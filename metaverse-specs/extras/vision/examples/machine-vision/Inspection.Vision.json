@@ -71,10 +71,10 @@
       "fields": [
         ["Fx", "8310.2", "px"],
         ["Fy", "8309.6", "px"],
-        ["Cx", "1295.4", "px, corner-datum per 5.10"],
-        ["Cy", "971.2", "px, corner-datum per 5.10"],
+        ["Cx", "1295.4", "px, corner-datum per §5.12"],
+        ["Cy", "971.2", "px, corner-datum per §5.12"],
         ["Skew", "0.0", "px"],
-        ["DistortionModel", "BrownConrady", "5.10 ordering: k1, k2, p1, p2, k3"],
+        ["DistortionModel", "BrownConrady", "§5.12 ordering: k1, k2, p1, p2, k3"],
         ["DistortionCoefficients", "[-0.0021, 0.0004, 0.0, 0.0, 0.0]", "dimensionless; a telecentric lens is close to distortion-free"],
         ["Width", "2592", "px"],
         ["Height", "1944", "px"]
@@ -93,10 +93,10 @@
       "sourceFrame": "camera_insp_07",
       "targetFrame": "station",
       "fields": [
-        ["FrameId", "station", "equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule"],
+        ["FrameId", "station", "equals the TargetFrame's FrameId, per the §5.12 frame-precedence rule"],
         ["Position", "(0.0, 0.0, 0.320)", "metres, ordered (x, y, z)"],
         ["Orientation", "(1.0, 0.0, 0.0, 0.0)", "unit quaternion ordered (x, y, z, w); a 180 degree rotation about x, so the camera looks down at the station"],
-        ["Covariance", "empty array", "not reported, per the 5.10 sentinel"]
+        ["Covariance", "empty array", "not reported, per the §5.12 sentinel"]
       ]
     }
   ],

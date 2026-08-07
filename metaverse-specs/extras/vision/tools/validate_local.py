@@ -38,10 +38,72 @@ Exit code 0 and "OK" on success; non-zero with an ERRORS list otherwise.
 from __future__ import annotations
 import csv
 import os
+import re
 import sys
 import xml.etree.ElementTree as ET
 
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
+
+# The AI Model Management model is a separate specification. This validator reads its
+# NodeSet rather than importing its generator, for the same reason it reads Vision's:
+# a checker that asks the emitter what it emitted validates nothing.
+AI_NS = "http://opcfoundation.org/UA/AI/"
+_HERE = os.path.dirname(os.path.abspath(__file__))
+AI_NODESET = os.path.normpath(os.path.join(
+    _HERE, "..", "..", "..", "ai-model-management", "Opc.Ua.AiModelManagement.NodeSet2.xml"))
+
+
+def _ai_prefix():
+    """The NodeId prefix the AI Model Management model uses for its OWN namespace.
+
+    Not necessarily ns=1: a NodeSet lists its RequiredModel namespaces in
+    NamespaceUris too, so adding a dependency shifts the model's own index. Reading
+    it from the file rather than assuming is the difference between this validator
+    noticing a change and silently resolving nothing, which would pass.
+    """
+    if not os.path.exists(AI_NODESET):
+        return None
+    root = ET.parse(AI_NODESET).getroot()
+    uris = [u.text for u in root.findall(f"{NS}NamespaceUris/{NS}Uri")]
+    if AI_NS not in uris:
+        return None
+    return "ns=%d;i=" % (uris.index(AI_NS) + 1)
+
+
+AI_PREFIX = _ai_prefix()
+
+
+def _load_ai_types():
+    """BrowseName -> numeric id for every type the AI Model Management model declares."""
+    out = {}
+    if not os.path.exists(AI_NODESET) or not AI_PREFIX:
+        return out
+    for el in ET.parse(AI_NODESET).getroot():
+        tag = el.tag[len(NS):] if el.tag.startswith(NS) else ""
+        if tag in ("UAObjectType", "UADataType", "UAReferenceType"):
+            bn = (el.get("BrowseName") or "").split(":", 1)[-1]
+            nid = el.get("NodeId", "")
+            if bn and nid.startswith(AI_PREFIX):
+                out[bn] = int(nid.split("i=")[1])
+    return out
+
+
+AI_TYPE_ID = _load_ai_types()
+
+
+def _load_ai_ids():
+    """Every numeric NodeId the AI Model Management model declares, for reference checking."""
+    out = set()
+    if not os.path.exists(AI_NODESET) or not AI_PREFIX:
+        return out
+    for el in ET.parse(AI_NODESET).getroot():
+        nid = el.get("NodeId", "") if el.tag.startswith(NS) else ""
+        if nid.startswith(AI_PREFIX):
+            out.add(int(nid.split("i=")[1]))
+    return out
+
+
+AI_IDS = _load_ai_ids()
 
 # Base-UA NodeIds that this model legitimately references (namespace 0).
 KNOWN_BASE = {
@@ -439,6 +501,69 @@ def main():
                 err(f"OPC-UA-Vision.md '{marker}' region does not contain an "
                     f"'Annex {letter}' heading; regenerate with build_examples.py")
 
+        # ---- specification <-> model, in both directions -------------------
+        # Every type and enumeration literal the model declares must be named in the
+        # prose, and every `SomeType.SomeMember` the prose writes must exist in the
+        # model. Neither direction alone catches drift: the first misses a document
+        # that describes a member no Server can implement, the second misses a member
+        # that ships undocumented. Only qualified member names are checked in the
+        # reverse direction, because a bare backticked word is as likely to be an
+        # enumeration literal or a term of art as it is to be a member.
+        for n in nodes:
+            cls = n.tag[len(NS):]
+            if cls not in ("UAObjectType", "UAVariableType", "UADataType",
+                           "UAReferenceType"):
+                continue
+            bn = simple_name(n)
+            if bn not in spec_text:
+                err(f"model declares {cls[2:]} {bn} but OPC-UA-Vision.md never "
+                    "names it")
+            for f_el in n.findall(f"{NS}Definition/{NS}Field"):
+                fname = f_el.get("Name") or ""
+                if fname and not re.search(rf"\b{re.escape(fname)}\b", spec_text):
+                    err(f"model declares {bn}.{fname} but OPC-UA-Vision.md never "
+                        "names it")
+
+        member_of = set()
+        for n in nodes:
+            owner = simple_name(n)
+            for r in n.findall(f"{NS}References/{NS}Reference"):
+                rt = (r.get("ReferenceType") or "").strip()
+                tgt = (r.text or "").strip()
+                if r.get("IsForward", "true") != "false" and \
+                        rt in ("HasComponent", "HasProperty", "i=47", "i=46") and \
+                        tgt in by_id:
+                    member_of.add((owner, simple_name(by_id[tgt])))
+            # A structure's fields are Definition/Field, not references, but the prose
+            # writes them with the same `Type.Field` notation.
+            for f_el in n.findall(f"{NS}Definition/{NS}Field"):
+                member_of.add((owner, f_el.get("Name") or ""))
+        declared = {simple_name(n) for n in nodes}
+        # AI_TYPE_ID holds every type the AI Model Management model declares. Between the two
+        # sets, a `SomeType.Member` whose owner appears in NEITHER names a type that
+        # exists nowhere - which is how a reference to a renamed or retired type
+        # survives. Skipping it, as the check first did, made exactly that invisible.
+        # Types defined by companion specifications this document cites but does not
+        # load. Listed explicitly rather than pattern-matched, so that adding a
+        # dependency on an outside type is a deliberate edit rather than a silent one.
+        EXTERNAL_TYPES = {
+            "ResultDataType",        # OPC 40100-1
+            "UsdGeomCameraType",     # OPC UA - OpenUSD Scene Materialization
+            "UsdApiSchemaType",      # OPC UA - OpenUSD Scene Materialization
+            "DataChannelSourceType",  # OPC UA - Data Channels (draft)
+        }
+        known_elsewhere = set(AI_TYPE_ID) | EXTERNAL_TYPES
+        for owner, member in set(re.findall(
+                r"`([A-Z][A-Za-z0-9]*Type)\.([A-Za-z][A-Za-z0-9]*)`", spec_text)):
+            if owner in declared:
+                if (owner, member) not in member_of:
+                    err(f"OPC-UA-Vision.md names {owner}.{member}, which the model "
+                        "does not declare")
+            elif owner not in known_elsewhere:
+                err(f"OPC-UA-Vision.md names {owner}.{member}, but neither this model "
+                    f"nor the AI Model Management model declares {owner} - a type that "
+                    "exists nowhere resolves to nothing")
+
     # ---- example overlays --------------------------------------------------
     # Each overlay instantiates the base model. Verify it is well-formed, declares the
     # Vision namespace as a RequiredModel, and only references type NodeIds that this
@@ -517,10 +642,18 @@ def main():
         if len(uris) < 2 or uris[1] != "http://opcfoundation.org/UA/Vision/":
             err(f"{label}: expected the Vision namespace at NamespaceUris index 2 "
                 f"(ns=2); found {uris}")
+        # The worked examples show a camera whose inference runs on a described
+        # deployment, so they instantiate types from BOTH models. The base Vision
+        # NodeSet still requires only base UA; it is the example overlay that composes.
+        if len(uris) < 3 or uris[2] != AI_NS:
+            err(f"{label}: expected the AI Model Management namespace at NamespaceUris "
+                f"index 3 (ns=3); found {uris}")
         req = [r.get("ModelUri")
                for r in ov_root.findall(f"{NS}Models/{NS}Model/{NS}RequiredModel")]
         if "http://opcfoundation.org/UA/Vision/" not in req:
             err(f"{label}: missing <RequiredModel> for the Vision namespace")
+        if AI_NS not in req:
+            err(f"{label}: missing <RequiredModel> for the AI Model Management namespace")
         ov_nodes = [e for e in ov_root
                     if e.tag.startswith(NS) and e.tag[len(NS):].startswith("UA")]
         total_overlay_nodes += len(ov_nodes)
@@ -537,6 +670,10 @@ def main():
                     if tgt not in ov_ids:
                         err(f"{label}: {e.get('NodeId')} references {tgt}, which the "
                             "overlay does not define")
+                elif tgt.startswith("ns=3;i="):
+                    if int(tgt.split("i=")[1]) not in AI_IDS:
+                        err(f"{label}: {e.get('NodeId')} references {tgt}, which the "
+                            "AI Model Management model does not define")
                 elif not tgt.startswith("i="):
                     err(f"{label}: {e.get('NodeId')} has malformed reference {tgt}")
             if e.tag[len(NS):] in ("UAObject", "UAVariable"):
@@ -603,11 +740,17 @@ def main():
             tid = own_by_name.get(name)
             return f"ns=2;i={tid}" if tid else None
 
-        # 5.9: an AiDeploymentType instance shall have exactly one UsesModel reference,
-        # and it shall target an AiModelType instance.
-        dep_td = type_named("AiDeploymentType")
-        model_td = type_named("AiModelType")
-        uses_model = type_named("UsesModel")
+        # The deployment-to-model rule moved with the types it constrains, into the
+        # AI Model Management specification. The overlays are still checked against it there,
+        # because they instantiate those types; what this validator keeps is the Vision
+        # side of the seam - that the pipeline names a deployment at all.
+        def ai_type_named(name):
+            tid = AI_TYPE_ID.get(name)
+            return f"ns=3;i={tid}" if tid else None
+
+        dep_td = ai_type_named("DeploymentType")
+        model_td = ai_type_named("ModelType")
+        uses_model = ai_type_named("UsesModel")
         for e in ov_nodes:
             if type_of.get(e.get("NodeId")) != dep_td:
                 continue
@@ -616,13 +759,14 @@ def main():
                        if r.get("ReferenceType") in ("UsesModel", uses_model)
                        and r.get("IsForward", "true") != "false"]
             if len(targets) != 1:
-                err(f"{label}: {e.get('NodeId')} is an AiDeploymentType with "
-                    f"{len(targets)} UsesModel references; clause 5.11 requires exactly "
-                    "one, and clause 12.6 depends on it")
+                err(f"{label}: {e.get('NodeId')} is a DeploymentType with "
+                    f"{len(targets)} UsesModel references; the AI Model Management "
+                    "specification requires exactly one, and its provenance rule "
+                    "depends on it")
             for t in targets:
                 if type_of.get(t) != model_td:
                     err(f"{label}: {e.get('NodeId')} UsesModel targets {t}, which is "
-                        "not an AiModelType instance (clause 5.11)")
+                        "not a ModelType instance")
 
         # Clause 11: VIS-Media-Inline is all four members or none.
         clip_td = type_named("ClipEndpointType")
