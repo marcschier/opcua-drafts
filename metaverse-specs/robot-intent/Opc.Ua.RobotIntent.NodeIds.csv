@@ -256,3 +256,4 @@ IntentCapabilitiesType_MissionBranchingSupported,6135,Variable
 IntentCapabilitiesType_MaxTrajectoryPoints,6136,Variable
 IntentOperationType_FinalResultData,6137,Object
 IntentOperationType_ProgramDiagnostic,6138,Variable
+IntentCapabilitiesType_SupportedFacets,6139,Variable

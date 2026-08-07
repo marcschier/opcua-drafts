@@ -276,7 +276,7 @@ One submitted intent, tracked to completion. It is a Part 10 program instance, s
 | MissionId | Variable | String | Scalar | Optional | The mission this intent belongs to, or empty when it was submitted alone. |
 | QueuePosition | Variable | UInt32 | Scalar | Optional | Place in the queue while ExecutionState is Queued, 1 being next. Zero once it is no longer queued. |
 | FinalResultData | Object |  |  | Mandatory | Part 10 result container. Carries the same IntentResultDataType value as Result, so a Part 10 client finds the outcome where Part 10 says it will be. Mandatory here because clause 6.7 requires it and an Optional member cannot carry a SHALL. |
-| ProgramDiagnostic | Variable | i=24033 | Scalar | Mandatory | Part 10 invocation diagnostics: which Session invoked the program, when, with what arguments and to what outcome. Mandatory here because the auditable-commanding property of clause 1.2 is exactly this member, and a capability the specification advertises cannot rest on one a Server may omit. Declared exactly as OPC 10000-10 declares it - a Variable of ProgramDiagnostic2Type reached by HasComponent - because a promotion that altered the inherited member's TypeDefinition or reference type would declare a second member rather than promote the inherited one. |
+| ProgramDiagnostic | Variable | i=24033 | Scalar | Mandatory | Part 10 invocation diagnostics: which Session invoked the program, when, with what arguments and to what outcome. Mandatory here because the auditable-commanding property of clause 1.2 is exactly this member, and a capability the specification advertises cannot rest on one a Server may omit. Declared exactly as OPC 10000-10 declares it - a Variable of ProgramDiagnostic2Type reached by HasComponent, with the inherited namespace-0 BrowseName - because a promotion that altered the inherited member's TypeDefinition, reference type or BrowseName namespace would declare a second member rather than promote the inherited one. |
 
 ### MissionType — `ns=1;i=1004`
 
@@ -312,6 +312,7 @@ What one robot will accept. A client reads this once, before it submits anything
 | RealTimeChannelsSupported | Variable | Boolean | Scalar | Mandatory | True when the Server brokers real-time channels. |
 | MissionBranchingSupported | Variable | Boolean | Scalar | Mandatory | True when mission transitions are evaluated. A Server that reports false executes the steps in order and ignores any transitions supplied. |
 | MaxTrajectoryPoints | Variable | UInt32 | Scalar | Optional | Largest number of points accepted in one trajectory. Zero means the Server states no limit. |
+| SupportedFacets | Variable | String | Array | Mandatory | The facets of Table 12.2 this controller claims, by the names given there. A client reads this instead of re-deriving conformance from the address space. Clause 12.2 binds the claim: a facet whose structural requirements are unmet shall not appear, and the behavioural requirements are subject to the honesty rules of clause 9. |
 
 ### CoordinateFrameType — `ns=1;i=1006`
 
@@ -884,7 +885,7 @@ What the Server will accept for one intent type. This is the machine-readable de
 | IntentType | NodeId | Scalar |  | The DataType of the intent, a subtype of IntentDataType. |
 | Description | LocalizedText | Scalar |  | What this Server does with it. |
 | CancelSupported | Boolean | Scalar |  | True when Cancel is honoured for it. A Server may still refuse a particular cancel; see clause 6.5. |
-| PauseSupported | Boolean | Scalar |  | True when Pause and Resume are honoured. |
+| PauseSupported | Boolean | Scalar |  | True when Pause and Resume are honoured for a running intent. False when the Server can only stop its queue: suspending execution means the robot stops, and Suspended is never reported while it is still moving. |
 | RetrySupported | Boolean | Scalar |  | True when it can terminate Retriable and be re-attempted. |
 | SupportedBufferModes | BufferModeEnum | Array |  | Buffer modes accepted for it. Aborting is always accepted and always listed. |
 | SupportedBlockingModes | BlockingModeEnum | Array |  | Blocking modes accepted for it. |

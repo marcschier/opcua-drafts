@@ -542,6 +542,10 @@ A Server **shall** either honour the requested `StopMode` or treat every value a
 
 `Pause` suspends execution retaining position, and `Resume` continues it. Both are optional, and a capability entry declares per intent type whether they are honoured.
 
+Suspending execution means the robot stops. A Server **shall not** report `Suspended` for an operation whose motion is still in progress: Part 10 defines that state as position retained, and a client or operator that reads it will act on the robot having come to rest. Since this specification defines no channel through which a Server can instruct an actuator to pause mid-motion, whether a Server can honour `Pause` for a running intent depends entirely on the underlying controller.
+
+A Server that cannot suspend a running intent **shall** declare `PauseSupported` false for that intent type. It **may** still stop its queue on `Pause` - refusing to start further work is useful on its own - but the executing operation remains `Executing` until it finishes, and `Ready` **shall** reflect that no new work will be admitted. This is the same rule clause 9 applies to `BlendingSupported`: declare false rather than accept work that will not be performed.
+
 `Retriable` is a terminal state a Server uses where it judges an intent worth another attempt — a grasp that closed on nothing, a location that was momentarily blocked. `Retry` creates a **new** `IntentOperationType` instance for the new attempt; the original remains, terminal, with its own result. A Server that does not offer `Retry` never enters `Retriable` and reports `Failed` instead.
 
 `Retry` refuses like a submission does, and reports it the same way (§6.2): `Accepted` false with a `Failure` and a `Message`. A named intent that is not in `Retriable` is refused with `ParameterInvalid`, and one whose capability entry declares `RetrySupported` false with `CapabilityNotSupported`.
@@ -682,13 +686,14 @@ Reading, browsing and subscribing require no authority. Observation is always pe
 
 `SupportedIntents` carries one `IntentCapabilityDataType` per accepted intent type, naming the DataType and declaring whether cancel, pause and retry are honoured for it, which buffer and blocking modes it accepts, and which named `Attributes` this Server recognises.
 
-Three rules keep the declaration honest, and each is checkable against a running Server:
+Four rules keep the declaration honest, and each is checkable against a running Server:
 
 1. A Server **shall** refuse an intent whose DataType is not listed, with `CapabilityNotSupported`.
 2. Every entry's `SupportedBufferModes` **shall** include `Aborting`.
 3. `BlendingSupported` **shall** be false unless the blending buffer modes actually blend.
+4. `PauseSupported` **shall** be false unless `Pause` actually suspends a *running* intent, per §6.6. Stopping only the queue is not suspending execution, and `Suspended` **shall not** be reported while the robot is still moving.
 
-A fourth rule applies the same honesty to the **Method surface**, because a declaration a client cannot act on is worse than no declaration. Where a Server declares a capability, the Methods that make it usable **shall** be present on the controller and callable:
+A fifth rule applies the same honesty to the **Method surface**, because a declaration a client cannot act on is worse than no declaration. Where a Server declares a capability, the Methods that make it usable **shall** be present on the controller and callable:
 
 | Declaration | Methods that **shall** be present |
 |---|---|
@@ -698,13 +703,15 @@ A fourth rule applies the same honesty to the **Method surface**, because a decl
 | a capability entry with `PauseSupported` true | `Pause`, `Resume` |
 | a capability entry with `RetrySupported` true | `Retry` |
 
-These Methods are Optional on `IntentControllerType`, which is what makes the rule necessary: a Server can otherwise advertise missions while omitting `SubmitMission` entirely, and a client discovers the contradiction only by calling something that is not there. Like the other three, this is observable against a running Server — browse the controller and compare what it offers with what it claims.
+These Methods are Optional on `IntentControllerType`, which is what makes the rule necessary: a Server can otherwise advertise missions while omitting `SubmitMission` entirely, and a client discovers the contradiction only by calling something that is not there. Like the others, this is observable against a running Server — browse the controller and compare what it offers with what it claims.
 
 `AxisCount` states how many entries `JointMoveIntentDataType.JointTargets` must carry, and **shall** equal the number of `AxisType` instances under the controller.
 
 Five further declarations cover the capability added beyond single moves. `TrajectorySupported` and `ForceControlSupported` say whether trajectories and force-controlled moves are accepted; `RealTimeChannelsSupported` whether channels are brokered; `MissionBranchingSupported` whether `Transitions` are evaluated at all; and `MaxTrajectoryPoints` bounds a trajectory, zero meaning the Server states no limit.
 
 Each follows the same rule as `BlendingSupported`: a Server declares false rather than accepting work it will not actually perform. A Server that reports `MissionBranchingSupported` false executes the steps in order and ignores any transitions supplied, and a client reading that declaration knows not to express a branch it needs.
+
+`SupportedFacets` is the same contract at the level of whole facets, and it is bound by every rule above. A facet is not a summary of the declaration a client has already read: some of what Table 12.2 requires — that blending modes are honoured, that the refusal rules of §6.2 are followed, that a mission base is immutable — cannot be established by reading the address space at all. Listing such a facet is therefore an attestation, and a Server that lists **RI-Blending** while treating the buffer modes as `Buffered` has made a false statement of exactly the kind rule 3 forbids, whatever `BlendingSupported` says. Clause 12.2 sets out which requirements are structural and which are attested.
 
 ---
 
@@ -804,9 +811,15 @@ ISO 10218-1 addresses cybersecurity where a vulnerability could compromise robot
 
 ### 12.1 Declaring conformance
 
-A Server declares conformance by exposing `RobotIntentRootType` under the Server object with `SpecificationVersion` set to the release it implements, and by populating `IntentCapabilitiesType` truthfully.
+A Server declares conformance by exposing `RobotIntentRootType` under the Server object with `SpecificationVersion` set to the release it implements, by populating `IntentCapabilitiesType` truthfully, and by listing in `SupportedFacets` the facets of Table 12.2 that each controller satisfies.
+
+`SupportedFacets` carries the facet names of Table 12.2 verbatim. It exists because conformance is otherwise not machine-readable: a client would have to re-derive the whole table from the address space, and since several rows are behavioural, two clients deriving independently could reach different conclusions about the same Server. This mirrors `ServerCapabilitiesType.ServerProfileArray` in OPC 10000-5, where a Server states its profiles rather than leaving them to be inferred.
+
+A Server shall not list a facet whose structural requirements are unmet. The behavioural requirements are the Server's own attestation and are subject to the honesty rules of clause 9 — a Server that lists **RI-Blending** while treating the blending buffer modes as `Buffered` is making a false statement in exactly the sense clause 9 forbids, and is no more conformant than one that reports `BlendingSupported` true under the same conditions.
 
 ### 12.2 Facets
+
+Requirements are of two kinds. **Structural** requirements are settled by reading the address space and the capability declaration: a client can check them, and so can a compliance tool, without commanding the robot. **Behavioural** requirements — written below as accepting, honouring, maintaining or observing a rule — cannot be settled by reading, only by exercising the Server, and are the Server's attestation under clause 9.
 
 | Facet | Requires |
 |---|---|
@@ -844,13 +857,19 @@ A Server declares conformance by exposing `RobotIntentRootType` under the Server
 
 A facet other than **RI-Base** is claimed only where every intent type it names appears in `SupportedIntents`.
 
-A Server **shall** publish the URI of every facet and profile it claims in `Server/ServerCapabilities/ServerProfileArray`, which is where a client discovers what it supports without submitting an intent to find out.
+**RI-Base** additionally requires `SupportedFacets`, since a conformance claim that cannot be read is not a claim.
+
+Conformance is therefore declared at two levels, and they answer different questions. `SupportedFacets` is a member of `IntentCapabilitiesType`, so it is stated **per controller**: a Server hosting two robots of different capability has two answers, and a client asking whether *this* controller blends must read *this* controller's list. `ServerProfileArray` is a member of the Server object, so it is stated **once for the Server**, which is the right granularity for a profile (§12.3) — a named shape an integrator specifies and a supplier builds to.
+
+A Server **shall** publish the URI of every profile it claims in `Server/ServerCapabilities/ServerProfileArray`, and **may** publish facet URIs there as well. Where it does, the two **shall** agree: a facet URI on the Server that no controller lists in `SupportedFacets` is a claim nothing in the address space backs, and a client that read only one of them would be told something untrue by the other.
 
 ### 12.3 Profiles
 
 A facet is a building block. A **profile** is a complete claim: a named set of facets describing one plausible robot Server, which is what an integrator specifies and what two manufacturers implementing the same shape agree they have built. §1.2's use cases are written about profiles even though they do not use the word — a mixed-fleet cell works only because two robots claim the same one.
 
 Four are defined. Each includes the **Robot Motion Server** set, and a Server **may** claim more than one: a robot that both follows paths and executes missions claims two.
+
+Claiming a profile is claiming every facet in it, on the terms §12.2 sets out — structural requirements a client can check by reading, behavioural ones the Server attests to under clause 9. A profile is a shorter way to say the same thing, not a weaker one.
 
 | Profile | Facets | The Server it describes |
 |---|---|---|
@@ -876,7 +895,7 @@ Profiles are published under `http://opcfoundation.org/UA-Profile/RobotIntent/Se
 | Robot Path Server | `Path` |
 | Robot Mission Server | `Mission` |
 
-Facets are published under `http://opcfoundation.org/UA-Profile/RobotIntent/Facet/`, with the suffix being the facet name after the `RI-` prefix: **RI-Base** is `Base`, **RI-Motion-Joint** is `Motion-Joint`, **RI-Process-ArcWeld** is `Process-ArcWeld`, and so on for every row of §12.2.
+Facets are published under `http://opcfoundation.org/UA-Profile/RobotIntent/Facet/`, with the suffix being the facet name after the `RI-` prefix: **RI-Base** is `Base`, **RI-Motion-Joint** is `Motion-Joint`, **RI-Process-ArcWeld** is `Process-ArcWeld`, and so on for every row of §12.2. These URIs exist so a generic OPC UA tool that reads `ServerProfileArray` and knows nothing about robots can still recognise a facet; the authority on which facets a given controller satisfies is that controller's `SupportedFacets`, because only it is stated per controller.
 
 These URIs are **provisional**, on the same terms as the namespace URI and the NodeIds: this is a working-group draft, and the OPC Foundation assigns the final values.
 
