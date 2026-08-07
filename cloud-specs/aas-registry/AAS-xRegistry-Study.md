@@ -95,11 +95,11 @@ committee texts corrected four things and confirmed two.
 
 **Confirmed:**
 
-5. **EN 18222 ≠ AAS Part 2**, definitively. Its resource paths are `/dpps`, it has a separate
+1. **EN 18222 ≠ AAS Part 2**, definitively. Its resource paths are `/dpps`, it has a separate
    register operation and a fine-granular element API addressed by RFC 9535 JSONPath, it uses
    RFC 7396 merge-patch for updates, and it carries a `representation` flag selecting the compressed
    or full serialization.[^60] No shell, no submodel, no `$value`.
-6. **The module-to-standard map** is exactly as first reported (M1 EN 18219, M2 EN 18220,
+2. **The module-to-standard map** is exactly as first reported (M1 EN 18219, M2 EN 18220,
    M3 EN 18239, M4 EN 18223, M5 EN 18216, M6 EN 18221, M7 EN 18246, M8 EN 18222), plus a proposed
    Technical Specification for semantic dictionaries that the first pass missed.
 
@@ -478,6 +478,14 @@ There is no `visibility` attribute, no tenancy, no redaction, no per-caller attr
 only adjacent hooks are that capabilities MAY vary by authorization level[^45] and that the spec
 suggests Groups as a natural ACL unit.[^46]
 
+It is worth noting what AAS itself offers here, because it is not nothing. AAS Part 4 defines an
+attribute-based access control model that reaches down to individual submodel elements, with an
+explicit anonymous-access notion aimed at exactly the scan-a-code-on-a-product case.[^47] On paper
+it answers the requirement. In practice it is the least-adopted part of the standard, no
+open-source implementation deploys fine-grained enforcement, and what is actually deployed in the
+field is business-partner filtering plus dataspace contract policies.[^48] So the gap analysed
+below is not one this mapping opens; it is one the ecosystem has not closed either.
+
 #### Can the endpoint registry supply the missing model?
 
 Not as the endpoint registry itself — but its authorization sub-model is the right primitive, and it
@@ -634,8 +642,7 @@ last three remain open.
 | 3 | Adopt the federation identity rule rather than re-deriving it[^9] | **Done** — stated in `spec.md` 5.3 |
 | 4 | Add a disclosure-tier clause covering segmentation and advertisement, and stating plainly that element-level enforcement is out of scope | **Done** — `spec.md` 6, including the bulk-extraction constraint |
 | 5 | Add a product passport profile constraining the projection to the element subset EN 18223 defines | **Done** — `spec.md` 7, which also records that EN 18222's read-by-date is servable from Versions and that a plain AAS server cannot serve it |
-| 6 | Write a conformance annex mapping AAS API operations to their xRegistry equivalents, as the OPC UA binding does for HTTP[^55] | **Done** — `spec.md` Annex A, informative |
-| 7 | Prototype against Eclipse BaSyx or FA³ST, using the `crates` service as the xrproxy template[^56] | Open. FA³ST remains the closest analog: one AAS dataset, two protocol facades[^57] |
+| 6 | Write a conformance annex mapping AAS API operations to their xRegistry equivalents, as the OPC UA binding does for HTTP[^55] | **Done** — `spec.md` Annex A, informative || 7 | Prototype against Eclipse BaSyx or FA³ST, using the `crates` service as the xrproxy template[^56] | Open. FA³ST remains the closest analog: one AAS dataset, two protocol facades[^57] |
 | 8 | Raise the xrproxy group-type collision with the maintainers before relying on multi-registry federation[^35] | Open |
 | 9 | Follow up the OPC 30450-1 intersection | Open. A passport projected into OPC UA and a registry served over the OPC UA binding would share an address space[^62] |
 
@@ -648,7 +655,8 @@ Submodel Template is itself a Submodel and benefits from being the same Resource
 model type as an instance for cross-referencing.
 
 Three things surfaced only when the model met the tooling, and are recorded here
-because they are not obvious from the specification text:
+because they are not obvious from the specification text. All three were caught
+by the repository's own verification targets[^58]:
 
 - An `xid` with a `target` resolves only against group types declared in the
   same model. A cross-domain reference — to the Endpoint Registry, say — has to
@@ -685,6 +693,7 @@ because they are not obvious from the specification text:
 ## Confidence Assessment
 
 **High confidence (verified against primary sources):**
+
 - xRegistry id grammar, `xref`, `ximportresources`, `constraints`, `$include`, capabilities, and the absence of any access-control model — all read from `core/spec.md` / `core/model.md` with line citations.
 - AAS metamodel structure and Part 2 endpoints — read from the normative JSON Schema and OpenAPI files.
 - Absence of prior art — searched systematically across named orgs and GitHub full text, with per-repo results.
@@ -692,10 +701,12 @@ because they are not obvious from the specification text:
 - PR #510 §5.1.1 and PR #511 §9 — quoted verbatim from the PR branches.
 
 **Medium confidence:**
+
 - IDTA submodel template contents (verified for 02011, 02023, 02035, 02099).
 - Exact publication dates for JTC 24 standards and Implementing Regulation (EU) 2026/1778.
 
 **Upgraded to high confidence in this revision (read from the primary committee texts):**
+
 - EN 18222's API surface and its distinctness from AAS Part 2.
 - EN 18239's access-control model, granularity requirement and scraping constraint.
 - EN 18223's data model element types and dual serializations.
@@ -706,11 +717,13 @@ These documents are licensed and several remain under formal vote, so they are c
 title only. No text, table or figure from them is reproduced here or in any downstream artifact.
 
 **Was a design proposal at the time of writing, and has since been implemented:**
+
 - The group-type model and the `model.json` sketch in §3. No such model existed anywhere when this study was written; the delivered version differs in detail (see [Outcome](#outcome)) but not in shape.
 - The decision to reuse the OpenUSD symbolic identifier construction.
 - The assessment of OCI as a complementary distribution channel rather than the primary mapping.
 
 **Assumptions made:**
+
 - That the new spec targets xRegistry 1.0-rc3 (matching `main`), not the rc2 that xrproxy currently implements — this is a real version skew to resolve.
 - That "proxy model" means a domain model specification under `models/`, not a protocol binding under `bindings/`. AAS is a data model plus an API, so a *model* spec is the right shape; the OPC UA work is the binding-shaped counterpart. This held: the delivered documents are a model spec and a packaging binding.
 - That read-only proxying was the initial target, matching all existing xrproxy services. **This one was wrong**, and was overridden during drafting: the model is fully mutable, and a read-only projection declares the restriction through `capabilities`.
@@ -722,14 +735,14 @@ title only. No text, table or figure from them is reproduced here or in any down
 [^1]: [xregistry/spec](https://github.com/xregistry/spec) — main branch at commit `af777bc25778cc7759b007e99bede6bf7d371a27`.
 [^2]: [xregistry/xrproxy](https://github.com/xregistry/xrproxy) — main at commit `6e37565e75bfbfd023e9db8042d865484d132a77`.
 [^3]: [xregistry/server](https://github.com/xregistry/server) @ `f2ad6f1`. Go, spec version 1.0-rc3, MySQL/MariaDB only. Searches for `federat`, `proxy`, `remote`, `mirror`, `replicat` found no cross-registry federation, no remote-registry proxy, no mirroring, and no import-from-another-registry feature. `meta.xref` is implemented but is intra-registry only.
-[^4]: AAS specification index: https://industrialdigitaltwin.io/aas-specifications/index/home/index.html
+[^4]: AAS specification index: <https://industrialdigitaltwin.io/aas-specifications/index/home/index.html>
 [^5]: Prior-art search: 0 results for "asset administration shell", "AASX", "IDTA", "submodel", "digital twin", "industrie 4.0", "digital product passport" across `xregistry/spec`, `xregistry/xrproxy`, `xregistry/server`, `xregistry/codegen`, `xregistry/viewer`, `cloudevents/spec`; 0 results for "xregistry"/"cloudevents registry" across `admin-shell-io`, `eclipse-basyx`, `FraunhoferIOSB`, `eclipse-tractusx`; no hits in CNCF xRegistry mailing list archives.
 [^6]: AAS `Identifiable.id`: string, 1–2048 characters, free-form UTF-8. `idType` discriminator was removed in V3.0. Source: `admin-shell-io/aas-specs-metamodel:schemas/json/aas.json` (schema id `https://admin-shell.io/aas/3/2`).
 [^7]: [core/spec.md:1030–1064](https://github.com/xregistry/spec/blob/af777bc25778cc7759b007e99bede6bf7d371a27/core/spec.md#L1030-L1064) — `<SINGULAR>id` attribute constraints.
 [^8]: [models/openusd/spec.md:648–702](https://github.com/xregistry/spec/blob/ddf8275d2358db3974ef6558725516a9d661979a/models/openusd/spec.md#L648-L702) — §5.1.1 The Symbolic Identifier Construction (PR #510, blob `665b4fb6ad38c723b61e483c6527663895accb35`).
 [^9]: [bindings/opcua.md:1070–1104](https://github.com/xregistry/spec/blob/3279ee84ac9bdf1841e66edbaceeaecec9a2e195/bindings/opcua.md#L1070-L1104) — §9 Federation (PR #511, blob `1f02bc7fa99d65d4ad2a98437e71015df35771c3`).
 [^10]: AAS `AdministrativeInformation`: `version` and `revision` are non-negative integer strings of 1–4 characters; `createdAt`/`updatedAt` added in V3.1; `templateId` links an instance to its template. No version history, changelog or branching exists. Source: `admin-shell-io/aas-specs-metamodel:schemas/json/aas.json`.
-[^11]: CIRPASS-2 Deliverable D4.1, EU DPP Reference Architecture (10 June 2026), DPP Integrity recommendations. https://doi.org/10.5281/zenodo.15388412
+[^11]: CIRPASS-2 Deliverable D4.1, EU DPP Reference Architecture (10 June 2026), DPP Integrity recommendations. <https://doi.org/10.5281/zenodo.15388412>
 [^12]: [core/spec.md:407–408](https://github.com/xregistry/spec/blob/af777bc25778cc7759b007e99bede6bf7d371a27/core/spec.md#L407-L408) and `core/spec.md:795–797`; `core/primer.md:313–314` lists Authentication and Authorization as an explicit Non-Goal.
 [^13]: IDTA-02035 Digital Battery Passport, 7 parts, at `admin-shell-io/submodel-templates:published/Digital Battery Passport/`. Tier assignments in §6.3 are inferred from EU 2023/1542 Annex XIII, not stated by IDTA.
 [^14]: EN 18216, 18219, 18220, 18221, 18222, 18223 published 27 May 2026; referenced in the OJEU by Commission Implementing Decision (EU) 2026/1736 (14 July 2026). EN 18222 defines a DPP-native REST API, not AAS Part 2. Implementations: [eclipse-basyx/dpp-api](https://github.com/eclipse-basyx/dpp-api), [openepcis-dpp-ready](https://github.com/openepcis/openepcis-dpp-ready).
@@ -756,12 +769,12 @@ title only. No text, table or figure from them is reproduced here or in any down
 [^35]: `bridge/src/services/model-service.ts:65–130` (blob `4da6b533ebe21ad59766b4c2d7e1b828ae720900`) — a group type advertised by more than one active downstream is disabled rather than resolved; bridge health becomes `degraded`. Confirmed by `bridge/test/generalization.test.js:136–162`.
 [^36]: `AssetInformation.assetKind` — required; enum `Batch | Instance | NotApplicable | Role | Type`.
 [^37]: IDTA-02099-1 Digital Product Passport Part 1 (Metadata) v1.0.1 granularity mapping table: Item↔Instance, Model↔Type, Batch↔Batch.
-[^38]: IEC 61406-1:2022 (serialized items, successor to DIN SPEC 91406) and IEC 61406-2:2024 (types/models, lots/batches, characteristics). https://webstore.iec.ch/en/publication/67673 and /77973
+[^38]: IEC 61406-1:2022 (serialized items, successor to DIN SPEC 91406) and IEC 61406-2:2024 (types/models, lots/batches, characteristics). <https://webstore.iec.ch/en/publication/67673> and /77973
 [^39]: IDTA-02011 v1.1 Hierarchical Structures enabling Bills of Material, `admin-shell-io/submodel-templates:published/Hierarchical Structures enabling Bills of Material/1/1/README.md`. `SelfManagedEntity` carries `globalAssetId` for cross-company navigation; `CoManagedEntity` has no external reference.
 [^40]: `models/openusd/model.json` — `dependson`: array of authored identifiers, "not xids, so a resolver matches them against @...@ references directly".
 [^41]: Regulation (EU) 2023/1542, Article 77(2)–(3) — three access tiers; unique identifier per ISO/IEC 15459:2015; applicable 18 February 2027.
 [^42]: Regulation (EU) 2024/1781 (ESPR), Articles 9 (data carrier) and 10 (registry). Delegated acts: steel 2026; batteries/textiles/tyres/aluminium 2027; furniture 2028; mattresses/ICT 2029.
-[^43]: Commission Implementing Regulation (EU) 2026/1778 (16 July 2026) establishing the central DPP Registry. It stores identifiers, pointer URLs, and high-level metadata — not product data. https://single-market-economy.ec.europa.eu/single-market/digital-product-passport/dpp-registry_en
+[^43]: Commission Implementing Regulation (EU) 2026/1778 (16 July 2026) establishing the central DPP Registry. It stores identifiers, pointer URLs, and high-level metadata — not product data. <https://single-market-economy.ec.europa.eu/single-market/digital-product-passport/dpp-registry_en>
 [^44]: IDTA-02099-1 v1.0.1, `admin-shell-io/submodel-templates:published/Digital Product Passport/Digital Product Passport Part-1/1/0/1/`. Elements include `digitalProductPassportId`, `uniqueProductIdentifier`, `granularity`, `dppStatus`, `economicOperatorId`, `facilityId`, `contentSpecificationIds`.
 [^45]: [core/spec.md:1886–1888](https://github.com/xregistry/spec/blob/af777bc25778cc7759b007e99bede6bf7d371a27/core/spec.md#L1886-L1888) — capability presence "MAY vary based on the authorization level of the client making the request."
 [^46]: `core/spec.md:197–200` — "An additional common use for Groups is for access control."
@@ -771,7 +784,7 @@ title only. No text, table or figure from them is reproduced here or in any down
 [^50]: No `artifactType` for AAS/AASX exists. Searched IDTA, `admin-shell-io`, `eclipse-basyx`, `FraunhoferIOSB`, `aas-core-works`, `eclipse-tractusx`, and the web. Candidate media types proposed in this report are unregistered.
 [^51]: `oci/model.json` (blob `3996df63a0e0b9ab37a7f768c12013f98035743e`) sets `hasdocument: false`. A repo-wide search for `referrers` / `artifactType` in `xregistry/xrproxy` returns zero results; `subject` is absent from all OCI type definitions.
 [^52]: `core/http.md` contains no occurrence of `ETag`, `If-Match`, `If-None-Match`, or `precondition`. `core/primer.md:825–836` notes `epoch` is "very similar to HTTP's ETag" but it is not mapped to HTTP conditional headers.
-[^53]: OPC 30270 "OPC UA for Asset Administration Shell" v1.0.0 maps AAS V1.0; a V3-aligned update is in progress at the OPC Foundation AAS Working Group. https://reference.opcfoundation.org/specs/OPC-30270/
+[^53]: OPC 30270 "OPC UA for Asset Administration Shell" v1.0.0 maps AAS V1.0; a V3-aligned update is in progress at the OPC Foundation AAS Working Group. <https://reference.opcfoundation.org/specs/OPC-30270/>
 [^54]: PR #510 and #511 were both relocated at maintainer request to `models/openusd/` and `bindings/opcua.md`. An `extensions/` folder proposal (bindings + models beneath it) was raised in PR conversation and remains unresolved.
 [^55]: `bindings/opcua.md` Annex A (informative) — operation-by-operation correspondence to the HTTP binding, 38 rows from `GET /` to `DELETE /<GROUPS>/<GID>/<RESOURCES>/<RID>/versions/<VID>`.
 [^56]: `crates/src/{server,adapter,mapper,model,routes,config}.ts` — the newest xrproxy pattern built on `shared/registry-core` (`createRegistryApp`, `HttpUpstreamClient`, `TtlCache`). Services `npm`, `pypi`, `maven`, `nuget`, `oci`, `gomod` use an older hand-rolled style.
