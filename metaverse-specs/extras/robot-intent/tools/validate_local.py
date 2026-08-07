@@ -566,7 +566,9 @@ def main() -> int:
         try:
             from opcdocx import nodeset_diagram as _nd
         except ImportError as _exc:
-            err(f"model-figure check could not run: {_exc}")
+            # The parser lives in the Word tooling, whose dependencies are optional here.
+            # A missing one is a skip, not a wrong figure; CI installs them so the gate runs.
+            print(f"note: model-figure check skipped: {_exc}")
         else:
             try:
                 for _msg in _nd.check_markdown(SPEC, NODESET):

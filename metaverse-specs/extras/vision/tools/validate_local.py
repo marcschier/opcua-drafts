@@ -166,7 +166,9 @@ def check_model_figures(nodeset_path, spec_path):
     try:
         from opcdocx import nodeset_diagram
     except ImportError as exc:
-        err(f"model-figure check could not run: {exc}")
+        # The parser lives in the Word tooling, whose dependencies are optional here.
+        # A missing one is a skip, not a wrong figure; CI installs them so the gate runs.
+        print(f"note: model-figure check skipped: {exc}")
         return
     try:
         for message in nodeset_diagram.check_markdown(spec_path, nodeset_path):
