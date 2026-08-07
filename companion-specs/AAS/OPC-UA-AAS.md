@@ -132,11 +132,11 @@ any prior understanding or agreement (oral or written) relating to, this compani
   - [9.8 The xRegistry API over OPC UA](#98-the-xregistry-api-over-opc-ua)
 - [10 Profiles and conformance](#10-profiles-and-conformance)
 - [11 NodeSet validation](#11-nodeset-validation)
-- [Annex A — Information model](#annex-a-information-model)
-- [Annex B — Field coverage](#annex-b-field-coverage)
-- [Annex C — Migration from version 1.00](#annex-c-migration-from-version-100)
-- [Annex D — Correspondence to the xRegistry HTTP binding](#annex-d-correspondence-to-the-xregistry-http-binding)
-- [Annex E — Federation resolution](#annex-e-federation-resolution)
+- [Annex A — Information model](#annex-a--information-model)
+- [Annex B — Field coverage](#annex-b--field-coverage)
+- [Annex C — Migration from version 1.00](#annex-c--migration-from-version-100)
+- [Annex D — Correspondence to the xRegistry HTTP binding](#annex-d--correspondence-to-the-xregistry-http-binding)
+- [Annex E — Federation resolution](#annex-e--federation-resolution)
 
 ## 1 Scope
 
