@@ -642,7 +642,8 @@ last three remain open.
 | 3 | Adopt the federation identity rule rather than re-deriving it[^9] | **Done** — stated in `spec.md` 5.3 |
 | 4 | Add a disclosure-tier clause covering segmentation and advertisement, and stating plainly that element-level enforcement is out of scope | **Done** — `spec.md` 6, including the bulk-extraction constraint |
 | 5 | Add a product passport profile constraining the projection to the element subset EN 18223 defines | **Done** — `spec.md` 7, which also records that EN 18222's read-by-date is servable from Versions and that a plain AAS server cannot serve it |
-| 6 | Write a conformance annex mapping AAS API operations to their xRegistry equivalents, as the OPC UA binding does for HTTP[^55] | **Done** — `spec.md` Annex A, informative || 7 | Prototype against Eclipse BaSyx or FA³ST, using the `crates` service as the xrproxy template[^56] | Open. FA³ST remains the closest analog: one AAS dataset, two protocol facades[^57] |
+| 6 | Write a conformance annex mapping AAS API operations to their xRegistry equivalents, as the OPC UA binding does for HTTP[^55] | **Done** — `spec.md` Annex A, informative |
+| 7 | Prototype against Eclipse BaSyx or FA³ST, using the `crates` service as the xrproxy template[^56] | Open. FA³ST remains the closest analog: one AAS dataset, two protocol facades[^57] |
 | 8 | Raise the xrproxy group-type collision with the maintainers before relying on multi-registry federation[^35] | Open |
 | 9 | Follow up the OPC 30450-1 intersection | Open. A passport projected into OPC UA and a registry served over the OPC UA binding would share an address space[^62] |
 
