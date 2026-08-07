@@ -24,6 +24,7 @@ import os
 import re
 
 from . import mermaid_pptx
+from . import nodeset_tables
 from .nodeset_tables import NODE_CLASS, Model
 
 DIRECTIVE_RE = re.compile(r'<!--\s*model-figure:(?P<body>.*?)-->', re.S)
@@ -178,6 +179,32 @@ def _has_reference(model, src, dst, ref_name):
     return False
 
 
+def _external_reference(model, node, ref_name, other_label, node_is_source):
+    """Check an edge with one end in a required model, from the end that is in this one.
+
+    An `external=` Node is never resolved, so an edge touching one used to be skipped
+    altogether — and every figure anchors its types on a base-namespace supertype, so the
+    unchecked edges were the majority. A NodeSet cannot confirm what it does not contain,
+    but it does carry its own half of the reference: the inverse `HasSubtype` sits on the
+    subtype and the inverse `HasComponent` on the child, both naming a NodeId outside this
+    model. That is enough to verify the ReferenceType and its direction, which is what the
+    figure actually asserts.
+
+    Where the far NodeId is a well-known base-namespace Node, its BrowseName is checked
+    too. Where it is not, the reference is accepted on type and direction alone rather
+    than guessed at — returning None to say so.
+    """
+    for ref_type, target, forward in node.refs:
+        if _ref_type_name(model, ref_type) != ref_name:
+            continue
+        if forward != node_is_source or target in model.nodes:
+            continue
+        known = nodeset_tables.STANDARD_NODES.get(target)
+        if known is None or known == _bare(other_label):
+            return True
+    return False
+
+
 def check_figure(model, fig):
     """Errors this figure makes about the model. Empty means it is accurate."""
     errors = []
@@ -256,12 +283,22 @@ def _resolve(model, fig, graph, where):
     # Every edge whose endpoints both resolved must be a real reference.
     for e in graph.edges:
         src, dst = resolved.get(e.src), resolved.get(e.dst)
-        if src is None or dst is None:
-            continue
         ref = _edge_reference(e)
-        if not _has_reference(model, src, dst, ref):
-            errors.append('%s: no %s reference from %s to %s in the model'
-                          % (where, ref, src.name, dst.name))
+        if src is not None and dst is not None:
+            if not _has_reference(model, src, dst, ref):
+                errors.append('%s: no %s reference from %s to %s in the model'
+                              % (where, ref, src.name, dst.name))
+            continue
+        # One end is in a required model. Check the half this NodeSet does carry.
+        for near, far, near_is_source in ((src, e.dst, True), (dst, e.src, False)):
+            if near is None:
+                continue
+            far_label = graph.nodes[far].label
+            if _bare(far_label) not in externals:
+                continue
+            if not _external_reference(model, near, ref, far_label, near_is_source):
+                errors.append('%s: no %s reference between %s and the external Node %r '
+                              'in the model' % (where, ref, near.name, far_label))
     return resolved, errors
 
 

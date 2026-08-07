@@ -297,9 +297,59 @@ This costs some parallelism — one slow device holds up the answers about ninet
 
 The complete node reference is Annex A. This clause states what the Nodes are for.
 
+The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in *italics*, and a Node whose BrowseName is a placeholder is written in angle brackets. A `HasTypeDefinition` reference carries a solid arrowhead; a `HasComponent` reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow, and a `HasInterface` reference is dashed. A figure shows the part of the model its clause describes, never the whole of it.
+
+```mermaid
+flowchart LR
+  OBJ[Object, Variable or View]:::object
+  MTH(Method):::method
+  TYP[[ObjectType or VariableType]]:::objecttype
+  ABS[[abstract type]]:::objecttype,abstract
+  PH[&lt;Placeholder&gt;]:::object
+  TYP ==> ABS
+  OBJ --> MTH
+  OBJ -->|Organizes| PH
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
 ### 9.1 Server capabilities
 
 `AsyncServiceCapabilitiesType`, instanced as the well-known `AsyncServiceCapabilities` Object under `ServerCapabilities`, is the Server-wide answer. **Its absence is how a Server says it never defers a request** — a Client checks for the Object rather than discovering the fact from a `Bad_RequestNotComplete` it was not expecting.
+
+<!-- model-figure: root=i=70000 require=mandatory external=BaseObjectType,ServerCapabilities -->
+
+```mermaid
+flowchart TD
+  BOT[[BaseObjectType]]:::objecttype,abstract
+  CAPT[[AsyncServiceCapabilitiesType]]:::objecttype
+  SC[ServerCapabilities]:::object
+  CAP[AsyncServiceCapabilities]:::object
+  MAXD[MaxDeferredRequests]:::variable
+  MAXS[MaxDeferredRequestsPerSession]:::variable
+  MAXT[MaxDeferralTime]:::variable
+  DRA[DefaultRetryAfter]:::variable
+  MRA[MinRetryAfter]:::variable
+  DS[DeferrableServices]:::variable
+
+  BOT -->|HasSubtype| CAPT
+  CAPT -->|HasProperty| MAXD
+  CAPT -->|HasProperty| MAXS
+  CAPT -->|HasProperty| MAXT
+  CAPT -->|HasProperty| DRA
+  CAPT -->|HasProperty| MRA
+  CAPT -->|HasProperty| DS
+  SC --> CAP
+  CAP ==> CAPT
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
 
 `DeferrableServices` lists the request message DataTypes the Server may defer, **exhaustively**. A Service absent from the list is never deferred. The list is exhaustive rather than open because the alternative — an empty array meaning "anything" — would make the useful reading and the uninitialized reading identical, and a Client cannot tell a Server that defers everything from a Server that has not filled the Property in.
 
@@ -308,6 +358,39 @@ Every member of this type is Mandatory. A conformance unit that named an Optiona
 ### 9.2 Diagnostics
 
 `AsyncServiceDiagnosticsType`, instanced as `AsyncServiceDiagnostics` under `ServerDiagnostics`, carries the counters and one record per parked request.
+
+<!-- model-figure: root=i=70001 require=mandatory external=BaseObjectType,ServerDiagnostics -->
+
+```mermaid
+flowchart TD
+  BOT[[BaseObjectType]]:::objecttype,abstract
+  DIAT[[AsyncServiceDiagnosticsType]]:::objecttype
+  SD[ServerDiagnostics]:::object
+  DIA[AsyncServiceDiagnostics]:::object
+  DRC[DeferredRequestCount]:::variable
+  TDC[TotalDeferredCount]:::variable
+  CC[CompletedCount]:::variable
+  EC[ExpiredCount]:::variable
+  CAC[CancelledCount]:::variable
+  RC[RejectedCount]:::variable
+  DR[DeferredRequests]:::variable
+
+  BOT -->|HasSubtype| DIAT
+  DIAT --> DRC
+  DIAT --> TDC
+  DIAT --> CC
+  DIAT --> EC
+  DIAT --> CAC
+  DIAT --> RC
+  DIAT --> DR
+  SD --> DIA
+  DIA ==> DIAT
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
 
 `ExpiredCount` and `CompleteCount` are the two an operator watches. A rising `ExpiredCount` says Clients are deferring and never returning, which is a Client defect that presents as Server memory. A high `CompleteCount` against a long `StartTime` says a Client is polling a Server that asked it not to.
 
@@ -339,6 +422,30 @@ That one structure carries both jobs because the alternative — a separate Bool
 
 `DeferredRequestCompletedEventType` is raised on the Server Object when a parked response becomes ready. It is an optimization of the retry contract, never a replacement for it: a Client that subscribes calls `Complete` once, when there is something to collect, and a Client that does not is unaffected because `RetryAfter` still governs.
 
+<!-- model-figure: root=i=70010 require=mandatory external=BaseEventType -->
+
+```mermaid
+flowchart TD
+  BET[[BaseEventType]]:::objecttype,abstract
+  EVT[[DeferredRequestCompletedEventType]]:::objecttype
+  RH[RequestHandle]:::variable
+  SI[ServiceId]:::variable
+  SR[ServiceResult]:::variable
+  CT[CompletionTime]:::variable
+  ET[ExpiryTime]:::variable
+
+  BET -->|HasSubtype| EVT
+  EVT -->|HasProperty| RH
+  EVT -->|HasProperty| SI
+  EVT -->|HasProperty| SR
+  EVT -->|HasProperty| CT
+  EVT -->|HasProperty| ET
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
 The Event names a parked request, so it **shall** reach only the Session that parked it. A Server **shall not** deliver it to any other Session, however that Session's Event filter is written. Delivering it more widely would tell every subscriber which user is running which long operation, which is the same disclosure §6 restricts `DeferredRequests` to prevent, arriving by a different route.
 
 `ServiceResult` carries the **service-level** `serviceResult` of the parked response and nothing more. For a Service whose response carries per-operation results — `Call`, `Write`, `HistoryUpdate` — a `Good` `ServiceResult` says the request was processed, not that every operation in it succeeded, and a Client that needs the per-operation outcomes **shall** call `Complete` and read them. What the Event saves is the polling, not the collection.
@@ -346,6 +453,28 @@ The Event names a parked request, so it **shall** reach only the Session that pa
 A Server **shall** hold the response until it is collected, cancelled or expires, whether or not the Event was delivered and whether or not any Client read it: a Client that receives the Event is not thereby deemed to have collected anything.
 
 `AuditDeferredRequestEventType` reports every transition. It subtypes `AuditSessionEventType` and carries its own `RequestHandle`, following `AuditCancelEventType`, which is the existing audit event for the other Service that acts on an outstanding request by its handle.
+
+<!-- model-figure: root=i=70011 require=mandatory external=AuditSessionEventType -->
+
+```mermaid
+flowchart TD
+  ASE[[AuditSessionEventType]]:::objecttype,abstract
+  AUD[[AuditDeferredRequestEventType]]:::objecttype
+  RH[RequestHandle]:::variable
+  SI[ServiceId]:::variable
+  TR[Transition]:::variable
+  OC[Outcome]:::variable
+
+  ASE -->|HasSubtype| AUD
+  AUD -->|HasProperty| RH
+  AUD -->|HasProperty| SI
+  AUD -->|HasProperty| TR
+  AUD -->|HasProperty| OC
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
 
 Because it names the Session and the user behind every parked request, a Server **shall** deliver it only to Sessions whose Roles include `SecurityAdmin`, and only over an encrypted SecureChannel; the §7.7 states the rule and the alternative for a Server that delivers it more widely. An Event that arrives unbidden is not a lesser disclosure than a Variable that has to be read — it is a greater one.
 

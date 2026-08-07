@@ -57,6 +57,7 @@ turn the discussion into concrete changes to the source and regenerate everythin
 | `OPC-UA-Generators.docx` | Generators (generator sets). |
 | `OPC-UA-Data-Channels.docx` | Data Channels — extends the base namespace; see below. |
 | `OPC-UA-Arrow-Encoding.docx` | Apache Arrow DataEncoding — declares a template deviation; see below. |
+| `OPC-UA-Async-Services.docx` | Asynchronous Service Execution — extends the base namespace; see below. |
 | `OPC-UA-Vision.docx` | Vision — sensors, media, inference and results. |
 | `OPC-UA-AI-Model-Management.docx` | AI Model Management — models, deployments and the learning loop. |
 | `*.docmodel.json` | The intermediate representation each document was rendered from. Committed **because a `.docx` diff is unreadable** — review this instead. |
@@ -163,6 +164,7 @@ a new config file; a genuinely new shape needs a generalisation in `opcdocx/` fi
 | `OPC-UA-Data-Channels.docx` | `core-specs/data-channels/` + `Opc.Ua.DataChannels.NodeSet2.xml` — **base namespace**; see below |
 | `OPC-UA-Avro-Encoding.docx` | `core-specs/encodings/avro/` — **no NodeSet**; see below |
 | `OPC-UA-Arrow-Encoding.docx` | `core-specs/encodings/arrow/` — **no NodeSet**; see below |
+| `OPC-UA-Async-Services.docx` | `core-specs/async-services/` + `Opc.Ua.AsyncServices.NodeSet2.xml` — **base namespace**; see below |
 | `OPC-UA-Vision.docx` | `metaverse-specs/vision/` + `Opc.Ua.Vision.NodeSet2.xml` |
 | `OPC-UA-AI-Model-Management.docx` | `metaverse-specs/ai-model-management/` + `Opc.Ua.AiModelManagement.NodeSet2.xml` |
 

@@ -70,6 +70,16 @@ exists, that its NodeClass matches the declared class, that `IsAbstract` matches
 `:::abstract`, that a bracketed BrowseName matches a placeholder ModellingRule, and that
 every edge is a real Reference of that type in that direction.
 
+**An edge to an `external=` Node is checked from the end that is in the model.** Every
+figure anchors its types on a base-namespace supertype, so skipping those edges — which is
+what "one end is not in this NodeSet" first suggests — left the majority of edges
+unverified, and a `HasSubtype` drawn as an `Organizes` passed. A NodeSet does carry its own
+half: the inverse `HasSubtype` sits on the subtype and the inverse `HasComponent` on the
+child, each naming a NodeId outside the model. That verifies the ReferenceType and its
+direction, and where the far NodeId is a well-known base Node its BrowseName is verified
+too. Where it is not known, the edge is accepted on type and direction rather than guessed
+at.
+
 **Resolution walks the graph, not the name index.** This model has 46 BrowseNames borne by
 more than one Node — `CreateAsset` exists on the type *and* on the well-known instance, and
 so does most of the 1.02 surface. Resolving by name would check an edge against the wrong
