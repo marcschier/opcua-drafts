@@ -7,6 +7,137 @@
 > compatible with v1.00, and it is not normative, official or endorsed by the OPC Foundation.
 > Namespace URIs and NodeIds are provisional.
 
+## Agreement of Use
+
+COPYRIGHT RESTRICTIONS
+
+This document is provided "as is" by the OPC Foundation, ZVEI, and VDMA.
+
+Right of use for this companion specification is restricted to this companion specification and
+does not grant rights of use for referred documents.
+
+Right of use for this companion specification will be granted without cost.
+
+This document may be distributed through computer systems, printed or copied as long as the content
+remains unchanged and the document is not modified.
+
+OPC Foundation, ZVEI, and VDMA do not guarantee usability for any purpose and shall not be made
+liable for any case using the content of this document.
+
+The user of the document agrees to indemnify OPC Foundation, ZVEI, and VDMA and their officers,
+directors and agents harmless from all demands, claims, actions, losses, damages (including damages
+from personal injuries), costs and expenses (including attorneys' fees) which are in any way related
+to activities associated with its use of content from this companion specification.
+
+The document shall not be used in conjunction with company advertising, shall not be sold or
+licensed to any party.
+
+The intellectual property and copyright is solely owned by the OPC Foundation, ZVEI, and VDMA.
+
+PATENTS
+
+The attention of adopters is directed to the possibility that compliance with or adoption of OPC
+Foundation, ZVEI, or VDMA specifications may require use of an invention covered by patent rights.
+OPC Foundation, ZVEI, or VDMA shall not be responsible for identifying patents for which a license
+may be required by any OPC Foundation, ZVEI, or VDMA specification, or for conducting legal
+inquiries into the legal validity or scope of those patents that are brought to its attention. OPC
+Foundation, ZVEI, or VDMA specifications are prospective and advisory only. Prospective users are
+responsible for protecting themselves against liability for infringement of patents.
+
+WARRANTY AND LIABILITY DISCLAIMERS
+
+WHILE THIS PUBLICATION IS BELIEVED TO BE ACCURATE, IT IS PROVIDED "AS IS" AND MAY CONTAIN ERRORS OR
+MISPRINTS. THE OPC FOUNDATION NOR ZVEI NOR VDMA MAKES NO WARRANTY OF ANY KIND, EXPRESSED OR IMPLIED,
+WITH REGARD TO THIS PUBLICATION, INCLUDING BUT NOT LIMITED TO ANY WARRANTY OF TITLE OR OWNERSHIP,
+IMPLIED WARRANTY OF MERCHANTABILITY OR WARRANTY OF FITNESS FOR A PARTICULAR PURPOSE OR USE. IN NO
+EVENT SHALL THE OPC FOUNDATION NOR ZVEI NOR VDMA BE LIABLE FOR ERRORS CONTAINED HEREIN OR FOR
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, RELIANCE OR COVER DAMAGES, INCLUDING LOSS OF
+PROFITS, REVENUE, DATA OR USE, INCURRED BY ANY USER OR ANY THIRD PARTY IN CONNECTION WITH THE
+FURNISHING, PERFORMANCE, OR USE OF THIS MATERIAL, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGES.
+
+The entire risk as to the quality and performance of software developed using this companion
+specification is borne by you.
+
+RESTRICTED RIGHTS LEGEND
+
+This companion specification is provided with Restricted Rights. Use, duplication or disclosure by
+the U.S. government is subject to restrictions as set forth in (a) this Agreement pursuant to DFARs
+227.7202-3(a); (b) subparagraph (c)(1)(i) of the Rights in Technical Data and Computer Software
+clause at DFARs 252.227-7013; or (c) the Commercial Computer Software Restricted Rights clause at
+FAR 52.227-19 subdivision (c)(1) and (2), as applicable. Contractor / manufacturer are the OPC
+Foundation, 16101 N. 82nd Street, Suite 3B, Scottsdale, AZ, 85260-1830
+
+COMPLIANCE
+
+The combination of ZVEI, VDMA, and OPC Foundation shall at all times be the sole entities that may
+authorize developers, suppliers and sellers of hardware and software to use certification marks,
+trademarks or other special designations to indicate compliance with these materials as specified
+within this document. Products developed using this companion specification may claim compliance or
+conformance with this companion specification if and only if the software satisfactorily meets the
+certification requirements set by ZVEI, VDMA, or the OPC Foundation. Products that do not meet these
+requirements may claim only that the product was based on this companion specification and must not
+claim compliance or conformance with this companion specification.
+
+TRADEMARKS
+
+Most computer and software brand names have trademarks or registered trademarks. The individual
+trademarks have not been listed here.
+
+GENERAL PROVISIONS
+
+Should any provision of this Agreement be held to be void, invalid, unenforceable or illegal by a
+court, the validity and enforceability of the other provisions shall not be affected thereby.
+
+This Agreement shall be governed by and construed under the laws of Germany.
+
+This Agreement embodies the entire understanding between the parties with respect to, and supersedes
+any prior understanding or agreement (oral or written) relating to, this companion specification.
+
+## Contents
+
+- [1 Scope](#1-scope)
+- [2 Normative references](#2-normative-references)
+- [3 Terms, definitions and conventions](#3-terms-definitions-and-conventions)
+  - [3.1 Terms](#31-terms)
+  - [3.2 Abbreviations](#32-abbreviations)
+  - [3.3 Conventions](#33-conventions)
+  - [3.4 AddressSpace figures](#34-addressspace-figures)
+- [4 General information](#4-general-information)
+  - [4.1 The Asset Administration Shell](#41-the-asset-administration-shell)
+  - [4.2 OPC UA](#42-opc-ua)
+  - [4.3 What changed in version 3.00, and why it is breaking](#43-what-changed-in-version-300-and-why-it-is-breaking)
+- [5 Mapping rules](#5-mapping-rules)
+  - [5.1 General](#51-general)
+  - [5.2 Canonical value representation](#52-canonical-value-representation)
+  - [5.3 NodeId and BrowseName assignment](#53-nodeid-and-browsename-assignment)
+  - [5.4 Ordering](#54-ordering)
+  - [5.5 Absent versus empty](#55-absent-versus-empty)
+  - [5.6 Instance materialization](#56-instance-materialization)
+- [6 AAS metamodel ObjectTypes](#6-aas-metamodel-objecttypes)
+  - [6.1 Abstract bases](#61-abstract-bases)
+  - [6.2 Environment, shell and asset information](#62-environment-shell-and-asset-information)
+  - [6.3 Submodel and concept description](#63-submodel-and-concept-description)
+  - [6.4 Submodel elements](#64-submodel-elements)
+- [7 AAS DataTypes](#7-aas-datatypes)
+- [8 Round-trip conformance](#8-round-trip-conformance)
+- [9 The AAS Registry](#9-the-aas-registry)
+  - [9.1 The registry is folders of files](#91-the-registry-is-folders-of-files)
+  - [9.2 Registry types](#92-registry-types)
+  - [9.3 Identifiers](#93-identifiers)
+  - [9.4 Versioning and the lifecycle record](#94-versioning-and-the-lifecycle-record)
+  - [9.5 Discovery and resolution](#95-discovery-and-resolution)
+  - [9.6 Federation](#96-federation)
+  - [9.7 Disclosure tiers](#97-disclosure-tiers)
+  - [9.8 The xRegistry API over OPC UA](#98-the-xregistry-api-over-opc-ua)
+- [10 Profiles and conformance](#10-profiles-and-conformance)
+- [11 NodeSet validation](#11-nodeset-validation)
+- [Annex A — Information model](#annex-a-information-model)
+- [Annex B — Field coverage](#annex-b-field-coverage)
+- [Annex C — Migration from version 1.00](#annex-c-migration-from-version-100)
+- [Annex D — Correspondence to the xRegistry HTTP binding](#annex-d-correspondence-to-the-xregistry-http-binding)
+- [Annex E — Federation resolution](#annex-e-federation-resolution)
+
 ## 1 Scope
 
 This companion specification defines an OPC UA information model for the Asset Administration Shell
@@ -81,6 +212,42 @@ Node definitions follow the conventions of OPC 20020. The normative node referen
 
 The key words **shall**, **shall not**, **should**, **should not** and **may** are to be interpreted
 as described in OPC 10000-1.
+
+### 3.4 AddressSpace figures
+
+The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node
+of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded
+rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing
+on a shadow. An abstract type is set in *italics*, and a Node whose BrowseName is a placeholder is
+written in angle brackets. A `HasTypeDefinition` reference carries a solid arrowhead; a
+`HasComponent` reference is the plain unlabelled arrow; every other ReferenceType is drawn with its
+BrowseName on the arrow. A figure shows the part of the model its clause describes, never the whole
+of it.
+
+```mermaid
+flowchart LR
+  OBJ[Object, Variable or View]:::object
+  MTH(Method):::method
+  TYP[[ObjectType or VariableType]]:::objecttype
+  ABS[[abstract type]]:::objecttype,abstract
+  PH[&lt;Placeholder&gt;]:::object
+  TYP ==> ABS
+  OBJ --> MTH
+  OBJ -->|Organizes| PH
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
+Figure 1 — The notation used by the AddressSpace figures in this document
+
+Every figure that draws part of this specification's information model is re-derived from the
+NodeSet by `tools/validate_local.py`: each Node must exist with the NodeClass and abstractness the
+figure claims, and each edge must be a real Reference of that type in that direction. A node table
+is generated and so cannot drift; a figure is authored, and a wrong arrow looks exactly like a right
+one, so it is checked rather than trusted.
 
 ## 4 General information
 
@@ -242,7 +409,9 @@ The companion namespace is `http://opcfoundation.org/UA/I4AAS/`, model version 3
 NodeIds use the `1001+` block; final NodeIds are assigned by the OPC Foundation. The normative node
 reference is [Annex A](#annex-a); this clause describes intent.
 
-**Abstract bases** mirror the metamodel's own hierarchy, so that an element carries the members its
+### 6.1 Abstract bases
+
+The abstract bases mirror the metamodel's own hierarchy, so that an element carries the members its
 metamodel class gives it and no others: `AASReferableType` for everything with a short name,
 `AASIdentifiableType` for the three classes with a globally unique identifier, and
 `AASHasSemanticsType`, `AASHasKindType`, `AASHasDataSpecificationType` and `AASQualifiableType` for
@@ -253,21 +422,360 @@ the ObjectType, and it is carried anyway: a serialization produced from the Addr
 byte-identical to the one that produced it, and the metamodel's serialization includes this
 discriminator.
 
-**`AASEnvironmentType`** is the container and the root a generator materializes into.
+`AASIdentifiableType` carries the `Id` — up to 2048 characters of arbitrary text, which is why
+identity lives in a Property and in the String NodeId rather than in the BrowseName (clause 5.3).
 
-**`AASType`** is a shell. It holds `AssetInformation`, references to its submodels, and the
-derivation link from an instance to its type.
+<!-- model-figure: root=ns=2;i=1001 require=mandatory external=BaseObjectType -->
 
-**`AASSubmodelType`** is a submodel, holding its elements.
+```mermaid
+flowchart TD
+  BOT[[BaseObjectType]]:::objecttype
+  REF[[AASReferableType]]:::objecttype,abstract
+  IDF[[AASIdentifiableType]]:::objecttype,abstract
+  IDS[IdShort]:::variable
+  CAT[Category]:::variable
+  DSP[DisplayNameSet]:::variable
+  DSC[DescriptionSet]:::variable
+  EXT[Extensions]:::variable
+  MT[ModelType]:::variable
 
-**The element types** cover the metamodel's element set. Three deserve note:
+  BOT -->|HasSubtype| REF
+  REF -->|HasSubtype| IDF
+  REF -->|HasProperty| IDS
+  REF -->|HasProperty| CAT
+  REF -->|HasProperty| DSP
+  REF -->|HasProperty| DSC
+  REF -->|HasProperty| EXT
+  REF -->|HasProperty| MT
 
-- `AASPropertyType` carries the dual value representation of clause 5.2.
-- `AASSubmodelElementListType` is ordered, and its members carry `Index`.
-- `AASOperationType` carries its variables as references to the element nodes that hold them, rather
-  than duplicating those elements, so an operation's variables round-trip as the elements they are.
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
 
-**`AASConceptDescriptionType`** is the definition a semantic identifier resolves to.
+Figure 2 — `AASReferableType`, and the identity it gives every element
+
+<!-- model-figure: root=ns=2;i=1003 require=mandatory external=BaseObjectType -->
+
+```mermaid
+flowchart TD
+  BOT[[BaseObjectType]]:::objecttype
+  SEM[[AASHasSemanticsType]]:::objecttype,abstract
+  KND[[AASHasKindType]]:::objecttype,abstract
+  DS[[AASHasDataSpecificationType]]:::objecttype,abstract
+  QUA[[AASQualifiableType]]:::objecttype,abstract
+  SID[SemanticId]:::variable
+  SSI[SupplementalSemanticIds]:::variable
+  KIN[Kind]:::variable
+  EDS[EmbeddedDataSpecifications]:::variable
+  QLF[Qualifiers]:::variable
+
+  BOT -->|HasSubtype| SEM
+  BOT -->|HasSubtype| KND
+  BOT -->|HasSubtype| DS
+  BOT -->|HasSubtype| QUA
+  SEM -->|HasProperty| SID
+  SEM -->|HasProperty| SSI
+  KND -->|HasProperty| KIN
+  DS -->|HasProperty| EDS
+  QUA -->|HasProperty| QLF
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
+Figure 3 — The orthogonal aspect bases
+
+### 6.2 Environment, shell and asset information
+
+`AASEnvironmentType` is the container and the root a generator materializes into. Shells, submodels
+and concept descriptions are all held by it directly: a submodel is not owned by the shell that
+references it, and one submodel may be referenced by several shells, so nesting them inside shells
+would misrepresent the model.
+
+`AASType` is a shell. It holds `AssetInformation`, references to its submodels, and the derivation
+link from an instance to its type.
+
+<!-- model-figure: root=ns=2;i=1010 require=mandatory external=FolderType -->
+
+```mermaid
+flowchart TD
+  FLD[[FolderType]]:::objecttype
+  ENV[[AASEnvironmentType]]:::objecttype
+  SHELL[&lt;AssetAdministrationShell&gt;]:::object
+  SUBM[&lt;Submodel&gt;]:::object
+  CONC[&lt;ConceptDescription&gt;]:::object
+  AAS[[AASType]]:::objecttype
+  SM[[AASSubmodelType]]:::objecttype
+  CD[[AASConceptDescriptionType]]:::objecttype
+
+  FLD -->|HasSubtype| ENV
+  ENV -->|Organizes| SHELL
+  ENV -->|Organizes| SUBM
+  ENV -->|Organizes| CONC
+  SHELL ==> AAS
+  SUBM ==> SM
+  CONC ==> CD
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+```
+
+Figure 4 — `AASEnvironmentType`, the container a generator materializes
+
+<!-- model-figure: root=ns=2;i=1011 require=mandatory -->
+
+```mermaid
+flowchart TD
+  IDF[[AASIdentifiableType]]:::objecttype,abstract
+  AAS[[AASType]]:::objecttype
+  AI[AssetInformation]:::object
+  AIT[[AASAssetInformationType]]:::objecttype
+  SMR[SubmodelReferences]:::variable
+  DF[DerivedFrom]:::variable
+  EDS[EmbeddedDataSpecifications]:::variable
+  AK[AssetKind]:::variable
+  GAI[GlobalAssetId]:::variable
+  AT[AssetType]:::variable
+  SAI[SpecificAssetIds]:::variable
+  THU[DefaultThumbnail]:::variable
+
+  IDF -->|HasSubtype| AAS
+  AAS -->|HasComponent| AI
+  AI ==> AIT
+  AAS -->|HasProperty| SMR
+  AAS -->|HasProperty| DF
+  AAS -->|HasProperty| EDS
+  AIT -->|HasProperty| AK
+  AIT -->|HasProperty| GAI
+  AIT -->|HasProperty| AT
+  AIT -->|HasProperty| SAI
+  AIT -->|HasProperty| THU
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
+Figure 5 — `AASType` and the asset identity it carries
+
+### 6.3 Submodel and concept description
+
+`AASSubmodelType` is a submodel, holding its elements. `AASConceptDescriptionType` is the definition
+a semantic identifier resolves to — what makes two submodels from different vendors comparable.
+
+<!-- model-figure: root=ns=2;i=1013 require=mandatory -->
+
+```mermaid
+flowchart TD
+  IDF[[AASIdentifiableType]]:::objecttype,abstract
+  SM[[AASSubmodelType]]:::objecttype
+  CD[[AASConceptDescriptionType]]:::objecttype
+  SE[&lt;SubmodelElement&gt;]:::object
+  SET[[AASSubmodelElementType]]:::objecttype,abstract
+  KIN[Kind]:::variable
+  SID[SemanticId]:::variable
+  SSI[SupplementalSemanticIds]:::variable
+  QLF[Qualifiers]:::variable
+  EDS[EmbeddedDataSpecifications]:::variable
+  ICO[IsCaseOf]:::variable
+
+  IDF -->|HasSubtype| SM
+  IDF -->|HasSubtype| CD
+  SM -->|Organizes| SE
+  SE ==> SET
+  SM -->|HasProperty| KIN
+  SM -->|HasProperty| SID
+  SM -->|HasProperty| SSI
+  SM -->|HasProperty| QLF
+  SM -->|HasProperty| EDS
+  CD -->|HasProperty| ICO
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
+Figure 6 — `AASSubmodelType` and `AASConceptDescriptionType`
+
+### 6.4 Submodel elements
+
+The element types cover the metamodel's element set. Every one of them subtypes
+`AASSubmodelElementType`, which carries the semantics, qualifiers and data specifications an element
+may have, and the `Index` that gives a list member its position (clause 5.4).
+
+<!-- model-figure: root=ns=2;i=1020 require=mandatory -->
+
+```mermaid
+flowchart TD
+  REF[[AASReferableType]]:::objecttype,abstract
+  SET[[AASSubmodelElementType]]:::objecttype,abstract
+  PRP[[AASPropertyType]]:::objecttype
+  MLP[[AASMultiLanguagePropertyType]]:::objecttype
+  RNG[[AASRangeType]]:::objecttype
+  BLB[[AASBlobType]]:::objecttype
+  FIL[[AASFileType]]:::objecttype
+  REL[[AASReferenceElementType]]:::objecttype
+  RLE[[AASRelationshipElementType]]:::objecttype
+  ARE[[AASAnnotatedRelationshipElementType]]:::objecttype
+  SEC[[AASSubmodelElementCollectionType]]:::objecttype
+  SEL[[AASSubmodelElementListType]]:::objecttype
+  ENT[[AASEntityType]]:::objecttype
+  BEE[[AASBasicEventElementType]]:::objecttype
+  OPR[[AASOperationType]]:::objecttype
+  CAP[[AASCapabilityType]]:::objecttype
+
+  REF -->|HasSubtype| SET
+  SET -->|HasSubtype| PRP
+  SET -->|HasSubtype| MLP
+  SET -->|HasSubtype| RNG
+  SET -->|HasSubtype| BLB
+  SET -->|HasSubtype| FIL
+  SET -->|HasSubtype| REL
+  SET -->|HasSubtype| RLE
+  RLE -->|HasSubtype| ARE
+  SET -->|HasSubtype| SEC
+  SET -->|HasSubtype| SEL
+  SET -->|HasSubtype| ENT
+  SET -->|HasSubtype| BEE
+  SET -->|HasSubtype| OPR
+  SET -->|HasSubtype| CAP
+
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
+Figure 7 — The submodel element hierarchy
+
+Three element types deserve note, and they are the three the losslessness rules bear on.
+
+**`AASPropertyType`** carries the dual value representation of clause 5.2: a typed `Value` for the
+native projection, and a Mandatory lexical `RawValue` that is normative for round-tripping.
+**`AASRangeType`** carries its bounds the same way, and an absent bound means unbounded rather than
+zero.
+
+<!-- model-figure: root=ns=2;i=1021 require=mandatory -->
+
+```mermaid
+flowchart TD
+  SET[[AASSubmodelElementType]]:::objecttype,abstract
+  PRP[[AASPropertyType]]:::objecttype
+  RNG[[AASRangeType]]:::objecttype
+  VT[ValueType]:::variable
+  VAL[Value]:::variable
+  RAW[RawValue]:::variable
+  VID[ValueId]:::variable
+  RVT[ValueType]:::variable
+  MIN[Min]:::variable
+  MAX[Max]:::variable
+
+  SET -->|HasSubtype| PRP
+  SET -->|HasSubtype| RNG
+  PRP -->|HasProperty| VT
+  PRP -->|HasProperty| VAL
+  PRP -->|HasProperty| RAW
+  PRP -->|HasProperty| VID
+  RNG -->|HasProperty| RVT
+  RNG -->|HasProperty| MIN
+  RNG -->|HasProperty| MAX
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
+Figure 8 — Value fidelity: a value carried both natively and lexically
+
+**`AASSubmodelElementListType`** is ordered, and its members carry `Index` because OPC UA References
+are not. `AASSubmodelElementCollectionType` is unordered and its members are identified by their own
+short names.
+
+<!-- model-figure: root=ns=2;i=1031 require=mandatory -->
+
+```mermaid
+flowchart TD
+  SET[[AASSubmodelElementType]]:::objecttype,abstract
+  SEL[[AASSubmodelElementListType]]:::objecttype
+  SEC[[AASSubmodelElementCollectionType]]:::objecttype
+  ELM[&lt;Element&gt;]:::object
+  SUB[&lt;SubmodelElement&gt;]:::object
+  ORD[OrderRelevant]:::variable
+  TVL[TypeValueListElement]:::variable
+  SIL[SemanticIdListElement]:::variable
+  VTL[ValueTypeListElement]:::variable
+  IDX[Index]:::variable
+
+  SET -->|HasSubtype| SEL
+  SET -->|HasSubtype| SEC
+  SET -->|HasProperty| IDX
+  SEL -->|Organizes| ELM
+  SEC -->|Organizes| SUB
+  ELM ==> SET
+  SUB ==> SET
+  SEL -->|HasProperty| ORD
+  SEL -->|HasProperty| TVL
+  SEL -->|HasProperty| SIL
+  SEL -->|HasProperty| VTL
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
+Figure 9 — Ordered and unordered collections
+
+**`AASEntityType`** is a component of a composition; a self-managed entity carries the identifier of
+its own shell, which is what makes a bill of material traversable across organizations.
+**`AASOperationType`** carries its variables as references to the element nodes that hold them,
+rather than duplicating those elements, so an operation's variables round-trip as the elements they
+are.
+
+<!-- model-figure: root=ns=2;i=1032 require=mandatory -->
+
+```mermaid
+flowchart TD
+  SET[[AASSubmodelElementType]]:::objecttype,abstract
+  ENT[[AASEntityType]]:::objecttype
+  OPR[[AASOperationType]]:::objecttype
+  BEE[[AASBasicEventElementType]]:::objecttype
+  STM[&lt;Statement&gt;]:::object
+  VAR[&lt;Variable&gt;]:::object
+  ETY[EntityType]:::variable
+  GAI[GlobalAssetId]:::variable
+  SAI[SpecificAssetIds]:::variable
+  IN[InputVariables]:::variable
+  OUT[OutputVariables]:::variable
+  INO[InoutputVariables]:::variable
+  OBS[Observed]:::variable
+  DIR[Direction]:::variable
+  STA[State]:::variable
+
+  SET -->|HasSubtype| ENT
+  SET -->|HasSubtype| OPR
+  SET -->|HasSubtype| BEE
+  ENT -->|Organizes| STM
+  OPR -->|Organizes| VAR
+  ENT -->|HasProperty| ETY
+  ENT -->|HasProperty| GAI
+  ENT -->|HasProperty| SAI
+  OPR -->|HasProperty| IN
+  OPR -->|HasProperty| OUT
+  OPR -->|HasProperty| INO
+  BEE -->|HasProperty| OBS
+  BEE -->|HasProperty| DIR
+  BEE -->|HasProperty| STA
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
+Figure 10 — Composition, operations and events
 
 ## 7 AAS DataTypes
 
@@ -347,6 +855,82 @@ and conflating them would make it impossible to have one without the other.
 
 `AASSubmodelFileType` is one submodel document. `AASConceptDescriptionFileType` and
 `AASPackageFileType` are the corresponding resources for concept definitions and packages.
+
+<!-- model-figure: root=ns=2;i=1100 require=mandatory external=RegistryType,GroupType,ResourceType,Server -->
+
+```mermaid
+flowchart TD
+  BREG[[RegistryType]]:::objecttype
+  BGRP[[GroupType]]:::objecttype
+  BRES[[ResourceType]]:::objecttype
+  REG[[AASRegistryType]]:::objecttype
+  SGT[[AASShellGroupType]]:::objecttype
+  SFT[[AASSubmodelFileType]]:::objecttype
+  SG[&lt;ShellGroup&gt;]:::object
+  SM[&lt;Submodel&gt;]:::object
+  LOOK(LookupShellsByAssetLink):::method
+  GET(GetSubmodel):::method
+  AID[AasIdentifier]:::variable
+  SID[SubmodelIdentifier]:::variable
+  AK[AssetKind]:::variable
+
+  BREG -->|HasSubtype| REG
+  BGRP -->|HasSubtype| SGT
+  BRES -->|HasSubtype| SFT
+  REG -->|Organizes| SG
+  REG -->|HasComponent| LOOK
+  REG -->|HasComponent| GET
+  SG ==> SGT
+  SGT -->|Organizes| SM
+  SM ==> SFT
+  SGT -->|HasProperty| AID
+  SGT -->|HasProperty| AK
+  SFT -->|HasProperty| SID
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+```
+
+Figure 11 — The registry root, shells and their submodel documents
+
+The other three group types follow the same shape: a group folder holding resource files, each
+naming the source identity its identifier is derived from.
+
+<!-- model-figure: root=ns=2;i=1103 require=mandatory external=GroupType,ResourceType -->
+
+```mermaid
+flowchart TD
+  BGRP[[GroupType]]:::objecttype
+  BRES[[ResourceType]]:::objecttype
+  STG[[AASSubmodelTemplateGroupType]]:::objecttype
+  CDG[[AASConceptDictionaryGroupType]]:::objecttype
+  PSG[[AASPackageStoreGroupType]]:::objecttype
+  CDF[[AASConceptDescriptionFileType]]:::objecttype
+  PFT[[AASPackageFileType]]:::objecttype
+  TN[TemplateNamespace]:::variable
+  DI[DictionaryIdentifier]:::variable
+  SI[StoreIdentifier]:::variable
+  CI[ConceptIdentifier]:::variable
+  PI[PackageIdentifier]:::variable
+
+  BGRP -->|HasSubtype| STG
+  BGRP -->|HasSubtype| CDG
+  BGRP -->|HasSubtype| PSG
+  BRES -->|HasSubtype| CDF
+  BRES -->|HasSubtype| PFT
+  STG -->|HasProperty| TN
+  CDG -->|HasProperty| DI
+  PSG -->|HasProperty| SI
+  CDF -->|HasProperty| CI
+  PFT -->|HasProperty| PI
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+```
+
+Figure 12 — Templates, concept dictionaries and package stores, each with its source identity
 
 ### 9.3 Identifiers
 
