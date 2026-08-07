@@ -503,5 +503,31 @@
     "12": "6.11",
     "7.8": "6.7.8"
   },
-  "figures": []
+  "figures": [
+    {
+      "id": "fig-async-notation",
+      "caption": "Graphical notation used by the AddressSpace figures",
+      "pptx": "AsyncServices-FigNotation.pptx"
+    },
+    {
+      "id": "fig-async-capabilities",
+      "caption": "The capabilities Object and where a Client finds it",
+      "pptx": "AsyncServices-FigCapabilities.pptx"
+    },
+    {
+      "id": "fig-async-diagnostics",
+      "caption": "The diagnostics Object and its counters",
+      "pptx": "AsyncServices-FigDiagnostics.pptx"
+    },
+    {
+      "id": "fig-async-completed",
+      "caption": "The completion Event",
+      "pptx": "AsyncServices-FigCompletedEvent.pptx"
+    },
+    {
+      "id": "fig-async-audit",
+      "caption": "The audit Event",
+      "pptx": "AsyncServices-FigAuditEvent.pptx"
+    }
+  ]
 }

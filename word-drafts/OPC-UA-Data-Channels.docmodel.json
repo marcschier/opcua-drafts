@@ -6021,6 +6021,66 @@
         "style": "PARAGRAPH",
         "runs": [
           {
+            "r": "t",
+            "text": "The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in "
+          },
+          {
+            "r": "t",
+            "text": "italics",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", and a Node whose BrowseName is a placeholder is written in angle brackets. A "
+          },
+          {
+            "r": "code",
+            "text": "HasTypeDefinition"
+          },
+          {
+            "r": "t",
+            "text": " reference carries a solid arrowhead; a "
+          },
+          {
+            "r": "code",
+            "text": "HasComponent"
+          },
+          {
+            "r": "t",
+            "text": " reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow, and a "
+          },
+          {
+            "r": "code",
+            "text": "HasInterface"
+          },
+          {
+            "r": "t",
+            "text": " reference is dashed. A figure shows the part of the model its clause describes, never the whole of it."
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "7 The model",
+          "b": 0
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-dch-notation",
+        "caption": "Graphical notation used by the AddressSpace figures",
+        "source": "mermaid",
+        "mermaid": "flowchart LR\n  OBJ[Object, Variable or View]:::object\n  MTH(Method):::method\n  TYP[[ObjectType or VariableType]]:::objecttype\n  ABS[[abstract type]]:::objecttype,abstract\n  PH[&lt;Placeholder&gt;]:::object\n  TYP ==> ABS\n  OBJ --> MTH\n  OBJ -->|Organizes| PH\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef method fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px\n  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic",
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "7 The model",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
             "r": "code",
             "text": "IDataChannelSourceType"
           },
@@ -6096,7 +6156,49 @@
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
           "s": "7 The model",
-          "b": 0
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The Interface and the three facts a negotiation needs, and the concrete Object that implements it:"
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "7 The model",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "<!-- model-figure: root=i=65010 require=mandatory external=BaseInterfaceType,BaseObjectType -->"
+          }
+        ],
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "7 The model",
+          "b": 4
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-dch-types",
+        "caption": "The data channel Interface and the Object that implements it",
+        "source": "mermaid",
+        "mermaid": "flowchart TD\n  BIT[[BaseInterfaceType]]:::objecttype,abstract\n  IFACE[[IDataChannelSourceType]]:::objecttype,abstract\n  DIR[Direction]:::variable\n  MODES[SupportedDeliveryModes]:::variable\n  CT[ContentType]:::variable\n  BOT[[BaseObjectType]]:::objecttype,abstract\n  SRC[[DataChannelSourceType]]:::objecttype\n  CH[Channels]:::variable\n  DIAG[Diagnostics]:::variable\n\n  BIT -->|HasSubtype| IFACE\n  IFACE -->|HasProperty| DIR\n  IFACE -->|HasProperty| MODES\n  IFACE -->|HasProperty| CT\n  BOT -->|HasSubtype| SRC\n  SRC -.->|HasInterface| IFACE\n  SRC --> CH\n  SRC --> DIAG\n\n  classDef variable fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px\n  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic",
+        "src": {
+          "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
+          "s": "7 The model",
+          "b": 5
         }
       },
       {
@@ -6119,7 +6221,7 @@
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
           "s": "7 The model",
-          "b": 1
+          "b": 6
         }
       },
       {
@@ -6186,7 +6288,7 @@
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
           "s": "7 The model",
-          "b": 2
+          "b": 7
         }
       },
       {
@@ -6222,7 +6324,7 @@
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
           "s": "7 The model",
-          "b": 3
+          "b": 8
         }
       },
       {
@@ -6254,7 +6356,7 @@
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
           "s": "7 The model",
-          "b": 4
+          "b": 9
         }
       },
       {
@@ -6278,7 +6380,7 @@
         "src": {
           "f": "core-specs/data-channels/OPC-UA-Data-Channels.md",
           "s": "7 The model",
-          "b": 5
+          "b": 10
         }
       },
       {

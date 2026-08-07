@@ -315,7 +315,56 @@ No resume token is defined. Resumption would have to replay the sender's queue a
 
 ## 7 The model
 
+The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in *italics*, and a Node whose BrowseName is a placeholder is written in angle brackets. A `HasTypeDefinition` reference carries a solid arrowhead; a `HasComponent` reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow, and a `HasInterface` reference is dashed. A figure shows the part of the model its clause describes, never the whole of it.
+
+```mermaid
+flowchart LR
+  OBJ[Object, Variable or View]:::object
+  MTH(Method):::method
+  TYP[[ObjectType or VariableType]]:::objecttype
+  ABS[[abstract type]]:::objecttype,abstract
+  PH[&lt;Placeholder&gt;]:::object
+  TYP ==> ABS
+  OBJ --> MTH
+  OBJ -->|Organizes| PH
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
 **`IDataChannelSourceType`** is the Interface a streamable type implements. Its Mandatory Properties — `Direction`, `SupportedDeliveryModes`, `ContentType` — are the three facts without which a channel cannot be negotiated. Its Optional ones — `MaxFrameSize`, `MaxBitrate`, `Priority`, `MaxChannels` — are the limits a Client checks before committing. `MaxBitrate` is what lets a Client on a constrained link choose the substream instead of discovering the problem as discarded frames ten seconds in.
+
+The Interface and the three facts a negotiation needs, and the concrete Object that implements it:
+
+<!-- model-figure: root=i=65010 require=mandatory external=BaseInterfaceType,BaseObjectType -->
+
+```mermaid
+flowchart TD
+  BIT[[BaseInterfaceType]]:::objecttype,abstract
+  IFACE[[IDataChannelSourceType]]:::objecttype,abstract
+  DIR[Direction]:::variable
+  MODES[SupportedDeliveryModes]:::variable
+  CT[ContentType]:::variable
+  BOT[[BaseObjectType]]:::objecttype,abstract
+  SRC[[DataChannelSourceType]]:::objecttype
+  CH[Channels]:::variable
+  DIAG[Diagnostics]:::variable
+
+  BIT -->|HasSubtype| IFACE
+  IFACE -->|HasProperty| DIR
+  IFACE -->|HasProperty| MODES
+  IFACE -->|HasProperty| CT
+  BOT -->|HasSubtype| SRC
+  SRC -.->|HasInterface| IFACE
+  SRC --> CH
+  SRC --> DIAG
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
 
 A type gains the capability by adding one `HasInterface` reference. No supertype changes, no NodeId changes, no new required model. A companion specification that has already shipped can adopt this in a revision without breaking a single existing instance.
 

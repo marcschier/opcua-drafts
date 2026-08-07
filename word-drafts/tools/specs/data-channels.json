@@ -716,6 +716,16 @@
       "id": "fig-dch-session",
       "caption": "Opening and using a data channel",
       "pptx": "DataChannels-Fig1-Session.pptx"
+    },
+    {
+      "id": "fig-dch-notation",
+      "caption": "Graphical notation used by the AddressSpace figures",
+      "pptx": "DataChannels-FigNotation.pptx"
+    },
+    {
+      "id": "fig-dch-types",
+      "caption": "The data channel Interface and the Object that implements it",
+      "pptx": "DataChannels-FigTypes.pptx"
     }
   ]
 }

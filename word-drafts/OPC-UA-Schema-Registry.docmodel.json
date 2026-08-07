@@ -2268,6 +2268,108 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in "
+          },
+          {
+            "r": "t",
+            "text": "italics",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", and a Node whose BrowseName is a placeholder is written in angle brackets. A "
+          },
+          {
+            "r": "code",
+            "text": "HasTypeDefinition"
+          },
+          {
+            "r": "t",
+            "text": " reference carries a solid arrowhead; a "
+          },
+          {
+            "r": "code",
+            "text": "HasComponent"
+          },
+          {
+            "r": "t",
+            "text": " reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow. A figure shows the part of the model its clause describes, never the whole of it."
+          }
+        ],
+        "src": {
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6 Schema-specific information model",
+          "b": 1
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-sreg-notation",
+        "caption": "Graphical notation used by the AddressSpace figures",
+        "source": "mermaid",
+        "mermaid": "flowchart LR\n  OBJ[Object, Variable or View]:::object\n  MTH(Method):::method\n  TYP[[ObjectType or VariableType]]:::objecttype\n  ABS[[abstract type]]:::objecttype,abstract\n  PH[&lt;Placeholder&gt;]:::object\n  TYP ==> ABS\n  OBJ --> MTH\n  OBJ -->|Organizes| PH\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef method fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px\n  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic",
+        "src": {
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6 Schema-specific information model",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The three types narrow the xRegistry base to schemas: a registry of groups, a group keyed by an OPC UA namespace, and a schema file identified by its "
+          },
+          {
+            "r": "code",
+            "text": "SchemaId"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6 Schema-specific information model",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "<!-- model-figure: root=ns=2;i=62000 require=mandatory external=RegistryType,GroupType,ResourceType -->"
+          }
+        ],
+        "src": {
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6 Schema-specific information model",
+          "b": 4
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-sreg-types",
+        "caption": "The three schema types and the xRegistry bases they narrow",
+        "source": "mermaid",
+        "mermaid": "flowchart TD\n  BREG[[RegistryType]]:::objecttype\n  BGRP[[GroupType]]:::objecttype\n  BRES[[ResourceType]]:::objecttype\n  REG[[SchemaRegistryType]]:::objecttype\n  GRP[[SchemaGroupType]]:::objecttype\n  FILE[[SchemaFileType]]:::objecttype\n  SG[&lt;SchemaGroup&gt;]:::object\n  SCH[&lt;Schema&gt;]:::object\n  NSURI[NamespaceUri]:::variable\n  SID[SchemaId]:::variable\n  GET(GetSchema):::method\n\n  BREG -->|HasSubtype| REG\n  BGRP -->|HasSubtype| GRP\n  BRES -->|HasSubtype| FILE\n  REG --> SG\n  REG --> GET\n  SG ==> GRP\n  GRP -->|HasProperty| NSURI\n  GRP --> SCH\n  SCH ==> FILE\n  FILE -->|HasProperty| SID\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef variable fill:#eef3fa,stroke:#444\n  classDef method fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px",
+        "src": {
+          "f": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+          "s": "6 Schema-specific information model",
+          "b": 5
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-3",
         "title": "Registry root",

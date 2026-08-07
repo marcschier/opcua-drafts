@@ -7,7 +7,9 @@
     "generators",
     "data-channels",
     "arrow-encoding",
-    "async-services"
+    "async-services",
+    "vision",
+    "ai-model-management"
   ],
   "ready": [],
   "notAFit": [

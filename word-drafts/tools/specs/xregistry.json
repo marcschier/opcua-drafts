@@ -139,6 +139,9 @@
   },
 
   "figures": [
-    {"id": "fig-xreg-shape", "caption": "The registry is folders of files", "pptx": "xRegistry-Fig1-RegistryShape.pptx"}
+    {"id": "fig-xreg-shape", "caption": "The registry is folders of files", "pptx": "xRegistry-Fig1-RegistryShape.pptx"},
+    {"id": "fig-xreg-notation", "caption": "Graphical notation used by the AddressSpace figures", "pptx": "xRegistry-FigNotation.pptx"},
+    {"id": "fig-xreg-root", "caption": "The registry root and the group placeholder", "pptx": "xRegistry-FigRegistryType.pptx"},
+    {"id": "fig-xreg-group", "caption": "A group, its resources and the file they are", "pptx": "xRegistry-FigGroupType.pptx"}
   ]
 }

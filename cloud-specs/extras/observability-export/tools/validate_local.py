@@ -113,6 +113,24 @@ for cid in csv_ids:
     if cid not in defined: errors.append(f"csv id {cid} not in XML")
 
 print(f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   base ids: {len(UA) if UA is not None else 'skipped (no local base table)'}")
+# --- AddressSpace figures agree with the model they draw ------------------------
+# A node table is generated from the NodeSet and so cannot drift. A figure is authored,
+# and a wrong arrow looks exactly like a right one, so it is re-derived from the model.
+_fig_spec = os.path.join(GEN, 'OPC-UA-Observability-Export.md')
+_fig_tools = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", "word-drafts", "tools"))
+if os.path.isdir(_fig_tools) and os.path.exists(_fig_spec):
+    if _fig_tools not in sys.path:
+        sys.path.insert(0, _fig_tools)
+    try:
+        from opcdocx import nodeset_diagram as _nd
+    except ImportError as _exc:
+        warnings.append(f"model-figure check skipped: {_exc}")
+    else:
+        try:
+            errors.extend(_nd.check_markdown(_fig_spec, XML))
+        except ValueError as _exc:
+            errors.append(f"model figure: {_exc}")
+
 print(f"ERRORS: {len(errors)}")
 for e in errors[:50]: print("  ERR", e)
 print(f"WARNINGS: {len(warnings)}")

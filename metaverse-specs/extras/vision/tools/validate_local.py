@@ -147,6 +147,36 @@ def err(m):
     ERR.append(m)
 
 
+def check_model_figures(nodeset_path, spec_path):
+    """AddressSpace figures must agree with the NodeSet they draw.
+
+    A node table is generated from the NodeSet and so cannot drift. A figure is authored,
+    and a wrong arrow looks exactly like a right one, so every Node and Reference a figure
+    claims is re-derived from the model rather than read from the prose beside it.
+    """
+    here = os.path.dirname(os.path.abspath(__file__))
+    repo = os.path.normpath(os.path.join(here, "..", "..", "..", ".."))
+    tools = os.path.join(repo, "word-drafts", "tools")
+    if not os.path.isdir(tools) or not os.path.exists(spec_path):
+        err("model-figure check could not run: word-drafts/tools or the specification "
+            "markdown was not found")
+        return
+    if tools not in sys.path:
+        sys.path.insert(0, tools)
+    try:
+        from opcdocx import nodeset_diagram
+    except ImportError as exc:
+        # The parser lives in the Word tooling, whose dependencies are optional here.
+        # A missing one is a skip, not a wrong figure; CI installs them so the gate runs.
+        print(f"note: model-figure check skipped: {exc}")
+        return
+    try:
+        for message in nodeset_diagram.check_markdown(spec_path, nodeset_path):
+            err(message)
+    except ValueError as exc:
+        err(f"model figure: {exc}")
+
+
 def _name_matches(csv_name: str, browse_name: str) -> bool:
     """True if a CSV symbolic name resolves to a NodeSet BrowseName.
 
@@ -168,6 +198,8 @@ def main():
     except ET.ParseError as e:
         print(f"ERRORS: 1\n  XML parse error: {e}")
         sys.exit(1)
+    check_model_figures(path, os.path.normpath(
+        os.path.join(here, "..", "..", "..", "vision", "OPC-UA-Vision.md")))
     root = tree.getroot()
 
     models = root.findall(f"{NS}Models/{NS}Model")

@@ -161,6 +161,62 @@ The full node reference — every type, member, DataType and well-known instance
 
 The model uses non-hierarchical ReferenceTypes for cross-links that must not affect containment: `BindsToNode` links a bound item to the source Variable, event source or Program it exposes; `ExportedBy`/`Exports` links a binding to its optional Part 14 PubSub realization; `HasBaseBinding` links a derived or composed binding to a locally present base binding; and `Collects`/`CollectedBy` links the `Observability` registry to the instance-contained `ObservabilityBindingGroup` Objects.
 
+The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in *italics*, and a Node whose BrowseName is a placeholder is written in angle brackets. A `HasTypeDefinition` reference carries a solid arrowhead; a `HasComponent` reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow, and a `HasInterface` reference is dashed. A figure shows the part of the model its clause describes, never the whole of it.
+
+```mermaid
+flowchart LR
+  OBJ[Object, Variable or View]:::object
+  MTH(Method):::method
+  TYP[[ObjectType or VariableType]]:::objecttype
+  ABS[[abstract type]]:::objecttype,abstract
+  PH[&lt;Placeholder&gt;]:::object
+  TYP ==> ABS
+  OBJ --> MTH
+  OBJ -->|Organizes| PH
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
+An observable type carries binding groups, a group carries bindings, and a binding carries the bound items it exports:
+
+<!-- model-figure: root=ns=1;i=60018 require=mandatory external=FolderType,BaseInterfaceType -->
+
+```mermaid
+flowchart TD
+  BIT[[BaseInterfaceType]]:::objecttype,abstract
+  IOBS[[IObservableType]]:::objecttype,abstract
+  FOLDER[[FolderType]]:::objecttype
+  GRPT[[ObservabilityBindingGroupType]]:::objecttype
+  CSURI[CompanionSpecificationUri]:::variable
+  NSURIS[ModelNamespaceUris]:::variable
+  GRP[&lt;ObservabilityBindingGroup&gt;]:::object
+  BND[&lt;ObservabilityBinding&gt;]:::object
+  BNDT[[ObservabilityBindingType]]:::objecttype
+  KIND[SignalKind]:::variable
+  CLASSID[DataSetClassId]:::variable
+  ITEM[&lt;BoundItem&gt;]:::object
+
+  BIT -->|HasSubtype| IOBS
+  IOBS --> GRP
+  GRP ==> GRPT
+  FOLDER -->|HasSubtype| GRPT
+  GRPT -->|HasProperty| CSURI
+  GRPT -->|HasProperty| NSURIS
+  GRPT --> BND
+  BND ==> BNDT
+  BNDT -->|HasProperty| KIND
+  BNDT -->|HasProperty| CLASSID
+  BNDT --> ITEM
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
 ### 5.1 ObservabilityFolderType
 
 The server-wide `Observability` registry is an [`ObservabilityFolderType`](#type-ObservabilityFolderType) Object exposed as a component of the **Server Object**. It references, through [`Collects`](#type-Collects), every [`ObservabilityBindingGroupType`](#type-ObservabilityBindingGroupType) in the Server. A Client follows those references to the groups and browses each group's `<ObservabilityBinding>` children. No query Method is defined — Browse and Read already provide enumeration and selection, and requiring a Method would burden the classic Servers that are the common case.

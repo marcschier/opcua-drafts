@@ -163,7 +163,84 @@ A client browses `Server/RobotIntent/Controllers` to find every robot it may com
 
 ## 5 Information model
 
+The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in *italics*, and a Node whose BrowseName is a placeholder is written in angle brackets. A `HasTypeDefinition` reference carries a solid arrowhead; a `HasComponent` reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow. A figure shows the part of the model its clause describes, never the whole of it.
+
+```mermaid
+flowchart LR
+  OBJ[Object, Variable or View]:::object
+  MTH(Method):::method
+  TYP[[ObjectType or VariableType]]:::objecttype
+  ABS[[abstract type]]:::objecttype,abstract
+  PH[&lt;Placeholder&gt;]:::object
+  TYP ==> ABS
+  OBJ --> MTH
+  OBJ -->|Organizes| PH
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
 ### 5.1 Type hierarchy
+
+The entry point is a root Object holding the controllers a Server exposes:
+
+<!-- model-figure: root=ns=1;i=1001 require=mandatory external=BaseObjectType -->
+
+```mermaid
+flowchart TD
+  BOT[[BaseObjectType]]:::objecttype,abstract
+  ROOT[[RobotIntentRootType]]:::objecttype
+  VER[SpecificationVersion]:::variable
+  CTRLS[Controllers]:::object
+  CTRLT[[IntentControllerType]]:::objecttype
+
+  BOT -->|HasSubtype| ROOT
+  BOT -->|HasSubtype| CTRLT
+  ROOT -->|HasProperty| VER
+  ROOT --> CTRLS
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic
+```
+
+A controller carries the containers a client browses, the intent queue, and the control-ownership and submission Methods. The figure shows those; Annex A carries the full member list:
+
+<!-- model-figure: root=ns=1;i=1002 external=BaseObjectType -->
+
+```mermaid
+flowchart TD
+  CTRLT[[IntentControllerType]]:::objecttype
+  CAPS[Capabilities]:::object
+  FRAMES[Frames]:::object
+  TOOLS[Tools]:::object
+  LOCS[Locations]:::object
+  AXES[Axes]:::object
+  INTENTS[Intents]:::object
+  ACTIVE[ActiveIntent]:::variable
+  REQ(RequestControl):::method
+  SUBMIT(SubmitIntent):::method
+  CANCEL(CancelIntent):::method
+
+  CTRLT --> CAPS
+  CTRLT --> FRAMES
+  CTRLT --> TOOLS
+  CTRLT --> LOCS
+  CTRLT --> AXES
+  CTRLT --> INTENTS
+  CTRLT --> ACTIVE
+  CTRLT --> REQ
+  CTRLT --> SUBMIT
+  CTRLT --> CANCEL
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+```
 
 | Type | NodeId | Subtype of |
 |---|---|---|

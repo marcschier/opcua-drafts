@@ -480,6 +480,16 @@
       "id": "fig-sreg-shape",
       "caption": "The schema registry in the address space",
       "pptx": "SchemaRegistry-Fig1-Shape.pptx"
+    },
+    {
+      "id": "fig-sreg-notation",
+      "caption": "Graphical notation used by the AddressSpace figures",
+      "pptx": "SchemaRegistry-FigNotation.pptx"
+    },
+    {
+      "id": "fig-sreg-types",
+      "caption": "The three schema types and the xRegistry bases they narrow",
+      "pptx": "SchemaRegistry-FigTypes.pptx"
     }
   ]
 }

@@ -3013,6 +3013,58 @@
         "level": 2
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in "
+          },
+          {
+            "r": "t",
+            "text": "italics",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", and a Node whose BrowseName is a placeholder is written in angle brackets. A "
+          },
+          {
+            "r": "code",
+            "text": "HasTypeDefinition"
+          },
+          {
+            "r": "t",
+            "text": " reference carries a solid arrowhead; a "
+          },
+          {
+            "r": "code",
+            "text": "HasComponent"
+          },
+          {
+            "r": "t",
+            "text": " reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow. A figure shows the part of the model its clause describes, never the whole of it."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "5 Information‑model architecture",
+          "b": 0
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-gen-notation",
+        "caption": "Graphical notation used by the AddressSpace figures",
+        "source": "mermaid",
+        "mermaid": "flowchart LR\n  OBJ[Object, Variable or View]:::object\n  MTH(Method):::method\n  TYP[[ObjectType or VariableType]]:::objecttype\n  ABS[[abstract type]]:::objecttype,abstract\n  PH[&lt;Placeholder&gt;]:::object\n  TYP ==> ABS\n  OBJ --> MTH\n  OBJ -->|Organizes| PH\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef method fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px\n  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic",
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "5 Information‑model architecture",
+          "b": 1
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-5",
         "title": "Composition of a generator set",
@@ -3603,6 +3655,48 @@
           "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
           "s": "6.1 [GeneratorSetType](#type-GeneratorSetType)",
           "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The figure shows the Mandatory content — what a conforming generator set always has. The optional subsystems, signals and Methods listed above are omitted; Annex A carries the full member list."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.1 [GeneratorSetType](#type-GeneratorSetType)",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "<!-- model-figure: root=ns=1;i=1001 require=mandatory external=DeviceType -->"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.1 [GeneratorSetType](#type-GeneratorSetType)",
+          "b": 2
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-gen-setmembers",
+        "caption": "The Mandatory content of a generator set",
+        "source": "mermaid",
+        "mermaid": "flowchart TD\n  DEV[[DeviceType]]:::objecttype\n  GS[[GeneratorSetType]]:::objecttype\n  IDENT[Identification]:::object\n  STATE[OperatingState]:::object\n  MODE[OperatingMode]:::variable\n  ENGINE[Engine]:::object\n  ALT[Alternator]:::object\n  CTRL[Controller]:::object\n  RATINGS[Ratings]:::object\n\n  DEV -->|HasSubtype| GS\n  GS -->|HasAddIn| IDENT\n  GS --> STATE\n  GS --> MODE\n  GS --> ENGINE\n  GS --> ALT\n  GS --> CTRL\n  GS --> RATINGS\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef variable fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px",
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.1 [GeneratorSetType](#type-GeneratorSetType)",
+          "b": 3
         }
       },
       {
