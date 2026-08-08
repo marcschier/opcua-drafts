@@ -14,3 +14,8 @@ Thumbs.db
 # the public commit, and this rule is the second, independent barrier against
 # committing a private checkout into this public repository.
 node_modules/
+
+# The pinned upstream AAS example corpus (~2400 matched JSON/Turtle pairs).
+# Fetched on demand by companion-specs/AAS/jsonld/tools/fetch_corpus.py; the
+# hard cases needed for an offline run are vendored in jsonld/fixtures/ instead.
+companion-specs/AAS/jsonld/.corpus/
