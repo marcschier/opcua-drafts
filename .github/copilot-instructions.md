@@ -134,6 +134,32 @@ another bridge"* contrasts with an alternative design, and *"without invalidatin
 deployed connectors"* is a forward-looking property. Judge by whether the sentence describes the
 model or its past.
 
+**State the decision, not the reasoning that produced it.** A specification says what a Server
+does. It does not narrate what its author analysed, what alternative was rejected, or how
+hard-won the conclusion was, and it does not market its own choices with superlatives.
+
+Avoid: *"This is the one place where this specification does not reproduce its input byte for
+byte, so it states plainly what it does instead"*, *"the reason is a cardinality mismatch rather
+than a modelling preference"*, *"The consequence, stated rather than buried:"*, *"Four rows
+deserve their reasoning stated, because in each the obvious choice is wrong"*, *"Nothing in that
+sequence requires judgement, which is the point"*, *"a negative control, because a check that
+cannot fail is not evidence"*, *"is the honest choice"*, *"a corpus chosen to hurt"*.
+
+Write instead the mechanics: *"A value is compared in the xsd value space, not the lexical
+space"*, *"`ValueType` is Mandatory. The metamodel makes `valueType` mandatory and `value`
+optional, so a Property with no value has no value node to carry the declaration"*, *"No step in
+that sequence is implementation-defined"*.
+
+A short causal clause that a reader needs in order to implement correctly is not narration and
+should stay — *"because Browse is not required to return references in order"* tells an
+implementer why `Index` exists and what breaks without it. Judge by whether removing the clause
+would leave a reader unable to implement the rule, or merely less impressed.
+
+**Exploratory material does not belong in the document.** A clause weighing whether the
+specification should exist, comparing it with an unrelated technology, or recording an avenue
+that was considered and dropped belongs in a study, a `CHANGELOG.md` entry, or a pull request
+discussion. Delete it from the specification.
+
 ## Normative language
 
 **Match the house style of the target standards body.**
