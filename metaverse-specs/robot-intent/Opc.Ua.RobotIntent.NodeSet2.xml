@@ -1983,13 +1983,13 @@
   </UAObject>
   <UADataType NodeId="ns=1;i=3080" BrowseName="1:FastenIntentDataType">
     <DisplayName>FastenIntentDataType</DisplayName>
-    <Description>Drive a fastener at the target. This intent is deliberately THIN: OPC 40450 and OPC 40451 already define joining and tightening in full, so Joint references the joint in that model and the result belongs there. Restating those parameters here would create a second definition of the same fact.</Description>
+    <Description>Drive a fastener at the target. This intent is deliberately THIN: OPC 40450 and OPC 40451 already define joining and tightening in full, so where such a model is exposed, Joint references the joint in that model and the result belongs there; otherwise Joint is null and the remaining fastening parameters stand alone. Restating those parameters here would create a second definition of the same fact.</Description>
     <Category>RobotIntent DataTypes</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3076</Reference>
       <Reference ReferenceType="HasEncoding">ns=1;i=5028</Reference>
     </References>
-    <Definition Name="FastenIntentDataType"><Field Name="Joint" DataType="i=17"><Description>The joint being fastened, in an OPC UA joining or tightening model where one is implemented.</Description></Field><Field Name="ProgramNumber" DataType="i=7"><Description>The tightening program the tool is to run.</Description></Field><Field Name="TargetTorque" DataType="i=11"><Description>Target torque in newton metres, where the robot supplies it rather than the tool.</Description></Field><Field Name="TargetAngle" DataType="i=11"><Description>Target angle in radians, for angle-controlled strategies.</Description></Field><Field Name="SnugTorque" DataType="i=11"><Description>Torque at which angle counting begins, in newton metres.</Description></Field></Definition>
+    <Definition Name="FastenIntentDataType"><Field Name="Joint" DataType="i=17"><Description>The joint being fastened, in an OPC UA joining or tightening model where one is implemented; null otherwise.</Description></Field><Field Name="ProgramNumber" DataType="i=7"><Description>The tightening program the tool is to run.</Description></Field><Field Name="TargetTorque" DataType="i=11"><Description>Target torque in newton metres, where the robot supplies it rather than the tool.</Description></Field><Field Name="TargetAngle" DataType="i=11"><Description>Target angle in radians, for angle-controlled strategies.</Description></Field><Field Name="SnugTorque" DataType="i=11"><Description>Torque at which angle counting begins, in newton metres.</Description></Field></Definition>
   </UADataType>
   <UAObject NodeId="ns=1;i=5028" BrowseName="Default Binary" SymbolicName="DefaultBinary">
     <DisplayName>Default Binary</DisplayName>

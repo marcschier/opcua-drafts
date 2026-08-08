@@ -366,7 +366,7 @@ Each parameter set is the subset the vendor languages agree on — ABB `seamdata
 
 Two of these deserve their reasoning stated.
 
-**Fastening is deliberately thin.** OPC 40450 and OPC 40451 already define industrial joining and tightening in full, including step-wise results and traces. `FastenIntentDataType.Joint` therefore references the joint in that model and the result belongs there. Restating torque strategies here would create a second definition of a fact that specification already owns — the same reason `PickIntentDataType.Source` references a `Location` node instead of naming a station in a string.
+**Fastening is deliberately thin.** OPC 40450 and OPC 40451 already define industrial joining and tightening in full, including step-wise results and traces. Where a controller exposes such a model, `FastenIntentDataType.Joint` references the joint in that model and the result belongs there. Where no such model is exposed under the controller, `Joint` is null, the remaining fastening parameters stand alone, and a Server **shall** refuse a non-null `Joint` with `CapabilityNotSupported`. Restating torque strategies here would create a second definition of a fact that specification already owns — the same reason `PickIntentDataType.Source` references a `Location` node instead of naming a station in a string.
 
 **Palletising references a pattern, not a computed pose.** `Pattern` is a `LocationType`, so the geometry has one definition a client can read and subscribe to, rather than being recomputed from indices independently on both sides and disagreeing.
 
@@ -769,7 +769,7 @@ Reading, browsing and subscribing require no authority. Observation is always pe
 
 `IntentCapabilitiesType` is what makes an intent surface self-describing. A conformant Server **shall** populate it to reflect what it will actually accept — it is a contract, not documentation.
 
-`SupportedIntents` carries one `IntentCapabilityDataType` per accepted intent type, naming the DataType and declaring whether cancel, pause and retry are honoured for it, which buffer and blocking modes it accepts, and which named `Attributes` this Server recognises.
+`SupportedIntents` carries one `IntentCapabilityDataType` per accepted intent type, naming the DataType and declaring whether cancel, pause and retry are honoured for it, which buffer and blocking modes it accepts, and which named `Attributes` this Server recognises. It is intentionally at intent-type granularity; it does not define per-member capabilities. The member-level scope of `FastenIntentDataType.Joint` is therefore structural: a client tells whether non-null `Joint` values are meaningful by browsing for the OPC 40450 / OPC 40451 joining or tightening model under the controller.
 
 Four rules keep the declaration honest, and each is checkable against a running Server:
 
@@ -883,9 +883,11 @@ The expected type is fixed for every such member, so that "the expected type" is
 | `SetOutputIntentDataType.Output` | an `OutputSignalType` instance under the controller; `Value` **shall** match that signal's own DataType |
 | `CallProgramIntentDataType.Program`, `ProcessIntentDataType.ProcessProgram` | a `ProgramType` instance under the controller |
 | `WaitIntentDataType.Signal` | an `OutputSignalType` instance under the controller, or a Variable of DataType `Boolean` under it |
-| `FastenIntentDataType.Joint` | a joint in an OPC 40450 / OPC 40451 model where one is implemented; otherwise the intent's own parameters stand alone and the member is null |
+| `FastenIntentDataType.Joint` | a joint in an OPC 40450 / OPC 40451 model under the controller where one is implemented; otherwise the intent's own parameters stand alone and the member is null |
 
 `CallProgramIntentDataType` deserves particular care: it runs code the Server holds. A Server **shall** restrict it to programs it has published as `ProgramType` instances, and **shall not** accept a program identifier that names anything else.
+
+For `FastenIntentDataType.Joint`, absence of an OPC 40450 / OPC 40451 joining or tightening model under the controller is itself the discoverable structural statement that non-null `Joint` values are not supported. A Server in that case **shall** refuse a non-null `Joint` with `CapabilityNotSupported`. Where such a model is exposed, a `Joint` that does not resolve to a joint in that model is malformed input and **shall** be refused with `ParameterInvalid`.
 
 ### 11.4 Cybersecurity is in scope of the safety case
 
@@ -922,7 +924,7 @@ Requirements are of two kinds. **Structural** requirements are settled by readin
 | **RI-Process-ArcWeld** | `ArcWeldIntentDataType`. |
 | **RI-Process-SpotWeld** | `SpotWeldIntentDataType`. |
 | **RI-Process-Dispense** | `DispenseIntentDataType`. |
-| **RI-Process-Fasten** | `FastenIntentDataType`. Where an OPC UA joining or tightening model is implemented, `Joint` resolves into it. |
+| **RI-Process-Fasten** | `FastenIntentDataType`. Support for non-null `Joint` is structural: where an OPC UA joining or tightening model is implemented, `Joint` resolves into it; where no such model is exposed under the controller, `Joint` is null and a non-null `Joint` is refused with `CapabilityNotSupported`. |
 | **RI-Process-Palletise** | `PalletiseIntentDataType` and at least one `LocationType` describing a pattern. |
 | **RI-Process-SurfaceFinish** | `SurfaceFinishIntentDataType` and **RI-Force**. |
 | **RI-Grasp** | `GraspIntentDataType` and `ReleaseIntentDataType`, and at least one `ToolType` with a `TcpFrame`. |

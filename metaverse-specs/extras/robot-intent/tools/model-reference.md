@@ -1114,11 +1114,11 @@ Lay a bead of adhesive, sealant or paint along the path. The trigger distances e
 
 *Subtype of:* `ProcessIntentDataType`
 
-Drive a fastener at the target. This intent is deliberately THIN: OPC 40450 and OPC 40451 already define joining and tightening in full, so Joint references the joint in that model and the result belongs there. Restating those parameters here would create a second definition of the same fact.
+Drive a fastener at the target. This intent is deliberately THIN: OPC 40450 and OPC 40451 already define joining and tightening in full, so where such a model is exposed, Joint references the joint in that model and the result belongs there; otherwise Joint is null and the remaining fastening parameters stand alone. Restating those parameters here would create a second definition of the same fact.
 
 | Field | DataType | ValueRank | ArrayDimensions | Description |
 |---|---|---|---|---|
-| Joint | NodeId | Scalar |  | The joint being fastened, in an OPC UA joining or tightening model where one is implemented. |
+| Joint | NodeId | Scalar |  | The joint being fastened, in an OPC UA joining or tightening model where one is implemented; null otherwise. |
 | ProgramNumber | UInt32 | Scalar |  | The tightening program the tool is to run. |
 | TargetTorque | Double | Scalar |  | Target torque in newton metres, where the robot supplies it rather than the tool. |
 | TargetAngle | Double | Scalar |  | Target angle in radians, for angle-controlled strategies. |
