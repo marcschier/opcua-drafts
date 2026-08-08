@@ -593,6 +593,7 @@ Why an intent did not succeed. The set is deliberately small and diagnosable: a 
 | SafetyStop | 17 | A safety function acted. The safety system, not this interface, decided this. |
 | Other | 18 | A reason none of the above describes; see Message. |
 | SafetyLimitExceeded | 19 | Refused because the request would exceed a limit the safety system is enforcing. See clause 10.3. |
+| NoTransition | 20 | A mission branch point had no true outgoing transition, or the selected transition target did not resolve. See clause 7.4. |
 
 ### StopModeEnum — `ns=1;i=3010`
 
@@ -1113,11 +1114,11 @@ Lay a bead of adhesive, sealant or paint along the path. The trigger distances e
 
 *Subtype of:* `ProcessIntentDataType`
 
-Drive a fastener at the target. This intent is deliberately THIN: OPC 40450 and OPC 40451 already define joining and tightening in full, so Joint references the joint in that model and the result belongs there. Restating those parameters here would create a second definition of the same fact.
+Drive a fastener at the target. This intent is deliberately THIN: OPC 40450 and OPC 40451 already define joining and tightening in full, so where such a model is exposed, Joint references the joint in that model and the result belongs there; otherwise Joint is null and the remaining fastening parameters stand alone. Restating those parameters here would create a second definition of the same fact.
 
 | Field | DataType | ValueRank | ArrayDimensions | Description |
 |---|---|---|---|---|
-| Joint | NodeId | Scalar |  | The joint being fastened, in an OPC UA joining or tightening model where one is implemented. |
+| Joint | NodeId | Scalar |  | The joint being fastened, in an OPC UA joining or tightening model where one is implemented; null otherwise. |
 | ProgramNumber | UInt32 | Scalar |  | The tightening program the tool is to run. |
 | TargetTorque | Double | Scalar |  | Target torque in newton metres, where the robot supplies it rather than the tool. |
 | TargetAngle | Double | Scalar |  | Target angle in radians, for angle-controlled strategies. |
