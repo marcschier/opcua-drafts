@@ -22,17 +22,16 @@ them in this order, and records the disagreement below rather than silently choo
 2. **Generated examples** — they are produced by the same toolchain that produces the schemas.
 3. **`rdf.adoc` prose** — normative in intent, but demonstrably not what the artefacts do.
 
-## D1 — The root `Identifiable`'s `idShort` is not serialized
+## D1 — The JSON and RDF example generators emit different instances
 
-**Severity: high. Systematic, fully characterised.**
+**Severity: high for anyone using the corpus as an oracle. Not a defect in the RDF *serialization
+rules*, which was my first reading of it, but in the *example corpus*.**
 
-Of the 2 424 readable matched pairs, **2 383 differ from their JSON counterpart by exactly this
-rule and nothing else**, and the remaining 41 agree exactly — those being the cases whose root
-carries no `idShort`. There are **zero** unexplained differences, so this is a single defect rather
-than a family of them.
+The two halves of a matched pair are meant to describe one instance. Mostly they do not.
 
-The `idShort` of a root `AssetAdministrationShell`, `Submodel` or `ConceptDescription` produces no
-`aas:Referable/idShort` triple. The `idShort` of every nested element is serialized correctly.
+In 2 361 of 2 424 readable pairs the JSON root `Identifiable` carries an `idShort` for which the
+Turtle has no `aas:Referable/idShort` triple. Lifting those pairs and comparing as RDF graphs shows
+the root `idShort` is the **only** difference: suppress it and the graphs are isomorphic.
 
 ```jsonc
 // schemas/json/examples/generated/AdministrativeInformation/minimal.json
@@ -50,10 +49,30 @@ The `idShort` of a root `AssetAdministrationShell`, `Submodel` or `ConceptDescri
 .
 ```
 
-**Consequence for this specification.** The corpus is usable as a conformance oracle only once this
-deviation is declared. The lifting defined here emits the triple; the conformance runner therefore
-compares against the corpus *modulo D1*, and records D1 as an upstream defect rather than
-reproducing it.
+It is **not** a rule that the root `idShort` is dropped. In the `idShortOverPatternExamples` cases,
+where `idShort` is the subject of the test, the Turtle does carry it. The pattern is consistent with
+the two generators populating optional fields differently rather than with a serialization rule, and
+D7 below shows the divergence is not confined to `idShort`.
+
+**Consequence.** The corpus is usable as an oracle once this deviation is declared. The lifting
+defined here emits the triple; `tools/conformance.py` retries a failing case without it and counts
+the case as conforming when that alone reconciles the two.
+
+## D7 — The generators diverge on more than `idShort`
+
+**Severity: medium. 22 of 2 424 pairs.**
+
+In `Operation/idShortOverPatternExamples/*` the nested `Entity` differs in substance, not only in an
+optional label:
+
+| | JSON | Turtle |
+|---|---|---|
+| `entityType` | `SelfManagedEntity` | `SelfManagedEntity` |
+| `idShort` | `something_c8b0a9a0` | absent |
+| `globalAssetId` | absent | `urn:an-example03:cc3a7d47` |
+
+These are different instances, so no lifting can reconcile them and none should try. They are
+excluded from the oracle and reported upstream.
 
 ## D2 — Order is discarded, including where order carries meaning
 
@@ -132,9 +151,21 @@ is not a legal IRI, and retains the `id` literal unchanged in every case.
 `Blob/contentTypeOverPatternExamples/number prefix and suffix` do not parse. 2 424 of the 2 426
 matched pairs are usable.
 
+## Result
+
+Running `tools/conformance.py` over the pinned corpus:
+
+| | cases |
+|---|---|
+| isomorphic outright | 41 |
+| isomorphic once the root `idShort` is accounted for (D1) | 2 361 |
+| **conforming** | **2 402 of 2 424 (99.1%)** |
+| differing — generator divergence (D7) | 22 |
+| unreadable (D6) | 2 |
+
 ## Reporting
 
-D1 to D5 are to be reported upstream. D1, D3 and D4 are implementation or specification gaps that
-could be fixed without a breaking change. D2 is a design decision, and the report should present it
-as a question about `Reference/keys` specifically, where the loss is semantic rather than
+D1 to D7 are to be reported upstream. D1, D3, D4, D6 and D7 are implementation or specification gaps
+that could be fixed without a breaking change. D2 is a design decision, and the report should
+present it as a question about `Reference/keys` specifically, where the loss is semantic rather than
 cosmetic.
