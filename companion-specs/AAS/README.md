@@ -61,28 +61,27 @@ retrievable as it stood on a date.
 
 `AAS → AddressSpace → AAS` reproduces the original, and the reverse likewise. That requirement is
 what makes it possible to compile an AAS into a Server with a source generator, because a mapping in
-which any choice is left to the implementer cannot be generated. It forces four decisions:
+which any choice is left to the implementer cannot be generated. It forces five decisions:
 
-- **The xsd type mapping is injective.** Each of the thirty `DataTypeDefXsd` values gets its own
-  OPC UA DataType — a built-in where one already denotes it, a subtype defined here where two would
-  otherwise collide, as with `xs:anyURI` against `xs:string` or `xs:hexBinary` against
-  `xs:base64Binary`. The declared type is therefore recoverable from the value node and the value is
-  carried once. `ValueType` remains Mandatory only because the metamodel makes it mandatory while
-  making the value optional.
+- **Each xsd type is assigned its own OPC UA DataType.** A built-in where one denotes the type, a
+  subtype defined here where two would otherwise share one, as with `xs:anyURI` against `xs:string`
+  or `xs:hexBinary` against `xs:base64Binary`. The declared type is read from the value node, and
+  the value is carried once. `ValueType` remains Mandatory because the metamodel makes it mandatory
+  while making the value optional.
 - **Equivalence is judged in the xsd value space.** AAS carries values as strings and defines no
   equality on them; XML Schema defines identity on the value space and a canonical lexical form per
-  type. So a round trip emits the canonical form, and `"1.500000"` returns as `"1.5"` — equivalent,
-  not identical, and the specification says so rather than pretending otherwise.
+  type. A round trip emits the canonical form, so `"1.500000"` returns as `"1.5"`: equivalent, not
+  identical.
 - **Order is stated by the ReferenceType and recovered from `Index`.** A list whose `orderRelevant`
   is true uses `HasOrderedComponent`; one whose `orderRelevant` is false uses `HasComponent` and is
-  compared as a bag. `Index` is what makes a position recoverable, because Browse is not required to
-  return references in order.
+  compared as a bag. `Index` carries the position, because Browse is not required to return
+  references in order.
 - **Identity is deterministic**: String NodeIds built from the AAS identifier and the metamodel's
   own `idShortPath`, so the identifier a generator computes is the one the AAS API already uses.
 - **Absent and empty stay different**: an absent field has no node, an empty collection has a node
   with no children.
 
-Annex B of the specification is the proof — every metamodel field, and where it lives.
+Annex B of the specification lists every metamodel field and where it lives.
 
 ## Regenerate and validate
 
