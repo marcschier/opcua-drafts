@@ -19,6 +19,10 @@
     <Alias Alias="ByteString">i=15</Alias>
     <Alias Alias="ExpandedNodeId">i=18</Alias>
     <Alias Alias="Duration">i=290</Alias>
+    <Alias Alias="BaseDataType">i=24</Alias>
+    <Alias Alias="Integer">i=27</Alias>
+    <Alias Alias="UInteger">i=28</Alias>
+    <Alias Alias="DurationString">i=12879</Alias>
     <Alias Alias="Argument">i=296</Alias>
     <Alias Alias="KeyValuePair">i=14533</Alias>
     <Alias Alias="NodeId">i=17</Alias>
@@ -32,9 +36,89 @@
     <Alias Alias="HasComponent">i=47</Alias>
     <Alias Alias="HasEncoding">i=38</Alias>
   </Aliases>
+  <UADataType NodeId="ns=2;i=1180" BrowseName="2:AASAnyUri">
+    <DisplayName>AASAnyUri</DisplayName>
+    <Description>An xs:anyURI value. A subtype of String because xs:string already occupies String, and the two must stay distinguishable for the declared type to be recoverable from the value.</Description>
+    <Category>AAS-ValueFidelity</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=2;i=1181" BrowseName="2:AASHexBinary">
+    <DisplayName>AASHexBinary</DisplayName>
+    <Description>An xs:hexBinary value. The octets are the same as an xs:base64Binary value's, so the two differ only in how they were written; ByteString carries xs:base64Binary and this subtype carries the hexadecimal form.</Description>
+    <Category>AAS-ValueFidelity</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=15</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=2;i=1182" BrowseName="2:AASNonPositiveInteger">
+    <DisplayName>AASNonPositiveInteger</DisplayName>
+    <Description>An xs:nonPositiveInteger value: an integer at most zero.</Description>
+    <Category>AAS-ValueFidelity</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=27</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=2;i=1183" BrowseName="2:AASNegativeInteger">
+    <DisplayName>AASNegativeInteger</DisplayName>
+    <Description>An xs:negativeInteger value: an integer below zero. A subtype of AASNonPositiveInteger, mirroring the restriction hierarchy xsd itself defines.</Description>
+    <Category>AAS-ValueFidelity</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1182</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=2;i=1184" BrowseName="2:AASPositiveInteger">
+    <DisplayName>AASPositiveInteger</DisplayName>
+    <Description>An xs:positiveInteger value: an integer above zero. A subtype of UInteger, which carries xs:nonNegativeInteger.</Description>
+    <Category>AAS-ValueFidelity</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=28</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=2;i=1185" BrowseName="2:AASGYear">
+    <DisplayName>AASGYear</DisplayName>
+    <Description>An xs:gYear value, such as 2026. A Gregorian year denotes a period rather than an instant, and OPC UA has no DataType for a period, so the value is its lexical form.</Description>
+    <Category>AAS-ValueFidelity</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=2;i=1186" BrowseName="2:AASGYearMonth">
+    <DisplayName>AASGYearMonth</DisplayName>
+    <Description>An xs:gYearMonth value, such as 2026-08.</Description>
+    <Category>AAS-ValueFidelity</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=2;i=1187" BrowseName="2:AASGMonth">
+    <DisplayName>AASGMonth</DisplayName>
+    <Description>An xs:gMonth value, such as --08.</Description>
+    <Category>AAS-ValueFidelity</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=2;i=1188" BrowseName="2:AASGMonthDay">
+    <DisplayName>AASGMonthDay</DisplayName>
+    <Description>An xs:gMonthDay value, such as --08-07.</Description>
+    <Category>AAS-ValueFidelity</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
+    </References>
+  </UADataType>
+  <UADataType NodeId="ns=2;i=1189" BrowseName="2:AASGDay">
+    <DisplayName>AASGDay</DisplayName>
+    <Description>An xs:gDay value, such as ---07.</Description>
+    <Category>AAS-ValueFidelity</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
+    </References>
+  </UADataType>
   <UADataType NodeId="ns=2;i=1199" BrowseName="2:AASValueString">
     <DisplayName>AASValueString</DisplayName>
-    <Description>The xsd lexical form of a typed value, as authored. A subtype of String so that a lexical value is distinguishable from an ordinary string by its DataType rather than by which Variable it came from - the pattern OPC UA already uses for DecimalString, DurationString, DateString and TimeString. The xsd type the form denotes is declared separately, in ValueType.</Description>
+    <Description>The xsd lexical form of a value whose declared type is carried in a sibling field of the same Structure. A Structure field has one static DataType and cannot vary with a declared type, so a qualifier, an extension or a data specification carries its value lexically and its ValueType field says how to read it. A subtype of String so the field is recognizable as a lexical form rather than as text - the pattern OPC UA uses for DecimalString and DurationString. It is never the DataType of a Variable: a value node always carries the specific DataType clause 7.1 assigns to its declared xsd type.</Description>
     <Category>AAS-ValueFidelity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
@@ -106,11 +190,11 @@
   </UADataType>
   <UADataType NodeId="ns=2;i=1208" BrowseName="2:AASDataTypeDefXsdDataType">
     <DisplayName>AASDataTypeDefXsdDataType</DisplayName>
-    <Description>The xsd type a value is expressed in. Several of these have no faithful OPC UA equivalent, which is why a value is carried both as a typed Variable and as its exact lexical form.</Description>
+    <Description>The xsd type a value is expressed in. All thirty of the metamodel's values are listed. Each maps onto exactly one OPC UA DataType, given in clause 7.1, so the declared type is recoverable from the value node and never has to be guessed.</Description>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
     </References>
-    <Definition Name="AASDataTypeDefXsdDataType"><Field Name="AnyUri" Value="0"></Field><Field Name="Base64Binary" Value="1"></Field><Field Name="Boolean" Value="2"></Field><Field Name="Byte" Value="3"></Field><Field Name="Date" Value="4"></Field><Field Name="DateTime" Value="5"></Field><Field Name="Decimal" Value="6"><Description>Arbitrary precision; has no faithful OPC UA equivalent, so RawValue is the normative carrier.</Description></Field><Field Name="Double" Value="7"></Field><Field Name="Duration" Value="8"><Description>Has no native OPC UA equivalent; RawValue is the normative carrier.</Description></Field><Field Name="Float" Value="9"></Field><Field Name="GDay" Value="10"></Field><Field Name="GMonth" Value="11"></Field><Field Name="GMonthDay" Value="12"></Field><Field Name="GYear" Value="13"></Field><Field Name="GYearMonth" Value="14"><Description>Partial date; RawValue is the normative carrier.</Description></Field><Field Name="HexBinary" Value="15"></Field><Field Name="Int" Value="16"></Field><Field Name="Integer" Value="17"><Description>Unbounded; RawValue is the normative carrier.</Description></Field><Field Name="Long" Value="18"></Field><Field Name="NegativeInteger" Value="19"></Field><Field Name="NonNegativeInteger" Value="20"></Field><Field Name="NonPositiveInteger" Value="21"></Field><Field Name="PositiveInteger" Value="22"></Field><Field Name="Short" Value="23"></Field><Field Name="String" Value="24"></Field><Field Name="Time" Value="25"></Field><Field Name="UnsignedByte" Value="26"></Field><Field Name="UnsignedInt" Value="27"></Field><Field Name="UnsignedLong" Value="28"></Field><Field Name="UnsignedShort" Value="29"></Field></Definition>
+    <Definition Name="AASDataTypeDefXsdDataType"><Field Name="AnyUri" Value="0"></Field><Field Name="Base64Binary" Value="1"></Field><Field Name="Boolean" Value="2"></Field><Field Name="Byte" Value="3"></Field><Field Name="Date" Value="4"></Field><Field Name="DateTime" Value="5"></Field><Field Name="Decimal" Value="6"></Field><Field Name="Double" Value="7"></Field><Field Name="Duration" Value="8"></Field><Field Name="Float" Value="9"></Field><Field Name="GDay" Value="10"></Field><Field Name="GMonth" Value="11"></Field><Field Name="GMonthDay" Value="12"></Field><Field Name="GYear" Value="13"></Field><Field Name="GYearMonth" Value="14"></Field><Field Name="HexBinary" Value="15"></Field><Field Name="Int" Value="16"></Field><Field Name="Integer" Value="17"></Field><Field Name="Long" Value="18"></Field><Field Name="NegativeInteger" Value="19"></Field><Field Name="NonNegativeInteger" Value="20"></Field><Field Name="NonPositiveInteger" Value="21"></Field><Field Name="PositiveInteger" Value="22"></Field><Field Name="Short" Value="23"></Field><Field Name="String" Value="24"></Field><Field Name="Time" Value="25"></Field><Field Name="UnsignedByte" Value="26"></Field><Field Name="UnsignedInt" Value="27"></Field><Field Name="UnsignedLong" Value="28"></Field><Field Name="UnsignedShort" Value="29"></Field></Definition>
   </UADataType>
   <UADataType NodeId="ns=2;i=1209" BrowseName="2:AASDataTypeIec61360DataType">
     <DisplayName>AASDataTypeIec61360DataType</DisplayName>
@@ -135,6 +219,24 @@
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
     </References>
     <Definition Name="AASDisclosureTierDataType"><Field Name="Public" Value="0"><Description>Readable without authentication.</Description></Field><Field Name="Controlled" Value="1"><Description>Requires an authenticated role.</Description></Field></Definition>
+  </UADataType>
+  <UADataType NodeId="ns=2;i=1212" BrowseName="2:AASLoadStateDataType">
+    <DisplayName>AASLoadStateDataType</DisplayName>
+    <Description>The materialization state of one stored document under the updateable registry profile.</Description>
+    <Category>AAS-UpdateableRegistry</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+    </References>
+    <Definition Name="AASLoadStateDataType"><Field Name="Unloaded" Value="0"><Description>The document is stored but not materialized.</Description></Field><Field Name="Loading" Value="1"><Description>A shadow generation is being prepared and is not yet visible.</Description></Field><Field Name="Active" Value="2"><Description>The materialized nodes are the ones a Client sees.</Description></Field><Field Name="Superseded" Value="3"><Description>A newer generation has been switched in; this one still serves retained work.</Description></Field><Field Name="Retiring" Value="4"><Description>The superseded generation is draining and its nodes will be removed.</Description></Field><Field Name="Retired" Value="5"><Description>The generation's nodes have been removed.</Description></Field><Field Name="Failed" Value="6"><Description>The document did not validate or did not materialize. The stored document is kept and the previously active generation, where there was one, keeps serving.</Description></Field></Definition>
+  </UADataType>
+  <UADataType NodeId="ns=2;i=1213" BrowseName="2:AASMaterializationOutcomeDataType">
+    <DisplayName>AASMaterializationOutcomeDataType</DisplayName>
+    <Description>What a Materialize call did to one document.</Description>
+    <Category>AAS-UpdateableRegistry</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+    </References>
+    <Definition Name="AASMaterializationOutcomeDataType"><Field Name="Unchanged" Value="0"><Description>The document's digest was unchanged, so it was not re-materialized.</Description></Field><Field Name="Materialized" Value="1"><Description>A new generation was prepared and switched in.</Description></Field><Field Name="Retired" Value="2"><Description>The document's projection was removed.</Description></Field><Field Name="Failed" Value="3"><Description>The document did not validate or did not materialize. Diagnostic says why.</Description></Field></Definition>
   </UADataType>
   <UADataType NodeId="ns=2;i=1220" BrowseName="2:AASKeyDataType">
     <DisplayName>AASKeyDataType</DisplayName>
@@ -264,7 +366,7 @@
       <Reference ReferenceType="HasEncoding">ns=2;i=5010</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5011</Reference>
     </References>
-    <Definition Name="AASQualifierDataType"><Field Name="Kind" DataType="ns=2;i=1205"><Description>What the qualifier qualifies.</Description></Field><Field Name="Type" DataType="i=12"><Description>The qualifier type name.</Description></Field><Field Name="ValueType" DataType="ns=2;i=1208"><Description>The xsd type the value is expressed in.</Description></Field><Field Name="Value" DataType="ns=2;i=1199"><Description>The value in its exact lexical form.</Description></Field><Field Name="ValueId" DataType="ns=2;i=1221"><Description>A reference to the value, where it is itself an identified concept.</Description></Field><Field Name="SemanticId" DataType="ns=2;i=1221"><Description>The concept this qualifier is an occurrence of.</Description></Field><Field Name="SupplementalSemanticIds" DataType="ns=2;i=1221" ValueRank="1"><Description>Further concepts this qualifier corresponds to.</Description></Field></Definition>
+    <Definition Name="AASQualifierDataType"><Field Name="Kind" DataType="ns=2;i=1205"><Description>What the qualifier qualifies.</Description></Field><Field Name="Type" DataType="i=12"><Description>The qualifier type name.</Description></Field><Field Name="ValueType" DataType="ns=2;i=1208"><Description>The xsd type the value is expressed in.</Description></Field><Field Name="Value" DataType="ns=2;i=1199"><Description>The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type.</Description></Field><Field Name="ValueId" DataType="ns=2;i=1221"><Description>A reference to the value, where it is itself an identified concept.</Description></Field><Field Name="SemanticId" DataType="ns=2;i=1221"><Description>The concept this qualifier is an occurrence of.</Description></Field><Field Name="SupplementalSemanticIds" DataType="ns=2;i=1221" ValueRank="1"><Description>Further concepts this qualifier corresponds to.</Description></Field></Definition>
   </UADataType>
   <UAObject NodeId="ns=2;i=5010" BrowseName="Default Binary" ParentNodeId="ns=2;i=1225">
     <DisplayName>Default Binary</DisplayName>
@@ -312,7 +414,7 @@
       <Reference ReferenceType="HasEncoding">ns=2;i=5014</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5015</Reference>
     </References>
-    <Definition Name="AASDataSpecificationIec61360DataType"><Field Name="PreferredName" DataType="ns=2;i=1222" ValueRank="1"><Description>Preferred name per language.</Description></Field><Field Name="ShortName" DataType="ns=2;i=1222" ValueRank="1"><Description>Short name per language.</Description></Field><Field Name="Unit" DataType="i=12"><Description>Unit symbol.</Description></Field><Field Name="UnitId" DataType="ns=2;i=1221"><Description>Reference to the unit concept.</Description></Field><Field Name="SourceOfDefinition" DataType="i=12"><Description>Where the definition comes from.</Description></Field><Field Name="Symbol" DataType="i=12"><Description>Symbol for the concept.</Description></Field><Field Name="DataType" DataType="ns=2;i=1209"><Description>The IEC 61360 data type.</Description></Field><Field Name="Definition" DataType="ns=2;i=1222" ValueRank="1"><Description>Definition per language.</Description></Field><Field Name="ValueFormat" DataType="i=12"><Description>Format of the value.</Description></Field><Field Name="ValueList" DataType="i=12"><Description>Permitted values, serialized in the metamodel's own form.</Description></Field><Field Name="Value" DataType="ns=2;i=1199"><Description>The value in its exact lexical form.</Description></Field><Field Name="LevelType" DataType="i=12"><Description>Which of min, nom, typ and max apply.</Description></Field></Definition>
+    <Definition Name="AASDataSpecificationIec61360DataType"><Field Name="PreferredName" DataType="ns=2;i=1222" ValueRank="1"><Description>Preferred name per language.</Description></Field><Field Name="ShortName" DataType="ns=2;i=1222" ValueRank="1"><Description>Short name per language.</Description></Field><Field Name="Unit" DataType="i=12"><Description>Unit symbol.</Description></Field><Field Name="UnitId" DataType="ns=2;i=1221"><Description>Reference to the unit concept.</Description></Field><Field Name="SourceOfDefinition" DataType="i=12"><Description>Where the definition comes from.</Description></Field><Field Name="Symbol" DataType="i=12"><Description>Symbol for the concept.</Description></Field><Field Name="DataType" DataType="ns=2;i=1209"><Description>The IEC 61360 data type.</Description></Field><Field Name="Definition" DataType="ns=2;i=1222" ValueRank="1"><Description>Definition per language.</Description></Field><Field Name="ValueFormat" DataType="i=12"><Description>Format of the value.</Description></Field><Field Name="ValueList" DataType="i=12"><Description>Permitted values, serialized in the metamodel's own form.</Description></Field><Field Name="Value" DataType="ns=2;i=1199"><Description>The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type.</Description></Field><Field Name="LevelType" DataType="i=12"><Description>Which of min, nom, typ and max apply.</Description></Field></Definition>
   </UADataType>
   <UAObject NodeId="ns=2;i=5014" BrowseName="Default Binary" ParentNodeId="ns=2;i=1227">
     <DisplayName>Default Binary</DisplayName>
@@ -336,7 +438,7 @@
       <Reference ReferenceType="HasEncoding">ns=2;i=5016</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5017</Reference>
     </References>
-    <Definition Name="AASExtensionDataType"><Field Name="Name" DataType="i=12"><Description>Extension name.</Description></Field><Field Name="ValueType" DataType="ns=2;i=1208"><Description>The xsd type the value is expressed in.</Description></Field><Field Name="Value" DataType="ns=2;i=1199"><Description>The value in its exact lexical form.</Description></Field><Field Name="RefersTo" DataType="ns=2;i=1221" ValueRank="1"><Description>What the extension refers to.</Description></Field><Field Name="SemanticId" DataType="ns=2;i=1221"><Description>The concept this extension is an occurrence of.</Description></Field><Field Name="SupplementalSemanticIds" DataType="ns=2;i=1221" ValueRank="1"><Description>Further concepts this extension corresponds to.</Description></Field></Definition>
+    <Definition Name="AASExtensionDataType"><Field Name="Name" DataType="i=12"><Description>Extension name.</Description></Field><Field Name="ValueType" DataType="ns=2;i=1208"><Description>The xsd type the value is expressed in.</Description></Field><Field Name="Value" DataType="ns=2;i=1199"><Description>The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type.</Description></Field><Field Name="RefersTo" DataType="ns=2;i=1221" ValueRank="1"><Description>What the extension refers to.</Description></Field><Field Name="SemanticId" DataType="ns=2;i=1221"><Description>The concept this extension is an occurrence of.</Description></Field><Field Name="SupplementalSemanticIds" DataType="ns=2;i=1221" ValueRank="1"><Description>Further concepts this extension corresponds to.</Description></Field></Definition>
   </UADataType>
   <UAObject NodeId="ns=2;i=5016" BrowseName="Default Binary" ParentNodeId="ns=2;i=1228">
     <DisplayName>Default Binary</DisplayName>
@@ -448,21 +550,46 @@
       <Reference ReferenceType="HasEncoding" IsForward="false">ns=2;i=1232</Reference>
     </References>
   </UAObject>
+  <UADataType NodeId="ns=2;i=1233" BrowseName="2:AASMaterializationResultDataType">
+    <DisplayName>AASMaterializationResultDataType</DisplayName>
+    <Description>The result of materializing one document. A call returns one of these per document it considered, so a caller learns which documents were skipped as unchanged and which failed, not merely whether the call succeeded.</Description>
+    <Category>AAS-UpdateableRegistry</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+      <Reference ReferenceType="HasEncoding">ns=2;i=5026</Reference>
+      <Reference ReferenceType="HasEncoding">ns=2;i=5027</Reference>
+    </References>
+    <Definition Name="AASMaterializationResultDataType"><Field Name="Xid" DataType="i=12"><Description>The registry-relative path of the document this result is about.</Description></Field><Field Name="Outcome" DataType="ns=2;i=1213"><Description>What the call did to it.</Description></Field><Field Name="VersionId" DataType="i=12"><Description>The version that is now active for this document, where one is.</Description></Field><Field Name="MaterializedNode" DataType="i=17"><Description>The root node of the generation now serving this document, where it materialized.</Description></Field><Field Name="Diagnostic" DataType="i=12"><Description>Why the document failed, where it did. Empty otherwise.</Description></Field></Definition>
+  </UADataType>
+  <UAObject NodeId="ns=2;i=5026" BrowseName="Default Binary" ParentNodeId="ns=2;i=1233">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=2;i=1233</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=2;i=5027" BrowseName="Default JSON" ParentNodeId="ns=2;i=1233">
+    <DisplayName>Default JSON</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=2;i=1233</Reference>
+    </References>
+  </UAObject>
   <UAObjectType NodeId="ns=2;i=1001" BrowseName="2:AASReferableType" IsAbstract="true">
     <DisplayName>AASReferableType</DisplayName>
     <Description>Abstract base of everything in the metamodel that can be referred to by a short name. Carries the identifying and descriptive attributes every element has.</Description>
     <Category>AAS-Metamodel</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5026</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5027</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5028</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5029</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5030</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5031</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5032</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5033</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5026" BrowseName="2:IdShort" ParentNodeId="ns=2;i=1001" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5028" BrowseName="2:IdShort" ParentNodeId="ns=2;i=1001" DataType="String" ValueRank="-1">
     <DisplayName>IdShort</DisplayName>
     <Description>The short name, unique only within its parent. It is never an identifier: two elements from different publishers routinely share one. Absent for an element inside a SubmodelElementList, which is addressed by index instead.</Description>
     <References>
@@ -471,7 +598,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1001</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5027" BrowseName="2:Category" ParentNodeId="ns=2;i=1001" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5029" BrowseName="2:Category" ParentNodeId="ns=2;i=1001" DataType="String" ValueRank="-1">
     <DisplayName>Category</DisplayName>
     <Description>Deprecated in the metamodel and retained only so that a document carrying it round-trips unchanged.</Description>
     <References>
@@ -480,7 +607,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1001</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5028" BrowseName="2:DisplayNameSet" ParentNodeId="ns=2;i=1001" DataType="ns=2;i=1222" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5030" BrowseName="2:DisplayNameSet" ParentNodeId="ns=2;i=1001" DataType="ns=2;i=1222" ValueRank="1">
     <DisplayName>DisplayNameSet</DisplayName>
     <Description>Display name per language.</Description>
     <References>
@@ -489,7 +616,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1001</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5029" BrowseName="2:DescriptionSet" ParentNodeId="ns=2;i=1001" DataType="ns=2;i=1222" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5031" BrowseName="2:DescriptionSet" ParentNodeId="ns=2;i=1001" DataType="ns=2;i=1222" ValueRank="1">
     <DisplayName>DescriptionSet</DisplayName>
     <Description>Description per language.</Description>
     <References>
@@ -498,7 +625,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1001</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5030" BrowseName="2:Extensions" ParentNodeId="ns=2;i=1001" DataType="ns=2;i=1228" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5032" BrowseName="2:Extensions" ParentNodeId="ns=2;i=1001" DataType="ns=2;i=1228" ValueRank="1">
     <DisplayName>Extensions</DisplayName>
     <Description>Proprietary extensions, preserved verbatim.</Description>
     <References>
@@ -507,7 +634,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1001</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5031" BrowseName="2:ModelType" ParentNodeId="ns=2;i=1001" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5033" BrowseName="2:ModelType" ParentNodeId="ns=2;i=1001" DataType="String" ValueRank="-1">
     <DisplayName>ModelType</DisplayName>
     <Description>The metamodel class name of this element. It is redundant with the ObjectType and is carried so that a serialization produced from the AddressSpace is byte-identical to the one that produced it.</Description>
     <References>
@@ -522,11 +649,11 @@
     <Category>AAS-Metamodel</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1001</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5032</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5033</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5034</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5035</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5032" BrowseName="2:Id" ParentNodeId="ns=2;i=1002" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5034" BrowseName="2:Id" ParentNodeId="ns=2;i=1002" DataType="String" ValueRank="-1">
     <DisplayName>Id</DisplayName>
     <Description>The globally unique identifier, up to 2048 characters. It is arbitrary text and can never be a BrowseName, so it is carried here and the node is named by the derived identifier instead.</Description>
     <References>
@@ -535,7 +662,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1002</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5033" BrowseName="2:Administration" ParentNodeId="ns=2;i=1002" DataType="ns=2;i=1224" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5035" BrowseName="2:Administration" ParentNodeId="ns=2;i=1002" DataType="ns=2;i=1224" ValueRank="-1">
     <DisplayName>Administration</DisplayName>
     <Description>Administrative information: a single current revision, with no history.</Description>
     <References>
@@ -550,11 +677,11 @@
     <Category>AAS-Metamodel</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5034</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5035</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5036</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5037</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5034" BrowseName="2:SemanticId" ParentNodeId="ns=2;i=1003" DataType="ns=2;i=1221" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5036" BrowseName="2:SemanticId" ParentNodeId="ns=2;i=1003" DataType="ns=2;i=1221" ValueRank="-1">
     <DisplayName>SemanticId</DisplayName>
     <Description>The concept this element is an occurrence of. It is what makes an element discoverable by meaning rather than by name.</Description>
     <References>
@@ -563,7 +690,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1003</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5035" BrowseName="2:SupplementalSemanticIds" ParentNodeId="ns=2;i=1003" DataType="ns=2;i=1221" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5037" BrowseName="2:SupplementalSemanticIds" ParentNodeId="ns=2;i=1003" DataType="ns=2;i=1221" ValueRank="1">
     <DisplayName>SupplementalSemanticIds</DisplayName>
     <Description>Further concepts this element corresponds to, which is how one element is made discoverable through more than one dictionary.</Description>
     <References>
@@ -578,10 +705,10 @@
     <Category>AAS-Metamodel</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5036</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5038</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5036" BrowseName="2:Kind" ParentNodeId="ns=2;i=1004" DataType="ns=2;i=1201" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5038" BrowseName="2:Kind" ParentNodeId="ns=2;i=1004" DataType="ns=2;i=1201" ValueRank="-1">
     <DisplayName>Kind</DisplayName>
     <Description>Whether this element defines a shape or carries values.</Description>
     <References>
@@ -596,10 +723,10 @@
     <Category>AAS-Metamodel</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5037</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5039</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5037" BrowseName="2:EmbeddedDataSpecifications" ParentNodeId="ns=2;i=1005" DataType="ns=2;i=1226" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5039" BrowseName="2:EmbeddedDataSpecifications" ParentNodeId="ns=2;i=1005" DataType="ns=2;i=1226" ValueRank="1">
     <DisplayName>EmbeddedDataSpecifications</DisplayName>
     <Description>Data specifications carried by this element.</Description>
     <References>
@@ -614,10 +741,10 @@
     <Category>AAS-Metamodel</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5038</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5040</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5038" BrowseName="2:Qualifiers" ParentNodeId="ns=2;i=1006" DataType="ns=2;i=1225" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5040" BrowseName="2:Qualifiers" ParentNodeId="ns=2;i=1006" DataType="ns=2;i=1225" ValueRank="1">
     <DisplayName>Qualifiers</DisplayName>
     <Description>Qualifiers constraining or annotating this element.</Description>
     <References>
@@ -633,12 +760,12 @@
     <Category>AAS-InstanceMaterialization</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=61</Reference>
-      <Reference ReferenceType="Organizes">ns=2;i=5039</Reference>
-      <Reference ReferenceType="Organizes">ns=2;i=5040</Reference>
       <Reference ReferenceType="Organizes">ns=2;i=5041</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=5042</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=5043</Reference>
     </References>
   </UAObjectType>
-  <UAObject NodeId="ns=2;i=5039" BrowseName="2:&lt;AssetAdministrationShell&gt;" ParentNodeId="ns=2;i=1010">
+  <UAObject NodeId="ns=2;i=5041" BrowseName="2:&lt;AssetAdministrationShell&gt;" ParentNodeId="ns=2;i=1010">
     <DisplayName>&lt;AssetAdministrationShell&gt;</DisplayName>
     <Description>A shell held by this environment.</Description>
     <References>
@@ -647,7 +774,7 @@
       <Reference ReferenceType="Organizes" IsForward="false">ns=2;i=1010</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="ns=2;i=5040" BrowseName="2:&lt;Submodel&gt;" ParentNodeId="ns=2;i=1010">
+  <UAObject NodeId="ns=2;i=5042" BrowseName="2:&lt;Submodel&gt;" ParentNodeId="ns=2;i=1010">
     <DisplayName>&lt;Submodel&gt;</DisplayName>
     <Description>A submodel held by this environment. Submodels are top-level: one submodel may be referenced by several shells, which is why they are not nested inside them.</Description>
     <References>
@@ -656,7 +783,7 @@
       <Reference ReferenceType="Organizes" IsForward="false">ns=2;i=1010</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="ns=2;i=5041" BrowseName="2:&lt;ConceptDescription&gt;" ParentNodeId="ns=2;i=1010">
+  <UAObject NodeId="ns=2;i=5043" BrowseName="2:&lt;ConceptDescription&gt;" ParentNodeId="ns=2;i=1010">
     <DisplayName>&lt;ConceptDescription&gt;</DisplayName>
     <Description>A concept description held by this environment.</Description>
     <References>
@@ -672,13 +799,13 @@
     <Category>AAS-InstanceMaterialization</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1002</Reference>
-      <Reference ReferenceType="HasComponent">ns=2;i=5042</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5043</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5044</Reference>
+      <Reference ReferenceType="HasComponent">ns=2;i=5044</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5045</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5046</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5047</Reference>
     </References>
   </UAObjectType>
-  <UAObject NodeId="ns=2;i=5042" BrowseName="2:AssetInformation" ParentNodeId="ns=2;i=1011">
+  <UAObject NodeId="ns=2;i=5044" BrowseName="2:AssetInformation" ParentNodeId="ns=2;i=1011">
     <DisplayName>AssetInformation</DisplayName>
     <Description>The identity of the asset this shell represents.</Description>
     <References>
@@ -687,7 +814,7 @@
       <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1011</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=2;i=5043" BrowseName="2:SubmodelReferences" ParentNodeId="ns=2;i=1011" DataType="ns=2;i=1221" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5045" BrowseName="2:SubmodelReferences" ParentNodeId="ns=2;i=1011" DataType="ns=2;i=1221" ValueRank="1">
     <DisplayName>SubmodelReferences</DisplayName>
     <Description>References to the submodels describing this asset. A submodel is not owned by the shell that references it.</Description>
     <References>
@@ -696,7 +823,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1011</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5044" BrowseName="2:DerivedFrom" ParentNodeId="ns=2;i=1011" DataType="ns=2;i=1221" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5046" BrowseName="2:DerivedFrom" ParentNodeId="ns=2;i=1011" DataType="ns=2;i=1221" ValueRank="-1">
     <DisplayName>DerivedFrom</DisplayName>
     <Description>The Type shell this Instance shell was derived from, so an individual item can be traced to its product model.</Description>
     <References>
@@ -705,7 +832,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1011</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5045" BrowseName="2:EmbeddedDataSpecifications" ParentNodeId="ns=2;i=1011" DataType="ns=2;i=1226" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5047" BrowseName="2:EmbeddedDataSpecifications" ParentNodeId="ns=2;i=1011" DataType="ns=2;i=1226" ValueRank="1">
     <DisplayName>EmbeddedDataSpecifications</DisplayName>
     <Description>Data specifications carried by this shell.</Description>
     <References>
@@ -720,14 +847,14 @@
     <Category>AAS-Metamodel</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5046</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5047</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5048</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5049</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5050</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5051</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5052</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5046" BrowseName="2:AssetKind" ParentNodeId="ns=2;i=1012" DataType="ns=2;i=1200" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5048" BrowseName="2:AssetKind" ParentNodeId="ns=2;i=1012" DataType="ns=2;i=1200" ValueRank="-1">
     <DisplayName>AssetKind</DisplayName>
     <Description>Whether the asset is a product model, an individual item, a batch, a role, or none of these.</Description>
     <References>
@@ -736,7 +863,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1012</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5047" BrowseName="2:GlobalAssetId" ParentNodeId="ns=2;i=1012" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5049" BrowseName="2:GlobalAssetId" ParentNodeId="ns=2;i=1012" DataType="String" ValueRank="-1">
     <DisplayName>GlobalAssetId</DisplayName>
     <Description>The globally unique identifier of the asset itself. Where the asset carries an identification link, that link is this value, and it is what connects a code scanned from a physical product to this Server.</Description>
     <References>
@@ -745,7 +872,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1012</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5048" BrowseName="2:AssetType" ParentNodeId="ns=2;i=1012" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5050" BrowseName="2:AssetType" ParentNodeId="ns=2;i=1012" DataType="String" ValueRank="-1">
     <DisplayName>AssetType</DisplayName>
     <Description>The identifier of the asset type this asset is an occurrence of.</Description>
     <References>
@@ -754,7 +881,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1012</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5049" BrowseName="2:SpecificAssetIds" ParentNodeId="ns=2;i=1012" DataType="ns=2;i=1223" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5051" BrowseName="2:SpecificAssetIds" ParentNodeId="ns=2;i=1012" DataType="ns=2;i=1223" ValueRank="1">
     <DisplayName>SpecificAssetIds</DisplayName>
     <Description>The additional keys the asset is discoverable by.</Description>
     <References>
@@ -763,7 +890,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1012</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5050" BrowseName="2:DefaultThumbnail" ParentNodeId="ns=2;i=1012" DataType="ns=2;i=1229" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5052" BrowseName="2:DefaultThumbnail" ParentNodeId="ns=2;i=1012" DataType="ns=2;i=1229" ValueRank="-1">
     <DisplayName>DefaultThumbnail</DisplayName>
     <Description>A pointer to a representative image of the asset.</Description>
     <References>
@@ -779,15 +906,15 @@
     <Category>AAS-InstanceMaterialization</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1002</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5051</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5052</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5053</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5054</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5055</Reference>
-      <Reference ReferenceType="Organizes">ns=2;i=5056</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5056</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5057</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=5058</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5051" BrowseName="2:Kind" ParentNodeId="ns=2;i=1013" DataType="ns=2;i=1201" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5053" BrowseName="2:Kind" ParentNodeId="ns=2;i=1013" DataType="ns=2;i=1201" ValueRank="-1">
     <DisplayName>Kind</DisplayName>
     <Description>Whether this submodel carries values or defines a shape other submodels are built from.</Description>
     <References>
@@ -796,7 +923,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1013</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5052" BrowseName="2:SemanticId" ParentNodeId="ns=2;i=1013" DataType="ns=2;i=1221" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5054" BrowseName="2:SemanticId" ParentNodeId="ns=2;i=1013" DataType="ns=2;i=1221" ValueRank="-1">
     <DisplayName>SemanticId</DisplayName>
     <Description>The concept this submodel is an occurrence of.</Description>
     <References>
@@ -805,7 +932,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1013</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5053" BrowseName="2:SupplementalSemanticIds" ParentNodeId="ns=2;i=1013" DataType="ns=2;i=1221" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5055" BrowseName="2:SupplementalSemanticIds" ParentNodeId="ns=2;i=1013" DataType="ns=2;i=1221" ValueRank="1">
     <DisplayName>SupplementalSemanticIds</DisplayName>
     <Description>Further concepts this submodel corresponds to.</Description>
     <References>
@@ -814,7 +941,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1013</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5054" BrowseName="2:Qualifiers" ParentNodeId="ns=2;i=1013" DataType="ns=2;i=1225" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5056" BrowseName="2:Qualifiers" ParentNodeId="ns=2;i=1013" DataType="ns=2;i=1225" ValueRank="1">
     <DisplayName>Qualifiers</DisplayName>
     <Description>Qualifiers on this submodel.</Description>
     <References>
@@ -823,7 +950,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1013</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5055" BrowseName="2:EmbeddedDataSpecifications" ParentNodeId="ns=2;i=1013" DataType="ns=2;i=1226" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5057" BrowseName="2:EmbeddedDataSpecifications" ParentNodeId="ns=2;i=1013" DataType="ns=2;i=1226" ValueRank="1">
     <DisplayName>EmbeddedDataSpecifications</DisplayName>
     <Description>Data specifications carried by this submodel.</Description>
     <References>
@@ -832,7 +959,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1013</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=2;i=5056" BrowseName="2:&lt;SubmodelElement&gt;" ParentNodeId="ns=2;i=1013">
+  <UAObject NodeId="ns=2;i=5058" BrowseName="2:&lt;SubmodelElement&gt;" ParentNodeId="ns=2;i=1013">
     <DisplayName>&lt;SubmodelElement&gt;</DisplayName>
     <Description>An element of this submodel.</Description>
     <References>
@@ -847,11 +974,11 @@
     <Category>AAS-Metamodel</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1002</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5057</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5058</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5059</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5060</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5057" BrowseName="2:IsCaseOf" ParentNodeId="ns=2;i=1030" DataType="ns=2;i=1221" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5059" BrowseName="2:IsCaseOf" ParentNodeId="ns=2;i=1030" DataType="ns=2;i=1221" ValueRank="1">
     <DisplayName>IsCaseOf</DisplayName>
     <Description>Concepts in other dictionaries this concept corresponds to, which is how a Server bridges two classification systems without asserting that either is canonical.</Description>
     <References>
@@ -860,7 +987,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1030</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5058" BrowseName="2:EmbeddedDataSpecifications" ParentNodeId="ns=2;i=1030" DataType="ns=2;i=1226" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5060" BrowseName="2:EmbeddedDataSpecifications" ParentNodeId="ns=2;i=1030" DataType="ns=2;i=1226" ValueRank="1">
     <DisplayName>EmbeddedDataSpecifications</DisplayName>
     <Description>The data specifications defining this concept.</Description>
     <References>
@@ -875,14 +1002,14 @@
     <Category>AAS-SubmodelElements</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1001</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5059</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5060</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5061</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5062</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5063</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5064</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5065</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5059" BrowseName="2:SemanticId" ParentNodeId="ns=2;i=1020" DataType="ns=2;i=1221" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5061" BrowseName="2:SemanticId" ParentNodeId="ns=2;i=1020" DataType="ns=2;i=1221" ValueRank="-1">
     <DisplayName>SemanticId</DisplayName>
     <Description>The concept this element is an occurrence of.</Description>
     <References>
@@ -891,7 +1018,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1020</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5060" BrowseName="2:SupplementalSemanticIds" ParentNodeId="ns=2;i=1020" DataType="ns=2;i=1221" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5062" BrowseName="2:SupplementalSemanticIds" ParentNodeId="ns=2;i=1020" DataType="ns=2;i=1221" ValueRank="1">
     <DisplayName>SupplementalSemanticIds</DisplayName>
     <Description>Further concepts this element corresponds to.</Description>
     <References>
@@ -900,7 +1027,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1020</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5061" BrowseName="2:Qualifiers" ParentNodeId="ns=2;i=1020" DataType="ns=2;i=1225" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5063" BrowseName="2:Qualifiers" ParentNodeId="ns=2;i=1020" DataType="ns=2;i=1225" ValueRank="1">
     <DisplayName>Qualifiers</DisplayName>
     <Description>Qualifiers on this element.</Description>
     <References>
@@ -909,7 +1036,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1020</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5062" BrowseName="2:EmbeddedDataSpecifications" ParentNodeId="ns=2;i=1020" DataType="ns=2;i=1226" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5064" BrowseName="2:EmbeddedDataSpecifications" ParentNodeId="ns=2;i=1020" DataType="ns=2;i=1226" ValueRank="1">
     <DisplayName>EmbeddedDataSpecifications</DisplayName>
     <Description>Data specifications carried by this element.</Description>
     <References>
@@ -918,9 +1045,9 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1020</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5063" BrowseName="2:Index" ParentNodeId="ns=2;i=1020" DataType="UInt32" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5065" BrowseName="2:Index" ParentNodeId="ns=2;i=1020" DataType="UInt32" ValueRank="-1">
     <DisplayName>Index</DisplayName>
-    <Description>The element's position within its parent SubmodelElementList. OPC UA References are unordered, so an ordered collection carries its order explicitly or loses it. Present only for an element inside a list.</Description>
+    <Description>The element's position within its parent SubmodelElementList. Optional, and recommended wherever the list's order is relevant: HasOrderedComponent states that the order matters, but Browse is not required to return references in order, so Index is what makes the position recoverable without relying on Server behaviour the Services do not guarantee.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -929,45 +1056,35 @@
   </UAVariable>
   <UAObjectType NodeId="ns=2;i=1021" BrowseName="2:AASPropertyType">
     <DisplayName>AASPropertyType</DisplayName>
-    <Description>A single typed value. The value is carried twice: as a typed Variable for the native projection a generic Client expects, and as its exact lexical form, because several xsd types have no faithful OPC UA equivalent.</Description>
+    <Description>A single typed value. The value node carries the OPC UA DataType that clause 7.1 assigns to the declared xsd type, and that mapping is injective, so a serializer recovers the declared type from the node rather than guessing it.</Description>
     <Category>AAS-SubmodelElements</Category>
     <Category>AAS-ValueFidelity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1020</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5064</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5065</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5066</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5067</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5068</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5064" BrowseName="2:ValueType" ParentNodeId="ns=2;i=1021" DataType="ns=2;i=1208" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5066" BrowseName="2:ValueType" ParentNodeId="ns=2;i=1021" DataType="ns=2;i=1208" ValueRank="-1">
     <DisplayName>ValueType</DisplayName>
-    <Description>The xsd type the value is expressed in.</Description>
+    <Description>The xsd type the value is expressed in. Mandatory because the metamodel makes it mandatory while making the value itself optional: a Property with no value still declares a type, and there is then no value node whose DataType could carry it.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1021</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5065" BrowseName="2:Value" ParentNodeId="ns=2;i=1021" DataType="i=24" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5067" BrowseName="2:Value" ParentNodeId="ns=2;i=1021" DataType="BaseDataType" ValueRank="-1">
     <DisplayName>Value</DisplayName>
-    <Description>The value in its native OPC UA representation, for reading. Where the declared ValueType cannot be represented faithfully, this is the nearest representation and RawValue is authoritative.</Description>
+    <Description>The value. Declared as BaseDataType here because the concrete DataType depends on ValueType; a materialized node carries the specific DataType clause 7.1 assigns.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1021</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5066" BrowseName="2:RawValue" ParentNodeId="ns=2;i=1021" DataType="ns=2;i=1199" ValueRank="-1">
-    <DisplayName>RawValue</DisplayName>
-    <Description>The value in the exact xsd lexical form the metamodel carries. This is the normative carrier for round-tripping: where it and Value disagree, RawValue wins.</Description>
-    <References>
-      <Reference ReferenceType="HasModellingRule">i=78</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1021</Reference>
-    </References>
-  </UAVariable>
-  <UAVariable NodeId="ns=2;i=5067" BrowseName="2:ValueId" ParentNodeId="ns=2;i=1021" DataType="ns=2;i=1221" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5068" BrowseName="2:ValueId" ParentNodeId="ns=2;i=1021" DataType="ns=2;i=1221" ValueRank="-1">
     <DisplayName>ValueId</DisplayName>
     <Description>A reference to the value, where the value is itself an identified concept.</Description>
     <References>
@@ -983,11 +1100,11 @@
     <Category>AAS-ValueFidelity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1020</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5068</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5069</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5070</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5068" BrowseName="2:Value" ParentNodeId="ns=2;i=1022" DataType="ns=2;i=1222" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5069" BrowseName="2:Value" ParentNodeId="ns=2;i=1022" DataType="ns=2;i=1222" ValueRank="1">
     <DisplayName>Value</DisplayName>
     <Description>The language-tagged values, in order.</Description>
     <References>
@@ -996,7 +1113,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1022</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5069" BrowseName="2:ValueId" ParentNodeId="ns=2;i=1022" DataType="ns=2;i=1221" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5070" BrowseName="2:ValueId" ParentNodeId="ns=2;i=1022" DataType="ns=2;i=1221" ValueRank="-1">
     <DisplayName>ValueId</DisplayName>
     <Description>A reference to the value, where the value is itself an identified concept.</Description>
     <References>
@@ -1012,32 +1129,32 @@
     <Category>AAS-ValueFidelity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1020</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5070</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5071</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5072</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5073</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5070" BrowseName="2:ValueType" ParentNodeId="ns=2;i=1023" DataType="ns=2;i=1208" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5071" BrowseName="2:ValueType" ParentNodeId="ns=2;i=1023" DataType="ns=2;i=1208" ValueRank="-1">
     <DisplayName>ValueType</DisplayName>
-    <Description>The xsd type the bounds are expressed in.</Description>
+    <Description>The xsd type the bounds are expressed in. Mandatory for the same reason as on a Property: both bounds are optional and the declared type is not.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1023</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5071" BrowseName="2:Min" ParentNodeId="ns=2;i=1023" DataType="ns=2;i=1199" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5072" BrowseName="2:Min" ParentNodeId="ns=2;i=1023" DataType="BaseDataType" ValueRank="-1">
     <DisplayName>Min</DisplayName>
-    <Description>The lower bound in its exact lexical form. Absent means unbounded below, which is different from a bound of zero.</Description>
+    <Description>The lower bound, carrying the DataType clause 7.1 assigns to ValueType. Absent means unbounded below, which is different from a bound of zero.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1023</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5072" BrowseName="2:Max" ParentNodeId="ns=2;i=1023" DataType="ns=2;i=1199" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5073" BrowseName="2:Max" ParentNodeId="ns=2;i=1023" DataType="BaseDataType" ValueRank="-1">
     <DisplayName>Max</DisplayName>
-    <Description>The upper bound in its exact lexical form. Absent means unbounded above.</Description>
+    <Description>The upper bound. Absent means unbounded above.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1051,11 +1168,11 @@
     <Category>AAS-ValueFidelity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1020</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5073</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5074</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5075</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5073" BrowseName="2:Value" ParentNodeId="ns=2;i=1024" DataType="ByteString" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5074" BrowseName="2:Value" ParentNodeId="ns=2;i=1024" DataType="ByteString" ValueRank="-1">
     <DisplayName>Value</DisplayName>
     <Description>The content bytes.</Description>
     <References>
@@ -1064,7 +1181,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1024</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5074" BrowseName="2:ContentType" ParentNodeId="ns=2;i=1024" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5075" BrowseName="2:ContentType" ParentNodeId="ns=2;i=1024" DataType="String" ValueRank="-1">
     <DisplayName>ContentType</DisplayName>
     <Description>Media type of the content.</Description>
     <References>
@@ -1080,11 +1197,11 @@
     <Category>AAS-ValueFidelity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1020</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5075</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5076</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5077</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5075" BrowseName="2:Value" ParentNodeId="ns=2;i=1025" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5076" BrowseName="2:Value" ParentNodeId="ns=2;i=1025" DataType="String" ValueRank="-1">
     <DisplayName>Value</DisplayName>
     <Description>Path or URL to the content.</Description>
     <References>
@@ -1093,7 +1210,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1025</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5076" BrowseName="2:ContentType" ParentNodeId="ns=2;i=1025" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5077" BrowseName="2:ContentType" ParentNodeId="ns=2;i=1025" DataType="String" ValueRank="-1">
     <DisplayName>ContentType</DisplayName>
     <Description>Media type of the content.</Description>
     <References>
@@ -1108,10 +1225,10 @@
     <Category>AAS-SubmodelElements</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1020</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5077</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5078</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5077" BrowseName="2:Value" ParentNodeId="ns=2;i=1026" DataType="ns=2;i=1221" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5078" BrowseName="2:Value" ParentNodeId="ns=2;i=1026" DataType="ns=2;i=1221" ValueRank="-1">
     <DisplayName>Value</DisplayName>
     <Description>The reference.</Description>
     <References>
@@ -1126,11 +1243,11 @@
     <Category>AAS-SubmodelElements</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1020</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5078</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5079</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5080</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5078" BrowseName="2:First" ParentNodeId="ns=2;i=1027" DataType="ns=2;i=1221" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5079" BrowseName="2:First" ParentNodeId="ns=2;i=1027" DataType="ns=2;i=1221" ValueRank="-1">
     <DisplayName>First</DisplayName>
     <Description>The first, or source, end of the relationship.</Description>
     <References>
@@ -1139,7 +1256,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1027</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5079" BrowseName="2:Second" ParentNodeId="ns=2;i=1027" DataType="ns=2;i=1221" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5080" BrowseName="2:Second" ParentNodeId="ns=2;i=1027" DataType="ns=2;i=1221" ValueRank="-1">
     <DisplayName>Second</DisplayName>
     <Description>The second, or target, end of the relationship.</Description>
     <References>
@@ -1154,10 +1271,10 @@
     <Category>AAS-SubmodelElements</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1027</Reference>
-      <Reference ReferenceType="Organizes">ns=2;i=5080</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=5081</Reference>
     </References>
   </UAObjectType>
-  <UAObject NodeId="ns=2;i=5080" BrowseName="2:&lt;Annotation&gt;" ParentNodeId="ns=2;i=1028">
+  <UAObject NodeId="ns=2;i=5081" BrowseName="2:&lt;Annotation&gt;" ParentNodeId="ns=2;i=1028">
     <DisplayName>&lt;Annotation&gt;</DisplayName>
     <Description>A data element annotating this relationship.</Description>
     <References>
@@ -1173,10 +1290,10 @@
     <Category>AAS-LosslessRoundTrip</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1020</Reference>
-      <Reference ReferenceType="Organizes">ns=2;i=5081</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=5082</Reference>
     </References>
   </UAObjectType>
-  <UAObject NodeId="ns=2;i=5081" BrowseName="2:&lt;SubmodelElement&gt;" ParentNodeId="ns=2;i=1029">
+  <UAObject NodeId="ns=2;i=5082" BrowseName="2:&lt;SubmodelElement&gt;" ParentNodeId="ns=2;i=1029">
     <DisplayName>&lt;SubmodelElement&gt;</DisplayName>
     <Description>An element of this collection.</Description>
     <References>
@@ -1187,27 +1304,17 @@
   </UAObject>
   <UAObjectType NodeId="ns=2;i=1031" BrowseName="2:AASSubmodelElementListType">
     <DisplayName>AASSubmodelElementListType</DisplayName>
-    <Description>An ordered sequence of elements. Its members have no IdShort, so they are named by index and carry their position in Index; that is what lets the sequence be reconstructed from a Browse result.</Description>
+    <Description>A list of elements. Its members have no IdShort, so they are named by index. Whether the order carries meaning is stated by the ReferenceType the members are referenced with, not by a Property: HasOrderedComponent where it does, HasComponent where the list is a set or a bag.</Description>
     <Category>AAS-SubmodelElements</Category>
     <Category>AAS-LosslessRoundTrip</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=2;i=1020</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5082</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5083</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5084</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5085</Reference>
       <Reference ReferenceType="HasOrderedComponent">ns=2;i=5086</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5082" BrowseName="2:OrderRelevant" ParentNodeId="ns=2;i=1031" DataType="Boolean" ValueRank="-1">
-    <DisplayName>OrderRelevant</DisplayName>
-    <Description>Whether the order carries meaning. Order is preserved either way, because a round trip must reproduce its input whether or not the order is significant.</Description>
-    <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
-      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1031</Reference>
-    </References>
-  </UAVariable>
   <UAVariable NodeId="ns=2;i=5083" BrowseName="2:TypeValueListElement" ParentNodeId="ns=2;i=1031" DataType="ns=2;i=1210" ValueRank="-1">
     <DisplayName>TypeValueListElement</DisplayName>
     <Description>The element kind every member is constrained to.</Description>
@@ -1228,7 +1335,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=5085" BrowseName="2:ValueTypeListElement" ParentNodeId="ns=2;i=1031" DataType="ns=2;i=1208" ValueRank="-1">
     <DisplayName>ValueTypeListElement</DisplayName>
-    <Description>The xsd type every member's value is expressed in, where they share one.</Description>
+    <Description>The xsd type every member's value is expressed in, where they share one. Mandatory in the metamodel when the members are Properties or Ranges.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1237,7 +1344,7 @@
   </UAVariable>
   <UAObject NodeId="ns=2;i=5086" BrowseName="2:&lt;Element&gt;" ParentNodeId="ns=2;i=1031">
     <DisplayName>&lt;Element&gt;</DisplayName>
-    <Description>A member of this list, named by its index. Referenced with HasOrderedComponent because the collection is a sequence; Index carries the position that makes the sequence recoverable.</Description>
+    <Description>A member of this list, named by its index. Referenced with HasOrderedComponent where the list's order is relevant and with HasComponent where it is not.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=11508</Reference>
       <Reference ReferenceType="HasTypeDefinition">ns=2;i=1020</Reference>
@@ -1353,27 +1460,27 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1033</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5096" BrowseName="2:LastUpdate" ParentNodeId="ns=2;i=1033" DataType="ns=2;i=1199" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5096" BrowseName="2:LastUpdate" ParentNodeId="ns=2;i=1033" DataType="DateTime" ValueRank="-1">
     <DisplayName>LastUpdate</DisplayName>
-    <Description>When the event last fired, in its exact lexical form.</Description>
+    <Description>When the event last fired. The metamodel types this xs:dateTime, so clause 7.1 gives it DateTime and it needs no lexical carrier.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1033</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5097" BrowseName="2:MinInterval" ParentNodeId="ns=2;i=1033" DataType="ns=2;i=1199" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5097" BrowseName="2:MinInterval" ParentNodeId="ns=2;i=1033" DataType="DurationString" ValueRank="-1">
     <DisplayName>MinInterval</DisplayName>
-    <Description>Minimum interval between events, in its exact lexical form.</Description>
+    <Description>Minimum interval between events. The metamodel types this xs:duration, whose lexical space is the ISO 8601 duration form DurationString carries; the OPC UA Duration DataType is a count of milliseconds and cannot express the year and month components.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1033</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5098" BrowseName="2:MaxInterval" ParentNodeId="ns=2;i=1033" DataType="ns=2;i=1199" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5098" BrowseName="2:MaxInterval" ParentNodeId="ns=2;i=1033" DataType="DurationString" ValueRank="-1">
     <DisplayName>MaxInterval</DisplayName>
-    <Description>Maximum interval between events, in its exact lexical form.</Description>
+    <Description>Maximum interval between events, on the same basis as MinInterval.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1441,6 +1548,7 @@
     <Description>The AAS Registry root - an xRegistry RegistryType, and therefore a FolderType - whose group folders hold shells, submodel templates, concept dictionaries and packages. Exposed as a well-known object under the Server object, so any Client that reaches the standard Server object discovers it.</Description>
     <Category>AAS-Registry</Category>
     <Category>AAS-Discovery</Category>
+    <Category>AAS-UpdateableRegistry</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63000</Reference>
       <Reference ReferenceType="Organizes">ns=2;i=5103</Reference>
@@ -1449,6 +1557,9 @@
       <Reference ReferenceType="Organizes">ns=2;i=5106</Reference>
       <Reference ReferenceType="HasComponent">ns=2;i=5107</Reference>
       <Reference ReferenceType="HasComponent">ns=2;i=5110</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5113</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5114</Reference>
+      <Reference ReferenceType="HasComponent">ns=2;i=5115</Reference>
     </References>
   </UAObjectType>
   <UAObject NodeId="ns=2;i=5103" BrowseName="2:&lt;ShellGroup&gt;" ParentNodeId="ns=2;i=1100">
@@ -1543,6 +1654,52 @@
     </References>
     <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Document</Name><DataType><Identifier>i=15</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>The submodel document bytes.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Format</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>xRegistry format string.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>ContentType</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Document media type.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
   </UAVariable>
+  <UAVariable NodeId="ns=2;i=5113" BrowseName="2:AutoMaterialize" ParentNodeId="ns=2;i=1100" DataType="Boolean" ValueRank="-1">
+    <DisplayName>AutoMaterialize</DisplayName>
+    <Description>Whether a change to a stored document re-materializes the AddressSpace without being asked. Part of the updateable registry profile.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1100</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=5114" BrowseName="2:MaterializationGeneration" ParentNodeId="ns=2;i=1100" DataType="UInt32" ValueRank="-1">
+    <DisplayName>MaterializationGeneration</DisplayName>
+    <Description>Increments once on each committed switch. A Client correlates a node's NodeVersion with the generation that produced it.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1100</Reference>
+    </References>
+  </UAVariable>
+  <UAMethod NodeId="ns=2;i=5115" BrowseName="2:Materialize" ParentNodeId="ns=2;i=1100">
+    <DisplayName>Materialize</DisplayName>
+    <Description>Re-materialize the AddressSpace from the stored documents. Part of the updateable registry profile: the documents are canonical and the nodes are derived, so this is the operation that makes the derived side agree with the canonical one.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1100</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5116</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5117</Reference>
+    </References>
+  </UAMethod>
+  <UAVariable NodeId="ns=2;i=5116" BrowseName="InputArguments" ParentNodeId="ns=2;i=5115" DataType="Argument" ValueRank="1" ArrayDimensions="2">
+    <DisplayName>InputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5115</Reference>
+    </References>
+    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Targets</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>1</ValueRank><ArrayDimensions><UInt32>0</UInt32></ArrayDimensions><Description><Text>The documents to consider, as registry-relative paths. An empty array means every document.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Force</Name><DataType><Identifier>i=1</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Re-materialize even a document whose digest is unchanged.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=5117" BrowseName="OutputArguments" ParentNodeId="ns=2;i=5115" DataType="Argument" ValueRank="1" ArrayDimensions="2">
+    <DisplayName>OutputArguments</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5115</Reference>
+    </References>
+    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Generation</Name><DataType><Identifier>i=7</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>The generation in force after the call.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Results</Name><DataType><Identifier>ns=2;i=1233</Identifier></DataType><ValueRank>1</ValueRank><ArrayDimensions><UInt32>0</UInt32></ArrayDimensions><Description><Text>One result per document considered.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
   <UAObjectType NodeId="ns=2;i=1101" BrowseName="2:AASShellGroupType">
     <DisplayName>AASShellGroupType</DisplayName>
     <Description>An xRegistry GroupType holding the submodel documents of one shell. Its source identity is the shell's authored identifier, from which the GroupId is constructed. It is distinct from AASType, which models the same shell as a live node tree rather than as a catalogue entry.</Description>
@@ -1552,21 +1709,21 @@
     <Category>AAS-DisclosureTiers</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63001</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5113</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5114</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5115</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5116</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5117</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5118</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5119</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5120</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5121</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5122</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5123</Reference>
-      <Reference ReferenceType="Organizes">ns=2;i=5124</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5124</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5125</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5126</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5127</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5128</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=5129</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5113" BrowseName="2:AasIdentifier" ParentNodeId="ns=2;i=1101" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5118" BrowseName="2:AasIdentifier" ParentNodeId="ns=2;i=1101" DataType="String" ValueRank="-1">
     <DisplayName>AasIdentifier</DisplayName>
     <Description>The shell's authored identifier, verbatim. It is the group's source identity: the GroupId is the symbolic identifier constructed from it, and Name is this identifier.</Description>
     <References>
@@ -1575,7 +1732,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1101</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5114" BrowseName="2:AssetKind" ParentNodeId="ns=2;i=1101" DataType="ns=2;i=1200" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5119" BrowseName="2:AssetKind" ParentNodeId="ns=2;i=1101" DataType="ns=2;i=1200" ValueRank="-1">
     <DisplayName>AssetKind</DisplayName>
     <Description>Whether the shell describes a product model, an individual item or a batch.</Description>
     <References>
@@ -1584,7 +1741,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1101</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5115" BrowseName="2:GlobalAssetId" ParentNodeId="ns=2;i=1101" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5120" BrowseName="2:GlobalAssetId" ParentNodeId="ns=2;i=1101" DataType="String" ValueRank="-1">
     <DisplayName>GlobalAssetId</DisplayName>
     <Description>The identifier of the asset itself, as distinct from the shell describing it.</Description>
     <References>
@@ -1593,7 +1750,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1101</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5116" BrowseName="2:AssetType" ParentNodeId="ns=2;i=1101" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5121" BrowseName="2:AssetType" ParentNodeId="ns=2;i=1101" DataType="String" ValueRank="-1">
     <DisplayName>AssetType</DisplayName>
     <Description>The identifier of the asset type this asset is an occurrence of.</Description>
     <References>
@@ -1602,7 +1759,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1101</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5117" BrowseName="2:SpecificAssetIds" ParentNodeId="ns=2;i=1101" DataType="ns=2;i=1223" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5122" BrowseName="2:SpecificAssetIds" ParentNodeId="ns=2;i=1101" DataType="ns=2;i=1223" ValueRank="1">
     <DisplayName>SpecificAssetIds</DisplayName>
     <Description>The keys this shell is discoverable by.</Description>
     <References>
@@ -1611,7 +1768,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1101</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5118" BrowseName="2:Administration" ParentNodeId="ns=2;i=1101" DataType="ns=2;i=1224" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5123" BrowseName="2:Administration" ParentNodeId="ns=2;i=1101" DataType="ns=2;i=1224" ValueRank="-1">
     <DisplayName>Administration</DisplayName>
     <Description>Administrative information carried by the shell.</Description>
     <References>
@@ -1620,7 +1777,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1101</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5119" BrowseName="2:DerivedFrom" ParentNodeId="ns=2;i=1101" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5124" BrowseName="2:DerivedFrom" ParentNodeId="ns=2;i=1101" DataType="String" ValueRank="-1">
     <DisplayName>DerivedFrom</DisplayName>
     <Description>The identifier of the Type shell this Instance shell was derived from.</Description>
     <References>
@@ -1629,7 +1786,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1101</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5120" BrowseName="2:DisclosureTier" ParentNodeId="ns=2;i=1101" DataType="ns=2;i=1211" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5125" BrowseName="2:DisclosureTier" ParentNodeId="ns=2;i=1101" DataType="ns=2;i=1211" ValueRank="-1">
     <DisplayName>DisclosureTier</DisplayName>
     <Description>Whether this entity is readable without authentication.</Description>
     <References>
@@ -1638,7 +1795,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1101</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5121" BrowseName="2:Authorization" ParentNodeId="ns=2;i=1101" DataType="ns=2;i=1231" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5126" BrowseName="2:Authorization" ParentNodeId="ns=2;i=1101" DataType="ns=2;i=1231" ValueRank="1">
     <DisplayName>Authorization</DisplayName>
     <Description>The authorization options a Consumer may use to obtain access.</Description>
     <References>
@@ -1647,7 +1804,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1101</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5122" BrowseName="2:EventEndpoint" ParentNodeId="ns=2;i=1101" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5127" BrowseName="2:EventEndpoint" ParentNodeId="ns=2;i=1101" DataType="String" ValueRank="-1">
     <DisplayName>EventEndpoint</DisplayName>
     <Description>The catalogued endpoint delivering change events for this shell, where one is published.</Description>
     <References>
@@ -1656,7 +1813,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1101</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5123" BrowseName="2:ShellNode" ParentNodeId="ns=2;i=1101" DataType="NodeId" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5128" BrowseName="2:ShellNode" ParentNodeId="ns=2;i=1101" DataType="NodeId" ValueRank="-1">
     <DisplayName>ShellNode</DisplayName>
     <Description>The AASType node modelling this same shell as a live node tree, where the Server also implements the metamodel half. The catalogue entry and the node tree are different nodes for the same shell, and this is the link between them.</Description>
     <References>
@@ -1665,7 +1822,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1101</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=2;i=5124" BrowseName="2:&lt;Submodel&gt;" ParentNodeId="ns=2;i=1101">
+  <UAObject NodeId="ns=2;i=5129" BrowseName="2:&lt;Submodel&gt;" ParentNodeId="ns=2;i=1101">
     <DisplayName>&lt;Submodel&gt;</DisplayName>
     <Description>A submodel document held by this shell.</Description>
     <References>
@@ -1681,13 +1838,9 @@
     <Category>AAS-RegistryIdentity</Category>
     <Category>AAS-RegistryVersioning</Category>
     <Category>AAS-DisclosureTiers</Category>
+    <Category>AAS-UpdateableRegistry</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63002</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5125</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5126</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5127</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5128</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5129</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5130</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5131</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5132</Reference>
@@ -1695,9 +1848,17 @@
       <Reference ReferenceType="HasProperty">ns=2;i=5134</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5135</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5136</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5137</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5138</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5139</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5140</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5141</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5142</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5143</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5144</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5125" BrowseName="2:SubmodelIdentifier" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5130" BrowseName="2:SubmodelIdentifier" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
     <DisplayName>SubmodelIdentifier</DisplayName>
     <Description>The submodel's authored identifier, verbatim. It is the resource's source identity, from which the ResourceId is constructed, and it is invariant across the submodel's versions.</Description>
     <References>
@@ -1706,7 +1867,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5126" BrowseName="2:SemanticId" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5131" BrowseName="2:SemanticId" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
     <DisplayName>SemanticId</DisplayName>
     <Description>The concept this submodel is an occurrence of - the attribute a Consumer filters on to find, for example, every carbon footprint submodel in a registry.</Description>
     <References>
@@ -1715,7 +1876,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5127" BrowseName="2:SupplementalSemanticIds" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5132" BrowseName="2:SupplementalSemanticIds" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="1">
     <DisplayName>SupplementalSemanticIds</DisplayName>
     <Description>Further concepts this submodel corresponds to.</Description>
     <References>
@@ -1724,7 +1885,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5128" BrowseName="2:Kind" ParentNodeId="ns=2;i=1102" DataType="ns=2;i=1201" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5133" BrowseName="2:Kind" ParentNodeId="ns=2;i=1102" DataType="ns=2;i=1201" ValueRank="-1">
     <DisplayName>Kind</DisplayName>
     <Description>Whether the submodel carries values or defines a shape.</Description>
     <References>
@@ -1733,7 +1894,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5129" BrowseName="2:Template" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5134" BrowseName="2:Template" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
     <DisplayName>Template</DisplayName>
     <Description>The identifier of the template this submodel was built from. It is an identifier and not a pointer, so it resolves identically whether or not this registry also serves the template.</Description>
     <References>
@@ -1742,7 +1903,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5130" BrowseName="2:Digest" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5135" BrowseName="2:Digest" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
     <DisplayName>Digest</DisplayName>
     <Description>Digest of the exact document bytes a Consumer retrieves. A registry does not publish one for bytes it has not itself seen.</Description>
     <References>
@@ -1751,7 +1912,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5131" BrowseName="2:DigestAlg" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5136" BrowseName="2:DigestAlg" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
     <DisplayName>DigestAlg</DisplayName>
     <Description>The algorithm used to compute Digest. Present whenever Digest is.</Description>
     <References>
@@ -1760,7 +1921,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5132" BrowseName="2:IsDefault" ParentNodeId="ns=2;i=1102" DataType="Boolean" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5137" BrowseName="2:IsDefault" ParentNodeId="ns=2;i=1102" DataType="Boolean" ValueRank="-1">
     <DisplayName>IsDefault</DisplayName>
     <Description>Whether this is the version served when none is selected.</Description>
     <References>
@@ -1769,7 +1930,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5133" BrowseName="2:Ancestor" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5138" BrowseName="2:Ancestor" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
     <DisplayName>Ancestor</DisplayName>
     <Description>The version this one derives from. A root version's ancestor is itself.</Description>
     <References>
@@ -1778,7 +1939,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5134" BrowseName="2:DisclosureTier" ParentNodeId="ns=2;i=1102" DataType="ns=2;i=1211" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5139" BrowseName="2:DisclosureTier" ParentNodeId="ns=2;i=1102" DataType="ns=2;i=1211" ValueRank="-1">
     <DisplayName>DisclosureTier</DisplayName>
     <Description>Whether this document is readable without authentication. A document is wholly one tier or the other: a boundary falling between elements inside a document cannot be expressed here.</Description>
     <References>
@@ -1787,7 +1948,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5135" BrowseName="2:Authorization" ParentNodeId="ns=2;i=1102" DataType="ns=2;i=1231" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5140" BrowseName="2:Authorization" ParentNodeId="ns=2;i=1102" DataType="ns=2;i=1231" ValueRank="1">
     <DisplayName>Authorization</DisplayName>
     <Description>The authorization options a Consumer may use to obtain access.</Description>
     <References>
@@ -1796,9 +1957,36 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5136" BrowseName="2:SubmodelNode" ParentNodeId="ns=2;i=1102" DataType="NodeId" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5141" BrowseName="2:SubmodelNode" ParentNodeId="ns=2;i=1102" DataType="NodeId" ValueRank="-1">
     <DisplayName>SubmodelNode</DisplayName>
     <Description>The AASSubmodelType node modelling this same submodel as a live node tree, where the Server also implements the metamodel half.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=5142" BrowseName="2:LoadState" ParentNodeId="ns=2;i=1102" DataType="ns=2;i=1212" ValueRank="-1">
+    <DisplayName>LoadState</DisplayName>
+    <Description>The materialization state of this document. Part of the updateable registry profile.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=5143" BrowseName="2:DesiredVersionId" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
+    <DisplayName>DesiredVersionId</DisplayName>
+    <Description>The version an operator wants materialized. Part of the updateable registry profile.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1102</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=5144" BrowseName="2:ActiveVersionId" ParentNodeId="ns=2;i=1102" DataType="String" ValueRank="-1">
+    <DisplayName>ActiveVersionId</DisplayName>
+    <Description>The version currently materialized. It differs from DesiredVersionId while a switch is in flight, and persistently when the desired version failed to validate.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1812,12 +2000,12 @@
     <Category>AAS-RegistryIdentity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63001</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5137</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5138</Reference>
-      <Reference ReferenceType="Organizes">ns=2;i=5139</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5145</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5146</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=5147</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5137" BrowseName="2:TemplateNamespace" ParentNodeId="ns=2;i=1103" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5145" BrowseName="2:TemplateNamespace" ParentNodeId="ns=2;i=1103" DataType="String" ValueRank="-1">
     <DisplayName>TemplateNamespace</DisplayName>
     <Description>The publisher's template namespace, verbatim. It is the group's source identity.</Description>
     <References>
@@ -1826,7 +2014,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1103</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5138" BrowseName="2:Publisher" ParentNodeId="ns=2;i=1103" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5146" BrowseName="2:Publisher" ParentNodeId="ns=2;i=1103" DataType="String" ValueRank="-1">
     <DisplayName>Publisher</DisplayName>
     <Description>The organization publishing this template family.</Description>
     <References>
@@ -1835,7 +2023,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1103</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=2;i=5139" BrowseName="2:&lt;Submodel&gt;" ParentNodeId="ns=2;i=1103">
+  <UAObject NodeId="ns=2;i=5147" BrowseName="2:&lt;Submodel&gt;" ParentNodeId="ns=2;i=1103">
     <DisplayName>&lt;Submodel&gt;</DisplayName>
     <Description>A submodel template held by this family.</Description>
     <References>
@@ -1851,11 +2039,11 @@
     <Category>AAS-RegistryIdentity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63001</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5140</Reference>
-      <Reference ReferenceType="Organizes">ns=2;i=5141</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5148</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=5149</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5140" BrowseName="2:DictionaryIdentifier" ParentNodeId="ns=2;i=1104" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5148" BrowseName="2:DictionaryIdentifier" ParentNodeId="ns=2;i=1104" DataType="String" ValueRank="-1">
     <DisplayName>DictionaryIdentifier</DisplayName>
     <Description>The dictionary's identifier, verbatim. It is the group's source identity.</Description>
     <References>
@@ -1864,7 +2052,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1104</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=2;i=5141" BrowseName="2:&lt;ConceptDescription&gt;" ParentNodeId="ns=2;i=1104">
+  <UAObject NodeId="ns=2;i=5149" BrowseName="2:&lt;ConceptDescription&gt;" ParentNodeId="ns=2;i=1104">
     <DisplayName>&lt;ConceptDescription&gt;</DisplayName>
     <Description>A concept definition held by this dictionary.</Description>
     <References>
@@ -1878,13 +2066,18 @@
     <Description>An xRegistry ResourceType whose file content is one concept description document.</Description>
     <Category>AAS-Registry</Category>
     <Category>AAS-RegistryIdentity</Category>
+    <Category>AAS-UpdateableRegistry</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63002</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5142</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5143</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5150</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5151</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5152</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5153</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5154</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5155</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5142" BrowseName="2:ConceptIdentifier" ParentNodeId="ns=2;i=1105" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5150" BrowseName="2:ConceptIdentifier" ParentNodeId="ns=2;i=1105" DataType="String" ValueRank="-1">
     <DisplayName>ConceptIdentifier</DisplayName>
     <Description>The concept's authored identifier, verbatim, which is the value that appears as a SemanticId elsewhere. It is the resource's source identity. Dictionary identifiers frequently use a syntax unrelated to any URI scheme, which is precisely why the identifier is carried here and the node is named by the derived one.</Description>
     <References>
@@ -1893,9 +2086,45 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1105</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5143" BrowseName="2:IsCaseOf" ParentNodeId="ns=2;i=1105" DataType="String" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5151" BrowseName="2:IsCaseOf" ParentNodeId="ns=2;i=1105" DataType="String" ValueRank="1">
     <DisplayName>IsCaseOf</DisplayName>
     <Description>Concepts in other dictionaries this concept corresponds to.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1105</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=5152" BrowseName="2:ConceptNode" ParentNodeId="ns=2;i=1105" DataType="NodeId" ValueRank="-1">
+    <DisplayName>ConceptNode</DisplayName>
+    <Description>The AASConceptDescriptionType node modelling this same concept as a live node tree, where the Server also implements the metamodel half.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1105</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=5153" BrowseName="2:LoadState" ParentNodeId="ns=2;i=1105" DataType="ns=2;i=1212" ValueRank="-1">
+    <DisplayName>LoadState</DisplayName>
+    <Description>The materialization state of this document. Part of the updateable registry profile.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1105</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=5154" BrowseName="2:DesiredVersionId" ParentNodeId="ns=2;i=1105" DataType="String" ValueRank="-1">
+    <DisplayName>DesiredVersionId</DisplayName>
+    <Description>The version an operator wants materialized. Part of the updateable registry profile.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1105</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=5155" BrowseName="2:ActiveVersionId" ParentNodeId="ns=2;i=1105" DataType="String" ValueRank="-1">
+    <DisplayName>ActiveVersionId</DisplayName>
+    <Description>The version currently materialized.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1909,12 +2138,12 @@
     <Category>AAS-RegistryIdentity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63001</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5144</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5145</Reference>
-      <Reference ReferenceType="Organizes">ns=2;i=5146</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5156</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5157</Reference>
+      <Reference ReferenceType="Organizes">ns=2;i=5158</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5144" BrowseName="2:StoreIdentifier" ParentNodeId="ns=2;i=1106" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5156" BrowseName="2:StoreIdentifier" ParentNodeId="ns=2;i=1106" DataType="String" ValueRank="-1">
     <DisplayName>StoreIdentifier</DisplayName>
     <Description>The store's identifier, verbatim. It is the group's source identity.</Description>
     <References>
@@ -1923,7 +2152,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1106</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5145" BrowseName="2:RegistryUrl" ParentNodeId="ns=2;i=1106" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5157" BrowseName="2:RegistryUrl" ParentNodeId="ns=2;i=1106" DataType="String" ValueRank="-1">
     <DisplayName>RegistryUrl</DisplayName>
     <Description>Base URL of the backing package store.</Description>
     <References>
@@ -1932,7 +2161,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1106</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=2;i=5146" BrowseName="2:&lt;Package&gt;" ParentNodeId="ns=2;i=1106">
+  <UAObject NodeId="ns=2;i=5158" BrowseName="2:&lt;Package&gt;" ParentNodeId="ns=2;i=1106">
     <DisplayName>&lt;Package&gt;</DisplayName>
     <Description>A package held by this store.</Description>
     <References>
@@ -1948,16 +2177,16 @@
     <Category>AAS-RegistryIdentity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63002</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5147</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5148</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5149</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5150</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5151</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5152</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5153</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5159</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5160</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5161</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5162</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5163</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5164</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5165</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=2;i=5147" BrowseName="2:PackageIdentifier" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5159" BrowseName="2:PackageIdentifier" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
     <DisplayName>PackageIdentifier</DisplayName>
     <Description>The package's name as held by the backing store, verbatim. It is the resource's source identity.</Description>
     <References>
@@ -1966,7 +2195,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1107</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5148" BrowseName="2:ArtifactType" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5160" BrowseName="2:ArtifactType" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
     <DisplayName>ArtifactType</DisplayName>
     <Description>The media type identifying what the artifact is, where the backing store carries one.</Description>
     <References>
@@ -1975,7 +2204,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1107</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5149" BrowseName="2:Digest" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5161" BrowseName="2:Digest" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
     <DisplayName>Digest</DisplayName>
     <Description>Digest of the exact package bytes. This is the integrity anchor: a version identifies which release a Consumer wants, a digest identifies what that release contains.</Description>
     <References>
@@ -1984,7 +2213,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1107</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5150" BrowseName="2:DigestAlg" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5162" BrowseName="2:DigestAlg" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
     <DisplayName>DigestAlg</DisplayName>
     <Description>The algorithm used to compute Digest.</Description>
     <References>
@@ -1993,7 +2222,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1107</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5151" BrowseName="2:AasIdentifiers" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5163" BrowseName="2:AasIdentifiers" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="1">
     <DisplayName>AasIdentifiers</DisplayName>
     <Description>The shell identifiers this package contains, so a Consumer can tell what it holds without retrieving and opening it.</Description>
     <References>
@@ -2002,7 +2231,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1107</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5152" BrowseName="2:Subject" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5164" BrowseName="2:Subject" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
     <DisplayName>Subject</DisplayName>
     <Description>The digest of the artifact this one attests, where it is an attestation rather than a package.</Description>
     <References>
@@ -2011,7 +2240,7 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1107</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5153" BrowseName="2:Attestations" ParentNodeId="ns=2;i=1107" DataType="ns=2;i=1232" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5165" BrowseName="2:Attestations" ParentNodeId="ns=2;i=1107" DataType="ns=2;i=1232" ValueRank="1">
     <DisplayName>Attestations</DisplayName>
     <Description>The signatures and attestations attached to this package.</Description>
     <References>
@@ -2027,64 +2256,93 @@
     <References>
       <Reference ReferenceType="HasTypeDefinition">ns=2;i=1100</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">i=2253</Reference>
-      <Reference ReferenceType="HasComponent">ns=2;i=5154</Reference>
-      <Reference ReferenceType="HasComponent">ns=2;i=5157</Reference>
+      <Reference ReferenceType="HasComponent">ns=2;i=5166</Reference>
+      <Reference ReferenceType="HasComponent">ns=2;i=5169</Reference>
+      <Reference ReferenceType="HasComponent">ns=2;i=5172</Reference>
     </References>
   </UAObject>
-  <UAMethod NodeId="ns=2;i=5154" BrowseName="2:LookupShellsByAssetLink" ParentNodeId="ns=2;i=1150">
+  <UAMethod NodeId="ns=2;i=5166" BrowseName="2:LookupShellsByAssetLink" ParentNodeId="ns=2;i=1150">
     <DisplayName>LookupShellsByAssetLink</DisplayName>
     <Description>Return the shells discoverable by an asset key. The functional method on the well-known AASRegistry object.</Description>
     <Category>AAS Registry Instances</Category>
     <References>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1150</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5155</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5156</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5167</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5168</Reference>
     </References>
   </UAMethod>
-  <UAVariable NodeId="ns=2;i=5155" BrowseName="InputArguments" ParentNodeId="ns=2;i=5154" DataType="Argument" ValueRank="1" ArrayDimensions="2">
+  <UAVariable NodeId="ns=2;i=5167" BrowseName="InputArguments" ParentNodeId="ns=2;i=5166" DataType="Argument" ValueRank="1" ArrayDimensions="2">
     <DisplayName>InputArguments</DisplayName>
     <Category>AAS Registry Instances</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5154</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5166</Reference>
     </References>
     <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Name</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>The key name, for example serialNumber.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Value</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>The key value.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5156" BrowseName="OutputArguments" ParentNodeId="ns=2;i=5154" DataType="Argument" ValueRank="1" ArrayDimensions="1">
+  <UAVariable NodeId="ns=2;i=5168" BrowseName="OutputArguments" ParentNodeId="ns=2;i=5166" DataType="Argument" ValueRank="1" ArrayDimensions="1">
     <DisplayName>OutputArguments</DisplayName>
     <Category>AAS Registry Instances</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5154</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5166</Reference>
     </References>
     <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Shells</Name><DataType><Identifier>i=17</Identifier></DataType><ValueRank>1</ValueRank><ArrayDimensions><UInt32>0</UInt32></ArrayDimensions><Description><Text>The shell group nodes matching the key.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
   </UAVariable>
-  <UAMethod NodeId="ns=2;i=5157" BrowseName="2:GetSubmodel" ParentNodeId="ns=2;i=1150">
+  <UAMethod NodeId="ns=2;i=5169" BrowseName="2:GetSubmodel" ParentNodeId="ns=2;i=1150">
     <DisplayName>GetSubmodel</DisplayName>
     <Description>Return a submodel document and enough metadata to parse it, given its identifier. The functional method on the well-known AASRegistry object.</Description>
     <Category>AAS Registry Instances</Category>
     <References>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1150</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5158</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5159</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5170</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5171</Reference>
     </References>
   </UAMethod>
-  <UAVariable NodeId="ns=2;i=5158" BrowseName="InputArguments" ParentNodeId="ns=2;i=5157" DataType="Argument" ValueRank="1" ArrayDimensions="1">
+  <UAVariable NodeId="ns=2;i=5170" BrowseName="InputArguments" ParentNodeId="ns=2;i=5169" DataType="Argument" ValueRank="1" ArrayDimensions="1">
     <DisplayName>InputArguments</DisplayName>
     <Category>AAS Registry Instances</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5157</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5169</Reference>
     </References>
     <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>SubmodelIdentifier</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>The submodel's authored identifier.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5159" BrowseName="OutputArguments" ParentNodeId="ns=2;i=5157" DataType="Argument" ValueRank="1" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=5171" BrowseName="OutputArguments" ParentNodeId="ns=2;i=5169" DataType="Argument" ValueRank="1" ArrayDimensions="3">
     <DisplayName>OutputArguments</DisplayName>
     <Category>AAS Registry Instances</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5157</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5169</Reference>
     </References>
     <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Document</Name><DataType><Identifier>i=15</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>The submodel document bytes.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Format</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>xRegistry format string.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>ContentType</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Document media type.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAMethod NodeId="ns=2;i=5172" BrowseName="2:Materialize" ParentNodeId="ns=2;i=1150">
+    <DisplayName>Materialize</DisplayName>
+    <Description>Re-materialize the AddressSpace from the stored documents. The functional method on the well-known AASRegistry object.</Description>
+    <Category>AAS Registry Instances</Category>
+    <References>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1150</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5173</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5174</Reference>
+    </References>
+  </UAMethod>
+  <UAVariable NodeId="ns=2;i=5173" BrowseName="InputArguments" ParentNodeId="ns=2;i=5172" DataType="Argument" ValueRank="1" ArrayDimensions="2">
+    <DisplayName>InputArguments</DisplayName>
+    <Category>AAS Registry Instances</Category>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5172</Reference>
+    </References>
+    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Targets</Name><DataType><Identifier>i=12</Identifier></DataType><ValueRank>1</ValueRank><ArrayDimensions><UInt32>0</UInt32></ArrayDimensions><Description><Text>The documents to consider, as registry-relative paths. An empty array means every document.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Force</Name><DataType><Identifier>i=1</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>Re-materialize even a document whose digest is unchanged.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=5174" BrowseName="OutputArguments" ParentNodeId="ns=2;i=5172" DataType="Argument" ValueRank="1" ArrayDimensions="2">
+    <DisplayName>OutputArguments</DisplayName>
+    <Category>AAS Registry Instances</Category>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5172</Reference>
+    </References>
+    <Value><ListOfExtensionObject xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Generation</Name><DataType><Identifier>i=7</Identifier></DataType><ValueRank>-1</ValueRank><ArrayDimensions/><Description><Text>The generation in force after the call.</Text></Description></Argument></Body></ExtensionObject><ExtensionObject><TypeId><Identifier>i=297</Identifier></TypeId><Body><Argument><Name>Results</Name><DataType><Identifier>ns=2;i=1233</Identifier></DataType><ValueRank>1</ValueRank><ArrayDimensions><UInt32>0</UInt32></ArrayDimensions><Description><Text>One result per document considered.</Text></Description></Argument></Body></ExtensionObject></ListOfExtensionObject></Value>
   </UAVariable>
 </UANodeSet>

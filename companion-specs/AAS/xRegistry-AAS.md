@@ -12,7 +12,7 @@
 <!-- words: interoperate federatable subtypes unresolvable scraping -->
 <!-- words: Identifiable Referable versionid versionids opc ua -->
 <!-- words: cencenelec changelog conceptdescriptionid dictid fsp iec -->
-<!-- words: irdi iri metamodel mitigations openusd packageid regid -->
+<!-- words: irdi iri metamodel mitigations packageid regid -->
 <!-- words: shellid validateformat webstore supplementalsemanticids -->
 
 ## Abstract
@@ -133,10 +133,10 @@ An AAS Registry is complementary to the xRegistry
 These cross-references are informative: an implementation MAY validate them, but
 this specification does not require that all referents resolve.
 
-The identifier rules of [Section 5.1](#51-aas-identifiers-and-xids) are those of
-the [OpenUSD Artifact Registry][OpenUSD spec], and are cited rather than
-restated so that the two cannot drift. Any registry that adopts the same
-construction addresses the same entity by the same `xid`.
+The identifier rules of [Section 5.1](#51-aas-identifiers-and-xids) define the
+symbolic identifier construction in full, so that this specification is readable
+without a second document open. Any registry that adopts the same construction
+addresses the same entity by the same `xid`.
 
 Packaging an AAS as an AASX artifact for immutable, signed distribution is
 defined in the companion document [AAS Packages](xRegistry-AAS-Packages.md), which shares this
@@ -157,18 +157,27 @@ unchanged on top of them. A `submodel` is defined with `versionmode` set to
 Consumer asking for the Submodel as it stood at a given moment reads the newest
 Version not later than that moment.
 
-Two rules follow, both inherited from the same reasoning as the OpenUSD
-registry:
+Two rules follow:
 
 - **The identifier binds to the Resource, not to the Version.** All Versions of
   one `submodel` share one `submodelidentifier` and one `submodelid`; they
   differ only in `versionid`. An AAS Submodel id denotes the Submodel across its
-  whole life, and a Consumer that resolved an identifier to a Version would
-  re-resolve to a different entity on every revision.
+  whole life. That durability is the point: a Reference authored inside a Shell
+  or another Submodel names the Submodel, not a revision of it. An id that
+  resolved to a Version would defeat the registry's ability to serve a corrected
+  document, because a Consumer holding that id would re-resolve to a different
+  entity the moment a new revision was published.
 - **A `submodelid` MUST NOT be derived from the document bytes.** A Resource is
-  the umbrella over its Versions, so an id computed from content would fork the
-  Submodel on every update. The content hash of a Version is the `digest`
-  ([Section 4.2](#42-submodels)), which is Version-level metadata.
+  the umbrella over its Versions. An id computed from content would therefore
+  change on every revision and split one logical Submodel into a new Resource
+  each time, which is the opposite of what a Resource is for. The content hash
+  belongs at Version level, where it is the `digest`
+  ([Section 4.2](#42-submodels)); the id is derived only from the
+  `submodelidentifier`, which is Version-invariant.
+
+A Consumer that does not select a Version explicitly MUST receive the Resource's
+default Version. An `xid` that addresses a specific Version MUST NOT be used as
+an AAS identifier.
 
 A change that violates the Resource's [`compatibility`][xRegistry compatibility]
 policy MUST result in a new Resource, not a new Version.
@@ -382,28 +391,60 @@ characters long, and unique case-insensitively within its parent. An AAS
 Identifiable id is a free-form string of up to 2048 characters, conventionally
 an IRI, an IRDI or a URN.
 
-These are **not the same grammar**, and the mismatch is not marginal. An
-identifier such as `https://example.com/aas/pump-001` is not a valid entity id
+An identifier such as `https://example.com/aas/pump-001` is not a valid entity id
 because of its solidus characters, and a dictionary identifier of the form
 `0173-1#02-AAO677#002` is not one because of its number signs. Almost no real
 AAS identifier is usable verbatim.
 
 This specification therefore does not equate them. It derives one from the other
-by the same **closed-form, one-way construction** the OpenUSD Artifact Registry
-defines, and keeps the authored identifier as the authority:
+by a **closed-form, one-way construction**, and keeps the authored identifier as
+the authority:
 
 > A `shell`'s `aasidentifier` MUST be its authored AAS Identifiable id, and its
-> `shellid` MUST be the [symbolic identifier][symbolic identifier] of that
+> `shellid` MUST be the [symbolic identifier](#51-aas-identifiers-and-xids) of that
 > `aasidentifier`. A `submodel`'s `submodelidentifier` and a
 > `conceptdescription`'s `conceptidentifier` relate to `submodelid` and
 > `conceptdescriptionid` in the same way. Those attributes are REQUIRED and are
 > the authority: an implementation MUST NOT recover an AAS identifier by
 > attempting to invert the construction.
 
-The construction is defined in
-[the OpenUSD Artifact Registry specification][symbolic identifier] and is
-adopted here without modification, so that a registry serving both addresses the
-same source identifier by the same id. Applied to AAS identifiers it gives:
+The construction is defined here in full. It builds a **symbolic identifier**
+from a source string; the result is a dot-separated token in the alphabet
+`A-Z a-z 0-9 _ . -`, a strict subset of what xRegistry permits, so that it is
+simultaneously safe in a URL, on a command line and as a file name in the
+[file-system representation][xRegistry primer].
+
+1. Split the source into an *authority* and a *path*. For an absolute URI with
+   an authority component the authority is the host together with its port when
+   present, and the path is the URI path; the scheme, userinfo, query and
+   fragment are discarded. For a URN the authority is empty and the path is the
+   URN split on `:`. Otherwise — the usual case for an IRDI — the authority is
+   empty and the path is the source split on `/`.
+2. Reverse the authority's `.`-separated labels (`contoso.com` becomes `com`,
+   `contoso`), appending the port, where present, as a further label.
+3. Percent-decode each path segment and discard the empty ones.
+4. Normalize each label: replace every run of characters outside
+   `A-Z a-z 0-9 _ . -` with a single `-`; collapse runs of `-` and runs of `.`;
+   strip leading and trailing `-` and `.`; discard a label that becomes empty.
+   Letter case is preserved.
+5. Join the surviving labels with `.`. If no label survives, the identifier is
+   `_`.
+6. If the result is longer than 128 characters, drop trailing labels — never the
+   first — until it is at most 119 characters long; if that first label is itself
+   longer than 119 characters, truncate it to 119 and strip any trailing `-` or
+   `.`. Then append the disambiguator of step 7.
+7. Where step 6 truncated the result, or where the result would collide
+   case-insensitively with an existing sibling in the same collection, append `.`
+   followed by the first eight lower-case hexadecimal characters of the SHA-256
+   of the UTF-8 encoding of the **exact source string**. The disambiguator is a
+   function of the identifier, not of any document, so it does not change when a
+   new Version is written.
+
+The construction is deterministic, so a Producer and a Consumer agree without a
+lookup table, and it is lossy, so only the forward direction is defined: an
+implementation recovers an AAS identifier by reading the `aasidentifier`,
+`submodelidentifier` or `conceptidentifier` attribute, never by inverting the
+construction. Applied to AAS identifiers it gives:
 
 | Authored AAS id | Derived id |
 |---|---|
@@ -711,8 +752,6 @@ interface of the system it projects.
 [xRegistry compatibility]: https://xregistry.io/xreg/xregistryspecs/core-v1/docs/spec.html#compatibility-attribute
 [xRegistry version-ids]: https://xregistry.io/xreg/xregistryspecs/core-v1/docs/spec.html#version-ids
 [xRegistry hasdocument]: https://xregistry.io/xreg/xregistryspecs/core-v1/docs/spec.html#hasdocument
-[OpenUSD spec]: ../../metaverse-specs/openusd-binding/xRegistry-OpenUsd.md
-[symbolic identifier]: ../../core-specs/xregistry/OPC-UA-xRegistry.md#69-entity-identifiers-and-names
 [RFC3986]: https://datatracker.ietf.org/doc/html/rfc3986#section-2.3
 [IEC63278]: https://webstore.iec.ch/publication/65628
 [IEC61406]: https://webstore.iec.ch/publication/67673

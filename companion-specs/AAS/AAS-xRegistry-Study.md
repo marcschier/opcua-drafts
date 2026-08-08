@@ -57,14 +57,16 @@ Four findings in this study shaped those documents more than any other:
    OPC UA specification existed.
 
 The OPC UA specification also surfaced a finding this study did not anticipate, recorded here
-because it is counter-intuitive enough that a later reader would try to remove it. **Losslessness
-forces a value to be carried twice.** AAS types values with xsd types, and several of them —
-`xs:decimal` at arbitrary precision, `xs:duration`, the partial-date types — have no faithful OPC UA
-equivalent, so a typed mapping cannot be reversible. The specification therefore carries both a
-typed Variable, for the native projection a generic Client expects, and a Mandatory lexical
-`RawValue`, which is normative for round-tripping. The duplication is the price of the requirement,
-and the requirement is what makes it possible to compile an AAS into a Server with a source
-generator.
+because it is counter-intuitive enough that a later reader would try to undo it. **Losslessness is
+a claim about the value space, not about the bytes.** AAS types values with xsd types and carries
+them as strings, but it defines no equality on those strings — no canonical form, no rule that a
+lexical form must survive a round trip — and its own Part 2 ValueOnly serialization already
+normalizes them by rendering values as native JSON. XML Schema, by contrast, defines identity on the
+value space and designates a canonical lexical representation for every type. The specification
+therefore maps each of the thirty `DataTypeDefXsd` values onto its own OPC UA DataType, carries a
+value **once**, and compares round trips in the value space while emitting the canonical lexical
+form. The first draft carried every value twice to defend the authored lexical form; that turned out
+to be defending a property the source specification does not claim.
 
 The sections below are the study as it stood when those decisions were made.
 

@@ -227,8 +227,11 @@ HasOrderedComponent = "i=49"
 Decimal = "i=50"
 Integer = "i=27"
 UInteger = "i=28"
+Number = "i=26"
 DateString = "i=12881"
 TimeString = "i=12880"
+DurationString = "i=12879"
+BaseDataType = "i=24"
 
 def X(nid):
     """Reference to a node in the abstract xRegistry base namespace (required model)."""
@@ -297,11 +300,12 @@ CU_DISCOVERY = "AAS-Discovery"
 CU_FEDERATION = "AAS-Federation"
 CU_DISCLOSURE = "AAS-DisclosureTiers"
 CU_PACKAGES = "AAS-Packages"
+CU_UPDATEABLE = "AAS-UpdateableRegistry"
 
 ALL_CONFORMANCE_UNITS = (
     CU_METAMODEL, CU_ELEMENTS, CU_VALUES, CU_ROUNDTRIP, CU_MATERIALIZE,
     CU_REGISTRY, CU_IDENTITY, CU_VERSIONING, CU_DISCOVERY, CU_FEDERATION,
-    CU_DISCLOSURE, CU_PACKAGES,
+    CU_DISCLOSURE, CU_PACKAGES, CU_UPDATEABLE,
 )
 
 CU_BY_NAME = {
@@ -330,12 +334,12 @@ CU_BY_NAME = {
     "AASCapabilityType": (CU_ELEMENTS,),
     "AASConceptDescriptionType": (CU_METAMODEL,),
     # registry
-    "AASRegistryType": (CU_REGISTRY, CU_DISCOVERY),
+    "AASRegistryType": (CU_REGISTRY, CU_DISCOVERY, CU_UPDATEABLE),
     "AASShellGroupType": (CU_REGISTRY, CU_IDENTITY, CU_DISCOVERY, CU_DISCLOSURE),
-    "AASSubmodelFileType": (CU_REGISTRY, CU_IDENTITY, CU_VERSIONING, CU_DISCLOSURE),
+    "AASSubmodelFileType": (CU_REGISTRY, CU_IDENTITY, CU_VERSIONING, CU_DISCLOSURE, CU_UPDATEABLE),
     "AASSubmodelTemplateGroupType": (CU_REGISTRY, CU_IDENTITY),
     "AASConceptDictionaryGroupType": (CU_REGISTRY, CU_IDENTITY),
-    "AASConceptDescriptionFileType": (CU_REGISTRY, CU_IDENTITY),
+    "AASConceptDescriptionFileType": (CU_REGISTRY, CU_IDENTITY, CU_UPDATEABLE),
     "AASPackageStoreGroupType": (CU_PACKAGES, CU_IDENTITY),
     "AASPackageFileType": (CU_PACKAGES, CU_IDENTITY),
     "AASRegistry": (CU_REGISTRY,),
@@ -349,11 +353,53 @@ CAT_INST = "AAS Registry Instances"
 # ---------------------------------------------------------------------------
 # DataTypes - enumerations
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# DataTypes - the xsd value carriers
+# ---------------------------------------------------------------------------
+# Clause 7.1 maps each of the 30 DataTypeDefXsd values onto exactly one OPC UA DataType.
+# Where a built-in already denotes the xsd type on its own, it is used directly. Where two
+# xsd types would otherwise share one built-in, a subtype is defined here so that the
+# mapping stays injective and the declared type is recoverable from the value node itself.
+def xsd_type(nid, name, base, desc):
+    add(nid, "UADataType", name, name, desc=desc, category=(CU_VALUES,))
+    ref(nid, HasSubtype, base, forward=False)
+    return T(nid)
+
+xsd_type(1180, "AASAnyUri", String,
+         "An xs:anyURI value. A subtype of String because xs:string already occupies String, and "
+         "the two must stay distinguishable for the declared type to be recoverable from the value.")
+xsd_type(1181, "AASHexBinary", ByteString,
+         "An xs:hexBinary value. The octets are the same as an xs:base64Binary value's, so the two "
+         "differ only in how they were written; ByteString carries xs:base64Binary and this subtype "
+         "carries the hexadecimal form.")
+xsd_type(1182, "AASNonPositiveInteger", Integer,
+         "An xs:nonPositiveInteger value: an integer at most zero.")
+xsd_type(1183, "AASNegativeInteger", T(1182),
+         "An xs:negativeInteger value: an integer below zero. A subtype of AASNonPositiveInteger, "
+         "mirroring the restriction hierarchy xsd itself defines.")
+xsd_type(1184, "AASPositiveInteger", UInteger,
+         "An xs:positiveInteger value: an integer above zero. A subtype of UInteger, which carries "
+         "xs:nonNegativeInteger.")
+xsd_type(1185, "AASGYear", String,
+         "An xs:gYear value, such as 2026. A Gregorian year denotes a period rather than an instant, "
+         "and OPC UA has no DataType for a period, so the value is its lexical form.")
+xsd_type(1186, "AASGYearMonth", String,
+         "An xs:gYearMonth value, such as 2026-08.")
+xsd_type(1187, "AASGMonth", String,
+         "An xs:gMonth value, such as --08.")
+xsd_type(1188, "AASGMonthDay", String,
+         "An xs:gMonthDay value, such as --08-07.")
+xsd_type(1189, "AASGDay", String,
+         "An xs:gDay value, such as ---07.")
+
 add(1199, "UADataType", "AASValueString", "AASValueString",
-    desc="The xsd lexical form of a typed value, as authored. A subtype of String so that a lexical "
-         "value is distinguishable from an ordinary string by its DataType rather than by which "
-         "Variable it came from - the pattern OPC UA already uses for DecimalString, DurationString, "
-         "DateString and TimeString. The xsd type the form denotes is declared separately, in ValueType.",
+    desc="The xsd lexical form of a value whose declared type is carried in a sibling field of the "
+         "same Structure. A Structure field has one static DataType and cannot vary with a declared "
+         "type, so a qualifier, an extension or a data specification carries its value lexically and "
+         "its ValueType field says how to read it. A subtype of String so the field is recognizable "
+         "as a lexical form rather than as text - the pattern OPC UA uses for DecimalString and "
+         "DurationString. It is never the DataType of a Variable: a value node always carries the "
+         "specific DataType clause 7.1 assigns to its declared xsd type.",
     category=(CU_VALUES,))
 ref(1199, HasSubtype, String, forward=False)
 
@@ -410,16 +456,16 @@ enum_type(1207, "AASKeyTypesDataType", [
 
 enum_type(1208, "AASDataTypeDefXsdDataType", [
     ("AnyUri", 0, ""), ("Base64Binary", 1, ""), ("Boolean", 2, ""), ("Byte", 3, ""),
-    ("Date", 4, ""), ("DateTime", 5, ""), ("Decimal", 6, "Arbitrary precision; has no faithful OPC UA equivalent, so RawValue is the normative carrier."),
-    ("Double", 7, ""), ("Duration", 8, "Has no native OPC UA equivalent; RawValue is the normative carrier."),
+    ("Date", 4, ""), ("DateTime", 5, ""), ("Decimal", 6, ""),
+    ("Double", 7, ""), ("Duration", 8, ""),
     ("Float", 9, ""), ("GDay", 10, ""), ("GMonth", 11, ""), ("GMonthDay", 12, ""),
-    ("GYear", 13, ""), ("GYearMonth", 14, "Partial date; RawValue is the normative carrier."),
-    ("HexBinary", 15, ""), ("Int", 16, ""), ("Integer", 17, "Unbounded; RawValue is the normative carrier."),
+    ("GYear", 13, ""), ("GYearMonth", 14, ""),
+    ("HexBinary", 15, ""), ("Int", 16, ""), ("Integer", 17, ""),
     ("Long", 18, ""), ("NegativeInteger", 19, ""), ("NonNegativeInteger", 20, ""),
     ("NonPositiveInteger", 21, ""), ("PositiveInteger", 22, ""), ("Short", 23, ""),
     ("String", 24, ""), ("Time", 25, ""), ("UnsignedByte", 26, ""), ("UnsignedInt", 27, ""),
     ("UnsignedLong", 28, ""), ("UnsignedShort", 29, ""),
-], "The xsd type a value is expressed in. Several of these have no faithful OPC UA equivalent, which is why a value is carried both as a typed Variable and as its exact lexical form.")
+], "The xsd type a value is expressed in. All thirty of the metamodel's values are listed. Each maps onto exactly one OPC UA DataType, given in clause 7.1, so the declared type is recoverable from the value node and never has to be guessed.")
 
 enum_type(1209, "AASDataTypeIec61360DataType", [
     ("Blob", 0, ""), ("Boolean", 1, ""), ("Date", 2, ""), ("File", 3, ""), ("Html", 4, ""),
@@ -441,6 +487,23 @@ enum_type(1211, "AASDisclosureTierDataType", [
     ("Public", 0, "Readable without authentication."),
     ("Controlled", 1, "Requires an authenticated role."),
 ], "Whether an entity is readable without authentication. It advertises the tier so a Consumer can discover it; it does not enforce it.")
+
+enum_type(1212, "AASLoadStateDataType", [
+    ("Unloaded", 0, "The document is stored but not materialized."),
+    ("Loading", 1, "A shadow generation is being prepared and is not yet visible."),
+    ("Active", 2, "The materialized nodes are the ones a Client sees."),
+    ("Superseded", 3, "A newer generation has been switched in; this one still serves retained work."),
+    ("Retiring", 4, "The superseded generation is draining and its nodes will be removed."),
+    ("Retired", 5, "The generation's nodes have been removed."),
+    ("Failed", 6, "The document did not validate or did not materialize. The stored document is kept and the previously active generation, where there was one, keeps serving."),
+], "The materialization state of one stored document under the updateable registry profile.", category=(CU_UPDATEABLE,))
+
+enum_type(1213, "AASMaterializationOutcomeDataType", [
+    ("Unchanged", 0, "The document's digest was unchanged, so it was not re-materialized."),
+    ("Materialized", 1, "A new generation was prepared and switched in."),
+    ("Retired", 2, "The document's projection was removed."),
+    ("Failed", 3, "The document did not validate or did not materialize. Diagnostic says why."),
+], "What a Materialize call did to one document.", category=(CU_UPDATEABLE,))
 
 # ---------------------------------------------------------------------------
 # DataTypes - structures
@@ -481,7 +544,7 @@ data_type(1225, "AASQualifierDataType", [
     ("Kind", T(1205), "What the qualifier qualifies."),
     ("Type", String, "The qualifier type name."),
     ("ValueType", T(1208), "The xsd type the value is expressed in."),
-    ("Value", T(1199), "The value in its exact lexical form."),
+    ("Value", T(1199), "The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type."),
     ("ValueId", T(1221), "A reference to the value, where it is itself an identified concept."),
     ("SemanticId", T(1221), "The concept this qualifier is an occurrence of."),
     ("SupplementalSemanticIds", T(1221), "Further concepts this qualifier corresponds to.", 1),
@@ -503,14 +566,14 @@ data_type(1227, "AASDataSpecificationIec61360DataType", [
     ("Definition", T(1222), "Definition per language.", 1),
     ("ValueFormat", String, "Format of the value."),
     ("ValueList", String, "Permitted values, serialized in the metamodel's own form."),
-    ("Value", T(1199), "The value in its exact lexical form."),
+    ("Value", T(1199), "The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type."),
     ("LevelType", String, "Which of min, nom, typ and max apply."),
 ], "The IEC 61360 data specification content of a concept definition.")
 
 data_type(1228, "AASExtensionDataType", [
     ("Name", String, "Extension name."),
     ("ValueType", T(1208), "The xsd type the value is expressed in."),
-    ("Value", T(1199), "The value in its exact lexical form."),
+    ("Value", T(1199), "The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type."),
     ("RefersTo", T(1221), "What the extension refers to.", 1),
     ("SemanticId", T(1221), "The concept this extension is an occurrence of."),
     ("SupplementalSemanticIds", T(1221), "Further concepts this extension corresponds to.", 1),
@@ -537,6 +600,14 @@ data_type(1232, "AASAttestationDataType", [
     ("Digest", String, "Digest of the attestation artifact."),
     ("Signer", String, "The party that produced the attestation."),
 ], "A signature or attestation attached to a package. Its presence is not verification: a Consumer retrieves and verifies the artifact itself.")
+
+data_type(1233, "AASMaterializationResultDataType", [
+    ("Xid", String, "The registry-relative path of the document this result is about."),
+    ("Outcome", T(1213), "What the call did to it."),
+    ("VersionId", String, "The version that is now active for this document, where one is."),
+    ("MaterializedNode", NodeId, "The root node of the generation now serving this document, where it materialized."),
+    ("Diagnostic", String, "Why the document failed, where it did. Empty otherwise."),
+], "The result of materializing one document. A call returns one of these per document it considered, so a caller learns which documents were skipped as unchanged and which failed, not merely whether the call succeeded.", category=(CU_UPDATEABLE,))
 
 # ---------------------------------------------------------------------------
 # Metamodel ObjectTypes - abstract bases
@@ -633,16 +704,15 @@ prop_var(1020, SE, "SemanticId", T(1221), "The concept this element is an occurr
 prop_var(1020, SE, "SupplementalSemanticIds", T(1221), "Further concepts this element corresponds to.", valuerank="1")
 prop_var(1020, SE, "Qualifiers", T(1225), "Qualifiers on this element.", valuerank="1")
 prop_var(1020, SE, "EmbeddedDataSpecifications", T(1226), "Data specifications carried by this element.", valuerank="1")
-prop_var(1020, SE, "Index", UInt32, "The element's position within its parent SubmodelElementList. OPC UA References are unordered, so an ordered collection carries its order explicitly or loses it. Present only for an element inside a list.")
+prop_var(1020, SE, "Index", UInt32, "The element's position within its parent SubmodelElementList. Optional, and recommended wherever the list's order is relevant: HasOrderedComponent states that the order matters, but Browse is not required to return references in order, so Index is what makes the position recoverable without relying on Server behaviour the Services do not guarantee.")
 
 object_type(1021, "AASPropertyType", T(1020),
-            "A single typed value. The value is carried twice: as a typed Variable for the native projection a "
-            "generic Client expects, and as its exact lexical form, because several xsd types have no faithful "
-            "OPC UA equivalent.")
+            "A single typed value. The value node carries the OPC UA DataType that clause 7.1 assigns to the "
+            "declared xsd type, and that mapping is injective, so a serializer recovers the declared type from "
+            "the node rather than guessing it.")
 PR = "AASPropertyType"
-prop_var(1021, PR, "ValueType", T(1208), "The xsd type the value is expressed in.", rule=MR_Mandatory)
-prop_var(1021, PR, "Value", "i=24", "The value in its native OPC UA representation, for reading. Where the declared ValueType cannot be represented faithfully, this is the nearest representation and RawValue is authoritative.")
-prop_var(1021, PR, "RawValue", T(1199), "The value in the exact xsd lexical form the metamodel carries. This is the normative carrier for round-tripping: where it and Value disagree, RawValue wins.", rule=MR_Mandatory)
+prop_var(1021, PR, "ValueType", T(1208), "The xsd type the value is expressed in. Mandatory because the metamodel makes it mandatory while making the value itself optional: a Property with no value still declares a type, and there is then no value node whose DataType could carry it.", rule=MR_Mandatory)
+prop_var(1021, PR, "Value", BaseDataType, "The value. Declared as BaseDataType here because the concrete DataType depends on ValueType; a materialized node carries the specific DataType clause 7.1 assigns.")
 prop_var(1021, PR, "ValueId", T(1221), "A reference to the value, where the value is itself an identified concept.")
 
 object_type(1022, "AASMultiLanguagePropertyType", T(1020),
@@ -654,9 +724,9 @@ prop_var(1022, ML, "ValueId", T(1221), "A reference to the value, where the valu
 
 object_type(1023, "AASRangeType", T(1020), "A closed or half-open interval of a single typed value.")
 RA = "AASRangeType"
-prop_var(1023, RA, "ValueType", T(1208), "The xsd type the bounds are expressed in.", rule=MR_Mandatory)
-prop_var(1023, RA, "Min", T(1199), "The lower bound in its exact lexical form. Absent means unbounded below, which is different from a bound of zero.")
-prop_var(1023, RA, "Max", T(1199), "The upper bound in its exact lexical form. Absent means unbounded above.")
+prop_var(1023, RA, "ValueType", T(1208), "The xsd type the bounds are expressed in. Mandatory for the same reason as on a Property: both bounds are optional and the declared type is not.", rule=MR_Mandatory)
+prop_var(1023, RA, "Min", BaseDataType, "The lower bound, carrying the DataType clause 7.1 assigns to ValueType. Absent means unbounded below, which is different from a bound of zero.")
+prop_var(1023, RA, "Max", BaseDataType, "The upper bound. Absent means unbounded above.")
 
 object_type(1024, "AASBlobType", T(1020), "Binary content carried inline.")
 BL = "AASBlobType"
@@ -685,14 +755,14 @@ object_type(1029, "AASSubmodelElementCollectionType", T(1020),
 placeholder_obj(1029, "AASSubmodelElementCollectionType", "<SubmodelElement>", T(1020), "An element of this collection.")
 
 object_type(1031, "AASSubmodelElementListType", T(1020),
-            "An ordered sequence of elements. Its members have no IdShort, so they are named by index and carry "
-            "their position in Index; that is what lets the sequence be reconstructed from a Browse result.")
+            "A list of elements. Its members have no IdShort, so they are named by index. Whether the order "
+            "carries meaning is stated by the ReferenceType the members are referenced with, not by a Property: "
+            "HasOrderedComponent where it does, HasComponent where the list is a set or a bag.")
 SL = "AASSubmodelElementListType"
-prop_var(1031, SL, "OrderRelevant", Boolean, "Whether the order carries meaning. Order is preserved either way, because a round trip must reproduce its input whether or not the order is significant.")
 prop_var(1031, SL, "TypeValueListElement", T(1210), "The element kind every member is constrained to.", rule=MR_Mandatory)
 prop_var(1031, SL, "SemanticIdListElement", T(1221), "The concept every member is an occurrence of, where they share one.")
-prop_var(1031, SL, "ValueTypeListElement", T(1208), "The xsd type every member's value is expressed in, where they share one.")
-ordered_placeholder(1031, SL, "<Element>", T(1020), "A member of this list, named by its index. Referenced with HasOrderedComponent because the collection is a sequence; Index carries the position that makes the sequence recoverable.")
+prop_var(1031, SL, "ValueTypeListElement", T(1208), "The xsd type every member's value is expressed in, where they share one. Mandatory in the metamodel when the members are Properties or Ranges.")
+ordered_placeholder(1031, SL, "<Element>", T(1020), "A member of this list, named by its index. Referenced with HasOrderedComponent where the list's order is relevant and with HasComponent where it is not.")
 
 object_type(1032, "AASEntityType", T(1020),
             "A component of a composition. A self-managed entity carries the identifier of its own shell, which is "
@@ -710,9 +780,9 @@ prop_var(1033, BE, "Direction", T(1203), "Whether the event is produced or consu
 prop_var(1033, BE, "State", T(1204), "Whether the event source is active.", rule=MR_Mandatory)
 prop_var(1033, BE, "MessageTopic", String, "The topic events are delivered on. Where the delivery endpoint is itself catalogued, the registry entry points at it.")
 prop_var(1033, BE, "MessageBroker", T(1221), "The broker delivering the events.")
-prop_var(1033, BE, "LastUpdate", T(1199), "When the event last fired, in its exact lexical form.")
-prop_var(1033, BE, "MinInterval", T(1199), "Minimum interval between events, in its exact lexical form.")
-prop_var(1033, BE, "MaxInterval", T(1199), "Maximum interval between events, in its exact lexical form.")
+prop_var(1033, BE, "LastUpdate", DateTime, "When the event last fired. The metamodel types this xs:dateTime, so clause 7.1 gives it DateTime and it needs no lexical carrier.")
+prop_var(1033, BE, "MinInterval", DurationString, "Minimum interval between events. The metamodel types this xs:duration, whose lexical space is the ISO 8601 duration form DurationString carries; the OPC UA Duration DataType is a count of milliseconds and cannot express the year and month components.")
+prop_var(1033, BE, "MaxInterval", DurationString, "Maximum interval between events, on the same basis as MinInterval.")
 
 object_type(1034, "AASOperationType", T(1020), "An invocable operation.")
 OP = "AASOperationType"
@@ -747,6 +817,16 @@ getsm_type = method(1100, RG, "GetSubmodel",
     "document fast path, for a Client that has an identifier rather than a node.",
     inargs=[("SubmodelIdentifier", String, "The submodel's authored identifier.")],
     outargs=[("Document", ByteString, "The submodel document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Document media type.")])
+prop_var(1100, RG, "AutoMaterialize", Boolean, "Whether a change to a stored document re-materializes the AddressSpace without being asked. Part of the updateable registry profile.")
+prop_var(1100, RG, "MaterializationGeneration", UInt32, "Increments once on each committed switch. A Client correlates a node's NodeVersion with the generation that produced it.")
+materialize_type = method(1100, RG, "Materialize",
+    "Re-materialize the AddressSpace from the stored documents. Part of the updateable registry profile: the "
+    "documents are canonical and the nodes are derived, so this is the operation that makes the derived side agree "
+    "with the canonical one.",
+    inargs=[("Targets", String, "The documents to consider, as registry-relative paths. An empty array means every document.", 1),
+            ("Force", Boolean, "Re-materialize even a document whose digest is unchanged.")],
+    outargs=[("Generation", UInt32, "The generation in force after the call."),
+             ("Results", T(1233), "One result per document considered.", 1)])
 
 object_type(1101, "AASShellGroupType", XRegistry_GroupType,
             "An xRegistry GroupType holding the submodel documents of one shell. Its source identity is the shell's "
@@ -782,6 +862,9 @@ prop_var(1102, SF, "Ancestor", String, "The version this one derives from. A roo
 prop_var(1102, SF, "DisclosureTier", T(1211), "Whether this document is readable without authentication. A document is wholly one tier or the other: a boundary falling between elements inside a document cannot be expressed here.")
 prop_var(1102, SF, "Authorization", T(1231), "The authorization options a Consumer may use to obtain access.", valuerank="1")
 prop_var(1102, SF, "SubmodelNode", NodeId, "The AASSubmodelType node modelling this same submodel as a live node tree, where the Server also implements the metamodel half.")
+prop_var(1102, SF, "LoadState", T(1212), "The materialization state of this document. Part of the updateable registry profile.")
+prop_var(1102, SF, "DesiredVersionId", String, "The version an operator wants materialized. Part of the updateable registry profile.")
+prop_var(1102, SF, "ActiveVersionId", String, "The version currently materialized. It differs from DesiredVersionId while a switch is in flight, and persistently when the desired version failed to validate.")
 
 object_type(1103, "AASSubmodelTemplateGroupType", XRegistry_GroupType,
             "An xRegistry GroupType holding one publisher's family of submodel templates. Keeping templates in a "
@@ -804,6 +887,10 @@ object_type(1105, "AASConceptDescriptionFileType", XRegistry_ResourceType,
 CDF = "AASConceptDescriptionFileType"
 prop_var(1105, CDF, "ConceptIdentifier", String, "The concept's authored identifier, verbatim, which is the value that appears as a SemanticId elsewhere. It is the resource's source identity. Dictionary identifiers frequently use a syntax unrelated to any URI scheme, which is precisely why the identifier is carried here and the node is named by the derived one.", rule=MR_Mandatory)
 prop_var(1105, CDF, "IsCaseOf", String, "Concepts in other dictionaries this concept corresponds to.", valuerank="1")
+prop_var(1105, CDF, "ConceptNode", NodeId, "The AASConceptDescriptionType node modelling this same concept as a live node tree, where the Server also implements the metamodel half.")
+prop_var(1105, CDF, "LoadState", T(1212), "The materialization state of this document. Part of the updateable registry profile.")
+prop_var(1105, CDF, "DesiredVersionId", String, "The version an operator wants materialized. Part of the updateable registry profile.")
+prop_var(1105, CDF, "ActiveVersionId", String, "The version currently materialized.")
 
 object_type(1106, "AASPackageStoreGroupType", XRegistry_GroupType,
             "An xRegistry GroupType holding packages - one store, or one namespace within one.")
@@ -838,6 +925,12 @@ instance_method(1150, "AASRegistry", "GetSubmodel", getsm_type,
     "Return a submodel document and enough metadata to parse it, given its identifier. The functional method on the well-known AASRegistry object.",
     inargs=[("SubmodelIdentifier", String, "The submodel's authored identifier.")],
     outargs=[("Document", ByteString, "The submodel document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Document media type.")])
+instance_method(1150, "AASRegistry", "Materialize", materialize_type,
+    "Re-materialize the AddressSpace from the stored documents. The functional method on the well-known AASRegistry object.",
+    inargs=[("Targets", String, "The documents to consider, as registry-relative paths. An empty array means every document.", 1),
+            ("Force", Boolean, "Re-materialize even a document whose digest is unchanged.")],
+    outargs=[("Generation", UInt32, "The generation in force after the call."),
+             ("Results", T(1233), "One result per document considered.", 1)])
 
 NAMESPACE = "http://opcfoundation.org/UA/I4AAS/"
 VERSION = "3.00"
@@ -850,6 +943,8 @@ XR_PUBDATE = "2026-07-31T00:00:00Z"
 ALIASES = [
     ("Boolean", Boolean), ("UInt32", UInt32), ("String", String), ("DateTime", DateTime),
     ("ByteString", ByteString), ("ExpandedNodeId", ExpandedNodeId), ("Duration", Duration),
+    ("BaseDataType", BaseDataType), ("Integer", Integer), ("UInteger", UInteger),
+    ("DurationString", DurationString),
     ("Argument", Argument), ("KeyValuePair", KeyValuePair), ("NodeId", NodeId),
     ("Enumeration", Enumeration), ("Organizes", Organizes),
     ("HasOrderedComponent", HasOrderedComponent), ("HasModellingRule", HasModellingRule),

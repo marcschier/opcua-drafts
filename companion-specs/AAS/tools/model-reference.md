@@ -42,6 +42,16 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | ns=1;i=1105 | [AASConceptDescriptionFileType](#type-AASConceptDescriptionFileType) | ObjectType | ns=1;i=63002 |
 | ns=1;i=1106 | [AASPackageStoreGroupType](#type-AASPackageStoreGroupType) | ObjectType | ns=1;i=63001 |
 | ns=1;i=1107 | [AASPackageFileType](#type-AASPackageFileType) | ObjectType | ns=1;i=63002 |
+| ns=1;i=1180 | [AASAnyUri](#type-AASAnyUri) | DataType | String |
+| ns=1;i=1181 | [AASHexBinary](#type-AASHexBinary) | DataType | ByteString |
+| ns=1;i=1182 | [AASNonPositiveInteger](#type-AASNonPositiveInteger) | DataType | Integer |
+| ns=1;i=1183 | [AASNegativeInteger](#type-AASNegativeInteger) | DataType | [AASNonPositiveInteger](#type-AASNonPositiveInteger) |
+| ns=1;i=1184 | [AASPositiveInteger](#type-AASPositiveInteger) | DataType | UInteger |
+| ns=1;i=1185 | [AASGYear](#type-AASGYear) | DataType | String |
+| ns=1;i=1186 | [AASGYearMonth](#type-AASGYearMonth) | DataType | String |
+| ns=1;i=1187 | [AASGMonth](#type-AASGMonth) | DataType | String |
+| ns=1;i=1188 | [AASGMonthDay](#type-AASGMonthDay) | DataType | String |
+| ns=1;i=1189 | [AASGDay](#type-AASGDay) | DataType | String |
 | ns=1;i=1199 | [AASValueString](#type-AASValueString) | DataType | String |
 | ns=1;i=1200 | [AASAssetKindDataType](#type-AASAssetKindDataType) | DataType | Enumeration |
 | ns=1;i=1201 | [AASModellingKindDataType](#type-AASModellingKindDataType) | DataType | Enumeration |
@@ -55,6 +65,8 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | ns=1;i=1209 | [AASDataTypeIec61360DataType](#type-AASDataTypeIec61360DataType) | DataType | Enumeration |
 | ns=1;i=1210 | [AASSubmodelElementsDataType](#type-AASSubmodelElementsDataType) | DataType | Enumeration |
 | ns=1;i=1211 | [AASDisclosureTierDataType](#type-AASDisclosureTierDataType) | DataType | Enumeration |
+| ns=1;i=1212 | [AASLoadStateDataType](#type-AASLoadStateDataType) | DataType | Enumeration |
+| ns=1;i=1213 | [AASMaterializationOutcomeDataType](#type-AASMaterializationOutcomeDataType) | DataType | Enumeration |
 | ns=1;i=1220 | [AASKeyDataType](#type-AASKeyDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 | ns=1;i=1221 | [AASReferenceDataType](#type-AASReferenceDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 | ns=1;i=1222 | [AASLangStringDataType](#type-AASLangStringDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
@@ -68,6 +80,7 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | ns=1;i=1230 | [AASOperationVariableDataType](#type-AASOperationVariableDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 | ns=1;i=1231 | [AASAuthorizationOptionDataType](#type-AASAuthorizationOptionDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 | ns=1;i=1232 | [AASAttestationDataType](#type-AASAttestationDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=1;i=1233 | [AASMaterializationResultDataType](#type-AASMaterializationResultDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 
 ### Object types
 
@@ -239,7 +252,7 @@ Abstract base of every element that can appear inside a submodel.
 | SupplementalSemanticIds | Variable | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Optional | AASSubmodelElementType | Further concepts this element corresponds to. |
 | Qualifiers | Variable | [AASQualifierDataType](#type-AASQualifierDataType)\[\] | Optional | AASSubmodelElementType | Qualifiers on this element. |
 | EmbeddedDataSpecifications | Variable | [AASEmbeddedDataSpecificationDataType](#type-AASEmbeddedDataSpecificationDataType)\[\] | Optional | AASSubmodelElementType | Data specifications carried by this element. |
-| Index | Variable | UInt32 | Optional | AASSubmodelElementType | The element's position within its parent SubmodelElementList. OPC UA References are unordered, so an ordered collection carries its order explicitly or loses it. Present only for an element inside a list. |
+| Index | Variable | UInt32 | Optional | AASSubmodelElementType | The element's position within its parent SubmodelElementList. Optional, and recommended wherever the list's order is relevant: HasOrderedComponent states that the order matters, but Browse is not required to return references in order, so Index is what makes the position recoverable without relying on Server behaviour the Services do not guarantee. |
 
 <a id="type-AASPropertyType"></a>
 
@@ -247,13 +260,12 @@ Abstract base of every element that can appear inside a submodel.
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
-A single typed value. The value is carried twice: as a typed Variable for the native projection a generic Client expects, and as its exact lexical form, because several xsd types have no faithful OPC UA equivalent.
+A single typed value. The value node carries the OPC UA DataType that clause 7.1 assigns to the declared xsd type, and that mapping is injective, so a serializer recovers the declared type from the node rather than guessing it.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| ValueType | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Mandatory | AASPropertyType | The xsd type the value is expressed in. |
-| Value | Variable | i=24 | Optional | AASPropertyType | The value in its native OPC UA representation, for reading. Where the declared ValueType cannot be represented faithfully, this is the nearest representation and RawValue is authoritative. |
-| RawValue | Variable | [AASValueString](#type-AASValueString) | Mandatory | AASPropertyType | The value in the exact xsd lexical form the metamodel carries. This is the normative carrier for round-tripping: where it and Value disagree, RawValue wins. |
+| ValueType | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Mandatory | AASPropertyType | The xsd type the value is expressed in. Mandatory because the metamodel makes it mandatory while making the value itself optional: a Property with no value still declares a type, and there is then no value node whose DataType could carry it. |
+| Value | Variable | BaseDataType | Optional | AASPropertyType | The value. Declared as BaseDataType here because the concrete DataType depends on ValueType; a materialized node carries the specific DataType clause 7.1 assigns. |
 | ValueId | Variable | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | AASPropertyType | A reference to the value, where the value is itself an identified concept. |
 
 <a id="type-AASMultiLanguagePropertyType"></a>
@@ -279,9 +291,9 @@ A closed or half-open interval of a single typed value.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| ValueType | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Mandatory | AASRangeType | The xsd type the bounds are expressed in. |
-| Min | Variable | [AASValueString](#type-AASValueString) | Optional | AASRangeType | The lower bound in its exact lexical form. Absent means unbounded below, which is different from a bound of zero. |
-| Max | Variable | [AASValueString](#type-AASValueString) | Optional | AASRangeType | The upper bound in its exact lexical form. Absent means unbounded above. |
+| ValueType | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Mandatory | AASRangeType | The xsd type the bounds are expressed in. Mandatory for the same reason as on a Property: both bounds are optional and the declared type is not. |
+| Min | Variable | BaseDataType | Optional | AASRangeType | The lower bound, carrying the DataType clause 7.1 assigns to ValueType. Absent means unbounded below, which is different from a bound of zero. |
+| Max | Variable | BaseDataType | Optional | AASRangeType | The upper bound. Absent means unbounded above. |
 
 <a id="type-AASBlobType"></a>
 
@@ -364,14 +376,13 @@ An unordered set of elements, each identified by its own IdShort.
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
-An ordered sequence of elements. Its members have no IdShort, so they are named by index and carry their position in Index; that is what lets the sequence be reconstructed from a Browse result.
+A list of elements. Its members have no IdShort, so they are named by index. Whether the order carries meaning is stated by the ReferenceType the members are referenced with, not by a Property: HasOrderedComponent where it does, HasComponent where the list is a set or a bag.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| OrderRelevant | Variable | Boolean | Optional | AASSubmodelElementListType | Whether the order carries meaning. Order is preserved either way, because a round trip must reproduce its input whether or not the order is significant. |
 | TypeValueListElement | Variable | [AASSubmodelElementsDataType](#type-AASSubmodelElementsDataType) | Mandatory | AASSubmodelElementListType | The element kind every member is constrained to. |
 | SemanticIdListElement | Variable | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | AASSubmodelElementListType | The concept every member is an occurrence of, where they share one. |
-| ValueTypeListElement | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Optional | AASSubmodelElementListType | The xsd type every member's value is expressed in, where they share one. |
+| ValueTypeListElement | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Optional | AASSubmodelElementListType | The xsd type every member's value is expressed in, where they share one. Mandatory in the metamodel when the members are Properties or Ranges. |
 
 <a id="type-AASEntityType"></a>
 
@@ -403,9 +414,9 @@ An event source or sink.
 | State | Variable | [AASStateOfEventDataType](#type-AASStateOfEventDataType) | Mandatory | AASBasicEventElementType | Whether the event source is active. |
 | MessageTopic | Variable | String | Optional | AASBasicEventElementType | The topic events are delivered on. Where the delivery endpoint is itself catalogued, the registry entry points at it. |
 | MessageBroker | Variable | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | AASBasicEventElementType | The broker delivering the events. |
-| LastUpdate | Variable | [AASValueString](#type-AASValueString) | Optional | AASBasicEventElementType | When the event last fired, in its exact lexical form. |
-| MinInterval | Variable | [AASValueString](#type-AASValueString) | Optional | AASBasicEventElementType | Minimum interval between events, in its exact lexical form. |
-| MaxInterval | Variable | [AASValueString](#type-AASValueString) | Optional | AASBasicEventElementType | Maximum interval between events, in its exact lexical form. |
+| LastUpdate | Variable | DateTime | Optional | AASBasicEventElementType | When the event last fired. The metamodel types this xs:dateTime, so clause 7.1 gives it DateTime and it needs no lexical carrier. |
+| MinInterval | Variable | DurationString | Optional | AASBasicEventElementType | Minimum interval between events. The metamodel types this xs:duration, whose lexical space is the ISO 8601 duration form DurationString carries; the OPC UA Duration DataType is a count of milliseconds and cannot express the year and month components. |
+| MaxInterval | Variable | DurationString | Optional | AASBasicEventElementType | Maximum interval between events, on the same basis as MinInterval. |
 
 <a id="type-AASOperationType"></a>
 
@@ -446,6 +457,9 @@ The AAS Registry root - an xRegistry RegistryType, and therefore a FolderType - 
 | <PackageStoreGroup> | Object |  | OptionalPlaceholder | AASRegistryType | A package store held by the registry. |
 | LookupShellsByAssetLink | Method |  | Optional | AASRegistryType | Return the shells discoverable by an asset key. This is the discovery question - given a serial number or a part identifier, which shells describe it - answered without the caller browsing the whole collection. |
 | GetSubmodel | Method |  | Optional | AASRegistryType | Return a submodel document and enough metadata to parse it, given its identifier. The method form of the document fast path, for a Client that has an identifier rather than a node. |
+| AutoMaterialize | Variable | Boolean | Optional | AASRegistryType | Whether a change to a stored document re-materializes the AddressSpace without being asked. Part of the updateable registry profile. |
+| MaterializationGeneration | Variable | UInt32 | Optional | AASRegistryType | Increments once on each committed switch. A Client correlates a node's NodeVersion with the generation that produced it. |
+| Materialize | Method |  | Optional | AASRegistryType | Re-materialize the AddressSpace from the stored documents. Part of the updateable registry profile: the documents are canonical and the nodes are derived, so this is the operation that makes the derived side agree with the canonical one. |
 
 <a id="type-AASShellGroupType"></a>
 
@@ -492,6 +506,9 @@ An xRegistry ResourceType whose file content is one submodel document. Each vers
 | DisclosureTier | Variable | [AASDisclosureTierDataType](#type-AASDisclosureTierDataType) | Optional | AASSubmodelFileType | Whether this document is readable without authentication. A document is wholly one tier or the other: a boundary falling between elements inside a document cannot be expressed here. |
 | Authorization | Variable | [AASAuthorizationOptionDataType](#type-AASAuthorizationOptionDataType)\[\] | Optional | AASSubmodelFileType | The authorization options a Consumer may use to obtain access. |
 | SubmodelNode | Variable | NodeId | Optional | AASSubmodelFileType | The AASSubmodelType node modelling this same submodel as a live node tree, where the Server also implements the metamodel half. |
+| LoadState | Variable | [AASLoadStateDataType](#type-AASLoadStateDataType) | Optional | AASSubmodelFileType | The materialization state of this document. Part of the updateable registry profile. |
+| DesiredVersionId | Variable | String | Optional | AASSubmodelFileType | The version an operator wants materialized. Part of the updateable registry profile. |
+| ActiveVersionId | Variable | String | Optional | AASSubmodelFileType | The version currently materialized. It differs from DesiredVersionId while a switch is in flight, and persistently when the desired version failed to validate. |
 
 <a id="type-AASSubmodelTemplateGroupType"></a>
 
@@ -532,6 +549,10 @@ An xRegistry ResourceType whose file content is one concept description document
 |---|---|---|---|---|---|
 | ConceptIdentifier | Variable | String | Mandatory | AASConceptDescriptionFileType | The concept's authored identifier, verbatim, which is the value that appears as a SemanticId elsewhere. It is the resource's source identity. Dictionary identifiers frequently use a syntax unrelated to any URI scheme, which is precisely why the identifier is carried here and the node is named by the derived one. |
 | IsCaseOf | Variable | String\[\] | Optional | AASConceptDescriptionFileType | Concepts in other dictionaries this concept corresponds to. |
+| ConceptNode | Variable | NodeId | Optional | AASConceptDescriptionFileType | The AASConceptDescriptionType node modelling this same concept as a live node tree, where the Server also implements the metamodel half. |
+| LoadState | Variable | [AASLoadStateDataType](#type-AASLoadStateDataType) | Optional | AASConceptDescriptionFileType | The materialization state of this document. Part of the updateable registry profile. |
+| DesiredVersionId | Variable | String | Optional | AASConceptDescriptionFileType | The version an operator wants materialized. Part of the updateable registry profile. |
+| ActiveVersionId | Variable | String | Optional | AASConceptDescriptionFileType | The version currently materialized. |
 
 <a id="type-AASPackageStoreGroupType"></a>
 
@@ -567,13 +588,93 @@ An xRegistry ResourceType whose file content is one package: an immutable releas
 
 ### DataTypes
 
+<a id="type-AASAnyUri"></a>
+
+#### AASAnyUri  (ns=1;i=1180)
+
+*Subtype of:* String
+
+An xs:anyURI value. A subtype of String because xs:string already occupies String, and the two must stay distinguishable for the declared type to be recoverable from the value.
+
+<a id="type-AASHexBinary"></a>
+
+#### AASHexBinary  (ns=1;i=1181)
+
+*Subtype of:* ByteString
+
+An xs:hexBinary value. The octets are the same as an xs:base64Binary value's, so the two differ only in how they were written; ByteString carries xs:base64Binary and this subtype carries the hexadecimal form.
+
+<a id="type-AASNonPositiveInteger"></a>
+
+#### AASNonPositiveInteger  (ns=1;i=1182)
+
+*Subtype of:* Integer
+
+An xs:nonPositiveInteger value: an integer at most zero.
+
+<a id="type-AASNegativeInteger"></a>
+
+#### AASNegativeInteger  (ns=1;i=1183)
+
+*Subtype of:* [AASNonPositiveInteger](#type-AASNonPositiveInteger)
+
+An xs:negativeInteger value: an integer below zero. A subtype of AASNonPositiveInteger, mirroring the restriction hierarchy xsd itself defines.
+
+<a id="type-AASPositiveInteger"></a>
+
+#### AASPositiveInteger  (ns=1;i=1184)
+
+*Subtype of:* UInteger
+
+An xs:positiveInteger value: an integer above zero. A subtype of UInteger, which carries xs:nonNegativeInteger.
+
+<a id="type-AASGYear"></a>
+
+#### AASGYear  (ns=1;i=1185)
+
+*Subtype of:* String
+
+An xs:gYear value, such as 2026. A Gregorian year denotes a period rather than an instant, and OPC UA has no DataType for a period, so the value is its lexical form.
+
+<a id="type-AASGYearMonth"></a>
+
+#### AASGYearMonth  (ns=1;i=1186)
+
+*Subtype of:* String
+
+An xs:gYearMonth value, such as 2026-08.
+
+<a id="type-AASGMonth"></a>
+
+#### AASGMonth  (ns=1;i=1187)
+
+*Subtype of:* String
+
+An xs:gMonth value, such as --08.
+
+<a id="type-AASGMonthDay"></a>
+
+#### AASGMonthDay  (ns=1;i=1188)
+
+*Subtype of:* String
+
+An xs:gMonthDay value, such as --08-07.
+
+<a id="type-AASGDay"></a>
+
+#### AASGDay  (ns=1;i=1189)
+
+*Subtype of:* String
+
+An xs:gDay value, such as ---07.
+
 <a id="type-AASValueString"></a>
 
 #### AASValueString  (ns=1;i=1199)
 
 *Subtype of:* String
 
-The xsd lexical form of a typed value, as authored. A subtype of String so that a lexical value is distinguishable from an ordinary string by its DataType rather than by which Variable it came from - the pattern OPC UA already uses for DecimalString, DurationString, DateString and TimeString. The xsd type the form denotes is declared separately, in ValueType.
+The xsd lexical form of a value whose declared type is carried in a sibling field of the same Structure. A Structure field has one static DataType and cannot vary with a declared type, so a qualifier, an extension or a data specification carries its value lexically and its ValueType field says how to read it. A subtype of String so the field is recognizable as a lexical form rather than as text - the pattern OPC UA uses for DecimalString and DurationString. It is never the DataType of a Variable: a value node always carries the specific DataType clause 7.1 assigns to its declared xsd type.
 
 <a id="type-AASAssetKindDataType"></a>
 
@@ -711,7 +812,7 @@ The kind of thing a reference key addresses. The enumeration is closed: a value 
 
 *Subtype of:* Enumeration
 
-The xsd type a value is expressed in. Several of these have no faithful OPC UA equivalent, which is why a value is carried both as a typed Variable and as its exact lexical form.
+The xsd type a value is expressed in. All thirty of the metamodel's values are listed. Each maps onto exactly one OPC UA DataType, given in clause 7.1, so the declared type is recoverable from the value node and never has to be guessed.
 
 | Field | DataType | Description |
 |---|---|---|
@@ -721,18 +822,18 @@ The xsd type a value is expressed in. Several of these have no faithful OPC UA e
 | Byte |  |  |
 | Date |  |  |
 | DateTime |  |  |
-| Decimal |  | Arbitrary precision; has no faithful OPC UA equivalent, so RawValue is the normative carrier. |
+| Decimal |  |  |
 | Double |  |  |
-| Duration |  | Has no native OPC UA equivalent; RawValue is the normative carrier. |
+| Duration |  |  |
 | Float |  |  |
 | GDay |  |  |
 | GMonth |  |  |
 | GMonthDay |  |  |
 | GYear |  |  |
-| GYearMonth |  | Partial date; RawValue is the normative carrier. |
+| GYearMonth |  |  |
 | HexBinary |  |  |
 | Int |  |  |
-| Integer |  | Unbounded; RawValue is the normative carrier. |
+| Integer |  |  |
 | Long |  |  |
 | NegativeInteger |  |  |
 | NonNegativeInteger |  |  |
@@ -816,6 +917,39 @@ Whether an entity is readable without authentication. It advertises the tier so 
 |---|---|---|
 | Public |  | Readable without authentication. |
 | Controlled |  | Requires an authenticated role. |
+
+<a id="type-AASLoadStateDataType"></a>
+
+#### AASLoadStateDataType  (ns=1;i=1212)
+
+*Subtype of:* Enumeration
+
+The materialization state of one stored document under the updateable registry profile.
+
+| Field | DataType | Description |
+|---|---|---|
+| Unloaded |  | The document is stored but not materialized. |
+| Loading |  | A shadow generation is being prepared and is not yet visible. |
+| Active |  | The materialized nodes are the ones a Client sees. |
+| Superseded |  | A newer generation has been switched in; this one still serves retained work. |
+| Retiring |  | The superseded generation is draining and its nodes will be removed. |
+| Retired |  | The generation's nodes have been removed. |
+| Failed |  | The document did not validate or did not materialize. The stored document is kept and the previously active generation, where there was one, keeps serving. |
+
+<a id="type-AASMaterializationOutcomeDataType"></a>
+
+#### AASMaterializationOutcomeDataType  (ns=1;i=1213)
+
+*Subtype of:* Enumeration
+
+What a Materialize call did to one document.
+
+| Field | DataType | Description |
+|---|---|---|
+| Unchanged |  | The document's digest was unchanged, so it was not re-materialized. |
+| Materialized |  | A new generation was prepared and switched in. |
+| Retired |  | The document's projection was removed. |
+| Failed |  | The document did not validate or did not materialize. Diagnostic says why. |
 
 <a id="type-AASKeyDataType"></a>
 
@@ -902,7 +1036,7 @@ A qualifier constraining or annotating an element.
 | Kind | [AASQualifierKindDataType](#type-AASQualifierKindDataType) | What the qualifier qualifies. |
 | Type | String | The qualifier type name. |
 | ValueType | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | The xsd type the value is expressed in. |
-| Value | [AASValueString](#type-AASValueString) | The value in its exact lexical form. |
+| Value | [AASValueString](#type-AASValueString) | The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type. |
 | ValueId | [AASReferenceDataType](#type-AASReferenceDataType) | A reference to the value, where it is itself an identified concept. |
 | SemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | The concept this qualifier is an occurrence of. |
 | SupplementalSemanticIds | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Further concepts this qualifier corresponds to. |
@@ -940,7 +1074,7 @@ The IEC 61360 data specification content of a concept definition.
 | Definition | [AASLangStringDataType](#type-AASLangStringDataType)\[\] | Definition per language. |
 | ValueFormat | String | Format of the value. |
 | ValueList | String | Permitted values, serialized in the metamodel's own form. |
-| Value | [AASValueString](#type-AASValueString) | The value in its exact lexical form. |
+| Value | [AASValueString](#type-AASValueString) | The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type. |
 | LevelType | String | Which of min, nom, typ and max apply. |
 
 <a id="type-AASExtensionDataType"></a>
@@ -955,7 +1089,7 @@ A proprietary extension carried on a Referable. Extensions round-trip verbatim; 
 |---|---|---|
 | Name | String | Extension name. |
 | ValueType | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | The xsd type the value is expressed in. |
-| Value | [AASValueString](#type-AASValueString) | The value in its exact lexical form. |
+| Value | [AASValueString](#type-AASValueString) | The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type. |
 | RefersTo | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | What the extension refers to. |
 | SemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | The concept this extension is an occurrence of. |
 | SupplementalSemanticIds | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Further concepts this extension corresponds to. |
@@ -1014,12 +1148,30 @@ A signature or attestation attached to a package. Its presence is not verificati
 | Digest | String | Digest of the attestation artifact. |
 | Signer | String | The party that produced the attestation. |
 
+<a id="type-AASMaterializationResultDataType"></a>
+
+#### AASMaterializationResultDataType  (ns=1;i=1233)
+
+*Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
+
+The result of materializing one document. A call returns one of these per document it considered, so a caller learns which documents were skipped as unchanged and which failed, not merely whether the call succeeded.
+
+| Field | DataType | Description |
+|---|---|---|
+| Xid | String | The registry-relative path of the document this result is about. |
+| Outcome | [AASMaterializationOutcomeDataType](#type-AASMaterializationOutcomeDataType) | What the call did to it. |
+| VersionId | String | The version that is now active for this document, where one is. |
+| MaterializedNode | NodeId | The root node of the generation now serving this document, where it materialized. |
+| Diagnostic | String | Why the document failed, where it did. Empty otherwise. |
+
 ### Methods
 
 | Method | Owning type | Input arguments | Output arguments |
 |---|---|---|---|
 | LookupShellsByAssetLink | [AASRegistryType](#type-AASRegistryType) | Name, Value | Shells |
 | GetSubmodel | [AASRegistryType](#type-AASRegistryType) | SubmodelIdentifier | Document, Format, ContentType |
+| Materialize | [AASRegistryType](#type-AASRegistryType) | Targets, Force | Generation, Results |
 | LookupShellsByAssetLink | AASRegistry | Name, Value | Shells |
 | GetSubmodel | AASRegistry | SubmodelIdentifier | Document, Format, ContentType |
+| Materialize | AASRegistry | Targets, Force | Generation, Results |
 
