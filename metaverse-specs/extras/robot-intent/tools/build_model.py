@@ -532,7 +532,10 @@ enum_type(3009, "IntentFailureEnum",
            ("Other", 18, "A reason none of the above describes; see Message."),
            ("SafetyLimitExceeded", 19,
             "Refused because the request would exceed a limit the safety system is "
-            "enforcing. See clause 10.3.")])
+            "enforcing. See clause 10.3."),
+           ("NoTransition", 20,
+            "A mission branch point had no true outgoing transition, or the selected "
+            "transition target did not resolve. See clause 7.4.")])
 IntentFailureEnum = T(3009)
 
 enum_type(3010, "StopModeEnum",
@@ -1449,11 +1452,14 @@ DispenseIntentDataType = T(3079)
 struct_type(3080, "FastenIntentDataType",
             "Drive a fastener at the target. This intent is deliberately THIN: "
             "OPC 40450 and OPC 40451 already define joining and tightening in full, "
-            "so Joint references the joint in that model and the result belongs there. "
+            "so where such a model is exposed, Joint references the joint in that model "
+            "and the result belongs there; otherwise Joint is null and the remaining "
+            "fastening parameters stand alone. "
             "Restating those parameters here would create a second definition of the "
             "same fact.",
             [("Joint", NodeId_, "The joint being fastened, in an OPC UA joining or "
-                                "tightening model where one is implemented."),
+                                "tightening model where one is implemented; null "
+                                "otherwise."),
              ("ProgramNumber", UInt32, "The tightening program the tool is to run."),
              ("TargetTorque", Double, "Target torque in newton metres, where the robot "
                                       "supplies it rather than the tool."),
