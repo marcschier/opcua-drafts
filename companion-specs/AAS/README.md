@@ -91,6 +91,11 @@ python companion-specs\AAS\tools\jsonld\dpp_map.py
 python companion-specs\AAS\tools\jsonld\wot_bridge.py <environment.json> --proposed
 ```
 
+`build_model.py` emits the NodeSet, the CSV and Annex A, and injects the annex into the
+specification, so the prose and the model cannot drift apart. `roundtrip_check.py` runs both
+directions over the corpus and then runs a negative control that breaks one normative rule at a
+time, so a green result means the rules are load-bearing rather than that the comparison is blind.
+
 Without the corpus the JSON-LD tools fall back to `jsonld/fixtures/`, so a clone runs offline.
 `rdflib` and `pyld` are required.
 
@@ -153,19 +158,6 @@ which any choice is left to the implementer cannot be generated. It forces five 
   with no children.
 
 Annex B of the specification lists every metamodel field and where it lives.
-
-## Regenerate and validate
-
-```powershell
-python companion-specs\AAS\tools\build_model.py
-python companion-specs\AAS\tools\validate_local.py
-python companion-specs\AAS\tools\roundtrip_check.py
-```
-
-`build_model.py` emits the NodeSet, the CSV and Annex A, and injects the annex into the
-specification, so the prose and the model cannot drift apart. `roundtrip_check.py` runs both
-directions over the corpus and then runs a negative control that breaks one normative rule at a
-time, so a green result means the rules are load-bearing rather than that the comparison is blind.
 
 Draft numeric NodeIds use the provisional `1001+` block in `http://opcfoundation.org/UA/I4AAS/`;
 final NodeIds are assigned by the OPC Foundation.
