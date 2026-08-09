@@ -14,7 +14,10 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-SKIP_DIRS = {".git", "node_modules", "__pycache__"}
+SKIP_DIRS = {".git", "node_modules", "__pycache__",
+             # Local, gitignored cache of the pinned upstream AAS example corpus.
+             # Fetched by companion-specs/AAS/jsonld/tools/fetch_corpus.py.
+             ".corpus"}
 
 
 def is_nested_repo(path):
