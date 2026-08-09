@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import random
 import sys
 
 from rdflib import Graph
@@ -38,7 +39,8 @@ FIXTURES = os.path.join(ROOT, "fixtures")
 CORPUS = os.path.join(ROOT, ".corpus")
 
 sys.path.insert(0, HERE)
-from lift import AAS, Lifter, Ontology, serialize  # noqa: E402
+from lift import AAS, Lifter, Ontology, Schema, serialize  # noqa: E402
+from lower import Lowerer, parse_nt  # noqa: E402
 
 IDSHORT = AAS + "Referable/idShort"
 
@@ -58,7 +60,7 @@ def load_expected(path):
 def load_actual(json_path, profile="core", emit_root_idshort=True):
     with open(json_path, encoding="utf-8") as f:
         doc = json.load(f)
-    lifter = Lifter(ONTOLOGY, BASE, profile, emit_root_idshort=emit_root_idshort)
+    lifter = Lifter(ONTOLOGY, BASE, profile, emit_root_idshort=emit_root_idshort, schema=SCHEMA)
     sink = lifter.lift(doc)
     g = Graph()
     g.parse(data=serialize(sink, with_graphs=False), format="nt")
@@ -101,14 +103,55 @@ def describe(expected, actual, limit=4):
     return "\n".join(out)
 
 
+def canonical(doc):
+    """AAS JSON compared as data, not as bytes.
+
+    Root collections are order-free - the metamodel gives no meaning to the
+    order of `submodels` within an Environment - so they are sorted by `id`
+    before comparison. Every other array keeps its order, because the round trip
+    is exactly the claim that order survives.
+    """
+    if isinstance(doc, dict):
+        return {k: canonical(v) for k, v in sorted(doc.items())}
+    if isinstance(doc, list):
+        return [canonical(v) for v in doc]
+    return doc
+
+
+def round_trip(jpath, with_order):
+    """Lift then lower, and report whether the source document came back.
+
+    The triples are shuffled before lowering. RDF is a set, so a consumer gets no
+    order guarantee, and a lowering that recovered an array's order from the
+    order the triples happened to arrive in would be measuring the serializer
+    rather than the graph. Shuffling with a fixed seed makes the run repeatable
+    while removing that accident.
+    """
+    with open(jpath, encoding="utf-8") as f:
+        source = json.load(f)
+    lifter = Lifter(ONTOLOGY, BASE, "linked" if with_order else "core", schema=SCHEMA)
+    sink = lifter.lift(source)
+    core = parse_nt(serialize(sink, with_graphs=False))
+    random.Random(20260809).shuffle(core)
+    order = parse_nt("\n".join(f"{s} {p} {o} ." for s, p, o, _ in sink.quads)) if with_order else ()
+    low = Lowerer(ONTOLOGY, SCHEMA)
+    low.load(core, order)
+    result = low.lower()
+    for collection in ("assetAdministrationShells", "submodels", "conceptDescriptions"):
+        if collection in source:
+            source[collection] = sorted(source[collection], key=lambda n: n.get("id", ""))
+    return canonical(source) == canonical(result), source, result
+
+
 def main():
-    global ONTOLOGY
+    global ONTOLOGY, SCHEMA
     ap = argparse.ArgumentParser()
     ap.add_argument("--corpus", action="store_true", help="require the full upstream corpus")
     ap.add_argument("--show", type=int, default=6, help="how many failures to describe")
     args = ap.parse_args()
 
     ONTOLOGY = Ontology()
+    SCHEMA = Schema()
 
     cases = list(cases_from_corpus()) if (args.corpus or os.path.exists(os.path.join(CORPUS, "manifest.json"))) else []
     source = "upstream corpus"
@@ -120,6 +163,8 @@ def main():
         source = "vendored fixtures"
 
     passed, d1, failed, errored, ordered = 0, 0, [], [], 0
+    rt_with, rt_without, rt_err = 0, 0, 0
+    order_only = []
     for case, jpath, tpath in cases:
         try:
             expected = load_expected(tpath)
@@ -131,29 +176,50 @@ def main():
             ordered += 1
         if isomorphic(expected, actual):
             passed += 1
-            continue
-        # D1 of the register: for most cases the upstream JSON example carries a
-        # root idShort that the upstream Turtle example does not. Retry without
-        # it; if that agrees, the only difference is the known corpus deviation.
+        else:
+            # D1 of the register: for most cases the upstream JSON example carries a
+            # root idShort that the upstream Turtle example does not. Retry without
+            # it; if that agrees, the only difference is the known corpus deviation.
+            try:
+                without, _ = load_actual(jpath, profile="linked", emit_root_idshort=False)
+            except Exception:  # noqa: BLE001
+                without = None
+            if without is not None and isomorphic(expected, without):
+                d1 += 1
+            else:
+                failed.append((case, expected, actual))
+
+        # The round trip, run twice: with the ordering graph the enrichment
+        # profile emits, and without it. The difference is what the upstream
+        # serialization loses, measured rather than asserted.
         try:
-            without, _ = load_actual(jpath, profile="linked", emit_root_idshort=False)
+            ok_with, _, _ = round_trip(jpath, with_order=True)
+            ok_without, _, _ = round_trip(jpath, with_order=False)
         except Exception:  # noqa: BLE001
-            without = None
-        if without is not None and isomorphic(expected, without):
-            d1 += 1
+            rt_err += 1
             continue
-        failed.append((case, expected, actual))
+        rt_with += ok_with
+        rt_without += ok_without
+        if ok_with and not ok_without:
+            order_only.append(case)
 
     total = len(cases)
     print(f"source: {source}")
     print(f"cases: {total}")
     print("\nAASLD-RdfCompatible (base supplied per D3)")
-    print(f"  isomorphic outright                     : {passed}")
+    print(f"  isomorphic outright                      : {passed}")
     print(f"  isomorphic once the root idShort is set  : {d1}   <- corpus deviation D1")
     print(f"  differing                                : {len(failed)}")
     print(f"  errored                                  : {len(errored)}")
+    print("\nAASLD-JsonRoundTrip")
+    print(f"  restored with the ordering graph         : {rt_with}")
+    print(f"  restored from the core graph alone       : {rt_without}")
+    print(f"  restored ONLY with ordering              : {len(order_only)}   <- what D2 costs")
+    print(f"  errored                                  : {rt_err}")
     print("\nAASLD-Linked")
     print(f"  cases carrying an ordering graph: {ordered}")
+    for case in order_only[: args.show]:
+        print(f"    order-dependent: {case}")
 
     for case, why in errored[: args.show]:
         print(f"\n  ERROR {case}\n      {why[:200]}")

@@ -97,6 +97,14 @@ metamodel gives the order meaning:
 Ordering is therefore carried in the enrichment graph, by an index predicate rather than an
 `rdf:List`, so the published SHACL and ordinary SPARQL both continue to work.
 
+**Measured cost.** 175 of 2 424 corpus documents (7.2%) cannot be restored from the core graph and
+are restored exactly once the ordering graph is present. See the result table below.
+
+The loss is not confined to the cases one would guess. Every array-valued property is affected,
+including multi-language values, whose array order the metamodel's own JSON serialization preserves.
+The lifting therefore records the position of every member of every array rather than of an
+enumerated list of properties, and which properties those are is read from the pinned JSON Schema.
+
 ## D3 — Generated Turtle declares no base IRI
 
 **Severity: medium.**
@@ -153,7 +161,9 @@ matched pairs are usable.
 
 ## Result
 
-Running `tools/conformance.py` over the pinned corpus:
+Running `tools/conformance.py` over the pinned corpus.
+
+**`AASLD-RdfCompatible`** — the lifted graph against the upstream Turtle, by graph isomorphism:
 
 | | cases |
 |---|---|
@@ -163,9 +173,28 @@ Running `tools/conformance.py` over the pinned corpus:
 | differing — generator divergence (D7) | 22 |
 | unreadable (D6) | 2 |
 
+**`AASLD-JsonRoundTrip`** — lift, then lower, and compare against the source document. The triples
+are shuffled before lowering, because RDF is a set and a consumer gets no order guarantee; without
+shuffling the measurement records the serializer's sort order rather than the graph's content.
+
+| | cases |
+|---|---|
+| restored **with** the ordering graph | **2 424 of 2 424 (100%)** |
+| restored from the **core graph alone** | 2 249 of 2 424 (92.8%) |
+| restored **only** with the ordering graph | **175 (7.2%)** |
+
+Those 175 documents are what defect D2 costs. They are not exotic: they are ordinary documents with
+a multi-key `Reference`, an ordered `SubmodelElementList`, or a multi-language value with more than
+one entry. The normative RDF serialization cannot express them faithfully, and the enrichment graph
+recovers every one.
+
+This is the measurement the specification rests on. It is also the answer to the question of whether
+the existing RDF serialization plus a framing tool would have been enough: for 92.8% of documents it
+would, and for the rest it would silently return a different document from the one that went in.
+
 ## Reporting
 
 D1 to D7 are to be reported upstream. D1, D3, D4, D6 and D7 are implementation or specification gaps
 that could be fixed without a breaking change. D2 is a design decision, and the report should
 present it as a question about `Reference/keys` specifically, where the loss is semantic rather than
-cosmetic.
+cosmetic, and should carry the 175-document measurement rather than an argument.

@@ -38,6 +38,7 @@ import urllib.parse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ONTOLOGY = os.path.join(os.path.dirname(HERE), "upstream", "rdf-ontology.ttl")
+SCHEMA = os.path.join(os.path.dirname(HERE), "upstream", "aas.schema.json")
 
 AAS = "https://admin-shell.io/aas/3/0/"
 XS = "http://www.w3.org/2001/XMLSchema#"
@@ -53,15 +54,16 @@ ROOT_COLLECTIONS = {
     "conceptDescriptions": "ConceptDescription",
 }
 
-# Aggregations whose order the metamodel gives meaning to. Upstream discards it
-# (D2); the enrichment graph restores it.
-ORDERED_PROPERTIES = {
-    AAS + "Reference/keys",
-    AAS + "SubmodelElementList/value",
-    AAS + "Operation/inputVariables",
-    AAS + "Operation/outputVariables",
-    AAS + "Operation/inoutputVariables",
-}
+# Ordering. The upstream serialization discards the order of every multi-valued
+# property (defect D2), so an array that came in as `[a, b]` may come back as
+# `[b, a]`. That is harmless for a set, and wrong for `Reference/keys`, where the
+# key sequence is the reference path, and for a `SubmodelElementList` whose
+# `orderRelevant` is true, and for a multi-language value, whose array order the
+# metamodel's own serialization preserves.
+#
+# Rather than enumerate the ordered cases and be wrong about one, the enrichment
+# profile records the position of every member of every array-valued property.
+# Which properties those are is read from the pinned JSON Schema, not listed here.
 
 
 # ---------------------------------------------------------------------------
@@ -120,6 +122,64 @@ class Ontology:
             if hit:
                 return hit
         return None
+
+
+class Schema:
+    """The facts the ontology does not carry: discriminators, arrays, enum spelling."""
+
+    def __init__(self, path=SCHEMA):
+        with open(path, encoding="utf-8") as f:
+            doc = json.load(f)
+        self.defs = doc.get("$defs") or doc.get("definitions") or {}
+
+        # A class carries `modelType` when its definition pins it to a constant.
+        self.model_type = set()
+        for name, node in self.defs.items():
+            for const in re.findall(r'"modelType":\s*\{"const":\s*"(\w+)"', json.dumps(node)):
+                self.model_type.add(const)
+
+        # Arrays, and the JSON type of each scalar member, keyed by (class, member).
+        self.arrays = set()
+        self.scalar_type = {}
+        for name, node in self.defs.items():
+            for props in self._property_blocks(node):
+                for member, spec in props.items():
+                    if not isinstance(spec, dict):
+                        continue
+                    if spec.get("type") == "array":
+                        self.arrays.add((name, member))
+                    elif "type" in spec:
+                        self.scalar_type[(name, member)] = spec["type"]
+
+        # Enumeration spelling: the ontology individual is `Int`, the JSON is `xs:int`.
+        self.enum_json = {}
+        for name, node in self.defs.items():
+            values = node.get("enum")
+            if values:
+                self.enum_json[name] = list(values)
+
+    @staticmethod
+    def _property_blocks(node):
+        if not isinstance(node, dict):
+            return
+        if "properties" in node:
+            yield node["properties"]
+        for branch in node.get("allOf", []) or []:
+            if isinstance(branch, dict) and "properties" in branch:
+                yield branch["properties"]
+
+    def is_array(self, onto, cls, member):
+        for c in onto.mro(cls):
+            if (c, member) in self.arrays:
+                return True
+        return False
+
+    def json_type(self, onto, cls, member):
+        for c in onto.mro(cls):
+            hit = self.scalar_type.get((c, member))
+            if hit:
+                return hit
+        return "string"
 
 
 # ---------------------------------------------------------------------------
@@ -183,8 +243,9 @@ def literal(value, datatype=None, language=None):
 # ---------------------------------------------------------------------------
 class Lifter:
     def __init__(self, onto: Ontology, base: str, profile: str = "core",
-                 emit_root_idshort: bool = True):
+                 emit_root_idshort: bool = True, schema: "Schema | None" = None):
         self.onto = onto
+        self.schema = schema or Schema()
         self.base = base
         self.profile = profile
         # Upstream drops this (defect D1). The lifting emits it; the conformance
@@ -243,16 +304,14 @@ class Lifter:
                 raise ValueError(f"no property {key!r} on {cls} or its supertypes")
             if is_root and prop["iri"] == AAS + "Referable/idShort" and not self.emit_root_idshort:
                 continue
-            self.lift_value(subject, prop, value)
+            self.lift_value(subject, prop, value, cls, key)
         return subject
 
-    def lift_value(self, subject, prop, value):
-        rng = prop["range"] or ""
+    def lift_value(self, subject, prop, value, cls, key):
         if isinstance(value, list):
-            ordered = prop["iri"] in ORDERED_PROPERTIES
             for index, item in enumerate(value):
                 obj = self.lift_single(subject, prop, item)
-                if ordered and self.profile == "linked":
+                if self.profile == "linked":
                     # Order is carried by an index on a reified occurrence, not
                     # by rdf:List, so the published SHACL and ordinary SPARQL
                     # both keep working on the core graph.
