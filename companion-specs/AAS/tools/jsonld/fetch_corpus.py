@@ -36,7 +36,7 @@ import urllib.parse
 import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
+ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "jsonld"))
 CACHE = os.path.join(ROOT, ".corpus")
 
 # The pinned upstream release. Every artefact this specification is checked

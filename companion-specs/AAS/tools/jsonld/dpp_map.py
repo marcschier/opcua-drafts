@@ -33,13 +33,13 @@ import sys
 from collections import Counter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
+ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "jsonld"))
 sys.path.insert(0, HERE)
 
 from dpp_inventory import (CACHE, FAMILIES, REF, REPO, is_legal_iri,  # noqa: E402
                            scheme_of, walk)
 
-OUT = os.path.join(ROOT, "dpp", "mappings.sssom.tsv")
+OUT = os.path.normpath(os.path.join(HERE, "..", "..", "dpp", "mappings.sssom.tsv"))
 LD = "https://w3id.org/aas-dpp/"
 
 # ECLASS publishes this construction in "ECLASS Serialization as RDF, Part 1"

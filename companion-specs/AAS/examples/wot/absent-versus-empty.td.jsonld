@@ -1,0 +1,144 @@
+[
+  {
+    "@context": [
+      "https://www.w3.org/2022/wot/td/v1.1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "aas": "https://admin-shell.io/aas/3/0/",
+        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
+        "ua": "http://opcfoundation.org/UA/"
+      }
+    ],
+    "@type": [
+      "uav:object"
+    ],
+    "title": "AbsentVersusEmpty",
+    "id": "https://fabrikam.com/ids/sm/absent-vs-empty",
+    "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty",
+    "uav:browseName": "nsu={server};AbsentVersusEmpty",
+    "uav:typeref": "i4aas:AASSubmodelType",
+    "properties": {
+      "EmptyCollection": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyCollection",
+        "uav:browseName": "nsu={server};EmptyCollection",
+        "uav:typeref": "i4aas:AASSubmodelElementCollectionType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AbsentCollection": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentCollection",
+        "uav:browseName": "nsu={server};AbsentCollection",
+        "uav:typeref": "i4aas:AASSubmodelElementCollectionType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "EmptyList": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyList",
+        "uav:browseName": "nsu={server};EmptyList",
+        "uav:typeref": "i4aas:AASSubmodelElementListType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AbsentList": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentList",
+        "uav:browseName": "nsu={server};AbsentList",
+        "uav:typeref": "i4aas:AASSubmodelElementListType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "EmptyStatements": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyStatements",
+        "uav:browseName": "nsu={server};EmptyStatements",
+        "uav:typeref": "i4aas:AASEntityType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AbsentStatements": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentStatements",
+        "uav:browseName": "nsu={server};AbsentStatements",
+        "uav:typeref": "i4aas:AASEntityType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "PresentButEmptyValue": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#PresentButEmptyValue",
+        "uav:browseName": "nsu={server};PresentButEmptyValue",
+        "uav:typeref": "i4aas:AASPropertyType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AbsentValue": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentValue",
+        "uav:browseName": "nsu={server};AbsentValue",
+        "uav:typeref": "i4aas:AASPropertyType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "EmptyLangStrings": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyLangStrings",
+        "uav:browseName": "nsu={server};EmptyLangStrings",
+        "uav:typeref": "i4aas:AASMultiLanguagePropertyType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AbsentLangStrings": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentLangStrings",
+        "uav:browseName": "nsu={server};AbsentLangStrings",
+        "uav:typeref": "i4aas:AASMultiLanguagePropertyType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
+        ],
+        "uav:modellingRule": "Optional"
+      }
+    },
+    "links": []
+  }
+]

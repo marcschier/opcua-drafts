@@ -26,7 +26,7 @@ NOT**, **RECOMMENDED**, **MAY** and **OPTIONAL** are to be interpreted as descri
   - [Structure of the document](#structure-of-the-document)
   - [Working principles](#working-principles)
 - [Terms and definitions](#terms-and-definitions)
-- [1 Technical data format JSON-LD (normative)](#1-technical-data-format-json-ld-normative)
+- [1 The canonical JSON-LD form (normative)](#1-the-canonical-json-ld-form-normative)
 - [2 Lifting (normative)](#2-lifting-normative)
   - [2.1 Parameters](#21-parameters)
   - [2.2 Subject terms](#22-subject-terms)
@@ -37,6 +37,8 @@ NOT**, **RECOMMENDED**, **MAY** and **OPTIONAL** are to be interpreted as descri
 - [3 The ordering graph (normative)](#3-the-ordering-graph-normative)
 - [4 Lowering (normative)](#4-lowering-normative)
 - [5 The JSON-LD context (normative)](#5-the-json-ld-context-normative)
+- [5A Export (normative)](#5a-export-normative)
+- [5B Authoring an AAS inside a Thing Description (normative)](#5b-authoring-an-aas-inside-a-thing-description-normative)
 - [6 Conformance (normative)](#6-conformance-normative)
 - [Annex A — Constraints](#annex-a--constraints)
 - [Annex B — Deviations from the RDF mapping](#annex-b--deviations-from-the-rdf-mapping)
@@ -48,17 +50,31 @@ NOT**, **RECOMMENDED**, **MAY** and **OPTIONAL** are to be interpreted as descri
 
 ### Scope of this document
 
-This document defines how an Asset Administration Shell expressed in the JSON mapping of
-IDTA-01001 Part 1 is represented as RDF through JSON-LD, and how such a representation is converted
-back.
+This document defines **JSON-LD as a format an Asset Administration Shell is authored in**, and the
+conversions that make an authored document usable everywhere an AAS is expected.
+
+The goal is that an author writes an AAS as JSON-LD, using the vocabulary the OWL ontology of
+IDTA-01001 Part 1 already publishes, and that the result is:
+
+- **an AAS**, exportable as JSON, as XML and as an AASX package through a registry, without loss;
+- **RDF**, so it can be queried, linked to other data and validated against the published SHACL
+  schema; and
+- **usable inside a W3C Thing Description**, so a WoT document carrying the AAS vocabulary
+  materializes the AddressSpace the OPC UA AAS companion specification defines. Annex F of that
+  document states that correspondence.
+
+The canonical form is therefore a JSON-LD document whose shape follows the JSON mapping and whose
+meaning follows the RDF mapping. The two already exist and already agree on the metamodel; what has
+been missing is the document that lets one artefact be both.
 
 It defines:
 
-- a **lifting**, which converts an AAS JSON document to an RDF graph;
+- a **canonical JSON-LD form**, which an author writes and a processor reads (clause 1);
+- a **lifting**, which converts that form, or a plain AAS JSON document, to an RDF graph;
 - an **ordering graph**, which carries the information the RDF mapping does not represent;
-- a **lowering**, which converts an RDF graph back to an AAS JSON document;
-- a **JSON-LD context**, which allows a JSON-LD processor to interpret an AAS JSON document
-  directly, within the limits clause 5 states;
+- a **lowering**, which converts an RDF graph back to an AAS JSON document, and so to XML and AASX
+  through the existing serializations;
+- a **JSON-LD context**, which is what makes the authored document JSON-LD in the first place;
 - three **conformance claims**, which are independent of one another.
 
 It does not define a new vocabulary. The class and property IRIs are those of the OWL ontology
@@ -100,20 +116,30 @@ defines.
 **root Identifiable** — an `AssetAdministrationShell`, `Submodel` or `ConceptDescription` that
 appears in one of the three top-level collections of an `Environment`.
 
-## 1 Technical data format JSON-LD (normative)
+## 1 The canonical JSON-LD form (normative)
 
 IDTA-01001 Part 1 defines the technical data formats XML, JSON and RDF. This document defines a
 fourth, **JSON-LD**, whose media type is `application/ld+json`.
 
-A JSON-LD representation of an Asset Administration Shell **MUST** be an AAS JSON document as
-defined by the JSON mapping, unchanged, to which a `@context` member has been added.
+The canonical form takes its **shape** from the JSON mapping and its **meaning** from the RDF
+mapping. An Asset Administration Shell in JSON-LD:
 
-A conforming implementation **MUST NOT** require any other change to the JSON document. In
-particular it **MUST NOT** require a member to be renamed, added, removed or reordered.
+- **MUST** carry a `@context` member referencing the context of clause 5, either by its IRI or by
+  value;
+- **MUST** use the member names, nesting and `modelType` discriminator of the JSON mapping;
+- **MUST NOT** rename, add, remove or reorder a member relative to that mapping.
 
-The RDF graph a JSON-LD representation denotes is the graph the lifting of clause 2 produces. A
-JSON-LD processor applying the context of clause 5 produces part of that graph; clause 5 states
-which part it does not produce.
+A document meeting these rules is an AAS JSON document and a JSON-LD document at the same time. It
+is therefore accepted unchanged by a JSON-mapping reader that ignores `@context` as an unknown
+member, and by a JSON-LD processor.
+
+An implementation **MAY** accept a plain AAS JSON document with no `@context` and apply the context
+of clause 5 to it. Whether the `@context` is written in the document or supplied by the reader does
+not change the graph.
+
+The RDF graph a JSON-LD document denotes is the graph the lifting of clause 2 produces. A JSON-LD
+processor applying the context alone produces part of that graph; clause 5 states which part it does
+not produce, and clause 6 states which conformance unit requires which.
 
 ## 2 Lifting (normative)
 
@@ -300,6 +326,42 @@ An implementation claiming a conformance unit of clause 6 **MUST** implement cla
 
 Annex C reports how much of the core graph's predicates and non-blank objects the context produces.
 
+## 5A Export (normative)
+
+An authored JSON-LD document is exportable in every serialization IDTA-01001 Part 1 defines, without
+loss and without a separate authoring step.
+
+- **JSON.** Removing the `@context` member yields the AAS JSON document, because clause 1 requires
+  the shape to be that of the JSON mapping. No other change is permitted.
+- **XML.** The JSON document is converted by the XML mapping of IDTA-01001 Part 1, unchanged.
+- **AASX.** The JSON or XML document is placed in a package by the mapping of IDTA-01005, unchanged.
+- **RDF.** The lifting of clause 2 produces the graph; the ordering graph of clause 3 accompanies it.
+
+Where a Server serves the document through a registry, the environment documents of clause 9.10 of
+the OPC UA AAS companion specification are these same serializations, filtered to the caller.
+
+An implementation **MUST NOT** require a round trip through RDF to export JSON, XML or AASX. The
+authored document already is the JSON document.
+
+## 5B Authoring an AAS inside a Thing Description (normative)
+
+The vocabulary of clause 1 is usable inside a W3C Thing Description, so that one document describes
+an asset both as a Thing and as an Asset Administration Shell.
+
+A Thing Description carrying AAS content **MUST**:
+
+- bind the `aas` prefix to `https://admin-shell.io/aas/3/0/` in its `@context`;
+- carry the AAS content under members whose terms resolve to that namespace, per clause 5; and
+- where the projected AddressSpace is to be the one the OPC UA AAS companion specification defines,
+  follow Annex F of that document.
+
+Annex F specifies the correspondence, including the `uav:typeref` binding that types a projected
+node with an ObjectType the Server has already loaded. A Thing Description meeting it materializes
+the nodes clause 5.6 of that specification defines, and the same document exports as JSON, XML and
+AASX per clause 5A.
+
+`examples/wot/` holds one such Thing Description per fixture of the conformance corpus.
+
 ## 6 Conformance (normative)
 
 The three conformance units are independent. An implementation **MAY** claim any subset, and
@@ -355,8 +417,8 @@ upstream artefacts while this document was prepared, with the evidence for each.
 
 ## Annex C — Conformance results
 
-This annex is informative. The figures are produced by `tools/conformance.py` and
-`tools/make_context.py` over the 2 426 matched JSON and Turtle example pairs published with the
+This annex is informative. The figures are produced by `tools/jsonld/conformance.py` and
+`tools/jsonld/make_context.py` over the 2 426 matched JSON and Turtle example pairs published with the
 pinned upstream release, of which 2 424 are readable.
 
 **`AASLD-RdfCompatible`**
@@ -409,8 +471,8 @@ the graph as a whole.
 
 ## Annex D — Worked example
 
-This annex is informative. The document is `fixtures/example-irdi-identifier.json`; the graph is the
-output of `tools/lift.py` with base IRI `https://example.org/aas/`.
+This annex is informative. The document is `jsonld/fixtures/example-irdi-identifier.json`; the graph is the
+output of `tools/jsonld/lift.py` with base IRI `https://example.org/aas/`.
 
 ```json
 {

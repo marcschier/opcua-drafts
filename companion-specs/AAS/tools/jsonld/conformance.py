@@ -34,7 +34,7 @@ from rdflib import Graph
 from rdflib.compare import isomorphic, to_isomorphic, graph_diff
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
+ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "jsonld"))
 FIXTURES = os.path.join(ROOT, "fixtures")
 CORPUS = os.path.join(ROOT, ".corpus")
 

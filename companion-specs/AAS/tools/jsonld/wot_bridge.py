@@ -35,7 +35,7 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-AAS_TOOLS = os.path.normpath(os.path.join(HERE, "..", "..", "tools"))
+AAS_TOOLS = os.path.normpath(os.path.join(HERE, ".."))
 sys.path.insert(0, AAS_TOOLS)
 
 import roundtrip_check as rt  # noqa: E402
@@ -59,6 +59,33 @@ def load_type_nodeids():
             if len(parts) >= 3 and parts[2] == "ObjectType":
                 TYPE_NODEIDS[parts[0]] = f"nsu={I4AAS};i={parts[1]}"
     return TYPE_NODEIDS
+
+
+def typeref(type_name):
+    """The single form a document carries: the prefix-qualified BrowseName.
+
+    One form, not two. A document that carried both a compact name and an
+    ExpandedNodeId would have to keep them consistent, and the pair adds nothing:
+    the prefix binds to the NamespaceUri in the `@context`, so the compact name
+    already identifies the type unambiguously wherever the model is loaded.
+    """
+    return f"i4aas:{type_name}"
+
+
+def resolve_typeref(value):
+    """Resolve a `uav:typeref` the way a Server does: by name, in what it has.
+
+    The candidate space is the loaded AddressSpace. This resolves the compact
+    name through the NodeId table the specification publishes, which is the same
+    lookup a Server performs against its own namespace table - it does not read
+    back a NodeId the generator wrote.
+    """
+    if not value or ":" not in value:
+        return None
+    prefix, name = value.split(":", 1)
+    if prefix != "i4aas":
+        return None
+    return TYPE_NODEIDS.get(name)
 
 
 # ---------------------------------------------------------------------------
@@ -86,9 +113,7 @@ def td_for_submodel(sm):
         "id": owner,
         "uav:id": expanded_node_id(owner),
         "uav:browseName": f"nsu={{server}};{sm.get('idShort', owner)}",
-        "uav:typeDefinition": TYPE_NODEIDS.get("AASSubmodelType"),
-        "uav:congruentTypeName": "i4aas:AASSubmodelType",
-        "uav:congruentType": TYPE_NODEIDS.get("AASSubmodelType"),
+        "uav:typeref": typeref("AASSubmodelType"),
         "properties": {},
         "links": [],
     }
@@ -111,9 +136,7 @@ def emit_element(td, element, owner, parent_path, index):
         "@type": ["uav:object"],
         "uav:id": node_id,
         "uav:browseName": f"nsu={{server}};{browse}",
-        "uav:typeDefinition": TYPE_NODEIDS.get(type_name),
-        "uav:congruentTypeName": f"i4aas:{type_name}",
-        "uav:congruentType": TYPE_NODEIDS.get(type_name),
+        "uav:typeref": typeref(type_name),
         "uav:componentOf": [expanded_node_id(owner, parent_path) if parent_path
                             else expanded_node_id(owner)],
         "uav:modellingRule": "Optional",
@@ -172,11 +195,15 @@ def type_of(entry, honour_proposed_term, _default):
 
     With the published vocabulary a Thing Description projects to an Object typed
     `BaseObjectType` unless it instantiates a Thing Model, and `uav:congruentType`
-    does not change that. The proposed `uav:typeDefinition` binds the projected
-    Object to an ObjectType that is already loaded.
+    does not change that: it is reconciliation metadata and is retained as
+    residue. The proposed `uav:typeref` binds the projected Object to an
+    ObjectType that is already loaded, resolved by name against what the Server
+    has, not read back from the document.
     """
-    if honour_proposed_term and entry.get("uav:typeDefinition"):
-        return entry["uav:typeDefinition"]
+    if honour_proposed_term:
+        resolved = resolve_typeref(entry.get("uav:typeref"))
+        if resolved:
+            return resolved
     return f"nsu={UA};i=58"  # BaseObjectType
 
 
@@ -230,7 +257,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("environment")
     ap.add_argument("--proposed", action="store_true",
-                    help="honour the proposed uav:typeDefinition term")
+                    help="honour the proposed uav:typeref term")
     ap.add_argument("--dump-td", help="write the generated Thing Descriptions here")
     args = ap.parse_args()
 
@@ -252,7 +279,7 @@ def main():
               "would pass without testing anything", file=sys.stderr)
         return 1
 
-    print(f"vocabulary: {'published + proposed uav:typeDefinition' if args.proposed else 'published only'}")
+    print(f"vocabulary: {'published + proposed uav:typeref' if args.proposed else 'published only'}")
     print(f"nodes expected by clause 5.6 : {len(want)}")
     print(f"nodes produced by projection : {len(got)}")
     print(f"  missing   : {len(missing)}")

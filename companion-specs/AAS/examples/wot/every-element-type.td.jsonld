@@ -1,0 +1,266 @@
+[
+  {
+    "@context": [
+      "https://www.w3.org/2022/wot/td/v1.1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "aas": "https://admin-shell.io/aas/3/0/",
+        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
+        "ua": "http://opcfoundation.org/UA/"
+      }
+    ],
+    "@type": [
+      "uav:object"
+    ],
+    "title": "EveryElement",
+    "id": "https://fabrikam.com/ids/sm/every-element",
+    "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element",
+    "uav:browseName": "nsu={server};EveryElement",
+    "uav:typeref": "i4aas:AASSubmodelType",
+    "properties": {
+      "AProperty": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AProperty",
+        "uav:browseName": "nsu={server};AProperty",
+        "uav:typeref": "i4aas:AASPropertyType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AMultiLanguageProperty": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AMultiLanguageProperty",
+        "uav:browseName": "nsu={server};AMultiLanguageProperty",
+        "uav:typeref": "i4aas:AASMultiLanguagePropertyType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ARange": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ARange",
+        "uav:browseName": "nsu={server};ARange",
+        "uav:typeref": "i4aas:AASRangeType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ABlob": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ABlob",
+        "uav:browseName": "nsu={server};ABlob",
+        "uav:typeref": "i4aas:AASBlobType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AFile": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AFile",
+        "uav:browseName": "nsu={server};AFile",
+        "uav:typeref": "i4aas:AASFileType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AReferenceElement": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AReferenceElement",
+        "uav:browseName": "nsu={server};AReferenceElement",
+        "uav:typeref": "i4aas:AASReferenceElementType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ARelationship": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ARelationship",
+        "uav:browseName": "nsu={server};ARelationship",
+        "uav:typeref": "i4aas:AASRelationshipElementType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AnAnnotatedRelationship": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship",
+        "uav:browseName": "nsu={server};AnAnnotatedRelationship",
+        "uav:typeref": "i4aas:AASAnnotatedRelationshipElementType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AnAnnotatedRelationship.Quantity": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship.Quantity",
+        "uav:browseName": "nsu={server};Quantity",
+        "uav:typeref": "i4aas:AASPropertyType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ACollection": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ACollection",
+        "uav:browseName": "nsu={server};ACollection",
+        "uav:typeref": "i4aas:AASSubmodelElementCollectionType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ACollection.Nested": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ACollection.Nested",
+        "uav:browseName": "nsu={server};Nested",
+        "uav:typeref": "i4aas:AASPropertyType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ACollection"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AList": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AList",
+        "uav:browseName": "nsu={server};AList",
+        "uav:typeref": "i4aas:AASSubmodelElementListType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AList[0]": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AList[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:typeref": "i4aas:AASPropertyType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AList"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "ASelfManagedEntity": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity",
+        "uav:browseName": "nsu={server};ASelfManagedEntity",
+        "uav:typeref": "i4aas:AASEntityType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ASelfManagedEntity.Position": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity.Position",
+        "uav:browseName": "nsu={server};Position",
+        "uav:typeref": "i4aas:AASPropertyType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AnEvent": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AnEvent",
+        "uav:browseName": "nsu={server};AnEvent",
+        "uav:typeref": "i4aas:AASBasicEventElementType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AnOperation": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AnOperation",
+        "uav:browseName": "nsu={server};AnOperation",
+        "uav:typeref": "i4aas:AASOperationType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ACapability": {
+        "@type": [
+          "uav:object"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ACapability",
+        "uav:browseName": "nsu={server};ACapability",
+        "uav:typeref": "i4aas:AASCapabilityType",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
+        ],
+        "uav:modellingRule": "Optional"
+      }
+    },
+    "links": [
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship.Quantity",
+        "uav:refId": "i=47",
+        "uav:refName": "Quantity"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ACollection.Nested",
+        "uav:refId": "i=47",
+        "uav:refName": "Nested"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AList[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity.Position",
+        "uav:refId": "i=47",
+        "uav:refName": "Position"
+      }
+    ]
+  }
+]

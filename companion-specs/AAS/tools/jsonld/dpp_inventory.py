@@ -36,7 +36,7 @@ import urllib.request
 from collections import Counter, defaultdict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
+ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "jsonld"))
 CACHE = os.path.join(ROOT, ".templates")
 
 REPO = "admin-shell-io/submodel-templates"

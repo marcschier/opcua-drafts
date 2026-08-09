@@ -1,7 +1,8 @@
 # Asset Administration Shell
 
-All the Asset Administration Shell work in one folder: an OPC UA companion specification, the
-xRegistry submission that describes the same registry over HTTP, and the study behind both.
+All the Asset Administration Shell work in one folder: an OPC UA companion specification, a JSON-LD
+mapping for authoring an AAS as linked data, the xRegistry submission that describes the same
+registry over HTTP, a DPP and battery passport identifier mapping, and the study behind them.
 
 ## Files
 
@@ -13,15 +14,84 @@ xRegistry submission that describes the same registry over HTTP, and the study b
 | `xRegistry-AAS.md` | The AAS registry model as proposed to the xRegistry project | xRegistry |
 | `xRegistry-AAS-Packages.md` | AASX packages as content-addressed, signable artifacts | xRegistry |
 | `xRegistry-AAS.model.json` | The xRegistry model definition | xRegistry |
+| `AAS-JsonLd.md` | **JSON-LD as a format an AAS is authored in**, and the conversions that make an authored document exportable as JSON, XML and AASX | IDTA |
+| `aas.context.jsonld` | The JSON-LD context, generated from the pinned ontology and JSON Schema | IDTA |
+| `AAS-DPP-Vocabulary.md` | The DPP and battery passport identifier mapping | IDTA |
+| `dpp/mappings.sssom.tsv` | The mapping set, as SSSOM | IDTA |
+| `UAV-TYPEREF-PROPOSAL.md` | The one WoT term Annex F needs, proposed to `OPCF-Members/spec-drafts` | OPC Foundation |
+| `examples/wot/` | A Thing Description per corpus fixture, each projecting to the AddressSpace of Annex F | — |
 | `AAS-xRegistry-Study.md` | The study behind all of the above | — |
 | `tools/build_model.py` | Generates the NodeSet, the CSV and Annex A | — |
 | `tools/validate_local.py` | Validates the generated NodeSet | — |
 | `tools/roundtrip_check.py` | Proves the mapping is lossless, and proves the proof has teeth | — |
 | `tools/fixtures/` | The round-trip corpus | — |
+| `tools/jsonld/` | Lifting, lowering, context generation, conformance, the DPP inventory and the WoT bridge | — |
+| `jsonld/` | The pinned upstream artefacts, the JSON-LD fixtures and `UPSTREAM-DEFECTS.md` | — |
 
 The three `xRegistry-*` files are a **mirror** of what was proposed to the xRegistry project from
 [`marcschier/spec@aas-domain-spec`](https://github.com/marcschier/spec/tree/aas-domain-spec). If that
 branch changes in review, refresh the copy here.
+
+## JSON-LD, and authoring an AAS as linked data
+
+`AAS-JsonLd.md` defines JSON-LD as a format an AAS is **authored** in. An authored document is an
+AAS JSON document and a JSON-LD document at once, so it exports as JSON, XML and AASX through the
+existing serializations, and it is RDF that validates against the SHACL schema IDTA publishes.
+
+It does not define a vocabulary. IDTA already publishes a normative OWL ontology and SHACL schema at
+`https://admin-shell.io/aas/3/0/`, and those IRIs are reused. Only the ordering-graph terms are
+minted.
+
+Two gaps in the published RDF mapping motivate it, both measured over the 2 424 readable example
+pairs of the pinned upstream release rather than argued:
+
+- **308 documents (12.7%) carry an array of two or more members**, whose order the RDF mapping
+  discards. That includes `Reference/keys`, where the key sequence *is* the reference path.
+- **An `id` that is not a legal IRI has no defined subject term.** An IRDI such as
+  `0173-1#02-AAO677#002` cannot be an IRI, and no published example exercises the case.
+
+| Claim | Result |
+|---|---|
+| `AASLD-RdfCompatible` | 2 402 of 2 424 (99.1%): 41 isomorphic outright, 2 361 under the root `idShort` allowance |
+| `AASLD-JsonRoundTrip`, with the ordering graph | 2 424 of 2 424 (100%) |
+| structurally order-bearing, not guaranteed by the core graph | 308 of 2 424 (12.7%) |
+| the context alone | 72.9% of the core graph's predicates and non-blank objects |
+
+`jsonld/UPSTREAM-DEFECTS.md` records seven defects found in the pinned upstream artefacts, with the
+evidence for each.
+
+## Authoring an AAS as a Thing Description
+
+Annex F of `OPC-UA-AAS.md` states the correspondence between a WoT Thing Description carrying the
+AAS vocabulary and the AddressSpace this specification defines. `examples/wot/` holds one Thing
+Description per corpus fixture; each projects to exactly the nodes clause 5.6 materializes.
+
+It needs one term the WoT drafts do not yet have — `uav:typeref`, which types a projected node with
+an ObjectType the Server has already loaded. `UAV-TYPEREF-PROPOSAL.md` states it, presents the
+alternatives that use only published vocabulary, and gives the converter behaviour it requires.
+
+## Regenerate and validate
+
+```powershell
+python companion-specs\AAS\tools\build_model.py
+python companion-specs\AAS\tools\validate_local.py
+python companion-specs\AAS\tools\roundtrip_check.py
+
+# JSON-LD: fetch the pinned corpus (untracked), regenerate the context, run the claims
+python companion-specs\AAS\tools\jsonld\fetch_corpus.py
+python companion-specs\AAS\tools\jsonld\make_context.py --measure
+python companion-specs\AAS\tools\jsonld\conformance.py
+
+# DPP: read the published templates, regenerate the mapping set
+python companion-specs\AAS\tools\jsonld\dpp_inventory.py
+python companion-specs\AAS\tools\jsonld\dpp_map.py
+
+# WoT: regenerate examples\wot and check Annex F
+python companion-specs\AAS\tools\jsonld\wot_bridge.py <environment.json> --proposed
+```
+
+Without the corpus the JSON-LD tools fall back to `jsonld/fixtures/`, so a clone runs offline.
+`rdflib` and `pyld` are required.
 
 ## Version 3.00 supersedes v1.00
 

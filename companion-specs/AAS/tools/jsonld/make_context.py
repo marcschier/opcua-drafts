@@ -37,12 +37,12 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
+ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "jsonld"))
 sys.path.insert(0, HERE)
 
 from lift import AAS, Lifter, Ontology, Schema, serialize  # noqa: E402
 
-OUT = os.path.join(ROOT, "aas.context.jsonld")
+OUT = os.path.normpath(os.path.join(HERE, "..", "..", "aas.context.jsonld"))
 XSD = "http://www.w3.org/2001/XMLSchema#"
 
 

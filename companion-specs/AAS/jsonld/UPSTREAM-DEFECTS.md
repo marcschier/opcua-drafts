@@ -11,7 +11,7 @@
 | Matched examples | `schemas/{json,rdf}/examples/generated/` | 2 426 pairs |
 
 Copies of the first three are vendored beside this file in `upstream/`. The example corpus is
-fetched by `tools/fetch_corpus.py` into `.corpus/`, which is not tracked.
+fetched by `../tools/jsonld/fetch_corpus.py` into `.corpus/`, which is not tracked.
 
 ## Artefact precedence
 
@@ -55,7 +55,7 @@ the two generators populating optional fields differently rather than with a ser
 D7 below shows the divergence is not confined to `idShort`.
 
 **Consequence.** The corpus is usable as an oracle once this deviation is declared. The lifting
-defined here emits the triple; `tools/conformance.py` retries a failing case without it and counts
+defined here emits the triple; `../tools/jsonld/conformance.py` retries a failing case without it and counts
 the case as conforming when that alone reconciles the two.
 
 ## D7 — The generators diverge on more than `idShort`
@@ -163,8 +163,8 @@ matched pairs are usable.
 ## What a JSON-LD context can and cannot do
 
 The plan originally proposed shipping a `@context` you drop into an unmodified AAS JSON file. That
-is impossible, and `tools/make_context.py` measures how impossible with a real JSON-LD 1.1 processor
-rather than arguing it. The generated `aas.context.jsonld` uses every relevant JSON-LD 1.1 facility —
+is impossible, and `../tools/jsonld/make_context.py` measures how impossible with a real JSON-LD 1.1 processor
+rather than arguing it. The generated `../aas.context.jsonld` uses every relevant JSON-LD 1.1 facility —
 `modelType` aliased to `@type`, type-scoped contexts to disambiguate keys that recur across classes
 with different property IRIs, property-scoped contexts to reach objects that carry no discriminator —
 and still reaches only part of the graph.
@@ -206,7 +206,7 @@ lifting is the conformance mechanism.
 
 ## Result
 
-Running `tools/conformance.py` over the pinned corpus.
+Running `../tools/jsonld/conformance.py` over the pinned corpus.
 
 **`AASLD-RdfCompatible`** — the lifted graph against the upstream Turtle, by graph isomorphism:
 

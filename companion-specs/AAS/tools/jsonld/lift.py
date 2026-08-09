@@ -37,8 +37,9 @@ import sys
 import urllib.parse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ONTOLOGY = os.path.join(os.path.dirname(HERE), "upstream", "rdf-ontology.ttl")
-SCHEMA = os.path.join(os.path.dirname(HERE), "upstream", "aas.schema.json")
+ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "jsonld"))
+ONTOLOGY = os.path.join(ROOT, "upstream", "rdf-ontology.ttl")
+SCHEMA = os.path.join(ROOT, "upstream", "aas.schema.json")
 
 AAS = "https://admin-shell.io/aas/3/0/"
 XS = "http://www.w3.org/2001/XMLSchema#"
