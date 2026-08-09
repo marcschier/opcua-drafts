@@ -159,6 +159,48 @@ is not a legal IRI, and retains the `id` literal unchanged in every case.
 `Blob/contentTypeOverPatternExamples/number prefix and suffix` do not parse. 2 424 of the 2 426
 matched pairs are usable.
 
+## What a JSON-LD context can and cannot do
+
+The plan originally proposed shipping a `@context` you drop into an unmodified AAS JSON file. That
+is impossible, and `tools/make_context.py` measures how impossible with a real JSON-LD 1.1 processor
+rather than arguing it. The generated `aas.context.jsonld` uses every relevant JSON-LD 1.1 facility —
+`modelType` aliased to `@type`, type-scoped contexts to disambiguate keys that recur across classes
+with different property IRIs, property-scoped contexts to reach objects that carry no discriminator —
+and still reaches only part of the graph.
+
+Over 200 corpus documents, against the lifting:
+
+| | |
+|---|---|
+| predicate/object pairs reproduced | **4 575 of 7 366 (62.1%)** |
+| documents whose graph matches exactly | **0** |
+
+Three causes, each measured, each a clause the lifting has to carry:
+
+| Cause | Cases affected |
+|---|---|
+| root subject is a blank node, not an IRI | 198 of 198 |
+| nested object has no `rdf:type` | 194 |
+| enumeration value left as a compact IRI | 145 |
+
+**The root subject.** The normative RDF uses an `Identifiable`'s `id` twice, as the subject IRI and
+as an `aas:Identifiable/id` literal. A context maps a key to one or the other, never both, so
+mapping `id` to the literal leaves every root a blank node.
+
+**The nested type.** `Reference`, `Key`, `Qualifier`, `AssetInformation` and the language-string
+types carry `rdf:type` in the normative RDF but have no `modelType` in the JSON for a context to
+alias. Injecting one would mean redefining the `@type` keyword inside a scoped context, which JSON-LD
+forbids outright: a processor rejects the context with *"keywords cannot be overridden"*.
+
+**The enumeration spelling.** `DataTypeDefXsd` is written `xs:int` in JSON and is the individual
+`aas:DataTypeDefXsd/Int` in RDF. A term containing a colon is read as a compact IRI, and JSON-LD
+requires it to expand to its own definition, so aliasing it is rejected with *"term in form of IRI
+must expand to definition"*. All 30 `DataTypeDefXsd` values are affected; the other ten
+enumerations, whose spellings carry no colon, alias correctly.
+
+The context is therefore published as a convenience layer for JSON-LD-native consumers, and the
+lifting is the conformance mechanism.
+
 ## Result
 
 Running `tools/conformance.py` over the pinned corpus.
