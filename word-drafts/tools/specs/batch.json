@@ -9,7 +9,8 @@
     "arrow-encoding",
     "async-services",
     "vision",
-    "ai-model-management"
+    "ai-model-management",
+    "robot-intent"
   ],
   "ready": [],
   "notAFit": [
