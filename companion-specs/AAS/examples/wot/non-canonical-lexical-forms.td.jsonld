@@ -10,21 +10,21 @@
       }
     ],
     "@type": [
-      "uav:object"
+      "uav:object",
+      "i4aas:AASSubmodelType"
     ],
     "title": "AwkwardValues",
     "id": "https://fabrikam.com/ids/sm/awkward-values",
     "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values",
     "uav:browseName": "nsu={server};AwkwardValues",
-    "uav:typeref": "i4aas:AASSubmodelType",
     "properties": {
       "ArbitraryPrecision": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#ArbitraryPrecision",
         "uav:browseName": "nsu={server};ArbitraryPrecision",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
         ],
@@ -32,11 +32,11 @@
       },
       "UnboundedInteger": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#UnboundedInteger",
         "uav:browseName": "nsu={server};UnboundedInteger",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
         ],
@@ -44,11 +44,11 @@
       },
       "TrailingZeros": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#TrailingZeros",
         "uav:browseName": "nsu={server};TrailingZeros",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
         ],
@@ -56,11 +56,11 @@
       },
       "NegativeZero": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#NegativeZero",
         "uav:browseName": "nsu={server};NegativeZero",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
         ],
@@ -68,11 +68,11 @@
       },
       "Duration": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#Duration",
         "uav:browseName": "nsu={server};Duration",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
         ],
@@ -80,11 +80,11 @@
       },
       "PartialDate": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#PartialDate",
         "uav:browseName": "nsu={server};PartialDate",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
         ],
@@ -92,11 +92,11 @@
       },
       "GDay": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#GDay",
         "uav:browseName": "nsu={server};GDay",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
         ],
@@ -104,11 +104,11 @@
       },
       "OffsetDateTime": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#OffsetDateTime",
         "uav:browseName": "nsu={server};OffsetDateTime",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
         ],
@@ -116,11 +116,11 @@
       },
       "LeadingPlus": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#LeadingPlus",
         "uav:browseName": "nsu={server};LeadingPlus",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
         ],
@@ -128,11 +128,11 @@
       },
       "EmptyString": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#EmptyString",
         "uav:browseName": "nsu={server};EmptyString",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
         ],
@@ -140,11 +140,11 @@
       },
       "UnboundedBelow": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASRangeType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#UnboundedBelow",
         "uav:browseName": "nsu={server};UnboundedBelow",
-        "uav:typeref": "i4aas:AASRangeType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
         ],
@@ -152,11 +152,11 @@
       },
       "BoundedAtZero": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASRangeType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#BoundedAtZero",
         "uav:browseName": "nsu={server};BoundedAtZero",
-        "uav:typeref": "i4aas:AASRangeType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
         ],

@@ -1,0 +1,7156 @@
+{
+  "@context": "https://w3id.org/aas-jsonld/context",
+  "@graph": [
+    {
+      "@id": "_:b1",
+      "@type": "aas:AssetInformation",
+      "aas:AssetInformation/globalAssetId": "https://admin-shell.io/idta/asset/DigitalBatteryPassport/CarbonFootprint/1/0",
+      "assetKind": "aas:AssetKind/Type"
+    },
+    {
+      "@id": "_:b10",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "carbon footprint"
+    },
+    {
+      "@id": "_:b102",
+      "@type": "aas:Qualifier",
+      "aas:Qualifier/type": "SMT/Cardinality",
+      "aas:Qualifier/value": "One",
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    },
+    {
+      "@id": "_:b105",
+      "@type": "aas:Property",
+      "aas:Property/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      },
+      "category": "PARAMETER",
+      "description": "_:b110",
+      "displayName": [
+        "_:b106",
+        "_:b108"
+      ],
+      "idShort": "ReferenceImpactUnitForCalculation",
+      "qualifiers": "_:b119",
+      "semanticId": "_:b112",
+      "supplementalSemanticIds": "_:b115"
+    },
+    {
+      "@id": "_:b106",
+      "@type": "aas:LangStringNameType",
+      "language": "de",
+      "text": "Referenzeinheit für die Berechnung"
+    },
+    {
+      "@id": "_:b108",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "reference impact unit for calculation"
+    },
+    {
+      "@id": "_:b110",
+      "@type": "aas:LangStringTextType",
+      "language": "en",
+      "text": "If a normalized product carbon footprint (PCF) value is provided, the reference value for calculation should be a specific unit such as 'kWh'. \nIf the total PCF value is provided the reference value for calculation should be 'piece'."
+    },
+    {
+      "@id": "_:b112",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b113"
+    },
+    {
+      "@id": "_:b113",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#02-ABG856#003"
+    },
+    {
+      "@id": "_:b115",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b116"
+    },
+    {
+      "@id": "_:b116",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "urn:samm:io.admin-shell.idta.carbon_footprint:1.0.0#referenceImpactUnitForCalculation"
+    },
+    {
+      "@id": "_:b119",
+      "@type": "aas:Qualifier",
+      "aas:Qualifier/type": "SMT/Cardinality",
+      "aas:Qualifier/value": "One",
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    },
+    {
+      "@id": "_:b12",
+      "@type": "aas:LangStringTextType",
+      "language": "en",
+      "text": "The Submodel provides the means to access the Carbon Footprint of the asset."
+    },
+    {
+      "@id": "_:b122",
+      "@type": "aas:Property",
+      "aas:Property/valueType": {
+        "@id": "aas:DataTypeDefXsd/Double"
+      },
+      "category": "PARAMETER",
+      "description": "_:b127",
+      "displayName": [
+        "_:b123",
+        "_:b125"
+      ],
+      "idShort": "QuantityOfMeasureForCalculation",
+      "qualifiers": "_:b136",
+      "semanticId": "_:b129",
+      "supplementalSemanticIds": "_:b132"
+    },
+    {
+      "@id": "_:b123",
+      "@type": "aas:LangStringNameType",
+      "language": "de",
+      "text": "Mengenangabe für die Berechnung"
+    },
+    {
+      "@id": "_:b125",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "quantity of measure for calculation"
+    },
+    {
+      "@id": "_:b127",
+      "@type": "aas:LangStringTextType",
+      "language": "en",
+      "text": "If a normalized product carbon footprint (PCF) value is provided, the quantity of measure for calculation should be 1.\nIf the total PCF value is provided the quantity of measure for calculation should be 1."
+    },
+    {
+      "@id": "_:b129",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b130"
+    },
+    {
+      "@id": "_:b130",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#02-ABG857#003"
+    },
+    {
+      "@id": "_:b132",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b133"
+    },
+    {
+      "@id": "_:b133",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "urn:samm:io.admin-shell.idta.carbon_footprint:1.0.0#quantityOfMeasureForCalculation"
+    },
+    {
+      "@id": "_:b136",
+      "@type": "aas:Qualifier",
+      "aas:Qualifier/type": "SMT/Cardinality",
+      "aas:Qualifier/value": "One",
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    },
+    {
+      "@id": "_:b139",
+      "@type": "aas:SubmodelElementList",
+      "aas:SubmodelElementList/value": {
+        "@id": "_:b162"
+      },
+      "description": "_:b144",
+      "displayName": [
+        "_:b140",
+        "_:b142"
+      ],
+      "idShort": "LifeCyclePhases",
+      "qualifiers": "_:b157",
+      "semanticId": "_:b146",
+      "semanticIdListElement": "_:b159",
+      "supplementalSemanticIds": [
+        "_:b149",
+        "_:b153"
+      ],
+      "typeValueListElement": "aas:AasSubmodelElements/Property",
+      "valueTypeListElement": "aas:DataTypeDefXsd/String"
+    },
+    {
+      "@id": "_:b14",
+      "@type": "aas:AdministrativeInformation",
+      "revision": "0",
+      "templateId": "https://admin-shell.io/idta-02023-1-0",
+      "version": "1"
+    },
+    {
+      "@id": "_:b140",
+      "@type": "aas:LangStringNameType",
+      "language": "de",
+      "text": "Lebenszyklusphasen"
+    },
+    {
+      "@id": "_:b142",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "life cycle phases"
+    },
+    {
+      "@id": "_:b144",
+      "@type": "aas:LangStringTextType",
+      "language": "en",
+      "text": "List of life cycle stages of the product according to the quantification requirements of the standard to which the PCF carbon footprint statement refers.\n\nThe string value in the value list is based on DIN DKE SPEC 99100: \"A1 - raw material supply (and upstream production)\" (6.3.5 required lify cycle mapping), \"A3 - production\" (6.3.4 Contribution of main product production/manufacturing lifecycle stage), \"A4 - transport to final destination\" (6.3.5 Contribution of distribution lifecycle stage), \"C3 - recycling, waste treatment\" (6.3.6 Contribution of end of life and recycling lifecycle stage)\n\nPlease note that the model should always contain at least one Product Carbon Footprint entry that reflects the total PCF value (including all life cycle phases) of the battery.\n"
+    },
+    {
+      "@id": "_:b146",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b147"
+    },
+    {
+      "@id": "_:b147",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "https://admin-shell.io/idta/CarbonFootprint/LifeCyclePhases/1/0"
+    },
+    {
+      "@id": "_:b149",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b150"
+    },
+    {
+      "@id": "_:b15",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b16"
+    },
+    {
+      "@id": "_:b150",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "urn:samm:io.admin-shell.idta.carbon_footprint:1.0.0#lifeCyclePhases"
+    },
+    {
+      "@id": "_:b153",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b154"
+    },
+    {
+      "@id": "_:b154",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#02-ABG858#003"
+    },
+    {
+      "@id": "_:b157",
+      "@type": "aas:Qualifier",
+      "aas:Qualifier/type": "SMT/Cardinality",
+      "aas:Qualifier/value": "One",
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    },
+    {
+      "@id": "_:b159",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b160"
+    },
+    {
+      "@id": "_:b16",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "https://admin-shell.io/idta/CarbonFootprint/CarbonFootprint/1/0"
+    },
+    {
+      "@id": "_:b160",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#02-ABG858#004"
+    },
+    {
+      "@id": "_:b162",
+      "@type": "aas:Property",
+      "aas:Property/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      },
+      "category": "PARAMETER",
+      "displayName": [
+        "_:b163",
+        "_:b165"
+      ],
+      "idShort": "LifeCyclePhase",
+      "qualifiers": "_:b170",
+      "semanticId": "_:b167"
+    },
+    {
+      "@id": "_:b163",
+      "@type": "aas:LangStringNameType",
+      "language": "de",
+      "text": "Lebenszyklusphase"
+    },
+    {
+      "@id": "_:b165",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "life cycle phase"
+    },
+    {
+      "@id": "_:b167",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b168"
+    },
+    {
+      "@id": "_:b168",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#02-ABG858#004"
+    },
+    {
+      "@id": "_:b170",
+      "@type": "aas:Qualifier",
+      "aas:Qualifier/type": "SMT/Cardinality",
+      "aas:Qualifier/value": "One",
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    },
+    {
+      "@id": "_:b174",
+      "@type": "aas:Property",
+      "aas:Property/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      },
+      "displayName": "_:b183",
+      "idShort": "PerformanceClass",
+      "qualifiers": "_:b178",
+      "semanticId": "_:b175"
+    },
+    {
+      "@id": "_:b175",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b176"
+    },
+    {
+      "@id": "_:b176",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#performanceClass"
+    },
+    {
+      "@id": "_:b178",
+      "@type": "aas:Qualifier",
+      "aas:Qualifier/type": "SMT/Cardinality",
+      "aas:Qualifier/value": "One",
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      },
+      "semanticId": "_:b179"
+    },
+    {
+      "@id": "_:b179",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b180"
+    },
+    {
+      "@id": "_:b18",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b19"
+    },
+    {
+      "@id": "_:b180",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+    },
+    {
+      "@id": "_:b183",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "performance class"
+    },
+    {
+      "@id": "_:b186",
+      "@type": "aas:SubmodelElementList",
+      "aas:SubmodelElementList/value": {
+        "@id": "_:b195"
+      },
+      "displayName": "_:b213",
+      "idShort": "WebLinkToPublicCarbonFootprintStudy",
+      "qualifiers": "_:b190",
+      "semanticId": "_:b187",
+      "typeValueListElement": "aas:AasSubmodelElements/Property",
+      "valueTypeListElement": "aas:DataTypeDefXsd/String"
+    },
+    {
+      "@id": "_:b187",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b188"
+    },
+    {
+      "@id": "_:b188",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#webLinkToPublicCarbonFootprintStudy"
+    },
+    {
+      "@id": "_:b19",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#CarbonFootprintBattery"
+    },
+    {
+      "@id": "_:b190",
+      "@type": "aas:Qualifier",
+      "aas:Qualifier/type": "SMT/Cardinality",
+      "aas:Qualifier/value": "One",
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      },
+      "semanticId": "_:b191"
+    },
+    {
+      "@id": "_:b191",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b192"
+    },
+    {
+      "@id": "_:b192",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+    },
+    {
+      "@id": "_:b195",
+      "@type": "aas:Property",
+      "aas:Property/value": "XF90-884",
+      "aas:Property/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      },
+      "description": "_:b196",
+      "displayName": "_:b210",
+      "idShort": "DocumentIdentifier",
+      "qualifiers": "_:b205",
+      "semanticId": "_:b198",
+      "supplementalSemanticIds": "_:b201"
+    },
+    {
+      "@id": "_:b196",
+      "@type": "aas:LangStringTextType",
+      "language": "en",
+      "text": "Document identifier of the document (e.g., PDF) that can be found in the HandoverDocumentation Submodel.\n\nDIN DKE Spec 99100 chapter reference: 6.3.8 "
+    },
+    {
+      "@id": "_:b198",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b199"
+    },
+    {
+      "@id": "_:b199",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier"
+    },
+    {
+      "@id": "_:b2",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ModelReference"
+      },
+      "keys": "_:b3"
+    },
+    {
+      "@id": "_:b201",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b202"
+    },
+    {
+      "@id": "_:b202",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#02-AAO099#004"
+    },
+    {
+      "@id": "_:b205",
+      "@type": "aas:Qualifier",
+      "aas:Qualifier/type": "SMT/Cardinality",
+      "aas:Qualifier/value": "OneToMany",
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      },
+      "semanticId": "_:b206"
+    },
+    {
+      "@id": "_:b206",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b207"
+    },
+    {
+      "@id": "_:b207",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+    },
+    {
+      "@id": "_:b210",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "document identifier"
+    },
+    {
+      "@id": "_:b213",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "web link to public carbon footprint study"
+    },
+    {
+      "@id": "_:b218",
+      "@type": "aas:EmbeddedDataSpecification",
+      "dataSpecification": "_:b219",
+      "dataSpecificationContent": "_:b222"
+    },
+    {
+      "@id": "_:b219",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b220"
+    },
+    {
+      "@id": "_:b22",
+      "@type": "aas:SubmodelElementList",
+      "aas:SubmodelElementList/value": {
+        "@id": "_:b41"
+      },
+      "description": "_:b27",
+      "displayName": [
+        "_:b23",
+        "_:b25"
+      ],
+      "idShort": "ProductCarbonFootprints",
+      "qualifiers": "_:b36",
+      "semanticId": "_:b29",
+      "semanticIdListElement": "_:b38",
+      "supplementalSemanticIds": "_:b32",
+      "typeValueListElement": "aas:AasSubmodelElements/SubmodelElementCollection"
+    },
+    {
+      "@id": "_:b220",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "http://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0"
+    },
+    {
+      "@id": "_:b222",
+      "@type": "aas:DataSpecificationIec61360",
+      "dataType": "aas:DataTypeIec61360/String",
+      "definition": [
+        "_:b227",
+        "_:b229"
+      ],
+      "preferredName": [
+        "_:b223",
+        "_:b225"
+      ],
+      "valueList": "_:b231"
+    },
+    {
+      "@id": "_:b223",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "en",
+      "text": "impact assessment method / calculation method"
+    },
+    {
+      "@id": "_:b225",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "de",
+      "text": "Folgenabschätzungsmethode / Berechnungsmethode"
+    },
+    {
+      "@id": "_:b227",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "de",
+      "text": "Norm, Standard, Verfahren zur Ermittlung der Treibhausgas-Emissionen eines Produkts"
+    },
+    {
+      "@id": "_:b229",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "en",
+      "text": "standard, method for determining the greenhouse gas emissions of a product"
+    },
+    {
+      "@id": "_:b23",
+      "@type": "aas:LangStringNameType",
+      "language": "de",
+      "text": "Produkt CO2-Fußabdruck"
+    },
+    {
+      "@id": "_:b231",
+      "@type": "aas:ValueList",
+      "valueReferencePairs": [
+        "_:b232",
+        "_:b237",
+        "_:b242",
+        "_:b247",
+        "_:b252",
+        "_:b257",
+        "_:b262",
+        "_:b267",
+        "_:b272",
+        "_:b277",
+        "_:b282",
+        "_:b287",
+        "_:b292",
+        "_:b297",
+        "_:b302",
+        "_:b307",
+        "_:b312"
+      ]
+    },
+    {
+      "@id": "_:b232",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "EN 15804",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b233"
+      }
+    },
+    {
+      "@id": "_:b233",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b234"
+    },
+    {
+      "@id": "_:b234",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABU223#003"
+    },
+    {
+      "@id": "_:b237",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "GHG Protocol",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b238"
+      }
+    },
+    {
+      "@id": "_:b238",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b239"
+    },
+    {
+      "@id": "_:b239",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABU221#003"
+    },
+    {
+      "@id": "_:b242",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "IEC TS 63058",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b243"
+      }
+    },
+    {
+      "@id": "_:b243",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b244"
+    },
+    {
+      "@id": "_:b244",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABU222#003"
+    },
+    {
+      "@id": "_:b247",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "IEC 63366",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b248"
+      }
+    },
+    {
+      "@id": "_:b248",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b249"
+    },
+    {
+      "@id": "_:b249",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACA792#002"
+    },
+    {
+      "@id": "_:b25",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "product carbon footprints"
+    },
+    {
+      "@id": "_:b252",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "ISO 14040, ISO 14044",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b253"
+      }
+    },
+    {
+      "@id": "_:b253",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b254"
+    },
+    {
+      "@id": "_:b254",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABV505#003"
+    },
+    {
+      "@id": "_:b257",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "ISO 14067",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b258"
+      }
+    },
+    {
+      "@id": "_:b258",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b259"
+    },
+    {
+      "@id": "_:b259",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABU218#003"
+    },
+    {
+      "@id": "_:b262",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "PEP Ecopassport",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b263"
+      }
+    },
+    {
+      "@id": "_:b263",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b264"
+    },
+    {
+      "@id": "_:b264",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABU220#003"
+    },
+    {
+      "@id": "_:b267",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "PACT v1.0.1",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b268"
+      }
+    },
+    {
+      "@id": "_:b268",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b269"
+    },
+    {
+      "@id": "_:b269",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC004#001"
+    },
+    {
+      "@id": "_:b27",
+      "@type": "aas:LangStringTextType",
+      "language": "en",
+      "text": "Balance of greenhouse gas emissions along the entire life cycle of a product in a defined application and in relation to a defined unit of use."
+    },
+    {
+      "@id": "_:b272",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "PACT v2.0.0",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b273"
+      }
+    },
+    {
+      "@id": "_:b273",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b274"
+    },
+    {
+      "@id": "_:b274",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC003#001"
+    },
+    {
+      "@id": "_:b277",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "PACT v3.0.0",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b278"
+      }
+    },
+    {
+      "@id": "_:b278",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b279"
+    },
+    {
+      "@id": "_:b279",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC012#001"
+    },
+    {
+      "@id": "_:b282",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "TFS v2",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b283"
+      }
+    },
+    {
+      "@id": "_:b283",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b284"
+    },
+    {
+      "@id": "_:b284",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC005#001"
+    },
+    {
+      "@id": "_:b287",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "TFS v3",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b288"
+      }
+    },
+    {
+      "@id": "_:b288",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b289"
+    },
+    {
+      "@id": "_:b289",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC010#001"
+    },
+    {
+      "@id": "_:b29",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b30"
+    },
+    {
+      "@id": "_:b292",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "Catena-X v1",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b293"
+      }
+    },
+    {
+      "@id": "_:b293",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b294"
+    },
+    {
+      "@id": "_:b294",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC007#001"
+    },
+    {
+      "@id": "_:b297",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "Catena-X v2",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b298"
+      }
+    },
+    {
+      "@id": "_:b298",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b299"
+    },
+    {
+      "@id": "_:b299",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC006#001"
+    },
+    {
+      "@id": "_:b3",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/Submodel"
+      },
+      "aas:Key/value": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+    },
+    {
+      "@id": "_:b30",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "https://admin-shell.io/idta/CarbonFootprint/ProductCarbonFootprints/1/0"
+    },
+    {
+      "@id": "_:b302",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "Catena-X v3",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b303"
+      }
+    },
+    {
+      "@id": "_:b303",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b304"
+    },
+    {
+      "@id": "_:b304",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC011#001"
+    },
+    {
+      "@id": "_:b307",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "BS PAS 2050",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b308"
+      }
+    },
+    {
+      "@id": "_:b308",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b309"
+    },
+    {
+      "@id": "_:b309",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC008#001"
+    },
+    {
+      "@id": "_:b312",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "IEC 63372",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b313"
+      }
+    },
+    {
+      "@id": "_:b313",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b314"
+    },
+    {
+      "@id": "_:b314",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC019#001"
+    },
+    {
+      "@id": "_:b318",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "PCF calculation method"
+    },
+    {
+      "@id": "_:b32",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b33"
+    },
+    {
+      "@id": "_:b320",
+      "@type": "aas:EmbeddedDataSpecification",
+      "dataSpecification": "_:b321",
+      "dataSpecificationContent": "_:b324"
+    },
+    {
+      "@id": "_:b321",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b322"
+    },
+    {
+      "@id": "_:b322",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "http://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0"
+    },
+    {
+      "@id": "_:b324",
+      "@type": "aas:DataSpecificationIec61360",
+      "dataType": "aas:DataTypeIec61360/RealMeasure",
+      "definition": [
+        "_:b329",
+        "_:b331"
+      ],
+      "preferredName": [
+        "_:b325",
+        "_:b327"
+      ],
+      "unit": "CO2eq"
+    },
+    {
+      "@id": "_:b325",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "en",
+      "text": "CO2 eq Climate Change - total (for PCF and LCA)"
+    },
+    {
+      "@id": "_:b327",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "de",
+      "text": "CO2 eq Klimawandel - total (für PCF und LCA)"
+    },
+    {
+      "@id": "_:b329",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "de",
+      "text": "Summe aller Treibhausgas-Emissionen eines Produkts gemäß der Quantifizierungsvorgaben der Norm"
+    },
+    {
+      "@id": "_:b33",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#CarbonFootprintBattery"
+    },
+    {
+      "@id": "_:b331",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "en",
+      "text": "sum of all greenhouse gas emissions of a product according to the quantification requirements of the standard"
+    },
+    {
+      "@id": "_:b334",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "PCF co 2 eq"
+    },
+    {
+      "@id": "_:b336",
+      "@type": "aas:EmbeddedDataSpecification",
+      "dataSpecification": "_:b337",
+      "dataSpecificationContent": "_:b340"
+    },
+    {
+      "@id": "_:b337",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b338"
+    },
+    {
+      "@id": "_:b338",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "http://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0"
+    },
+    {
+      "@id": "_:b340",
+      "@type": "aas:DataSpecificationIec61360",
+      "dataType": "aas:DataTypeIec61360/String",
+      "definition": [
+        "_:b345",
+        "_:b347"
+      ],
+      "preferredName": [
+        "_:b341",
+        "_:b343"
+      ],
+      "valueList": "_:b349"
+    },
+    {
+      "@id": "_:b341",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "en",
+      "text": "Reference value for calculation"
+    },
+    {
+      "@id": "_:b343",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "de",
+      "text": "Referenzeinheit für die Berechnung"
+    },
+    {
+      "@id": "_:b345",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "en",
+      "text": "Quantity unit of the product to which the PCF information on the CO2 footprint refers"
+    },
+    {
+      "@id": "_:b347",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "de",
+      "text": "Mengeneinheit des Produktes, auf das sich die PCF-Angabe zum CO2-Fußabdruck bezieht"
+    },
+    {
+      "@id": "_:b349",
+      "@type": "aas:ValueList",
+      "valueReferencePairs": [
+        "_:b350",
+        "_:b355",
+        "_:b360",
+        "_:b365",
+        "_:b370",
+        "_:b375",
+        "_:b380",
+        "_:b385",
+        "_:b390"
+      ]
+    },
+    {
+      "@id": "_:b350",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "g",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b351"
+      }
+    },
+    {
+      "@id": "_:b351",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b352"
+    },
+    {
+      "@id": "_:b352",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABZ596#003"
+    },
+    {
+      "@id": "_:b355",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "kg",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b356"
+      }
+    },
+    {
+      "@id": "_:b356",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b357"
+    },
+    {
+      "@id": "_:b357",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABZ597#003"
+    },
+    {
+      "@id": "_:b36",
+      "@type": "aas:Qualifier",
+      "aas:Qualifier/type": "SMT/Cardinality",
+      "aas:Qualifier/value": "One",
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    },
+    {
+      "@id": "_:b360",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "t",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b361"
+      }
+    },
+    {
+      "@id": "_:b361",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b362"
+    },
+    {
+      "@id": "_:b362",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABZ598#003"
+    },
+    {
+      "@id": "_:b365",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "ml",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b366"
+      }
+    },
+    {
+      "@id": "_:b366",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b367"
+    },
+    {
+      "@id": "_:b367",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABZ599#003"
+    },
+    {
+      "@id": "_:b370",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "l",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b371"
+      }
+    },
+    {
+      "@id": "_:b371",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b372"
+    },
+    {
+      "@id": "_:b372",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABZ600#003"
+    },
+    {
+      "@id": "_:b375",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "cbm",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b376"
+      }
+    },
+    {
+      "@id": "_:b376",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b377"
+    },
+    {
+      "@id": "_:b377",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABZ601#003"
+    },
+    {
+      "@id": "_:b38",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b39"
+    },
+    {
+      "@id": "_:b380",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "qm",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b381"
+      }
+    },
+    {
+      "@id": "_:b381",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b382"
+    },
+    {
+      "@id": "_:b382",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABZ602#003"
+    },
+    {
+      "@id": "_:b385",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "piece",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b386"
+      }
+    },
+    {
+      "@id": "_:b386",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b387"
+    },
+    {
+      "@id": "_:b387",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABZ603#003"
+    },
+    {
+      "@id": "_:b39",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "https://admin-shell.io/idta/CarbonFootprint/ProductCarbonFootprint/1/0"
+    },
+    {
+      "@id": "_:b390",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "kWh",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b391"
+      }
+    },
+    {
+      "@id": "_:b391",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b392"
+    },
+    {
+      "@id": "_:b392",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACB997#001"
+    },
+    {
+      "@id": "_:b396",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "reference impact unit for calculation"
+    },
+    {
+      "@id": "_:b398",
+      "@type": "aas:LangStringNameType",
+      "language": "de",
+      "text": "Mengenangabe für die Berechnung"
+    },
+    {
+      "@id": "_:b400",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "quantity of measure for calculation"
+    },
+    {
+      "@id": "_:b402",
+      "@type": "aas:EmbeddedDataSpecification",
+      "dataSpecification": "_:b403",
+      "dataSpecificationContent": "_:b406"
+    },
+    {
+      "@id": "_:b403",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b404"
+    },
+    {
+      "@id": "_:b404",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "http://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0"
+    },
+    {
+      "@id": "_:b406",
+      "@type": "aas:DataSpecificationIec61360",
+      "dataType": "aas:DataTypeIec61360/RealCount",
+      "definition": [
+        "_:b411",
+        "_:b413"
+      ],
+      "preferredName": [
+        "_:b407",
+        "_:b409"
+      ]
+    },
+    {
+      "@id": "_:b407",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "en",
+      "text": "quantity of measure for calculation"
+    },
+    {
+      "@id": "_:b409",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "de",
+      "text": "Mengenangabe für die Berechnung"
+    },
+    {
+      "@id": "_:b41",
+      "@type": "aas:SubmodelElementCollection",
+      "aas:SubmodelElementCollection/value": [
+        {
+          "@id": "_:b105"
+        },
+        {
+          "@id": "_:b122"
+        },
+        {
+          "@id": "_:b139"
+        },
+        {
+          "@id": "_:b174"
+        },
+        {
+          "@id": "_:b186"
+        },
+        {
+          "@id": "_:b55"
+        },
+        {
+          "@id": "_:b88"
+        }
+      ],
+      "description": "_:b46",
+      "displayName": [
+        "_:b42",
+        "_:b44"
+      ],
+      "idShort": "ProductCarbonFootprint",
+      "semanticId": "_:b48",
+      "supplementalSemanticIds": "_:b51"
+    },
+    {
+      "@id": "_:b411",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "de",
+      "text": "Angabe der Stückzahl, Masse oder des Volumens zur Berechnung der Auswirkungen des Klimawandels oder des CO2-Fußabdrucks des Produktes"
+    },
+    {
+      "@id": "_:b413",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "en",
+      "text": "provides the quantity number of pieces or mass or volume to compute the impact of climate change or product carbon footprint"
+    },
+    {
+      "@id": "_:b416",
+      "@type": "aas:EmbeddedDataSpecification",
+      "dataSpecification": "_:b417",
+      "dataSpecificationContent": "_:b420"
+    },
+    {
+      "@id": "_:b417",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b418"
+    },
+    {
+      "@id": "_:b418",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "http://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0"
+    },
+    {
+      "@id": "_:b42",
+      "@type": "aas:LangStringNameType",
+      "language": "de",
+      "text": "Produkt CO2-Fußabdruck"
+    },
+    {
+      "@id": "_:b420",
+      "@type": "aas:DataSpecificationIec61360",
+      "dataType": "aas:DataTypeIec61360/String",
+      "definition": [
+        "_:b429",
+        "_:b431"
+      ],
+      "preferredName": [
+        "_:b421",
+        "_:b423"
+      ],
+      "shortName": [
+        "_:b425",
+        "_:b427"
+      ],
+      "valueList": "_:b433"
+    },
+    {
+      "@id": "_:b421",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "en",
+      "text": "life cycle phase (acc. EN 15804)"
+    },
+    {
+      "@id": "_:b423",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "de",
+      "text": "Lebenszyklusphase (nach EN 15804)"
+    },
+    {
+      "@id": "_:b425",
+      "@type": "aas:LangStringShortNameTypeIec61360",
+      "language": "en",
+      "text": "life cycle phase"
+    },
+    {
+      "@id": "_:b427",
+      "@type": "aas:LangStringShortNameTypeIec61360",
+      "language": "de",
+      "text": "Lebenszyklusphase"
+    },
+    {
+      "@id": "_:b429",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "de",
+      "text": "Lebenszyklusphase des Produktes gemäß den Quantifizierungsvorgaben der Norm, auf den sich die PCF-Angabe zum CO2-Fußabdruck bezieht"
+    },
+    {
+      "@id": "_:b431",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "en",
+      "text": "life cycle stages of the product according to the quantification requirements of the standard to which the PCF carbon footprint statement refers"
+    },
+    {
+      "@id": "_:b433",
+      "@type": "aas:ValueList",
+      "valueReferencePairs": [
+        "_:b434",
+        "_:b439",
+        "_:b444",
+        "_:b449",
+        "_:b454",
+        "_:b459",
+        "_:b464",
+        "_:b469",
+        "_:b474",
+        "_:b479",
+        "_:b484",
+        "_:b489",
+        "_:b494",
+        "_:b499",
+        "_:b504",
+        "_:b509",
+        "_:b514",
+        "_:b519",
+        "_:b524",
+        "_:b529",
+        "_:b534",
+        "_:b539"
+      ]
+    },
+    {
+      "@id": "_:b434",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "A1 - raw material supply (and upstream production)",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b435"
+      }
+    },
+    {
+      "@id": "_:b435",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b436"
+    },
+    {
+      "@id": "_:b436",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABU208#003"
+    },
+    {
+      "@id": "_:b439",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "A2 - cradle-to-gate transport to factory",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b440"
+      }
+    },
+    {
+      "@id": "_:b44",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "product carbon footprint"
+    },
+    {
+      "@id": "_:b440",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b441"
+    },
+    {
+      "@id": "_:b441",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABU209#003"
+    },
+    {
+      "@id": "_:b444",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "A3 - production",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b445"
+      }
+    },
+    {
+      "@id": "_:b445",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b446"
+    },
+    {
+      "@id": "_:b446",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABU210#003"
+    },
+    {
+      "@id": "_:b449",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "A1-A3",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b450"
+      }
+    },
+    {
+      "@id": "_:b450",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b451"
+    },
+    {
+      "@id": "_:b451",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABZ789#003 "
+    },
+    {
+      "@id": "_:b454",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "A4 - transport to final destination",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b455"
+      }
+    },
+    {
+      "@id": "_:b455",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b456"
+    },
+    {
+      "@id": "_:b456",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABU211#003"
+    },
+    {
+      "@id": "_:b459",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "A4-A5",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b460"
+      }
+    },
+    {
+      "@id": "_:b46",
+      "@type": "aas:LangStringTextType",
+      "language": "en",
+      "text": "Balance of greenhouse gas emissions along the entire life cycle of a product in a defined application and in relation to a defined unit of use."
+    },
+    {
+      "@id": "_:b460",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b461"
+    },
+    {
+      "@id": "_:b461",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC013#001"
+    },
+    {
+      "@id": "_:b464",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "A5 - Installation",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b465"
+      }
+    },
+    {
+      "@id": "_:b465",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b466"
+    },
+    {
+      "@id": "_:b466",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC016#001"
+    },
+    {
+      "@id": "_:b469",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "B1 - usage phase",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b470"
+      }
+    },
+    {
+      "@id": "_:b470",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b471"
+    },
+    {
+      "@id": "_:b471",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABU212#003"
+    },
+    {
+      "@id": "_:b474",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "B1-B7",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b475"
+      }
+    },
+    {
+      "@id": "_:b475",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b476"
+    },
+    {
+      "@id": "_:b476",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC014#001"
+    },
+    {
+      "@id": "_:b479",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "B2 - maintenance",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b480"
+      }
+    },
+    {
+      "@id": "_:b48",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b49"
+    },
+    {
+      "@id": "_:b480",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b481"
+    },
+    {
+      "@id": "_:b481",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABV498#003"
+    },
+    {
+      "@id": "_:b484",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "B3 - repair",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b485"
+      }
+    },
+    {
+      "@id": "_:b485",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b486"
+    },
+    {
+      "@id": "_:b486",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABV497#003"
+    },
+    {
+      "@id": "_:b489",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "B4 - Replacement",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b490"
+      }
+    },
+    {
+      "@id": "_:b49",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "https://admin-shell.io/idta/CarbonFootprint/ProductCarbonFootprint/1/0"
+    },
+    {
+      "@id": "_:b490",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b491"
+    },
+    {
+      "@id": "_:b491",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC017#001"
+    },
+    {
+      "@id": "_:b494",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "B5 - update/upgrade, refurbishing",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b495"
+      }
+    },
+    {
+      "@id": "_:b495",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b496"
+    },
+    {
+      "@id": "_:b496",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABV499#003"
+    },
+    {
+      "@id": "_:b499",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "B6 - usage energy consumption",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b500"
+      }
+    },
+    {
+      "@id": "_:b500",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b501"
+    },
+    {
+      "@id": "_:b501",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABV500#003"
+    },
+    {
+      "@id": "_:b504",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "B7 - usage water consumption",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b505"
+      }
+    },
+    {
+      "@id": "_:b505",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b506"
+    },
+    {
+      "@id": "_:b506",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABV501#003"
+    },
+    {
+      "@id": "_:b509",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "C1 - reassembly",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b510"
+      }
+    },
+    {
+      "@id": "_:b51",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b52"
+    },
+    {
+      "@id": "_:b510",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b511"
+    },
+    {
+      "@id": "_:b511",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABV502#003"
+    },
+    {
+      "@id": "_:b514",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "C1-C4",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b515"
+      }
+    },
+    {
+      "@id": "_:b515",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b516"
+    },
+    {
+      "@id": "_:b516",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC015#001"
+    },
+    {
+      "@id": "_:b519",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "C2 - transport to recycler",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b520"
+      }
+    },
+    {
+      "@id": "_:b52",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#ProductCarbonFootprint"
+    },
+    {
+      "@id": "_:b520",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b521"
+    },
+    {
+      "@id": "_:b521",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABU213#003"
+    },
+    {
+      "@id": "_:b524",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "C2-C4",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b525"
+      }
+    },
+    {
+      "@id": "_:b525",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b526"
+    },
+    {
+      "@id": "_:b526",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ACC018#001"
+    },
+    {
+      "@id": "_:b529",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "C3 - recycling, waste treatment",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b530"
+      }
+    },
+    {
+      "@id": "_:b530",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b531"
+    },
+    {
+      "@id": "_:b531",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABV503#003"
+    },
+    {
+      "@id": "_:b534",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "C4 - landfill",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b535"
+      }
+    },
+    {
+      "@id": "_:b535",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b536"
+    },
+    {
+      "@id": "_:b536",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABV504#003"
+    },
+    {
+      "@id": "_:b539",
+      "@type": "aas:ValueReferencePair",
+      "aas:ValueReferencePair/value": "D - reuse",
+      "aas:ValueReferencePair/valueId": {
+        "@id": "_:b540"
+      }
+    },
+    {
+      "@id": "_:b540",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b541"
+    },
+    {
+      "@id": "_:b541",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#07-ABU214#003"
+    },
+    {
+      "@id": "_:b545",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "life cycle phase"
+    },
+    {
+      "@id": "_:b547",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "performance class"
+    },
+    {
+      "@id": "_:b549",
+      "@type": "aas:EmbeddedDataSpecification",
+      "dataSpecification": "_:b550",
+      "dataSpecificationContent": "_:b553"
+    },
+    {
+      "@id": "_:b55",
+      "@type": "aas:SubmodelElementList",
+      "aas:SubmodelElementList/value": {
+        "@id": "_:b76"
+      },
+      "description": [
+        "_:b60",
+        "_:b62"
+      ],
+      "displayName": [
+        "_:b56",
+        "_:b58"
+      ],
+      "idShort": "PcfCalculationMethods",
+      "qualifiers": "_:b71",
+      "semanticId": "_:b64",
+      "semanticIdListElement": "_:b73",
+      "supplementalSemanticIds": "_:b67",
+      "typeValueListElement": "aas:AasSubmodelElements/Property",
+      "valueTypeListElement": "aas:DataTypeDefXsd/String"
+    },
+    {
+      "@id": "_:b550",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b551"
+    },
+    {
+      "@id": "_:b551",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+    },
+    {
+      "@id": "_:b553",
+      "@type": "aas:DataSpecificationIec61360",
+      "dataType": "aas:DataTypeIec61360/String",
+      "definition": "_:b558",
+      "preferredName": "_:b554",
+      "shortName": "_:b556"
+    },
+    {
+      "@id": "_:b554",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "en",
+      "text": "carbon footprint performance class"
+    },
+    {
+      "@id": "_:b556",
+      "@type": "aas:LangStringShortNameTypeIec61360",
+      "language": "en",
+      "text": "performanceClass"
+    },
+    {
+      "@id": "_:b558",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "en",
+      "text": "The battery passport must include the carbon footprint performance class in accordance with the entry into force of the delegated and implementing acts on the carbon footprint performance classes per Article7 of the Battery Regulation.\n\n DIN DKE Spec 99100 chapter reference: 6.3.7 "
+    },
+    {
+      "@id": "_:b56",
+      "@type": "aas:LangStringNameType",
+      "language": "de",
+      "text": "Folgenabschätzungsmethoden"
+    },
+    {
+      "@id": "_:b561",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "web link to public carbon footprint study"
+    },
+    {
+      "@id": "_:b563",
+      "@type": "aas:EmbeddedDataSpecification",
+      "dataSpecification": "_:b564",
+      "dataSpecificationContent": "_:b567"
+    },
+    {
+      "@id": "_:b564",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b565"
+    },
+    {
+      "@id": "_:b565",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+    },
+    {
+      "@id": "_:b567",
+      "@type": "aas:DataSpecificationIec61360",
+      "dataType": "aas:DataTypeIec61360/String",
+      "definition": "_:b570",
+      "preferredName": "_:b568"
+    },
+    {
+      "@id": "_:b568",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "en",
+      "text": "web link to public carbon footprint study"
+    },
+    {
+      "@id": "_:b570",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "en",
+      "text": "One or more document identifiers (depending, for example, on the translation) of a specific document, which can be found in the 'HandoverDocumentation' model.\n\n DIN DKE Spec 99100 chapter reference: 6.3.8"
+    },
+    {
+      "@id": "_:b573",
+      "@type": "aas:LangStringNameType",
+      "language": "de",
+      "text": "Dokumentennummer"
+    },
+    {
+      "@id": "_:b575",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "document identifier"
+    },
+    {
+      "@id": "_:b577",
+      "@type": "aas:EmbeddedDataSpecification",
+      "dataSpecification": "_:b578",
+      "dataSpecificationContent": "_:b581"
+    },
+    {
+      "@id": "_:b578",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b579"
+    },
+    {
+      "@id": "_:b579",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIec61360/3/0"
+    },
+    {
+      "@id": "_:b58",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "PCF calculation methods"
+    },
+    {
+      "@id": "_:b581",
+      "@type": "aas:DataSpecificationIec61360",
+      "dataType": "aas:DataTypeIec61360/String",
+      "definition": [
+        "_:b588",
+        "_:b590"
+      ],
+      "preferredName": [
+        "_:b582",
+        "_:b584"
+      ],
+      "shortName": "_:b586"
+    },
+    {
+      "@id": "_:b582",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "de",
+      "text": "Dokumentennummer"
+    },
+    {
+      "@id": "_:b584",
+      "@type": "aas:LangStringPreferredNameTypeIec61360",
+      "language": "en",
+      "text": "document identifier (ID)"
+    },
+    {
+      "@id": "_:b586",
+      "@type": "aas:LangStringShortNameTypeIec61360",
+      "language": "en",
+      "text": "documentIdentifier"
+    },
+    {
+      "@id": "_:b588",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "de",
+      "text": "Alphanumerische Zeichenfolge, die ein Dokument eindeutig identifiziert."
+    },
+    {
+      "@id": "_:b590",
+      "@type": "aas:LangStringDefinitionTypeIec61360",
+      "language": "en",
+      "text": "Alphanumeric character sequence uniquely identifying a document."
+    },
+    {
+      "@id": "_:b6",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "carbon footprint for dbpaas"
+    },
+    {
+      "@id": "_:b60",
+      "@type": "aas:LangStringTextType",
+      "language": "de",
+      "text": "Normen, Standards, Verfahren zur Ermittlung der Treibhausgas-Emissionen eines Produkts"
+    },
+    {
+      "@id": "_:b62",
+      "@type": "aas:LangStringTextType",
+      "language": "en",
+      "text": "Standards, methods for determining the greenhouse gas emissions of a product.\n\nThis Value List is based on ECLASS 15 with IRDI 0173-1#09-AAO115#003. The full list can be found in Section 2.5 in \"Product Carbon Footprint 1.0 (IDTA-02023)\".\n"
+    },
+    {
+      "@id": "_:b64",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b65"
+    },
+    {
+      "@id": "_:b65",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "https://admin-shell.io/idta/CarbonFootprint/PcfCalculationMethods/1/0"
+    },
+    {
+      "@id": "_:b67",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b68"
+    },
+    {
+      "@id": "_:b68",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "urn:samm:io.admin-shell.idta.carbon_footprint:1.0.0#pcfCalculationMethods"
+    },
+    {
+      "@id": "_:b71",
+      "@type": "aas:Qualifier",
+      "aas:Qualifier/type": "SMT/Cardinality",
+      "aas:Qualifier/value": "One",
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    },
+    {
+      "@id": "_:b73",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b74"
+    },
+    {
+      "@id": "_:b74",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#02-ABG854#003"
+    },
+    {
+      "@id": "_:b76",
+      "@type": "aas:Property",
+      "aas:Property/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      },
+      "category": "PARAMETER",
+      "displayName": [
+        "_:b77",
+        "_:b79"
+      ],
+      "idShort": "PcfCalculationMethod",
+      "qualifiers": "_:b84",
+      "semanticId": "_:b81"
+    },
+    {
+      "@id": "_:b77",
+      "@type": "aas:LangStringNameType",
+      "language": "de",
+      "text": "Folgenabschätzungsmethode / Berechnungsmethode"
+    },
+    {
+      "@id": "_:b79",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "PCF calculation method"
+    },
+    {
+      "@id": "_:b8",
+      "@type": "aas:LangStringNameType",
+      "language": "de",
+      "text": "C02 Footprint"
+    },
+    {
+      "@id": "_:b81",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b82"
+    },
+    {
+      "@id": "_:b82",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#02-ABG854#003"
+    },
+    {
+      "@id": "_:b84",
+      "@type": "aas:Qualifier",
+      "aas:Qualifier/type": "SMT/Cardinality",
+      "aas:Qualifier/value": "One",
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    },
+    {
+      "@id": "_:b88",
+      "@type": "aas:Property",
+      "aas:Property/valueType": {
+        "@id": "aas:DataTypeDefXsd/Decimal"
+      },
+      "category": "PARAMETER",
+      "description": "_:b93",
+      "displayName": [
+        "_:b89",
+        "_:b91"
+      ],
+      "idShort": "PcfCO2eq",
+      "qualifiers": "_:b102",
+      "semanticId": "_:b95",
+      "supplementalSemanticIds": "_:b98"
+    },
+    {
+      "@id": "_:b89",
+      "@type": "aas:LangStringNameType",
+      "language": "de",
+      "text": "CO2-Äquivalent"
+    },
+    {
+      "@id": "_:b91",
+      "@type": "aas:LangStringNameType",
+      "language": "en",
+      "text": "PCF co 2 eq"
+    },
+    {
+      "@id": "_:b93",
+      "@type": "aas:LangStringTextType",
+      "language": "en",
+      "text": "DIN DKE Spec 99100 chapter reference: 6.3.2"
+    },
+    {
+      "@id": "_:b95",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b96"
+    },
+    {
+      "@id": "_:b96",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "0173-1#02-ABG855#003"
+    },
+    {
+      "@id": "_:b98",
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "keys": "_:b99"
+    },
+    {
+      "@id": "_:b99",
+      "@type": "aas:Key",
+      "aas:Key/type": {
+        "@id": "aas:KeyTypes/GlobalReference"
+      },
+      "aas:Key/value": "urn:samm:io.admin-shell.idta.carbon_footprint:1.0.0#pcfCo2eq"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
+      "@type": "aas:Submodel",
+      "aas:HasKind/kind": {
+        "@id": "aas:ModellingKind/Template"
+      },
+      "administration": "_:b14",
+      "description": "_:b12",
+      "displayName": [
+        "_:b10",
+        "_:b8"
+      ],
+      "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
+      "idShort": "CarbonFootprint",
+      "semanticId": "_:b15",
+      "submodelElements": "_:b22",
+      "supplementalSemanticIds": "_:b18"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/aas/DigitalBatteryPassport/CarbonFootprint/1/0",
+      "@type": "aas:AssetAdministrationShell",
+      "aas:AssetAdministrationShell/submodels": {
+        "@id": "_:b2"
+      },
+      "assetInformation": "_:b1",
+      "displayName": "_:b6",
+      "id": "https://admin-shell.io/idta/aas/DigitalBatteryPassport/CarbonFootprint/1/0",
+      "idShort": "CarbonFootprintForDBPAAS"
+    },
+    {
+      "@graph": [
+        {
+          "@id": "_:b100",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b99"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b98"
+          }
+        },
+        {
+          "@id": "_:b101",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b98"
+          },
+          "aasld:property": {
+            "@id": "aas:HasSemantics/supplementalSemanticIds"
+          },
+          "aasld:subject": {
+            "@id": "_:b88"
+          }
+        },
+        {
+          "@id": "_:b103",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b102"
+          },
+          "aasld:property": {
+            "@id": "aas:Qualifiable/qualifiers"
+          },
+          "aasld:subject": {
+            "@id": "_:b88"
+          }
+        },
+        {
+          "@id": "_:b104",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b88"
+          },
+          "aasld:property": {
+            "@id": "aas:SubmodelElementCollection/value"
+          },
+          "aasld:subject": {
+            "@id": "_:b41"
+          }
+        },
+        {
+          "@id": "_:b107",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b106"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b105"
+          }
+        },
+        {
+          "@id": "_:b109",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b108"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b105"
+          }
+        },
+        {
+          "@id": "_:b11",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b10"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+          }
+        },
+        {
+          "@id": "_:b111",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b110"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/description"
+          },
+          "aasld:subject": {
+            "@id": "_:b105"
+          }
+        },
+        {
+          "@id": "_:b114",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b113"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b112"
+          }
+        },
+        {
+          "@id": "_:b117",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b116"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b115"
+          }
+        },
+        {
+          "@id": "_:b118",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b115"
+          },
+          "aasld:property": {
+            "@id": "aas:HasSemantics/supplementalSemanticIds"
+          },
+          "aasld:subject": {
+            "@id": "_:b105"
+          }
+        },
+        {
+          "@id": "_:b120",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b119"
+          },
+          "aasld:property": {
+            "@id": "aas:Qualifiable/qualifiers"
+          },
+          "aasld:subject": {
+            "@id": "_:b105"
+          }
+        },
+        {
+          "@id": "_:b121",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "2"
+          },
+          "aasld:member": {
+            "@id": "_:b105"
+          },
+          "aasld:property": {
+            "@id": "aas:SubmodelElementCollection/value"
+          },
+          "aasld:subject": {
+            "@id": "_:b41"
+          }
+        },
+        {
+          "@id": "_:b124",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b123"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b122"
+          }
+        },
+        {
+          "@id": "_:b126",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b125"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b122"
+          }
+        },
+        {
+          "@id": "_:b128",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b127"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/description"
+          },
+          "aasld:subject": {
+            "@id": "_:b122"
+          }
+        },
+        {
+          "@id": "_:b13",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b12"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/description"
+          },
+          "aasld:subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+          }
+        },
+        {
+          "@id": "_:b131",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b130"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b129"
+          }
+        },
+        {
+          "@id": "_:b134",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b133"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b132"
+          }
+        },
+        {
+          "@id": "_:b135",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b132"
+          },
+          "aasld:property": {
+            "@id": "aas:HasSemantics/supplementalSemanticIds"
+          },
+          "aasld:subject": {
+            "@id": "_:b122"
+          }
+        },
+        {
+          "@id": "_:b137",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b136"
+          },
+          "aasld:property": {
+            "@id": "aas:Qualifiable/qualifiers"
+          },
+          "aasld:subject": {
+            "@id": "_:b122"
+          }
+        },
+        {
+          "@id": "_:b138",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "3"
+          },
+          "aasld:member": {
+            "@id": "_:b122"
+          },
+          "aasld:property": {
+            "@id": "aas:SubmodelElementCollection/value"
+          },
+          "aasld:subject": {
+            "@id": "_:b41"
+          }
+        },
+        {
+          "@id": "_:b141",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b140"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b139"
+          }
+        },
+        {
+          "@id": "_:b143",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b142"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b139"
+          }
+        },
+        {
+          "@id": "_:b145",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b144"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/description"
+          },
+          "aasld:subject": {
+            "@id": "_:b139"
+          }
+        },
+        {
+          "@id": "_:b148",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b147"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b146"
+          }
+        },
+        {
+          "@id": "_:b151",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b150"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b149"
+          }
+        },
+        {
+          "@id": "_:b152",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b149"
+          },
+          "aasld:property": {
+            "@id": "aas:HasSemantics/supplementalSemanticIds"
+          },
+          "aasld:subject": {
+            "@id": "_:b139"
+          }
+        },
+        {
+          "@id": "_:b155",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b154"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b153"
+          }
+        },
+        {
+          "@id": "_:b156",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b153"
+          },
+          "aasld:property": {
+            "@id": "aas:HasSemantics/supplementalSemanticIds"
+          },
+          "aasld:subject": {
+            "@id": "_:b139"
+          }
+        },
+        {
+          "@id": "_:b158",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b157"
+          },
+          "aasld:property": {
+            "@id": "aas:Qualifiable/qualifiers"
+          },
+          "aasld:subject": {
+            "@id": "_:b139"
+          }
+        },
+        {
+          "@id": "_:b161",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b160"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b159"
+          }
+        },
+        {
+          "@id": "_:b164",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b163"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b162"
+          }
+        },
+        {
+          "@id": "_:b166",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b165"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b162"
+          }
+        },
+        {
+          "@id": "_:b169",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b168"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b167"
+          }
+        },
+        {
+          "@id": "_:b17",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b16"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b15"
+          }
+        },
+        {
+          "@id": "_:b171",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b170"
+          },
+          "aasld:property": {
+            "@id": "aas:Qualifiable/qualifiers"
+          },
+          "aasld:subject": {
+            "@id": "_:b162"
+          }
+        },
+        {
+          "@id": "_:b172",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b162"
+          },
+          "aasld:property": {
+            "@id": "aas:SubmodelElementList/value"
+          },
+          "aasld:subject": {
+            "@id": "_:b139"
+          }
+        },
+        {
+          "@id": "_:b173",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "4"
+          },
+          "aasld:member": {
+            "@id": "_:b139"
+          },
+          "aasld:property": {
+            "@id": "aas:SubmodelElementCollection/value"
+          },
+          "aasld:subject": {
+            "@id": "_:b41"
+          }
+        },
+        {
+          "@id": "_:b177",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b176"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b175"
+          }
+        },
+        {
+          "@id": "_:b181",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b180"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b179"
+          }
+        },
+        {
+          "@id": "_:b182",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b178"
+          },
+          "aasld:property": {
+            "@id": "aas:Qualifiable/qualifiers"
+          },
+          "aasld:subject": {
+            "@id": "_:b174"
+          }
+        },
+        {
+          "@id": "_:b184",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b183"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b174"
+          }
+        },
+        {
+          "@id": "_:b185",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "5"
+          },
+          "aasld:member": {
+            "@id": "_:b174"
+          },
+          "aasld:property": {
+            "@id": "aas:SubmodelElementCollection/value"
+          },
+          "aasld:subject": {
+            "@id": "_:b41"
+          }
+        },
+        {
+          "@id": "_:b189",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b188"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b187"
+          }
+        },
+        {
+          "@id": "_:b193",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b192"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b191"
+          }
+        },
+        {
+          "@id": "_:b194",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b190"
+          },
+          "aasld:property": {
+            "@id": "aas:Qualifiable/qualifiers"
+          },
+          "aasld:subject": {
+            "@id": "_:b186"
+          }
+        },
+        {
+          "@id": "_:b197",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b196"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/description"
+          },
+          "aasld:subject": {
+            "@id": "_:b195"
+          }
+        },
+        {
+          "@id": "_:b20",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b19"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b18"
+          }
+        },
+        {
+          "@id": "_:b200",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b199"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b198"
+          }
+        },
+        {
+          "@id": "_:b203",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b202"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b201"
+          }
+        },
+        {
+          "@id": "_:b204",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b201"
+          },
+          "aasld:property": {
+            "@id": "aas:HasSemantics/supplementalSemanticIds"
+          },
+          "aasld:subject": {
+            "@id": "_:b195"
+          }
+        },
+        {
+          "@id": "_:b208",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b207"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b206"
+          }
+        },
+        {
+          "@id": "_:b209",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b205"
+          },
+          "aasld:property": {
+            "@id": "aas:Qualifiable/qualifiers"
+          },
+          "aasld:subject": {
+            "@id": "_:b195"
+          }
+        },
+        {
+          "@id": "_:b21",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b18"
+          },
+          "aasld:property": {
+            "@id": "aas:HasSemantics/supplementalSemanticIds"
+          },
+          "aasld:subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+          }
+        },
+        {
+          "@id": "_:b211",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b210"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b195"
+          }
+        },
+        {
+          "@id": "_:b212",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b195"
+          },
+          "aasld:property": {
+            "@id": "aas:SubmodelElementList/value"
+          },
+          "aasld:subject": {
+            "@id": "_:b186"
+          }
+        },
+        {
+          "@id": "_:b214",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b213"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b186"
+          }
+        },
+        {
+          "@id": "_:b215",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "6"
+          },
+          "aasld:member": {
+            "@id": "_:b186"
+          },
+          "aasld:property": {
+            "@id": "aas:SubmodelElementCollection/value"
+          },
+          "aasld:subject": {
+            "@id": "_:b41"
+          }
+        },
+        {
+          "@id": "_:b216",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b41"
+          },
+          "aasld:property": {
+            "@id": "aas:SubmodelElementList/value"
+          },
+          "aasld:subject": {
+            "@id": "_:b22"
+          }
+        },
+        {
+          "@id": "_:b217",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b22"
+          },
+          "aasld:property": {
+            "@id": "aas:Submodel/submodelElements"
+          },
+          "aasld:subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+          }
+        },
+        {
+          "@id": "_:b221",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b220"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b219"
+          }
+        },
+        {
+          "@id": "_:b224",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b223"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b222"
+          }
+        },
+        {
+          "@id": "_:b226",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b225"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b222"
+          }
+        },
+        {
+          "@id": "_:b228",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b227"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b222"
+          }
+        },
+        {
+          "@id": "_:b230",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b229"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b222"
+          }
+        },
+        {
+          "@id": "_:b235",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b234"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b233"
+          }
+        },
+        {
+          "@id": "_:b236",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b232"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b24",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b23"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b22"
+          }
+        },
+        {
+          "@id": "_:b240",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b239"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b238"
+          }
+        },
+        {
+          "@id": "_:b241",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b237"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b245",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b244"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b243"
+          }
+        },
+        {
+          "@id": "_:b246",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "2"
+          },
+          "aasld:member": {
+            "@id": "_:b242"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b250",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b249"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b248"
+          }
+        },
+        {
+          "@id": "_:b251",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "3"
+          },
+          "aasld:member": {
+            "@id": "_:b247"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b255",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b254"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b253"
+          }
+        },
+        {
+          "@id": "_:b256",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "4"
+          },
+          "aasld:member": {
+            "@id": "_:b252"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b26",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b25"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b22"
+          }
+        },
+        {
+          "@id": "_:b260",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b259"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b258"
+          }
+        },
+        {
+          "@id": "_:b261",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "5"
+          },
+          "aasld:member": {
+            "@id": "_:b257"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b265",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b264"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b263"
+          }
+        },
+        {
+          "@id": "_:b266",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "6"
+          },
+          "aasld:member": {
+            "@id": "_:b262"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b270",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b269"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b268"
+          }
+        },
+        {
+          "@id": "_:b271",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "7"
+          },
+          "aasld:member": {
+            "@id": "_:b267"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b275",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b274"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b273"
+          }
+        },
+        {
+          "@id": "_:b276",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "8"
+          },
+          "aasld:member": {
+            "@id": "_:b272"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b28",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b27"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/description"
+          },
+          "aasld:subject": {
+            "@id": "_:b22"
+          }
+        },
+        {
+          "@id": "_:b280",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b279"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b278"
+          }
+        },
+        {
+          "@id": "_:b281",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "9"
+          },
+          "aasld:member": {
+            "@id": "_:b277"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b285",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b284"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b283"
+          }
+        },
+        {
+          "@id": "_:b286",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "10"
+          },
+          "aasld:member": {
+            "@id": "_:b282"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b290",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b289"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b288"
+          }
+        },
+        {
+          "@id": "_:b291",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "11"
+          },
+          "aasld:member": {
+            "@id": "_:b287"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b295",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b294"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b293"
+          }
+        },
+        {
+          "@id": "_:b296",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "12"
+          },
+          "aasld:member": {
+            "@id": "_:b292"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b300",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b299"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b298"
+          }
+        },
+        {
+          "@id": "_:b301",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "13"
+          },
+          "aasld:member": {
+            "@id": "_:b297"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b305",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b304"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b303"
+          }
+        },
+        {
+          "@id": "_:b306",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "14"
+          },
+          "aasld:member": {
+            "@id": "_:b302"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b31",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b30"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b29"
+          }
+        },
+        {
+          "@id": "_:b310",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b309"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b308"
+          }
+        },
+        {
+          "@id": "_:b311",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "15"
+          },
+          "aasld:member": {
+            "@id": "_:b307"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b315",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b314"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b313"
+          }
+        },
+        {
+          "@id": "_:b316",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "16"
+          },
+          "aasld:member": {
+            "@id": "_:b312"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b231"
+          }
+        },
+        {
+          "@id": "_:b317",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b218"
+          },
+          "aasld:property": {
+            "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
+          },
+          "aasld:subject": {
+            "@id": "aasld:id/36b62da882234b8eca404c65f6b45bf33fa34a73d89f6fc819e1b95c7cd5a62b"
+          }
+        },
+        {
+          "@id": "_:b319",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b318"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "aasld:id/36b62da882234b8eca404c65f6b45bf33fa34a73d89f6fc819e1b95c7cd5a62b"
+          }
+        },
+        {
+          "@id": "_:b323",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b322"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b321"
+          }
+        },
+        {
+          "@id": "_:b326",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b325"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b324"
+          }
+        },
+        {
+          "@id": "_:b328",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b327"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b324"
+          }
+        },
+        {
+          "@id": "_:b330",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b329"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b324"
+          }
+        },
+        {
+          "@id": "_:b332",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b331"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b324"
+          }
+        },
+        {
+          "@id": "_:b333",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b320"
+          },
+          "aasld:property": {
+            "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
+          },
+          "aasld:subject": {
+            "@id": "aasld:id/a5e8fd02e995494cbfc65629310b533a046d0ab6aad2c29da40470919792c9b1"
+          }
+        },
+        {
+          "@id": "_:b335",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b334"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "aasld:id/a5e8fd02e995494cbfc65629310b533a046d0ab6aad2c29da40470919792c9b1"
+          }
+        },
+        {
+          "@id": "_:b339",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b338"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b337"
+          }
+        },
+        {
+          "@id": "_:b34",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b33"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b32"
+          }
+        },
+        {
+          "@id": "_:b342",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b341"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b340"
+          }
+        },
+        {
+          "@id": "_:b344",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b343"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b340"
+          }
+        },
+        {
+          "@id": "_:b346",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b345"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b340"
+          }
+        },
+        {
+          "@id": "_:b348",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b347"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b340"
+          }
+        },
+        {
+          "@id": "_:b35",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b32"
+          },
+          "aasld:property": {
+            "@id": "aas:HasSemantics/supplementalSemanticIds"
+          },
+          "aasld:subject": {
+            "@id": "_:b22"
+          }
+        },
+        {
+          "@id": "_:b353",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b352"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b351"
+          }
+        },
+        {
+          "@id": "_:b354",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b350"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b349"
+          }
+        },
+        {
+          "@id": "_:b358",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b357"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b356"
+          }
+        },
+        {
+          "@id": "_:b359",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b355"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b349"
+          }
+        },
+        {
+          "@id": "_:b363",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b362"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b361"
+          }
+        },
+        {
+          "@id": "_:b364",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "2"
+          },
+          "aasld:member": {
+            "@id": "_:b360"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b349"
+          }
+        },
+        {
+          "@id": "_:b368",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b367"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b366"
+          }
+        },
+        {
+          "@id": "_:b369",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "3"
+          },
+          "aasld:member": {
+            "@id": "_:b365"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b349"
+          }
+        },
+        {
+          "@id": "_:b37",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b36"
+          },
+          "aasld:property": {
+            "@id": "aas:Qualifiable/qualifiers"
+          },
+          "aasld:subject": {
+            "@id": "_:b22"
+          }
+        },
+        {
+          "@id": "_:b373",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b372"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b371"
+          }
+        },
+        {
+          "@id": "_:b374",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "4"
+          },
+          "aasld:member": {
+            "@id": "_:b370"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b349"
+          }
+        },
+        {
+          "@id": "_:b378",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b377"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b376"
+          }
+        },
+        {
+          "@id": "_:b379",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "5"
+          },
+          "aasld:member": {
+            "@id": "_:b375"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b349"
+          }
+        },
+        {
+          "@id": "_:b383",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b382"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b381"
+          }
+        },
+        {
+          "@id": "_:b384",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "6"
+          },
+          "aasld:member": {
+            "@id": "_:b380"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b349"
+          }
+        },
+        {
+          "@id": "_:b388",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b387"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b386"
+          }
+        },
+        {
+          "@id": "_:b389",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "7"
+          },
+          "aasld:member": {
+            "@id": "_:b385"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b349"
+          }
+        },
+        {
+          "@id": "_:b393",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b392"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b391"
+          }
+        },
+        {
+          "@id": "_:b394",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "8"
+          },
+          "aasld:member": {
+            "@id": "_:b390"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b349"
+          }
+        },
+        {
+          "@id": "_:b395",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b336"
+          },
+          "aasld:property": {
+            "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
+          },
+          "aasld:subject": {
+            "@id": "aasld:id/3984c5c0ddb4d70d5f6b33f85ca9c9eb4eb235b7f767bc1580eeb0f4b8bf1920"
+          }
+        },
+        {
+          "@id": "_:b397",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b396"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "aasld:id/3984c5c0ddb4d70d5f6b33f85ca9c9eb4eb235b7f767bc1580eeb0f4b8bf1920"
+          }
+        },
+        {
+          "@id": "_:b399",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b398"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "aasld:id/8a882e2adbfb607d672828ca6409b5e5669ed4df21bd5ba635627641f5871c1b"
+          }
+        },
+        {
+          "@id": "_:b4",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b3"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b2"
+          }
+        },
+        {
+          "@id": "_:b40",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b39"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b38"
+          }
+        },
+        {
+          "@id": "_:b401",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b400"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "aasld:id/8a882e2adbfb607d672828ca6409b5e5669ed4df21bd5ba635627641f5871c1b"
+          }
+        },
+        {
+          "@id": "_:b405",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b404"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b403"
+          }
+        },
+        {
+          "@id": "_:b408",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b407"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b406"
+          }
+        },
+        {
+          "@id": "_:b410",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b409"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b406"
+          }
+        },
+        {
+          "@id": "_:b412",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b411"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b406"
+          }
+        },
+        {
+          "@id": "_:b414",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b413"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b406"
+          }
+        },
+        {
+          "@id": "_:b415",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b402"
+          },
+          "aasld:property": {
+            "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
+          },
+          "aasld:subject": {
+            "@id": "aasld:id/8a882e2adbfb607d672828ca6409b5e5669ed4df21bd5ba635627641f5871c1b"
+          }
+        },
+        {
+          "@id": "_:b419",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b418"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b417"
+          }
+        },
+        {
+          "@id": "_:b422",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b421"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b420"
+          }
+        },
+        {
+          "@id": "_:b424",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b423"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b420"
+          }
+        },
+        {
+          "@id": "_:b426",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b425"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/shortName"
+          },
+          "aasld:subject": {
+            "@id": "_:b420"
+          }
+        },
+        {
+          "@id": "_:b428",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b427"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/shortName"
+          },
+          "aasld:subject": {
+            "@id": "_:b420"
+          }
+        },
+        {
+          "@id": "_:b43",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b42"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b41"
+          }
+        },
+        {
+          "@id": "_:b430",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b429"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b420"
+          }
+        },
+        {
+          "@id": "_:b432",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b431"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b420"
+          }
+        },
+        {
+          "@id": "_:b437",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b436"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b435"
+          }
+        },
+        {
+          "@id": "_:b438",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b434"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b442",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b441"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b440"
+          }
+        },
+        {
+          "@id": "_:b443",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b439"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b447",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b446"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b445"
+          }
+        },
+        {
+          "@id": "_:b448",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "2"
+          },
+          "aasld:member": {
+            "@id": "_:b444"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b45",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b44"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b41"
+          }
+        },
+        {
+          "@id": "_:b452",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b451"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b450"
+          }
+        },
+        {
+          "@id": "_:b453",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "3"
+          },
+          "aasld:member": {
+            "@id": "_:b449"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b457",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b456"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b455"
+          }
+        },
+        {
+          "@id": "_:b458",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "4"
+          },
+          "aasld:member": {
+            "@id": "_:b454"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b462",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b461"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b460"
+          }
+        },
+        {
+          "@id": "_:b463",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "5"
+          },
+          "aasld:member": {
+            "@id": "_:b459"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b467",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b466"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b465"
+          }
+        },
+        {
+          "@id": "_:b468",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "6"
+          },
+          "aasld:member": {
+            "@id": "_:b464"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b47",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b46"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/description"
+          },
+          "aasld:subject": {
+            "@id": "_:b41"
+          }
+        },
+        {
+          "@id": "_:b472",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b471"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b470"
+          }
+        },
+        {
+          "@id": "_:b473",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "7"
+          },
+          "aasld:member": {
+            "@id": "_:b469"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b477",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b476"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b475"
+          }
+        },
+        {
+          "@id": "_:b478",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "8"
+          },
+          "aasld:member": {
+            "@id": "_:b474"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b482",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b481"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b480"
+          }
+        },
+        {
+          "@id": "_:b483",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "9"
+          },
+          "aasld:member": {
+            "@id": "_:b479"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b487",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b486"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b485"
+          }
+        },
+        {
+          "@id": "_:b488",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "10"
+          },
+          "aasld:member": {
+            "@id": "_:b484"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b492",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b491"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b490"
+          }
+        },
+        {
+          "@id": "_:b493",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "11"
+          },
+          "aasld:member": {
+            "@id": "_:b489"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b497",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b496"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b495"
+          }
+        },
+        {
+          "@id": "_:b498",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "12"
+          },
+          "aasld:member": {
+            "@id": "_:b494"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b5",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b2"
+          },
+          "aasld:property": {
+            "@id": "aas:AssetAdministrationShell/submodels"
+          },
+          "aasld:subject": {
+            "@id": "https://admin-shell.io/idta/aas/DigitalBatteryPassport/CarbonFootprint/1/0"
+          }
+        },
+        {
+          "@id": "_:b50",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b49"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b48"
+          }
+        },
+        {
+          "@id": "_:b502",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b501"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b500"
+          }
+        },
+        {
+          "@id": "_:b503",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "13"
+          },
+          "aasld:member": {
+            "@id": "_:b499"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b507",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b506"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b505"
+          }
+        },
+        {
+          "@id": "_:b508",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "14"
+          },
+          "aasld:member": {
+            "@id": "_:b504"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b512",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b511"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b510"
+          }
+        },
+        {
+          "@id": "_:b513",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "15"
+          },
+          "aasld:member": {
+            "@id": "_:b509"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b517",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b516"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b515"
+          }
+        },
+        {
+          "@id": "_:b518",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "16"
+          },
+          "aasld:member": {
+            "@id": "_:b514"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b522",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b521"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b520"
+          }
+        },
+        {
+          "@id": "_:b523",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "17"
+          },
+          "aasld:member": {
+            "@id": "_:b519"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b527",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b526"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b525"
+          }
+        },
+        {
+          "@id": "_:b528",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "18"
+          },
+          "aasld:member": {
+            "@id": "_:b524"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b53",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b52"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b51"
+          }
+        },
+        {
+          "@id": "_:b532",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b531"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b530"
+          }
+        },
+        {
+          "@id": "_:b533",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "19"
+          },
+          "aasld:member": {
+            "@id": "_:b529"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b537",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b536"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b535"
+          }
+        },
+        {
+          "@id": "_:b538",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "20"
+          },
+          "aasld:member": {
+            "@id": "_:b534"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b54",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b51"
+          },
+          "aasld:property": {
+            "@id": "aas:HasSemantics/supplementalSemanticIds"
+          },
+          "aasld:subject": {
+            "@id": "_:b41"
+          }
+        },
+        {
+          "@id": "_:b542",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b541"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b540"
+          }
+        },
+        {
+          "@id": "_:b543",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "21"
+          },
+          "aasld:member": {
+            "@id": "_:b539"
+          },
+          "aasld:property": {
+            "@id": "aas:ValueList/valueReferencePairs"
+          },
+          "aasld:subject": {
+            "@id": "_:b433"
+          }
+        },
+        {
+          "@id": "_:b544",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b416"
+          },
+          "aasld:property": {
+            "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
+          },
+          "aasld:subject": {
+            "@id": "aasld:id/018ed2092ff362c4837ded7eb0e34e29d7a49afd5147ce2ff26e1e3bcddee313"
+          }
+        },
+        {
+          "@id": "_:b546",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b545"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "aasld:id/018ed2092ff362c4837ded7eb0e34e29d7a49afd5147ce2ff26e1e3bcddee313"
+          }
+        },
+        {
+          "@id": "_:b548",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b547"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#performanceClass"
+          }
+        },
+        {
+          "@id": "_:b552",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b551"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b550"
+          }
+        },
+        {
+          "@id": "_:b555",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b554"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b553"
+          }
+        },
+        {
+          "@id": "_:b557",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b556"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/shortName"
+          },
+          "aasld:subject": {
+            "@id": "_:b553"
+          }
+        },
+        {
+          "@id": "_:b559",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b558"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b553"
+          }
+        },
+        {
+          "@id": "_:b560",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b549"
+          },
+          "aasld:property": {
+            "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
+          },
+          "aasld:subject": {
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#performanceClass"
+          }
+        },
+        {
+          "@id": "_:b562",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b561"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#webLinkToPublicCarbonFootprintStudy"
+          }
+        },
+        {
+          "@id": "_:b566",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b565"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b564"
+          }
+        },
+        {
+          "@id": "_:b569",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b568"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b567"
+          }
+        },
+        {
+          "@id": "_:b57",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b56"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b55"
+          }
+        },
+        {
+          "@id": "_:b571",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b570"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b567"
+          }
+        },
+        {
+          "@id": "_:b572",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b563"
+          },
+          "aasld:property": {
+            "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
+          },
+          "aasld:subject": {
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#webLinkToPublicCarbonFootprintStudy"
+          }
+        },
+        {
+          "@id": "_:b574",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b573"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIdentifier"
+          }
+        },
+        {
+          "@id": "_:b576",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b575"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIdentifier"
+          }
+        },
+        {
+          "@id": "_:b580",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b579"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b578"
+          }
+        },
+        {
+          "@id": "_:b583",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b582"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b581"
+          }
+        },
+        {
+          "@id": "_:b585",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b584"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/preferredName"
+          },
+          "aasld:subject": {
+            "@id": "_:b581"
+          }
+        },
+        {
+          "@id": "_:b587",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b586"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/shortName"
+          },
+          "aasld:subject": {
+            "@id": "_:b581"
+          }
+        },
+        {
+          "@id": "_:b589",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b588"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b581"
+          }
+        },
+        {
+          "@id": "_:b59",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b58"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b55"
+          }
+        },
+        {
+          "@id": "_:b591",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b590"
+          },
+          "aasld:property": {
+            "@id": "aas:DataSpecificationIec61360/definition"
+          },
+          "aasld:subject": {
+            "@id": "_:b581"
+          }
+        },
+        {
+          "@id": "_:b592",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b577"
+          },
+          "aasld:property": {
+            "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
+          },
+          "aasld:subject": {
+            "@id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIdentifier"
+          }
+        },
+        {
+          "@id": "_:b61",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b60"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/description"
+          },
+          "aasld:subject": {
+            "@id": "_:b55"
+          }
+        },
+        {
+          "@id": "_:b63",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b62"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/description"
+          },
+          "aasld:subject": {
+            "@id": "_:b55"
+          }
+        },
+        {
+          "@id": "_:b66",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b65"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b64"
+          }
+        },
+        {
+          "@id": "_:b69",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b68"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b67"
+          }
+        },
+        {
+          "@id": "_:b7",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b6"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "https://admin-shell.io/idta/aas/DigitalBatteryPassport/CarbonFootprint/1/0"
+          }
+        },
+        {
+          "@id": "_:b70",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b67"
+          },
+          "aasld:property": {
+            "@id": "aas:HasSemantics/supplementalSemanticIds"
+          },
+          "aasld:subject": {
+            "@id": "_:b55"
+          }
+        },
+        {
+          "@id": "_:b72",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b71"
+          },
+          "aasld:property": {
+            "@id": "aas:Qualifiable/qualifiers"
+          },
+          "aasld:subject": {
+            "@id": "_:b55"
+          }
+        },
+        {
+          "@id": "_:b75",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b74"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b73"
+          }
+        },
+        {
+          "@id": "_:b78",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b77"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b76"
+          }
+        },
+        {
+          "@id": "_:b80",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b79"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b76"
+          }
+        },
+        {
+          "@id": "_:b83",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b82"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b81"
+          }
+        },
+        {
+          "@id": "_:b85",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b84"
+          },
+          "aasld:property": {
+            "@id": "aas:Qualifiable/qualifiers"
+          },
+          "aasld:subject": {
+            "@id": "_:b76"
+          }
+        },
+        {
+          "@id": "_:b86",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b76"
+          },
+          "aasld:property": {
+            "@id": "aas:SubmodelElementList/value"
+          },
+          "aasld:subject": {
+            "@id": "_:b55"
+          }
+        },
+        {
+          "@id": "_:b87",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b55"
+          },
+          "aasld:property": {
+            "@id": "aas:SubmodelElementCollection/value"
+          },
+          "aasld:subject": {
+            "@id": "_:b41"
+          }
+        },
+        {
+          "@id": "_:b9",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b8"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+          }
+        },
+        {
+          "@id": "_:b90",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b89"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b88"
+          }
+        },
+        {
+          "@id": "_:b92",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "1"
+          },
+          "aasld:member": {
+            "@id": "_:b91"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/displayName"
+          },
+          "aasld:subject": {
+            "@id": "_:b88"
+          }
+        },
+        {
+          "@id": "_:b94",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b93"
+          },
+          "aasld:property": {
+            "@id": "aas:Referable/description"
+          },
+          "aasld:subject": {
+            "@id": "_:b88"
+          }
+        },
+        {
+          "@id": "_:b97",
+          "@type": "aasld:Occurrence",
+          "aasld:index": {
+            "@type": "xsd:nonNegativeInteger",
+            "@value": "0"
+          },
+          "aasld:member": {
+            "@id": "_:b96"
+          },
+          "aasld:property": {
+            "@id": "aas:Reference/keys"
+          },
+          "aasld:subject": {
+            "@id": "_:b95"
+          }
+        }
+      ],
+      "@id": "aasld:graph/order"
+    },
+    {
+      "@id": "aasld:id/018ed2092ff362c4837ded7eb0e34e29d7a49afd5147ce2ff26e1e3bcddee313",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b545",
+      "embeddedDataSpecifications": "_:b416",
+      "id": "0173-1#02-ABG858#003",
+      "idShort": "LifeCyclePhase"
+    },
+    {
+      "@id": "aasld:id/36b62da882234b8eca404c65f6b45bf33fa34a73d89f6fc819e1b95c7cd5a62b",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b318",
+      "embeddedDataSpecifications": "_:b218",
+      "id": "0173-1#02-ABG854#003",
+      "idShort": "PcfCalculationMethod"
+    },
+    {
+      "@id": "aasld:id/3984c5c0ddb4d70d5f6b33f85ca9c9eb4eb235b7f767bc1580eeb0f4b8bf1920",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b396",
+      "embeddedDataSpecifications": "_:b336",
+      "id": "0173-1#02-ABG856#003",
+      "idShort": "ReferenceImpactUnitForCalculation"
+    },
+    {
+      "@id": "aasld:id/8a882e2adbfb607d672828ca6409b5e5669ed4df21bd5ba635627641f5871c1b",
+      "@type": "aas:ConceptDescription",
+      "displayName": [
+        "_:b398",
+        "_:b400"
+      ],
+      "embeddedDataSpecifications": "_:b402",
+      "id": "0173-1#02-ABG857#003",
+      "idShort": "QuantityOfMeasureForCalculation"
+    },
+    {
+      "@id": "aasld:id/a5e8fd02e995494cbfc65629310b533a046d0ab6aad2c29da40470919792c9b1",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b334",
+      "embeddedDataSpecifications": "_:b320",
+      "id": "0173-1#02-ABG855#003",
+      "idShort": "PcfCo2eq"
+    },
+    {
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#performanceClass",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b547",
+      "embeddedDataSpecifications": "_:b549",
+      "id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#performanceClass",
+      "idShort": "performanceClass"
+    },
+    {
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#webLinkToPublicCarbonFootprintStudy",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b561",
+      "embeddedDataSpecifications": "_:b563",
+      "id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#webLinkToPublicCarbonFootprintStudy",
+      "idShort": "webLinkToPublicCarbonFootprintStudy"
+    },
+    {
+      "@id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIdentifier",
+      "@type": "aas:ConceptDescription",
+      "displayName": [
+        "_:b573",
+        "_:b575"
+      ],
+      "embeddedDataSpecifications": "_:b577",
+      "id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIdentifier",
+      "idShort": "documentIdentifier"
+    }
+  ]
+}

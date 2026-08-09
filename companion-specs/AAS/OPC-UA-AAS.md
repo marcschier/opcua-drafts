@@ -154,7 +154,8 @@ any prior understanding or agreement (oral or written) relating to, this compani
   - [F.3 Terms](#f3-terms)
   - [F.4 A worked Thing Description](#f4-a-worked-thing-description)
   - [F.5 Implementer notes](#f5-implementer-notes)
-  - [F.6 What the published vocabulary achieves without `uav:typeref`](#f6-what-the-published-vocabulary-achieves-without-uavtyperef)
+  - [F.6 What the published vocabulary achieves without the type binding](#f6-what-the-published-vocabulary-achieves-without-the-type-binding)
+- [Annex G — Correspondence to the AAS API of IDTA-01002 Part 2](#annex-g--correspondence-to-the-aas-api-of-idta-01002-part-2)
 
 ## 1 Scope
 
@@ -178,7 +179,7 @@ The same mapping is reached from a **W3C Thing Description**. A Thing Descriptio
 vocabulary materializes the AddressSpace this document defines, and an AddressSpace subtree is
 expressible as a Thing Description again, so an AAS authored as a WoT document and an AAS
 materialized from a package are the same nodes. [Annex F](#annex-f) states the correspondence, the
-terms it uses and the one term it requires, and `examples/wot/` holds a Thing Description for each
+terms it uses and the one rule it requires, and `examples/wot/` holds a Thing Description for each
 fixture of the conformance corpus.
 
 This document supersedes OPC 30270 v1.00, which maps the AAS v1.x metamodel. Clause 4.3 explains why
@@ -834,6 +835,39 @@ flowchart TD
 
 Figure 10 — Composition, operations and events
 
+### 6.5 Invoking an operation
+
+An `Operation` submodel element is invocable. `AASOperationType` carries the Method `Invoke`, whose
+arguments correspond positionally to the element's `InputVariables`, `OutputVariables` and
+`InoutputVariables`.
+
+| Argument | Direction | Corresponds to |
+|---|---|---|
+| `InputValues` | in | `inputArguments` of the AAS API request, in the order of `InputVariables` |
+| `InoutputValues` | in | `inoutputArguments` of the request, in the order of `InoutputVariables` |
+| `ClientTimeout` | in | `clientTimeoutDuration`; zero selects the Server's default |
+| `OutputValues` | out | `outputArguments` of the result, in the order of `OutputVariables` |
+| `InoutputResults` | out | `inoutputArguments` of the result |
+| `Success` | out | `success` |
+| `Diagnostic` | out | the message of a failed execution |
+
+A Server **shall** return `Bad_InvalidArgument` where the number of values does not match the number
+of variables the element declares.
+
+`Success` reports the outcome of the operation, not of the Call. An operation that runs and reports
+failure returns `Good` with `Success` false; a Call that could not be made at all returns a bad
+StatusCode. Conflating the two would leave a Client unable to distinguish an unreachable Server from
+a rejected workpiece.
+
+Positional correspondence, rather than a name-keyed structure, is what the metamodel supports:
+`InputVariables` is an ordered array and clause 5.4 already preserves that order, so the *n*-th value
+belongs to the *n*-th variable in both directions.
+
+The AAS API of IDTA-01002 Part 2 also defines an asynchronous form, `InvokeOperationAsync` with
+`GetOperationAsyncResult`. This specification defines no counterpart: an OPC UA Method Call is
+synchronous, and a Server whose operations outlive a Call implements the Program interface of
+OPC 10000-10 on the element rather than a second Method here. Annex G records the correspondence.
+
 ## 7 AAS DataTypes
 
 ### 7.1 The xsd type mapping
@@ -1444,6 +1478,7 @@ declares the corresponding conformance units.
 | `AAS-RegistryIdentity` | Source identities and derived identifiers per clause 9.3. |
 | `AAS-RegistryVersioning` | Versions as the lifecycle record, clause 9.4. |
 | `AAS-Discovery` | `LookupShellsByAssetLink` and `GetSubmodel`. |
+| `AAS-OperationInvoke` | `AASOperationType.Invoke`, clause 6.5. |
 | `AAS-Federation` | External references and the identity rule of clause 9.6. |
 | `AAS-DisclosureTiers` | `DisclosureTier` and `Authorization`, clause 9.7. |
 | `AAS-UpdateableRegistry` | Generational materialization from stored documents, clause 9.9. |
@@ -1897,6 +1932,7 @@ An invocable operation.
 | OutputVariables | Variable | [AASOperationVariableDataType](#type-AASOperationVariableDataType)\[\] | Optional | AASOperationType | The operation's output variables, in order. |
 | InoutputVariables | Variable | [AASOperationVariableDataType](#type-AASOperationVariableDataType)\[\] | Optional | AASOperationType | The operation's in-out variables, in order. |
 | <Variable> | Object |  | OptionalPlaceholder | AASOperationType | An element carrying one of the operation's variables. |
+| Invoke | Method |  | Optional | AASOperationType | Invoke the operation and return its results. The Call counterpart of InvokeOperation in the AAS API of IDTA-01002 Part 2: a Client that has browsed to the Operation element calls this rather than reaching for the HTTP interface, and the two carry the same arguments in the same order. |
 
 <a id="type-AASCapabilityType"></a>
 
@@ -2653,6 +2689,7 @@ The result of materializing one document. A call returns one of these per docume
 
 | Method | Owning type | Input arguments | Output arguments |
 |---|---|---|---|
+| Invoke | [AASOperationType](#type-AASOperationType) | InputValues, InoutputValues, ClientTimeout | OutputValues, InoutputResults, Success, Diagnostic |
 | LookupShellsByAssetLink | [AASRegistryType](#type-AASRegistryType) | Name, Value | Shells |
 | GetSubmodel | [AASRegistryType](#type-AASRegistryType) | SubmodelIdentifier | Document, Format, ContentType |
 | Materialize | [AASRegistryType](#type-AASRegistryType) | Targets, Force | Generation, Results |
@@ -2876,17 +2913,24 @@ hundred resources, each versioned independently, to describe one document.
 |---|---|---|
 | NodeId, clause 5.3 | `uav:id` | an ExpandedNodeId naming its namespace by URI |
 | BrowseName, clause 5.3 | `uav:browseName` | the portable QualifiedName form |
-| TypeDefinition, clause 6 | `uav:typeref` | the prefix-qualified BrowseName of the ObjectType, for example `i4aas:AASPropertyType` |
+| TypeDefinition, clause 6 | a member of `@type` | the prefix-qualified BrowseName of the ObjectType, for example `i4aas:AASPropertyType` |
 | Containment, clause 5.6 | `uav:componentOf` | the ExpandedNodeId of the parent |
 | Ordering, clause 5.4 | a link `rel` | `ua:HasOrderedComponent` with `uav:refId` `i=49`, or `ua:HasComponent` with `i=47` |
 | Position, clause 5.4 | `uav:index` | the zero-based position |
 | Modelling rule | `uav:modellingRule` | `Mandatory`, `Optional`, `MandatoryPlaceholder` or `OptionalPlaceholder` |
 | Semantic identifier | `uav:semanticId` | the AAS `semanticId` as an IRI |
 
-`uav:typeref` is the term proposed in `UAV-TYPEREF-PROPOSAL.md`, raised as `OPCF-Members/spec-drafts`
-PR #19; this annex is written as though it has been adopted. It carries the prefix-qualified BrowseName and no ExpandedNodeId alternative: the
-NodeId of a type in this companion model is assigned by the Server that loaded it, so an author
-cannot know it, and the name is unique by construction.
+The type binding adds no term. `@type` already carries the `uav:object` node-class annotation, and
+the ObjectType is named alongside it. It carries the prefix-qualified BrowseName and no
+ExpandedNodeId alternative: the NodeId of a type in this companion model is assigned by the Server
+that loaded it, so an author cannot know it, and the name is unique by construction.
+
+`@type` also carries ordinary semantic annotation, so a rule is needed to say which member is the
+type binding. A member whose namespace the Server holds as an information model is a type binding
+and **shall** resolve; a member in any other namespace is an annotation. A single `@type` carries at
+most one type binding, because a Node has one `HasTypeDefinition`. `WOT-TYPE-BINDING-PROPOSAL.md` states
+the rule, raised as `OPCF-Members/spec-drafts` PR #19; this annex is written as though it has been
+adopted.
 
 The prefix `i4aas` binds to `http://opcfoundation.org/UA/I4AAS/` in the document's `@context`.
 
@@ -2901,23 +2945,20 @@ The `ordering-and-nesting` fixture contains a `SubmodelElementList` whose order 
     { "uav":   "http://opcfoundation.org/UA/WoT-Binding/",
       "i4aas": "http://opcfoundation.org/UA/I4AAS/",
       "ua":    "http://opcfoundation.org/UA/" } ],
-  "@type": ["uav:object"],
+  "@type": ["uav:object", "i4aas:AASSubmodelType"],
   "title": "Ordering",
   "id": "https://fabrikam.com/ids/sm/ordering",
   "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering",
-  "uav:typeref": "i4aas:AASSubmodelType",
   "properties": {
     "CollectionsInsideAList": {
-      "@type": ["uav:object"],
+      "@type": ["uav:object", "i4aas:AASSubmodelElementListType"],
       "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList",
-      "uav:typeref": "i4aas:AASSubmodelElementListType",
       "uav:componentOf": ["nsu={server};s=https://fabrikam.com/ids/sm/ordering"],
       "uav:modellingRule": "Optional"
     },
     "CollectionsInsideAList[0]": {
-      "@type": ["uav:object"],
+      "@type": ["uav:object", "i4aas:AASSubmodelElementCollectionType"],
       "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
-      "uav:typeref": "i4aas:AASSubmodelElementCollectionType",
       "uav:componentOf": ["nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList"],
       "uav:index": 0,
       "uav:modellingRule": "Optional"
@@ -2949,7 +2990,7 @@ This subclause is informative.
 - *`uav:componentOf` points at the parent, not at the child.* It is directional and names the
   container. A converter that reverses it builds the tree upside down and the error surfaces only
   at the leaves.
-- *Do not synthesise a type when `uav:typeref` resolves.* The types of this specification are loaded
+- *Do not synthesise a type when the `@type` binding resolves.* The types of this specification are loaded
   from `Opc.Ua.I4AAS.NodeSet2.xml`. A converter that generates its own type of the same name leaves
   the Server holding two type hierarchies, and a Client written against this specification
   recognises neither.
@@ -2965,11 +3006,11 @@ This subclause is informative.
   produces ExpandedNodeIds that name a namespace the Server does not have, and the projection fails
   at resolution rather than at materialization, which is the better failure but an obscure message.
 
-### F.6 What the published vocabulary achieves without `uav:typeref`
+### F.6 What the published vocabulary achieves without the type binding
 
 Measured over the four fixtures, 61 nodes:
 
-| | with `uav:typeref` | published vocabulary only |
+| | with the type binding | published vocabulary only |
 |---|---|---|
 | nodes produced | 61 of 61 | 61 of 61 |
 | NodeIds correct | 61 | 61 |
@@ -2982,7 +3023,62 @@ fixtures exercise — 17 of the 61 nodes are reached by a reference the comparis
 being top-level elements of a submodel. Only the type binding fails, because `uav:congruentType` is
 reconciliation metadata and does not produce a `HasTypeDefinition`.
 
-Until `uav:typeref` is adopted and implemented, a Server reaches the same result by loading one
+Until the type binding is adopted and implemented, a Server reaches the same result by loading one
 Thing Model per ObjectType of this specification and having each Thing Description instantiate the
 matching one. That produces types congruent with the ones defined here rather than the ones defined
 here, and an implementation **should not** describe the result as conforming to clause 6.
+
+<a id="annex-g"></a>
+
+## Annex G — Correspondence to the AAS API of IDTA-01002 Part 2
+
+This annex is informative.
+
+IDTA-01002 Part 2 defines an HTTP API over the same metamodel this specification maps. The two are
+different bindings of one model, not two models: a Client that has a node reaches the same content a
+Client that has a URL reaches. This annex says which OPC UA Service answers each operation, so that
+a Server implementing both does not implement them twice.
+
+The general rule is that a **resource** of the AAS API is a node of this specification, and the
+operations on it are the OPC UA Services on that node. Read replaces GET, Write replaces PATCH with
+the `$value` modifier, and Browse replaces the collection endpoints.
+
+| AAS API operation | OPC UA equivalent |
+|---|---|
+| `GetAllAssetAdministrationShells` | Browse the registry root, clause 9.2 |
+| `GetAssetAdministrationShellById` | Browse to the shell group whose identifier matches, clause 9.3 |
+| `GetAllSubmodels`, `GetAllSubmodelReferences` | Browse the shell's submodel references |
+| `GetSubmodelById` | Read the `AASSubmodelType` subtree, or call `GetSubmodel` for the document form |
+| `GetSubmodelById-ValueOnly` (`$value`) | Read the value Variables of the subtree; clause 5.2 assigns each its xsd type |
+| `GetSubmodelById-Metadata` (`$metadata`) | Read the subtree with the value Variables excluded |
+| `GetSubmodelById-Reference` (`$reference`) | Read the node's `AASReferenceDataType` form |
+| `GetSubmodelElementByPath` | Read the node whose NodeId clause 5.3 derives from that `idShortPath` |
+| `PatchSubmodelElementValueByPath` | Write that node's `Value` |
+| `GetFileByPath`, `PutFileByPath` | `Open`, `Read`/`Write`, `Close` on the `AASFileType` node |
+| **`InvokeOperation`** | **Call `Invoke` on the `AASOperationType` node, clause 6.5** |
+| `InvokeOperationAsync`, `GetOperationAsyncResult` | no counterpart; see clause 6.5 |
+| `SearchAllAssetAdministrationShellIdsByAssetLink` | Call `LookupShellsByAssetLink`, clause 9.5 |
+| `GenerateSerializationByIds` | The environment documents of clause 9.10 |
+| `GetSelfDescription` | Read `Server.ServerCapabilities.ServerProfileArray` |
+
+Three differences are structural rather than incidental, and an implementation should not try to
+paper over them.
+
+**The path is a NodeId, not a string.** The AAS API addresses an element by a base64url-encoded
+identifier and an `idShortPath`. Clause 5.3 derives a String NodeId from the same two parts, so the
+mapping is mechanical, but the encoding is not the same and a gateway converts rather than passes
+through.
+
+**The level and extent parameters have no counterpart.** `level=core|deep` and
+`extent=withBlobValue|withoutBlobValue` shape one response document. OPC UA shapes a response by
+what the caller asked to Read and by the disclosure tier of clause 9.7, which is a different
+mechanism with a different granularity.
+
+**Paging is a continuation point.** The AAS API returns a `cursor`; OPC UA returns a
+ContinuationPoint from Browse. Both are opaque to the caller and neither is convertible into the
+other.
+
+A Server that implements both bindings **should** publish the IDTA profile identifier it satisfies —
+for example `https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-001` — in
+`ServerProfileArray` alongside the OPC UA profile URIs, so that one array answers the conformance
+question for either kind of Client.

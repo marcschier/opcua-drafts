@@ -291,6 +291,14 @@ class Lifter:
         lowered = {m.lower(): m for m in members}
         if bare.lower() in lowered:
             return iri(f"{AAS}{enum_name}/{lowered[bare.lower()]}")
+        # DataTypeIec61360 is `STRING_TRANSLATABLE` in the JSON schema and
+        # `StringTranslatable` in the ontology, of the same release. Defect D8.
+        if "_" in bare:
+            joined = "".join(part.capitalize() for part in bare.split("_"))
+            if joined in members:
+                return iri(f"{AAS}{enum_name}/{joined}")
+            if joined.lower() in lowered:
+                return iri(f"{AAS}{enum_name}/{lowered[joined.lower()]}")
         raise ValueError(f"{value!r} is not a member of {enum_name}")
 
     def datatype_literal(self, value, range_name):

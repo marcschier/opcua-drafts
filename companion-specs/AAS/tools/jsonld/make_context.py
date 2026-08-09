@@ -46,6 +46,50 @@ OUT = os.path.normpath(os.path.join(HERE, "..", "..", "aas.context.jsonld"))
 XSD = "http://www.w3.org/2001/XMLSchema#"
 
 
+def build_authoring(onto: Ontology):
+    """The context an authored document uses: prefixes, and safe short names.
+
+    An authored document is linked data, so it writes a property as
+    `aas:Property/value` and needs a prefix, not a member-name mapping. The one
+    thing a context can add safely on top of that is a short alias for a local
+    name that belongs to exactly one property in the vocabulary - `idShort` is
+    only ever `Referable/idShort`, so it may be written bare, while `value`
+    belongs to several classes and may not.
+
+    Which names are safe is read from the ontology rather than chosen, so the
+    context cannot drift from the vocabulary it abbreviates.
+    """
+    by_local = {}
+    for prop in onto.properties.values():
+        by_local.setdefault(prop["iri"].rsplit("/", 1)[-1], set()).add(prop["iri"])
+
+    ctx = {
+        "@version": 1.1,
+        "aas": AAS,
+        "xsd": XSD,
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "aasld": "https://w3id.org/aas-jsonld/",
+    }
+    aliased = 0
+    for local, iris in sorted(by_local.items()):
+        if len(iris) != 1 or ":" in local:
+            continue
+        iri = next(iter(iris))
+        prop = next(p for p in onto.properties.values() if p["iri"] == iri)
+        if prop["kind"] == "ObjectProperty":
+            ctx[local] = {"@id": iri, "@type": "@id"}
+        elif (prop["range"] or "xs:string").split(":")[-1] == "string":
+            # A plain literal is already `xsd:string` in RDF 1.1, so coercing the
+            # term to it stops the term matching the very values it is for.
+            ctx[local] = iri
+        else:
+            ctx[local] = literal_term(prop, onto)
+        aliased += 1
+    ambiguous = sum(1 for iris in by_local.values() if len(iris) > 1)
+    return {"@context": ctx}, aliased, ambiguous
+
+
 def literal_term(prop, onto):
     """A term definition for a datatype-valued member."""
     rng = (prop["range"] or "xs:string").split(":")[-1]
@@ -252,23 +296,27 @@ def main():
     args = ap.parse_args()
 
     onto, schema = Ontology(), Schema()
-    doc, unaliasable = build(onto, schema)
+    doc, aliased, ambiguous = build_authoring(onto)
     with open(OUT, "w", encoding="utf-8", newline="\n") as f:
         json.dump(doc, f, indent=2, sort_keys=False, ensure_ascii=False)
         f.write("\n")
-    terms = len(doc["@context"])
-    scoped = sum(1 for v in doc["@context"].values()
-                 if isinstance(v, dict) and "@context" in v)
-    print(f"wrote {os.path.relpath(OUT, ROOT)}: {terms} terms, {scoped} type-scoped")
+    print(f"wrote {os.path.relpath(OUT, ROOT)}: {len(doc['@context'])} terms "
+          f"({aliased} unambiguous local names aliased, {ambiguous} left to the prefix "
+          f"because more than one property shares the name)")
+
+    if not args.measure:
+        return 0
+
+    # The measurement is about the *other* context - the one that maps the JSON
+    # mapping's member names onto property IRIs. That form is not defined by this
+    # document, and this is the evidence for why: Annex B quotes the figure.
+    mapping_doc, unaliasable = build(onto, schema)
     if unaliasable:
         enums = sorted({e for e, _ in unaliasable})
         print(f"  not aliasable (spelling contains a colon): "
               f"{len(unaliasable)} values across {enums}")
 
-    if not args.measure:
-        return 0
-
-    cases, same, differ, errored, causes, reproduced, total_lift = measure(doc, args.limit)
+    cases, same, differ, errored, causes, reproduced, total_lift = measure(mapping_doc, args.limit)
     total = len(cases)
     print(f"\ncontext measured against the lifting over {total} cases")
     print(f"  graphs identical : {same}")

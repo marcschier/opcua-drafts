@@ -1,0 +1,430 @@
+[
+  {
+    "@context": [
+      "https://www.w3.org/2022/wot/td/v1.1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "aas": "https://admin-shell.io/aas/3/0/",
+        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
+        "ua": "http://opcfoundation.org/UA/"
+      }
+    ],
+    "@type": [
+      "uav:object",
+      "i4aas:AASSubmodelType"
+    ],
+    "title": "MaterialComposition",
+    "id": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel",
+    "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel",
+    "uav:browseName": "nsu={server};MaterialComposition",
+    "properties": {
+      "BatteryChemistry": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry",
+        "uav:browseName": "nsu={server};BatteryChemistry",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "BatteryChemistry.ShortName": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry.ShortName",
+        "uav:browseName": "nsu={server};ShortName",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "BatteryChemistry.ClearName": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry.ClearName",
+        "uav:browseName": "nsu={server};ClearName",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "BatteryMaterials": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials",
+        "uav:browseName": "nsu={server};BatteryMaterials",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "BatteryMaterials[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "BatteryMaterials[0].BatteryMaterialLocation": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation",
+        "uav:browseName": "nsu={server};BatteryMaterialLocation",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "BatteryMaterials[0].BatteryMaterialLocation.ComponentName": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation.ComponentName",
+        "uav:browseName": "nsu={server};ComponentName",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "BatteryMaterials[0].BatteryMaterialLocation.ComponentId": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation.ComponentId",
+        "uav:browseName": "nsu={server};ComponentId",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "BatteryMaterials[0].BatteryMaterialIdentifier": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialIdentifier",
+        "uav:browseName": "nsu={server};BatteryMaterialIdentifier",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "BatteryMaterials[0].BatteryMaterialName": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialName",
+        "uav:browseName": "nsu={server};BatteryMaterialName",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "BatteryMaterials[0].BatteryMaterialMass": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialMass",
+        "uav:browseName": "nsu={server};BatteryMaterialMass",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "BatteryMaterials[0].IsCriticalRawMaterial": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].IsCriticalRawMaterial",
+        "uav:browseName": "nsu={server};IsCriticalRawMaterial",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "HazardousSubstances": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances",
+        "uav:browseName": "nsu={server};HazardousSubstances",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "HazardousSubstances[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "HazardousSubstances[0].HazardousSubstanceClass": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceClass",
+        "uav:browseName": "nsu={server};HazardousSubstanceClass",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "HazardousSubstances[0].HazardousSubstanceName": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceName",
+        "uav:browseName": "nsu={server};HazardousSubstanceName",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "HazardousSubstances[0].HazardousSubstanceConcentration": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceConcentration",
+        "uav:browseName": "nsu={server};HazardousSubstanceConcentration",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "HazardousSubstances[0].HazardousSubstanceImpact": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceImpact",
+        "uav:browseName": "nsu={server};HazardousSubstanceImpact",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "HazardousSubstances[0].HazardousSubstanceImpact[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceImpact[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceImpact"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "HazardousSubstances[0].HazardousSubstanceLocation": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation",
+        "uav:browseName": "nsu={server};HazardousSubstanceLocation",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "HazardousSubstances[0].HazardousSubstanceLocation.ComponentName": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation.ComponentName",
+        "uav:browseName": "nsu={server};ComponentName",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "HazardousSubstances[0].HazardousSubstanceLocation.ComponentId": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation.ComponentId",
+        "uav:browseName": "nsu={server};ComponentId",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "HazardousSubstances[0].HazardousSubstanceIdentifier": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceIdentifier",
+        "uav:browseName": "nsu={server};HazardousSubstanceIdentifier",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      }
+    },
+    "links": [
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry.ShortName",
+        "uav:refId": "i=47",
+        "uav:refName": "ShortName"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry.ClearName",
+        "uav:refId": "i=47",
+        "uav:refName": "ClearName"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation.ComponentName",
+        "uav:refId": "i=47",
+        "uav:refName": "ComponentName"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation.ComponentId",
+        "uav:refId": "i=47",
+        "uav:refName": "ComponentId"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation",
+        "uav:refId": "i=47",
+        "uav:refName": "BatteryMaterialLocation"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialIdentifier",
+        "uav:refId": "i=47",
+        "uav:refName": "BatteryMaterialIdentifier"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialName",
+        "uav:refId": "i=47",
+        "uav:refName": "BatteryMaterialName"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialMass",
+        "uav:refId": "i=47",
+        "uav:refName": "BatteryMaterialMass"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].IsCriticalRawMaterial",
+        "uav:refId": "i=47",
+        "uav:refName": "IsCriticalRawMaterial"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceClass",
+        "uav:refId": "i=47",
+        "uav:refName": "HazardousSubstanceClass"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceName",
+        "uav:refId": "i=47",
+        "uav:refName": "HazardousSubstanceName"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceConcentration",
+        "uav:refId": "i=47",
+        "uav:refName": "HazardousSubstanceConcentration"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceImpact[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceImpact",
+        "uav:refId": "i=47",
+        "uav:refName": "HazardousSubstanceImpact"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation.ComponentName",
+        "uav:refId": "i=47",
+        "uav:refName": "ComponentName"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation.ComponentId",
+        "uav:refId": "i=47",
+        "uav:refName": "ComponentId"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation",
+        "uav:refId": "i=47",
+        "uav:refName": "HazardousSubstanceLocation"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceIdentifier",
+        "uav:refId": "i=47",
+        "uav:refName": "HazardousSubstanceIdentifier"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      }
+    ],
+    "securityDefinitions": {
+      "nosec_sc": {
+        "scheme": "nosec"
+      }
+    },
+    "security": "nosec_sc"
+  }
+]

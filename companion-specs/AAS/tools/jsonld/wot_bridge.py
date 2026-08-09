@@ -19,13 +19,18 @@ mapping, so the comparison covers the identified projection subgraph only.
 
 **The type binding is not assumed.** With the vocabulary as published,
 `uav:congruentType` is reconciliation metadata and does not set a
-`HasTypeDefinition`. The generator therefore emits the proposed `uav:typeDefinition`
-term, and the projector honours it only when `--proposed` is passed. Without that
-flag the run reports what the published vocabulary actually achieves, which is
-less.
+`HasTypeDefinition`. The generator therefore names the ObjectType in `@type`, and
+the projector honours it only when `--proposed` is passed. Without that flag the
+run reports what the published vocabulary actually achieves, which is less.
+
+`--form term` writes the same binding as a dedicated `uav:typeref` member
+instead. That form was proposed first and withdrawn; the option is kept because
+the two produce identical node sets, and that is the measurement that decided
+between them.
 
 Usage:
-    python wot_bridge.py <environment.json> [--proposed] [--dump-td out.jsonld]
+    python wot_bridge.py <environment.json> [--proposed] [--form attype|term]
+                         [--dump-td out.jsonld]
 """
 from __future__ import annotations
 
@@ -88,6 +93,29 @@ def resolve_typeref(value):
     return TYPE_NODEIDS.get(name)
 
 
+# The node-class terms of the Binding. A member of `@type` that is one of these
+# says which NodeClass the entry projects to; it is never a TypeDefinition.
+NODE_CLASS_TERMS = {"uav:object", "uav:variable", "uav:method", "uav:objectType",
+                    "uav:variableType", "uav:referenceType", "uav:dataType", "uav:view"}
+
+
+def resolve_attype(types):
+    """Resolve a TypeDefinition carried in `@type`, the way a Server would.
+
+    `@type` already carries the NodeClass term, so the TypeDefinition is the
+    member that is not one. Resolution is against what the Server has: a member
+    naming a type it holds is the TypeDefinition, and one it does not hold is an
+    ordinary semantic annotation, which is what `@type` means everywhere else.
+    """
+    for value in types or []:
+        if value in NODE_CLASS_TERMS:
+            continue
+        resolved = resolve_typeref(value)
+        if resolved:
+            return resolved
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Generation: an AAS environment becomes one Thing Description per Submodel
 # ---------------------------------------------------------------------------
@@ -97,7 +125,16 @@ def expanded_node_id(owner_id, path=None):
     return f"nsu={{server}};s={ident}"
 
 
-def td_for_submodel(sm):
+def bind_type(entry, type_name, form):
+    """Write the type reference in whichever form is under test."""
+    if form == "attype":
+        entry["@type"] = entry["@type"] + [typeref(type_name)]
+    else:
+        entry["uav:typeref"] = typeref(type_name)
+    return entry
+
+
+def td_for_submodel(sm, form):
     """A Thing Description whose projection is the submodel's node tree."""
     owner = sm["id"]
     td = {
@@ -113,16 +150,16 @@ def td_for_submodel(sm):
         "id": owner,
         "uav:id": expanded_node_id(owner),
         "uav:browseName": f"nsu={{server}};{sm.get('idShort', owner)}",
-        "uav:typeref": typeref("AASSubmodelType"),
         "properties": {},
         "links": [],
     }
+    bind_type(td, "AASSubmodelType", form)
     for index, element in enumerate(sm.get("submodelElements", []) or []):
-        emit_element(td, element, owner, "", None)
+        emit_element(td, element, owner, "", None, form)
     return td
 
 
-def emit_element(td, element, owner, parent_path, index):
+def emit_element(td, element, owner, parent_path, index, form):
     """Each submodel element becomes a contained Object, named by clause 5.3."""
     model_type = element.get("modelType")
     type_name = ELEMENT_TYPES.get(model_type)
@@ -136,11 +173,11 @@ def emit_element(td, element, owner, parent_path, index):
         "@type": ["uav:object"],
         "uav:id": node_id,
         "uav:browseName": f"nsu={{server}};{browse}",
-        "uav:typeref": typeref(type_name),
         "uav:componentOf": [expanded_node_id(owner, parent_path) if parent_path
                             else expanded_node_id(owner)],
         "uav:modellingRule": "Optional",
     }
+    bind_type(entry, type_name, form)
     if index is not None:
         entry["uav:index"] = index
     td["properties"][path] = entry
@@ -151,7 +188,7 @@ def emit_element(td, element, owner, parent_path, index):
         children = element.get(field) or []
         ordered = is_list and element.get("orderRelevant", True)
         for i, child in enumerate(children):
-            emit_element(td, child, owner, path, i if is_list else None)
+            emit_element(td, child, owner, path, i if is_list else None, form)
             child_path = rt.id_short_path(path, child, i if is_list else None)
             td["links"].append({
                 "rel": "ua:HasOrderedComponent" if ordered else "ua:HasComponent",
@@ -161,27 +198,28 @@ def emit_element(td, element, owner, parent_path, index):
             })
 
 
-def generate(env):
+def generate(env, form="term"):
     load_type_nodeids()
-    return [td_for_submodel(sm) for sm in env.get("submodels", []) or []]
+    return [td_for_submodel(sm, form) for sm in env.get("submodels", []) or []]
+
 
 
 # ---------------------------------------------------------------------------
 # Projection: the rules Annex F states, applied to the generated documents
 # ---------------------------------------------------------------------------
-def project(tds, honour_proposed_term):
+def project(tds, honour_proposed_term, form="term"):
     """Return the node set a WoT Connectivity registry would materialize."""
     nodes = {}
     for td in tds:
         root = td["uav:id"]
         nodes[root] = {
             "BrowseName": td["uav:browseName"].split(";")[-1],
-            "TypeDefinition": type_of(td, honour_proposed_term, "AASSubmodelType"),
+            "TypeDefinition": type_of(td, honour_proposed_term, form),
         }
         for path, entry in td["properties"].items():
             nodes[entry["uav:id"]] = {
                 "BrowseName": entry["uav:browseName"].split(";")[-1],
-                "TypeDefinition": type_of(entry, honour_proposed_term, None),
+                "TypeDefinition": type_of(entry, honour_proposed_term, form),
             }
         for link in td["links"]:
             node = nodes.get(link["href"])
@@ -190,21 +228,23 @@ def project(tds, honour_proposed_term):
     return nodes
 
 
-def type_of(entry, honour_proposed_term, _default):
+def type_of(entry, honour_proposed_term, form="term"):
     """Which ObjectType the projection gives a node.
 
     With the published vocabulary a Thing Description projects to an Object typed
     `BaseObjectType` unless it instantiates a Thing Model, and `uav:congruentType`
     does not change that: it is reconciliation metadata and is retained as
-    residue. The proposed `uav:typeref` binds the projected Object to an
-    ObjectType that is already loaded, resolved by name against what the Server
-    has, not read back from the document.
+    residue. The proposed binding names an ObjectType that is already loaded and
+    resolves it by name against what the Server has, not by reading back a NodeId
+    the document carries - in either of the two forms under test.
     """
     if honour_proposed_term:
-        resolved = resolve_typeref(entry.get("uav:typeref"))
+        resolved = (resolve_attype(entry.get("@type")) if form == "attype"
+                    else resolve_typeref(entry.get("uav:typeref")))
         if resolved:
             return resolved
     return f"nsu={UA};i=58"  # BaseObjectType
+
 
 
 # ---------------------------------------------------------------------------
@@ -226,9 +266,7 @@ def expected(env):
 
 
 def collect(node, owner, out):
-    ident = node["NodeId"].split(";s=", 1)[-1]
-    path = ident.split("#", 1)[1] if "#" in ident else None
-    key = expanded_node_id(owner, path)
+    key = expanded_node_id(owner, path_of(node, owner))
     out[key] = {
         "BrowseName": node["BrowseName"],
         "TypeDefinition": TYPE_NODEIDS.get(node["TypeDefinition"]),
@@ -236,10 +274,24 @@ def collect(node, owner, out):
     ref = node["Members"].get("_childReference")
     for child in node["Children"]:
         collect(child, owner, out)
-        child_ident = child["NodeId"].split(";s=", 1)[-1]
-        child_path = child_ident.split("#", 1)[1] if "#" in child_ident else None
-        out[expanded_node_id(owner, child_path)]["Reference"] = ref or "HasComponent"
+        out[expanded_node_id(owner, path_of(child, owner))]["Reference"] = ref or "HasComponent"
     return out
+
+
+def path_of(node, owner):
+    """The `idShortPath` part of a node's String NodeId.
+
+    Clause 5.3 builds the identifier as `<owner id>#<idShortPath>`, and an AAS
+    identifier may itself contain a `#` - every SAMM URN in the battery passport
+    templates does. Splitting on the first one therefore takes the owner's own
+    fragment for part of the path. The owner is known, so the prefix is removed
+    rather than searched for.
+    """
+    ident = node["NodeId"].split(";s=", 1)[-1]
+    prefix = owner + "#"
+    if ident.startswith(prefix):
+        return ident[len(prefix):]
+    return ident.split("#", 1)[1] if "#" in ident else None
 
 
 def compare(want, got):
@@ -257,21 +309,25 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("environment")
     ap.add_argument("--proposed", action="store_true",
-                    help="honour the proposed uav:typeref term")
+                    help="honour the proposed type binding of spec-drafts#19")
+    ap.add_argument("--form", choices=("attype", "term"), default="attype",
+                    help="how the type reference is written: a member of @type "
+                         "(the proposed form), or a dedicated uav:typeref member "
+                         "(the withdrawn alternative, kept so the two can be compared)")
     ap.add_argument("--dump-td", help="write the generated Thing Descriptions here")
     args = ap.parse_args()
 
     with open(args.environment, encoding="utf-8") as f:
         env = json.load(f)
 
-    tds = generate(env)
+    tds = generate(env, args.form)
     if args.dump_td:
         with open(args.dump_td, "w", encoding="utf-8", newline="\n") as f:
             json.dump(tds, f, indent=2, ensure_ascii=False)
             f.write("\n")
 
     want = expected(env)
-    got = project(tds, honour_proposed_term=args.proposed)
+    got = project(tds, honour_proposed_term=args.proposed, form=args.form)
     missing, extra, differing = compare(want, got)
 
     if not want:
@@ -279,7 +335,8 @@ def main():
               "would pass without testing anything", file=sys.stderr)
         return 1
 
-    print(f"vocabulary: {'published + proposed uav:typeref' if args.proposed else 'published only'}")
+    binding = ("uav:typeref" if args.form == "term" else "a member of @type")
+    print(f"vocabulary: {'published + ' + binding if args.proposed else 'published only'}")
     print(f"nodes expected by clause 5.6 : {len(want)}")
     print(f"nodes produced by projection : {len(got)}")
     print(f"  missing   : {len(missing)}")

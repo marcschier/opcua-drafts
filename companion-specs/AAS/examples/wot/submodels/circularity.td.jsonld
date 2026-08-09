@@ -1,0 +1,670 @@
+[
+  {
+    "@context": [
+      "https://www.w3.org/2022/wot/td/v1.1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "aas": "https://admin-shell.io/aas/3/0/",
+        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
+        "ua": "http://opcfoundation.org/UA/"
+      }
+    ],
+    "@type": [
+      "uav:object",
+      "i4aas:AASSubmodelType"
+    ],
+    "title": "Circularity",
+    "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
+    "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
+    "uav:browseName": "nsu={server};Circularity",
+    "properties": {
+      "DismantlingAndRemovalInformation": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation",
+        "uav:browseName": "nsu={server};DismantlingAndRemovalInformation",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "DismantlingAndRemovalInformation[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "SparePartSources": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources",
+        "uav:browseName": "nsu={server};SparePartSources",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "SparePartSources[0].NameOfSupplier": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].NameOfSupplier",
+        "uav:browseName": "nsu={server};NameOfSupplier",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].AddressOfSupplier": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier",
+        "uav:browseName": "nsu={server};AddressOfSupplier",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].AddressOfSupplier.NationalCode": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.NationalCode",
+        "uav:browseName": "nsu={server};NationalCode",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].AddressOfSupplier.PostalCode": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.PostalCode",
+        "uav:browseName": "nsu={server};PostalCode",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].AddressOfSupplier.Street": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.Street",
+        "uav:browseName": "nsu={server};Street",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].EmailAddressOfSupplier": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier",
+        "uav:browseName": "nsu={server};EmailAddressOfSupplier",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].EmailAddressOfSupplier.EmailAddress": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.EmailAddress",
+        "uav:browseName": "nsu={server};EmailAddress",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].EmailAddressOfSupplier.PublicKey": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.PublicKey",
+        "uav:browseName": "nsu={server};PublicKey",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].EmailAddressOfSupplier.TypeOfEmailAddress": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.TypeOfEmailAddress",
+        "uav:browseName": "nsu={server};TypeOfEmailAddress",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].EmailAddressOfSupplier.TypeOfPublicKey": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.TypeOfPublicKey",
+        "uav:browseName": "nsu={server};TypeOfPublicKey",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].SupplierWebAddress": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].SupplierWebAddress",
+        "uav:browseName": "nsu={server};SupplierWebAddress",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].Components": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components",
+        "uav:browseName": "nsu={server};Components",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].Components[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "SparePartSources[0].Components[0].PartName": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0].PartName",
+        "uav:browseName": "nsu={server};PartName",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SparePartSources[0].Components[0].PartNumber": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0].PartNumber",
+        "uav:browseName": "nsu={server};PartNumber",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "RecycledContentInformation": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation",
+        "uav:browseName": "nsu={server};RecycledContentInformation",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "RecycledContentInformation[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "RecycledContentInformation[0].PreConsumerShare": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].PreConsumerShare",
+        "uav:browseName": "nsu={server};PreConsumerShare",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "RecycledContentInformation[0].RecycledMaterial": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].RecycledMaterial",
+        "uav:browseName": "nsu={server};RecycledMaterial",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "RecycledContentInformation[0].PostConsumerShare": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].PostConsumerShare",
+        "uav:browseName": "nsu={server};PostConsumerShare",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SafetyMeasures": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures",
+        "uav:browseName": "nsu={server};SafetyMeasures",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SafetyMeasures.SafetyInstructions": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions",
+        "uav:browseName": "nsu={server};SafetyInstructions",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SafetyMeasures.SafetyInstructions[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "SafetyMeasures.ExtinguishingAgents": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents",
+        "uav:browseName": "nsu={server};ExtinguishingAgents",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SafetyMeasures.ExtinguishingAgents[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "EndOfLifeInformation": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation",
+        "uav:browseName": "nsu={server};EndOfLifeInformation",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "EndOfLifeInformation.WastePrevention": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention",
+        "uav:browseName": "nsu={server};WastePrevention",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "EndOfLifeInformation.WastePrevention[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "EndOfLifeInformation.SeparateCollection": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection",
+        "uav:browseName": "nsu={server};SeparateCollection",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "EndOfLifeInformation.SeparateCollection[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "EndOfLifeInformation.InformationOnCollection": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection",
+        "uav:browseName": "nsu={server};InformationOnCollection",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "EndOfLifeInformation.InformationOnCollection[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "RenewableContent": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RenewableContent",
+        "uav:browseName": "nsu={server};RenewableContent",
+        "uav:componentOf": [
+          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+        ],
+        "uav:modellingRule": "Optional"
+      }
+    },
+    "links": [
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].NameOfSupplier",
+        "uav:refId": "i=47",
+        "uav:refName": "NameOfSupplier"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.NationalCode",
+        "uav:refId": "i=47",
+        "uav:refName": "NationalCode"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.PostalCode",
+        "uav:refId": "i=47",
+        "uav:refName": "PostalCode"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.Street",
+        "uav:refId": "i=47",
+        "uav:refName": "Street"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier",
+        "uav:refId": "i=47",
+        "uav:refName": "AddressOfSupplier"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.EmailAddress",
+        "uav:refId": "i=47",
+        "uav:refName": "EmailAddress"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.PublicKey",
+        "uav:refId": "i=47",
+        "uav:refName": "PublicKey"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.TypeOfEmailAddress",
+        "uav:refId": "i=47",
+        "uav:refName": "TypeOfEmailAddress"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.TypeOfPublicKey",
+        "uav:refId": "i=47",
+        "uav:refName": "TypeOfPublicKey"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier",
+        "uav:refId": "i=47",
+        "uav:refName": "EmailAddressOfSupplier"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].SupplierWebAddress",
+        "uav:refId": "i=47",
+        "uav:refName": "SupplierWebAddress"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0].PartName",
+        "uav:refId": "i=47",
+        "uav:refName": "PartName"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0].PartNumber",
+        "uav:refId": "i=47",
+        "uav:refName": "PartNumber"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components",
+        "uav:refId": "i=47",
+        "uav:refName": "Components"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].PreConsumerShare",
+        "uav:refId": "i=47",
+        "uav:refName": "PreConsumerShare"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].RecycledMaterial",
+        "uav:refId": "i=47",
+        "uav:refName": "RecycledMaterial"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].PostConsumerShare",
+        "uav:refId": "i=47",
+        "uav:refName": "PostConsumerShare"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions",
+        "uav:refId": "i=47",
+        "uav:refName": "SafetyInstructions"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents",
+        "uav:refId": "i=47",
+        "uav:refName": "ExtinguishingAgents"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention",
+        "uav:refId": "i=47",
+        "uav:refName": "WastePrevention"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection",
+        "uav:refId": "i=47",
+        "uav:refName": "SeparateCollection"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection",
+        "uav:refId": "i=47",
+        "uav:refName": "InformationOnCollection"
+      }
+    ],
+    "securityDefinitions": {
+      "nosec_sc": {
+        "scheme": "nosec"
+      }
+    },
+    "security": "nosec_sc"
+  }
+]

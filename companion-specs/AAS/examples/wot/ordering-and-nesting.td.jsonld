@@ -10,21 +10,21 @@
       }
     ],
     "@type": [
-      "uav:object"
+      "uav:object",
+      "i4aas:AASSubmodelType"
     ],
     "title": "Ordering",
     "id": "https://fabrikam.com/ids/sm/ordering",
     "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering",
     "uav:browseName": "nsu={server};Ordering",
-    "uav:typeref": "i4aas:AASSubmodelType",
     "properties": {
       "OrderMatters": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters",
         "uav:browseName": "nsu={server};OrderMatters",
-        "uav:typeref": "i4aas:AASSubmodelElementListType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering"
         ],
@@ -32,11 +32,11 @@
       },
       "OrderMatters[0]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters[0]",
         "uav:browseName": "nsu={server};0",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters"
         ],
@@ -45,11 +45,11 @@
       },
       "OrderMatters[1]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters[1]",
         "uav:browseName": "nsu={server};1",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters"
         ],
@@ -58,11 +58,11 @@
       },
       "OrderMatters[2]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters[2]",
         "uav:browseName": "nsu={server};2",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters"
         ],
@@ -71,11 +71,11 @@
       },
       "OrderDoesNotMatter": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter",
         "uav:browseName": "nsu={server};OrderDoesNotMatter",
-        "uav:typeref": "i4aas:AASSubmodelElementListType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering"
         ],
@@ -83,11 +83,11 @@
       },
       "OrderDoesNotMatter[0]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[0]",
         "uav:browseName": "nsu={server};0",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter"
         ],
@@ -96,11 +96,11 @@
       },
       "OrderDoesNotMatter[1]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[1]",
         "uav:browseName": "nsu={server};1",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter"
         ],
@@ -109,11 +109,11 @@
       },
       "OrderDoesNotMatter[2]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[2]",
         "uav:browseName": "nsu={server};2",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter"
         ],
@@ -122,11 +122,11 @@
       },
       "NestedLists": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists",
         "uav:browseName": "nsu={server};NestedLists",
-        "uav:typeref": "i4aas:AASSubmodelElementListType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering"
         ],
@@ -134,11 +134,11 @@
       },
       "NestedLists[0]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0]",
         "uav:browseName": "nsu={server};0",
-        "uav:typeref": "i4aas:AASSubmodelElementListType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists"
         ],
@@ -147,11 +147,11 @@
       },
       "NestedLists[0][0]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0][0]",
         "uav:browseName": "nsu={server};0",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0]"
         ],
@@ -160,11 +160,11 @@
       },
       "NestedLists[0][1]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0][1]",
         "uav:browseName": "nsu={server};1",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0]"
         ],
@@ -173,11 +173,11 @@
       },
       "NestedLists[1]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[1]",
         "uav:browseName": "nsu={server};1",
-        "uav:typeref": "i4aas:AASSubmodelElementListType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists"
         ],
@@ -186,11 +186,11 @@
       },
       "NestedLists[1][0]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[1][0]",
         "uav:browseName": "nsu={server};0",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[1]"
         ],
@@ -199,11 +199,11 @@
       },
       "CollectionsInsideAList": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList",
         "uav:browseName": "nsu={server};CollectionsInsideAList",
-        "uav:typeref": "i4aas:AASSubmodelElementListType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering"
         ],
@@ -211,11 +211,11 @@
       },
       "CollectionsInsideAList[0]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
         "uav:browseName": "nsu={server};0",
-        "uav:typeref": "i4aas:AASSubmodelElementCollectionType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList"
         ],
@@ -224,11 +224,11 @@
       },
       "CollectionsInsideAList[0].Named": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0].Named",
         "uav:browseName": "nsu={server};Named",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]"
         ],

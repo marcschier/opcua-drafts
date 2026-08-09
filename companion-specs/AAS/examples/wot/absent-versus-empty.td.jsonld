@@ -10,21 +10,21 @@
       }
     ],
     "@type": [
-      "uav:object"
+      "uav:object",
+      "i4aas:AASSubmodelType"
     ],
     "title": "AbsentVersusEmpty",
     "id": "https://fabrikam.com/ids/sm/absent-vs-empty",
     "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty",
     "uav:browseName": "nsu={server};AbsentVersusEmpty",
-    "uav:typeref": "i4aas:AASSubmodelType",
     "properties": {
       "EmptyCollection": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyCollection",
         "uav:browseName": "nsu={server};EmptyCollection",
-        "uav:typeref": "i4aas:AASSubmodelElementCollectionType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
         ],
@@ -32,11 +32,11 @@
       },
       "AbsentCollection": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentCollection",
         "uav:browseName": "nsu={server};AbsentCollection",
-        "uav:typeref": "i4aas:AASSubmodelElementCollectionType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
         ],
@@ -44,11 +44,11 @@
       },
       "EmptyList": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyList",
         "uav:browseName": "nsu={server};EmptyList",
-        "uav:typeref": "i4aas:AASSubmodelElementListType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
         ],
@@ -56,11 +56,11 @@
       },
       "AbsentList": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentList",
         "uav:browseName": "nsu={server};AbsentList",
-        "uav:typeref": "i4aas:AASSubmodelElementListType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
         ],
@@ -68,11 +68,11 @@
       },
       "EmptyStatements": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASEntityType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyStatements",
         "uav:browseName": "nsu={server};EmptyStatements",
-        "uav:typeref": "i4aas:AASEntityType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
         ],
@@ -80,11 +80,11 @@
       },
       "AbsentStatements": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASEntityType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentStatements",
         "uav:browseName": "nsu={server};AbsentStatements",
-        "uav:typeref": "i4aas:AASEntityType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
         ],
@@ -92,11 +92,11 @@
       },
       "PresentButEmptyValue": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#PresentButEmptyValue",
         "uav:browseName": "nsu={server};PresentButEmptyValue",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
         ],
@@ -104,11 +104,11 @@
       },
       "AbsentValue": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentValue",
         "uav:browseName": "nsu={server};AbsentValue",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
         ],
@@ -116,11 +116,11 @@
       },
       "EmptyLangStrings": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyLangStrings",
         "uav:browseName": "nsu={server};EmptyLangStrings",
-        "uav:typeref": "i4aas:AASMultiLanguagePropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
         ],
@@ -128,11 +128,11 @@
       },
       "AbsentLangStrings": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentLangStrings",
         "uav:browseName": "nsu={server};AbsentLangStrings",
-        "uav:typeref": "i4aas:AASMultiLanguagePropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
         ],

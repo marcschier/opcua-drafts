@@ -160,6 +160,45 @@ is not a legal IRI, and retains the `id` literal unchanged in every case.
 `Blob/contentTypeOverPatternExamples/number prefix and suffix` do not parse. 2 424 of the 2 426
 matched pairs are usable.
 
+## D8 — Three enumerations are spelled differently in the JSON schema and the ontology
+
+**Severity: high for anyone converting between the two mappings. Found by reading the published
+submodel templates, not the examples.**
+
+The JSON schema and the OWL ontology of the same release disagree on the spelling of enumeration
+members, in a way that has no single rule:
+
+| Enumeration | JSON schema | OWL ontology |
+|---|---|---|
+| `DataTypeDefXsd` | `xs:anyURI`, `xs:base64Binary` | `AnyUri`, `Base64Binary` |
+| `DataTypeIec61360` | `STRING_TRANSLATABLE`, `REAL_MEASURE` | `StringTranslatable`, `RealMeasure` |
+| `Direction` | `input`, `output` | `Input`, `Output` |
+| `StateOfEvent` | `off`, `on` | `Off`, `On` |
+
+Four different conventions across four enumerations: a prefixed lexical form, screaming snake case,
+lower camel case, and lower case. The remaining enumerations agree exactly. A converter cannot
+derive the correspondence from the metamodel and must carry a table or a set of rules; this document
+carries rules, in `lift.py` and `lower.py`.
+
+None of the 2 424 example pairs exercises `DataTypeIec61360`. The defect surfaced only when the
+published submodel templates of `admin-shell-io/submodel-templates` were read, which is a different
+corpus and a more representative one — every battery passport template contains
+`STRING_TRANSLATABLE`.
+
+## D9 — Published templates contain a literal backslash-n
+
+**Severity: low upstream, high for tooling.**
+
+`IDTA 02035-1_DBP-Part-1_Digital Nameplate` carries a `definition` whose text contains the two
+characters `\` and `n` where a line break was meant. It is harmless in JSON, and it is a trap for
+every serializer between JSON and RDF: escaped once it becomes `\\n`, and any decoder that unescapes
+by a sequence of independent replacements turns it into a backslash followed by a newline.
+
+Two implementations were caught by it while this document was prepared, one of them this document's
+own `lower.py`, which now decodes in a single left-to-right pass. The other is `pyld`, whose N-Quads
+reader and writer both corrupt the value; `authored.py` therefore exchanges datasets with it as
+structures rather than as text. No example in the upstream corpus contains the sequence.
+
 ## What a JSON-LD context can and cannot do
 
 The plan originally proposed shipping a `@context` you drop into an unmodified AAS JSON file. That

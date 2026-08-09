@@ -10,21 +10,21 @@
       }
     ],
     "@type": [
-      "uav:object"
+      "uav:object",
+      "i4aas:AASSubmodelType"
     ],
     "title": "EveryElement",
     "id": "https://fabrikam.com/ids/sm/every-element",
     "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element",
     "uav:browseName": "nsu={server};EveryElement",
-    "uav:typeref": "i4aas:AASSubmodelType",
     "properties": {
       "AProperty": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AProperty",
         "uav:browseName": "nsu={server};AProperty",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -32,11 +32,11 @@
       },
       "AMultiLanguageProperty": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AMultiLanguageProperty",
         "uav:browseName": "nsu={server};AMultiLanguageProperty",
-        "uav:typeref": "i4aas:AASMultiLanguagePropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -44,11 +44,11 @@
       },
       "ARange": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASRangeType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ARange",
         "uav:browseName": "nsu={server};ARange",
-        "uav:typeref": "i4aas:AASRangeType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -56,11 +56,11 @@
       },
       "ABlob": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASBlobType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ABlob",
         "uav:browseName": "nsu={server};ABlob",
-        "uav:typeref": "i4aas:AASBlobType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -68,11 +68,11 @@
       },
       "AFile": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASFileType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AFile",
         "uav:browseName": "nsu={server};AFile",
-        "uav:typeref": "i4aas:AASFileType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -80,11 +80,11 @@
       },
       "AReferenceElement": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASReferenceElementType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AReferenceElement",
         "uav:browseName": "nsu={server};AReferenceElement",
-        "uav:typeref": "i4aas:AASReferenceElementType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -92,11 +92,11 @@
       },
       "ARelationship": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASRelationshipElementType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ARelationship",
         "uav:browseName": "nsu={server};ARelationship",
-        "uav:typeref": "i4aas:AASRelationshipElementType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -104,11 +104,11 @@
       },
       "AnAnnotatedRelationship": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASAnnotatedRelationshipElementType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship",
         "uav:browseName": "nsu={server};AnAnnotatedRelationship",
-        "uav:typeref": "i4aas:AASAnnotatedRelationshipElementType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -116,11 +116,11 @@
       },
       "AnAnnotatedRelationship.Quantity": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship.Quantity",
         "uav:browseName": "nsu={server};Quantity",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship"
         ],
@@ -128,11 +128,11 @@
       },
       "ACollection": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ACollection",
         "uav:browseName": "nsu={server};ACollection",
-        "uav:typeref": "i4aas:AASSubmodelElementCollectionType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -140,11 +140,11 @@
       },
       "ACollection.Nested": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ACollection.Nested",
         "uav:browseName": "nsu={server};Nested",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ACollection"
         ],
@@ -152,11 +152,11 @@
       },
       "AList": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AList",
         "uav:browseName": "nsu={server};AList",
-        "uav:typeref": "i4aas:AASSubmodelElementListType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -164,11 +164,11 @@
       },
       "AList[0]": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AList[0]",
         "uav:browseName": "nsu={server};0",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AList"
         ],
@@ -177,11 +177,11 @@
       },
       "ASelfManagedEntity": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASEntityType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity",
         "uav:browseName": "nsu={server};ASelfManagedEntity",
-        "uav:typeref": "i4aas:AASEntityType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -189,11 +189,11 @@
       },
       "ASelfManagedEntity.Position": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASPropertyType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity.Position",
         "uav:browseName": "nsu={server};Position",
-        "uav:typeref": "i4aas:AASPropertyType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity"
         ],
@@ -201,11 +201,11 @@
       },
       "AnEvent": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASBasicEventElementType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AnEvent",
         "uav:browseName": "nsu={server};AnEvent",
-        "uav:typeref": "i4aas:AASBasicEventElementType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -213,11 +213,11 @@
       },
       "AnOperation": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASOperationType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#AnOperation",
         "uav:browseName": "nsu={server};AnOperation",
-        "uav:typeref": "i4aas:AASOperationType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],
@@ -225,11 +225,11 @@
       },
       "ACapability": {
         "@type": [
-          "uav:object"
+          "uav:object",
+          "i4aas:AASCapabilityType"
         ],
         "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/every-element#ACapability",
         "uav:browseName": "nsu={server};ACapability",
-        "uav:typeref": "i4aas:AASCapabilityType",
         "uav:componentOf": [
           "nsu={server};s=https://fabrikam.com/ids/sm/every-element"
         ],

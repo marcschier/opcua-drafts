@@ -1,0 +1,158 @@
+[
+  {
+    "@context": [
+      "https://www.w3.org/2022/wot/td/v1.1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "aas": "https://admin-shell.io/aas/3/0/",
+        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
+        "ua": "http://opcfoundation.org/UA/"
+      }
+    ],
+    "@type": [
+      "uav:object",
+      "i4aas:AASSubmodelType"
+    ],
+    "title": "DppMetadata",
+    "id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
+    "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
+    "uav:browseName": "nsu={server};DppMetadata",
+    "properties": {
+      "digitalProductPassportId": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#digitalProductPassportId",
+        "uav:browseName": "nsu={server};digitalProductPassportId",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "uniqueProductIdentifier": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#uniqueProductIdentifier",
+        "uav:browseName": "nsu={server};uniqueProductIdentifier",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "granularity": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#granularity",
+        "uav:browseName": "nsu={server};granularity",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "dppSchemaVersion": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#dppSchemaVersion",
+        "uav:browseName": "nsu={server};dppSchemaVersion",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "dppStatus": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#dppStatus",
+        "uav:browseName": "nsu={server};dppStatus",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "lastUpdate": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#lastUpdate",
+        "uav:browseName": "nsu={server};lastUpdate",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "economicOperatorId": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#economicOperatorId",
+        "uav:browseName": "nsu={server};economicOperatorId",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "facilityId": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#facilityId",
+        "uav:browseName": "nsu={server};facilityId",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "contentSpecificationIds": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds",
+        "uav:browseName": "nsu={server};contentSpecificationIds",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "contentSpecificationIds[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      }
+    },
+    "links": [
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds[0]",
+        "uav:refId": "i=47",
+        "uav:refName": "0"
+      }
+    ],
+    "securityDefinitions": {
+      "nosec_sc": {
+        "scheme": "nosec"
+      }
+    },
+    "security": "nosec_sc"
+  }
+]

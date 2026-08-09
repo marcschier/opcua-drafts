@@ -65,9 +65,42 @@ def unquote_iri(term):
 
 def literal_value(term):
     m = re.match(r'^"((?:[^"\\]|\\.)*)"', term)
-    raw = m.group(1)
-    return (raw.replace("\\n", "\n").replace("\\r", "\r").replace("\\t", "\t")
-               .replace('\\"', '"').replace("\\\\", "\\"))
+    return unescape(m.group(1))
+
+
+ESCAPES = {"n": "\n", "r": "\r", "t": "\t", "b": "\b", "f": "\f",
+           '"': '"', "'": "'", "\\": "\\"}
+
+
+def unescape(raw):
+    """Decode an N-Triples literal in one left-to-right pass.
+
+    Sequential `str.replace` calls cannot do this. `\\\\n` in the serialization is
+    an escaped backslash followed by the letter n, and replacing `\\n` first
+    consumes the second half of the backslash escape, turning a backslash and an
+    n into a newline. No example in the corpus contains one; the published
+    submodel templates do.
+    """
+    out = []
+    i = 0
+    while i < len(raw):
+        ch = raw[i]
+        if ch != "\\" or i + 1 >= len(raw):
+            out.append(ch)
+            i += 1
+            continue
+        nxt = raw[i + 1]
+        if nxt in ESCAPES:
+            out.append(ESCAPES[nxt])
+            i += 2
+        elif nxt in ("u", "U"):
+            width = 4 if nxt == "u" else 8
+            out.append(chr(int(raw[i + 2:i + 2 + width], 16)))
+            i += 2 + width
+        else:
+            out.append(nxt)
+            i += 2
+    return "".join(out)
 
 
 def is_literal(term):
@@ -87,8 +120,9 @@ class Lowerer:
             table = {}
             for spelling in spellings:
                 bare = spelling.split(":", 1)[-1]
+                joined = "".join(part.capitalize() for part in bare.split("_"))
                 for member in members:
-                    if member.lower() == bare.lower():
+                    if member.lower() in (bare.lower(), joined.lower()):
                         table[member] = spelling
             for member in members:
                 table.setdefault(member, member)
