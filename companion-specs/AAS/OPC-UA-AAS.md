@@ -2825,10 +2825,14 @@ Binding* drafts as they stood at the date of this document. Both are under revie
 and a change there can invalidate what follows.
 
 A Thing Description carrying the terms below, loaded through a WoT Connectivity registry,
-materializes the nodes clause 5.6 defines. The correspondence is verified rather than asserted:
+materializes the nodes clause 5.6 defines.
+
 `jsonld/tools/wot_bridge.py` emits the Thing Descriptions from an AAS environment, applies the
 projection rules of this annex, and compares the result against the node set the reference
-materializer produces from the same environment.
+materializer produces from the same environment. Both sides of that comparison are implemented
+alongside this document, so it establishes that the rules below are self-consistent and complete
+for the reference fixtures. It is not a test of a WoT Connectivity implementation, and no such test
+is possible until the term of F.4 exists. That is one of the reasons this annex is informative.
 
 ### F.1 Scope of the claim
 

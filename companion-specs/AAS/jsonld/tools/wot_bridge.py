@@ -252,6 +252,11 @@ def main():
     got = project(tds, honour_proposed_term=args.proposed)
     missing, extra, differing = compare(want, got)
 
+    if not want:
+        print("no nodes expected: the environment contains no submodels, so this run "
+              "would pass without testing anything", file=sys.stderr)
+        return 1
+
     print(f"vocabulary: {'published + proposed uav:typeDefinition' if args.proposed else 'published only'}")
     print(f"nodes expected by clause 5.6 : {len(want)}")
     print(f"nodes produced by projection : {len(got)}")
@@ -262,6 +267,10 @@ def main():
         print(f"    {key}\n      {field}: expected {w}, got {g}")
     for key in missing[:4]:
         print(f"    missing: {key}")
+    print("\nThis compares the documented projection rules against the reference materializer.\n"
+          "Both sides are implemented here, so it demonstrates that the rules of Annex F are\n"
+          "self-consistent and complete for these fixtures. It is not a test of any WoT\n"
+          "Connectivity implementation, and Annex F is informative for that reason.")
     return 0 if not (missing or extra or differing) else 1
 
 
