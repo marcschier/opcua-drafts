@@ -1,7 +1,8 @@
 # Asset Administration Shell
 
-All the Asset Administration Shell work in one folder: an OPC UA companion specification, the
-xRegistry submission that describes the same registry over HTTP, and the study behind both.
+All the Asset Administration Shell work in one folder: an OPC UA companion specification, a JSON-LD
+mapping for authoring an AAS as linked data, the xRegistry submission that describes the same
+registry over HTTP, a DPP and battery passport identifier mapping, and the study behind them.
 
 ## Files
 
@@ -13,15 +14,114 @@ xRegistry submission that describes the same registry over HTTP, and the study b
 | `xRegistry-AAS.md` | The AAS registry model as proposed to the xRegistry project | xRegistry |
 | `xRegistry-AAS-Packages.md` | AASX packages as content-addressed, signable artifacts | xRegistry |
 | `xRegistry-AAS.model.json` | The xRegistry model definition | xRegistry |
+| `AAS-JsonLd.md` | **JSON-LD as a format an AAS is authored in**, and the conversions that make an authored document exportable as JSON, XML and AASX | IDTA |
+| `aas.context.jsonld` | The JSON-LD authoring context, generated from the pinned ontology | IDTA |
+| `AAS-DPP-Vocabulary.md` | The DPP and battery passport identifier mapping | IDTA |
+| `dpp/mappings.sssom.tsv` | The mapping set, as SSSOM | IDTA |
+| `WOT-TYPE-BINDING-PROPOSAL.md` | The one WoT rule Annex F needs, proposed to `OPCF-Members/spec-drafts` | OPC Foundation |
+| `examples/jsonld/` | Seven published IDTA submodels as pure JSON-LD — the AAS and nothing else | — |
+| `examples/wot/minimal/` | The same seven, plus the least that makes each a loadable Thing Description | — |
+| `examples/wot/submodels/` | The same seven, projection-complete: each materializes the AddressSpace of Annex F | — |
+| `examples/wot/` | A Thing Description per corpus fixture, each projecting to the AddressSpace of Annex F | — |
 | `AAS-xRegistry-Study.md` | The study behind all of the above | — |
 | `tools/build_model.py` | Generates the NodeSet, the CSV and Annex A | — |
 | `tools/validate_local.py` | Validates the generated NodeSet | — |
 | `tools/roundtrip_check.py` | Proves the mapping is lossless, and proves the proof has teeth | — |
 | `tools/fixtures/` | The round-trip corpus | — |
+| `tools/jsonld/` | Lifting, lowering, context generation, conformance, the DPP inventory and the WoT bridge | — |
+| `jsonld/` | The pinned upstream artefacts, the JSON-LD fixtures and `UPSTREAM-DEFECTS.md` | — |
 
 The three `xRegistry-*` files are a **mirror** of what was proposed to the xRegistry project from
 [`marcschier/spec@aas-domain-spec`](https://github.com/marcschier/spec/tree/aas-domain-spec). If that
 branch changes in review, refresh the copy here.
+
+## JSON-LD, and authoring an AAS as linked data
+
+`AAS-JsonLd.md` defines JSON-LD as a format an AAS is **authored** in. An authored document is an
+AAS JSON document and a JSON-LD document at once, so it exports as JSON, XML and AASX through the
+existing serializations, and it is RDF that validates against the SHACL schema IDTA publishes.
+
+It does not define a vocabulary. IDTA already publishes a normative OWL ontology and SHACL schema at
+`https://admin-shell.io/aas/3/0/`, and those IRIs are reused. Only the ordering-graph terms are
+minted.
+
+Two gaps in the published RDF mapping motivate it, both measured over the 2 424 readable example
+pairs of the pinned upstream release rather than argued:
+
+- **308 documents (12.7%) carry an array of two or more members**, whose order the RDF mapping
+  discards. That includes `Reference/keys`, where the key sequence *is* the reference path.
+- **An `id` that is not a legal IRI has no defined subject term.** An IRDI such as
+  `0173-1#02-AAO677#002` cannot be an IRI, and no published example exercises the case.
+
+| Claim | Result |
+|---|---|
+| `AASLD-RdfCompatible` | 2 402 of 2 424 (99.1%): 41 isomorphic outright, 2 361 under the root `idShort` allowance |
+| `AASLD-JsonRoundTrip`, with the ordering graph | 2 424 of 2 424 (100%) |
+| structurally order-bearing, not guaranteed by the core graph | 308 of 2 424 (12.7%) |
+| `AASLD-Authored`, the graph carried and the AAS recovered | 2 424 of 2 424 (100%) |
+| `AASLD-Authored`, with foreign-vocabulary triples added to every document | 2 424 of 2 424 (100%) |
+| a member-name context alone, which is why that form is not defined | 72.9% of predicates and non-blank objects, 0 documents |
+
+`jsonld/UPSTREAM-DEFECTS.md` records nine defects found in the pinned upstream artefacts, with the
+evidence for each.
+
+## Authoring an AAS as a Thing Description
+
+Annex F of `OPC-UA-AAS.md` states the correspondence between a WoT Thing Description carrying the
+AAS vocabulary and the AddressSpace this specification defines. `examples/wot/` holds one Thing
+Description per corpus fixture; each projects to exactly the nodes clause 5.6 materializes.
+
+Seven published IDTA submodels — the ones a Digital Product Passport and a Digital Battery Passport
+are assembled from — are published in three forms each, so the difference between them is visible
+rather than described:
+
+| Form | Carries | Achieves |
+|---|---|---|
+| `examples/jsonld/X.aas.jsonld` | the AAS as linked data, nothing else | is an AAS; lowers back to the published template |
+| `examples/wot/minimal/X.td.jsonld` | the same, plus `title`, `security`, `securityDefinitions` and `@type` | a WoT runtime loads it |
+| `examples/wot/submodels/X.td.jsonld` | the same, plus `uav:id`, `uav:browseName`, `uav:componentOf` and the ordering links | materializes the AddressSpace clause 5.6 defines |
+
+All three are generated by `tools/jsonld/build_examples.py` from the templates cached by
+`dpp_inventory.py`, and none is written unless it passes its own check first.
+
+It needs one rule the WoT drafts do not yet have: a member of `@type` naming an ObjectType the
+Server has already loaded types the projected node with it. `WOT-TYPE-BINDING-PROPOSAL.md` states
+the rule, presents the alternatives — including the dedicated term proposed first and withdrawn —
+and gives the converter behaviour it requires. It adds no vocabulary and is raised as
+`OPCF-Members/spec-drafts` PR #19.
+
+## Regenerate and validate
+
+```powershell
+python companion-specs\AAS\tools\build_model.py
+python companion-specs\AAS\tools\validate_local.py
+python companion-specs\AAS\tools\roundtrip_check.py
+
+# JSON-LD: fetch the pinned corpus (untracked), regenerate the context, run the claims
+python companion-specs\AAS\tools\jsonld\fetch_corpus.py
+python companion-specs\AAS\tools\jsonld\make_context.py --measure
+python companion-specs\AAS\tools\jsonld\conformance.py
+python companion-specs\AAS\tools\jsonld\authored.py --corpus
+python companion-specs\AAS\tools\jsonld\authored.py --corpus --superset
+
+# Examples: rebuild the seven published submodels in all three forms
+python companion-specs\AAS\tools\jsonld\build_examples.py
+
+# DPP: read the published templates, regenerate the mapping set
+python companion-specs\AAS\tools\jsonld\dpp_inventory.py
+python companion-specs\AAS\tools\jsonld\dpp_map.py
+
+# WoT: regenerate examples\wot and check Annex F
+python companion-specs\AAS\tools\jsonld\wot_bridge.py <environment.json> --proposed
+```
+
+`build_model.py` emits the NodeSet, the CSV and Annex A, and injects the annex into the
+specification, so the prose and the model cannot drift apart. `roundtrip_check.py` runs both
+directions over the corpus and then runs a negative control that breaks one normative rule at a
+time, so a green result means the rules are load-bearing rather than that the comparison is blind.
+
+Without the corpus the JSON-LD tools fall back to `jsonld/fixtures/`, so a clone runs offline.
+`rdflib` and `pyld` are required.
 
 ## Version 3.00 supersedes v1.00
 
@@ -82,19 +182,6 @@ which any choice is left to the implementer cannot be generated. It forces five 
   with no children.
 
 Annex B of the specification lists every metamodel field and where it lives.
-
-## Regenerate and validate
-
-```powershell
-python companion-specs\AAS\tools\build_model.py
-python companion-specs\AAS\tools\validate_local.py
-python companion-specs\AAS\tools\roundtrip_check.py
-```
-
-`build_model.py` emits the NodeSet, the CSV and Annex A, and injects the annex into the
-specification, so the prose and the model cannot drift apart. `roundtrip_check.py` runs both
-directions over the corpus and then runs a negative control that breaks one normative rule at a
-time, so a green result means the rules are load-bearing rather than that the comparison is blind.
 
 Draft numeric NodeIds use the provisional `1001+` block in `http://opcfoundation.org/UA/I4AAS/`;
 final NodeIds are assigned by the OPC Foundation.

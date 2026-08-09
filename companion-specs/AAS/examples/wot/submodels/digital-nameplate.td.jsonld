@@ -1,0 +1,352 @@
+[
+  {
+    "@context": [
+      "https://www.w3.org/2022/wot/td/v1.1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "aas": "https://admin-shell.io/aas/3/0/",
+        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
+        "ua": "http://opcfoundation.org/UA/"
+      }
+    ],
+    "@type": [
+      "uav:object",
+      "i4aas:AASSubmodelType"
+    ],
+    "title": "BatteryNameplate",
+    "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0",
+    "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0",
+    "uav:browseName": "nsu={server};BatteryNameplate",
+    "properties": {
+      "URIOfTheProduct": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#URIOfTheProduct",
+        "uav:browseName": "nsu={server};URIOfTheProduct",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ManufacturerName": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#ManufacturerName",
+        "uav:browseName": "nsu={server};ManufacturerName",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "AddressInformation": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#AddressInformation",
+        "uav:browseName": "nsu={server};AddressInformation",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "SerialNumber": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#SerialNumber",
+        "uav:browseName": "nsu={server};SerialNumber",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "DateOfManufacture": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#DateOfManufacture",
+        "uav:browseName": "nsu={server};DateOfManufacture",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "DateOfPuttingIntoService": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#DateOfPuttingIntoService",
+        "uav:browseName": "nsu={server};DateOfPuttingIntoService",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "UniqueFacilityIdentifier": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#UniqueFacilityIdentifier",
+        "uav:browseName": "nsu={server};UniqueFacilityIdentifier",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "LifeCycleStage": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#LifeCycleStage",
+        "uav:browseName": "nsu={server};LifeCycleStage",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "OperatorIdentifier": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#OperatorIdentifier",
+        "uav:browseName": "nsu={server};OperatorIdentifier",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ManufacturerIdentifier": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#ManufacturerIdentifier",
+        "uav:browseName": "nsu={server};ManufacturerIdentifier",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Markings": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings",
+        "uav:browseName": "nsu={server};Markings",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Markings[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "Markings[0].MarkingName": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].MarkingName",
+        "uav:browseName": "nsu={server};MarkingName",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Markings[0].DesignationOfCertificateOrApproval": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].DesignationOfCertificateOrApproval",
+        "uav:browseName": "nsu={server};DesignationOfCertificateOrApproval",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Markings[0].IssueDate": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].IssueDate",
+        "uav:browseName": "nsu={server};IssueDate",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Markings[0].ExpiryDate": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].ExpiryDate",
+        "uav:browseName": "nsu={server};ExpiryDate",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Markings[0].MarkingFile": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASFileType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].MarkingFile",
+        "uav:browseName": "nsu={server};MarkingFile",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Markings[0].MarkingAdditionalText": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].MarkingAdditionalText",
+        "uav:browseName": "nsu={server};MarkingAdditionalText",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "EUDeclarationOfConformity": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#EUDeclarationOfConformity",
+        "uav:browseName": "nsu={server};EUDeclarationOfConformity",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "EUDeclarationOfConformity[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#EUDeclarationOfConformity[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#EUDeclarationOfConformity"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "ResultsOfTestReportsProvingCompliance": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#ResultsOfTestReportsProvingCompliance",
+        "uav:browseName": "nsu={server};ResultsOfTestReportsProvingCompliance",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ResultsOfTestReportsProvingCompliance[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#ResultsOfTestReportsProvingCompliance[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#ResultsOfTestReportsProvingCompliance"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      }
+    },
+    "links": [
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].MarkingName",
+        "uav:refId": "i=47",
+        "uav:refName": "MarkingName"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].DesignationOfCertificateOrApproval",
+        "uav:refId": "i=47",
+        "uav:refName": "DesignationOfCertificateOrApproval"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].IssueDate",
+        "uav:refId": "i=47",
+        "uav:refName": "IssueDate"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].ExpiryDate",
+        "uav:refId": "i=47",
+        "uav:refName": "ExpiryDate"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].MarkingFile",
+        "uav:refId": "i=47",
+        "uav:refName": "MarkingFile"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].MarkingAdditionalText",
+        "uav:refId": "i=47",
+        "uav:refName": "MarkingAdditionalText"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#EUDeclarationOfConformity[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#ResultsOfTestReportsProvingCompliance[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      }
+    ],
+    "securityDefinitions": {
+      "nosec_sc": {
+        "scheme": "nosec"
+      }
+    },
+    "security": "nosec_sc"
+  }
+]

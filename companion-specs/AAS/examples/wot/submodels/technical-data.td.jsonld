@@ -1,0 +1,849 @@
+[
+  {
+    "@context": [
+      "https://www.w3.org/2022/wot/td/v1.1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "aas": "https://admin-shell.io/aas/3/0/",
+        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
+        "ua": "http://opcfoundation.org/UA/"
+      }
+    ],
+    "@type": [
+      "uav:object",
+      "i4aas:AASSubmodelType"
+    ],
+    "title": "TechnicalData",
+    "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0",
+    "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0",
+    "uav:browseName": "nsu={server};TechnicalData",
+    "properties": {
+      "GeneralInformation": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation",
+        "uav:browseName": "nsu={server};GeneralInformation",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "GeneralInformation.ManufacturerName": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.ManufacturerName",
+        "uav:browseName": "nsu={server};ManufacturerName",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "GeneralInformation.CompanyLogo": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASFileType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.CompanyLogo",
+        "uav:browseName": "nsu={server};CompanyLogo",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "GeneralInformation.ManufacturerIdentifier": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.ManufacturerIdentifier",
+        "uav:browseName": "nsu={server};ManufacturerIdentifier",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "GeneralInformation.BatteryCategory": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.BatteryCategory",
+        "uav:browseName": "nsu={server};BatteryCategory",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "GeneralInformation.BatteryMass": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.BatteryMass",
+        "uav:browseName": "nsu={server};BatteryMass",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "GeneralInformation.ProductImages": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.ProductImages",
+        "uav:browseName": "nsu={server};ProductImages",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "GeneralInformation.ProductImages[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASFileType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.ProductImages[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.ProductImages"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "GeneralInformation.WarrantyInformation": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.WarrantyInformation",
+        "uav:browseName": "nsu={server};WarrantyInformation",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "GeneralInformation.WarrantyInformation.WarrantyPeriod": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.WarrantyInformation.WarrantyPeriod",
+        "uav:browseName": "nsu={server};WarrantyPeriod",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.WarrantyInformation"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas",
+        "uav:browseName": "nsu={server};TechnicalPropertyAreas",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.CapacityEnergyVoltage": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage",
+        "uav:browseName": "nsu={server};CapacityEnergyVoltage",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.CapacityEnergyVoltage.NominalVoltage": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage.NominalVoltage",
+        "uav:browseName": "nsu={server};NominalVoltage",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.CapacityEnergyVoltage.MinVoltage": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage.MinVoltage",
+        "uav:browseName": "nsu={server};MinVoltage",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.CapacityEnergyVoltage.MaxVoltage": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage.MaxVoltage",
+        "uav:browseName": "nsu={server};MaxVoltage",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.CapacityEnergyVoltage.RatedCapacity": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage.RatedCapacity",
+        "uav:browseName": "nsu={server};RatedCapacity",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.CapacityEnergyVoltage.CapacityFade": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage.CapacityFade",
+        "uav:browseName": "nsu={server};CapacityFade",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.CapacityEnergyVoltage.CertifiedUsableBatteryEnergy": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage.CertifiedUsableBatteryEnergy",
+        "uav:browseName": "nsu={server};CertifiedUsableBatteryEnergy",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.RoundTripEnergyEfficiency": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency",
+        "uav:browseName": "nsu={server};RoundTripEnergyEfficiency",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.RoundTripEnergyEfficiency.InitialRoundTripEnergyEfficiency": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency.InitialRoundTripEnergyEfficiency",
+        "uav:browseName": "nsu={server};InitialRoundTripEnergyEfficiency",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.RoundTripEnergyEfficiency.RoundTripEnergyEfficiencyAt50PercentOfCycleLife": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency.RoundTripEnergyEfficiencyAt50PercentOfCycleLife",
+        "uav:browseName": "nsu={server};RoundTripEnergyEfficiencyAt50PercentOfCycleLife",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.RoundTripEnergyEfficiency.EnergyRoundTripEfficiencyFade": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency.EnergyRoundTripEfficiencyFade",
+        "uav:browseName": "nsu={server};EnergyRoundTripEfficiencyFade",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.RoundTripEnergyEfficiency.InitialSelfDischargingRate": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency.InitialSelfDischargingRate",
+        "uav:browseName": "nsu={server};InitialSelfDischargingRate",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Resistance": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance",
+        "uav:browseName": "nsu={server};Resistance",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Resistance.InitialInternalResistanceOnBatteryCellLevel": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance.InitialInternalResistanceOnBatteryCellLevel",
+        "uav:browseName": "nsu={server};InitialInternalResistanceOnBatteryCellLevel",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Resistance.InitialInternalResistanceOnBatteryPackLevel": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance.InitialInternalResistanceOnBatteryPackLevel",
+        "uav:browseName": "nsu={server};InitialInternalResistanceOnBatteryPackLevel",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Resistance.InitialInternalResistanceOnBatteryModuleLevel": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance.InitialInternalResistanceOnBatteryModuleLevel",
+        "uav:browseName": "nsu={server};InitialInternalResistanceOnBatteryModuleLevel",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Resistance.InternalResistanceIncreaseOfBatteryCellLevel": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance.InternalResistanceIncreaseOfBatteryCellLevel",
+        "uav:browseName": "nsu={server};InternalResistanceIncreaseOfBatteryCellLevel",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Resistance.InternalResistanceIncreaseOfBatteryPackLevel": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance.InternalResistanceIncreaseOfBatteryPackLevel",
+        "uav:browseName": "nsu={server};InternalResistanceIncreaseOfBatteryPackLevel",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Resistance.InternalResistanceIncreaseOfBatteryModuleLevel": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance.InternalResistanceIncreaseOfBatteryModuleLevel",
+        "uav:browseName": "nsu={server};InternalResistanceIncreaseOfBatteryModuleLevel",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.PowerCapability": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability",
+        "uav:browseName": "nsu={server};PowerCapability",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.PowerCapability.MaximumPermittedBatteryPower": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.MaximumPermittedBatteryPower",
+        "uav:browseName": "nsu={server};MaximumPermittedBatteryPower",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.PowerCapability.PowerFade": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.PowerFade",
+        "uav:browseName": "nsu={server};PowerFade",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.PowerCapability.RatioNorminalBatteryPowerAndBatteryEnergy": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.RatioNorminalBatteryPowerAndBatteryEnergy",
+        "uav:browseName": "nsu={server};RatioNorminalBatteryPowerAndBatteryEnergy",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability",
+        "uav:browseName": "nsu={server};OriginalPowerCapability",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0].atSoc": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0].atSoc",
+        "uav:browseName": "nsu={server};atSoc",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0].powerCapabilityAt": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0].powerCapabilityAt",
+        "uav:browseName": "nsu={server};powerCapabilityAt",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Temperature": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Temperature",
+        "uav:browseName": "nsu={server};Temperature",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Temperature.TemperatureRangeIdleState_LowerBoundary": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Temperature.TemperatureRangeIdleState_LowerBoundary",
+        "uav:browseName": "nsu={server};TemperatureRangeIdleState_LowerBoundary",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Temperature"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Temperature.TemperatureRangeIdleState_UpperBoundary": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Temperature.TemperatureRangeIdleState_UpperBoundary",
+        "uav:browseName": "nsu={server};TemperatureRangeIdleState_UpperBoundary",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Temperature"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Lifetime": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime",
+        "uav:browseName": "nsu={server};Lifetime",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Lifetime.ExpectedLifetimeInCalendarYears": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime.ExpectedLifetimeInCalendarYears",
+        "uav:browseName": "nsu={server};ExpectedLifetimeInCalendarYears",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Lifetime.ExpectedNumberOfCycles": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime.ExpectedNumberOfCycles",
+        "uav:browseName": "nsu={server};ExpectedNumberOfCycles",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Lifetime.CapacityThresholdExhaustion": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime.CapacityThresholdExhaustion",
+        "uav:browseName": "nsu={server};CapacityThresholdExhaustion",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TechnicalPropertyAreas.Lifetime.CRateOfRelevantCycleLifeTest": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime.CRateOfRelevantCycleLifeTest",
+        "uav:browseName": "nsu={server};CRateOfRelevantCycleLifeTest",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime"
+        ],
+        "uav:modellingRule": "Optional"
+      }
+    },
+    "links": [
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.ManufacturerName",
+        "uav:refId": "i=47",
+        "uav:refName": "ManufacturerName"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.CompanyLogo",
+        "uav:refId": "i=47",
+        "uav:refName": "CompanyLogo"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.ManufacturerIdentifier",
+        "uav:refId": "i=47",
+        "uav:refName": "ManufacturerIdentifier"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.BatteryCategory",
+        "uav:refId": "i=47",
+        "uav:refName": "BatteryCategory"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.BatteryMass",
+        "uav:refId": "i=47",
+        "uav:refName": "BatteryMass"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.ProductImages[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.ProductImages",
+        "uav:refId": "i=47",
+        "uav:refName": "ProductImages"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.WarrantyInformation.WarrantyPeriod",
+        "uav:refId": "i=47",
+        "uav:refName": "WarrantyPeriod"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.WarrantyInformation",
+        "uav:refId": "i=47",
+        "uav:refName": "WarrantyInformation"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage.NominalVoltage",
+        "uav:refId": "i=47",
+        "uav:refName": "NominalVoltage"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage.MinVoltage",
+        "uav:refId": "i=47",
+        "uav:refName": "MinVoltage"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage.MaxVoltage",
+        "uav:refId": "i=47",
+        "uav:refName": "MaxVoltage"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage.RatedCapacity",
+        "uav:refId": "i=47",
+        "uav:refName": "RatedCapacity"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage.CapacityFade",
+        "uav:refId": "i=47",
+        "uav:refName": "CapacityFade"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage.CertifiedUsableBatteryEnergy",
+        "uav:refId": "i=47",
+        "uav:refName": "CertifiedUsableBatteryEnergy"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.CapacityEnergyVoltage",
+        "uav:refId": "i=47",
+        "uav:refName": "CapacityEnergyVoltage"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency.InitialRoundTripEnergyEfficiency",
+        "uav:refId": "i=47",
+        "uav:refName": "InitialRoundTripEnergyEfficiency"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency.RoundTripEnergyEfficiencyAt50PercentOfCycleLife",
+        "uav:refId": "i=47",
+        "uav:refName": "RoundTripEnergyEfficiencyAt50PercentOfCycleLife"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency.EnergyRoundTripEfficiencyFade",
+        "uav:refId": "i=47",
+        "uav:refName": "EnergyRoundTripEfficiencyFade"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency.InitialSelfDischargingRate",
+        "uav:refId": "i=47",
+        "uav:refName": "InitialSelfDischargingRate"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.RoundTripEnergyEfficiency",
+        "uav:refId": "i=47",
+        "uav:refName": "RoundTripEnergyEfficiency"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance.InitialInternalResistanceOnBatteryCellLevel",
+        "uav:refId": "i=47",
+        "uav:refName": "InitialInternalResistanceOnBatteryCellLevel"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance.InitialInternalResistanceOnBatteryPackLevel",
+        "uav:refId": "i=47",
+        "uav:refName": "InitialInternalResistanceOnBatteryPackLevel"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance.InitialInternalResistanceOnBatteryModuleLevel",
+        "uav:refId": "i=47",
+        "uav:refName": "InitialInternalResistanceOnBatteryModuleLevel"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance.InternalResistanceIncreaseOfBatteryCellLevel",
+        "uav:refId": "i=47",
+        "uav:refName": "InternalResistanceIncreaseOfBatteryCellLevel"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance.InternalResistanceIncreaseOfBatteryPackLevel",
+        "uav:refId": "i=47",
+        "uav:refName": "InternalResistanceIncreaseOfBatteryPackLevel"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance.InternalResistanceIncreaseOfBatteryModuleLevel",
+        "uav:refId": "i=47",
+        "uav:refName": "InternalResistanceIncreaseOfBatteryModuleLevel"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Resistance",
+        "uav:refId": "i=47",
+        "uav:refName": "Resistance"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.MaximumPermittedBatteryPower",
+        "uav:refId": "i=47",
+        "uav:refName": "MaximumPermittedBatteryPower"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.PowerFade",
+        "uav:refId": "i=47",
+        "uav:refName": "PowerFade"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.RatioNorminalBatteryPowerAndBatteryEnergy",
+        "uav:refId": "i=47",
+        "uav:refName": "RatioNorminalBatteryPowerAndBatteryEnergy"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0].atSoc",
+        "uav:refId": "i=47",
+        "uav:refName": "atSoc"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0].powerCapabilityAt",
+        "uav:refId": "i=47",
+        "uav:refName": "powerCapabilityAt"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability",
+        "uav:refId": "i=47",
+        "uav:refName": "OriginalPowerCapability"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability",
+        "uav:refId": "i=47",
+        "uav:refName": "PowerCapability"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Temperature.TemperatureRangeIdleState_LowerBoundary",
+        "uav:refId": "i=47",
+        "uav:refName": "TemperatureRangeIdleState_LowerBoundary"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Temperature.TemperatureRangeIdleState_UpperBoundary",
+        "uav:refId": "i=47",
+        "uav:refName": "TemperatureRangeIdleState_UpperBoundary"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Temperature",
+        "uav:refId": "i=47",
+        "uav:refName": "Temperature"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime.ExpectedLifetimeInCalendarYears",
+        "uav:refId": "i=47",
+        "uav:refName": "ExpectedLifetimeInCalendarYears"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime.ExpectedNumberOfCycles",
+        "uav:refId": "i=47",
+        "uav:refName": "ExpectedNumberOfCycles"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime.CapacityThresholdExhaustion",
+        "uav:refId": "i=47",
+        "uav:refName": "CapacityThresholdExhaustion"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime.CRateOfRelevantCycleLifeTest",
+        "uav:refId": "i=47",
+        "uav:refName": "CRateOfRelevantCycleLifeTest"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime",
+        "uav:refId": "i=47",
+        "uav:refName": "Lifetime"
+      }
+    ],
+    "securityDefinitions": {
+      "nosec_sc": {
+        "scheme": "nosec"
+      }
+    },
+    "security": "nosec_sc"
+  }
+]

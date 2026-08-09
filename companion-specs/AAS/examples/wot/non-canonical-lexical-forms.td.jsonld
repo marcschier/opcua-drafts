@@ -1,0 +1,168 @@
+[
+  {
+    "@context": [
+      "https://www.w3.org/2022/wot/td/v1.1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "aas": "https://admin-shell.io/aas/3/0/",
+        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
+        "ua": "http://opcfoundation.org/UA/"
+      }
+    ],
+    "@type": [
+      "uav:object",
+      "i4aas:AASSubmodelType"
+    ],
+    "title": "AwkwardValues",
+    "id": "https://fabrikam.com/ids/sm/awkward-values",
+    "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values",
+    "uav:browseName": "nsu={server};AwkwardValues",
+    "properties": {
+      "ArbitraryPrecision": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#ArbitraryPrecision",
+        "uav:browseName": "nsu={server};ArbitraryPrecision",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "UnboundedInteger": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#UnboundedInteger",
+        "uav:browseName": "nsu={server};UnboundedInteger",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "TrailingZeros": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#TrailingZeros",
+        "uav:browseName": "nsu={server};TrailingZeros",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "NegativeZero": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#NegativeZero",
+        "uav:browseName": "nsu={server};NegativeZero",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Duration": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#Duration",
+        "uav:browseName": "nsu={server};Duration",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "PartialDate": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#PartialDate",
+        "uav:browseName": "nsu={server};PartialDate",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "GDay": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#GDay",
+        "uav:browseName": "nsu={server};GDay",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "OffsetDateTime": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#OffsetDateTime",
+        "uav:browseName": "nsu={server};OffsetDateTime",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "LeadingPlus": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#LeadingPlus",
+        "uav:browseName": "nsu={server};LeadingPlus",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "EmptyString": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#EmptyString",
+        "uav:browseName": "nsu={server};EmptyString",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "UnboundedBelow": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASRangeType"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#UnboundedBelow",
+        "uav:browseName": "nsu={server};UnboundedBelow",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "BoundedAtZero": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASRangeType"
+        ],
+        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#BoundedAtZero",
+        "uav:browseName": "nsu={server};BoundedAtZero",
+        "uav:componentOf": [
+          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
+        ],
+        "uav:modellingRule": "Optional"
+      }
+    },
+    "links": []
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "submodels": [
+    {
+      "id": "0173-1#02-AAO677#002",
+      "idShort": "Nameplate",
+      "modelType": "Submodel",
+      "submodelElements": [
+        {
+          "idShort": "MaxTemperature",
+          "modelType": "Property",
+          "valueType": "xs:decimal",
+          "value": "85.0",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [
+              {
+                "type": "GlobalReference",
+                "value": "0173-1#02-AAO677#002"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

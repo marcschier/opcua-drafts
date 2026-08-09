@@ -1,0 +1,84 @@
+{
+  "upstream": {
+    "repo": "admin-shell-io/aas-specs-metamodel",
+    "ref": "V3.0.7",
+    "commit": "21e68502e367b72fd82cfa29488a686cbd3892a5"
+  },
+  "cases": [
+    {
+      "case": "AdministrativeInformation/minimal",
+      "file": "AdministrativeInformation__minimal",
+      "why": "D1: root idShort dropped upstream"
+    },
+    {
+      "case": "Submodel/maximal",
+      "file": "Submodel__maximal",
+      "why": "broad coverage: extensions, langstrings, qualifiers"
+    },
+    {
+      "case": "Property/maximal",
+      "file": "Property__maximal",
+      "why": "typed value plus valueType named individual"
+    },
+    {
+      "case": "Range/maximal",
+      "file": "Range__maximal",
+      "why": "two optional bounds sharing one valueType"
+    },
+    {
+      "case": "Reference/for_a_model_reference_fragment_after_blob",
+      "file": "Reference__for_a_model_reference_fragment_after_blob",
+      "why": "D2: multi-key path, order is meaning"
+    },
+    {
+      "case": "SubmodelElementList/maximal",
+      "file": "SubmodelElementList__maximal",
+      "why": "D2: ordered list"
+    },
+    {
+      "case": "MultiLanguageProperty/maximal",
+      "file": "MultiLanguageProperty__maximal",
+      "why": "D5: langstring as typed node, not rdf:langString"
+    },
+    {
+      "case": "Qualifier/maximal",
+      "file": "Qualifier__maximal",
+      "why": "value plus sibling valueType inside a structure"
+    },
+    {
+      "case": "Extension/maximal",
+      "file": "Extension__maximal",
+      "why": "same shape as Qualifier, different owner"
+    },
+    {
+      "case": "AssetAdministrationShell/maximal",
+      "file": "AssetAdministrationShell__maximal",
+      "why": "asset information and submodel references"
+    },
+    {
+      "case": "ConceptDescription/maximal",
+      "file": "ConceptDescription__maximal",
+      "why": "IEC 61360 data specification content"
+    },
+    {
+      "case": "Entity/maximal",
+      "file": "Entity__maximal",
+      "why": "self-managed entity with its own asset id"
+    },
+    {
+      "case": "BasicEventElement/maximal",
+      "file": "BasicEventElement__maximal",
+      "why": "dateTime and duration typed members"
+    },
+    {
+      "case": "Blob/maximal",
+      "file": "Blob__maximal",
+      "why": "base64 content"
+    },
+    {
+      "case": "SubmodelElementCollection/maximal",
+      "file": "SubmodelElementCollection__maximal",
+      "why": "unordered collection"
+    }
+  ]
+}

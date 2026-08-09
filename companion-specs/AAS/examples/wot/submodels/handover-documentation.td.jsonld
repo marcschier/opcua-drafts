@@ -1,0 +1,427 @@
+[
+  {
+    "@context": [
+      "https://www.w3.org/2022/wot/td/v1.1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "aas": "https://admin-shell.io/aas/3/0/",
+        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
+        "ua": "http://opcfoundation.org/UA/"
+      }
+    ],
+    "@type": [
+      "uav:object",
+      "i4aas:AASSubmodelType"
+    ],
+    "title": "HandoverDocumentation",
+    "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
+    "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
+    "uav:browseName": "nsu={server};HandoverDocumentation",
+    "properties": {
+      "Documents": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents",
+        "uav:browseName": "nsu={server};Documents",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "Documents[0].DocumentClassifications": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications",
+        "uav:browseName": "nsu={server};DocumentClassifications",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentClassifications[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "Documents[0].DocumentClassifications[0].ClassName": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassName",
+        "uav:browseName": "nsu={server};ClassName",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentClassifications[0].ClassId": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassId",
+        "uav:browseName": "nsu={server};ClassId",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentClassifications[0].ClassificationSystem": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassificationSystem",
+        "uav:browseName": "nsu={server};ClassificationSystem",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentIds": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds",
+        "uav:browseName": "nsu={server};DocumentIds",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentIds[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "Documents[0].DocumentIds[0].DocumentDomainId": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentDomainId",
+        "uav:browseName": "nsu={server};DocumentDomainId",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentIds[0].DocumentIdentifier": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIdentifier",
+        "uav:browseName": "nsu={server};DocumentIdentifier",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentIds[0].DocumentIsPrimary": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIsPrimary",
+        "uav:browseName": "nsu={server};DocumentIsPrimary",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentVersions": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions",
+        "uav:browseName": "nsu={server};DocumentVersions",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentVersions[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "Documents[0].DocumentVersions[0].Language": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language",
+        "uav:browseName": "nsu={server};Language",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentVersions[0].Language[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "Documents[0].DocumentVersions[0].Version": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Version",
+        "uav:browseName": "nsu={server};Version",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentVersions[0].Title": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Title",
+        "uav:browseName": "nsu={server};Title",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentVersions[0].Subtitle": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Subtitle",
+        "uav:browseName": "nsu={server};Subtitle",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentVersions[0].Description": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASMultiLanguagePropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Description",
+        "uav:browseName": "nsu={server};Description",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentVersions[0].DigitalFiles": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles",
+        "uav:browseName": "nsu={server};DigitalFiles",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "Documents[0].DocumentVersions[0].DigitalFiles[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASFileType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      }
+    },
+    "links": [
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassName",
+        "uav:refId": "i=47",
+        "uav:refName": "ClassName"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassId",
+        "uav:refId": "i=47",
+        "uav:refName": "ClassId"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassificationSystem",
+        "uav:refId": "i=47",
+        "uav:refName": "ClassificationSystem"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications",
+        "uav:refId": "i=47",
+        "uav:refName": "DocumentClassifications"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentDomainId",
+        "uav:refId": "i=47",
+        "uav:refName": "DocumentDomainId"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIdentifier",
+        "uav:refId": "i=47",
+        "uav:refName": "DocumentIdentifier"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIsPrimary",
+        "uav:refId": "i=47",
+        "uav:refName": "DocumentIsPrimary"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds",
+        "uav:refId": "i=47",
+        "uav:refName": "DocumentIds"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language",
+        "uav:refId": "i=47",
+        "uav:refName": "Language"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Version",
+        "uav:refId": "i=47",
+        "uav:refName": "Version"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Title",
+        "uav:refId": "i=47",
+        "uav:refName": "Title"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Subtitle",
+        "uav:refId": "i=47",
+        "uav:refName": "Subtitle"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Description",
+        "uav:refId": "i=47",
+        "uav:refName": "Description"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles",
+        "uav:refId": "i=47",
+        "uav:refName": "DigitalFiles"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions",
+        "uav:refId": "i=47",
+        "uav:refName": "DocumentVersions"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      }
+    ],
+    "securityDefinitions": {
+      "nosec_sc": {
+        "scheme": "nosec"
+      }
+    },
+    "security": "nosec_sc"
+  }
+]

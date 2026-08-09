@@ -1,0 +1,250 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "aas": "https://admin-shell.io/aas/3/0/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "aasld": "https://w3id.org/aas-jsonld/",
+    "administration": {
+      "@id": "https://admin-shell.io/aas/3/0/Identifiable/administration",
+      "@type": "@id"
+    },
+    "annotations": {
+      "@id": "https://admin-shell.io/aas/3/0/AnnotatedRelationshipElement/annotations",
+      "@type": "@id"
+    },
+    "assetAdministrationShells": {
+      "@id": "https://admin-shell.io/aas/3/0/Environment/assetAdministrationShells",
+      "@type": "@id"
+    },
+    "assetInformation": {
+      "@id": "https://admin-shell.io/aas/3/0/AssetAdministrationShell/assetInformation",
+      "@type": "@id"
+    },
+    "assetKind": {
+      "@id": "https://admin-shell.io/aas/3/0/AssetInformation/assetKind",
+      "@type": "@id"
+    },
+    "assetType": "https://admin-shell.io/aas/3/0/AssetInformation/assetType",
+    "category": "https://admin-shell.io/aas/3/0/Referable/category",
+    "conceptDescriptions": {
+      "@id": "https://admin-shell.io/aas/3/0/Environment/conceptDescriptions",
+      "@type": "@id"
+    },
+    "creator": {
+      "@id": "https://admin-shell.io/aas/3/0/AdministrativeInformation/creator",
+      "@type": "@id"
+    },
+    "dataSpecification": {
+      "@id": "https://admin-shell.io/aas/3/0/EmbeddedDataSpecification/dataSpecification",
+      "@type": "@id"
+    },
+    "dataSpecificationContent": {
+      "@id": "https://admin-shell.io/aas/3/0/EmbeddedDataSpecification/dataSpecificationContent",
+      "@type": "@id"
+    },
+    "dataType": {
+      "@id": "https://admin-shell.io/aas/3/0/DataSpecificationIec61360/dataType",
+      "@type": "@id"
+    },
+    "defaultThumbnail": {
+      "@id": "https://admin-shell.io/aas/3/0/AssetInformation/defaultThumbnail",
+      "@type": "@id"
+    },
+    "definition": {
+      "@id": "https://admin-shell.io/aas/3/0/DataSpecificationIec61360/definition",
+      "@type": "@id"
+    },
+    "derivedFrom": {
+      "@id": "https://admin-shell.io/aas/3/0/AssetAdministrationShell/derivedFrom",
+      "@type": "@id"
+    },
+    "description": {
+      "@id": "https://admin-shell.io/aas/3/0/Referable/description",
+      "@type": "@id"
+    },
+    "direction": {
+      "@id": "https://admin-shell.io/aas/3/0/BasicEventElement/direction",
+      "@type": "@id"
+    },
+    "displayName": {
+      "@id": "https://admin-shell.io/aas/3/0/Referable/displayName",
+      "@type": "@id"
+    },
+    "embeddedDataSpecifications": {
+      "@id": "https://admin-shell.io/aas/3/0/HasDataSpecification/embeddedDataSpecifications",
+      "@type": "@id"
+    },
+    "entityType": {
+      "@id": "https://admin-shell.io/aas/3/0/Entity/entityType",
+      "@type": "@id"
+    },
+    "extensions": {
+      "@id": "https://admin-shell.io/aas/3/0/HasExtensions/extensions",
+      "@type": "@id"
+    },
+    "externalSubjectId": {
+      "@id": "https://admin-shell.io/aas/3/0/SpecificAssetId/externalSubjectId",
+      "@type": "@id"
+    },
+    "first": {
+      "@id": "https://admin-shell.io/aas/3/0/RelationshipElement/first",
+      "@type": "@id"
+    },
+    "id": "https://admin-shell.io/aas/3/0/Identifiable/id",
+    "idShort": "https://admin-shell.io/aas/3/0/Referable/idShort",
+    "inoutputVariables": {
+      "@id": "https://admin-shell.io/aas/3/0/Operation/inoutputVariables",
+      "@type": "@id"
+    },
+    "inputVariables": {
+      "@id": "https://admin-shell.io/aas/3/0/Operation/inputVariables",
+      "@type": "@id"
+    },
+    "isCaseOf": {
+      "@id": "https://admin-shell.io/aas/3/0/ConceptDescription/isCaseOf",
+      "@type": "@id"
+    },
+    "keys": {
+      "@id": "https://admin-shell.io/aas/3/0/Reference/keys",
+      "@type": "@id"
+    },
+    "language": "https://admin-shell.io/aas/3/0/AbstractLangString/language",
+    "lastUpdate": "https://admin-shell.io/aas/3/0/BasicEventElement/lastUpdate",
+    "levelType": {
+      "@id": "https://admin-shell.io/aas/3/0/DataSpecificationIec61360/levelType",
+      "@type": "@id"
+    },
+    "maxInterval": "https://admin-shell.io/aas/3/0/BasicEventElement/maxInterval",
+    "messageBroker": {
+      "@id": "https://admin-shell.io/aas/3/0/BasicEventElement/messageBroker",
+      "@type": "@id"
+    },
+    "messageTopic": "https://admin-shell.io/aas/3/0/BasicEventElement/messageTopic",
+    "minInterval": "https://admin-shell.io/aas/3/0/BasicEventElement/minInterval",
+    "nom": {
+      "@id": "https://admin-shell.io/aas/3/0/LevelType/nom",
+      "@type": "http://www.w3.org/2001/XMLSchema#boolean"
+    },
+    "observableReference": {
+      "@id": "https://admin-shell.io/aas/3/0/EventPayload/observableReference",
+      "@type": "@id"
+    },
+    "observableSemanticId": {
+      "@id": "https://admin-shell.io/aas/3/0/EventPayload/observableSemanticId",
+      "@type": "@id"
+    },
+    "observed": {
+      "@id": "https://admin-shell.io/aas/3/0/BasicEventElement/observed",
+      "@type": "@id"
+    },
+    "orderRelevant": {
+      "@id": "https://admin-shell.io/aas/3/0/SubmodelElementList/orderRelevant",
+      "@type": "http://www.w3.org/2001/XMLSchema#boolean"
+    },
+    "outputVariables": {
+      "@id": "https://admin-shell.io/aas/3/0/Operation/outputVariables",
+      "@type": "@id"
+    },
+    "path": "https://admin-shell.io/aas/3/0/Resource/path",
+    "payload": {
+      "@id": "https://admin-shell.io/aas/3/0/EventPayload/payload",
+      "@type": "http://www.w3.org/2001/XMLSchema#base64Binary"
+    },
+    "preferredName": {
+      "@id": "https://admin-shell.io/aas/3/0/DataSpecificationIec61360/preferredName",
+      "@type": "@id"
+    },
+    "qualifiers": {
+      "@id": "https://admin-shell.io/aas/3/0/Qualifiable/qualifiers",
+      "@type": "@id"
+    },
+    "referredSemanticId": {
+      "@id": "https://admin-shell.io/aas/3/0/Reference/referredSemanticId",
+      "@type": "@id"
+    },
+    "refersTo": {
+      "@id": "https://admin-shell.io/aas/3/0/Extension/refersTo",
+      "@type": "@id"
+    },
+    "revision": "https://admin-shell.io/aas/3/0/AdministrativeInformation/revision",
+    "second": {
+      "@id": "https://admin-shell.io/aas/3/0/RelationshipElement/second",
+      "@type": "@id"
+    },
+    "semanticId": {
+      "@id": "https://admin-shell.io/aas/3/0/HasSemantics/semanticId",
+      "@type": "@id"
+    },
+    "semanticIdListElement": {
+      "@id": "https://admin-shell.io/aas/3/0/SubmodelElementList/semanticIdListElement",
+      "@type": "@id"
+    },
+    "shortName": {
+      "@id": "https://admin-shell.io/aas/3/0/DataSpecificationIec61360/shortName",
+      "@type": "@id"
+    },
+    "source": {
+      "@id": "https://admin-shell.io/aas/3/0/EventPayload/source",
+      "@type": "@id"
+    },
+    "sourceOfDefinition": "https://admin-shell.io/aas/3/0/DataSpecificationIec61360/sourceOfDefinition",
+    "sourceSemanticId": {
+      "@id": "https://admin-shell.io/aas/3/0/EventPayload/sourceSemanticId",
+      "@type": "@id"
+    },
+    "state": {
+      "@id": "https://admin-shell.io/aas/3/0/BasicEventElement/state",
+      "@type": "@id"
+    },
+    "statements": {
+      "@id": "https://admin-shell.io/aas/3/0/Entity/statements",
+      "@type": "@id"
+    },
+    "subjectId": {
+      "@id": "https://admin-shell.io/aas/3/0/EventPayload/subjectId",
+      "@type": "@id"
+    },
+    "submodelElements": {
+      "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements",
+      "@type": "@id"
+    },
+    "supplementalSemanticIds": {
+      "@id": "https://admin-shell.io/aas/3/0/HasSemantics/supplementalSemanticIds",
+      "@type": "@id"
+    },
+    "symbol": "https://admin-shell.io/aas/3/0/DataSpecificationIec61360/symbol",
+    "templateId": "https://admin-shell.io/aas/3/0/AdministrativeInformation/templateId",
+    "text": "https://admin-shell.io/aas/3/0/AbstractLangString/text",
+    "timeStamp": "https://admin-shell.io/aas/3/0/EventPayload/timeStamp",
+    "topic": "https://admin-shell.io/aas/3/0/EventPayload/topic",
+    "typ": {
+      "@id": "https://admin-shell.io/aas/3/0/LevelType/typ",
+      "@type": "http://www.w3.org/2001/XMLSchema#boolean"
+    },
+    "typeValueListElement": {
+      "@id": "https://admin-shell.io/aas/3/0/SubmodelElementList/typeValueListElement",
+      "@type": "@id"
+    },
+    "unit": "https://admin-shell.io/aas/3/0/DataSpecificationIec61360/unit",
+    "unitId": {
+      "@id": "https://admin-shell.io/aas/3/0/DataSpecificationIec61360/unitId",
+      "@type": "@id"
+    },
+    "valueFormat": "https://admin-shell.io/aas/3/0/DataSpecificationIec61360/valueFormat",
+    "valueList": {
+      "@id": "https://admin-shell.io/aas/3/0/DataSpecificationIec61360/valueList",
+      "@type": "@id"
+    },
+    "valueReferencePairs": {
+      "@id": "https://admin-shell.io/aas/3/0/ValueList/valueReferencePairs",
+      "@type": "@id"
+    },
+    "valueTypeListElement": {
+      "@id": "https://admin-shell.io/aas/3/0/SubmodelElementList/valueTypeListElement",
+      "@type": "@id"
+    },
+    "version": "https://admin-shell.io/aas/3/0/AdministrativeInformation/version"
+  }
+}

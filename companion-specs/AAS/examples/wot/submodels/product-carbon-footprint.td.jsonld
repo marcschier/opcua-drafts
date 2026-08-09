@@ -1,0 +1,245 @@
+[
+  {
+    "@context": [
+      "https://www.w3.org/2022/wot/td/v1.1",
+      {
+        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
+        "aas": "https://admin-shell.io/aas/3/0/",
+        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
+        "ua": "http://opcfoundation.org/UA/"
+      }
+    ],
+    "@type": [
+      "uav:object",
+      "i4aas:AASSubmodelType"
+    ],
+    "title": "CarbonFootprint",
+    "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
+    "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
+    "uav:browseName": "nsu={server};CarbonFootprint",
+    "properties": {
+      "ProductCarbonFootprints": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints",
+        "uav:browseName": "nsu={server};ProductCarbonFootprints",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ProductCarbonFootprints[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementCollectionType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "ProductCarbonFootprints[0].PcfCalculationMethods": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods",
+        "uav:browseName": "nsu={server};PcfCalculationMethods",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ProductCarbonFootprints[0].PcfCalculationMethods[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "ProductCarbonFootprints[0].PcfCO2eq": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCO2eq",
+        "uav:browseName": "nsu={server};PcfCO2eq",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ProductCarbonFootprints[0].ReferenceImpactUnitForCalculation": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].ReferenceImpactUnitForCalculation",
+        "uav:browseName": "nsu={server};ReferenceImpactUnitForCalculation",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ProductCarbonFootprints[0].QuantityOfMeasureForCalculation": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].QuantityOfMeasureForCalculation",
+        "uav:browseName": "nsu={server};QuantityOfMeasureForCalculation",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ProductCarbonFootprints[0].LifeCyclePhases": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases",
+        "uav:browseName": "nsu={server};LifeCyclePhases",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ProductCarbonFootprints[0].LifeCyclePhases[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      },
+      "ProductCarbonFootprints[0].PerformanceClass": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PerformanceClass",
+        "uav:browseName": "nsu={server};PerformanceClass",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASSubmodelElementListType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy",
+        "uav:browseName": "nsu={server};WebLinkToPublicCarbonFootprintStudy",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+        ],
+        "uav:modellingRule": "Optional"
+      },
+      "ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy[0]": {
+        "@type": [
+          "uav:object",
+          "i4aas:AASPropertyType"
+        ],
+        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy[0]",
+        "uav:browseName": "nsu={server};0",
+        "uav:componentOf": [
+          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy"
+        ],
+        "uav:modellingRule": "Optional",
+        "uav:index": 0
+      }
+    },
+    "links": [
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods",
+        "uav:refId": "i=47",
+        "uav:refName": "PcfCalculationMethods"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCO2eq",
+        "uav:refId": "i=47",
+        "uav:refName": "PcfCO2eq"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].ReferenceImpactUnitForCalculation",
+        "uav:refId": "i=47",
+        "uav:refName": "ReferenceImpactUnitForCalculation"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].QuantityOfMeasureForCalculation",
+        "uav:refId": "i=47",
+        "uav:refName": "QuantityOfMeasureForCalculation"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases",
+        "uav:refId": "i=47",
+        "uav:refName": "LifeCyclePhases"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PerformanceClass",
+        "uav:refId": "i=47",
+        "uav:refName": "PerformanceClass"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      },
+      {
+        "rel": "ua:HasComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy",
+        "uav:refId": "i=47",
+        "uav:refName": "WebLinkToPublicCarbonFootprintStudy"
+      },
+      {
+        "rel": "ua:HasOrderedComponent",
+        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]",
+        "uav:refId": "i=49",
+        "uav:refName": "0"
+      }
+    ],
+    "securityDefinitions": {
+      "nosec_sc": {
+        "scheme": "nosec"
+      }
+    },
+    "security": "nosec_sc"
+  }
+]

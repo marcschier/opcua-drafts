@@ -302,11 +302,12 @@ CU_DISCLOSURE = "AAS-DisclosureTiers"
 CU_PACKAGES = "AAS-Packages"
 CU_UPDATEABLE = "AAS-UpdateableRegistry"
 CU_ENVEXPORT = "AAS-EnvironmentExport"
+CU_INVOKE = "AAS-OperationInvoke"
 
 ALL_CONFORMANCE_UNITS = (
     CU_METAMODEL, CU_ELEMENTS, CU_VALUES, CU_ROUNDTRIP, CU_MATERIALIZE,
     CU_REGISTRY, CU_IDENTITY, CU_VERSIONING, CU_DISCOVERY, CU_FEDERATION,
-    CU_DISCLOSURE, CU_PACKAGES, CU_UPDATEABLE, CU_ENVEXPORT,
+    CU_DISCLOSURE, CU_PACKAGES, CU_UPDATEABLE, CU_ENVEXPORT, CU_INVOKE,
 )
 
 CU_BY_NAME = {
@@ -787,6 +788,18 @@ prop_var(1034, OP, "InputVariables", T(1230), "The operation's input variables, 
 prop_var(1034, OP, "OutputVariables", T(1230), "The operation's output variables, in order.", valuerank="1")
 prop_var(1034, OP, "InoutputVariables", T(1230), "The operation's in-out variables, in order.", valuerank="1")
 placeholder_obj(1034, OP, "<Variable>", T(1020), "An element carrying one of the operation's variables.")
+method(1034, OP, "Invoke",
+    "Invoke the operation and return its results. The Call counterpart of InvokeOperation in the AAS API of "
+    "IDTA-01002 Part 2: a Client that has browsed to the Operation element calls this rather than reaching for "
+    "the HTTP interface, and the two carry the same arguments in the same order.",
+    inargs=[("InputValues", BaseDataType, "Values for the operation's input variables, positionally matching InputVariables.", 1),
+            ("InoutputValues", BaseDataType, "Values for the operation's in-out variables, positionally matching InoutputVariables.", 1),
+            ("ClientTimeout", Duration, "How long the caller will wait. Zero means the Server's default. Corresponds to clientTimeoutDuration of the AAS API request.")],
+    outargs=[("OutputValues", BaseDataType, "Results, positionally matching OutputVariables.", 1),
+             ("InoutputResults", BaseDataType, "The in-out variables after execution, positionally matching InoutputVariables.", 1),
+             ("Success", Boolean, "Whether the operation executed successfully. A false result is an executed operation that failed, not a failed Call."),
+             ("Diagnostic", String, "Why the operation failed, where it did.")],
+    category=(CU_INVOKE,))
 
 object_type(1035, "AASCapabilityType", T(1020),
             "A declared capability of the asset. It carries no value of its own; the element's identity and "
