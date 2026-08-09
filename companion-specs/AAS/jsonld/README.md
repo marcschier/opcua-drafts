@@ -8,6 +8,9 @@ the XML, JSON and RDF mappings of IDTA-01001 Part 1.
 | [`AAS-JsonLd.md`](AAS-JsonLd.md) | the specification |
 | [`aas.context.jsonld`](aas.context.jsonld) | the JSON-LD context, generated from the pinned tables |
 | [`UPSTREAM-DEFECTS.md`](UPSTREAM-DEFECTS.md) | the defects found in the upstream artefacts, with evidence |
+| [`AAS-DPP-Vocabulary.md`](AAS-DPP-Vocabulary.md) | the DPP and battery passport identifier mapping |
+| [`UAV-TYPEDEFINITION-PROPOSAL.md`](UAV-TYPEDEFINITION-PROPOSAL.md) | the one WoT term Annex F of the AAS specification needs |
+| `dpp/` | the mapping set, as SSSOM |
 | `upstream/` | the pinned ontology, SHACL schema and JSON Schema |
 | `fixtures/` | 15 example pairs vendored so the tools run offline |
 | `tools/` | the lifting, the lowering, the context generator and the conformance runner |

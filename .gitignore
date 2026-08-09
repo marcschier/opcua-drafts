@@ -19,3 +19,7 @@ node_modules/
 # Fetched on demand by companion-specs/AAS/jsonld/tools/fetch_corpus.py; the
 # hard cases needed for an offline run are vendored in jsonld/fixtures/ instead.
 companion-specs/AAS/jsonld/.corpus/
+
+# Local cache of the published IDTA submodel templates, read by
+# companion-specs/AAS/jsonld/tools/dpp_inventory.py.
+companion-specs/AAS/jsonld/.templates/
