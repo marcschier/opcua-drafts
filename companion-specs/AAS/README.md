@@ -68,7 +68,8 @@ Description per corpus fixture; each projects to exactly the nodes clause 5.6 ma
 
 It needs one term the WoT drafts do not yet have — `uav:typeref`, which types a projected node with
 an ObjectType the Server has already loaded. `UAV-TYPEREF-PROPOSAL.md` states it, presents the
-alternatives that use only published vocabulary, and gives the converter behaviour it requires.
+alternatives that use only published vocabulary, and gives the converter behaviour it requires. It is
+raised as `OPCF-Members/spec-drafts` PR #19.
 
 ## Regenerate and validate
 

@@ -2883,8 +2883,8 @@ hundred resources, each versioned independently, to describe one document.
 | Modelling rule | `uav:modellingRule` | `Mandatory`, `Optional`, `MandatoryPlaceholder` or `OptionalPlaceholder` |
 | Semantic identifier | `uav:semanticId` | the AAS `semanticId` as an IRI |
 
-`uav:typeref` is the term proposed in `UAV-TYPEREF-PROPOSAL.md`; this annex is written as though it
-has been adopted. It carries the prefix-qualified BrowseName and no ExpandedNodeId alternative: the
+`uav:typeref` is the term proposed in `UAV-TYPEREF-PROPOSAL.md`, raised as `OPCF-Members/spec-drafts`
+PR #19; this annex is written as though it has been adopted. It carries the prefix-qualified BrowseName and no ExpandedNodeId alternative: the
 NodeId of a type in this companion model is assigned by the Server that loaded it, so an author
 cannot know it, and the name is unique by construction.
 

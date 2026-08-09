@@ -2,7 +2,8 @@
 
 **To:** the *OPC UA — WoT Binding* and *OPC UA — WoT Connectivity* drafts in `OPCF-Members/spec-drafts`.
 **From:** the AAS companion specification work in this repository.
-**Status:** proposal.
+**Status:** proposed as `OPCF-Members/spec-drafts` PR #19, which carries the specification text, the
+context, the JSON Schema, the ontology and the validator entries.
 
 ## The gap
 
