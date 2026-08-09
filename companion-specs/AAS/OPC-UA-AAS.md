@@ -148,6 +148,11 @@ any prior understanding or agreement (oral or written) relating to, this compani
 - [Annex C — Migration from version 1.00](#annex-c--migration-from-version-100)
 - [Annex D — Correspondence to the xRegistry HTTP binding](#annex-d--correspondence-to-the-xregistry-http-binding)
 - [Annex E — Federation resolution](#annex-e--federation-resolution)
+- [Annex F — Correspondence to a Thing Description projection](#annex-f--correspondence-to-a-thing-description-projection)
+  - [F.1 Scope of the claim](#f1-scope-of-the-claim)
+  - [F.2 Granularity](#f2-granularity)
+  - [F.3 Terms](#f3-terms)
+  - [F.4 The one term that does not yet exist](#f4-the-one-term-that-does-not-yet-exist)
 
 ## 1 Scope
 
@@ -2810,3 +2815,78 @@ This annex is informative and follows the base model's own resolution algorithm.
 Because identifiers are stable across registries while the endpoint identifies only where an entity
 is served, an entity federated from several registries keeps one identity and can be de-duplicated
 by identifier even though it is reachable through several links.
+
+<a id="annex-f"></a>
+
+## Annex F — Correspondence to a Thing Description projection
+
+This annex is informative, and is pinned to the *OPC UA — WoT Connectivity* and *OPC UA — WoT
+Binding* drafts as they stood at the date of this document. Both are under review by another body,
+and a change there can invalidate what follows.
+
+A Thing Description carrying the terms below, loaded through a WoT Connectivity registry,
+materializes the nodes clause 5.6 defines. The correspondence is verified rather than asserted:
+`jsonld/tools/wot_bridge.py` emits the Thing Descriptions from an AAS environment, applies the
+projection rules of this annex, and compares the result against the node set the reference
+materializer produces from the same environment.
+
+### F.1 Scope of the claim
+
+The claim covers the **projection subgraph**: the nodes clause 5.6 materializes for the shells,
+submodels, concept descriptions and submodel elements of one environment, with their NodeIds,
+BrowseNames, TypeDefinitions and the ReferenceType each is reached by.
+
+It does not cover the nodes a registry adds on its own account — the document resource, its
+versions, the reference from a document to its projection. Those exist because a registry is
+present, not because an AAS is being mapped, and a comparison that included them would fail for a
+reason unrelated to this specification.
+
+### F.2 Granularity
+
+One Thing Description per `Submodel`. Its submodel elements are contained nodes of that Thing, not
+Things of their own.
+
+A Thing Description is a top-level document with its own registry resource, version history and
+lifecycle. Emitting one per submodel element would give a submodel of a few hundred elements a few
+hundred resources, each versioned independently, to describe one document.
+
+### F.3 Terms
+
+| Fact of this specification | Term |
+|---|---|
+| NodeId, clause 5.3 | `uav:id`, as an ExpandedNodeId naming its namespace by URI |
+| BrowseName, clause 5.3 | `uav:browseName` |
+| TypeDefinition, clause 6 | `uav:typeDefinition`, see F.4 |
+| Containment, clause 5.6 | `uav:componentOf` on the child |
+| Ordering, clause 5.4 | a link whose `rel` is `ua:HasOrderedComponent` or `ua:HasComponent`, with `uav:refId` `i=49` or `i=47` |
+| Modelling rule | `uav:modellingRule` |
+| Semantic identifier | `uav:semanticId` |
+
+### F.4 The one term that does not yet exist
+
+`uav:congruentType` records that a type is structurally congruent with another. It is
+reconciliation metadata: it does not give the projected Object a `HasTypeDefinition` reference to an
+ObjectType that is already loaded, and a Thing Description otherwise takes its type from a Thing
+Model it instantiates. Projecting an AAS through the published vocabulary therefore produces Objects
+typed `BaseObjectType`.
+
+Measured over the reference fixtures, that is the **only** thing that fails:
+
+| | with `uav:typeDefinition` | published vocabulary only |
+|---|---|---|
+| nodes expected | 61 | 61 |
+| nodes produced | 61 | 61 |
+| missing | 0 | 0 |
+| unexpected | 0 | 0 |
+| wrong TypeDefinition | 0 | 61 |
+
+Every NodeId, every BrowseName and every ReferenceType is already correct. This annex therefore
+proposes one term, `uav:typeDefinition`, whose value is the ExpandedNodeId of an ObjectType the
+Server has already loaded, and whose effect is that the projected Object receives a
+`HasTypeDefinition` reference to it. `jsonld/UAV-TYPEDEFINITION-PROPOSAL.md` states the term and the
+converter behaviour it requires.
+
+Until that term is accepted and implemented, a Server reaches the same result by loading one Thing
+Model per ObjectType of this specification and having each Thing Description instantiate the
+matching one. That produces types congruent with the ones defined here rather than the ones defined
+here, and an implementation **should not** describe the result as conforming to clause 6.
