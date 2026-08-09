@@ -1,7 +1,6 @@
 {
   "_comment": "The conversion batch. `converted` are the specifications that have a config in this directory and a committed document; `ready` are the ones whose shape the pipeline already handles, so onboarding them is a config file plus the editorial work named in `needs`. Run them with tools/build_all.py.",
   "converted": [
-    "xregistry",
     "observability-export",
     "schema-registry",
     "generators",
