@@ -35,8 +35,10 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -44,9 +46,14 @@ AAS_TOOLS = os.path.normpath(os.path.join(HERE, ".."))
 sys.path.insert(0, AAS_TOOLS)
 
 import roundtrip_check as rt  # noqa: E402
+from jsonld.lift import Ontology  # noqa: E402
 
 I4AAS = "http://opcfoundation.org/UA/I4AAS/"
 UA = "http://opcfoundation.org/UA/"
+AAS_NS = "https://admin-shell.io/aas/3/0/"
+
+# The vocabulary, read from the pinned ontology rather than restated here.
+ONTOLOGY = Ontology()
 
 # The ObjectType each metamodel class materializes as, from clause 6. Read from
 # the round-trip reference implementation so the two cannot disagree.
@@ -119,10 +126,125 @@ def resolve_attype(types):
 # ---------------------------------------------------------------------------
 # Generation: an AAS environment becomes one Thing Description per Submodel
 # ---------------------------------------------------------------------------
-def expanded_node_id(owner_id, path=None):
-    """Clause 5.3, written portably: an ExpandedNodeId naming its namespace."""
+# The NamespaceUri a Server materializes instances into. A document carries a
+# real NamespaceUri, because `uav:id` is an ExpandedNodeId in the string form of
+# OPC 10000-6 and nothing in the WoT drafts defines a placeholder syntax for one.
+# A document that cannot know the target namespace omits `uav:id` instead; see
+# Annex F.5.
+INSTANCE_NS = "https://example.com/aas/instances/"
+
+
+def expanded_node_id(owner_id, path=None, namespace=None):
+    """Clause 5.3: the String NodeId, qualified by the instance NamespaceUri."""
     ident = owner_id if path is None else f"{owner_id}#{path}"
-    return f"nsu={{server}};s={ident}"
+    return f"nsu={namespace or INSTANCE_NS};s={ident}"
+
+
+def browse_name(name, namespace=None):
+    return f"nsu={namespace or INSTANCE_NS};{name}"
+
+
+def node_iri(owner_id, path=None):
+    """The subject term of a node, so the AAS triples have something to hang on.
+
+    An identifier that is already an absolute IRI without a fragment takes the
+    `idShortPath` as its fragment, which is readable and is the same construction
+    clause 5.3 uses for the NodeId. Anything else - a URN, an IRDI, or an IRI that
+    already carries a fragment - is hashed, because appending a second fragment
+    would not be a legal IRI. Clause 2.2 rule 3 of the JSON-LD mapping does the
+    same thing for the same reason.
+    """
+    if path is None:
+        base = owner_id
+    elif is_absolute_iri(owner_id) and "#" not in owner_id:
+        return f"{owner_id}#{path}"
+    else:
+        base = f"{owner_id}#{path}"
+    if is_absolute_iri(base) and "#" not in base:
+        return base
+    digest = hashlib.sha256(base.encode("utf-8")).hexdigest()
+    return f"https://w3id.org/aas-jsonld/id/{digest}"
+
+
+def is_absolute_iri(value):
+    return bool(re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", value or "")) and " " not in value
+
+
+def aas_members(node, skip_field=None, cls=None):
+    """The node's own AAS content, as compact JSON-LD in the AAS vocabulary.
+
+    Without this a Thing Description carries a node skeleton and no Asset
+    Administration Shell: the `aas` prefix would be declared and never used, and
+    the document would not be an AAS by clause 1 of the JSON-LD mapping. The
+    child collection is skipped, because each child is a node of its own and is
+    referenced rather than nested.
+
+    A nested object that carries no `modelType` - a `Reference`, a `Key`, a
+    `Qualifier`, a language string - takes its class from the declared range of
+    the property that reached it, which is clause 2.3 of the JSON-LD mapping.
+    """
+    cls = cls or node.get("modelType")
+    out = {}
+    if cls:
+        out["@type"] = compact(f"{AAS_NS}{cls}")
+    for key, value in node.items():
+        if key in ("modelType", skip_field):
+            continue
+        prop = ONTOLOGY.resolve(cls, key) if cls else None
+        if prop is None:
+            continue
+        rendered = render_value(value, prop)
+        if rendered is not None:
+            out[compact(prop["iri"])] = rendered
+    return out
+
+
+def render_value(value, prop):
+    rng = (prop.get("range") or "").split(":")[-1]
+    if isinstance(value, list):
+        rendered = [render_value(v, prop) for v in value]
+        return [r for r in rendered if r is not None] or None
+    if isinstance(value, dict):
+        return aas_members(value, cls=value.get("modelType") or rng) or None
+    if rng in ONTOLOGY.enums:
+        member = enum_individual(rng, value)
+        return {"@id": compact(member)} if member else None
+    if isinstance(value, bool):
+        return value
+    return value
+
+
+def enum_individual(enum_name, value):
+    members = ONTOLOGY.enums.get(enum_name, [])
+    bare = str(value).split(":", 1)[-1]
+    joined = "".join(part.capitalize() for part in bare.split("_"))
+    lowered = {m.lower(): m for m in members}
+    for candidate in (str(value), bare, bare[:1].upper() + bare[1:], joined):
+        if candidate in members:
+            return f"{AAS_NS}{enum_name}/{candidate}"
+    for candidate in (bare.lower(), joined.lower()):
+        if candidate in lowered:
+            return f"{AAS_NS}{enum_name}/{lowered[candidate]}"
+    return None
+
+
+def compact(iri):
+    return "aas:" + iri[len(AAS_NS):] if iri.startswith(AAS_NS) else iri
+
+
+def merge_aas(entry, node, skip_field=None):
+    """Add the node's AAS content to an affordance, keeping the `@type` list.
+
+    `@type` already carries the NodeClass term and the ObjectType; the AAS class
+    joins them rather than replacing them, so the same member says what the node
+    projects to and what it is in the metamodel.
+    """
+    members = aas_members(node, skip_field)
+    aas_type = members.pop("@type", None)
+    if aas_type:
+        entry["@type"] = entry["@type"] + [aas_type]
+    entry.update(members)
+    return entry
 
 
 def bind_type(entry, type_name, form):
@@ -134,68 +256,87 @@ def bind_type(entry, type_name, form):
     return entry
 
 
-def td_for_submodel(sm, form):
-    """A Thing Description whose projection is the submodel's node tree."""
+def td_for_submodel(sm, form, namespace=None):
+    """A Thing Description that is the submodel, and projects to its node tree."""
     owner = sm["id"]
+    child_field = rt.CHILD_FIELDS.get("Submodel")
     td = {
         "@context": [
             "https://www.w3.org/2022/wot/td/v1.1",
             {"uav": "http://opcfoundation.org/UA/WoT-Binding/",
-             "aas": "https://admin-shell.io/aas/3/0/",
+             "aas": AAS_NS,
              "i4aas": I4AAS,
              "ua": UA},
         ],
         "@type": ["uav:object"],
+        "@id": node_iri(owner),
         "title": sm.get("idShort", owner),
         "id": owner,
-        "uav:id": expanded_node_id(owner),
-        "uav:browseName": f"nsu={{server}};{sm.get('idShort', owner)}",
+        "uav:id": expanded_node_id(owner, None, namespace),
+        "uav:browseName": browse_name(sm.get("idShort", owner), namespace),
         "properties": {},
         "links": [],
     }
+    merge_aas(td, sm, child_field[0] if child_field else None)
     bind_type(td, "AASSubmodelType", form)
+
+    contained = []
     for index, element in enumerate(sm.get("submodelElements", []) or []):
-        emit_element(td, element, owner, "", None, form)
+        emit_element(td, element, owner, "", None, form, namespace)
+        contained.append({"@id": node_iri(owner, rt.id_short_path("", element, None))})
+    if contained:
+        td["aas:Submodel/submodelElements"] = contained
     return td
 
 
-def emit_element(td, element, owner, parent_path, index, form):
+def emit_element(td, element, owner, parent_path, index, form, namespace=None):
     """Each submodel element becomes a contained Object, named by clause 5.3."""
     model_type = element.get("modelType")
     type_name = ELEMENT_TYPES.get(model_type)
     if type_name is None:
         raise ValueError(f"no ObjectType for {model_type!r}")
     path = rt.id_short_path(parent_path, element, index)
-    node_id = expanded_node_id(owner, path)
     browse = str(index) if index is not None else element["idShort"]
+    child_field = rt.CHILD_FIELDS.get(model_type)
 
     entry = {
         "@type": ["uav:object"],
-        "uav:id": node_id,
-        "uav:browseName": f"nsu={{server}};{browse}",
-        "uav:componentOf": [expanded_node_id(owner, parent_path) if parent_path
-                            else expanded_node_id(owner)],
+        "@id": node_iri(owner, path),
+        "uav:id": expanded_node_id(owner, path, namespace),
+        "uav:browseName": browse_name(browse, namespace),
         "uav:modellingRule": "Optional",
     }
+    # `uav:componentOf` is only written where it says something. Every affordance
+    # of a Thing Description is already a member of that Thing, so naming the
+    # Thing as the parent repeats what the document structure states; a nested
+    # element's parent is another affordance and cannot be read off the document.
+    if parent_path:
+        entry["uav:componentOf"] = [expanded_node_id(owner, parent_path, namespace)]
+    merge_aas(entry, element, child_field[0] if child_field else None)
     bind_type(entry, type_name, form)
     if index is not None:
         entry["uav:index"] = index
     td["properties"][path] = entry
 
-    child_field = rt.CHILD_FIELDS.get(model_type)
     if child_field:
         field, is_list = child_field
         children = element.get(field) or []
         ordered = is_list and element.get("orderRelevant", True)
+        contained = []
         for i, child in enumerate(children):
-            emit_element(td, child, owner, path, i if is_list else None, form)
+            emit_element(td, child, owner, path, i if is_list else None, form, namespace)
             child_path = rt.id_short_path(path, child, i if is_list else None)
+            contained.append({"@id": node_iri(owner, child_path)})
             td["links"].append({
                 "rel": "ua:HasOrderedComponent" if ordered else "ua:HasComponent",
-                "href": expanded_node_id(owner, child_path),
+                "href": expanded_node_id(owner, child_path, namespace),
                 "uav:refId": "i=49" if ordered else "i=47",
                 "uav:refName": str(i) if is_list else child.get("idShort", ""),
             })
+        if contained:
+            prop = ONTOLOGY.resolve(model_type, field)
+            if prop is not None:
+                entry[compact(prop["iri"])] = contained
 
 
 def generate(env, form="term"):

@@ -11,134 +11,194 @@
     ],
     "@type": [
       "uav:object",
+      "aas:Submodel",
       "i4aas:AASSubmodelType"
     ],
+    "@id": "https://fabrikam.com/ids/sm/absent-vs-empty",
     "title": "AbsentVersusEmpty",
     "id": "https://fabrikam.com/ids/sm/absent-vs-empty",
-    "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty",
-    "uav:browseName": "nsu={server};AbsentVersusEmpty",
+    "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty",
+    "uav:browseName": "nsu=https://example.com/aas/instances/;AbsentVersusEmpty",
     "properties": {
       "EmptyCollection": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyCollection",
-        "uav:browseName": "nsu={server};EmptyCollection",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#EmptyCollection",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyCollection",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;EmptyCollection",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "EmptyCollection"
       },
       "AbsentCollection": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentCollection",
-        "uav:browseName": "nsu={server};AbsentCollection",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#AbsentCollection",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentCollection",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;AbsentCollection",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "AbsentCollection"
       },
       "EmptyList": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyList",
-        "uav:browseName": "nsu={server};EmptyList",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#EmptyList",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyList",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;EmptyList",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "EmptyList",
+        "aas:SubmodelElementList/orderRelevant": true,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        }
       },
       "AbsentList": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentList",
-        "uav:browseName": "nsu={server};AbsentList",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#AbsentList",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentList",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;AbsentList",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "AbsentList",
+        "aas:SubmodelElementList/orderRelevant": true,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        }
       },
       "EmptyStatements": {
         "@type": [
           "uav:object",
+          "aas:Entity",
           "i4aas:AASEntityType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyStatements",
-        "uav:browseName": "nsu={server};EmptyStatements",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#EmptyStatements",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyStatements",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;EmptyStatements",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "EmptyStatements",
+        "aas:Entity/entityType": {
+          "@id": "aas:EntityType/CoManagedEntity"
+        }
       },
       "AbsentStatements": {
         "@type": [
           "uav:object",
+          "aas:Entity",
           "i4aas:AASEntityType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentStatements",
-        "uav:browseName": "nsu={server};AbsentStatements",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#AbsentStatements",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentStatements",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;AbsentStatements",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "AbsentStatements",
+        "aas:Entity/entityType": {
+          "@id": "aas:EntityType/CoManagedEntity"
+        }
       },
       "PresentButEmptyValue": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#PresentButEmptyValue",
-        "uav:browseName": "nsu={server};PresentButEmptyValue",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#PresentButEmptyValue",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#PresentButEmptyValue",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;PresentButEmptyValue",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "PresentButEmptyValue",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Property/value": ""
       },
       "AbsentValue": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentValue",
-        "uav:browseName": "nsu={server};AbsentValue",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#AbsentValue",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentValue",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;AbsentValue",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "AbsentValue",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "EmptyLangStrings": {
         "@type": [
           "uav:object",
+          "aas:MultiLanguageProperty",
           "i4aas:AASMultiLanguagePropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyLangStrings",
-        "uav:browseName": "nsu={server};EmptyLangStrings",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#EmptyLangStrings",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyLangStrings",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;EmptyLangStrings",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "EmptyLangStrings"
       },
       "AbsentLangStrings": {
         "@type": [
           "uav:object",
+          "aas:MultiLanguageProperty",
           "i4aas:AASMultiLanguagePropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentLangStrings",
-        "uav:browseName": "nsu={server};AbsentLangStrings",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/absent-vs-empty"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#AbsentLangStrings",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentLangStrings",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;AbsentLangStrings",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "AbsentLangStrings"
       }
     },
-    "links": []
+    "links": [],
+    "aas:Identifiable/id": "https://fabrikam.com/ids/sm/absent-vs-empty",
+    "aas:Referable/idShort": "AbsentVersusEmpty",
+    "aas:HasKind/kind": {
+      "@id": "aas:ModellingKind/Instance"
+    },
+    "aas:Submodel/submodelElements": [
+      {
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#EmptyCollection"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#AbsentCollection"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#EmptyList"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#AbsentList"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#EmptyStatements"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#AbsentStatements"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#PresentButEmptyValue"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#AbsentValue"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#EmptyLangStrings"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/absent-vs-empty#AbsentLangStrings"
+      }
+    ]
   }
 ]

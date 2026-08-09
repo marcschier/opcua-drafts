@@ -11,158 +11,252 @@
     ],
     "@type": [
       "uav:object",
+      "aas:Submodel",
       "i4aas:AASSubmodelType"
     ],
+    "@id": "https://fabrikam.com/ids/sm/awkward-values",
     "title": "AwkwardValues",
     "id": "https://fabrikam.com/ids/sm/awkward-values",
-    "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values",
-    "uav:browseName": "nsu={server};AwkwardValues",
+    "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values",
+    "uav:browseName": "nsu=https://example.com/aas/instances/;AwkwardValues",
     "properties": {
       "ArbitraryPrecision": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#ArbitraryPrecision",
-        "uav:browseName": "nsu={server};ArbitraryPrecision",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#ArbitraryPrecision",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values#ArbitraryPrecision",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;ArbitraryPrecision",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "ArbitraryPrecision",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Decimal"
+        },
+        "aas:Property/value": "3.14159265358979323846264338327950288419716939937510582097494459"
       },
       "UnboundedInteger": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#UnboundedInteger",
-        "uav:browseName": "nsu={server};UnboundedInteger",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#UnboundedInteger",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values#UnboundedInteger",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;UnboundedInteger",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "UnboundedInteger",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Integer"
+        },
+        "aas:Property/value": "170141183460469231731687303715884105727170141183460469231731687303715884105727"
       },
       "TrailingZeros": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#TrailingZeros",
-        "uav:browseName": "nsu={server};TrailingZeros",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#TrailingZeros",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values#TrailingZeros",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;TrailingZeros",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "TrailingZeros",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Decimal"
+        },
+        "aas:Property/value": "1.500000"
       },
       "NegativeZero": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#NegativeZero",
-        "uav:browseName": "nsu={server};NegativeZero",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#NegativeZero",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values#NegativeZero",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;NegativeZero",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "NegativeZero",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Double"
+        },
+        "aas:Property/value": "-0.0"
       },
       "Duration": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#Duration",
-        "uav:browseName": "nsu={server};Duration",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#Duration",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values#Duration",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;Duration",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "Duration",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Duration"
+        },
+        "aas:Property/value": "P1Y2M3DT4H5M6.789S"
       },
       "PartialDate": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#PartialDate",
-        "uav:browseName": "nsu={server};PartialDate",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#PartialDate",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values#PartialDate",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;PartialDate",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "PartialDate",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/GYearMonth"
+        },
+        "aas:Property/value": "2026-08"
       },
       "GDay": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#GDay",
-        "uav:browseName": "nsu={server};GDay",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#GDay",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values#GDay",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;GDay",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "GDay",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/GDay"
+        },
+        "aas:Property/value": "---07"
       },
       "OffsetDateTime": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#OffsetDateTime",
-        "uav:browseName": "nsu={server};OffsetDateTime",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#OffsetDateTime",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values#OffsetDateTime",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;OffsetDateTime",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "OffsetDateTime",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/DateTime"
+        },
+        "aas:Property/value": "2026-08-07T13:24:23.297+02:00"
       },
       "LeadingPlus": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#LeadingPlus",
-        "uav:browseName": "nsu={server};LeadingPlus",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#LeadingPlus",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values#LeadingPlus",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;LeadingPlus",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "LeadingPlus",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Int"
+        },
+        "aas:Property/value": "+42"
       },
       "EmptyString": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#EmptyString",
-        "uav:browseName": "nsu={server};EmptyString",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#EmptyString",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values#EmptyString",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;EmptyString",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "EmptyString",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Property/value": ""
       },
       "UnboundedBelow": {
         "@type": [
           "uav:object",
+          "aas:Range",
           "i4aas:AASRangeType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#UnboundedBelow",
-        "uav:browseName": "nsu={server};UnboundedBelow",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#UnboundedBelow",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values#UnboundedBelow",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;UnboundedBelow",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "UnboundedBelow",
+        "aas:Range/valueType": {
+          "@id": "aas:DataTypeDefXsd/Decimal"
+        },
+        "aas:Range/max": "100.0"
       },
       "BoundedAtZero": {
         "@type": [
           "uav:object",
+          "aas:Range",
           "i4aas:AASRangeType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values#BoundedAtZero",
-        "uav:browseName": "nsu={server};BoundedAtZero",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/awkward-values"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#BoundedAtZero",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values#BoundedAtZero",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;BoundedAtZero",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "BoundedAtZero",
+        "aas:Range/valueType": {
+          "@id": "aas:DataTypeDefXsd/Decimal"
+        },
+        "aas:Range/min": "0",
+        "aas:Range/max": "100.0"
       }
     },
-    "links": []
+    "links": [],
+    "aas:Identifiable/id": "https://fabrikam.com/ids/sm/awkward-values",
+    "aas:Referable/idShort": "AwkwardValues",
+    "aas:HasKind/kind": {
+      "@id": "aas:ModellingKind/Instance"
+    },
+    "aas:Submodel/submodelElements": [
+      {
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#ArbitraryPrecision"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#UnboundedInteger"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#TrailingZeros"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#NegativeZero"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#Duration"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#PartialDate"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#GDay"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#OffsetDateTime"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#LeadingPlus"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#EmptyString"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#UnboundedBelow"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/awkward-values#BoundedAtZero"
+      }
+    ]
   }
 ]

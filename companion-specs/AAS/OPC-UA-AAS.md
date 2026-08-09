@@ -2911,14 +2911,21 @@ hundred resources, each versioned independently, to describe one document.
 
 | Fact of this specification | Term | Value |
 |---|---|---|
+| The AAS itself | the AAS vocabulary | `aas:Referable/idShort`, `aas:Property/value`, `aas:Submodel/submodelElements` and the rest, on the node they belong to |
+| Node identity | `@id` | the subject term the JSON-LD mapping gives the node, so the AAS triples have a subject |
 | NodeId, clause 5.3 | `uav:id` | an ExpandedNodeId naming its namespace by URI |
 | BrowseName, clause 5.3 | `uav:browseName` | the portable QualifiedName form |
 | TypeDefinition, clause 6 | a member of `@type` | the prefix-qualified BrowseName of the ObjectType, for example `i4aas:AASPropertyType` |
-| Containment, clause 5.6 | `uav:componentOf` | the ExpandedNodeId of the parent |
+| Containment, clause 5.6 | `uav:componentOf` | the ExpandedNodeId of the parent, where the parent is not the Thing |
 | Ordering, clause 5.4 | a link `rel` | `ua:HasOrderedComponent` with `uav:refId` `i=49`, or `ua:HasComponent` with `i=47` |
 | Position, clause 5.4 | `uav:index` | the zero-based position |
 | Modelling rule | `uav:modellingRule` | `Mandatory`, `Optional`, `MandatoryPlaceholder` or `OptionalPlaceholder` |
 | Semantic identifier | `uav:semanticId` | the AAS `semanticId` as an IRI |
+
+The AAS vocabulary is the first row because it is most of the document. A Thing Description that
+carried only the `uav` terms would describe a tree of empty nodes: it would name what to create and
+not what any of it is. The `uav` terms carry what the metamodel has no field for — a NodeId, a
+BrowseName, an ObjectType, a ReferenceType, a modelling rule — and nothing else.
 
 The type binding adds no term. `@type` already carries the `uav:object` node-class annotation, and
 the ObjectType is named alongside it. It carries the prefix-qualified BrowseName and no
@@ -2943,41 +2950,74 @@ The `ordering-and-nesting` fixture contains a `SubmodelElementList` whose order 
 {
   "@context": [ "https://www.w3.org/2022/wot/td/v1.1",
     { "uav":   "http://opcfoundation.org/UA/WoT-Binding/",
+      "aas":   "https://admin-shell.io/aas/3/0/",
       "i4aas": "http://opcfoundation.org/UA/I4AAS/",
       "ua":    "http://opcfoundation.org/UA/" } ],
-  "@type": ["uav:object", "i4aas:AASSubmodelType"],
+  "@type": ["uav:object", "aas:Submodel", "i4aas:AASSubmodelType"],
+  "@id": "https://fabrikam.com/ids/sm/ordering",
   "title": "Ordering",
   "id": "https://fabrikam.com/ids/sm/ordering",
-  "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering",
+  "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;Ordering",
+  "aas:Identifiable/id": "https://fabrikam.com/ids/sm/ordering",
+  "aas:Referable/idShort": "Ordering",
+  "aas:Submodel/submodelElements": [
+    { "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList" }
+  ],
   "properties": {
     "CollectionsInsideAList": {
-      "@type": ["uav:object", "i4aas:AASSubmodelElementListType"],
-      "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList",
-      "uav:componentOf": ["nsu={server};s=https://fabrikam.com/ids/sm/ordering"],
-      "uav:modellingRule": "Optional"
+      "@type": ["uav:object", "aas:SubmodelElementList", "i4aas:AASSubmodelElementListType"],
+      "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList",
+      "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList",
+      "uav:modellingRule": "Optional",
+      "aas:Referable/idShort": "CollectionsInsideAList",
+      "aas:SubmodelElementList/orderRelevant": true,
+      "aas:SubmodelElementList/value": [
+        { "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]" }
+      ]
     },
     "CollectionsInsideAList[0]": {
-      "@type": ["uav:object", "i4aas:AASSubmodelElementCollectionType"],
-      "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
-      "uav:componentOf": ["nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList"],
+      "@type": ["uav:object", "aas:SubmodelElementCollection", "i4aas:AASSubmodelElementCollectionType"],
+      "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
+      "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
+      "uav:componentOf": ["nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList"],
       "uav:index": 0,
       "uav:modellingRule": "Optional"
     }
   },
   "links": [
     { "rel": "ua:HasOrderedComponent",
-      "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
+      "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
       "uav:refId": "i=49", "uav:refName": "0" }
   ]
 }
 ```
 
-`{server}` stands for the NamespaceUri the Server materializes instances into; a document written
-for a known Server carries that URI directly.
+**The document is the Asset Administration Shell, not a description of one.** Every node carries its
+own AAS content in the AAS vocabulary — `aas:Referable/idShort`, `aas:Property/value`,
+`aas:HasSemantics/semanticId` — and the containment properties of the metamodel,
+`aas:Submodel/submodelElements` and `aas:SubmodelElementList/value`, reference the nodes by `@id`.
+Discarding every triple outside the AAS namespace leaves the graph of clause 1 of the JSON-LD
+mapping; `tools/jsonld/build_examples.py` performs that discard and fails if any AAS property or
+literal value of the source submodel is missing from the result.
 
-The member key is the `idShortPath` of clause 5.3, which is also the fragment of the NodeId, so a
-reader that has the key has the identity. A list member has no short name, so its key and its
-BrowseName are its index — the same rule clause 5.3 states.
+**The `uav` terms carry only what the AAS does not say.** The AAS gives the tree and the order; the
+`uav` terms give the NodeId, the BrowseName, the ObjectType, the ReferenceType and the modelling
+rule, none of which the metamodel has a field for.
+
+**The NamespaceUri is a real one.** `uav:id` is an ExpandedNodeId in the string form of OPC 10000-6
+and the WoT drafts define no placeholder syntax for a namespace. `https://example.com/aas/instances/`
+above is the Server's instance namespace, written out. A document that cannot know the target
+namespace omits `uav:id` instead; see F.5.
+
+**The member key is not the model.** `properties` is a flat map and its keys must be unique, so each
+key is the `idShortPath` of clause 5.3 — IDTA's own path syntax, and also the fragment of the NodeId.
+The `[n]` in a key is a consequence of that syntax and carries nothing: containment is stated by
+`aas:SubmodelElementList/value` and `uav:componentOf`, and order by `ua:HasOrderedComponent` with
+`uav:refId` `i=49` and by `uav:index`. A converter that read the key instead of those terms would
+still be right by accident here and wrong on any document that named its members differently.
+
+A list member has no short name, so its BrowseName is its index — the rule clause 5.3 states.
 
 ### F.5 Implementer notes
 
@@ -2987,9 +3027,11 @@ This subclause is informative.
   states whether the collection is a sequence; `uav:index` states where each member sits. A
   converter that emits one without the other produces a list a serializer cannot restore, which
   clause 5.4 is about.
-- *`uav:componentOf` points at the parent, not at the child.* It is directional and names the
-  container. A converter that reverses it builds the tree upside down and the error surfaces only
-  at the leaves.
+- *`uav:componentOf` is written only where it says something.* Every affordance of a Thing
+  Description is already a member of that Thing, so naming the Thing as a node's parent repeats what
+  the document structure states. A nested element's parent is another affordance and cannot be read
+  off the document, so there it is written. It is directional and names the container; a converter
+  that reverses it builds the tree upside down and the error surfaces only at the leaves.
 - *Do not synthesise a type when the `@type` binding resolves.* The types of this specification are loaded
   from `Opc.Ua.I4AAS.NodeSet2.xml`. A converter that generates its own type of the same name leaves
   the Server holding two type hierarchies, and a Client written against this specification
@@ -3002,9 +3044,12 @@ This subclause is informative.
   that generates NodeIds from the browse path instead — which *WoT Connectivity* §9.4 permits where
   a document supplies none — produces a subtree that no longer matches this specification. Supply
   `uav:id` on every node.
-- *The `{server}` namespace must be resolved before use.* A document that keeps the placeholder
-  produces ExpandedNodeIds that name a namespace the Server does not have, and the projection fails
-  at resolution rather than at materialization, which is the better failure but an obscure message.
+- *A document that cannot know the instance namespace omits `uav:id`.* An ExpandedNodeId names a
+  namespace, and the namespace a Server materializes instances into is the Server's to choose. An
+  author writing for a known Server writes it out. An author writing a portable document omits
+  `uav:id` and accepts browse-path NodeIds, or publishes the document per Server. There is no
+  placeholder: nothing in the WoT drafts defines one, and a document carrying an invented one
+  produces ExpandedNodeIds that name a namespace no Server has.
 
 ### F.6 What the published vocabulary achieves without the type binding
 

@@ -11,410 +11,2923 @@
     ],
     "@type": [
       "uav:object",
+      "aas:Submodel",
       "i4aas:AASSubmodelType"
     ],
+    "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
     "title": "HandoverDocumentation",
     "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
-    "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
-    "uav:browseName": "nsu={server};HandoverDocumentation",
+    "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
+    "uav:browseName": "nsu=https://example.com/aas/instances/;HandoverDocumentation",
     "properties": {
       "Documents": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents",
-        "uav:browseName": "nsu={server};Documents",
-        "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0"
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;Documents",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "Documents",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Documents"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Dokumente (Übergabedokumentation)"
+          }
         ],
-        "uav:modellingRule": "Optional"
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABI500#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABI500-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.handover_documentation:1.0.0#documents"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/semanticIdListElement": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABI500#003/0173-1#01-AHF579#003"
+            }
+          ]
+        },
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]"
+          }
+        ]
       },
       "Documents[0]": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents"
-        ],
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
-        "uav:index": 0
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents"
+        ],
+        "aas:Referable/idShort": "Document",
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "This SubmodelElementCollection holds the information for a VDI 2770 Document entity"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABI500#003/0173-1#01-AHF579#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "0173-1#02-ABI500#003~0/0173-1#01-AHF579#003"
+              },
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABI500-003/0173-1-01-AHF579-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.handover_documentation:1.0.0#Document"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document"
+          }
+        ],
+        "uav:index": 0,
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions"
+          }
+        ]
       },
       "Documents[0].DocumentClassifications": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications",
-        "uav:browseName": "nsu={server};DocumentClassifications",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;DocumentClassifications",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "DocumentClassifications",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document classifications"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Dokumentklassifikationen"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABI502#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABI502-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentClassifications"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/semanticIdListElement": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABI502#003/0173-1#01-AHF581#003"
+            }
+          ]
+        },
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]"
+          }
+        ]
       },
       "Documents[0].DocumentClassifications[0]": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications"
-        ],
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
-        "uav:index": 0
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications"
+        ],
+        "aas:Referable/idShort": "DocumentClassification",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document classification"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Dokumentklassifikation"
+          }
+        ],
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Set of information for describing the classification of the Document according to a ClassificationSystem"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABI502#003/0173-1#01-AHF581#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "0173-1#02-ABI502#003~0/0173-1#01-AHF581#003"
+              },
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABI502-003/0173-1-01-AHF581-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentClassification"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "uav:index": 0,
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassName"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassId"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassificationSystem"
+          }
+        ]
       },
       "Documents[0].DocumentClassifications[0].ClassName": {
         "@type": [
           "uav:object",
+          "aas:MultiLanguageProperty",
           "i4aas:AASMultiLanguagePropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassName",
-        "uav:browseName": "nsu={server};ClassName",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassName",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassName",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;ClassName",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "ClassName",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "class name"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Klassenname"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABJ219#002"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABJ219-002"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#className"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "ExampleValue",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "Certificates, declarations"
+          }
+        ]
       },
       "Documents[0].DocumentClassifications[0].ClassId": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassId",
-        "uav:browseName": "nsu={server};ClassId",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassId",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassId",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;ClassId",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "ClassId",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "class ID"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Klassenidentifikator"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABH996#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABH996-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#classId"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "ExampleValue",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "02-04"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "Documents[0].DocumentClassifications[0].ClassificationSystem": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassificationSystem",
-        "uav:browseName": "nsu={server};ClassificationSystem",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassificationSystem",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassificationSystem",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;ClassificationSystem",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "ClassificationSystem",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "classification system"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Klassifizierungssystem"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABH997#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABH997-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#classificationSystem"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "ExampleValue",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "VDI2770:2020"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "Documents[0].DocumentIds": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds",
-        "uav:browseName": "nsu={server};DocumentIds",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;DocumentIds",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "DocumentIds",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document IDs"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Dokumentidentifikatoren"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABI501#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABI501-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIds"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/semanticIdListElement": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABI501#003/0173-1#01-AHF580#003"
+            }
+          ]
+        },
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]"
+          }
+        ]
       },
       "Documents[0].DocumentIds[0]": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds"
-        ],
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
-        "uav:index": 0
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds"
+        ],
+        "aas:Referable/idShort": "DocumentId",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document ID"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Dokumentidentifikator"
+          }
+        ],
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "This SubmodelElementCollection holds the information for a VDI 2770 Document entity"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABI501#003/0173-1#01-AHF580#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "0173-1#02-ABI501#003~0/0173-1#01-AHF580#003"
+              },
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABI501-003/0173-1-01-AHF580-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentId"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "uav:index": 0,
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentDomainId"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIdentifier"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIsPrimary"
+          }
+        ]
       },
       "Documents[0].DocumentIds[0].DocumentDomainId": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentDomainId",
-        "uav:browseName": "nsu={server};DocumentDomainId",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentDomainId",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentDomainId",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;DocumentDomainId",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "DocumentDomainId",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document domain ID"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Document Domain Identifikator"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABH994#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABH994-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentDomainId"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "ExampleValue",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "https://domain.com/..."
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "Documents[0].DocumentIds[0].DocumentIdentifier": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIdentifier",
-        "uav:browseName": "nsu={server};DocumentIdentifier",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIdentifier",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIdentifier",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;DocumentIdentifier",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "DocumentIdentifier",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document identifier"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Dokumentennummer"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-AAO099#004"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-AAO099-004"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIdentifier"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "ExampleValue",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "XF90-884"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "Documents[0].DocumentIds[0].DocumentIsPrimary": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIsPrimary",
-        "uav:browseName": "nsu={server};DocumentIsPrimary",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIsPrimary",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIsPrimary",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;DocumentIsPrimary",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "DocumentIsPrimary",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document is primary"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Dokument ist primär"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABH995#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABH995-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIsPrimary"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "ZeroToOne"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "ExampleValue",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "true"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Boolean"
+        }
       },
       "Documents[0].DocumentVersions": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions",
-        "uav:browseName": "nsu={server};DocumentVersions",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;DocumentVersions",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "DocumentVersions",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document versions"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Dokumentenversionen"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABI503#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABI503-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.handover_documentation:1.0.0#documentVersions"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/semanticIdListElement": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABI503#003/0173-1#01-AHF582#003"
+            }
+          ]
+        },
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+          }
+        ]
       },
       "Documents[0].DocumentVersions[0]": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions"
-        ],
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
-        "uav:index": 0
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions"
+        ],
+        "aas:Referable/idShort": "DocumentVersion",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document version"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Document version"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABI503#003/0173-1#01-AHF582#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "0173-1#02-ABI503#003~0/0173-1#01-AHF582#003"
+              },
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABI503-003/0173-1-01-AHF582-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.handover_documentation:1.0.0#DocumentVersion"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "uav:index": 0,
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Version"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Title"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Subtitle"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Description"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles"
+          }
+        ]
       },
       "Documents[0].DocumentVersions[0].Language": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language",
-        "uav:browseName": "nsu={server};Language",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;Language",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "Language",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Language"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Sprache"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-AAN468#008"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-AAN468-008"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.shared:3.1.0#languages"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "aas:SubmodelElementList/valueTypeListElement": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language[0]"
+          }
+        ]
       },
       "Documents[0].DocumentVersions[0].Language[0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language"
-        ],
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language"
+        ],
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "language"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "en (Englisch)"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-AAN468#008"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#Locale"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "ExampleValue",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "en"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Property/value": "en",
+        "aas:Property/valueId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#07-AAS045#003"
+            }
+          ]
+        },
         "uav:index": 0
       },
       "Documents[0].DocumentVersions[0].Version": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Version",
-        "uav:browseName": "nsu={server};Version",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Version",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Version",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;Version",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "Version",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Version"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Dokumentenversion"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-AAP003#005"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-AAP003-005"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#version"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "ZeroToOne"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "ExampleValue",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "V1.2"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "Documents[0].DocumentVersions[0].Title": {
         "@type": [
           "uav:object",
+          "aas:MultiLanguageProperty",
           "i4aas:AASMultiLanguagePropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Title",
-        "uav:browseName": "nsu={server};Title",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Title",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Title",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;Title",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "Title",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Title"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Dokumententitel"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABG940#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABG940-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#title"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "ExampleValue",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "Examplary title@en"
+          }
+        ]
       },
       "Documents[0].DocumentVersions[0].Subtitle": {
         "@type": [
           "uav:object",
+          "aas:MultiLanguageProperty",
           "i4aas:AASMultiLanguagePropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Subtitle",
-        "uav:browseName": "nsu={server};Subtitle",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Subtitle",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Subtitle",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;Subtitle",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "Subtitle",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Subtitle"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Untertitel"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABH998#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABH998-003"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#subtitle"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "ZeroToOne"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "ExampleValue",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "Examplary subtitle@en"
+          }
+        ]
       },
       "Documents[0].DocumentVersions[0].Description": {
         "@type": [
           "uav:object",
+          "aas:MultiLanguageProperty",
           "i4aas:AASMultiLanguagePropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Description",
-        "uav:browseName": "nsu={server};Description",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Description",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Description",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;Description",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "Description",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Description"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Dokumentenbeschreibung"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-AAN466#004"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-AAN466-004"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#description"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "ZeroToOne"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "ExampleValue",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "Abstract@en"
+          }
+        ]
       },
       "Documents[0].DocumentVersions[0].DigitalFiles": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles",
-        "uav:browseName": "nsu={server};DigitalFiles",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;DigitalFiles",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "DigitalFiles",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "digital files"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Digitale Dateien"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABK126#002"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://api.eclass-cdp.com/0173-1-02-ABK126-002"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#digtialFiles"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/File"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles[0]"
+          }
+        ]
       },
       "Documents[0].DocumentVersions[0].DigitalFiles[0]": {
         "@type": [
           "uav:object",
+          "aas:File",
           "i4aas:AASFileType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles"
-        ],
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles"
+        ],
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "digital files"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Name der spezifischen digitalen Datei@de"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABK126#002"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.shared:3.1.0#ResourceWithContentType"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "ExampleValue",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "docu_cecc_fullmanual_DE.PDF"
+          },
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/AllowedIdShort/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "AllowedIdShort",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "DigitalFile[\\d{2,3}]"
+          }
+        ],
+        "aas:File/contentType": "application/pdf",
         "uav:index": 0
       }
     },
     "links": [
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassName",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassName",
         "uav:refId": "i=47",
         "uav:refName": "ClassName"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassId",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassId",
         "uav:refId": "i=47",
         "uav:refName": "ClassId"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassificationSystem",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassificationSystem",
         "uav:refId": "i=47",
         "uav:refName": "ClassificationSystem"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications",
         "uav:refId": "i=47",
         "uav:refName": "DocumentClassifications"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentDomainId",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentDomainId",
         "uav:refId": "i=47",
         "uav:refName": "DocumentDomainId"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIdentifier",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIdentifier",
         "uav:refId": "i=47",
         "uav:refName": "DocumentIdentifier"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIsPrimary",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0].DocumentIsPrimary",
         "uav:refId": "i=47",
         "uav:refName": "DocumentIsPrimary"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds",
         "uav:refId": "i=47",
         "uav:refName": "DocumentIds"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language",
         "uav:refId": "i=47",
         "uav:refName": "Language"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Version",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Version",
         "uav:refId": "i=47",
         "uav:refName": "Version"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Title",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Title",
         "uav:refId": "i=47",
         "uav:refName": "Title"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Subtitle",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Subtitle",
         "uav:refId": "i=47",
         "uav:refName": "Subtitle"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Description",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Description",
         "uav:refId": "i=47",
         "uav:refName": "Description"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles",
         "uav:refId": "i=47",
         "uav:refName": "DigitalFiles"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions",
         "uav:refId": "i=47",
         "uav:refName": "DocumentVersions"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
+      }
+    ],
+    "aas:Referable/idShort": "HandoverDocumentation",
+    "aas:Referable/description": [
+      {
+        "@type": "aas:LangStringTextType",
+        "aas:AbstractLangString/language": "en",
+        "aas:AbstractLangString/text": "The Submodel defines a set meta data for the handover of documentation from the manufacturer to the operator for industrial equipment"
+      }
+    ],
+    "aas:Identifiable/administration": {
+      "@type": "aas:AdministrativeInformation",
+      "aas:AdministrativeInformation/version": "1",
+      "aas:AdministrativeInformation/revision": "0",
+      "aas:AdministrativeInformation/templateId": "https://admin-shell.io/idta-02035-2"
+    },
+    "aas:Identifiable/id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
+    "aas:HasKind/kind": {
+      "@id": "aas:ModellingKind/Template"
+    },
+    "aas:HasSemantics/semanticId": {
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ModelReference"
+      },
+      "aas:Reference/keys": [
+        {
+          "@type": "aas:Key",
+          "aas:Key/type": {
+            "@id": "aas:KeyTypes/Submodel"
+          },
+          "aas:Key/value": "0173-1#01-AHF578#003"
+        }
+      ]
+    },
+    "aas:HasSemantics/supplementalSemanticIds": [
+      {
+        "@type": "aas:Reference",
+        "aas:Reference/type": {
+          "@id": "aas:ReferenceTypes/ExternalReference"
+        },
+        "aas:Reference/keys": [
+          {
+            "@type": "aas:Key",
+            "aas:Key/type": {
+              "@id": "aas:KeyTypes/GlobalReference"
+            },
+            "aas:Key/value": "https://api.eclass-cdp.com/0173-1-01-AHF578-003"
+          }
+        ]
+      },
+      {
+        "@type": "aas:Reference",
+        "aas:Reference/type": {
+          "@id": "aas:ReferenceTypes/ExternalReference"
+        },
+        "aas:Reference/keys": [
+          {
+            "@type": "aas:Key",
+            "aas:Key/type": {
+              "@id": "aas:KeyTypes/GlobalReference"
+            },
+            "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.handover_documentation:1.0.0#HandoverDocumentation"
+          }
+        ]
+      }
+    ],
+    "aas:Submodel/submodelElements": [
+      {
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents"
+      }
+    ],
+    "aas:Referable/displayName": [
+      {
+        "@type": "aas:LangStringNameType",
+        "aas:AbstractLangString/language": "en",
+        "aas:AbstractLangString/text": "handover documentation"
       }
     ],
     "securityDefinitions": {

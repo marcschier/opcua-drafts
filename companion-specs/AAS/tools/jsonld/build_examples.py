@@ -33,12 +33,15 @@ TEMPLATES = os.path.join(AAS_DIR, "jsonld", ".templates")
 OUT_LD = os.path.join(AAS_DIR, "examples", "jsonld")
 OUT_WOT = os.path.join(AAS_DIR, "examples", "wot", "submodels")
 OUT_MIN = os.path.join(AAS_DIR, "examples", "wot", "minimal")
+RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 
 sys.path.insert(0, HERE)
 
 import wot_bridge  # noqa: E402
 from authored import (as_graph, author, load_context, lower_graph,  # noqa: E402
-                      read_back)
+                      read_back, term)
+from pyld import jsonld  # noqa: E402
+from rdflib import Literal  # noqa: E402
 from conformance import BASE, canonical  # noqa: E402
 from lift import Lifter, Ontology, Schema, serialize  # noqa: E402
 
@@ -151,7 +154,48 @@ def write_minimal_td(name, env, context_doc):
     return path
 
 
-def write_thing_descriptions(name, env):
+def aas_graph_of(tds, context_doc):
+    """The AAS triples a Thing Description carries, as N-Triples.
+
+    Everything outside the AAS vocabulary is discarded - the `uav` terms, the WoT
+    terms, the Thing's own members - leaving what the document says as an Asset
+    Administration Shell.
+
+    The remote Thing Description context is replaced by a local stub rather than
+    fetched, so the check runs offline. The stub defines only what is needed to
+    reach the nested nodes - `properties` as an index container - because a term
+    the context does not define is dropped, and dropping `properties` would drop
+    every element with it. Nothing the stub defines survives the filter.
+    """
+    stub = {"properties": {"@id": "https://example.invalid/wot#properties",
+                           "@container": "@index"},
+            "links": {"@id": "https://example.invalid/wot#links"},
+            "title": "https://example.invalid/wot#title",
+            "security": "https://example.invalid/wot#security",
+            "securityDefinitions": "https://example.invalid/wot#securityDefinitions"}
+    lines = []
+    for td in tds:
+        local = json.loads(json.dumps(td))
+        inline = [c for c in local["@context"] if isinstance(c, dict)]
+        merged = dict(stub)
+        for c in inline:
+            merged.update(c)
+        local["@context"] = merged
+        dataset = jsonld.to_rdf(local)
+        for quads in dataset.values():
+            for quad in quads:
+                predicate = quad["predicate"]["value"]
+                is_aas = predicate.startswith(wot_bridge.AAS_NS) or (
+                    predicate == RDF_TYPE
+                    and quad["object"]["value"].startswith(wot_bridge.AAS_NS))
+                if is_aas:
+                    lines.append("%s %s %s ." % (term(quad["subject"]),
+                                                 term(quad["predicate"]),
+                                                 term(quad["object"])))
+    return "\n".join(lines)
+
+
+def write_thing_descriptions(name, env, context_doc):
     """The same submodel as a Thing Description, with the WoT vocabulary added."""
     tds = wot_bridge.generate(env, "attype")
     want = wot_bridge.expected(env)
@@ -164,11 +208,38 @@ def write_thing_descriptions(name, env):
     for td in tds:
         td["securityDefinitions"] = {"nosec_sc": {"scheme": "nosec"}}
         td["security"] = "nosec_sc"
+
+    # The document has to be an AAS as well as a projection, or the `aas` prefix
+    # is declared and never used. Every AAS property *and every literal value*
+    # the reference lifting produces from the source submodels must be
+    # recoverable from the Thing Descriptions. Subjects are not compared: the
+    # Thing Description names its nodes by clause 5.3 and the lifting skolemizes
+    # them, so the two agree on what is said and not on what it is said about.
+    carried = as_graph(aas_graph_of(tds, context_doc))
+    expected_aas = as_graph(graph_of({"submodels": env.get("submodels") or []})[0])
+    lost_props = stated_properties(expected_aas) - stated_properties(carried)
+    if lost_props:
+        raise SystemExit(f"{name}: the Thing Description drops AAS properties: "
+                         f"{sorted(lost_props)[:5]}")
+    lost_values = stated_values(expected_aas) - stated_values(carried)
+    if lost_values:
+        raise SystemExit(f"{name}: the Thing Description drops {len(lost_values)} "
+                         f"AAS values, for example {sorted(lost_values)[:3]}")
+
     path = os.path.join(OUT_WOT, f"{name}.td.jsonld")
     with open(path, "w", encoding="utf-8", newline="\n") as f:
         json.dump(tds, f, indent=2, ensure_ascii=False)
         f.write("\n")
-    return path, len(want)
+    return path, len(want), len(carried)
+
+
+def stated_properties(graph):
+    return {str(p) for _, p, _ in graph}
+
+
+def stated_values(graph):
+    """Every literal the graph states, with the property that states it."""
+    return {(str(p), str(o)) for _, p, o in graph if isinstance(o, Literal)}
 
 
 def main():
@@ -201,9 +272,9 @@ def main():
             env = json.load(f)
         ld_path, triples = write_authored(name, env, context_doc)
         write_minimal_td(name, env, context_doc)
-        td_path, nodes = write_thing_descriptions(name, env)
+        td_path, nodes, aas_triples = write_thing_descriptions(name, env, context_doc)
         print(f"  {name:26s} {triples:5d} triples -> examples/jsonld/{os.path.basename(ld_path)}"
-              f"   {nodes:4d} nodes -> examples/wot/submodels/{os.path.basename(td_path)}")
+              f"   {nodes:4d} nodes + {aas_triples:5d} AAS triples -> examples/wot/submodels/{os.path.basename(td_path)}")
         written += 1
 
     print(f"\n{written} submodel(s), three files each: the AAS as pure JSON-LD, the same "

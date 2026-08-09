@@ -11,228 +11,1142 @@
     ],
     "@type": [
       "uav:object",
+      "aas:Submodel",
       "i4aas:AASSubmodelType"
     ],
+    "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
     "title": "CarbonFootprint",
     "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
-    "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
-    "uav:browseName": "nsu={server};CarbonFootprint",
+    "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
+    "uav:browseName": "nsu=https://example.com/aas/instances/;CarbonFootprint",
     "properties": {
       "ProductCarbonFootprints": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints",
-        "uav:browseName": "nsu={server};ProductCarbonFootprints",
-        "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;ProductCarbonFootprints",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "ProductCarbonFootprints",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Produkt CO2-Fußabdruck"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "product carbon footprints"
+          }
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Balance of greenhouse gas emissions along the entire life cycle of a product in a defined application and in relation to a defined unit of use."
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "https://admin-shell.io/idta/CarbonFootprint/ProductCarbonFootprints/1/0"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#CarbonFootprintBattery"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/semanticIdListElement": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "https://admin-shell.io/idta/CarbonFootprint/ProductCarbonFootprint/1/0"
+            }
+          ]
+        },
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+          }
+        ]
       },
       "ProductCarbonFootprints[0]": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints"
-        ],
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
-        "uav:index": 0
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints"
+        ],
+        "aas:Referable/idShort": "ProductCarbonFootprint",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Produkt CO2-Fußabdruck"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "product carbon footprint"
+          }
+        ],
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Balance of greenhouse gas emissions along the entire life cycle of a product in a defined application and in relation to a defined unit of use."
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "https://admin-shell.io/idta/CarbonFootprint/ProductCarbonFootprint/1/0"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#ProductCarbonFootprint"
+              }
+            ]
+          }
+        ],
+        "uav:index": 0,
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCO2eq"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].ReferenceImpactUnitForCalculation"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].QuantityOfMeasureForCalculation"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PerformanceClass"
+          },
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy"
+          }
+        ]
       },
       "ProductCarbonFootprints[0].PcfCalculationMethods": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods",
-        "uav:browseName": "nsu={server};PcfCalculationMethods",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;PcfCalculationMethods",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "PcfCalculationMethods",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Folgenabschätzungsmethoden"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "PCF calculation methods"
+          }
+        ],
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Normen, Standards, Verfahren zur Ermittlung der Treibhausgas-Emissionen eines Produkts"
+          },
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Standards, methods for determining the greenhouse gas emissions of a product.\n\nThis Value List is based on ECLASS 15 with IRDI 0173-1#09-AAO115#003. The full list can be found in Section 2.5 in \"Product Carbon Footprint 1.0 (IDTA-02023)\".\n"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "https://admin-shell.io/idta/CarbonFootprint/PcfCalculationMethods/1/0"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.carbon_footprint:1.0.0#pcfCalculationMethods"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/semanticIdListElement": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABG854#003"
+            }
+          ]
+        },
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "aas:SubmodelElementList/valueTypeListElement": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods[0]"
+          }
+        ]
       },
       "ProductCarbonFootprints[0].PcfCalculationMethods[0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods"
-        ],
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods"
+        ],
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "PcfCalculationMethod",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Folgenabschätzungsmethode / Berechnungsmethode"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "PCF calculation method"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABG854#003"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
         "uav:index": 0
       },
       "ProductCarbonFootprints[0].PcfCO2eq": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCO2eq",
-        "uav:browseName": "nsu={server};PcfCO2eq",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCO2eq",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCO2eq",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;PcfCO2eq",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "PcfCO2eq",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "CO2-Äquivalent"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "PCF co 2 eq"
+          }
+        ],
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "DIN DKE Spec 99100 chapter reference: 6.3.2"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABG855#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.carbon_footprint:1.0.0#pcfCo2eq"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Decimal"
+        }
       },
       "ProductCarbonFootprints[0].ReferenceImpactUnitForCalculation": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].ReferenceImpactUnitForCalculation",
-        "uav:browseName": "nsu={server};ReferenceImpactUnitForCalculation",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].ReferenceImpactUnitForCalculation",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].ReferenceImpactUnitForCalculation",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;ReferenceImpactUnitForCalculation",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "ReferenceImpactUnitForCalculation",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Referenzeinheit für die Berechnung"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "reference impact unit for calculation"
+          }
+        ],
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "If a normalized product carbon footprint (PCF) value is provided, the reference value for calculation should be a specific unit such as 'kWh'. \nIf the total PCF value is provided the reference value for calculation should be 'piece'."
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABG856#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.carbon_footprint:1.0.0#referenceImpactUnitForCalculation"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "ProductCarbonFootprints[0].QuantityOfMeasureForCalculation": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].QuantityOfMeasureForCalculation",
-        "uav:browseName": "nsu={server};QuantityOfMeasureForCalculation",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].QuantityOfMeasureForCalculation",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].QuantityOfMeasureForCalculation",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;QuantityOfMeasureForCalculation",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "QuantityOfMeasureForCalculation",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Mengenangabe für die Berechnung"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "quantity of measure for calculation"
+          }
+        ],
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "If a normalized product carbon footprint (PCF) value is provided, the quantity of measure for calculation should be 1.\nIf the total PCF value is provided the quantity of measure for calculation should be 1."
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABG857#003"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.carbon_footprint:1.0.0#quantityOfMeasureForCalculation"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Double"
+        }
       },
       "ProductCarbonFootprints[0].LifeCyclePhases": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases",
-        "uav:browseName": "nsu={server};LifeCyclePhases",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;LifeCyclePhases",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "LifeCyclePhases",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Lebenszyklusphasen"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "life cycle phases"
+          }
+        ],
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "List of life cycle stages of the product according to the quantification requirements of the standard to which the PCF carbon footprint statement refers.\n\nThe string value in the value list is based on DIN DKE SPEC 99100: \"A1 - raw material supply (and upstream production)\" (6.3.5 required lify cycle mapping), \"A3 - production\" (6.3.4 Contribution of main product production/manufacturing lifecycle stage), \"A4 - transport to final destination\" (6.3.5 Contribution of distribution lifecycle stage), \"C3 - recycling, waste treatment\" (6.3.6 Contribution of end of life and recycling lifecycle stage)\n\nPlease note that the model should always contain at least one Product Carbon Footprint entry that reflects the total PCF value (including all life cycle phases) of the battery.\n"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "https://admin-shell.io/idta/CarbonFootprint/LifeCyclePhases/1/0"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:samm:io.admin-shell.idta.carbon_footprint:1.0.0#lifeCyclePhases"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "0173-1#02-ABG858#003"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/semanticIdListElement": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABG858#004"
+            }
+          ]
+        },
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "aas:SubmodelElementList/valueTypeListElement": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases[0]"
+          }
+        ]
       },
       "ProductCarbonFootprints[0].LifeCyclePhases[0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases"
-        ],
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases"
+        ],
+        "aas:Referable/category": "PARAMETER",
+        "aas:Referable/idShort": "LifeCyclePhase",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Lebenszyklusphase"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "life cycle phase"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "0173-1#02-ABG858#004"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
         "uav:index": 0
       },
       "ProductCarbonFootprints[0].PerformanceClass": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PerformanceClass",
-        "uav:browseName": "nsu={server};PerformanceClass",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PerformanceClass",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PerformanceClass",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;PerformanceClass",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "PerformanceClass",
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#performanceClass"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "performance class"
+          }
+        ]
       },
       "ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy",
-        "uav:browseName": "nsu={server};WebLinkToPublicCarbonFootprintStudy",
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;WebLinkToPublicCarbonFootprintStudy",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "WebLinkToPublicCarbonFootprintStudy",
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#webLinkToPublicCarbonFootprintStudy"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "aas:SubmodelElementList/valueTypeListElement": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "web link to public carbon footprint study"
+          }
+        ],
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy[0]"
+          }
+        ]
       },
       "ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy[0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy"
-        ],
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy"
+        ],
+        "aas:Referable/idShort": "DocumentIdentifier",
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Document identifier of the document (e.g., PDF) that can be found in the HandoverDocumentation Submodel.\n\nDIN DKE Spec 99100 chapter reference: 6.3.8 "
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "0173-1#02-AAO099#004"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Property/value": "XF90-884",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document identifier"
+          }
+        ],
         "uav:index": 0
       }
     },
     "links": [
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods",
         "uav:refId": "i=47",
         "uav:refName": "PcfCalculationMethods"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCO2eq",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCO2eq",
         "uav:refId": "i=47",
         "uav:refName": "PcfCO2eq"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].ReferenceImpactUnitForCalculation",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].ReferenceImpactUnitForCalculation",
         "uav:refId": "i=47",
         "uav:refName": "ReferenceImpactUnitForCalculation"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].QuantityOfMeasureForCalculation",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].QuantityOfMeasureForCalculation",
         "uav:refId": "i=47",
         "uav:refName": "QuantityOfMeasureForCalculation"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases",
         "uav:refId": "i=47",
         "uav:refName": "LifeCyclePhases"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PerformanceClass",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PerformanceClass",
         "uav:refId": "i=47",
         "uav:refName": "PerformanceClass"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy",
         "uav:refId": "i=47",
         "uav:refName": "WebLinkToPublicCarbonFootprintStudy"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
+      }
+    ],
+    "aas:Referable/idShort": "CarbonFootprint",
+    "aas:Referable/displayName": [
+      {
+        "@type": "aas:LangStringNameType",
+        "aas:AbstractLangString/language": "de",
+        "aas:AbstractLangString/text": "C02 Footprint"
+      },
+      {
+        "@type": "aas:LangStringNameType",
+        "aas:AbstractLangString/language": "en",
+        "aas:AbstractLangString/text": "carbon footprint"
+      }
+    ],
+    "aas:Referable/description": [
+      {
+        "@type": "aas:LangStringTextType",
+        "aas:AbstractLangString/language": "en",
+        "aas:AbstractLangString/text": "The Submodel provides the means to access the Carbon Footprint of the asset."
+      }
+    ],
+    "aas:Identifiable/administration": {
+      "@type": "aas:AdministrativeInformation",
+      "aas:AdministrativeInformation/version": "1",
+      "aas:AdministrativeInformation/revision": "0",
+      "aas:AdministrativeInformation/templateId": "https://admin-shell.io/idta-02023-1-0"
+    },
+    "aas:Identifiable/id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
+    "aas:HasKind/kind": {
+      "@id": "aas:ModellingKind/Template"
+    },
+    "aas:HasSemantics/semanticId": {
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "aas:Reference/keys": [
+        {
+          "@type": "aas:Key",
+          "aas:Key/type": {
+            "@id": "aas:KeyTypes/GlobalReference"
+          },
+          "aas:Key/value": "https://admin-shell.io/idta/CarbonFootprint/CarbonFootprint/1/0"
+        }
+      ]
+    },
+    "aas:HasSemantics/supplementalSemanticIds": [
+      {
+        "@type": "aas:Reference",
+        "aas:Reference/type": {
+          "@id": "aas:ReferenceTypes/ExternalReference"
+        },
+        "aas:Reference/keys": [
+          {
+            "@type": "aas:Key",
+            "aas:Key/type": {
+              "@id": "aas:KeyTypes/GlobalReference"
+            },
+            "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#CarbonFootprintBattery"
+          }
+        ]
+      }
+    ],
+    "aas:Submodel/submodelElements": [
+      {
+        "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints"
       }
     ],
     "securityDefinitions": {

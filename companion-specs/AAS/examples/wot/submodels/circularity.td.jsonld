@@ -11,653 +11,3196 @@
     ],
     "@type": [
       "uav:object",
+      "aas:Submodel",
       "i4aas:AASSubmodelType"
     ],
+    "@id": "https://w3id.org/aas-jsonld/id/4255fd58458d6665154663b3f08bcb10a37805e87e4cc35853f2e3aca26cc50b",
     "title": "Circularity",
     "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
-    "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
-    "uav:browseName": "nsu={server};Circularity",
+    "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
+    "uav:browseName": "nsu=https://example.com/aas/instances/;Circularity",
     "properties": {
       "DismantlingAndRemovalInformation": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation",
-        "uav:browseName": "nsu={server};DismantlingAndRemovalInformation",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+        "@id": "https://w3id.org/aas-jsonld/id/9f1c38f9b2277c3f02fecbf7cdbc2036ec101b739a47cf0625ee454e4889971e",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;DismantlingAndRemovalInformation",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "DismantlingAndRemovalInformation",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "dismantling and removal information"
+          }
         ],
-        "uav:modellingRule": "Optional"
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#dismantlingAndRemovalInformation"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/orderRelevant": false,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "aas:SubmodelElementList/valueTypeListElement": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/56269b14c1e8386fa7413d176d6fbb75017b2d50695e06a826e820c99f2e2313"
+          }
+        ]
       },
       "DismantlingAndRemovalInformation[0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation"
-        ],
+        "@id": "https://w3id.org/aas-jsonld/id/56269b14c1e8386fa7413d176d6fbb75017b2d50695e06a826e820c99f2e2313",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation"
+        ],
+        "aas:Referable/idShort": "DocumentIdentifier",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document identifier"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
         "uav:index": 0
       },
       "SparePartSources": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources",
-        "uav:browseName": "nsu={server};SparePartSources",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+        "@id": "https://w3id.org/aas-jsonld/id/c6a9e57e295eb1f8ea3b1ba8f67b34286ff1469df5c8dfd94af79b960527ac3c",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;SparePartSources",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "SparePartSources",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "spare part sources"
+          }
         ],
-        "uav:modellingRule": "Optional"
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#sparePartSources"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/orderRelevant": false,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/0ec02a0e6a0cf909969d5b54061a67ed403d821d047a71dd0b58d40c12e0cecd"
+          }
+        ]
       },
       "SparePartSources[0]": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources"
-        ],
+        "@id": "https://w3id.org/aas-jsonld/id/0ec02a0e6a0cf909969d5b54061a67ed403d821d047a71dd0b58d40c12e0cecd",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
-        "uav:index": 0
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources"
+        ],
+        "aas:Referable/idShort": "SparePartSupplier",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "spare part supplier"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#SparePartSupplier"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "ZeroToMany"
+          }
+        ],
+        "uav:index": 0,
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/4126f38679787ab17e5b975f12658535310adec2c8d4251a7b36945f13dda5b0"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/e3b690af41a8b8d756e476bc1fc5007de1b125f49c74b96f9369d2a06668dc23"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/aeebe1de862db35e66667774aa6f0be09c331d2a0f6d62140a78abfc80ffa870"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/3569b8e6fbee9d34f0d38fd9cc8131d2eb54f07f23d9a156e8bfda6cba4932ca"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/cdec8e5f93c77dcb23823f5179d8146af6ac36cdfa24d75b4fae7d2e0ea3eec5"
+          }
+        ]
       },
       "SparePartSources[0].NameOfSupplier": {
         "@type": [
           "uav:object",
+          "aas:MultiLanguageProperty",
           "i4aas:AASMultiLanguagePropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].NameOfSupplier",
-        "uav:browseName": "nsu={server};NameOfSupplier",
+        "@id": "https://w3id.org/aas-jsonld/id/4126f38679787ab17e5b975f12658535310adec2c8d4251a7b36945f13dda5b0",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].NameOfSupplier",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;NameOfSupplier",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "NameOfSupplier",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "name of supplier"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#company"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-AAW001#001"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ]
       },
       "SparePartSources[0].AddressOfSupplier": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier",
-        "uav:browseName": "nsu={server};AddressOfSupplier",
+        "@id": "https://w3id.org/aas-jsonld/id/e3b690af41a8b8d756e476bc1fc5007de1b125f49c74b96f9369d2a06668dc23",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;AddressOfSupplier",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "AddressOfSupplier",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "address of supplier"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#addressOfSupplier"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://schema.org/PostalAddress"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/231b0eef8bac383d85d147582518668186a161c42a3ee8d0a17b80a67d2a2d2e"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/0b53a681906ad6ff80fa4baf0fda1ee3f18ef75b765d39c15796989d65edd650"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/5e7db72038b266519592ed151223f267ff9dc3db5e27c973606a0f32a59bf782"
+          }
+        ]
       },
       "SparePartSources[0].AddressOfSupplier.NationalCode": {
         "@type": [
           "uav:object",
+          "aas:MultiLanguageProperty",
           "i4aas:AASMultiLanguagePropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.NationalCode",
-        "uav:browseName": "nsu={server};NationalCode",
+        "@id": "https://w3id.org/aas-jsonld/id/231b0eef8bac383d85d147582518668186a161c42a3ee8d0a17b80a67d2a2d2e",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.NationalCode",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;NationalCode",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "NationalCode",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Länderkürzel"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "national code"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#nationalCode"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-AAO134#002"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ]
       },
       "SparePartSources[0].AddressOfSupplier.PostalCode": {
         "@type": [
           "uav:object",
+          "aas:MultiLanguageProperty",
           "i4aas:AASMultiLanguagePropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.PostalCode",
-        "uav:browseName": "nsu={server};PostalCode",
+        "@id": "https://w3id.org/aas-jsonld/id/0b53a681906ad6ff80fa4baf0fda1ee3f18ef75b765d39c15796989d65edd650",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.PostalCode",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;PostalCode",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "PostalCode",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "postal code"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#postalCode"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://schema.org/postalCode"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-AAO129#002"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ]
       },
       "SparePartSources[0].AddressOfSupplier.Street": {
         "@type": [
           "uav:object",
+          "aas:MultiLanguageProperty",
           "i4aas:AASMultiLanguagePropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.Street",
-        "uav:browseName": "nsu={server};Street",
+        "@id": "https://w3id.org/aas-jsonld/id/5e7db72038b266519592ed151223f267ff9dc3db5e27c973606a0f32a59bf782",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.Street",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;Street",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "Street",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "street"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Straße"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#street"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "https://schema.org/streetAddress"
+              }
+            ]
+          },
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-AAO128#002"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ]
       },
       "SparePartSources[0].EmailAddressOfSupplier": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier",
-        "uav:browseName": "nsu={server};EmailAddressOfSupplier",
+        "@id": "https://w3id.org/aas-jsonld/id/aeebe1de862db35e66667774aa6f0be09c331d2a0f6d62140a78abfc80ffa870",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;EmailAddressOfSupplier",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "EmailAddressOfSupplier",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "email address of supplier"
+          },
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "de",
+            "aas:AbstractLangString/text": "Email"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#email"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-AAQ836#005"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/90e5ecd39dec1361eedcbdf42c65cf795ef7a0688fe437e8ecb007a59f7ddfa0"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/64c0953f08c60f0832e44834551f1f92a4c2a703b8d936b6155dcebe587cb083"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/c28ed9e9f8e5f02a143c33f819e77dbd09dd3e23974f7842429454d4f88e1c2f"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/1298135012c9791a08520d7d9028c37154abfec66b5cb1832959984480b5dd5c"
+          }
+        ]
       },
       "SparePartSources[0].EmailAddressOfSupplier.EmailAddress": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.EmailAddress",
-        "uav:browseName": "nsu={server};EmailAddress",
+        "@id": "https://w3id.org/aas-jsonld/id/90e5ecd39dec1361eedcbdf42c65cf795ef7a0688fe437e8ecb007a59f7ddfa0",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.EmailAddress",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;EmailAddress",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "EmailAddress",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "email address"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#emailAddress"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-AAO198#002"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "SparePartSources[0].EmailAddressOfSupplier.PublicKey": {
         "@type": [
           "uav:object",
+          "aas:MultiLanguageProperty",
           "i4aas:AASMultiLanguagePropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.PublicKey",
-        "uav:browseName": "nsu={server};PublicKey",
+        "@id": "https://w3id.org/aas-jsonld/id/64c0953f08c60f0832e44834551f1f92a4c2a703b8d936b6155dcebe587cb083",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.PublicKey",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;PublicKey",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "PublicKey",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "public key"
+          }
+        ],
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Public part of an unsymmetrical key pair to sign or encrypt text or messages."
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#publicKey"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-AAO200#002"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "ZeroToOne"
+          }
+        ]
       },
       "SparePartSources[0].EmailAddressOfSupplier.TypeOfEmailAddress": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.TypeOfEmailAddress",
-        "uav:browseName": "nsu={server};TypeOfEmailAddress",
+        "@id": "https://w3id.org/aas-jsonld/id/c28ed9e9f8e5f02a143c33f819e77dbd09dd3e23974f7842429454d4f88e1c2f",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.TypeOfEmailAddress",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;TypeOfEmailAddress",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "TypeOfEmailAddress",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "type of email address"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfEmailAddress"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-AAO199#003"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "ZeroToOne"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "SparePartSources[0].EmailAddressOfSupplier.TypeOfPublicKey": {
         "@type": [
           "uav:object",
+          "aas:MultiLanguageProperty",
           "i4aas:AASMultiLanguagePropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.TypeOfPublicKey",
-        "uav:browseName": "nsu={server};TypeOfPublicKey",
+        "@id": "https://w3id.org/aas-jsonld/id/1298135012c9791a08520d7d9028c37154abfec66b5cb1832959984480b5dd5c",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.TypeOfPublicKey",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;TypeOfPublicKey",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "TypeOfPublicKey",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "type of public key"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfPublicKey"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-AAO201#002"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "ZeroToOne"
+          }
+        ]
       },
       "SparePartSources[0].SupplierWebAddress": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].SupplierWebAddress",
-        "uav:browseName": "nsu={server};SupplierWebAddress",
+        "@id": "https://w3id.org/aas-jsonld/id/3569b8e6fbee9d34f0d38fd9cc8131d2eb54f07f23d9a156e8bfda6cba4932ca",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].SupplierWebAddress",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;SupplierWebAddress",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "SupplierWebAddress",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "supplier web address"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#addressOfAdditionalLink"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-AAQ326#002"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "SparePartSources[0].Components": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components",
-        "uav:browseName": "nsu={server};Components",
+        "@id": "https://w3id.org/aas-jsonld/id/cdec8e5f93c77dcb23823f5179d8146af6ac36cdfa24d75b4fae7d2e0ea3eec5",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;Components",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "Components",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "components"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#components"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/orderRelevant": false,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/d14d5ed0273b3df2f6f9e74796689c3ac79cb11702299590275aa58c56269a4d"
+          }
+        ]
       },
       "SparePartSources[0].Components[0]": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components"
-        ],
+        "@id": "https://w3id.org/aas-jsonld/id/d14d5ed0273b3df2f6f9e74796689c3ac79cb11702299590275aa58c56269a4d",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
-        "uav:index": 0
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components"
+        ],
+        "aas:Referable/idShort": "Component",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Component"
+          }
+        ],
+        "aas:Referable/description": [
+          {
+            "@type": "aas:LangStringTextType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "Components available at supplier"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Component"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "uav:index": 0,
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/ee7135edbbb0ac0b3cf347ab27cd30235621a4280776e882470b3b30d62088e4"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/817a219a18c8af90c1c467bcf513be850d85bd3c6f6beadf3797797d927261b2"
+          }
+        ]
       },
       "SparePartSources[0].Components[0].PartName": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0].PartName",
-        "uav:browseName": "nsu={server};PartName",
+        "@id": "https://w3id.org/aas-jsonld/id/ee7135edbbb0ac0b3cf347ab27cd30235621a4280776e882470b3b30d62088e4",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0].PartName",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;PartName",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0]"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "PartName",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "part name"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partName"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "SparePartSources[0].Components[0].PartNumber": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0].PartNumber",
-        "uav:browseName": "nsu={server};PartNumber",
+        "@id": "https://w3id.org/aas-jsonld/id/817a219a18c8af90c1c467bcf513be850d85bd3c6f6beadf3797797d927261b2",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0].PartNumber",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;PartNumber",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0]"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "PartNumber",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "part number"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partNumber"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "RecycledContentInformation": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation",
-        "uav:browseName": "nsu={server};RecycledContentInformation",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+        "@id": "https://w3id.org/aas-jsonld/id/631f55b829a93f049cf03cfed090407aaf8f9c0ae95ee3b1bf17ca04f6ea0837",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;RecycledContentInformation",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "RecycledContentInformation",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "recycled content information"
+          }
         ],
-        "uav:modellingRule": "Optional"
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledContent"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/orderRelevant": false,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/5a89f7a9630cdf962c63161cb14ccdbda830b55066e1df817310bc7c58815ca0"
+          }
+        ]
       },
       "RecycledContentInformation[0]": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation"
-        ],
+        "@id": "https://w3id.org/aas-jsonld/id/5a89f7a9630cdf962c63161cb14ccdbda830b55066e1df817310bc7c58815ca0",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
-        "uav:index": 0
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation"
+        ],
+        "aas:Referable/idShort": "RecycledContent",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "recycled content"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#RecycledContent"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "uav:index": 0,
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/e2d6298f1cc2db4b19029269f92a5f6d4c61e8d75a975976e3e6958938e18464"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/91a07d2567fef3454bc2edd54883b8ebdb6798dffdf65cc2a1cde45d3e94f1d4"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/9b419f7164c5377fc0ad118ac61b35729d40b4931f1782ad847a1f0ae9320225"
+          }
+        ]
       },
       "RecycledContentInformation[0].PreConsumerShare": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].PreConsumerShare",
-        "uav:browseName": "nsu={server};PreConsumerShare",
+        "@id": "https://w3id.org/aas-jsonld/id/e2d6298f1cc2db4b19029269f92a5f6d4c61e8d75a975976e3e6958938e18464",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].PreConsumerShare",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;PreConsumerShare",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "PreConsumerShare",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "pre consumer share"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#preConsumerShare"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "ZeroToOne"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Float"
+        }
       },
       "RecycledContentInformation[0].RecycledMaterial": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].RecycledMaterial",
-        "uav:browseName": "nsu={server};RecycledMaterial",
+        "@id": "https://w3id.org/aas-jsonld/id/91a07d2567fef3454bc2edd54883b8ebdb6798dffdf65cc2a1cde45d3e94f1d4",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].RecycledMaterial",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;RecycledMaterial",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "RecycledMaterial",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "recycled material"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledMaterial"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        }
       },
       "RecycledContentInformation[0].PostConsumerShare": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].PostConsumerShare",
-        "uav:browseName": "nsu={server};PostConsumerShare",
+        "@id": "https://w3id.org/aas-jsonld/id/9b419f7164c5377fc0ad118ac61b35729d40b4931f1782ad847a1f0ae9320225",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].PostConsumerShare",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;PostConsumerShare",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "PostConsumerShare",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "post consumer share"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#postConsumerShare"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "ZeroToOne"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Float"
+        }
       },
       "SafetyMeasures": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures",
-        "uav:browseName": "nsu={server};SafetyMeasures",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+        "@id": "https://w3id.org/aas-jsonld/id/c68763789d5833199080bdd7bfdb651165115d029633d0fad574f5c11fb9ad31",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;SafetyMeasures",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "SafetyMeasures",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "safety measures"
+          }
         ],
-        "uav:modellingRule": "Optional"
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyMeasures"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/731314a06224e8113f0cae491635226662438ba5e499e5a0e3802186d0feb0ae"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/8edcd844a75a1a17dfcea7bfaa7ee57b77e96808663049441c54bf2453591925"
+          }
+        ]
       },
       "SafetyMeasures.SafetyInstructions": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions",
-        "uav:browseName": "nsu={server};SafetyInstructions",
+        "@id": "https://w3id.org/aas-jsonld/id/731314a06224e8113f0cae491635226662438ba5e499e5a0e3802186d0feb0ae",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;SafetyInstructions",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "SafetyInstructions",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "safety instructions"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyInstructions"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/orderRelevant": false,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "aas:SubmodelElementList/valueTypeListElement": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/99cf352d50ef55b68ffe5949447180b2eb15d73beee5c0df7cecf5259f7845f1"
+          }
+        ]
       },
       "SafetyMeasures.SafetyInstructions[0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions"
-        ],
+        "@id": "https://w3id.org/aas-jsonld/id/99cf352d50ef55b68ffe5949447180b2eb15d73beee5c0df7cecf5259f7845f1",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions"
+        ],
+        "aas:Referable/idShort": "DocumentIdentifier",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document identifier"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
         "uav:index": 0
       },
       "SafetyMeasures.ExtinguishingAgents": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents",
-        "uav:browseName": "nsu={server};ExtinguishingAgents",
+        "@id": "https://w3id.org/aas-jsonld/id/8edcd844a75a1a17dfcea7bfaa7ee57b77e96808663049441c54bf2453591925",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;ExtinguishingAgents",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "ExtinguishingAgents",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "extinguishing agents"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#extinguishingAgents"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/orderRelevant": false,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "aas:SubmodelElementList/valueTypeListElement": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/ff86578a3c3e1a87dc125301b7862764764680fbd6678ecc1b9d1f4c63966dfb"
+          }
+        ]
       },
       "SafetyMeasures.ExtinguishingAgents[0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents"
-        ],
+        "@id": "https://w3id.org/aas-jsonld/id/ff86578a3c3e1a87dc125301b7862764764680fbd6678ecc1b9d1f4c63966dfb",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents"
+        ],
+        "aas:Referable/idShort": "ExtinguishingAgent",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "extinguishing agent"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#ExtinguishingAgent"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
         "uav:index": 0
       },
       "EndOfLifeInformation": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation",
-        "uav:browseName": "nsu={server};EndOfLifeInformation",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+        "@id": "https://w3id.org/aas-jsonld/id/b8d173f67fa7345a9436bc7de2122d898696906ed89002bee68f02c9e692ca0b",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;EndOfLifeInformation",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "EndOfLifeInformation",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "end of life information"
+          }
         ],
-        "uav:modellingRule": "Optional"
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#endOfLifeInformation"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/03a43ac2e5ea5451d137bc1259715dde992f055d437559ecca2c163c1575fc11"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/eb7a7ff797444ad05a4e910d2493dca00fed01499fe50d43ef2eb73946c7c43f"
+          },
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/6210e139723a4848927962951bbcbb9ccd420cfddff35fdd6a3dc8db831737d2"
+          }
+        ]
       },
       "EndOfLifeInformation.WastePrevention": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention",
-        "uav:browseName": "nsu={server};WastePrevention",
+        "@id": "https://w3id.org/aas-jsonld/id/03a43ac2e5ea5451d137bc1259715dde992f055d437559ecca2c163c1575fc11",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;WastePrevention",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "WastePrevention",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "waste prevention"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#wastePrevention"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-ABL855#001"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/orderRelevant": false,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "aas:SubmodelElementList/valueTypeListElement": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/e3ebea58414bbd3c7aa9a1cb605fc5542ff7d0dc84ffe916e320755184f23fe9"
+          }
+        ]
       },
       "EndOfLifeInformation.WastePrevention[0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention"
-        ],
+        "@id": "https://w3id.org/aas-jsonld/id/e3ebea58414bbd3c7aa9a1cb605fc5542ff7d0dc84ffe916e320755184f23fe9",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention"
+        ],
+        "aas:Referable/idShort": "DocumentIdentifier",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document identifier"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
         "uav:index": 0
       },
       "EndOfLifeInformation.SeparateCollection": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection",
-        "uav:browseName": "nsu={server};SeparateCollection",
+        "@id": "https://w3id.org/aas-jsonld/id/eb7a7ff797444ad05a4e910d2493dca00fed01499fe50d43ef2eb73946c7c43f",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;SeparateCollection",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "SeparateCollection",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "separate collection"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#separateCollection"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-ABL854#001"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/orderRelevant": false,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "aas:SubmodelElementList/valueTypeListElement": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/3c6a044d3fda26117cf522e0225b9469ce5e7ac202b9a6eaee5cbc5f5523adfd"
+          }
+        ]
       },
       "EndOfLifeInformation.SeparateCollection[0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection"
-        ],
+        "@id": "https://w3id.org/aas-jsonld/id/3c6a044d3fda26117cf522e0225b9469ce5e7ac202b9a6eaee5cbc5f5523adfd",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection"
+        ],
+        "aas:Referable/idShort": "DocumentIdentifier",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document identifier"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
         "uav:index": 0
       },
       "EndOfLifeInformation.InformationOnCollection": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection",
-        "uav:browseName": "nsu={server};InformationOnCollection",
+        "@id": "https://w3id.org/aas-jsonld/id/6210e139723a4848927962951bbcbb9ccd420cfddff35fdd6a3dc8db831737d2",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;InformationOnCollection",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation"
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "InformationOnCollection",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "information on collection"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#informationOnCollection"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-ABL856#001"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:SubmodelElementList/orderRelevant": false,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "aas:SubmodelElementList/valueTypeListElement": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://w3id.org/aas-jsonld/id/cf31224c73cc4ee80c75c312a5d2937e5515615fc663c0c60da631c37deaef4b"
+          }
+        ]
       },
       "EndOfLifeInformation.InformationOnCollection[0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection"
-        ],
+        "@id": "https://w3id.org/aas-jsonld/id/cf31224c73cc4ee80c75c312a5d2937e5515615fc663c0c60da631c37deaef4b",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection"
+        ],
+        "aas:Referable/idShort": "DocumentIdentifier",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "document identifier"
+          }
+        ],
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier"
+            }
+          ]
+        },
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
         "uav:index": 0
       },
       "RenewableContent": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RenewableContent",
-        "uav:browseName": "nsu={server};RenewableContent",
-        "uav:componentOf": [
-          "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+        "@id": "https://w3id.org/aas-jsonld/id/4140591987ceedfc6b90b562a9b5665fbb58c5d3a3ee2c7f78f1dc8ce63da24b",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RenewableContent",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;RenewableContent",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "RenewableContent",
+        "aas:Referable/displayName": [
+          {
+            "@type": "aas:LangStringNameType",
+            "aas:AbstractLangString/language": "en",
+            "aas:AbstractLangString/text": "renewable content"
+          }
         ],
-        "uav:modellingRule": "Optional"
+        "aas:HasSemantics/semanticId": {
+          "@type": "aas:Reference",
+          "aas:Reference/type": {
+            "@id": "aas:ReferenceTypes/ExternalReference"
+          },
+          "aas:Reference/keys": [
+            {
+              "@type": "aas:Key",
+              "aas:Key/type": {
+                "@id": "aas:KeyTypes/GlobalReference"
+              },
+              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#renewableContent"
+            }
+          ]
+        },
+        "aas:HasSemantics/supplementalSemanticIds": [
+          {
+            "@type": "aas:Reference",
+            "aas:Reference/type": {
+              "@id": "aas:ReferenceTypes/ExternalReference"
+            },
+            "aas:Reference/keys": [
+              {
+                "@type": "aas:Key",
+                "aas:Key/type": {
+                  "@id": "aas:KeyTypes/GlobalReference"
+                },
+                "aas:Key/value": "urn:irdi:0173-1#02-ABL867#001"
+              }
+            ]
+          }
+        ],
+        "aas:Qualifiable/qualifiers": [
+          {
+            "@type": "aas:Qualifier",
+            "aas:HasSemantics/semanticId": {
+              "@type": "aas:Reference",
+              "aas:Reference/type": {
+                "@id": "aas:ReferenceTypes/ExternalReference"
+              },
+              "aas:Reference/keys": [
+                {
+                  "@type": "aas:Key",
+                  "aas:Key/type": {
+                    "@id": "aas:KeyTypes/GlobalReference"
+                  },
+                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+                }
+              ]
+            },
+            "aas:Qualifier/kind": {
+              "@id": "aas:QualifierKind/TemplateQualifier"
+            },
+            "aas:Qualifier/type": "SMT/Cardinality",
+            "aas:Qualifier/valueType": {
+              "@id": "aas:DataTypeDefXsd/String"
+            },
+            "aas:Qualifier/value": "One"
+          }
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Float"
+        }
       }
     },
     "links": [
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation[0]",
         "uav:refId": "i=47",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].NameOfSupplier",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].NameOfSupplier",
         "uav:refId": "i=47",
         "uav:refName": "NameOfSupplier"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.NationalCode",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.NationalCode",
         "uav:refId": "i=47",
         "uav:refName": "NationalCode"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.PostalCode",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.PostalCode",
         "uav:refId": "i=47",
         "uav:refName": "PostalCode"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.Street",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier.Street",
         "uav:refId": "i=47",
         "uav:refName": "Street"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].AddressOfSupplier",
         "uav:refId": "i=47",
         "uav:refName": "AddressOfSupplier"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.EmailAddress",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.EmailAddress",
         "uav:refId": "i=47",
         "uav:refName": "EmailAddress"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.PublicKey",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.PublicKey",
         "uav:refId": "i=47",
         "uav:refName": "PublicKey"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.TypeOfEmailAddress",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.TypeOfEmailAddress",
         "uav:refId": "i=47",
         "uav:refName": "TypeOfEmailAddress"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.TypeOfPublicKey",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier.TypeOfPublicKey",
         "uav:refId": "i=47",
         "uav:refName": "TypeOfPublicKey"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].EmailAddressOfSupplier",
         "uav:refId": "i=47",
         "uav:refName": "EmailAddressOfSupplier"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].SupplierWebAddress",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].SupplierWebAddress",
         "uav:refId": "i=47",
         "uav:refName": "SupplierWebAddress"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0].PartName",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0].PartName",
         "uav:refId": "i=47",
         "uav:refName": "PartName"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0].PartNumber",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0].PartNumber",
         "uav:refId": "i=47",
         "uav:refName": "PartNumber"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components[0]",
         "uav:refId": "i=47",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0].Components",
         "uav:refId": "i=47",
         "uav:refName": "Components"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SparePartSources[0]",
         "uav:refId": "i=47",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].PreConsumerShare",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].PreConsumerShare",
         "uav:refId": "i=47",
         "uav:refName": "PreConsumerShare"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].RecycledMaterial",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].RecycledMaterial",
         "uav:refId": "i=47",
         "uav:refName": "RecycledMaterial"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].PostConsumerShare",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0].PostConsumerShare",
         "uav:refId": "i=47",
         "uav:refName": "PostConsumerShare"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#RecycledContentInformation[0]",
         "uav:refId": "i=47",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions[0]",
         "uav:refId": "i=47",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.SafetyInstructions",
         "uav:refId": "i=47",
         "uav:refName": "SafetyInstructions"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents[0]",
         "uav:refId": "i=47",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#SafetyMeasures.ExtinguishingAgents",
         "uav:refId": "i=47",
         "uav:refName": "ExtinguishingAgents"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention[0]",
         "uav:refId": "i=47",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.WastePrevention",
         "uav:refId": "i=47",
         "uav:refName": "WastePrevention"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection[0]",
         "uav:refId": "i=47",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.SeparateCollection",
         "uav:refId": "i=47",
         "uav:refName": "SeparateCollection"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection[0]",
         "uav:refId": "i=47",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection",
+        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#EndOfLifeInformation.InformationOnCollection",
         "uav:refId": "i=47",
         "uav:refName": "InformationOnCollection"
+      }
+    ],
+    "aas:Referable/idShort": "Circularity",
+    "aas:Referable/description": [
+      {
+        "@type": "aas:LangStringTextType",
+        "aas:AbstractLangString/language": "en",
+        "aas:AbstractLangString/text": "Dismantling information (including at least: exploded diagrams of the battery system/pack showing the location of battery cells; disassembly sequences; type and number of fastening techniques to be unlocked; tools required for disassembly; warnings if risk of damaging parts exists; amount of cells used and layout); part numbers for components and contact details of sources for replacement spares; safety measures \n   \n   (Annex XIII (2b-d)); usable extinguishing agent (Annex VI, Part A(9)). Bibliography includes the Digital Battery Passport Guideline."
+      }
+    ],
+    "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
+    "aas:Identifiable/administration": {
+      "@type": "aas:AdministrativeInformation",
+      "aas:AdministrativeInformation/version": "1",
+      "aas:AdministrativeInformation/revision": "0",
+      "aas:AdministrativeInformation/templateId": "https://admin-shell.io/idta-02035-7"
+    },
+    "aas:HasKind/kind": {
+      "@id": "aas:ModellingKind/Template"
+    },
+    "aas:HasSemantics/semanticId": {
+      "@type": "aas:Reference",
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      },
+      "aas:Reference/keys": [
+        {
+          "@type": "aas:Key",
+          "aas:Key/type": {
+            "@id": "aas:KeyTypes/GlobalReference"
+          },
+          "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity"
+        }
+      ]
+    },
+    "aas:Submodel/submodelElements": [
+      {
+        "@id": "https://w3id.org/aas-jsonld/id/9f1c38f9b2277c3f02fecbf7cdbc2036ec101b739a47cf0625ee454e4889971e"
+      },
+      {
+        "@id": "https://w3id.org/aas-jsonld/id/c6a9e57e295eb1f8ea3b1ba8f67b34286ff1469df5c8dfd94af79b960527ac3c"
+      },
+      {
+        "@id": "https://w3id.org/aas-jsonld/id/631f55b829a93f049cf03cfed090407aaf8f9c0ae95ee3b1bf17ca04f6ea0837"
+      },
+      {
+        "@id": "https://w3id.org/aas-jsonld/id/c68763789d5833199080bdd7bfdb651165115d029633d0fad574f5c11fb9ad31"
+      },
+      {
+        "@id": "https://w3id.org/aas-jsonld/id/b8d173f67fa7345a9436bc7de2122d898696906ed89002bee68f02c9e692ca0b"
+      },
+      {
+        "@id": "https://w3id.org/aas-jsonld/id/4140591987ceedfc6b90b562a9b5665fbb58c5d3a3ee2c7f78f1dc8ce63da24b"
+      }
+    ],
+    "aas:Referable/displayName": [
+      {
+        "@type": "aas:LangStringNameType",
+        "aas:AbstractLangString/language": "en",
+        "aas:AbstractLangString/text": "Circularity"
       }
     ],
     "securityDefinitions": {

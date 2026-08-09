@@ -11,308 +11,476 @@
     ],
     "@type": [
       "uav:object",
+      "aas:Submodel",
       "i4aas:AASSubmodelType"
     ],
+    "@id": "https://fabrikam.com/ids/sm/ordering",
     "title": "Ordering",
     "id": "https://fabrikam.com/ids/sm/ordering",
-    "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering",
-    "uav:browseName": "nsu={server};Ordering",
+    "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering",
+    "uav:browseName": "nsu=https://example.com/aas/instances/;Ordering",
     "properties": {
       "OrderMatters": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters",
-        "uav:browseName": "nsu={server};OrderMatters",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/ordering#OrderMatters",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderMatters",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;OrderMatters",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "OrderMatters",
+        "aas:SubmodelElementList/orderRelevant": true,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "aas:SubmodelElementList/valueTypeListElement": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#OrderMatters[0]"
+          },
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#OrderMatters[1]"
+          },
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#OrderMatters[2]"
+          }
+        ]
       },
       "OrderMatters[0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters"
-        ],
+        "@id": "https://fabrikam.com/ids/sm/ordering#OrderMatters[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderMatters[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderMatters"
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Property/value": "third",
         "uav:index": 0
       },
       "OrderMatters[1]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters[1]",
-        "uav:browseName": "nsu={server};1",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters"
-        ],
+        "@id": "https://fabrikam.com/ids/sm/ordering#OrderMatters[1]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderMatters[1]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;1",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderMatters"
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Property/value": "first",
         "uav:index": 1
       },
       "OrderMatters[2]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters[2]",
-        "uav:browseName": "nsu={server};2",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters"
-        ],
+        "@id": "https://fabrikam.com/ids/sm/ordering#OrderMatters[2]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderMatters[2]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;2",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderMatters"
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Property/value": "second",
         "uav:index": 2
       },
       "OrderDoesNotMatter": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter",
-        "uav:browseName": "nsu={server};OrderDoesNotMatter",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;OrderDoesNotMatter",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "OrderDoesNotMatter",
+        "aas:SubmodelElementList/orderRelevant": false,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[0]"
+          },
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[1]"
+          },
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[2]"
+          }
+        ]
       },
       "OrderDoesNotMatter[0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter"
-        ],
+        "@id": "https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter"
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Int"
+        },
+        "aas:Property/value": "9",
         "uav:index": 0
       },
       "OrderDoesNotMatter[1]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[1]",
-        "uav:browseName": "nsu={server};1",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter"
-        ],
+        "@id": "https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[1]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[1]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;1",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter"
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Int"
+        },
+        "aas:Property/value": "8",
         "uav:index": 1
       },
       "OrderDoesNotMatter[2]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[2]",
-        "uav:browseName": "nsu={server};2",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter"
-        ],
+        "@id": "https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[2]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[2]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;2",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter"
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/Int"
+        },
+        "aas:Property/value": "7",
         "uav:index": 2
       },
       "NestedLists": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists",
-        "uav:browseName": "nsu={server};NestedLists",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;NestedLists",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "NestedLists",
+        "aas:SubmodelElementList/orderRelevant": true,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/SubmodelElementList"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists[0]"
+          },
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists[1]"
+          }
+        ]
       },
       "NestedLists[0]": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists"
-        ],
+        "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
-        "uav:index": 0
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists"
+        ],
+        "aas:SubmodelElementList/orderRelevant": true,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "uav:index": 0,
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists[0][0]"
+          },
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists[0][1]"
+          }
+        ]
       },
       "NestedLists[0][0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0][0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0]"
-        ],
+        "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists[0][0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[0][0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[0]"
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Property/value": "a0",
         "uav:index": 0
       },
       "NestedLists[0][1]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0][1]",
-        "uav:browseName": "nsu={server};1",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0]"
-        ],
+        "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists[0][1]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[0][1]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;1",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[0]"
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Property/value": "a1",
         "uav:index": 1
       },
       "NestedLists[1]": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[1]",
-        "uav:browseName": "nsu={server};1",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists"
-        ],
+        "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists[1]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[1]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;1",
         "uav:modellingRule": "Optional",
-        "uav:index": 1
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists"
+        ],
+        "aas:SubmodelElementList/orderRelevant": true,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/Property"
+        },
+        "uav:index": 1,
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists[1][0]"
+          }
+        ]
       },
       "NestedLists[1][0]": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[1][0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[1]"
-        ],
+        "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists[1][0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[1][0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[1]"
+        ],
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Property/value": "b0",
         "uav:index": 0
       },
       "CollectionsInsideAList": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementList",
           "i4aas:AASSubmodelElementListType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList",
-        "uav:browseName": "nsu={server};CollectionsInsideAList",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering"
-        ],
-        "uav:modellingRule": "Optional"
+        "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;CollectionsInsideAList",
+        "uav:modellingRule": "Optional",
+        "aas:Referable/idShort": "CollectionsInsideAList",
+        "aas:SubmodelElementList/orderRelevant": true,
+        "aas:SubmodelElementList/typeValueListElement": {
+          "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
+        },
+        "aas:SubmodelElementList/value": [
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]"
+          }
+        ]
       },
       "CollectionsInsideAList[0]": {
         "@type": [
           "uav:object",
+          "aas:SubmodelElementCollection",
           "i4aas:AASSubmodelElementCollectionType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
-        "uav:browseName": "nsu={server};0",
-        "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList"
-        ],
+        "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
         "uav:modellingRule": "Optional",
-        "uav:index": 0
+        "uav:componentOf": [
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList"
+        ],
+        "uav:index": 0,
+        "aas:SubmodelElementCollection/value": [
+          {
+            "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0].Named"
+          }
+        ]
       },
       "CollectionsInsideAList[0].Named": {
         "@type": [
           "uav:object",
+          "aas:Property",
           "i4aas:AASPropertyType"
         ],
-        "uav:id": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0].Named",
-        "uav:browseName": "nsu={server};Named",
+        "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0].Named",
+        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0].Named",
+        "uav:browseName": "nsu=https://example.com/aas/instances/;Named",
+        "uav:modellingRule": "Optional",
         "uav:componentOf": [
-          "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]"
+          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]"
         ],
-        "uav:modellingRule": "Optional"
+        "aas:Referable/idShort": "Named",
+        "aas:Property/valueType": {
+          "@id": "aas:DataTypeDefXsd/String"
+        },
+        "aas:Property/value": "inside a list member"
       }
     },
     "links": [
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderMatters[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters[1]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderMatters[1]",
         "uav:refId": "i=49",
         "uav:refName": "1"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderMatters[2]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderMatters[2]",
         "uav:refId": "i=49",
         "uav:refName": "2"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[0]",
         "uav:refId": "i=47",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[1]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[1]",
         "uav:refId": "i=47",
         "uav:refName": "1"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[2]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[2]",
         "uav:refId": "i=47",
         "uav:refName": "2"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0][0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[0][0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0][1]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[0][1]",
         "uav:refId": "i=49",
         "uav:refName": "1"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[1][0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[1][0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#NestedLists[1]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#NestedLists[1]",
         "uav:refId": "i=49",
         "uav:refName": "1"
       },
       {
         "rel": "ua:HasComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0].Named",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0].Named",
         "uav:refId": "i=47",
         "uav:refName": "Named"
       },
       {
         "rel": "ua:HasOrderedComponent",
-        "href": "nsu={server};s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
+        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
         "uav:refId": "i=49",
         "uav:refName": "0"
+      }
+    ],
+    "aas:Identifiable/id": "https://fabrikam.com/ids/sm/ordering",
+    "aas:Referable/idShort": "Ordering",
+    "aas:HasKind/kind": {
+      "@id": "aas:ModellingKind/Instance"
+    },
+    "aas:Submodel/submodelElements": [
+      {
+        "@id": "https://fabrikam.com/ids/sm/ordering#OrderMatters"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists"
+      },
+      {
+        "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList"
       }
     ]
   }
