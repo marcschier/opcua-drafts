@@ -25,9 +25,10 @@ serialization to RDF, and a representation of the information the RDF serializat
 Two gaps motivate it, both measured over the 2 424 readable example pairs published with the pinned
 release rather than argued:
 
-- **The RDF serialization cannot represent 175 documents (7.2%) faithfully.** It discards the order
-  of every multi-valued property, including `Reference/keys`, where the key sequence *is* the
-  reference path. Those 175 documents come back different from how they went in.
+- **The RDF serialization cannot guarantee 308 documents (12.7%).** It discards the order of every
+  multi-valued property, including `Reference/keys`, where the key sequence *is* the reference path.
+  Those documents carry an array of two or more members, so no lowering can restore them from the
+  core graph; a given permutation may still come back right.
 - **An `id` that is not a legal IRI has no defined subject term.** An IRDI such as
   `0173-1#02-AAO677#002` cannot be an IRI, and no published example exercises the case.
 
@@ -35,10 +36,10 @@ release rather than argued:
 
 | Claim | Result |
 |---|---|
-| `AASLD-RdfCompatible` | 2 402 of 2 424 (99.1%) isomorphic to the published Turtle |
+| `AASLD-RdfCompatible` | 2 402 of 2 424 (99.1%): 41 isomorphic outright, 2 361 under the root `idShort` allowance |
 | `AASLD-JsonRoundTrip`, with the ordering graph | 2 424 of 2 424 (100%) |
-| `AASLD-JsonRoundTrip`, core graph alone | 2 249 of 2 424 (92.8%) |
-| the context of clause 5, alone | 62.1% of the graph; 0 documents exactly |
+| structurally order-bearing, so not guaranteed by the core graph | 308 of 2 424 (12.7%) |
+| the context of clause 5, alone | 72.9% of the core graph's predicates and non-blank objects; 0 documents exactly |
 
 The context is a convenience layer, not the conformance mechanism, and the specification says which
 three things it cannot do and why a JSON-LD processor rejects each attempt.

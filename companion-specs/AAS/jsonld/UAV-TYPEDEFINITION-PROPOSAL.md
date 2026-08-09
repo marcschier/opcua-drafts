@@ -29,11 +29,17 @@ Measured over the AAS fixtures, with everything else in the vocabulary doing its
 | nodes produced | 61 of 61 | 61 of 61 |
 | NodeIds correct | 61 | 61 |
 | BrowseNames correct | 61 | 61 |
-| ReferenceTypes correct | 61 | 61 |
+| containment ReferenceTypes correct | 17 of 17 compared | 17 of 17 |
 | TypeDefinitions correct | 61 | **0** |
 
 Every other fact the vocabulary carries already arrives intact. The type binding is the whole of the
 gap, which is why the proposal is one term rather than a mechanism.
+
+Only 17 of the 61 nodes are reached by a reference the comparison covers; the remaining 44 are
+top-level elements of a submodel and carry none. The comparison is between the projection rules of
+Annex F and the reference materializer, both implemented alongside the AAS specification. It
+establishes that those rules are self-consistent and complete for the fixtures. It is not a test of
+a WoT Connectivity implementation, and none is possible until this term exists.
 
 ## The term
 

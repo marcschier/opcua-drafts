@@ -97,8 +97,9 @@ metamodel gives the order meaning:
 Ordering is therefore carried in the enrichment graph, by an index predicate rather than an
 `rdf:List`, so the published SHACL and ordinary SPARQL both continue to work.
 
-**Measured cost.** 175 of 2 424 corpus documents (7.2%) cannot be restored from the core graph and
-are restored exactly once the ordering graph is present. See the result table below.
+**Measured cost.** 308 of 2 424 corpus documents (12.7%) carry an array of two or more members, so
+the core graph cannot guarantee them; all 2 424 are restored exactly once the ordering graph is
+present. See the result table below.
 
 The loss is not confined to the cases one would guess. Every array-valued property is affected,
 including multi-language values, whose array order the metamodel's own JSON serialization preserves.
@@ -168,20 +169,20 @@ rather than arguing it. The generated `aas.context.jsonld` uses every relevant J
 with different property IRIs, property-scoped contexts to reach objects that carry no discriminator —
 and still reaches only part of the graph.
 
-Over 200 corpus documents, against the lifting:
+Over the 2 424 readable corpus documents, against the lifting:
 
 | | |
 |---|---|
-| predicate/object pairs reproduced | **4 575 of 7 366 (62.1%)** |
-| documents whose graph matches exactly | **0** |
+| predicate/object pairs reproduced | **22 327 of 30 614 (72.9%)** |
+| documents whose graph matches exactly | **0 of 2 424** |
 
 Three causes, each measured, each a clause the lifting has to carry:
 
 | Cause | Cases affected |
 |---|---|
-| root subject is a blank node, not an IRI | 198 of 198 |
-| nested object has no `rdf:type` | 194 |
-| enumeration value left as a compact IRI | 145 |
+| root subject is a blank node, not an IRI | 2 424 of 2 424 |
+| enumeration value left as a compact IRI | 2 291 |
+| nested object has no `rdf:type` | 1 385 |
 
 **The root subject.** The normative RDF uses an `Identifiable`'s `id` twice, as the subject IRI and
 as an `aas:Identifiable/id` literal. A context maps a key to one or the other, never both, so
@@ -195,8 +196,10 @@ forbids outright: a processor rejects the context with *"keywords cannot be over
 **The enumeration spelling.** `DataTypeDefXsd` is written `xs:int` in JSON and is the individual
 `aas:DataTypeDefXsd/Int` in RDF. A term containing a colon is read as a compact IRI, and JSON-LD
 requires it to expand to its own definition, so aliasing it is rejected with *"term in form of IRI
-must expand to definition"*. All 30 `DataTypeDefXsd` values are affected; the other ten
-enumerations, whose spellings carry no colon, alias correctly.
+must expand to definition"*. All 30 `DataTypeDefXsd` values are affected. The other ten enumerations alias correctly, but only
+because each spelling is defined inside the scoped context of the property that admits it: at the
+top level, seventeen spellings collide with a class of the same name, and `Instance` belongs to two
+enumerations at once.
 
 The context is therefore published as a convenience layer for JSON-LD-native consumers, and the
 lifting is the conformance mechanism.
@@ -209,9 +212,9 @@ Running `tools/conformance.py` over the pinned corpus.
 
 | | cases |
 |---|---|
-| isomorphic outright | 41 |
-| isomorphic once the root `idShort` is accounted for (D1) | 2 361 |
-| **conforming** | **2 402 of 2 424 (99.1%)** |
+| isomorphic to the core graph of clause 2 | 41 |
+| isomorphic once the root `idShort` allowance is applied (D1) | 2 361 |
+| **conforming to `AASLD-RdfCompatible`** | **2 402 of 2 424 (99.1%)** |
 | differing — generator divergence (D7) | 22 |
 | unreadable (D6) | 2 |
 
@@ -222,17 +225,22 @@ shuffling the measurement records the serializer's sort order rather than the gr
 | | cases |
 |---|---|
 | restored **with** the ordering graph | **2 424 of 2 424 (100%)** |
-| restored from the **core graph alone** | 2 249 of 2 424 (92.8%) |
-| restored **only** with the ordering graph | **175 (7.2%)** |
+| **structurally order-bearing, so not guaranteed by the core graph** | **308 of 2 424 (12.7%)** |
+| restored from the core graph under every one of ten permutations | 2 117 |
+| failed under at least one permutation | 307 |
 
-Those 175 documents are what defect D2 costs. They are not exotic: they are ordinary documents with
+Those 308 documents are what defect D2 costs. They are not exotic: they are ordinary documents with
 a multi-key `Reference`, an ordered `SubmodelElementList`, or a multi-language value with more than
 one entry. The normative RDF serialization cannot express them faithfully, and the enrichment graph
 recovers every one.
 
 This is the measurement the specification rests on. It is also the answer to the question of whether
-the existing RDF serialization plus a framing tool would have been enough: for 92.8% of documents it
-would, and for the rest it would silently return a different document from the one that went in.
+the existing RDF serialization plus a framing tool would have been enough: for 87.3% of documents it
+would, and for the rest it may silently return a different document from the one that went in.
+
+The first version of this measurement shuffled the triples with one fixed seed and reported 175. The
+figure moved by six percentage points across seeds, so it described a permutation rather than the
+corpus. The structural count and a ten-permutation union agree to within one case.
 
 ## Reporting
 

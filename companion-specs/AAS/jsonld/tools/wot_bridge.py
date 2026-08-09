@@ -46,11 +46,6 @@ UA = "http://opcfoundation.org/UA/"
 # The ObjectType each metamodel class materializes as, from clause 6. Read from
 # the round-trip reference implementation so the two cannot disagree.
 ELEMENT_TYPES = dict(rt.ELEMENT_TYPES)
-ROOT_TYPES = {
-    "Submodel": "AASSubmodelType",
-    "AssetAdministrationShell": "AASType",
-    "ConceptDescription": "AASConceptDescriptionType",
-}
 
 # Draft NodeIds of the I4AAS ObjectTypes, from Opc.Ua.I4AAS.NodeIds.csv.
 TYPE_NODEIDS = {}
@@ -263,11 +258,15 @@ def main():
     print(f"  missing   : {len(missing)}")
     print(f"  unexpected: {len(extra)}")
     print(f"  differing : {len(differing)}")
+    compared_refs = sum(1 for k in set(want) & set(got)
+                        if want[k].get("Reference") or got[k].get("Reference"))
+    print(f"  of which a containment ReferenceType was compared on: {compared_refs}")
     for key, field, w, g in differing[:6]:
         print(f"    {key}\n      {field}: expected {w}, got {g}")
     for key in missing[:4]:
         print(f"    missing: {key}")
-    print("\nThis compares the documented projection rules against the reference materializer.\n"
+    print("\nScope: submodels and their elements. Shells and concept descriptions are not compared.\n"
+          "This compares the documented projection rules against the reference materializer.\n"
           "Both sides are implemented here, so it demonstrates that the rules of Annex F are\n"
           "self-consistent and complete for these fixtures. It is not a test of any WoT\n"
           "Connectivity implementation, and Annex F is informative for that reason.")

@@ -50,6 +50,11 @@ IDSHORT = AAS + "Referable/idShort"
 # differences the lifting is responsible for.
 BASE = "https://example.org/aas/"
 
+# Permutations tried for the core-graph round trip. One shuffle measures one
+# permutation, and the published figure moved by six percentage points across
+# seeds, so a single seed reports an accident rather than a property.
+SEEDS = (20260809, 1, 2, 3, 5, 8, 13, 21, 12345, 99991)
+
 
 def load_expected(path):
     g = Graph()
@@ -118,21 +123,22 @@ def canonical(doc):
     return doc
 
 
-def round_trip(jpath, with_order):
+def round_trip(jpath, with_order, seed=20260809):
     """Lift then lower, and report whether the source document came back.
 
     The triples are shuffled before lowering. RDF is a set, so a consumer gets no
     order guarantee, and a lowering that recovered an array's order from the
     order the triples happened to arrive in would be measuring the serializer
-    rather than the graph. Shuffling with a fixed seed makes the run repeatable
-    while removing that accident.
+    rather than the graph. One shuffle measures one permutation, so the caller
+    varies the seed; see `order_sensitive` for the structural figure, which does
+    not depend on sampling at all.
     """
     with open(jpath, encoding="utf-8") as f:
         source = json.load(f)
     lifter = Lifter(ONTOLOGY, BASE, "linked" if with_order else "core", schema=SCHEMA)
     sink = lifter.lift(source)
     core = parse_nt(serialize(sink, with_graphs=False))
-    random.Random(20260809).shuffle(core)
+    random.Random(seed).shuffle(core)
     order = parse_nt("\n".join(f"{s} {p} {o} ." for s, p, o, _ in sink.quads)) if with_order else ()
     low = Lowerer(ONTOLOGY, SCHEMA)
     low.load(core, order)
@@ -141,6 +147,28 @@ def round_trip(jpath, with_order):
         if collection in source:
             source[collection] = sorted(source[collection], key=lambda n: n.get("id", ""))
     return canonical(source) == canonical(result), source, result
+
+
+def order_sensitive(jpath):
+    """Whether the core graph can guarantee this document's arrays at all.
+
+    A document carries an array of two or more members, or it does not. Where it
+    does, the core graph does not represent that array's order and no lowering can
+    guarantee it: a particular permutation may happen to come back right, which is
+    why a shuffle-based figure varies with the seed and understates the
+    population. This is the structural answer and does not sample.
+    """
+    with open(jpath, encoding="utf-8") as f:
+        source = json.load(f)
+
+    def walk(node):
+        if isinstance(node, dict):
+            return any(walk(v) for v in node.values())
+        if isinstance(node, list):
+            return len(node) > 1 or any(walk(v) for v in node)
+        return False
+
+    return walk(source)
 
 
 def main():
@@ -163,7 +191,7 @@ def main():
         source = "vendored fixtures"
 
     passed, d1, failed, errored, ordered = 0, 0, [], [], 0
-    rt_with, rt_without, rt_err = 0, 0, 0
+    rt_with, rt_without, rt_err, rt_structural = 0, 0, 0, 0
     order_only = []
     for case, jpath, tpath in cases:
         try:
@@ -189,32 +217,39 @@ def main():
             else:
                 failed.append((case, expected, actual))
 
-        # The round trip, run twice: with the ordering graph the enrichment
-        # profile emits, and without it. The difference is what the upstream
-        # serialization loses, measured rather than asserted.
+        # The round trip. With the ordering graph it must always succeed. Without
+        # it, whether a document survives depends on which permutation the
+        # consumer happens to see, so several are tried and the structural figure
+        # is reported beside them.
         try:
             ok_with, _, _ = round_trip(jpath, with_order=True)
-            ok_without, _, _ = round_trip(jpath, with_order=False)
+            core_ok = all(round_trip(jpath, with_order=False, seed=s)[0] for s in SEEDS)
+            structural = order_sensitive(jpath)
         except Exception:  # noqa: BLE001
             rt_err += 1
             continue
         rt_with += ok_with
-        rt_without += ok_without
-        if ok_with and not ok_without:
+        rt_without += core_ok
+        if structural:
+            rt_structural += 1
+        if ok_with and not core_ok:
             order_only.append(case)
 
     total = len(cases)
     print(f"source: {source}")
     print(f"cases: {total}")
     print("\nAASLD-RdfCompatible (base supplied per D3)")
-    print(f"  isomorphic outright                      : {passed}")
+    print(f"  isomorphic to the core graph of clause 2 : {passed}")
     print(f"  isomorphic once the root idShort is set  : {d1}   <- corpus deviation D1")
     print(f"  differing                                : {len(failed)}")
     print(f"  errored                                  : {len(errored)}")
     print("\nAASLD-JsonRoundTrip")
     print(f"  restored with the ordering graph         : {rt_with}")
-    print(f"  restored from the core graph alone       : {rt_without}")
-    print(f"  restored ONLY with ordering              : {len(order_only)}   <- what D2 costs")
+    print(f"  restored from the core graph alone,")
+    print(f"    under every one of {len(SEEDS)} permutations       : {rt_without}")
+    print(f"  failed under at least one permutation    : {len(order_only)}")
+    print(f"  structurally order-bearing               : {rt_structural}"
+          f"   <- what the core graph cannot guarantee")
     print(f"  errored                                  : {rt_err}")
     print("\nAASLD-Linked")
     print(f"  cases carrying an ordering graph: {ordered}")

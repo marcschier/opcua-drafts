@@ -186,6 +186,10 @@ class Schema:
 # Terms
 # ---------------------------------------------------------------------------
 _IRI_OK = re.compile(r"^[A-Za-z][A-Za-z0-9+.\-]*:[^\s<>\"{}|\\^`]*$")
+# RFC 3986 relative-ref: a path, optional query, optional single fragment, with
+# no scheme and no character an IRI reference may not carry. An IRDI fails it on
+# the second `#`; `something#frag` passes, and is resolved against the base.
+_RELATIVE_OK = re.compile(r"^[^\s<>\"{}|\\^`:]*(?:\?[^\s<>\"{}|\\^`#]*)?(?:#[^\s<>\"{}|\\^`#]*)?$")
 
 
 def is_absolute_iri(value: str) -> bool:
@@ -195,6 +199,11 @@ def is_absolute_iri(value: str) -> bool:
     `0173-1#02-AAO677#002` is not one, however inviting it looks.
     """
     return bool(_IRI_OK.match(value)) and value.count("#") <= 1
+
+
+def is_relative_reference(value: str) -> bool:
+    """Whether the identifier is a legal RFC 3986 relative reference."""
+    return bool(value) and bool(_RELATIVE_OK.match(value)) and value.count("#") <= 1
 
 
 def skolem(identifier: str) -> str:
@@ -255,12 +264,18 @@ class Lifter:
 
     # -- subject terms ------------------------------------------------------
     def subject_for(self, identifier: str) -> str:
+        """Clause 2.2, in order.
+
+        The three rules are disjoint and are applied as written. An identifier is
+        never percent-encoded on the way in: the RDF mapping uses `id` verbatim,
+        so encoding it would produce a subject that cannot match the upstream
+        graph, and the encoding would not be idempotent.
+        """
         if is_absolute_iri(identifier):
             return iri(identifier)
-        if _IRI_OK.match(identifier) or "#" in identifier or " " in identifier:
-            return iri(skolem(identifier))
-        # A relative reference: resolve against the required base (defect D3).
-        return iri(urllib.parse.urljoin(self.base, urllib.parse.quote(identifier, safe="/:@")))
+        if is_relative_reference(identifier):
+            return iri(urllib.parse.urljoin(self.base, identifier))
+        return iri(skolem(identifier))
 
     # -- values -------------------------------------------------------------
     def enum_member(self, enum_name: str, value: str) -> str:
@@ -367,6 +382,9 @@ def main():
     ap.add_argument("input")
     ap.add_argument("--base", default="https://example.org/aas/")
     ap.add_argument("--profile", choices=("core", "linked"), default="core")
+    ap.add_argument("--order-out",
+                    help="write the ordering graph here, as N-Triples, so that lower.py --order "
+                         "can consume it; the core graph then goes to stdout alone")
     ap.add_argument("--no-root-idshort", action="store_true",
                     help="suppress the root idShort, to compare against the upstream corpus (D1)")
     args = ap.parse_args()
@@ -375,7 +393,15 @@ def main():
         doc = json.load(f)
     lifter = Lifter(Ontology(), args.base, args.profile,
                     emit_root_idshort=not args.no_root_idshort)
-    sys.stdout.write(serialize(lifter.lift(doc)))
+    sink = lifter.lift(doc)
+    if args.order_out:
+        with open(args.order_out, "w", encoding="utf-8", newline="\n") as f:
+            f.write("\n".join(sorted(f"{s} {p} {o} ." for s, p, o, _ in sink.quads)))
+            if sink.quads:
+                f.write("\n")
+        sys.stdout.write(serialize(sink, with_graphs=False))
+    else:
+        sys.stdout.write(serialize(sink))
     return 0
 
 

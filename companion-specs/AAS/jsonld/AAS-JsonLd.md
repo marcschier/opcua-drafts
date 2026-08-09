@@ -112,8 +112,8 @@ A conforming implementation **MUST NOT** require any other change to the JSON do
 particular it **MUST NOT** require a member to be renamed, added, removed or reordered.
 
 The RDF graph a JSON-LD representation denotes is the graph the lifting of clause 2 produces. A
-JSON-LD processor applying the context of clause 5 produces a subset of that graph; clause 5 states
-which part.
+JSON-LD processor applying the context of clause 5 produces part of that graph; clause 5 states
+which part it does not produce.
 
 ## 2 Lifting (normative)
 
@@ -276,7 +276,14 @@ The context is a JSON-LD 1.1 context. It:
   property IRI of clause 2.4;
 - defines property-scoped contexts, which resolve the member names of a class the JSON mapping does
   not discriminate;
-- defines the JSON spelling of every enumeration value whose spelling does not contain `:`.
+- defines the JSON spelling of every enumeration value whose spelling does not contain `:`, inside
+  the scoped context of each property whose range is that enumeration.
+
+An enumeration spelling is **not** defined at the top level of the context. Seventeen spellings are
+also the names of discriminated classes - `Submodel` is a `KeyTypes` member and a class - and a
+top-level definition of one silently replaces the other. `Instance` is a member of two
+enumerations, so a single top-level definition could only mean one of them. Scoping each spelling to
+the property that admits it removes both problems.
 
 A JSON-LD processor applying the context alone does **not** produce the graph of clause 2. It does
 not produce:
@@ -291,7 +298,7 @@ not produce:
 An implementation claiming a conformance unit of clause 6 **MUST** implement clauses 2 to 4. It
 **MUST NOT** rely on the context alone.
 
-Annex C reports how much of the graph the context produces.
+Annex C reports how much of the core graph's predicates and non-blank objects the context produces.
 
 ## 6 Conformance (normative)
 
@@ -300,7 +307,7 @@ The three conformance units are independent. An implementation **MAY** claim any
 
 | Unit | Requires |
 |---|---|
-| `AASLD-RdfCompatible` | For every AAS JSON document, the core graph of clause 2 is isomorphic to the graph the RDF mapping of IDTA-01001 Part 1 produces from the same document, given the same base IRI. |
+| `AASLD-RdfCompatible` | For every AAS JSON document, the core graph of clause 2 is isomorphic to the graph the RDF mapping of IDTA-01001 Part 1 produces from the same document, given the same base IRI, **or** differs from it only by the `aas:Referable/idShort` triple of a root Identifiable. The allowance is necessary because the published examples do not agree with each other on that member; Annex B states it and Annex C reports the two cases separately. |
 | `AASLD-JsonRoundTrip` | For every AAS JSON document, lifting per clause 2 with the ordering graph of clause 3 and lowering per clause 4 produces the source document. Members of the three top-level collections may be reordered; no other difference is permitted. |
 | `AASLD-Linked` | The ordering graph of clause 3 is produced. |
 
@@ -334,6 +341,15 @@ as the subject term. Applied to an IRDI this produces a term RFC 3986 does not p
 parser rejects. Clause 2.2 rule 3 defines a subject term for that case. No published example
 exercises it.
 
+**The root `idShort` allowance of clause 6.** For 2 361 of the 2 424 readable example pairs the
+published JSON carries an `idShort` on the root `Identifiable` for which the published Turtle has no
+`aas:Referable/idShort` triple. Clause 2.4 requires the triple, so the lifting emits it and the two
+graphs differ by exactly that. `AASLD-RdfCompatible` therefore admits this one difference and
+nothing else. Where the root carries no `idShort` — 41 of the pairs — no allowance is needed and the
+graphs are isomorphic outright. The deviation is in the published examples rather than in the
+mapping rules: the `idShortOverPattern` cases, where `idShort` is the subject of the test, do carry
+the triple.
+
 `UPSTREAM-DEFECTS.md`, beside this document, records these and the further defects found in the
 upstream artefacts while this document was prepared, with the evidence for each.
 
@@ -347,8 +363,14 @@ pinned upstream release, of which 2 424 are readable.
 
 | | cases |
 |---|---|
-| isomorphic to the published Turtle | 2 402 of 2 424 (99.1%) |
+| isomorphic to the core graph of clause 2 | 41 of 2 424 (1.7%) |
+| isomorphic once the root `idShort` allowance is applied | 2 361 |
+| **conforming to the unit as clause 6 defines it** | **2 402 of 2 424 (99.1%)** |
 | differing | 22 |
+
+The 41 are the documents whose root carries no `idShort`, so the allowance is not needed. For the
+other 2 361 the published Turtle omits a triple the published JSON requires, and the two agree only
+once that triple is set aside. Annex B records this as a deviation.
 
 The 22 are cases in which the published JSON and Turtle examples describe different instances; they
 are recorded as an upstream defect and are not reconcilable by any lifting.
@@ -358,24 +380,32 @@ are recorded as an upstream defect and are not reconcilable by any lifting.
 | | cases |
 |---|---|
 | restored with the ordering graph | 2 424 of 2 424 (100%) |
-| restored from the core graph alone | 2 249 of 2 424 (92.8%) |
-| restored only with the ordering graph | 175 (7.2%) |
+| **structurally order-bearing, so not guaranteed by the core graph** | **308 of 2 424 (12.7%)** |
+| restored from the core graph under every one of ten permutations | 2 117 |
+| failed under at least one permutation | 307 |
 
-The triples are shuffled before lowering, so the figures measure the graph rather than a
-serializer's output order.
+A document carries an array of two or more members, or it does not. Where it does, the core graph
+does not represent that array's order and no lowering can guarantee it; a particular permutation may
+still come back right. The structural figure answers the question and does not sample. The
+ten-permutation figure is reported beside it because the two agreeing to within one case is what
+establishes that neither is an artefact of the sampling.
 
 **The context of clause 5**
 
 | | |
 |---|---|
-| predicate and object pairs of the core graph reproduced | 4 575 of 7 366 (62.1%) |
-| documents whose graph is reproduced exactly | 0 |
+| predicate and object pairs of the core graph reproduced | 22 327 of 30 614 (72.9%) |
+| documents whose graph is reproduced exactly | 0 of 2 424 |
 
 | Cause | Cases affected |
 |---|---|
-| root subject is a blank node | 198 of 198 |
-| node has no `rdf:type` | 194 |
-| enumeration value left as a compact IRI | 145 |
+| root subject is a blank node | 2 424 of 2 424 |
+| enumeration value left as a compact IRI | 2 291 |
+| node has no `rdf:type` | 1 385 |
+
+The pairs are counted with the subject discarded and blank node objects excluded, because a blank
+node cannot match by label. The figure is about predicates and their non-blank objects, not about
+the graph as a whole.
 
 ## Annex D — Worked example
 

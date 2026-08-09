@@ -106,7 +106,12 @@ Applied to the current templates:
 | used unchanged (rule 1) | 342 |
 | ECLASS construction (rule 2) | 136 |
 | hash construction (rule 3) | 49 |
-| dereferenceable after construction | 478 of 527 (90.7%) |
+| **usable as an RDF IRI after construction** | **527 of 527 (100%)** |
+| of which dereferenceable today | 198 of 527 (37.6%) |
+
+Most of the identifiers used unchanged are URNs, which are IRIs but do not dereference. The
+construction makes every identifier usable as an RDF resource; it does not make most of them
+retrievable, and this document does not claim otherwise.
 
 ## 4 Mapping predicate (normative)
 

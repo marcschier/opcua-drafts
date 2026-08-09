@@ -65,6 +65,28 @@ def build(onto: Ontology, schema: Schema):
                     out[name] = prop
         return out
 
+    def enum_terms(enum):
+        """The JSON spellings of one enumeration, as term definitions.
+
+        These are placed inside the scoped context of the property whose range is
+        the enumeration, never at the top level. A top-level definition collides
+        with the class term of the same name - `Submodel` is both a class and a
+        `KeyTypes` member - and whichever is written second silently wins. Scoping
+        them to the property removes the collision, and also removes the second
+        one: `Instance` is a member of both `AssetKind` and `ModellingKind`, and a
+        single top-level definition can only mean one of them.
+        """
+        terms = {}
+        spellings = schema.enum_json.get(enum, [])
+        for member in onto.enums.get(enum, []):
+            bare = member.lower()
+            spelling = next((s for s in spellings if s.split(":", 1)[-1].lower() == bare), member)
+            if ":" in spelling:
+                unaliasable.append((enum, spelling))
+                continue
+            terms[spelling] = f"{AAS}{enum}/{member}"
+        return terms
+
     def scoped_context(cls, depth=0):
         """The term definitions that apply inside an object of this class."""
         ctx = {}
@@ -76,6 +98,9 @@ def build(onto: Ontology, schema: Schema):
                 target = rng[4:] if rng.startswith("aas:") else None
                 if target and target in onto.enums:
                     term = {"@id": prop["iri"], "@type": "@vocab"}
+                    values = enum_terms(target)
+                    if values:
+                        term["@context"] = values
                 else:
                     term = {"@id": prop["iri"], "@type": "@id"}
                     # A nested object with no discriminator carries no key a
@@ -93,6 +118,8 @@ def build(onto: Ontology, schema: Schema):
             ctx[name] = term
         return ctx
 
+    unaliasable = []
+
     context = {
         "@version": 1.1,
         "@vocab": AAS,
@@ -107,30 +134,12 @@ def build(onto: Ontology, schema: Schema):
                                 "@type": "@id", "@container": "@set"},
     }
 
-    # Enumeration spellings. A term containing a colon is read as a compact IRI
-    # and JSON-LD requires it to expand to its own definition, so `xs:int`
-    # cannot be aliased to `aas:DataTypeDefXsd/Int`: a processor rejects the
-    # context with "term in form of IRI must expand to definition". The
-    # enumerations whose JSON spelling has no colon can be aliased; the
-    # `DataTypeDefXsd` values cannot, and that is the sharpest of the context's
-    # limits. The lifting resolves them from the ontology instead.
-    unaliasable = []
-    for enum, members in sorted(onto.enums.items()):
-        spellings = schema.enum_json.get(enum, [])
-        for member in members:
-            bare = member.lower()
-            spelling = next((s for s in spellings if s.split(":", 1)[-1].lower() == bare), member)
-            if ":" in spelling:
-                unaliasable.append((enum, spelling))
-                continue
-            context.setdefault(spelling, f"{AAS}{enum}/{member}")
-
     # Type-scoped contexts, one per discriminated class.
     for cls in classes:
         if cls in schema.model_type:
             context[cls] = {"@id": f"{AAS}{cls}", "@context": scoped_context(cls)}
 
-    return {"@context": context}, unaliasable
+    return {"@context": context}, sorted(set(unaliasable))
 
 
 # ---------------------------------------------------------------------------

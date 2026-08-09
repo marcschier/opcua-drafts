@@ -2836,9 +2836,12 @@ is possible until the term of F.4 exists. That is one of the reasons this annex 
 
 ### F.1 Scope of the claim
 
-The claim covers the **projection subgraph**: the nodes clause 5.6 materializes for the shells,
-submodels, concept descriptions and submodel elements of one environment, with their NodeIds,
-BrowseNames, TypeDefinitions and the ReferenceType each is reached by.
+The claim covers the **projection subgraph**: the nodes clause 5.6 materializes for the submodels
+of one environment and their submodel elements, with their NodeIds, BrowseNames, TypeDefinitions
+and the ReferenceType each is reached by.
+
+Shells and concept descriptions are outside it. They project by the same rules, but the
+correspondence has not been exercised for them and this annex does not claim it.
 
 It does not cover the nodes a registry adds on its own account — the document resource, its
 versions, the reference from a document to its projection. Those exist because a registry is
@@ -2884,11 +2887,13 @@ Measured over the reference fixtures, that is the **only** thing that fails:
 | unexpected | 0 | 0 |
 | wrong TypeDefinition | 0 | 61 |
 
-Every NodeId, every BrowseName and every ReferenceType is already correct. This annex therefore
-proposes one term, `uav:typeDefinition`, whose value is the ExpandedNodeId of an ObjectType the
-Server has already loaded, and whose effect is that the projected Object receives a
-`HasTypeDefinition` reference to it. `jsonld/UAV-TYPEDEFINITION-PROPOSAL.md` states the term and the
-converter behaviour it requires.
+Every NodeId and every BrowseName is already correct, as is every containment ReferenceType the
+fixtures exercise - 17 of the 61 nodes are reached by a reference the comparison covers, the rest
+being top-level elements of a submodel. This annex therefore proposes one term,
+`uav:typeDefinition`, whose value is the ExpandedNodeId of an ObjectType the Server has already
+loaded, and whose effect is that the projected Object receives a `HasTypeDefinition` reference to
+it. `jsonld/UAV-TYPEDEFINITION-PROPOSAL.md` states the term and the converter behaviour it
+requires.
 
 Until that term is accepted and implemented, a Server reaches the same result by loading one Thing
 Model per ObjectType of this specification and having each Thing Description instantiate the

@@ -34,7 +34,7 @@ from collections import defaultdict
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-from lift import AAS, LD, Ontology, ROOT_COLLECTIONS  # noqa: E402
+from lift import AAS, LD, Ontology, Schema, ROOT_COLLECTIONS  # noqa: E402
 
 RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 
@@ -187,8 +187,8 @@ class Lowerer:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("graph")
-    ap.add_argument("--order", help="the enrichment ordering graph, as N-Triples")
+    ap.add_argument("graph", help="the core graph, as N-Triples")
+    ap.add_argument("--order", help="the ordering graph, as N-Triples")
     args = ap.parse_args()
 
     with open(args.graph, encoding="utf-8") as f:
