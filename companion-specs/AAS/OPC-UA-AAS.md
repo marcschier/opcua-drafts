@@ -194,7 +194,7 @@ the revision is breaking rather than additive.
 - OPC 10000-20 — OPC UA Specification: Part 20: File Transfer.
 - OPC 20020 — OPC UA Companion Specification Template and Rules.
 - *OPC UA — xRegistry*, the abstract registry base model this specification extends, in
-  [`core-specs/xregistry/`](../../core-specs/xregistry/OPC-UA-xRegistry.md).
+  [`core-specs/xregistry/`](../../core-specs/xregistry/README.md).
 - *Specification of the Asset Administration Shell — Part 1: Metamodel*, IDTA-01001, version 3.
 - *Specification of the Asset Administration Shell — Part 2: Application Programming Interfaces*,
   IDTA-01002, version 3.

@@ -411,5 +411,5 @@ a different value, and SHOULD record whatever value it found in `artifacttype`
 rather than normalizing it.
 
 [xRegistry Core]: https://xregistry.io/xreg/xregistryspecs/core-v1/docs/spec.html
-[symbolic identifier]: ../../core-specs/xregistry/OPC-UA-xRegistry.md#69-entity-identifiers-and-names
+[symbolic identifier]: ../../core-specs/xregistry/README.md
 [OCI Distribution]: https://github.com/opencontainers/distribution-spec
