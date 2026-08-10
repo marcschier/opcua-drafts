@@ -45,8 +45,8 @@ VENDORED_TEMPLATES = os.path.join(
 NS = 2  # the server namespace instances live in
 UANODESET_NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 MODEL_NAMESPACE = "http://opcfoundation.org/UA/I4AAS/v3/"
-MODEL_VERSION = "3.02"
-MODEL_PUBLICATION_DATE = "2026-08-10T10:56:21Z"
+MODEL_VERSION = "3.03"
+MODEL_PUBLICATION_DATE = "2026-08-10T16:54:40Z"
 PUBLISHED_NAMESPACE = "http://opcfoundation.org/UA/I4AAS/"
 MAX_STRING_NODEID_LENGTH = 4096
 
@@ -136,6 +136,84 @@ INSTANCE_METHOD_DECLARATIONS = (
     "LookupShellsByAssetLink",
     "GetSubmodel",
     "Materialize",
+)
+
+GET_SUBMODEL_SPEC_FRAGMENTS = (
+    "first resolve",
+    "`AASSubmodelFileType`",
+    "`RolePermissions`",
+    "`UserRolePermissions`",
+    "disclosure tier",
+    "authorization policy",
+    "`FileType.Open`",
+    "`FileType.Read`",
+    "Permission to Call",
+    "`Bad_UserAccessDenied`",
+    "`Bad_NotFound`",
+    "document bytes",
+    "same externally observable failure behavior",
+    "response timing",
+)
+
+GET_SUBMODEL_DESCRIPTION_FRAGMENTS = (
+    "Resolve the selected",
+    "AASSubmodelFileType",
+    "RolePermissions",
+    "UserRolePermissions",
+    "DisclosureTier",
+    "Authorization",
+    "FileType Open/Read",
+    "Call permission on this Method does not authorize the target",
+    "Bad_UserAccessDenied",
+    "Bad_NotFound",
+    "controlled bytes",
+    "Format",
+    "ContentType",
+    "target metadata",
+    "distinguishable timing",
+)
+
+FEDERATION_SECURITY_SPEC_FRAGMENTS = (
+    "scheme, host and port allowlists",
+    "loopback, link-local, private",
+    "cloud-metadata destinations",
+    "prevent DNS rebinding",
+    "no ambient cookies, credentials",
+    "sent to another peer or redirect target",
+    "validate the endpoint certificate",
+    "certificate ApplicationUri",
+    "returning or caching any bytes",
+)
+
+PACKAGE_INTEGRITY_SPEC_FRAGMENTS = (
+    "Every Version of an `AASPackageFileType` **shall** instantiate",
+    "`Digest`",
+    "`DigestAlg`",
+    "`ManifestDigest`",
+    "`Sha256`",
+    "`Sha384`",
+    "`Sha512`",
+    "lowercase hexadecimal",
+    "shall not** contain an algorithm prefix",
+    "`sha256`, `sha384` or `sha512`",
+    "immutable within that Version",
+    "exactly one package-layer descriptor",
+    "equal\n   `DigestAlg` and `Digest`",
+    "verifies only those exact manifest",
+    "shall not** be treated as verification of the returned package blob",
+    "sole authority for OCI Version identity",
+    "always-hashed symbolic identifier",
+    "mutable Resource-level alias",
+    "[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}",
+    "preserved byte-for-byte",
+    "create and retain a distinct immutable Version",
+    "OCI referrer",
+    "shall not** instantiate `Subject` or `Attestations`",
+    "separate immutable Resource",
+    "Version of the package Resource it refers to",
+    "shall not** change that package Resource's Version collection",
+    "default Version",
+    "`Epoch` or `ModifiedAt`",
 )
 
 # Fields carrying a value that clause 5.2 requires to be kept lexically.
@@ -750,11 +828,10 @@ EXPECTED_OBJECT_TYPES = {
     "AASPackageFileType": (1107, "xRegistry.ResourceType", False, (
         _v("PackageIdentifier", "String", rule=MANDATORY),
         _v("ArtifactType", "String"),
-        _v("Digest", "String"),
-        _v("DigestAlg", "String"),
+        _v("Digest", "String", rule=MANDATORY),
+        _v("DigestAlg", "String", rule=MANDATORY),
         _v("AasIdentifiers", "String", "1"),
-        _v("Subject", "String"),
-        _v("Attestations", "AASAttestationDataType", "1"),
+        _v("ManifestDigest", "String"),
     )),
     "AASEnvironmentFileType": (
         1108, "xRegistry.ResourceType", False, (
@@ -1422,8 +1499,216 @@ def _validate_object_types_and_annex(root, aliases, annex_text, schema):
     return errors
 
 
+def _markdown_clause(text, number):
+    marker = f"### {number} "
+    start = text.find(marker)
+    if start < 0:
+        return ""
+    end = text.find("\n### ", start + len(marker))
+    return text[start:] if end < 0 else text[start:end]
+
+
+def _description(node):
+    element = node.find(UANODESET_NS + "Description")
+    return "" if element is None else "".join(element.itertext())
+
+
+def _require_fragments(errors, label, text, fragments):
+    for fragment in fragments:
+        if fragment not in text:
+            errors.append(f"{label} omits required text {fragment!r}")
+
+
+def _validate_security_integrity_contracts(root, aliases, spec_text):
+    errors = []
+    nodes_by_id = {
+        _resolved(node.get("NodeId"), aliases): node
+        for node in root if node.get("NodeId") is not None
+    }
+
+    discovery_clause = _markdown_clause(spec_text, "9.5")
+    _require_fragments(
+        errors, "clause 9.5 GetSubmodel security contract",
+        discovery_clause, GET_SUBMODEL_SPEC_FRAGMENTS)
+    disclosure_clause = _markdown_clause(spec_text, "9.7")
+    _require_fragments(
+        errors, "clause 9.7 indirect-access disclosure contract",
+        disclosure_clause, ("`GetSubmodel`", "clause 9.5",
+                            "Method-level Call permission"))
+    federation_clause = _markdown_clause(spec_text, "9.6")
+    _require_fragments(
+        errors, "clause 9.6 federation security contract",
+        federation_clause, FEDERATION_SECURITY_SPEC_FRAGMENTS)
+
+    get_submodel_methods = [
+        node for node in nodes_by_id.values()
+        if _node_class(node) == "Method"
+        and _local_browse_name(node) == "GetSubmodel"
+        and _resolved(node.get("ParentNodeId"), aliases)
+        in {"ns=2;i=1100", "ns=2;i=1150"}
+    ]
+    if len(get_submodel_methods) != 2:
+        errors.append(
+            "expected GetSubmodel declaration and concrete Method, found "
+            f"{len(get_submodel_methods)}")
+    for method_node in get_submodel_methods:
+        _require_fragments(
+            errors,
+            f"{method_node.get('NodeId')} GetSubmodel Description",
+            _description(method_node),
+            GET_SUBMODEL_DESCRIPTION_FRAGMENTS)
+
+    integrity_clause = _markdown_clause(spec_text, "9.4")
+    _require_fragments(
+        errors, "clause 9.4 package integrity contract",
+        integrity_clause, PACKAGE_INTEGRITY_SPEC_FRAGMENTS)
+    conformance_clause = spec_text[
+        spec_text.find("## 10 Profiles and conformance"):
+        spec_text.find("## 11 NodeSet validation")]
+    _require_fragments(
+        errors, "package integrity conformance profile",
+        conformance_clause,
+        ("`AAS-PackageIntegrity`", "requires `AAS-PackageIntegrity`",
+         "claiming `AAS-Packages`", "manifest-to-blob binding",
+         "referrer separation"))
+
+    package_type = nodes_by_id.get("ns=2;i=1107")
+    if package_type is None:
+        errors.append("AASPackageFileType is missing")
+        return errors
+    categories = [
+        category.text or ""
+        for category in package_type.findall(UANODESET_NS + "Category")
+    ]
+    if "AAS-PackageIntegrity" not in categories:
+        errors.append(
+            "AASPackageFileType omits AAS-PackageIntegrity Category")
+    _require_fragments(
+        errors, "AASPackageFileType Description",
+        _description(package_type),
+        ("Resource-level discovery aliases",
+         "OCI referrers are separate Resources",
+         "rather than package Versions",
+         "cannot affect the package default Version"))
+
+    package_descriptions = {
+        name: child
+        for name in ("Digest", "DigestAlg", "ManifestDigest")
+        for _, child, _ in [
+            _find_declaration(root, aliases, "AASPackageFileType", name)]
+        if child is not None
+    }
+    if set(package_descriptions) != {
+            "Digest", "DigestAlg", "ManifestDigest"}:
+        errors.append(
+            "AASPackageFileType integrity members are "
+            f"{sorted(package_descriptions)}, expected "
+            "['Digest', 'DigestAlg', 'ManifestDigest']")
+    description_requirements = {
+        "Digest": (
+            "Immutable lower-case hexadecimal",
+            "without an algorithm prefix", "exact package blob bytes",
+            "Mandatory on every Version",
+            "Server verifies it before publication",
+            "Consumer recomputes it before parsing"),
+        "DigestAlg": (
+            "Immutable case-sensitive", "Sha256", "Sha384", "Sha512",
+            "sha256, sha384 and sha512 map respectively",
+            "all other algorithms or casing are rejected"),
+        "ManifestDigest": (
+            "Immutable exact OCI manifest digest",
+            "lower-case algorithm prefix",
+            "Mandatory for every OCI-backed Version",
+            "sole authority", "always-hashed symbolic VersionId",
+            "tag is never identity", "never the returned package blob",
+            "exactly one package-layer descriptor",
+            "map to DigestAlg and Digest",
+            "Server verifies this chain before publication",
+            "Consumer repeats it before use"),
+    }
+    for name, fragments in description_requirements.items():
+        member = package_descriptions.get(name)
+        if member is not None:
+            _require_fragments(
+                errors, f"AASPackageFileType.{name} Description",
+                _description(member), fragments)
+
+    reserved_package_nodes = {
+        "Subject": (
+            "ns=2;i=5168", "i=12", "-1",
+            ("Reserved Variable NodeId",
+             "not an InstanceDeclaration of AASPackageFileType",
+             "separate immutable Resource",
+             "never a package Version")),
+        "Attestations": (
+            "ns=2;i=5169", "ns=2;i=1232", "1",
+            ("Reserved Variable NodeId",
+             "not an InstanceDeclaration of AASPackageFileType",
+             "separate immutable Resources",
+             "never affect the package default Version")),
+    }
+    for name, (node_id, data_type, value_rank, fragments) in (
+            reserved_package_nodes.items()):
+        _, declaration, _ = _find_declaration(
+            root, aliases, "AASPackageFileType", name)
+        if declaration is not None:
+            errors.append(
+                f"AASPackageFileType must not declare reserved {name}")
+        node = nodes_by_id.get(node_id)
+        if node is None:
+            errors.append(f"reserved {name} node {node_id} is missing")
+            continue
+        if _node_class(node) != "Variable":
+            errors.append(
+                f"reserved {name} is {_node_class(node)}, expected Variable")
+        if _local_browse_name(node) != name:
+            errors.append(
+                f"reserved {name} BrowseName is "
+                f"{_local_browse_name(node)!r}")
+        if node.get("ParentNodeId") is not None:
+            errors.append(
+                f"reserved {name} must not have ParentNodeId")
+        actual_data_type = _resolved(node.get("DataType"), aliases)
+        if actual_data_type != data_type:
+            errors.append(
+                f"reserved {name} DataType {actual_data_type!r}, "
+                f"expected {data_type!r}")
+        if node.get("ValueRank", "-1") != value_rank:
+            errors.append(
+                f"reserved {name} ValueRank "
+                f"{node.get('ValueRank', '-1')!r}, expected {value_rank!r}")
+        if _reference_targets(node, aliases, "i=37"):
+            errors.append(
+                f"reserved {name} must not have a ModellingRule")
+        if _reference_targets(node, aliases, "i=40") != ["i=68"]:
+            errors.append(
+                f"reserved {name} must retain PropertyType")
+        for reference_type in ("i=35", "i=46", "i=47", "i=49"):
+            if _reference_targets(
+                    node, aliases, reference_type, forward=False):
+                errors.append(
+                    f"reserved {name} must not be attached by "
+                    f"{reference_type}")
+        _require_fragments(
+            errors, f"reserved {name} Description",
+            _description(node), fragments)
+
+    attestation_type = nodes_by_id.get("ns=2;i=1232")
+    if attestation_type is None:
+        errors.append("AASAttestationDataType is missing")
+    else:
+        _require_fragments(
+            errors, "AASAttestationDataType Description",
+            _description(attestation_type),
+            ("non-authoritative discovery hint",
+             "separate attestation or OCI referrer Resource",
+             "never represents a package Version",
+             "presence is not verification"))
+    return errors
+
+
 def validate_generated_artifacts(root=None, csv_text=None, annex_text=None,
-                                 schema=None):
+                                 schema=None, spec_text=None):
     if root is None:
         root = ET.parse(NODESET).getroot()
     if csv_text is None:
@@ -1435,6 +1720,9 @@ def validate_generated_artifacts(root=None, csv_text=None, annex_text=None,
     if schema is None:
         with open(SCHEMA, encoding="utf-8") as stream:
             schema = json.load(stream)
+    if spec_text is None:
+        with open(SPEC, encoding="utf-8") as stream:
+            spec_text = stream.read()
 
     errors = _validate_manifest_against_schema(schema)
     aliases = _aliases(root)
@@ -1465,6 +1753,14 @@ def validate_generated_artifacts(root=None, csv_text=None, annex_text=None,
             errors.append(f"AAS own namespace index is ns={own_ns}, expected ns=2")
 
     csv_by_id = _csv_rows(csv_text)
+    for node_id, expected_identity in {
+        5168: ("AASPackageFileType_Subject", "Variable"),
+        5169: ("AASPackageFileType_Attestations", "Variable"),
+    }.items():
+        if csv_by_id.get(node_id) != expected_identity:
+            errors.append(
+                f"reserved CSV i={node_id} is {csv_by_id.get(node_id)!r}, "
+                f"expected {expected_identity!r}")
     own_nodes = {}
     if own_ns is not None:
         for node in root:
@@ -1568,6 +1864,9 @@ def validate_generated_artifacts(root=None, csv_text=None, annex_text=None,
     errors.extend(
         _validate_object_types_and_annex(
             root, aliases, annex_text, schema))
+    errors.extend(
+        _validate_security_integrity_contracts(
+            root, aliases, spec_text))
 
     if own_ns is not None:
         if MODEL_NAMESPACE not in annex_text:
@@ -2291,6 +2590,8 @@ def _artifact_self_test():
         annex_text = stream.read()
     with open(SCHEMA, encoding="utf-8") as stream:
         schema = json.load(stream)
+    with open(SPEC, encoding="utf-8") as stream:
+        spec_text = stream.read()
 
     controls = []
 
@@ -2478,6 +2779,169 @@ def _artifact_self_test():
         validate_generated_artifacts(
             method_declaration, csv_text, annex_text, schema)))
 
+    method_security = copy.deepcopy(root)
+    get_submodel = next(
+        node for node in method_security
+        if (_node_class(node) == "Method"
+            and _local_browse_name(node) == "GetSubmodel"
+            and node.get("ParentNodeId") == "ns=2;i=1100"))
+    get_submodel_description = get_submodel.find(
+        UANODESET_NS + "Description")
+    get_submodel_description.text = get_submodel_description.text.replace(
+        "UserRolePermissions", "UserPermissions", 1)
+    controls.append((
+        "GetSubmodel target-authorization Description mutation",
+        validate_generated_artifacts(
+            method_security, csv_text, annex_text, schema, spec_text)))
+
+    get_submodel_spec = spec_text.replace(
+        "`Bad_UserAccessDenied`", "`Bad_SecurityChecksFailed`", 1)
+    controls.append((
+        "GetSubmodel security prose mutation",
+        validate_generated_artifacts(
+            root, csv_text, annex_text, schema, get_submodel_spec)))
+
+    federation_spec = spec_text.replace(
+        "prevent DNS rebinding", "permit DNS rebinding", 1)
+    controls.append((
+        "federation egress security prose mutation",
+        validate_generated_artifacts(
+            root, csv_text, annex_text, schema, federation_spec)))
+
+    package_digest_optional = copy.deepcopy(root)
+    digest_member = declaration(
+        package_digest_optional, "AASPackageFileType", "Digest")
+    member_reference(
+        digest_member, _aliases(package_digest_optional),
+        "i=37").text = "i=80"
+    controls.append((
+        "package Digest cardinality mutation",
+        validate_generated_artifacts(
+            package_digest_optional, csv_text, annex_text, schema, spec_text)))
+
+    package_digest_prefix = copy.deepcopy(root)
+    digest_description = declaration(
+        package_digest_prefix, "AASPackageFileType",
+        "Digest").find(UANODESET_NS + "Description")
+    digest_description.text = digest_description.text.replace(
+        "without an algorithm prefix", "including an algorithm prefix", 1)
+    controls.append((
+        "package Digest prefix mutation",
+        validate_generated_artifacts(
+            package_digest_prefix, csv_text, annex_text, schema, spec_text)))
+
+    package_digest_alg_optional = copy.deepcopy(root)
+    digest_alg_member = declaration(
+        package_digest_alg_optional, "AASPackageFileType", "DigestAlg")
+    member_reference(
+        digest_alg_member, _aliases(package_digest_alg_optional),
+        "i=37").text = "i=80"
+    controls.append((
+        "package DigestAlg cardinality mutation",
+        validate_generated_artifacts(
+            package_digest_alg_optional, csv_text, annex_text, schema,
+            spec_text)))
+
+    package_digest_alg_spelling = copy.deepcopy(root)
+    digest_alg_description = declaration(
+        package_digest_alg_spelling, "AASPackageFileType",
+        "DigestAlg").find(UANODESET_NS + "Description")
+    digest_alg_description.text = digest_alg_description.text.replace(
+        "Sha512", "SHA512", 1)
+    controls.append((
+        "package DigestAlg exact-case mutation",
+        validate_generated_artifacts(
+            package_digest_alg_spelling, csv_text, annex_text, schema,
+            spec_text)))
+
+    package_category = copy.deepcopy(root)
+    package_type = next(
+        node for node in package_category
+        if _local_browse_name(node) == "AASPackageFileType")
+    integrity_category = next(
+        category for category in package_type.findall(
+            UANODESET_NS + "Category")
+        if category.text == "AAS-PackageIntegrity")
+    package_type.remove(integrity_category)
+    controls.append((
+        "package integrity conformance-unit mutation",
+        validate_generated_artifacts(
+            package_category, csv_text, annex_text, schema, spec_text)))
+
+    manifest_semantics = copy.deepcopy(root)
+    manifest_member = declaration(
+        manifest_semantics, "AASPackageFileType", "ManifestDigest")
+    manifest_description = manifest_member.find(
+        UANODESET_NS + "Description")
+    manifest_description.text = manifest_description.text.replace(
+        "tag is never identity", "tag may be identity", 1)
+    controls.append((
+        "package ManifestDigest semantics mutation",
+        validate_generated_artifacts(
+            manifest_semantics, csv_text, annex_text, schema, spec_text)))
+
+    manifest_chain = copy.deepcopy(root)
+    manifest_chain_member = declaration(
+        manifest_chain, "AASPackageFileType", "ManifestDigest")
+    manifest_chain_description = manifest_chain_member.find(
+        UANODESET_NS + "Description")
+    manifest_chain_description.text = manifest_chain_description.text.replace(
+        "exactly one package-layer descriptor",
+        "one or more package-layer descriptors", 1)
+    controls.append((
+        "package manifest-to-blob binding mutation",
+        validate_generated_artifacts(
+            manifest_chain, csv_text, annex_text, schema, spec_text)))
+
+    package_spec = spec_text.replace("`Sha512`", "`SHA512`")
+    controls.append((
+        "package integrity prose mutation",
+        validate_generated_artifacts(
+            root, csv_text, annex_text, schema, package_spec)))
+
+    package_referrer_spec = spec_text.replace(
+        "represented as a separate immutable Resource",
+        "represented as a Version of the package Resource", 1)
+    controls.append((
+        "package referrer separation prose mutation",
+        validate_generated_artifacts(
+            root, csv_text, annex_text, schema, package_referrer_spec)))
+
+    package_default_spec = spec_text.replace(
+        "**shall not** change that package Resource's Version collection",
+        "**may** change that package Resource's Version collection", 1)
+    controls.append((
+        "package referrer default-Version mutation",
+        validate_generated_artifacts(
+            root, csv_text, annex_text, schema, package_default_spec)))
+
+    package_attestation_summary = copy.deepcopy(root)
+    package_type = next(
+        node for node in package_attestation_summary
+        if node.get("NodeId") == "ns=2;i=1107")
+    attestation_member = next(
+        node for node in package_attestation_summary
+        if node.get("NodeId") == "ns=2;i=5169")
+    attestation_member.set("ParentNodeId", "ns=2;i=1107")
+    ET.SubElement(
+        attestation_member.find(UANODESET_NS + "References"),
+        UANODESET_NS + "Reference",
+        {"ReferenceType": "HasModellingRule"}).text = "i=80"
+    ET.SubElement(
+        attestation_member.find(UANODESET_NS + "References"),
+        UANODESET_NS + "Reference",
+        {"ReferenceType": "HasProperty", "IsForward": "false"}
+    ).text = "ns=2;i=1107"
+    ET.SubElement(
+        package_type.find(UANODESET_NS + "References"),
+        UANODESET_NS + "Reference",
+        {"ReferenceType": "HasProperty"}).text = "ns=2;i=5169"
+    controls.append((
+        "package attestation declaration mutation",
+        validate_generated_artifacts(
+            package_attestation_summary, csv_text, annex_text, schema,
+            spec_text)))
+
     annex_data_type = annex_text.replace(
         "| Value | Variable | BaseDataType | Optional | AASPropertyType |",
         "| Value | Variable | String | Optional | AASPropertyType |",
@@ -2514,6 +2978,15 @@ def _artifact_self_test():
         "IEC 61360 Annex field DataType mutation",
         validate_generated_artifacts(
             root, csv_text, annex_iec_data_type, schema)))
+
+    annex_package_rule = annex_text.replace(
+        "| Digest | Variable | String | Mandatory | AASPackageFileType |",
+        "| Digest | Variable | String | Optional | AASPackageFileType |",
+        1)
+    controls.append((
+        "package integrity Annex cardinality mutation",
+        validate_generated_artifacts(
+            root, csv_text, annex_package_rule, schema, spec_text)))
 
     rebound = copy.deepcopy(root)
     model = rebound.find(f"{UANODESET_NS}Models/{UANODESET_NS}Model")

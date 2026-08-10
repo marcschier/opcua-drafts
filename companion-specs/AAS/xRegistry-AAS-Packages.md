@@ -174,7 +174,9 @@ supplier — while presenting a single collection to a Consumer.
 
 `registryurl` and `namespace` are routing metadata and MUST NOT be used as
 identity. Moving a store without changing `storeidentifier` does not change its
-Group `xid`.
+Group `xid`. `registryurl` is untrusted input and MUST be resolved under the
+[resolver egress policy](xRegistry-AAS.md#81-resolver-egress-policy); a Consumer
+MUST NOT dereference it directly.
 
 ### 3.2. Packages
 
@@ -222,10 +224,16 @@ collection. A `referrer` Resource MUST contain exactly one immutable Version.
   `versionid` MUST be its
   [symbolic identifier](xRegistry-AAS.md#51-aas-identifiers-and-xids).
 - `subjectmanifestdigest` is REQUIRED and is the package manifest digest named
-  by the OCI manifest's `subject` descriptor.
-- `artifacttype` is REQUIRED and identifies the kind of assertion.
-- `digest` and `digestalg` are REQUIRED and verify the exact referrer artifact
-  blob returned as the Resource document.
+  by the verified OCI manifest's `subject` descriptor. It is an index hint,
+  never an authority; a Consumer MUST derive the authoritative subject from the
+  verified manifest bytes.
+- `artifacttype` is REQUIRED and MUST equal the exact `artifactType` parsed from
+  the verified referrer manifest.
+- `layermediatype` is REQUIRED and MUST equal the exact `mediaType` of the
+  verified manifest's single layer descriptor.
+- `digest` and `digestalg` are REQUIRED and MUST equal the encoded digest and
+  mapped algorithm of that layer descriptor, and verify the exact referrer
+  artifact blob returned as the Resource document.
 - `signer`, where present, identifies the party established when the immutable
   Resource is created.
 - `format` MUST be `Opaque/1.0`.
@@ -267,6 +275,7 @@ serve the same model over a different store.
 | `referrer` Resource | one immutable OCI referrer manifest |
 | Referrer `manifestdigest` | the referrer manifest digest and sole Resource and Version source identity |
 | Referrer `subjectmanifestdigest` | the manifest `subject.digest` |
+| Referrer `artifacttype` and `layermediatype` | the manifest `artifactType` and single layer `mediaType` |
 | Referrer `digest` and `digestalg` | the single referrer-layer blob digest |
 
 A Consumer retrieving a Version's document receives the package blob, not the
@@ -470,7 +479,10 @@ the package store Group. It MUST NOT be represented as a Version of the
 `package` Resource it attests and MUST NOT be summarized by mutable metadata on
 that package. A Consumer discovers attestations by selecting `referrer`
 Resources whose `subjectmanifestdigest` equals the package
-`manifestdigest`.
+`manifestdigest`. That field is only an index hint: selection produces
+candidates, not a trusted association. A Producer MUST populate it from the
+verified referrer manifest, and a Consumer MUST independently parse the
+verified manifest and reject a different subject.
 
 The referrer manifest digest is the sole source identity for the Resource and
 its one Version. The Resource is therefore retrievable by `referrerid`, its
@@ -480,25 +492,35 @@ verified with that Version's `digest` and exact case-sensitive `digestalg`.
 For example, later discovery of an attestation for the first manifest in
 [Section 4.4](#44-identifiers) creates a `referrer` Resource whose
 `referrerid` and `versionid` are both
-`sha256-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.9f447b1b473d359884f2b8541a1ad0b7d194ed59b79e8eee48047ec4830564fd`.
+`sha256-37a44b2622885ffb53ecd0349f6346dec4582f87eb08606632492fc3.95dbfa0a5196f3d0249236ecf9f17909adef209ce8bef3b3ad2b3654f8e4a6c7`.
+After its bytes are verified against `manifestdigest`, the referrer manifest
+is parsed. Its `subject.digest` is the first package manifest digest, its
+`artifactType` is `application/vnd.dev.cosign.simplesigning.v1+json`, and its
+single layer has that same `mediaType`, size 276 and digest
+`sha256:930519f05c951daf28d814326626e57ef0583c384cf55da69ce5a03466ded58d`.
 The single Version has these domain attributes; decoding `attestationbase64`
 and computing SHA-256 produces the stated `digest`:
 
 ```json
 {
-  "manifestdigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "manifestdigest": "sha256:37a44b2622885ffb53ecd0349f6346dec4582f87eb08606632492fc32b08f342",
   "subjectmanifestdigest": "sha256:843f1b84d5129f49ddb26231c1f21fbe9ba5c78d3362731c27f16d1e467c20d0",
   "format": "Opaque/1.0",
   "artifacttype": "application/vnd.dev.cosign.simplesigning.v1+json",
+  "layermediatype": "application/vnd.dev.cosign.simplesigning.v1+json",
   "signer": "did:example:manufacturer",
   "digestalg": "Sha256",
-  "digest": "a5dec971ce22f8a8080036cbc2a16273368074ed1c0e7be8bcfe51970bccfe19",
-  "attestationbase64": "YXR0ZXN0YXRpb24tdjEK"
+  "digest": "930519f05c951daf28d814326626e57ef0583c384cf55da69ce5a03466ded58d",
+  "attestationbase64": "eyJjcml0aWNhbCI6eyJpZGVudGl0eSI6eyJkb2NrZXItcmVmZXJlbmNlIjoicmVnaXN0cnkuZXhhbXBsZS9hYXMvcHVtcCJ9LCJpbWFnZSI6eyJkb2NrZXItbWFuaWZlc3QtZGlnZXN0Ijoic2hhMjU2Ojg0M2YxYjg0ZDUxMjlmNDlkZGIyNjIzMWMxZjIxZmJlOWJhNWM3OGQzMzYyNzMxYzI3ZjE2ZDFlNDY3YzIwZDAifSwidHlwZSI6ImNvc2lnbiBjb250YWluZXIgaW1hZ2Ugc2lnbmF0dXJlIn0sIm9wdGlvbmFsIjp7ImNyZWF0b3IiOiJkaWQ6ZXhhbXBsZTptYW51ZmFjdHVyZXIifX0K"
 }
 ```
 
 `attestationbase64` is present only to make the example bytes reproducible; it
-is not a model attribute.
+is not a model attribute. After format-specific signature verification, the
+Cosign statement subject at
+`critical.image.docker-manifest-digest` is
+`sha256:843f1b84d5129f49ddb26231c1f21fbe9ba5c78d3362731c27f16d1e467c20d0`;
+it matches the selected package manifest.
 
 Immediately before and after this Resource is added, the package Resource's
 default Version remains the Version identified by
@@ -520,20 +542,38 @@ A Consumer that requires provenance SHOULD:
 3. Retrieve the package blob, compute its digest using `digestalg`, and compare
    it with `digest`. A mismatch MUST be treated as a failure, and the package
    MUST NOT be used.
-4. Retrieve `referrer` Resources whose `subjectmanifestdigest` is the package
-   `manifestdigest`, retrieve each referrer manifest by its `manifestdigest`,
-   verify the manifest against that digest, and verify the returned attestation
-   blob against the Resource's `digest` using its exact `digestalg`.
-5. Verify each attestation against the trust material for its `artifacttype`,
-   by whatever means that attestation format defines.
-6. Establish that the verified signer is one the Consumer is willing to trust
+4. Use `subjectmanifestdigest` only to retrieve candidate `referrer` Resources.
+   It is an index hint and MUST NOT establish which package an attestation
+   covers.
+5. Retrieve the exact referrer manifest bytes and verify them against the
+   candidate's `manifestdigest` before parsing them. Parse the verified manifest
+   and require its `subject.digest` — or the corresponding
+   `subject[].digest` in a projection that represents subjects as an array — to
+   equal the selected package `manifestdigest` exactly. It MUST also equal the
+   candidate's `subjectmanifestdigest`; disagreement invalidates the candidate,
+   but the parsed verified manifest remains the authority.
+6. Require the parsed manifest `artifactType` to equal `artifacttype` and the
+   single layer descriptor's `mediaType` to equal `layermediatype`. Require the
+   layer descriptor's digest algorithm and encoded digest to equal `digestalg`
+   and `digest`, retrieve that layer blob, and verify its size and digest before
+   parsing or using it.
+7. Perform the format-specific signature or statement verification required by
+   `artifacttype`. The subject carried inside the verified signature or
+   statement MUST equal the selected package `manifestdigest` exactly; a valid
+   signature over a statement naming another package MUST be rejected.
+8. Establish that the verified signer is one the Consumer is willing to trust
    for this purpose. A valid signature by an unknown party establishes only that
    the artifact has not changed since that party signed it.
 
-Step 6 is the one most often skipped and the one that carries the meaning. This
+Step 8 is the one most often skipped and the one that carries the meaning. This
 specification defines where attestations live and how they are surfaced; it does
 not define whose attestations matter, which is a policy question for the
 Consumer and, for regulated artifacts, for the regulation.
+
+Changing only a registry `subjectmanifestdigest` value cannot rebind a valid
+benign attestation to a malicious package: verification fails at both the
+verified referrer-manifest subject check and the format-specific signed
+statement subject check.
 
 ## 6. Security
 

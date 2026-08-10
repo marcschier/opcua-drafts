@@ -6,6 +6,7 @@ from __future__ import annotations
 import base64
 import copy
 import hashlib
+import hmac
 import ipaddress
 import json
 import re
@@ -39,6 +40,28 @@ BAD_PERCENT_ESCAPE_RE = re.compile(r"%(?![0-9A-Fa-f]{2})")
 URI_PCHAR_PATTERN = r"(?:[A-Za-z0-9._~!$&'()*+,;=:@-]|%[0-9A-Fa-f]{2})"
 URI_PATH_RE = re.compile(rf"^(?:/{URI_PCHAR_PATTERN}*)*$")
 URI_QUERY_FRAGMENT_RE = re.compile(rf"^(?:{URI_PCHAR_PATTERN}|[/?])*$")
+SENSITIVE_FORWARD_HEADERS = frozenset(
+    {"authorization", "cookie", "proxy-authorization"}
+)
+METADATA_SERVICE_ADDRESSES = frozenset(
+    {
+        ipaddress.ip_address("169.254.169.254"),
+        ipaddress.ip_address("100.100.100.200"),
+        ipaddress.ip_address("fd00:ec2::254"),
+    }
+)
+IPV4_COMPATIBLE_NETWORK = ipaddress.ip_network("::/96")
+IPV4_MAPPED_NETWORK = ipaddress.ip_network("::ffff:0:0/96")
+IPV4_TRANSLATED_NETWORK = ipaddress.ip_network("::ffff:0:0:0/96")
+NAT64_WELL_KNOWN_NETWORK = ipaddress.ip_network("64:ff9b::/96")
+NAT64_LOCAL_USE_NETWORK = ipaddress.ip_network("64:ff9b:1::/48")
+RFC6052_PREFIX_LENGTHS = frozenset({32, 40, 48, 56, 64, 96})
+ISATAP_MARKERS = frozenset(
+    {
+        bytes.fromhex("00005efe"),
+        bytes.fromhex("02005efe"),
+    }
+)
 
 IDENTIFIER_EXAMPLES = {
     "https://fabrikam.com/aas/pump/SN-001":
@@ -88,18 +111,44 @@ OCI_TAG_EXAMPLES = (
     "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 )
 
+OCI_REFERRER_MANIFEST_BASE64 = (
+    "eyJhcnRpZmFjdFR5cGUiOiJhcHBsaWNhdGlvbi92bmQuZGV2LmNvc2lnbi5zaW1w"
+    "bGVzaWduaW5nLnYxK2pzb24iLCJjb25maWciOnsiZGlnZXN0Ijoic2hhMjU2OjQ0"
+    "MTM2ZmEzNTViMzY3OGExMTQ2YWQxNmY3ZTg2NDllOTRmYjRmYzIxZmU3N2U4MzEw"
+    "YzA2MGY2MWNhYWZmOGEiLCJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQub2Np"
+    "LmVtcHR5LnYxK2pzb24iLCJzaXplIjoyfSwibGF5ZXJzIjpbeyJkaWdlc3QiOiJz"
+    "aGEyNTY6OTMwNTE5ZjA1Yzk1MWRhZjI4ZDgxNDMyNjYyNmU1N2VmMDU4M2MzODRj"
+    "ZjU1ZGE2OWNlNWEwMzQ2NmRlZDU4ZCIsIm1lZGlhVHlwZSI6ImFwcGxpY2F0aW9u"
+    "L3ZuZC5kZXYuY29zaWduLnNpbXBsZXNpZ25pbmcudjEranNvbiIsInNpemUiOjI3"
+    "Nn1dLCJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQub2NpLmltYWdlLm1hbmlm"
+    "ZXN0LnYxK2pzb24iLCJzY2hlbWFWZXJzaW9uIjoyLCJzdWJqZWN0Ijp7ImRpZ2Vz"
+    "dCI6InNoYTI1Njo4NDNmMWI4NGQ1MTI5ZjQ5ZGRiMjYyMzFjMWYyMWZiZTliYTVj"
+    "NzhkMzM2MjczMWMyN2YxNmQxZTQ2N2MyMGQwIiwibWVkaWFUeXBlIjoiYXBwbGlj"
+    "YXRpb24vdm5kLm9jaS5pbWFnZS5tYW5pZmVzdC52MStqc29uIiwic2l6ZSI6MH19"
+    "Cg=="
+)
+
 OCI_REFERRER_EXAMPLE = {
     "subjectmanifestdigest": OCI_EXAMPLES[0]["manifestdigest"],
     "manifestdigest":
-        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "sha256:37a44b2622885ffb53ecd0349f6346de"
+        "c4582f87eb08606632492fc32b08f342",
     "artifacttype": "application/vnd.dev.cosign.simplesigning.v1+json",
+    "layermediatype": "application/vnd.dev.cosign.simplesigning.v1+json",
     "signer": "did:example:manufacturer",
-    "attestationbase64": "YXR0ZXN0YXRpb24tdjEK",
+    "attestationbase64":
+        "eyJjcml0aWNhbCI6eyJpZGVudGl0eSI6eyJkb2NrZXItcmVmZXJlbmNlIjoi"
+        "cmVnaXN0cnkuZXhhbXBsZS9hYXMvcHVtcCJ9LCJpbWFnZSI6eyJkb2NrZXIt"
+        "bWFuaWZlc3QtZGlnZXN0Ijoic2hhMjU2Ojg0M2YxYjg0ZDUxMjlmNDlkZGIy"
+        "NjIzMWMxZjIxZmJlOWJhNWM3OGQzMzYyNzMxYzI3ZjE2ZDFlNDY3YzIwZDAi"
+        "fSwidHlwZSI6ImNvc2lnbiBjb250YWluZXIgaW1hZ2Ugc2lnbmF0dXJlIn0s"
+        "Im9wdGlvbmFsIjp7ImNyZWF0b3IiOiJkaWQ6ZXhhbXBsZTptYW51ZmFjdHVy"
+        "ZXIifX0K",
     "digestalg": "Sha256",
     "digest":
-        "a5dec971ce22f8a8080036cbc2a162733"
-        "68074ed1c0e7be8bcfe51970bccfe19",
+        "930519f05c951daf28d814326626e57e"
+        "f0583c384cf55da69ce5a03466ded58d",
+    "statementsubject": OCI_EXAMPLES[0]["manifestdigest"],
 }
 
 
@@ -261,6 +310,262 @@ def resource_xid(
     return f"{xid}/{resource_collection}/{symbolic_identifier(resource_source_identity)}"
 
 
+def _trusted_address(
+    address: ipaddress.IPv4Address | ipaddress.IPv6Address,
+    trusted_networks: tuple[str, ...],
+) -> bool:
+    for network_text in trusted_networks:
+        try:
+            network = ipaddress.ip_network(network_text, strict=False)
+        except ValueError as exc:
+            raise ValueError("invalid trusted-network entry") from exc
+        if address.version == network.version and address in network:
+            return True
+    return False
+
+
+def _nat64_networks(
+    configured_prefixes: tuple[str, ...],
+) -> tuple[ipaddress.IPv6Network, ...]:
+    networks = [NAT64_WELL_KNOWN_NETWORK, NAT64_LOCAL_USE_NETWORK]
+    for prefix_text in configured_prefixes:
+        if not isinstance(prefix_text, str) or prefix_text != prefix_text.strip():
+            raise ValueError("invalid configured NAT64 prefix")
+        try:
+            network = ipaddress.ip_network(prefix_text, strict=True)
+        except ValueError as exc:
+            raise ValueError("invalid configured NAT64 prefix") from exc
+        if (
+            not isinstance(network, ipaddress.IPv6Network)
+            or network.prefixlen not in RFC6052_PREFIX_LENGTHS
+        ):
+            raise ValueError(
+                "configured NAT64 prefix length must be /32, /40, /48, "
+                "/56, /64, or /96"
+            )
+        if network not in networks:
+            networks.append(network)
+    return tuple(networks)
+
+
+def _rfc6052_embedded_ipv4(
+    address: ipaddress.IPv6Address,
+    network: ipaddress.IPv6Network,
+) -> ipaddress.IPv4Address | None:
+    if address not in network:
+        return None
+    packed = address.packed
+    if network.prefixlen == 96:
+        return ipaddress.IPv4Address(packed[12:16])
+
+    if packed[8] != 0:
+        raise ValueError("RFC 6052 NAT64 address has a non-zero u octet")
+    prefix_octets = network.prefixlen // 8
+    before_u_octets = 8 - prefix_octets
+    embedded = (
+        packed[prefix_octets:8]
+        + packed[9:9 + 4 - before_u_octets]
+    )
+    return ipaddress.IPv4Address(embedded)
+
+
+def _embedded_ipv4_addresses(
+    address: ipaddress.IPv4Address | ipaddress.IPv6Address,
+    nat64_networks: tuple[ipaddress.IPv6Network, ...],
+) -> tuple[ipaddress.IPv4Address, ...]:
+    if not isinstance(address, ipaddress.IPv6Address):
+        return ()
+
+    embedded: list[ipaddress.IPv4Address] = []
+    if address.ipv4_mapped is not None:
+        embedded.append(address.ipv4_mapped)
+    if address in IPV4_COMPATIBLE_NETWORK:
+        embedded.append(ipaddress.IPv4Address(int(address) & 0xFFFFFFFF))
+    if address in IPV4_TRANSLATED_NETWORK:
+        embedded.append(ipaddress.IPv4Address(int(address) & 0xFFFFFFFF))
+    for network in nat64_networks:
+        nat64_address = _rfc6052_embedded_ipv4(address, network)
+        if nat64_address is not None:
+            embedded.append(nat64_address)
+
+    interface_identifier = address.packed[8:16]
+    if interface_identifier[0:4] in ISATAP_MARKERS:
+        embedded.append(ipaddress.IPv4Address(interface_identifier[4:8]))
+
+    if address.sixtofour is not None:
+        embedded.append(address.sixtofour)
+    if address.teredo is not None:
+        server, client = address.teredo
+        embedded.extend((server, client))
+    return tuple(dict.fromkeys(embedded))
+
+
+def _special_address(
+    address: ipaddress.IPv4Address | ipaddress.IPv6Address,
+) -> bool:
+    return (
+        address.is_loopback
+        or address.is_link_local
+        or address.is_private
+        or address.is_multicast
+        or address.is_unspecified
+        or address.is_reserved
+        or (
+            isinstance(address, ipaddress.IPv6Address)
+            and address.is_site_local
+        )
+        or not address.is_global
+    )
+
+
+def _validate_egress_address(
+    address_text: str,
+    trusted_networks: tuple[str, ...],
+    nat64_networks: tuple[ipaddress.IPv6Network, ...],
+) -> ipaddress.IPv4Address | ipaddress.IPv6Address:
+    try:
+        address = ipaddress.ip_address(address_text)
+    except ValueError as exc:
+        raise ValueError("resolver returned an invalid IP address") from exc
+    if address in METADATA_SERVICE_ADDRESSES:
+        raise ValueError("metadata service address is never a valid resolver target")
+
+    embedded_addresses = _embedded_ipv4_addresses(address, nat64_networks)
+    for embedded in embedded_addresses:
+        if embedded in METADATA_SERVICE_ADDRESSES:
+            raise ValueError(
+                "embedded metadata service address is never a valid resolver target"
+            )
+
+    outer_is_special = _special_address(address)
+    embedded_classifications = tuple(
+        (embedded, _special_address(embedded))
+        for embedded in embedded_addresses
+    )
+    for embedded, embedded_is_special in embedded_classifications:
+        if embedded_is_special and not _trusted_address(
+            embedded,
+            trusted_networks,
+        ):
+            raise ValueError(
+                "resolver target embeds an untrusted private or special-use IPv4 address"
+            )
+
+    if outer_is_special and not _trusted_address(
+        address,
+        trusted_networks,
+    ):
+        raise ValueError(
+            "resolver target is loopback, link-local, site-local, private, "
+            "reserved, multicast, unspecified, or special-use"
+        )
+    return address
+
+
+def validate_federated_resolution(
+    hops: list[dict[str, object]],
+    *,
+    allowed_schemes: set[str],
+    allowed_hosts: set[str],
+    allowed_ports: set[int],
+    trusted_networks: tuple[str, ...] = (),
+    nat64_prefixes: tuple[str, ...] = (),
+    allow_redirects: bool = False,
+    max_redirects: int = 0,
+    forwarded_headers: dict[str, str] | None = None,
+    response_size: int,
+    max_response_size: int,
+    elapsed_seconds: float,
+    max_elapsed_seconds: float,
+) -> None:
+    """Validate an untrusted federation resolution plan before releasing bytes."""
+    if not hops:
+        raise ValueError("resolver has no target")
+    if len(hops) > 1 and not allow_redirects:
+        raise ValueError("resolver redirects are disabled")
+    if len(hops) - 1 > max_redirects:
+        raise ValueError("resolver redirect limit exceeded")
+    if response_size < 0 or response_size > max_response_size:
+        raise ValueError("resolver response size limit exceeded")
+    if elapsed_seconds < 0 or elapsed_seconds > max_elapsed_seconds:
+        raise ValueError("resolver time limit exceeded")
+
+    for name in (forwarded_headers or {}):
+        if name.casefold() in SENSITIVE_FORWARD_HEADERS:
+            raise ValueError("resolver must not forward ambient credentials")
+
+    allowed_scheme_names = {value.casefold() for value in allowed_schemes}
+    allowed_host_names = {value.casefold() for value in allowed_hosts}
+    default_ports = {"http": 80, "https": 443, "opc.tcp": 4840}
+    nat64_networks = _nat64_networks(nat64_prefixes)
+
+    for hop in hops:
+        target = hop.get("url")
+        if not isinstance(target, str) or target != target.strip():
+            raise ValueError("resolver target is not an untouched absolute URL")
+        try:
+            parsed = urlsplit(target)
+            port = parsed.port
+        except ValueError as exc:
+            raise ValueError("resolver target URL is malformed") from exc
+        scheme = parsed.scheme.casefold()
+        host = (parsed.hostname or "").casefold()
+        if not scheme or not host:
+            raise ValueError("resolver target URL is not absolute")
+        if scheme not in allowed_scheme_names:
+            raise ValueError("resolver target scheme is not allowlisted")
+        if host not in allowed_host_names:
+            raise ValueError("resolver target host is not allowlisted")
+        effective_port = port if port is not None else default_ports.get(scheme)
+        if effective_port is None or effective_port not in allowed_ports:
+            raise ValueError("resolver target port is not allowlisted")
+
+        dns_values = hop.get("dns_addresses")
+        if not isinstance(dns_values, (list, tuple)) or not dns_values:
+            raise ValueError("resolver target has no validated DNS result")
+        validated_addresses = {
+            _validate_egress_address(
+                str(value),
+                trusted_networks,
+                nat64_networks,
+            )
+            for value in dns_values
+        }
+        connected_value = hop.get("connected_address")
+        if not isinstance(connected_value, str):
+            raise ValueError("resolver did not report the connected peer address")
+        connected_address = _validate_egress_address(
+            connected_value,
+            trusted_networks,
+            nat64_networks,
+        )
+        if connected_address not in validated_addresses:
+            raise ValueError("resolver connected address failed DNS rebinding check")
+
+        if scheme == "opc.tcp":
+            if hop.get("certificate_trusted") is not True:
+                raise ValueError("OPC UA endpoint certificate is not trusted")
+            certificate_uri = hop.get("certificate_application_uri")
+            server_uri = hop.get("server_application_uri")
+            configured_uri = hop.get("configured_peer_application_uri")
+            if (
+                not isinstance(certificate_uri, str)
+                or certificate_uri != server_uri
+                or certificate_uri != configured_uri
+            ):
+                raise ValueError("OPC UA ApplicationUri does not match configured peer")
+
+
+def release_federated_content(
+    content: bytes,
+    hops: list[dict[str, object]],
+    **policy: object,
+) -> bytes:
+    """Return fetched content only after the complete egress policy succeeds."""
+    validate_federated_resolution(hops, **policy)
+    return content
+
+
 def digest_bytes(data: bytes, algorithm: str) -> str:
     algorithms = {
         "Sha256": hashlib.sha256,
@@ -272,6 +577,122 @@ def digest_bytes(data: bytes, algorithm: str) -> str:
     except KeyError as exc:
         raise ValueError(f"unsupported digest algorithm: {algorithm}") from exc
     return digest(data).hexdigest()
+
+
+def _verify_oci_prefixed_digest(data: bytes, digest_value: str) -> tuple[str, str]:
+    try:
+        algorithm_name, encoded_digest = digest_value.split(":", 1)
+    except ValueError as exc:
+        raise ValueError("invalid OCI digest") from exc
+    model_algorithms = {
+        "sha256": "Sha256",
+        "sha384": "Sha384",
+        "sha512": "Sha512",
+    }
+    try:
+        model_algorithm = model_algorithms[algorithm_name]
+    except KeyError as exc:
+        raise ValueError("unsupported OCI digest algorithm") from exc
+    actual_digest = digest_bytes(data, model_algorithm)
+    if not hmac.compare_digest(actual_digest, encoded_digest):
+        raise ValueError("OCI digest verification failed")
+    return model_algorithm, encoded_digest
+
+
+def extract_cosign_statement_subject(attestation_blob: bytes) -> str:
+    """Extract the package manifest digest named by a verified Cosign statement."""
+    try:
+        statement = json.loads(attestation_blob)
+        subject = statement["critical"]["image"]["docker-manifest-digest"]
+    except (
+        UnicodeDecodeError,
+        json.JSONDecodeError,
+        KeyError,
+        TypeError,
+    ) as exc:
+        raise ValueError("Cosign statement has no package manifest subject") from exc
+    if not isinstance(subject, str) or not OCI_DIGEST_RE.fullmatch(subject):
+        raise ValueError("Cosign statement package manifest subject is invalid")
+    return subject
+
+
+def verify_oci_attestation_binding(
+    *,
+    selected_package_manifest_digest: str,
+    indexed_subject_manifest_digest: str,
+    referrer_manifest_digest: str,
+    referrer_manifest_bytes: bytes,
+    surfaced_artifact_type: str,
+    surfaced_layer_media_type: str,
+    surfaced_digest_algorithm: str,
+    surfaced_blob_digest: str,
+    attestation_blob: bytes,
+    signature_valid: bool,
+    statement_subject_manifest_digest: str,
+) -> dict:
+    """Verify that a referrer and signed statement bind to the selected package."""
+    _verify_oci_prefixed_digest(
+        referrer_manifest_bytes,
+        referrer_manifest_digest,
+    )
+    try:
+        manifest = json.loads(referrer_manifest_bytes)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("verified referrer manifest is not valid JSON") from exc
+    if not isinstance(manifest, dict):
+        raise ValueError("verified referrer manifest is not an object")
+
+    raw_subjects = manifest.get("subject")
+    subjects = raw_subjects if isinstance(raw_subjects, list) else [raw_subjects]
+    if (
+        len(subjects) != 1
+        or not isinstance(subjects[0], dict)
+        or subjects[0].get("digest") != selected_package_manifest_digest
+    ):
+        raise ValueError(
+            "verified referrer manifest subject does not match selected package"
+        )
+    verified_subject = subjects[0]["digest"]
+    if indexed_subject_manifest_digest != verified_subject:
+        raise ValueError(
+            "subjectmanifestdigest index hint disagrees with verified manifest"
+        )
+
+    manifest_artifact_type = manifest.get("artifactType")
+    if manifest_artifact_type != surfaced_artifact_type:
+        raise ValueError("surfaced artifacttype disagrees with verified manifest")
+    layers = manifest.get("layers")
+    if (
+        not isinstance(layers, list)
+        or len(layers) != 1
+        or not isinstance(layers[0], dict)
+    ):
+        raise ValueError("verified referrer manifest must have exactly one layer")
+    layer = layers[0]
+    if layer.get("mediaType") != surfaced_layer_media_type:
+        raise ValueError("surfaced layermediatype disagrees with verified manifest")
+    if layer.get("size") != len(attestation_blob):
+        raise ValueError("attestation blob size disagrees with verified manifest")
+    layer_digest = layer.get("digest")
+    if not isinstance(layer_digest, str):
+        raise ValueError("verified referrer layer has no digest")
+    layer_algorithm, layer_encoded_digest = _verify_oci_prefixed_digest(
+        attestation_blob,
+        layer_digest,
+    )
+    if (
+        layer_algorithm != surfaced_digest_algorithm
+        or not hmac.compare_digest(layer_encoded_digest, surfaced_blob_digest)
+    ):
+        raise ValueError("surfaced blob digest disagrees with verified layer")
+
+    if not signature_valid:
+        raise ValueError("attestation signature or statement verification failed")
+    if statement_subject_manifest_digest != selected_package_manifest_digest:
+        raise ValueError(
+            "verified attestation statement subject does not match selected package"
+        )
+    return manifest
 
 
 def apply_oci_tag(
@@ -317,10 +738,14 @@ def add_oci_referrer_resource(
     referrer_resources: dict[str, dict[str, object]],
     subject_manifest_digest: str,
     referrer_manifest_digest: str,
+    referrer_manifest_bytes: bytes,
     attestation_blob: bytes,
     digest_algorithm: str,
     attestation_digest: str,
     artifact_type: str,
+    layer_media_type: str,
+    signature_valid: bool,
+    statement_subject_manifest_digest: str,
     signer: str | None = None,
 ) -> str:
     """Create a separate immutable referrer Resource for an OCI attestation."""
@@ -333,8 +758,19 @@ def add_oci_referrer_resource(
         raise ValueError("unknown subject manifest")
     if not artifact_type:
         raise ValueError("missing OCI referrer artifact type")
-    if digest_bytes(attestation_blob, digest_algorithm) != attestation_digest:
-        raise ValueError("attestation blob digest mismatch")
+    verify_oci_attestation_binding(
+        selected_package_manifest_digest=subject_manifest_digest,
+        indexed_subject_manifest_digest=subject_manifest_digest,
+        referrer_manifest_digest=referrer_manifest_digest,
+        referrer_manifest_bytes=referrer_manifest_bytes,
+        surfaced_artifact_type=artifact_type,
+        surfaced_layer_media_type=layer_media_type,
+        surfaced_digest_algorithm=digest_algorithm,
+        surfaced_blob_digest=attestation_digest,
+        attestation_blob=attestation_blob,
+        signature_valid=signature_valid,
+        statement_subject_manifest_digest=statement_subject_manifest_digest,
+    )
 
     resource_id = symbolic_identifier(referrer_manifest_digest)
     version = {
@@ -342,6 +778,7 @@ def add_oci_referrer_resource(
         "manifestdigest": referrer_manifest_digest,
         "format": "Opaque/1.0",
         "artifacttype": artifact_type,
+        "layermediatype": layer_media_type,
         "digestalg": digest_algorithm,
         "digest": attestation_digest,
     }
@@ -496,6 +933,88 @@ def validate_model(model: dict) -> list[str]:
             context,
             max_versions=1 if context.endswith(".referrers") else 0,
         )
+        resource_description = resource.get("description", "").lower()
+        if (
+            "untrusted routing metadata" not in resource_description
+            or "resolver egress policy" not in resource_description
+        ):
+            errors.append(
+                f"{context}: core xref and Resource URL must require egress policy"
+            )
+
+    resolver_routing_descriptions = {
+        "shells.eventendpoint":
+            _at(groups, "shells", "attributes", "eventendpoint"),
+        "shells.authorization.resourceuri":
+            _at(
+                groups,
+                "shells",
+                "attributes",
+                "authorization",
+                "item",
+                "attributes",
+                "resourceuri",
+            ),
+        "shells.authorization.authorityuri":
+            _at(
+                groups,
+                "shells",
+                "attributes",
+                "authorization",
+                "item",
+                "attributes",
+                "authorityuri",
+            ),
+        "submodels.authorization.resourceuri":
+            _at(
+                groups,
+                "shells",
+                "resources",
+                "submodels",
+                "attributes",
+                "authorization",
+                "item",
+                "attributes",
+                "resourceuri",
+            ),
+        "submodels.authorization.authorityuri":
+            _at(
+                groups,
+                "shells",
+                "resources",
+                "submodels",
+                "attributes",
+                "authorization",
+                "item",
+                "attributes",
+                "authorityuri",
+            ),
+        "aasxregistries.registryurl":
+            _at(groups, "aasxregistries", "attributes", "registryurl"),
+    }
+    for context, definition in resolver_routing_descriptions.items():
+        description = definition.get("description", "").lower()
+        if (
+            "untrusted routing metadata" not in description
+            or "resolver egress policy" not in description
+        ):
+            errors.append(f"{context}: URL metadata must require resolver egress policy")
+    registry_url_description = resolver_routing_descriptions[
+        "aasxregistries.registryurl"
+    ].get("description", "").lower()
+    if (
+        "configured rfc 6052 nat64-prefix" not in registry_url_description
+        or "both isatap-marker" not in registry_url_description
+        or "embedded-ipv4 normalization" not in registry_url_description
+        or "unconditional metadata-address denial" not in registry_url_description
+        or "special-use rejection before global acceptance"
+        not in registry_url_description
+    ):
+        errors.append(
+            "aasxregistries.registryurl: resolver policy must normalize configured "
+            "NAT64 and both ISATAP forms, deny metadata unconditionally, and reject "
+            "special-use addresses before global acceptance"
+        )
 
     submodel_digest_algorithm = (
         resources["groups.shells.resources.submodels"]
@@ -589,12 +1108,20 @@ def validate_model(model: dict) -> list[str]:
         "manifestdigest",
         "subjectmanifestdigest",
         "artifacttype",
+        "layermediatype",
         "digest",
         "digestalg",
     ):
         if referrer_attributes.get(name, {}).get("required") is not True:
             errors.append(f"referrers.{name}: must be required")
-    for name in ("manifestdigest", "subjectmanifestdigest", "digestalg"):
+    for name in (
+        "manifestdigest",
+        "subjectmanifestdigest",
+        "artifacttype",
+        "layermediatype",
+        "digest",
+        "digestalg",
+    ):
         if referrer_attributes.get(name, {}).get("matchcase") is not True:
             errors.append(f"referrers.{name}: exact case must be preserved")
     referrer_format = referrer_attributes.get("format", {})
@@ -611,11 +1138,47 @@ def validate_model(model: dict) -> list[str]:
         )
     if referrer_digest_algorithm.get("strict") is not True:
         errors.append("referrers.digestalg: unsupported algorithms must be rejected")
+    subject_description = (
+        referrer_attributes.get("subjectmanifestdigest", {})
+        .get("description", "")
+        .lower()
+    )
+    if (
+        "index hint" not in subject_description
+        or "must not treat" not in subject_description
+        or "authority" not in subject_description
+        or "verified referrer manifest" not in subject_description
+    ):
+        errors.append(
+            "referrers.subjectmanifestdigest: must be a non-authoritative index hint"
+        )
+    artifact_description = (
+        referrer_attributes.get("artifacttype", {})
+        .get("description", "")
+        .lower()
+    )
+    layer_description = (
+        referrer_attributes.get("layermediatype", {})
+        .get("description", "")
+        .lower()
+    )
+    digest_description = (
+        referrer_attributes.get("digest", {})
+        .get("description", "")
+        .lower()
+    )
+    if "exact oci artifacttype" not in artifact_description:
+        errors.append("referrers.artifacttype: must match the verified manifest")
+    if "exact mediatype" not in layer_description:
+        errors.append("referrers.layermediatype: must match the verified layer")
+    if "single layer descriptor" not in digest_description:
+        errors.append("referrers.digest: must match the verified layer digest")
     referrer_description = referrers.get("description", "").lower()
     if (
         "separate resource" not in referrer_description
         or "exactly one immutable version" not in referrer_description
         or "default version" not in referrer_description
+        or "format-specific verified statement subject" not in referrer_description
     ):
         errors.append(
             "referrers: must isolate each immutable attestation from package defaults"
@@ -796,10 +1359,16 @@ def validate_algorithms() -> list[str]:
         referrer_resources,
         OCI_REFERRER_EXAMPLE["subjectmanifestdigest"],
         OCI_REFERRER_EXAMPLE["manifestdigest"],
+        base64.b64decode(OCI_REFERRER_MANIFEST_BASE64),
         base64.b64decode(OCI_REFERRER_EXAMPLE["attestationbase64"]),
         OCI_REFERRER_EXAMPLE["digestalg"],
         OCI_REFERRER_EXAMPLE["digest"],
         OCI_REFERRER_EXAMPLE["artifacttype"],
+        OCI_REFERRER_EXAMPLE["layermediatype"],
+        True,
+        extract_cosign_statement_subject(
+            base64.b64decode(OCI_REFERRER_EXAMPLE["attestationbase64"])
+        ),
         OCI_REFERRER_EXAMPLE["signer"],
     )
     if package_resource != package_resource_before:
@@ -814,6 +1383,30 @@ def validate_algorithms() -> list[str]:
         or list(referrer_versions) != [referrer_id]
     ):
         errors.append("OCI attestation was not isolated in a one-Version referrer Resource")
+    try:
+        verify_oci_attestation_binding(
+            selected_package_manifest_digest=OCI_EXAMPLES[1]["manifestdigest"],
+            indexed_subject_manifest_digest=OCI_EXAMPLES[1]["manifestdigest"],
+            referrer_manifest_digest=OCI_REFERRER_EXAMPLE["manifestdigest"],
+            referrer_manifest_bytes=base64.b64decode(
+                OCI_REFERRER_MANIFEST_BASE64
+            ),
+            surfaced_artifact_type=OCI_REFERRER_EXAMPLE["artifacttype"],
+            surfaced_layer_media_type=OCI_REFERRER_EXAMPLE["layermediatype"],
+            surfaced_digest_algorithm=OCI_REFERRER_EXAMPLE["digestalg"],
+            surfaced_blob_digest=OCI_REFERRER_EXAMPLE["digest"],
+            attestation_blob=base64.b64decode(
+                OCI_REFERRER_EXAMPLE["attestationbase64"]
+            ),
+            signature_valid=True,
+            statement_subject_manifest_digest=extract_cosign_statement_subject(
+                base64.b64decode(OCI_REFERRER_EXAMPLE["attestationbase64"])
+            ),
+        )
+    except ValueError:
+        pass
+    else:
+        errors.append("valid benign attestation was rebound to a malicious package")
 
     local_resource: dict[str, object] = {
         "versions": copy.deepcopy(versions),
@@ -831,6 +1424,66 @@ def validate_algorithms() -> list[str]:
     convert_resource_to_xref(descriptor, "/shells/remote")
     if descriptor.get("xref") != "/shells/remote":
         errors.append("xref descriptor could not be established before local history")
+
+    public_hop: dict[str, object] = {
+        "url": "https://registry.example/resource",
+        "dns_addresses": ["93.184.216.34"],
+        "connected_address": "93.184.216.34",
+    }
+    resolution_policy: dict[str, object] = {
+        "allowed_schemes": {"https"},
+        "allowed_hosts": {"registry.example"},
+        "allowed_ports": {443},
+        "response_size": 128,
+        "max_response_size": 1024,
+        "elapsed_seconds": 0.1,
+        "max_elapsed_seconds": 2.0,
+    }
+    validate_federated_resolution([public_hop], **resolution_policy)
+    private_hop = dict(public_hop)
+    private_hop["dns_addresses"] = ["169.254.169.254"]
+    private_hop["connected_address"] = "169.254.169.254"
+    try:
+        release_federated_content(
+            b"internal secret",
+            [private_hop],
+            **resolution_policy,
+        )
+    except ValueError as exc:
+        if b"internal secret".decode() in str(exc):
+            errors.append("failed federation resolution disclosed fetched content")
+    else:
+        errors.append("federation resolver returned metadata-service content")
+
+    wrapped_metadata_cases = (
+        (
+            "ISATAP Alibaba metadata",
+            "2606:4700:1234:5678:0:5efe:6464:64c8",
+            {"trusted_networks": ("100.64.0.0/10",)},
+        ),
+        (
+            "configured NAT64 metadata",
+            "2606:4700:1234:a9fe:a9:fe00::",
+            {"nat64_prefixes": ("2606:4700:1234::/48",)},
+        ),
+    )
+    for name, address, additions in wrapped_metadata_cases:
+        wrapped_hop = dict(public_hop)
+        wrapped_hop["dns_addresses"] = [address]
+        wrapped_hop["connected_address"] = address
+        wrapped_policy = dict(resolution_policy)
+        wrapped_policy.update(additions)
+        try:
+            release_federated_content(
+                b"internal secret",
+                [wrapped_hop],
+                **wrapped_policy,
+            )
+        except ValueError as exc:
+            if b"internal secret".decode() in str(exc):
+                errors.append(f"{name} failure disclosed fetched content")
+        else:
+            errors.append(f"{name} bypassed resolver metadata denial")
 
     return errors
 
@@ -856,6 +1509,26 @@ def validate_documents(registry_spec: str, package_spec: str) -> list[str]:
         '"meta": { "historypolicy": "retain-all" }',
         "`templatenamespace` is REQUIRED",
         "`dictionaryidentifier` is REQUIRED",
+        "allowlist of schemes, hosts and ports",
+        "every embedded IPv4 address in IPv4-mapped, IPv4-compatible, "
+        "translated, 6to4, Teredo, NAT64 and ISATAP forms",
+        "`0000:5efe` and `0200:5efe`",
+        "deployment-specific RFC 6052 prefix explicitly configured",
+        "length `/32`, `/40`, `/48`, `/56`, `/64` or `/96`",
+        "classify the outer IPv6 address and every decoded IPv4 address "
+        "before applying any trusted-network exception",
+        "site-local (including `fec0::/10`)",
+        "shared address space (`100.64.0.0/10`)",
+        "embedded private or shared address requires its own matching IPv4",
+        "Alibaba Cloud `100.100.100.200`",
+        "trusted-network entry, including one covering `100.64.0.0/10`, "
+        "MUST NOT override this metadata denial",
+        "revalidate DNS immediately before connection",
+        "Redirects MUST be disabled unless",
+        "MUST NOT forward an inbound `Authorization`",
+        "response bytes and decompressed document bytes MUST also be bounded",
+        "certificate ApplicationUri MUST equal",
+        "MUST NOT return, cache, parse or include fetched internal content",
     )
     for phrase in required_registry_phrases:
         if phrase not in registry_flat:
@@ -901,6 +1574,15 @@ def validate_documents(registry_spec: str, package_spec: str) -> list[str]:
         "represented by its own immutable `referrer` Resource",
         "MUST NOT be represented as a Version of the `package` Resource",
         "A `referrer` Resource MUST contain exactly one immutable Version",
+        "`subjectmanifestdigest` is REQUIRED",
+        "It is an index hint, never an authority",
+        "`layermediatype` is REQUIRED",
+        "verify them against the candidate's `manifestdigest` before parsing them",
+        "`subject[].digest` in a projection that represents subjects as an array",
+        "parsed manifest `artifactType` to equal `artifacttype`",
+        "single layer descriptor's `mediaType` to equal `layermediatype`",
+        "statement MUST equal the selected package `manifestdigest` exactly",
+        "cannot rebind a valid benign attestation to a malicious package",
         "Adding the referrer MUST NOT modify that package Resource's Version collection",
         "because referrer Versions belong to a different Resource collection",
         "verify the returned package bytes against `digest`",

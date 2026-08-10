@@ -118,6 +118,14 @@ def _member_var(owner, owner_sym, name, datatype, typedef, rule, reftype, desc, 
 def prop_var(owner, owner_sym, name, datatype, desc, rule=MR_Optional, valuerank="-1"):
     return _member_var(owner, owner_sym, name, datatype, PropertyType, rule, HasProperty, desc, valuerank)
 
+def reserved_var(owner_sym, name, datatype, desc, valuerank="-1"):
+    """Consume a published Variable NodeId without declaring it on an ObjectType."""
+    nid = _mid()
+    add(nid, "UAVariable", name, f"{owner_sym}_{name}", desc=desc,
+        attrs={"DataType": datatype, "ValueRank": valuerank})
+    ref(nid, HasTypeDefinition, PropertyType)
+    return nid
+
 def obj_member(owner, owner_sym, name, typedef, desc, rule=MR_Optional, reftype=HasComponent):
     nid = _mid()
     add(nid, "UAObject", name, f"{owner_sym}_{name.strip('<>')}", desc=desc, parent=T(owner))
@@ -310,6 +318,7 @@ CU_DISCOVERY = "AAS-Discovery"
 CU_FEDERATION = "AAS-Federation"
 CU_DISCLOSURE = "AAS-DisclosureTiers"
 CU_PACKAGES = "AAS-Packages"
+CU_PACKAGE_INTEGRITY = "AAS-PackageIntegrity"
 CU_UPDATEABLE = "AAS-UpdateableRegistry"
 CU_ENVEXPORT = "AAS-EnvironmentExport"
 CU_INVOKE = "AAS-OperationInvoke"
@@ -317,7 +326,8 @@ CU_INVOKE = "AAS-OperationInvoke"
 ALL_CONFORMANCE_UNITS = (
     CU_METAMODEL, CU_ELEMENTS, CU_VALUES, CU_ROUNDTRIP, CU_MATERIALIZE,
     CU_REGISTRY, CU_IDENTITY, CU_VERSIONING, CU_DISCOVERY, CU_FEDERATION,
-    CU_DISCLOSURE, CU_PACKAGES, CU_UPDATEABLE, CU_ENVEXPORT, CU_INVOKE,
+    CU_DISCLOSURE, CU_PACKAGES, CU_PACKAGE_INTEGRITY, CU_UPDATEABLE,
+    CU_ENVEXPORT, CU_INVOKE,
 )
 
 CU_BY_NAME = {
@@ -353,7 +363,8 @@ CU_BY_NAME = {
     "AASConceptDictionaryGroupType": (CU_REGISTRY, CU_IDENTITY),
     "AASConceptDescriptionFileType": (CU_REGISTRY, CU_IDENTITY, CU_UPDATEABLE),
     "AASPackageStoreGroupType": (CU_PACKAGES, CU_IDENTITY),
-    "AASPackageFileType": (CU_PACKAGES, CU_IDENTITY),
+    "AASPackageFileType": (
+        CU_PACKAGES, CU_IDENTITY, CU_PACKAGE_INTEGRITY),
     "AASEnvironmentFileType": (CU_ENVEXPORT, CU_IDENTITY),
     "AASRegistry": (CU_REGISTRY,),
 }
@@ -619,7 +630,9 @@ data_type(1232, "AASAttestationDataType", [
     ("ArtifactType", String, "Media type identifying what kind of attestation this is."),
     ("Digest", String, "Digest of the attestation artifact."),
     ("Signer", String, "The party that produced the attestation."),
-], "A signature or attestation attached to a package. Its presence is not verification: a Consumer retrieves and verifies the artifact itself.",
+], "A non-authoritative discovery hint for a separate attestation or OCI referrer Resource. It never "
+   "represents a package Version, and its presence is not verification: a Consumer retrieves and verifies "
+   "the separate artifact itself.",
     required=("ArtifactType", "Digest"))
 
 data_type(1233, "AASMaterializationResultDataType", [
@@ -842,14 +855,20 @@ placeholder_obj(1100, RG, "<SubmodelTemplateGroup>", T(1103), "A submodel templa
 placeholder_obj(1100, RG, "<ConceptDictionaryGroup>", T(1104), "A concept dictionary held by the registry.", reftype=Organizes)
 placeholder_obj(1100, RG, "<PackageStoreGroup>", T(1106), "A package store held by the registry.", reftype=Organizes)
 placeholder_obj(1100, RG, "<Environment>", T(1108), "A serialization of one materialized environment, held by the registry as a retrievable document.", reftype=Organizes)
+GET_SUBMODEL_DESCRIPTION = (
+    "Resolve the selected AASSubmodelFileType before returning its document and enforce the same "
+    "Session-specific effective RolePermissions, UserRolePermissions, DisclosureTier, Authorization "
+    "and FileType Open/Read decision as direct access to that target. Call permission on this Method "
+    "does not authorize the target. Return Bad_UserAccessDenied, or Bad_NotFound where policy conceals "
+    "existence, without exposing controlled bytes, Format, ContentType, other target metadata or a "
+    "distinguishable timing path.")
 lookup_type = method(1100, RG, "LookupShellsByAssetLink",
     "Return the shells discoverable by an asset key. This is the discovery question - given a serial number or a "
     "part identifier, which shells describe it - answered without the caller browsing the whole collection.",
     inargs=[("Name", String, "The key name, for example serialNumber."), ("Value", String, "The key value.")],
     outargs=[("Shells", NodeId, "The shell group nodes matching the key.", 1)])
 getsm_type = method(1100, RG, "GetSubmodel",
-    "Return a submodel document and enough metadata to parse it, given its identifier. The method form of the "
-    "document fast path, for a Client that has an identifier rather than a node.",
+    GET_SUBMODEL_DESCRIPTION,
     inargs=[("SubmodelIdentifier", String, "The submodel's authored identifier.")],
     outargs=[("Document", ByteString, "The submodel document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Document media type.")])
 prop_var(1100, RG, "AutoMaterialize", Boolean, "Whether a change to a stored document re-materializes the AddressSpace without being asked. Part of the updateable registry profile.")
@@ -934,16 +953,31 @@ prop_var(1106, PSG, "RegistryUrl", String, "Base URL of the backing package stor
 placeholder_obj(1106, PSG, "<Package>", T(1107), "A package held by this store.", reftype=Organizes)
 
 object_type(1107, "AASPackageFileType", XRegistry_ResourceType,
-            "An xRegistry ResourceType whose file content is one package: an immutable release addressed by digest "
-            "and optionally attested by signatures.")
+            "An xRegistry ResourceType whose file content is one package. Every package carries mandatory strong "
+            "integrity metadata for the exact returned blob; an OCI-backed version also carries the immutable "
+            "manifest digest that is its version identity. Mutable tags are Resource-level discovery aliases, "
+            "never Version identity, and OCI referrers are separate Resources rather than package Versions and "
+            "cannot affect the package default Version.")
 PF = "AASPackageFileType"
 prop_var(1107, PF, "PackageIdentifier", String, "The package's name as held by the backing store, verbatim. It is the resource's source identity.", rule=MR_Mandatory)
 prop_var(1107, PF, "ArtifactType", String, "The media type identifying what the artifact is, where the backing store carries one.")
-prop_var(1107, PF, "Digest", String, "Digest of the exact package bytes. This is the integrity anchor: a version identifies which release a Consumer wants, a digest identifies what that release contains.")
-prop_var(1107, PF, "DigestAlg", String, "The algorithm used to compute Digest.")
+prop_var(1107, PF, "Digest", String,
+         "Immutable lower-case hexadecimal digest, without an algorithm prefix, of the exact package blob bytes "
+         "returned by FileType Read. It is Mandatory on every Version. The Server verifies it before publication, "
+         "and a Consumer recomputes it before parsing, materializing or otherwise using the package.",
+         rule=MR_Mandatory)
+prop_var(1107, PF, "DigestAlg", String,
+         "Immutable case-sensitive algorithm used to compute Digest. Only the exact spellings Sha256, Sha384 and "
+         "Sha512 are valid. OCI descriptor algorithms sha256, sha384 and sha512 map respectively to those values; "
+         "all other algorithms or casing are rejected.", rule=MR_Mandatory)
 prop_var(1107, PF, "AasIdentifiers", String, "The shell identifiers this package contains, so a Consumer can tell what it holds without retrieving and opening it.", valuerank="1")
-prop_var(1107, PF, "Subject", String, "The digest of the artifact this one attests, where it is an attestation rather than a package.")
-prop_var(1107, PF, "Attestations", T(1232), "The signatures and attestations attached to this package.", valuerank="1")
+reserved_var(PF, "Subject", String,
+             "Reserved Variable NodeId. It is not an InstanceDeclaration of AASPackageFileType; an attestation or "
+             "OCI referrer is a separate immutable Resource and never a package Version.")
+reserved_var(PF, "Attestations", T(1232),
+             "Reserved Variable NodeId. It is not an InstanceDeclaration of AASPackageFileType; attestations and "
+             "OCI referrers are separate immutable Resources and never affect the package default Version.",
+             valuerank="1")
 
 object_type(1108, "AASEnvironmentFileType", XRegistry_ResourceType,
             "An xRegistry ResourceType whose file content is one serialization of a materialized environment: an "
@@ -971,7 +1005,7 @@ instance_method(1150, "AASRegistry", "LookupShellsByAssetLink", lookup_type,
     inargs=[("Name", String, "The key name, for example serialNumber."), ("Value", String, "The key value.")],
     outargs=[("Shells", NodeId, "The shell group nodes matching the key.", 1)])
 instance_method(1150, "AASRegistry", "GetSubmodel", getsm_type,
-    "Return a submodel document and enough metadata to parse it, given its identifier. The functional method on the well-known AASRegistry object.",
+    GET_SUBMODEL_DESCRIPTION,
     inargs=[("SubmodelIdentifier", String, "The submodel's authored identifier.")],
     outargs=[("Document", ByteString, "The submodel document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Document media type.")])
 instance_method(1150, "AASRegistry", "Materialize", materialize_type,
@@ -1002,9 +1036,18 @@ data_type(1236, "AASLevelTypeDataType", [
 ], "The four IEC 61360 level flags. Every flag is explicit.",
     required=("Min", "Nom", "Typ", "Max"))
 
+# Appended after every existing declaration to preserve all allocated NodeIds.
+prop_var(1107, PF, "ManifestDigest", String,
+         "Immutable exact OCI manifest digest with its lower-case algorithm prefix and lower-case hexadecimal "
+         "value. It is Mandatory for every OCI-backed Version, is the sole authority for that Version's identity, "
+         "and produces its always-hashed symbolic VersionId; a mutable tag is never identity. It verifies only the "
+         "exact manifest bytes, never the returned package blob. The verified manifest has exactly one package-layer "
+         "descriptor whose algorithm and encoded digest map to DigestAlg and Digest; the Server verifies this chain "
+         "before publication and a Consumer repeats it before use.")
+
 NAMESPACE = "http://opcfoundation.org/UA/I4AAS/v3/"
-VERSION = "3.02"
-PUBDATE = "2026-08-10T10:56:21Z"
+VERSION = "3.03"
+PUBDATE = "2026-08-10T16:54:40Z"
 UA_REQUIRED_VERSION = "1.05.04"
 UA_REQUIRED_PUBDATE = "2024-05-01T00:00:00Z"
 XR_NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"

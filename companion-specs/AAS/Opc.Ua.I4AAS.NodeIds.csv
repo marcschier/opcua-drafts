@@ -269,3 +269,4 @@ AASValueListDataType_DefaultJSON,5190,Object
 AASLevelTypeDataType,1236,DataType
 AASLevelTypeDataType_DefaultBinary,5191,Object
 AASLevelTypeDataType_DefaultJSON,5192,Object
+AASPackageFileType_ManifestDigest,5193,Variable

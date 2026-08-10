@@ -463,7 +463,7 @@ The AAS Registry root - an xRegistry RegistryType, and therefore a FolderType - 
 | <PackageStoreGroup> | Object |  | OptionalPlaceholder | AASRegistryType | A package store held by the registry. |
 | <Environment> | Object |  | OptionalPlaceholder | AASRegistryType | A serialization of one materialized environment, held by the registry as a retrievable document. |
 | LookupShellsByAssetLink | Method |  | Optional | AASRegistryType | Return the shells discoverable by an asset key. This is the discovery question - given a serial number or a part identifier, which shells describe it - answered without the caller browsing the whole collection. |
-| GetSubmodel | Method |  | Optional | AASRegistryType | Return a submodel document and enough metadata to parse it, given its identifier. The method form of the document fast path, for a Client that has an identifier rather than a node. |
+| GetSubmodel | Method |  | Optional | AASRegistryType | Resolve the selected AASSubmodelFileType before returning its document and enforce the same Session-specific effective RolePermissions, UserRolePermissions, DisclosureTier, Authorization and FileType Open/Read decision as direct access to that target. Call permission on this Method does not authorize the target. Return Bad_UserAccessDenied, or Bad_NotFound where policy conceals existence, without exposing controlled bytes, Format, ContentType, other target metadata or a distinguishable timing path. |
 | AutoMaterialize | Variable | Boolean | Optional | AASRegistryType | Whether a change to a stored document re-materializes the AddressSpace without being asked. Part of the updateable registry profile. |
 | MaterializationGeneration | Variable | UInt32 | Optional | AASRegistryType | Increments once on each committed switch. A Client correlates a node's NodeVersion with the generation that produced it. |
 | Materialize | Method |  | Optional | AASRegistryType | Re-materialize the AddressSpace from the stored documents. Part of the updateable registry profile: the documents are canonical and the nodes are derived, so this is the operation that makes the derived side agree with the canonical one. |
@@ -581,17 +581,16 @@ An xRegistry GroupType holding packages - one store, or one namespace within one
 
 *Inherits from:* ns=1;i=63002
 
-An xRegistry ResourceType whose file content is one package: an immutable release addressed by digest and optionally attested by signatures.
+An xRegistry ResourceType whose file content is one package. Every package carries mandatory strong integrity metadata for the exact returned blob; an OCI-backed version also carries the immutable manifest digest that is its version identity. Mutable tags are Resource-level discovery aliases, never Version identity, and OCI referrers are separate Resources rather than package Versions and cannot affect the package default Version.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | PackageIdentifier | Variable | String | Mandatory | AASPackageFileType | The package's name as held by the backing store, verbatim. It is the resource's source identity. |
 | ArtifactType | Variable | String | Optional | AASPackageFileType | The media type identifying what the artifact is, where the backing store carries one. |
-| Digest | Variable | String | Optional | AASPackageFileType | Digest of the exact package bytes. This is the integrity anchor: a version identifies which release a Consumer wants, a digest identifies what that release contains. |
-| DigestAlg | Variable | String | Optional | AASPackageFileType | The algorithm used to compute Digest. |
+| Digest | Variable | String | Mandatory | AASPackageFileType | Immutable lower-case hexadecimal digest, without an algorithm prefix, of the exact package blob bytes returned by FileType Read. It is Mandatory on every Version. The Server verifies it before publication, and a Consumer recomputes it before parsing, materializing or otherwise using the package. |
+| DigestAlg | Variable | String | Mandatory | AASPackageFileType | Immutable case-sensitive algorithm used to compute Digest. Only the exact spellings Sha256, Sha384 and Sha512 are valid. OCI descriptor algorithms sha256, sha384 and sha512 map respectively to those values; all other algorithms or casing are rejected. |
 | AasIdentifiers | Variable | String\[\] | Optional | AASPackageFileType | The shell identifiers this package contains, so a Consumer can tell what it holds without retrieving and opening it. |
-| Subject | Variable | String | Optional | AASPackageFileType | The digest of the artifact this one attests, where it is an attestation rather than a package. |
-| Attestations | Variable | [AASAttestationDataType](#type-AASAttestationDataType)\[\] | Optional | AASPackageFileType | The signatures and attestations attached to this package. |
+| ManifestDigest | Variable | String | Optional | AASPackageFileType | Immutable exact OCI manifest digest with its lower-case algorithm prefix and lower-case hexadecimal value. It is Mandatory for every OCI-backed Version, is the sole authority for that Version's identity, and produces its always-hashed symbolic VersionId; a mutable tag is never identity. It verifies only the exact manifest bytes, never the returned package blob. The verified manifest has exactly one package-layer descriptor whose algorithm and encoded digest map to DigestAlg and Digest; the Server verifies this chain before publication and a Consumer repeats it before use. |
 
 <a id="type-AASEnvironmentFileType"></a>
 
@@ -1166,7 +1165,7 @@ One authorization option a Consumer may use. It is authorization configuration o
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
-A signature or attestation attached to a package. Its presence is not verification: a Consumer retrieves and verifies the artifact itself.
+A non-authoritative discovery hint for a separate attestation or OCI referrer Resource. It never represents a package Version, and its presence is not verification: a Consumer retrieves and verifies the separate artifact itself.
 
 | Field | DataType | Cardinality | Description |
 |---|---|---|---|

@@ -57,6 +57,7 @@ Submodels meaning.
   - [6. Disclosure Tiers](#6-disclosure-tiers)
   - [7. Product Passport Profile](#7-product-passport-profile)
   - [8. Security](#8-security)
+    - [8.1. Resolver Egress Policy](#81-resolver-egress-policy)
   - [Annex A. Correspondence to the AAS HTTP API](#annex-a-correspondence-to-the-aas-http-api)
 
 ## 1. Overview
@@ -648,7 +649,9 @@ Consequently:
 - A delegated entity carries no `digest` of its own unless the delegating
   registry has verified the bytes it points at.
 - A Consumer follows a federation link exactly as it would consult the next
-  resolver in its chain, and MAY stop as soon as an entity resolves.
+  resolver in its chain, subject to the mandatory resolver egress policy in
+  [Section 8.1](#81-resolver-egress-policy), and MAY stop as soon as an entity
+  resolves.
 
 Because a Submodel is not owned by its shell, `xref` also serves the ordinary
 case of one Submodel shared by several shells within one registry. Both source
@@ -825,6 +828,68 @@ Where a `digest` is present a Consumer SHOULD verify it against the bytes it
 retrieved before trusting a document, particularly for a document obtained
 through federation. Where stronger provenance is needed, packages carry
 signatures and attestations; see [AAS Packages](xRegistry-AAS-Packages.md).
+
+### 8.1. Resolver Egress Policy
+
+Every serving or discovery location obtained from registry data is untrusted
+routing input. This includes an `xref` target, `<RESOURCE>url`, `registryurl`,
+`eventendpoint`, authorization `authorityuri`, and any `ServerUri` or
+`ResourceUrl` projected by another binding. A resolver MUST NOT dereference such
+a value until an administrator-defined egress policy has accepted the complete
+target.
+
+The resolver egress policy MUST satisfy all of the following:
+
+- It MUST use an allowlist of schemes, hosts and ports. A syntactically valid
+  URL or an authenticated caller is not sufficient to authorize network
+  access.
+- It MUST resolve the target host before connecting and examine every returned
+  address before accepting it as global. For IPv6, it MUST normalize and inspect
+  every embedded IPv4 address in IPv4-mapped, IPv4-compatible, translated,
+  6to4, Teredo, NAT64 and ISATAP forms. Both ISATAP interface-identifier
+  markers, `0000:5efe` and `0200:5efe`, MUST be recognized. A resolver using
+  NAT64 MUST recognize the RFC 6052 well-known prefix `64:ff9b::/96`, the local
+  use prefix `64:ff9b:1::/48`, and every deployment-specific RFC 6052 prefix
+  explicitly configured in its egress policy. A configured NAT64 prefix MUST
+  be a network-aligned IPv6 prefix of length `/32`, `/40`, `/48`, `/56`, `/64`
+  or `/96`; any other length or a non-zero RFC 6052 `u` octet MUST fail
+  resolution. The resolver MUST classify the outer IPv6 address and every
+  decoded IPv4 address before applying any trusted-network exception.
+  Loopback, link-local, site-local (including `fec0::/10`), private,
+  unique-local, shared address space (`100.64.0.0/10`), unspecified, multicast,
+  reserved and cloud-instance metadata service addresses MUST be denied by
+  default. A special-use address MAY be used only where the exact peer or
+  address range is an explicit trusted-network entry; an embedded private or
+  shared address requires its own matching IPv4 trusted-network entry rather
+  than inheriting trust from an outer IPv6 prefix. Metadata service addresses,
+  including `169.254.169.254`, Alibaba Cloud `100.100.100.200`,
+  `fd00:ec2::254`, and any mapped, translated, NAT64 or ISATAP form, MUST NOT be
+  allowed. A trusted-network entry, including one covering `100.64.0.0/10`,
+  MUST NOT override this metadata denial.
+- It MUST revalidate DNS immediately before connection and MUST verify that the
+  address of the connected peer is one of the validated addresses. A DNS answer
+  that changes to a disallowed address or an unvalidated connected address MUST
+  fail resolution, preventing DNS rebinding.
+- Redirects MUST be disabled unless the implementation enables them with a
+  bounded hop count. When enabled, every hop MUST undergo the complete scheme,
+  host, port, DNS, address and credential validation before it is followed.
+- A resolver MUST create a fresh outbound security context. It MUST NOT attach
+  ambient process, operating-system or user credentials, and MUST NOT forward
+  an inbound `Authorization`, cookie or proxy-authorization value to the
+  resolved target or to a redirect. Credentials explicitly configured for one
+  allowlisted peer MUST NOT be sent to another peer.
+- Connection, handshake, read and total resolution time MUST be bounded. The
+  number of redirects, response bytes and decompressed document bytes MUST also
+  be bounded before content is returned or parsed.
+- For an OPC UA endpoint, the resolver MUST validate the endpoint certificate
+  against its configured trust list. The certificate ApplicationUri MUST equal
+  the Server ApplicationUri returned by the endpoint and the ApplicationUri of
+  the configured peer; a mismatch MUST fail the connection.
+
+Any policy, DNS, redirect, credential, certificate, identity, size or timeout
+failure MUST fail closed. The resolver MUST discard the response and MUST NOT
+return, cache, parse or include fetched internal content in the resolved entity
+or in an error response.
 
 ## Annex A. Correspondence to the AAS HTTP API
 

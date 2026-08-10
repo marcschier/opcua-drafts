@@ -6,6 +6,7 @@ from __future__ import annotations
 import base64
 import copy
 import hashlib
+import ipaddress
 import json
 import sys
 import unittest
@@ -325,6 +326,7 @@ class ModelValidationTests(unittest.TestCase):
         referrers = mutated["groups"]["aasxregistries"]["resources"]["referrers"]
         referrers["maxversions"] = 0
         del referrers["attributes"]["subjectmanifestdigest"]
+        del referrers["attributes"]["layermediatype"]
         errors = validator.validate_model(mutated)
         self.assertTrue(
             any("attestations must not be package Version attributes" in error for error in errors),
@@ -339,9 +341,77 @@ class ModelValidationTests(unittest.TestCase):
             errors,
         )
         self.assertTrue(
+            any("referrers.layermediatype: must be required" in error for error in errors),
+            errors,
+        )
+        self.assertTrue(
             any("referrer-only Opaque/1.0" in error for error in errors),
             errors,
         )
+
+    def test_referrer_subject_metadata_must_remain_only_an_index_hint(self) -> None:
+        mutated = copy.deepcopy(self.model)
+        subject = (
+            mutated["groups"]["aasxregistries"]["resources"]["referrers"]
+            ["attributes"]["subjectmanifestdigest"]
+        )
+        subject["description"] = "The authoritative package association."
+        errors = validator.validate_model(mutated)
+        self.assertTrue(
+            any("non-authoritative index hint" in error for error in errors),
+            errors,
+        )
+
+    def test_routing_metadata_requires_resolver_egress_policy(self) -> None:
+        mutations = (
+            (
+                "submodel resource",
+                ("groups", "shells", "resources", "submodels"),
+            ),
+            (
+                "event endpoint",
+                ("groups", "shells", "attributes", "eventendpoint"),
+            ),
+            (
+                "package registry",
+                ("groups", "aasxregistries", "attributes", "registryurl"),
+            ),
+        )
+        for name, path in mutations:
+            with self.subTest(name=name):
+                mutated = copy.deepcopy(self.model)
+                definition = mutated
+                for component in path:
+                    definition = definition[component]
+                definition["description"] = "A routing URL."
+                errors = validator.validate_model(mutated)
+                self.assertTrue(
+                    any("egress policy" in error for error in errors),
+                    errors,
+                )
+
+    def test_registry_url_requires_ipv6_transition_address_controls(self) -> None:
+        for phrase in (
+            "configured RFC 6052 NAT64-prefix",
+            "both ISATAP-marker",
+            "unconditional metadata-address denial",
+            "special-use rejection before global acceptance",
+        ):
+            with self.subTest(phrase=phrase):
+                mutated = copy.deepcopy(self.model)
+                registry_url = (
+                    mutated["groups"]["aasxregistries"]["attributes"]["registryurl"]
+                )
+                registry_url["description"] = registry_url["description"].replace(
+                    phrase,
+                    "generic address filtering",
+                    1,
+                )
+                errors = validator.validate_model(mutated)
+                self.assertTrue(
+                    any("normalize configured NAT64" in error for error in errors),
+                    errors,
+                )
 
 
 class OciProjectionTests(unittest.TestCase):
@@ -538,10 +608,16 @@ class OciProjectionTests(unittest.TestCase):
             referrers,
             example["subjectmanifestdigest"],
             example["manifestdigest"],
+            base64.b64decode(validator.OCI_REFERRER_MANIFEST_BASE64),
             base64.b64decode(example["attestationbase64"]),
             example["digestalg"],
             example["digest"],
             example["artifacttype"],
+            example["layermediatype"],
+            True,
+            validator.extract_cosign_statement_subject(
+                base64.b64decode(example["attestationbase64"])
+            ),
             example["signer"],
         )
 
@@ -580,10 +656,16 @@ class OciProjectionTests(unittest.TestCase):
             referrers,
             example["subjectmanifestdigest"],
             example["manifestdigest"],
+            base64.b64decode(validator.OCI_REFERRER_MANIFEST_BASE64),
             base64.b64decode(example["attestationbase64"]),
             example["digestalg"],
             example["digest"],
             example["artifacttype"],
+            example["layermediatype"],
+            True,
+            validator.extract_cosign_statement_subject(
+                base64.b64decode(example["attestationbase64"])
+            ),
         )
         validator.add_oci_referrer_resource(
             *arguments,
@@ -594,6 +676,108 @@ class OciProjectionTests(unittest.TestCase):
                 *arguments,
                 signer="did:example:other",
             )
+
+    def test_verified_referrer_manifest_and_statement_bind_selected_package(self) -> None:
+        example = validator.OCI_REFERRER_EXAMPLE
+        manifest_bytes = base64.b64decode(validator.OCI_REFERRER_MANIFEST_BASE64)
+        attestation_blob = base64.b64decode(example["attestationbase64"])
+        self.assertEqual(
+            example["manifestdigest"].split(":", 1)[1],
+            hashlib.sha256(manifest_bytes).hexdigest(),
+        )
+        self.assertEqual(
+            example["digest"],
+            hashlib.sha256(attestation_blob).hexdigest(),
+        )
+        self.assertEqual(
+            example["statementsubject"],
+            validator.extract_cosign_statement_subject(attestation_blob),
+        )
+        manifest = validator.verify_oci_attestation_binding(
+            selected_package_manifest_digest=example["subjectmanifestdigest"],
+            indexed_subject_manifest_digest=example["subjectmanifestdigest"],
+            referrer_manifest_digest=example["manifestdigest"],
+            referrer_manifest_bytes=manifest_bytes,
+            surfaced_artifact_type=example["artifacttype"],
+            surfaced_layer_media_type=example["layermediatype"],
+            surfaced_digest_algorithm=example["digestalg"],
+            surfaced_blob_digest=example["digest"],
+            attestation_blob=attestation_blob,
+            signature_valid=True,
+            statement_subject_manifest_digest=
+                validator.extract_cosign_statement_subject(attestation_blob),
+        )
+        self.assertEqual(
+            example["subjectmanifestdigest"],
+            manifest["subject"]["digest"],
+        )
+
+    def test_valid_benign_attestation_cannot_be_rebound_to_malicious_package(self) -> None:
+        example = validator.OCI_REFERRER_EXAMPLE
+        malicious_package = validator.OCI_EXAMPLES[1]["manifestdigest"]
+        with self.assertRaisesRegex(ValueError, "manifest subject"):
+            validator.verify_oci_attestation_binding(
+                selected_package_manifest_digest=malicious_package,
+                indexed_subject_manifest_digest=malicious_package,
+                referrer_manifest_digest=example["manifestdigest"],
+                referrer_manifest_bytes=base64.b64decode(
+                    validator.OCI_REFERRER_MANIFEST_BASE64
+                ),
+                surfaced_artifact_type=example["artifacttype"],
+                surfaced_layer_media_type=example["layermediatype"],
+                surfaced_digest_algorithm=example["digestalg"],
+                surfaced_blob_digest=example["digest"],
+                attestation_blob=base64.b64decode(example["attestationbase64"]),
+                signature_valid=True,
+                statement_subject_manifest_digest=
+                    validator.extract_cosign_statement_subject(
+                        base64.b64decode(example["attestationbase64"])
+                    ),
+            )
+
+    def test_referrer_surface_and_statement_mutations_are_rejected(self) -> None:
+        example = validator.OCI_REFERRER_EXAMPLE
+        base_arguments = {
+            "selected_package_manifest_digest": example["subjectmanifestdigest"],
+            "indexed_subject_manifest_digest": example["subjectmanifestdigest"],
+            "referrer_manifest_digest": example["manifestdigest"],
+            "referrer_manifest_bytes": base64.b64decode(
+                validator.OCI_REFERRER_MANIFEST_BASE64
+            ),
+            "surfaced_artifact_type": example["artifacttype"],
+            "surfaced_layer_media_type": example["layermediatype"],
+            "surfaced_digest_algorithm": example["digestalg"],
+            "surfaced_blob_digest": example["digest"],
+            "attestation_blob": base64.b64decode(example["attestationbase64"]),
+            "signature_valid": True,
+            "statement_subject_manifest_digest":
+                validator.extract_cosign_statement_subject(
+                    base64.b64decode(example["attestationbase64"])
+                ),
+        }
+        mutations = (
+            (
+                "index hint",
+                {"indexed_subject_manifest_digest": validator.OCI_EXAMPLES[1]["manifestdigest"]},
+            ),
+            ("artifacttype", {"surfaced_artifact_type": "application/example"}),
+            ("layermediatype", {"surfaced_layer_media_type": "application/example"}),
+            ("blob digest", {"surfaced_blob_digest": "0" * 64}),
+            ("signature", {"signature_valid": False}),
+            (
+                "statement subject",
+                {
+                    "statement_subject_manifest_digest":
+                        validator.OCI_EXAMPLES[1]["manifestdigest"]
+                },
+            ),
+        )
+        for expected_error, mutation in mutations:
+            with self.subTest(mutation=expected_error):
+                arguments = dict(base_arguments)
+                arguments.update(mutation)
+                with self.assertRaisesRegex(ValueError, expected_error):
+                    validator.verify_oci_attestation_binding(**arguments)
 
 
 class XrefConversionTests(unittest.TestCase):
@@ -616,6 +800,396 @@ class XrefConversionTests(unittest.TestCase):
         self.assertEqual({}, resource["versions"])
 
 
+class FederationSecurityTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.public_hop = {
+            "url": "https://registry.example/resource",
+            "dns_addresses": ["93.184.216.34"],
+            "connected_address": "93.184.216.34",
+        }
+        self.policy = {
+            "allowed_schemes": {"https"},
+            "allowed_hosts": {"registry.example"},
+            "allowed_ports": {443},
+            "response_size": 128,
+            "max_response_size": 1024,
+            "elapsed_seconds": 0.1,
+            "max_elapsed_seconds": 2.0,
+        }
+
+    @staticmethod
+    def _rfc6052_address(prefix: str, embedded_ipv4: str) -> str:
+        network = ipaddress.ip_network(prefix, strict=True)
+        address = bytearray(network.network_address.packed)
+        ipv4 = ipaddress.IPv4Address(embedded_ipv4).packed
+        if network.prefixlen == 96:
+            address[12:16] = ipv4
+        else:
+            prefix_octets = network.prefixlen // 8
+            before_u_octets = 8 - prefix_octets
+            address[prefix_octets:8] = ipv4[:before_u_octets]
+            address[8] = 0
+            address[9:9 + 4 - before_u_octets] = ipv4[before_u_octets:]
+        return str(ipaddress.IPv6Address(bytes(address)))
+
+    @staticmethod
+    def _isatap_address(marker: str, embedded_ipv4: str) -> str:
+        address = bytearray(
+            ipaddress.IPv6Address("2606:4700:1234:5678::").packed
+        )
+        address[8:12] = bytes.fromhex(marker)
+        address[12:16] = ipaddress.IPv4Address(embedded_ipv4).packed
+        return str(ipaddress.IPv6Address(bytes(address)))
+
+    def _assert_release_blocked(
+        self,
+        address: str,
+        expected_error: str | None = None,
+        **policy_updates: object,
+    ) -> None:
+        hop = dict(self.public_hop)
+        hop["dns_addresses"] = [address]
+        hop["connected_address"] = address
+        policy = dict(self.policy)
+        policy.update(policy_updates)
+        content = b"internal-service-secret"
+        with self.assertRaises(ValueError) as failure:
+            validator.release_federated_content(content, [hop], **policy)
+        self.assertNotIn(content.decode(), str(failure.exception))
+        if expected_error is not None:
+            self.assertRegex(str(failure.exception), expected_error)
+
+    def test_allowlisted_public_target_is_accepted(self) -> None:
+        validator.validate_federated_resolution(
+            [self.public_hop],
+            **self.policy,
+        )
+
+    def test_private_metadata_and_special_addresses_are_rejected(self) -> None:
+        for address in (
+            "127.0.0.1",
+            "10.0.0.10",
+            "169.254.169.254",
+            "fe80::1",
+        ):
+            with self.subTest(address=address):
+                hop = dict(self.public_hop)
+                hop["dns_addresses"] = [address]
+                hop["connected_address"] = address
+                with self.assertRaises(ValueError):
+                    validator.validate_federated_resolution(
+                        [hop],
+                        **self.policy,
+                    )
+
+    def test_ipv6_embedded_ipv4_and_site_local_bypasses_are_rejected(self) -> None:
+        addresses = (
+            "64:ff9b::a9fe:a9fe",
+            "::ffff:169.254.169.254",
+            "::ffff:10.0.0.10",
+            "::a9fe:a9fe",
+            "::a00:1",
+            "fec0::1",
+        )
+        for address in addresses:
+            with self.subTest(address=address):
+                hop = dict(self.public_hop)
+                hop["dns_addresses"] = [address]
+                hop["connected_address"] = address
+                with self.assertRaises(ValueError):
+                    validator.validate_federated_resolution(
+                        [hop],
+                        **self.policy,
+                    )
+
+    def test_valid_global_ipv6_target_is_accepted(self) -> None:
+        address = "2606:2800:220:1:248:1893:25c8:1946"
+        hop = dict(self.public_hop)
+        hop["dns_addresses"] = [address]
+        hop["connected_address"] = address
+        validator.validate_federated_resolution([hop], **self.policy)
+
+    def test_trusted_network_override_requires_explicit_embedded_network(self) -> None:
+        address = "64:ff9b::a00:1"
+        hop = dict(self.public_hop)
+        hop["dns_addresses"] = [address]
+        hop["connected_address"] = address
+
+        outer_only_policy = dict(self.policy)
+        outer_only_policy["trusted_networks"] = ("64:ff9b::/96",)
+        with self.assertRaisesRegex(ValueError, "embeds an untrusted"):
+            validator.validate_federated_resolution(
+                [hop],
+                **outer_only_policy,
+            )
+
+        fully_trusted_policy = dict(self.policy)
+        fully_trusted_policy["trusted_networks"] = (
+            "64:ff9b::/96",
+            "10.0.0.0/8",
+        )
+        validator.validate_federated_resolution(
+            [hop],
+            **fully_trusted_policy,
+        )
+
+    def test_metadata_address_cannot_be_enabled_by_trusted_networks(self) -> None:
+        address = "64:ff9b::a9fe:a9fe"
+        hop = dict(self.public_hop)
+        hop["dns_addresses"] = [address]
+        hop["connected_address"] = address
+        policy = dict(self.policy)
+        policy["trusted_networks"] = (
+            "64:ff9b::/96",
+            "169.254.0.0/16",
+        )
+        with self.assertRaisesRegex(ValueError, "metadata service"):
+            validator.validate_federated_resolution([hop], **policy)
+
+    def test_rfc6052_configured_prefix_lengths_are_decoded(self) -> None:
+        for prefix_length in sorted(validator.RFC6052_PREFIX_LENGTHS):
+            prefix = f"2606:4700::/{prefix_length}"
+            with self.subTest(prefix=prefix, embedded="public"):
+                address = self._rfc6052_address(prefix, "8.8.8.8")
+                hop = dict(self.public_hop)
+                hop["dns_addresses"] = [address]
+                hop["connected_address"] = address
+                policy = dict(self.policy)
+                policy["nat64_prefixes"] = (prefix,)
+                validator.validate_federated_resolution([hop], **policy)
+            with self.subTest(prefix=prefix, embedded="private"):
+                self._assert_release_blocked(
+                    self._rfc6052_address(prefix, "10.1.2.3"),
+                    nat64_prefixes=(prefix,),
+                )
+
+    def test_invalid_rfc6052_prefix_configuration_is_rejected(self) -> None:
+        for prefix in (
+            "2606:4700::/33",
+            "2606:4700::/65",
+            "2606:4700::/95",
+            "2606:4700::1/96",
+            "192.0.2.0/24",
+        ):
+            with self.subTest(prefix=prefix):
+                policy = dict(self.policy)
+                policy["nat64_prefixes"] = (prefix,)
+                with self.assertRaisesRegex(ValueError, "NAT64 prefix"):
+                    validator.validate_federated_resolution(
+                        [self.public_hop],
+                        **policy,
+                    )
+
+    def test_nonzero_rfc6052_u_octet_is_rejected(self) -> None:
+        prefix = "2606:4700:1234::/48"
+        address_bytes = bytearray(
+            ipaddress.IPv6Address(
+                self._rfc6052_address(prefix, "8.8.8.8")
+            ).packed
+        )
+        address_bytes[8] = 1
+        address = str(ipaddress.IPv6Address(bytes(address_bytes)))
+        hop = dict(self.public_hop)
+        hop["dns_addresses"] = [address]
+        hop["connected_address"] = address
+        policy = dict(self.policy)
+        policy["nat64_prefixes"] = (prefix,)
+        with self.assertRaisesRegex(ValueError, "non-zero u octet"):
+            validator.validate_federated_resolution([hop], **policy)
+
+    def test_release_blocks_isatap_and_nat64_wrapped_special_addresses(self) -> None:
+        custom_prefix = "2606:4700:1234::/48"
+        cases = (
+            (
+                "isatap-zero-metadata",
+                self._isatap_address("00005efe", "169.254.169.254"),
+                {},
+            ),
+            (
+                "isatap-universal-metadata",
+                self._isatap_address("02005efe", "169.254.169.254"),
+                {},
+            ),
+            (
+                "isatap-private",
+                self._isatap_address("00005efe", "10.1.2.3"),
+                {},
+            ),
+            (
+                "isatap-shared",
+                self._isatap_address("02005efe", "100.64.1.2"),
+                {},
+            ),
+            (
+                "local-nat64-metadata",
+                self._rfc6052_address(
+                    str(validator.NAT64_LOCAL_USE_NETWORK),
+                    "169.254.169.254",
+                ),
+                {},
+            ),
+            (
+                "custom-nat64-metadata",
+                self._rfc6052_address(custom_prefix, "169.254.169.254"),
+                {"nat64_prefixes": (custom_prefix,)},
+            ),
+            (
+                "custom-nat64-private",
+                self._rfc6052_address(custom_prefix, "10.1.2.3"),
+                {"nat64_prefixes": (custom_prefix,)},
+            ),
+            (
+                "custom-nat64-shared",
+                self._rfc6052_address(custom_prefix, "100.64.1.2"),
+                {"nat64_prefixes": (custom_prefix,)},
+            ),
+        )
+        for name, address, policy_updates in cases:
+            with self.subTest(name=name, address=address):
+                self._assert_release_blocked(address, **policy_updates)
+
+    def test_alibaba_metadata_is_unconditional_in_wrapped_forms(self) -> None:
+        alibaba_metadata = "100.100.100.200"
+        custom_prefix = "2606:4700:1234::/48"
+        cases = (
+            ("direct", alibaba_metadata, {}),
+            ("mapped", f"::ffff:{alibaba_metadata}", {}),
+            (
+                "well-known-nat64",
+                self._rfc6052_address(
+                    str(validator.NAT64_WELL_KNOWN_NETWORK),
+                    alibaba_metadata,
+                ),
+                {},
+            ),
+            (
+                "custom-nat64",
+                self._rfc6052_address(custom_prefix, alibaba_metadata),
+                {"nat64_prefixes": (custom_prefix,)},
+            ),
+            (
+                "isatap-zero",
+                self._isatap_address("00005efe", alibaba_metadata),
+                {},
+            ),
+            (
+                "isatap-universal",
+                self._isatap_address("02005efe", alibaba_metadata),
+                {},
+            ),
+        )
+        for name, address, policy_updates in cases:
+            with self.subTest(name=name, address=address):
+                self._assert_release_blocked(
+                    address,
+                    expected_error="metadata service",
+                    trusted_networks=("100.64.0.0/10",),
+                    **policy_updates,
+                )
+
+    def test_dns_rebinding_and_redirect_targets_are_revalidated(self) -> None:
+        rebound = dict(self.public_hop)
+        rebound["connected_address"] = "1.1.1.1"
+        with self.assertRaisesRegex(ValueError, "DNS rebinding"):
+            validator.validate_federated_resolution(
+                [rebound],
+                **self.policy,
+            )
+
+        redirect = {
+            "url": "https://internal.example/resource",
+            "dns_addresses": ["93.184.216.34"],
+            "connected_address": "93.184.216.34",
+        }
+        with self.assertRaisesRegex(ValueError, "redirects are disabled"):
+            validator.validate_federated_resolution(
+                [self.public_hop, redirect],
+                **self.policy,
+            )
+        redirect_policy = dict(self.policy)
+        redirect_policy.update({"allow_redirects": True, "max_redirects": 1})
+        with self.assertRaisesRegex(ValueError, "host is not allowlisted"):
+            validator.validate_federated_resolution(
+                [self.public_hop, redirect],
+                **redirect_policy,
+            )
+
+    def test_ambient_credentials_and_resource_bounds_are_rejected(self) -> None:
+        credentials_policy = dict(self.policy)
+        credentials_policy["forwarded_headers"] = {
+            "Authorization": "Bearer inbound-token"
+        }
+        with self.assertRaisesRegex(ValueError, "ambient credentials"):
+            validator.validate_federated_resolution(
+                [self.public_hop],
+                **credentials_policy,
+            )
+
+        for name, value, error in (
+            ("response_size", 2048, "size limit"),
+            ("elapsed_seconds", 3.0, "time limit"),
+        ):
+            with self.subTest(bound=name):
+                bounded_policy = dict(self.policy)
+                bounded_policy[name] = value
+                with self.assertRaisesRegex(ValueError, error):
+                    validator.validate_federated_resolution(
+                        [self.public_hop],
+                        **bounded_policy,
+                    )
+
+    def test_opcua_certificate_and_application_uri_are_required(self) -> None:
+        hop = {
+            "url": "opc.tcp://opcua.example:4840",
+            "dns_addresses": ["10.0.0.10"],
+            "connected_address": "10.0.0.10",
+            "certificate_trusted": True,
+            "certificate_application_uri": "urn:example:server",
+            "server_application_uri": "urn:example:server",
+            "configured_peer_application_uri": "urn:example:server",
+        }
+        policy = {
+            "allowed_schemes": {"opc.tcp"},
+            "allowed_hosts": {"opcua.example"},
+            "allowed_ports": {4840},
+            "trusted_networks": ("10.0.0.0/24",),
+            "response_size": 128,
+            "max_response_size": 1024,
+            "elapsed_seconds": 0.1,
+            "max_elapsed_seconds": 2.0,
+        }
+        validator.validate_federated_resolution([hop], **policy)
+
+        for mutation, error in (
+            ({"certificate_trusted": False}, "certificate is not trusted"),
+            (
+                {"certificate_application_uri": "urn:example:attacker"},
+                "ApplicationUri",
+            ),
+        ):
+            with self.subTest(mutation=mutation):
+                invalid_hop = dict(hop)
+                invalid_hop.update(mutation)
+                with self.assertRaisesRegex(ValueError, error):
+                    validator.validate_federated_resolution(
+                        [invalid_hop],
+                        **policy,
+                    )
+
+    def test_failed_resolution_never_releases_internal_content(self) -> None:
+        secret = b"internal-service-secret"
+        hop = dict(self.public_hop)
+        hop["dns_addresses"] = ["169.254.169.254"]
+        hop["connected_address"] = "169.254.169.254"
+        with self.assertRaises(ValueError) as failure:
+            validator.release_federated_content(
+                secret,
+                [hop],
+                **self.policy,
+            )
+        self.assertNotIn(secret.decode(), str(failure.exception))
+
+
 class RepositoryValidationTests(unittest.TestCase):
     def test_documents_and_model_are_aligned(self) -> None:
         self.assertEqual([], validator.validate_repository())
@@ -635,6 +1209,85 @@ class RepositoryValidationTests(unittest.TestCase):
                 )
                 self.assertTrue(
                     any("outside meta" in error for error in errors),
+                    errors,
+                )
+
+    def test_security_requirements_cannot_be_removed_from_prose(self) -> None:
+        registry_spec = validator.REGISTRY_SPEC_PATH.read_text(encoding="utf-8")
+        package_spec = validator.PACKAGE_SPEC_PATH.read_text(encoding="utf-8")
+        mutations = (
+            (
+                "resolver allowlist",
+                registry_spec.replace(
+                    "allowlist of schemes, hosts and ports",
+                    "list of destinations",
+                    1,
+                ),
+                package_spec,
+            ),
+            (
+                "IPv6 embedded IPv4 inspection",
+                registry_spec.replace(
+                    "6to4, Teredo, NAT64 and ISATAP forms",
+                    "transition-network",
+                    1,
+                ),
+                package_spec,
+            ),
+            (
+                "ISATAP variants",
+                registry_spec.replace(
+                    "`0000:5efe` and `0200:5efe`",
+                    "an ISATAP marker",
+                    1,
+                ),
+                package_spec,
+            ),
+            (
+                "configured RFC6052 prefix",
+                registry_spec.replace(
+                    "deployment-specific RFC 6052 prefix",
+                    "deployment-specific translation prefix",
+                    1,
+                ),
+                package_spec,
+            ),
+            (
+                "Alibaba metadata rejection",
+                registry_spec.replace(
+                    "Alibaba Cloud `100.100.100.200`",
+                    "a cloud endpoint",
+                    1,
+                ),
+                package_spec,
+            ),
+            (
+                "CGNAT trust cannot override metadata",
+                registry_spec.replace(
+                    "MUST NOT override this metadata denial",
+                    "normally does not override this metadata denial",
+                    1,
+                ),
+                package_spec,
+            ),
+            (
+                "attestation subject authority",
+                registry_spec,
+                package_spec.replace(
+                    "It is an index hint,\n  never an authority",
+                    "It identifies the package",
+                    1,
+                ),
+            ),
+        )
+        for name, mutated_registry, mutated_package in mutations:
+            with self.subTest(name=name):
+                errors = validator.validate_documents(
+                    mutated_registry,
+                    mutated_package,
+                )
+                self.assertTrue(
+                    any("missing normative phrase" in error for error in errors),
                     errors,
                 )
 

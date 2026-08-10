@@ -42,6 +42,7 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "jsonld"))
 sys.path.insert(0, HERE)
 
 from lift import AAS, Lifter, Ontology, Schema, serialize  # noqa: E402
+from context_security import DEFAULT_POLICY  # noqa: E402
 
 OUT = os.path.normpath(os.path.join(HERE, "..", "..", "aas.context.jsonld"))
 XSD = "http://www.w3.org/2001/XMLSchema#"
@@ -265,7 +266,15 @@ def measure(context_doc, limit=0):
                 doc = json.load(f)
             framed = dict(doc)
             framed["@context"] = context_doc["@context"]
-            nq = jsonld.to_rdf(framed, {"format": "application/n-quads", "base": base})
+            nq = jsonld.to_rdf(
+                framed,
+                {
+                    "format": "application/n-quads",
+                    "base": base,
+                    "documentLoader": DEFAULT_POLICY.loader(
+                        framed, base=base),
+                },
+            )
             via_context = Graph()
             via_context.parse(data=nq, format="nt")
 

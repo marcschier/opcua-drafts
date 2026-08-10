@@ -36,7 +36,7 @@ mirrored beside this study:
 
 | Document | What it is |
 |---|---|
-| [`OPC-UA-AAS.md`](OPC-UA-AAS.md) | OPC 30270 draft 3.02 — the AAS V3 metamodel mapped losslessly onto OPC UA in its own provisional namespace, together with the same registry as an xRegistry domain extension |
+| [`OPC-UA-AAS.md`](OPC-UA-AAS.md) | OPC 30270 draft 3.03 — the AAS V3 metamodel mapped losslessly onto OPC UA in its own provisional namespace, together with the same registry as an xRegistry domain extension |
 
 Four findings in this study shaped those documents more than any other:
 

@@ -50,6 +50,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 from conformance import canonical, cases_from_corpus, cases_from_fixtures  # noqa: E402
+from context_security import DEFAULT_POLICY  # noqa: E402
 from lift import AAS, Lifter, Ontology, Schema, iri, literal, serialize  # noqa: E402
 from lower import Lowerer, parse_nt, unescape  # noqa: E402
 
@@ -146,7 +147,10 @@ def author(core_nt, order_nt, context_doc) -> str:
     its own inside the document, which is how JSON-LD writes a dataset.
     """
     expanded = jsonld.from_rdf(to_dataset(core_nt, order_nt))
-    compacted = jsonld.compact(expanded, context_doc["@context"])
+    context = context_doc["@context"]
+    loader = DEFAULT_POLICY.loader({"@context": context})
+    compacted = jsonld.compact(
+        expanded, context, {"documentLoader": loader})
     return json.dumps(compacted, ensure_ascii=False, sort_keys=True)
 
 
@@ -172,7 +176,7 @@ def add_foreign(core_nt):
     return core_nt.rstrip() + "\n" + "\n".join(additions) + "\n"
 
 
-def read_back(doc_text):
+def read_back(doc_text, context_policy=DEFAULT_POLICY):
     """Take the RDF of an authored document, the way any consumer would.
 
     The processor returns the dataset as terms, and the N-Triples text is written
@@ -182,7 +186,10 @@ def read_back(doc_text):
     escaped backslash followed by a raw newline, which is not a legal N-Quads
     literal and breaks any line-based reader.
     """
-    dataset = jsonld.to_rdf(json.loads(doc_text))
+    document = json.loads(doc_text)
+    loader = context_policy.loader(document)
+    dataset = jsonld.to_rdf(
+        document, {"documentLoader": loader})
     core, order = [], []
     for graph_name, quads in dataset.items():
         target = order if graph_name == ORDER_GRAPH else core

@@ -39,6 +39,7 @@ NOT**, **RECOMMENDED**, **MAY** and **OPTIONAL** are to be interpreted as descri
 - [3 The ordering graph (normative)](#3-the-ordering-graph-normative)
 - [4 Lowering (normative)](#4-lowering-normative)
 - [5 The JSON-LD context (normative)](#5-the-json-ld-context-normative)
+  - [5.1 Context resolution and integrity](#51-context-resolution-and-integrity)
 - [5A Converting to the other formats (normative)](#5a-converting-to-the-other-formats-normative)
 - [5B Authoring an AAS inside a Thing Description (normative)](#5b-authoring-an-aas-inside-a-thing-description-normative)
   - [5B.1 Published examples](#5b1-published-examples)
@@ -109,7 +110,9 @@ one without the other.
 
 **The document's surface is not constrained.** Everything normative here is stated about the graph,
 because that is what a JSON-LD processor leaves once the spelling is gone. A rule about member names
-would be a rule about one of the many documents that denote the same AAS.
+would be a rule about one of the many documents that denote the same AAS. This freedom does not
+authorize a processor to retrieve an arbitrary context: context resolution and integrity are
+constrained by clause 5.1 before the graph is interpreted.
 
 ## Terms and definitions
 
@@ -155,6 +158,9 @@ A document **MUST**:
   namespace `https://admin-shell.io/aas/3/0/`;
 - denote each `Identifiable` by the subject term of clause 2.2; and
 - expand, per JSON-LD 1.1, to a graph that simple-entails every triple that mapping produces.
+
+Any context needed for that expansion **MUST** be resolved under clause 5.1. Graph conformance does
+not grant permission to dereference a context IRI.
 
 Simple entailment permits a named subject to witness a non-root blank node in that graph. This is
 the RDF skolemization used when a projection must address a contained element. It does not permit a
@@ -376,10 +382,10 @@ order. Where it is absent, the order of an array is implementation defined.
 The context published with this document at `aas.context.jsonld` is an **authoring convenience**.
 Published examples reference that bundled file by a relative IRI, so their final bytes remain
 processable without depending on an external URL whose publication is outside this specification.
-An implementation MAY additionally publish the same bytes at a stable HTTPS IRI and use that IRI in
+An implementation **MAY** additionally publish the same bytes at a stable HTTPS IRI and use that IRI in
 its own documents. The context shortens what an author writes; it does not decide what a document
-means. A document that uses a different context, or none,
-is conforming if its graph is the graph of clause 1.
+means. A document that uses a different context, or none, is graph-conforming if its graph is the
+graph of clause 1, but a processor **MUST** apply clause 5.1 before resolving that context.
 
 The context is a JSON-LD 1.1 context. It defines:
 
@@ -398,6 +404,47 @@ string. A property whose range is `xs:string` is **not** coerced: a plain litera
 
 The context does not define enumeration spellings. An enumeration value is an individual of the
 vocabulary and is written as one — `aas:DataTypeDefXsd/String`, not `"xs:string"`.
+
+### 5.1 Context resolution and integrity
+
+A processor **MUST NOT** load a JSON-LD context from the network by default. An unbundled or
+unapproved context **MUST** fail closed; the processor **MUST NOT** make a request first, silently
+substitute a mutable cached copy or continue with a partial expansion. This rule applies to every
+context-loading mechanism, including a context IRI, `@import`, a scoped context and a context
+discovered while processing another context.
+
+An implementation **MAY** enable network loading through explicit configuration. Such configuration
+**MUST** name each allowed HTTPS origin; a rule that accepts an arbitrary host, every HTTPS origin
+or a host-name suffix is not an allowlist. Before each request, and again before every redirect hop,
+the implementation **MUST**:
+
+- reject a non-HTTPS URL and a URL containing user information;
+- resolve the destination's current IP addresses and apply the deployment's egress policy to them;
+- reject every address that is not globally routable, including IPv4 shared address space
+  `100.64.0.0/10` and deprecated IPv6 site-local space `fec0::/10`, as well as multicast, reserved,
+  unspecified and cloud-metadata destinations, unless the particular destination or network is
+  explicitly trusted by that deployment;
+- normalize IPv4-mapped and standardized IPv4-embedded IPv6 forms and apply the same test to each
+  effective IPv4 address; and
+- revalidate the redirect origin and destination addresses and enforce a finite redirect limit.
+
+The request **MUST NOT** carry ambient cookies, authorization headers, proxy credentials, client
+credentials or other credentials inherited from an interactive user or host process. A deployment
+that deliberately supplies a credential for one allowlisted origin **MUST** scope it to that origin
+and **MUST NOT** forward it across a redirect.
+
+Context processing **MUST** enforce finite implementation-defined limits on the number of contexts,
+the bytes of each context and of all contexts together, context and `@import` nesting depth,
+redirects, response time and response bytes. Exceeding a limit **MUST** terminate processing with an
+error.
+
+Every context that affects a signed, reviewed, approved or otherwise integrity-protected document
+**MUST** either be bundled in the protected material or be verified against a cryptographic content
+hash covered by the same integrity mechanism. The protected integrity scope **MUST** cover either
+the exact context bytes and their IRI-to-hash bindings, or the canonical expanded RDF dataset
+obtained with those contexts. Where canonical expanded RDF is protected, the canonicalization
+algorithm and version **MUST** be identified. A mutable URL or an unverified cache entry does not
+satisfy this requirement.
 
 ## 5A Converting to the other formats (normative)
 
@@ -454,7 +501,10 @@ inline context that preserves `id` as the `@id` alias and binds companion-model 
 The final bytes of each published example **MUST** be processable as JSON-LD 1.1. A final Thing
 Description **MUST** also validate against the W3C Thing Description 1.1 JSON Schema and the pinned
 OPC UA WoT Binding extension schema. Validation of an intermediate document does not satisfy any
-of these requirements.
+of these requirements. The published examples **MUST** be processed without network access: the
+W3C context IRI resolves to the vendored bytes whose SHA-256 appears in
+`tools/jsonld/vendor/sources.json`, and the AAS and OPC UA WoT Binding contexts resolve only from
+their bundled relative files.
 
 Validation **MUST** be performed on the expanded RDF terms, not inferred from compact member names.
 The expanded graph **MUST** use `https://admin-shell.io/aas/3/0/`,
@@ -567,6 +617,10 @@ this document.
 The four conformance units are independent. An implementation **MAY** claim any subset, and
 **MUST NOT** present one as implying another.
 
+Clause 5.1 is a mandatory processing prerequisite rather than an optional conformance unit. An
+implementation claiming any unit for an operation that resolves JSON-LD contexts **MUST** satisfy
+clause 5.1 for that operation.
+
 | Unit | Requires |
 |---|---|
 | `AASLD-Authored` | For every authored JSON-LD document, the RDF interpretation simple-entails the graph the RDF mapping of IDTA-01001 Part 1 defines, with root subjects encoded per clause 2.2, and lowering per clause 4 produces an AAS JSON document. Triples in a foreign vocabulary remain in the authored graph, do not appear in that JSON document and do not affect it, including where a foreign predicate has the same local name as an AAS property. |
@@ -590,6 +644,10 @@ sufficient; it is not all of them.
 | `AASLD-003` | The value of a member whose property range is an enumeration shall correspond to an individual of that enumeration. |
 | `AASLD-004` | A root subject term shall be the base64url construction of clause 2.2 for its `aas:Identifiable/id`. |
 | `AASLD-005` | A lowering shall resolve an AAS member only from its complete AAS property IRI, never from a foreign predicate's local name. |
+| `AASLD-006` | Network context loading shall be disabled by default; an enabled request and every redirect shall be restricted to an explicitly allowlisted HTTPS origin and shall pass DNS/IP and egress checks. |
+| `AASLD-007` | A context affecting an integrity-protected document shall be bundled in the protected package or verified against a cryptographic content hash. |
+| `AASLD-008` | Context requests shall carry no ambient credentials or cookies. |
+| `AASLD-009` | Context count, bytes, nesting, redirects and response resources shall have finite enforced bounds. |
 
 ## Annex B — Deviations from the RDF mapping
 
@@ -623,6 +681,9 @@ upstream artefacts while this document was prepared, with the evidence for each.
 This annex is informative. The figures are produced by `tools/jsonld/authored.py`,
 `tools/jsonld/conformance.py` and `tools/jsonld/make_context.py` over the 2 426 matched JSON and
 Turtle example pairs published with the pinned upstream release, of which 2 424 are readable.
+Every JSON-LD processor call in the supplied tooling uses
+`tools/jsonld/context_security.py`; network loading is disabled unless a caller constructs an
+explicit network policy.
 
 **`AASLD-Authored`**
 
@@ -655,16 +716,33 @@ projection-complete bundles carry the complete AAS submodel graph and match ever
 containment parent and source, sibling TD target, ReferenceType, Operation-variable role and list
 index, covering 234 containment edges, 45 indices and 6 621 ordered array occurrences.
 
+The final-byte processor resolves only three exact resources: the W3C Thing Description context to
+its vendored SHA-256-pinned bytes, and the two bundled relative context files to their exact local
+paths. Its per-operation limits are 32 context entries, 1 MiB of aggregate context definitions,
+eight levels of context/reference nesting and 512 KiB per loaded context. No network transport is
+configured.
+
 The validator's negative controls replace a containment parent, replace a containment source,
 replace a projected subject, replace a list index, substitute an RDF subject for a sibling TD
-target, remove a sibling TD, replace a bundled context with a missing IRI, wrap a Thing Description
-in an array, add `@id` beside `id`, remove the `id` alias, remove required Thing Description
-security, and change an AAS literal datatype. Further controls rebind `uav` and `i4aas`, malform an
-ExpandedNodeId, replace an OPC UA form with an RDF subject, address the wrong NodeId, violate each
-node-class term domain, remove the URI layer from a NodeId percent escape, move an Operation
-variable between roles, duplicate its index, replace its `ValueNodeId` target, use its role index as
-`uav:refName`, replace an ordering occurrence's property, and replace the index of a nested
-`Reference/keys` occurrence. All 29 mutations are rejected.
+target, remove a sibling TD, replace a bundled context with localhost, the link-local metadata
+address or an unpinned external context, wrap a Thing Description in an array, add `@id` beside
+`id`, remove the `id` alias, remove required Thing Description security, and change an AAS literal
+datatype. Further controls rebind `uav` and `i4aas`, malform an ExpandedNodeId, replace an OPC UA
+form with an RDF subject, address the wrong NodeId, violate each node-class term domain, remove the
+URI layer from a NodeId percent escape, move an Operation variable between roles, duplicate its
+index, replace its `ValueNodeId` target, use its role index as `uav:refName`, replace an ordering
+occurrence's property, and replace the index of a nested `Reference/keys` occurrence. All 31
+mutations are rejected.
+
+`tools/jsonld/regression_tests.py` also exercises the loader independently with a fake resolver and
+transport. Sixteen negative controls cover default-deny loading, loopback, the
+`169.254.169.254` metadata address, IPv4 shared address space, deprecated IPv6 site-local space,
+IPv4-mapped, IPv4-compatible and NAT64-embedded shared addresses, an allowlisted but unpinned
+context, a content-hash mismatch, a redirect to metadata, the redirect limit, URL credentials,
+context count, aggregate bytes and nesting depth. The prohibited and unpinned targets are rejected
+before the transport is called, and a redirect destination is revalidated before a second request.
+Positive controls load both an ordinary global address and an IPv4-mapped global address only when
+the exact response bytes match the configured SHA-256.
 
 **`AASLD-RdfCompatible`**
 

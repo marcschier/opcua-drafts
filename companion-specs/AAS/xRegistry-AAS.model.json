@@ -88,8 +88,8 @@
             "attributes": {
               "type": { "name": "type", "type": "string", "description": "The authorization type, for example OAuth2, Plain, SASL, X509Cert or APIKey" },
               "mechanism": { "name": "mechanism", "type": "string", "description": "The SASL mechanism name, used only when type is SASL" },
-              "resourceuri": { "name": "resourceuri", "type": "uri", "description": "The URI of the resource authorization is requested for" },
-              "authorityuri": { "name": "authorityuri", "type": "uri", "description": "The URI of the authority authorization is obtained from" },
+              "resourceuri": { "name": "resourceuri", "type": "uri", "description": "The URI of the resource authorization is requested for. It is untrusted routing metadata and, if dereferenced, MUST be handled under the resolver egress policy" },
+              "authorityuri": { "name": "authorityuri", "type": "uri", "description": "The URI of the authority authorization is obtained from. It is untrusted routing metadata and MUST be handled under the resolver egress policy" },
               "*": { "name": "*", "type": "any" }
             }
           }
@@ -97,7 +97,7 @@
         "eventendpoint": {
           "name": "eventendpoint",
           "type": "url",
-          "description": "The Endpoint Registry entry that delivers change events for this shell, where one is published. It is a URL rather than an xid because the Endpoint Registry serving it is usually a different registry, and an xid is resolved relative to the registry that carries it"
+          "description": "The Endpoint Registry entry that delivers change events for this shell, where one is published. It is a URL rather than an xid because the Endpoint Registry serving it is usually a different registry, and an xid is resolved relative to the registry that carries it. It is untrusted routing metadata and MUST be handled under the resolver egress policy"
         },
         "*": { "name": "*", "type": "any" }
       },
@@ -112,7 +112,7 @@
           "singleversionroot": true,
           "validateformat": true,
           "strictvalidation": false,
-          "description": "A Submodel served as a document. Every content change creates a new immutable Version, and all Versions are retained and remain directly retrievable",
+          "description": "A Submodel served as a document. Every content change creates a new immutable Version, and all Versions are retained and remain directly retrievable. Any core xref target or Resource URL is untrusted routing metadata and MUST be handled under the resolver egress policy",
           "attributes": {
             "format": {
               "name": "format",
@@ -198,8 +198,8 @@
                 "attributes": {
                   "type": { "name": "type", "type": "string", "description": "The authorization type, for example OAuth2, Plain, SASL, X509Cert or APIKey" },
                   "mechanism": { "name": "mechanism", "type": "string", "description": "The SASL mechanism name, used only when type is SASL" },
-                  "resourceuri": { "name": "resourceuri", "type": "uri", "description": "The URI of the resource authorization is requested for" },
-                  "authorityuri": { "name": "authorityuri", "type": "uri", "description": "The URI of the authority authorization is obtained from" },
+                  "resourceuri": { "name": "resourceuri", "type": "uri", "description": "The URI of the resource authorization is requested for. It is untrusted routing metadata and, if dereferenced, MUST be handled under the resolver egress policy" },
+                  "authorityuri": { "name": "authorityuri", "type": "uri", "description": "The URI of the authority authorization is obtained from. It is untrusted routing metadata and MUST be handled under the resolver egress policy" },
                   "*": { "name": "*", "type": "any" }
                 }
               }
@@ -270,7 +270,7 @@
           "singleversionroot": true,
           "validateformat": true,
           "strictvalidation": false,
-          "description": "A Concept Description served as a document. Every content change creates a new immutable Version, and all Versions are retained and remain directly retrievable",
+          "description": "A Concept Description served as a document. Every content change creates a new immutable Version, and all Versions are retained and remain directly retrievable. Any core xref target or Resource URL is untrusted routing metadata and MUST be handled under the resolver egress policy",
           "attributes": {
             "format": {
               "name": "format",
@@ -338,7 +338,7 @@
         "registryurl": {
           "name": "registryurl",
           "type": "url",
-          "description": "The current base URL of the backing package store. It is a routing location and is not an identity"
+          "description": "The current base URL of the backing package store. It is untrusted routing metadata, is not an identity, and MUST be handled under the resolver egress policy, including configured RFC 6052 NAT64-prefix and both ISATAP-marker embedded-IPv4 normalization, unconditional metadata-address denial, and special-use rejection before global acceptance"
         },
         "namespace": {
           "name": "namespace",
@@ -357,7 +357,7 @@
           "singleversionroot": true,
           "validateformat": true,
           "strictvalidation": false,
-          "description": "An AASX package release served as a document. Every content change creates a new immutable retained Version. In the OCI binding the Version source identity is manifestdigest; tags are mutable aliases in the Resource meta object. OCI referrer manifests MUST NOT be package Versions",
+          "description": "An AASX package release served as a document. Every content change creates a new immutable retained Version. In the OCI binding the Version source identity is manifestdigest; tags are mutable aliases in the Resource meta object. OCI referrer manifests MUST NOT be package Versions. Any core xref target or Resource URL is untrusted routing metadata and MUST be handled under the resolver egress policy",
           "attributes": {
             "format": {
               "name": "format",
@@ -450,7 +450,7 @@
           "singleversionroot": true,
           "validateformat": true,
           "strictvalidation": false,
-          "description": "An immutable OCI referrer artifact such as an attestation. Each referrer manifest is a separate Resource containing exactly one immutable Version, so its arrival cannot affect a package Resource's default Version",
+          "description": "An immutable OCI referrer artifact such as an attestation. Each referrer manifest is a separate Resource containing exactly one immutable Version, so its arrival cannot affect a package Resource's default Version. The verified manifest subject, artifactType and layer descriptor and the format-specific verified statement subject MUST bind to the selected package manifest. Any core xref target or Resource URL is untrusted routing metadata and MUST be handled under the resolver egress policy",
           "attributes": {
             "format": {
               "name": "format",
@@ -467,7 +467,7 @@
               "required": true,
               "matchcase": true,
               "matchversions": true,
-              "description": "The immutable OCI referrer manifest digest, including its algorithm prefix. It is the sole Resource source identity and also the Version source identity and authority: both referrerid and versionid are its always-hashed symbolic identifier"
+              "description": "The immutable OCI referrer manifest digest, including its algorithm prefix, verified against the exact manifest bytes before those bytes are parsed. It is the sole Resource source identity and also the Version source identity and authority: both referrerid and versionid are its always-hashed symbolic identifier"
             },
             "subjectmanifestdigest": {
               "name": "subjectmanifestdigest",
@@ -475,13 +475,21 @@
               "required": true,
               "matchcase": true,
               "matchversions": true,
-              "description": "The immutable package manifest digest named by the OCI referrer manifest's subject field"
+              "description": "An index hint copied from the OCI referrer manifest subject digest. It MUST equal the subject digest parsed from the verified referrer manifest, but a Consumer MUST NOT treat this registry value as authority"
             },
             "artifacttype": {
               "name": "artifacttype",
               "type": "string",
               "required": true,
-              "description": "The OCI artifactType identifying what kind of referrer or attestation this is"
+              "matchcase": true,
+              "description": "The exact OCI artifactType parsed from the verified referrer manifest, identifying what kind of referrer or attestation this is"
+            },
+            "layermediatype": {
+              "name": "layermediatype",
+              "type": "string",
+              "required": true,
+              "matchcase": true,
+              "description": "The exact mediaType of the single layer descriptor parsed from the verified referrer manifest"
             },
             "signer": {
               "name": "signer",
@@ -492,7 +500,8 @@
               "name": "digest",
               "type": "string",
               "required": true,
-              "description": "Lower-case hexadecimal digest of the exact attestation blob bytes a Consumer retrieves, computed with digestalg"
+              "matchcase": true,
+              "description": "Lower-case hexadecimal digest of the exact attestation blob bytes a Consumer retrieves. It MUST equal the encoded digest in the single layer descriptor parsed from the verified referrer manifest"
             },
             "digestalg": {
               "name": "digestalg",
@@ -501,7 +510,7 @@
               "matchcase": true,
               "enum": [ "Sha256", "Sha384", "Sha512" ],
               "strict": true,
-              "description": "The exact case-sensitive algorithm mapped from the OCI referrer layer descriptor and used to verify the attestation blob"
+              "description": "The exact case-sensitive algorithm mapped from the single layer descriptor parsed from the verified referrer manifest and used to verify the attestation blob"
             },
             "*": { "name": "*", "type": "any" }
           },

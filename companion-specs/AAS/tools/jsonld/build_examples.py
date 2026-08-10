@@ -42,6 +42,7 @@ sys.path.insert(0, HERE)
 import wot_bridge  # noqa: E402
 import validate_examples  # noqa: E402
 from authored import as_graph, author, load_context, term  # noqa: E402
+from context_security import DEFAULT_POLICY  # noqa: E402
 from pyld import jsonld  # noqa: E402
 from rdflib import Literal  # noqa: E402
 from lift import Lifter, Ontology, Schema, serialize, subject_iri  # noqa: E402
@@ -258,7 +259,8 @@ def aas_graph_of(tds, context_doc):
         for c in inline:
             merged.update(c)
         local["@context"] = merged
-        dataset = jsonld.to_rdf(local)
+        dataset = jsonld.to_rdf(
+            local, {"documentLoader": DEFAULT_POLICY.loader(local)})
         for quads in dataset.values():
             for quad in quads:
                 predicate = quad["predicate"]["value"]

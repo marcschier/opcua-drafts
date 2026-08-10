@@ -6,7 +6,7 @@
     <Uri>http://opcfoundation.org/UA/I4AAS/v3/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/I4AAS/v3/" Version="3.02" PublicationDate="2026-08-10T10:56:21Z">
+    <Model ModelUri="http://opcfoundation.org/UA/I4AAS/v3/" Version="3.03" PublicationDate="2026-08-10T16:54:40Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2024-05-01T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z" />
     </Model>
@@ -528,7 +528,7 @@
   </UAObject>
   <UADataType NodeId="ns=2;i=1232" BrowseName="2:AASAttestationDataType">
     <DisplayName>AASAttestationDataType</DisplayName>
-    <Description>A signature or attestation attached to a package. Its presence is not verification: a Consumer retrieves and verifies the artifact itself.</Description>
+    <Description>A non-authoritative discovery hint for a separate attestation or OCI referrer Resource. It never represents a package Version, and its presence is not verification: a Consumer retrieves and verifies the separate artifact itself.</Description>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
       <Reference ReferenceType="HasEncoding">ns=2;i=5024</Reference>
@@ -1669,7 +1669,7 @@
   </UAVariable>
   <UAMethod NodeId="ns=2;i=5114" BrowseName="2:GetSubmodel" ParentNodeId="ns=2;i=1100">
     <DisplayName>GetSubmodel</DisplayName>
-    <Description>Return a submodel document and enough metadata to parse it, given its identifier. The method form of the document fast path, for a Client that has an identifier rather than a node.</Description>
+    <Description>Resolve the selected AASSubmodelFileType before returning its document and enforce the same Session-specific effective RolePermissions, UserRolePermissions, DisclosureTier, Authorization and FileType Open/Read decision as direct access to that target. Call permission on this Method does not authorize the target. Return Bad_UserAccessDenied, or Bad_NotFound where policy conceals existence, without exposing controlled bytes, Format, ContentType, other target metadata or a distinguishable timing path.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1100</Reference>
@@ -2213,9 +2213,10 @@
   </UAObject>
   <UAObjectType NodeId="ns=2;i=1107" BrowseName="2:AASPackageFileType">
     <DisplayName>AASPackageFileType</DisplayName>
-    <Description>An xRegistry ResourceType whose file content is one package: an immutable release addressed by digest and optionally attested by signatures.</Description>
+    <Description>An xRegistry ResourceType whose file content is one package. Every package carries mandatory strong integrity metadata for the exact returned blob; an OCI-backed version also carries the immutable manifest digest that is its version identity. Mutable tags are Resource-level discovery aliases, never Version identity, and OCI referrers are separate Resources rather than package Versions and cannot affect the package default Version.</Description>
     <Category>AAS-Packages</Category>
     <Category>AAS-RegistryIdentity</Category>
+    <Category>AAS-PackageIntegrity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=63002</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5163</Reference>
@@ -2223,8 +2224,7 @@
       <Reference ReferenceType="HasProperty">ns=2;i=5165</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5166</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5167</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5168</Reference>
-      <Reference ReferenceType="HasProperty">ns=2;i=5169</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=5193</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=5163" BrowseName="2:PackageIdentifier" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
@@ -2247,18 +2247,18 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=5165" BrowseName="2:Digest" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
     <DisplayName>Digest</DisplayName>
-    <Description>Digest of the exact package bytes. This is the integrity anchor: a version identifies which release a Consumer wants, a digest identifies what that release contains.</Description>
+    <Description>Immutable lower-case hexadecimal digest, without an algorithm prefix, of the exact package blob bytes returned by FileType Read. It is Mandatory on every Version. The Server verifies it before publication, and a Consumer recomputes it before parsing, materializing or otherwise using the package.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1107</Reference>
     </References>
   </UAVariable>
   <UAVariable NodeId="ns=2;i=5166" BrowseName="2:DigestAlg" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
     <DisplayName>DigestAlg</DisplayName>
-    <Description>The algorithm used to compute Digest.</Description>
+    <Description>Immutable case-sensitive algorithm used to compute Digest. Only the exact spellings Sha256, Sha384 and Sha512 are valid. OCI descriptor algorithms sha256, sha384 and sha512 map respectively to those values; all other algorithms or casing are rejected.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1107</Reference>
     </References>
@@ -2272,22 +2272,18 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1107</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5168" BrowseName="2:Subject" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=2;i=5168" BrowseName="2:Subject" DataType="String" ValueRank="-1">
     <DisplayName>Subject</DisplayName>
-    <Description>The digest of the artifact this one attests, where it is an attestation rather than a package.</Description>
+    <Description>Reserved Variable NodeId. It is not an InstanceDeclaration of AASPackageFileType; an attestation or OCI referrer is a separate immutable Resource and never a package Version.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1107</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=2;i=5169" BrowseName="2:Attestations" ParentNodeId="ns=2;i=1107" DataType="ns=2;i=1232" ValueRank="1">
+  <UAVariable NodeId="ns=2;i=5169" BrowseName="2:Attestations" DataType="ns=2;i=1232" ValueRank="1">
     <DisplayName>Attestations</DisplayName>
-    <Description>The signatures and attestations attached to this package.</Description>
+    <Description>Reserved Variable NodeId. It is not an InstanceDeclaration of AASPackageFileType; attestations and OCI referrers are separate immutable Resources and never affect the package default Version.</Description>
     <References>
-      <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1107</Reference>
     </References>
   </UAVariable>
   <UAObjectType NodeId="ns=2;i=1108" BrowseName="2:AASEnvironmentFileType">
@@ -2421,7 +2417,7 @@
   </UAVariable>
   <UAMethod NodeId="ns=2;i=5181" BrowseName="2:GetSubmodel" ParentNodeId="ns=2;i=1150" MethodDeclarationId="ns=2;i=5114">
     <DisplayName>GetSubmodel</DisplayName>
-    <Description>Return a submodel document and enough metadata to parse it, given its identifier. The functional method on the well-known AASRegistry object.</Description>
+    <Description>Resolve the selected AASSubmodelFileType before returning its document and enforce the same Session-specific effective RolePermissions, UserRolePermissions, DisclosureTier, Authorization and FileType Open/Read decision as direct access to that target. Call permission on this Method does not authorize the target. Return Bad_UserAccessDenied, or Bad_NotFound where policy conceals existence, without exposing controlled bytes, Format, ContentType, other target metadata or a distinguishable timing path.</Description>
     <Category>AAS Registry Instances</Category>
     <References>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1150</Reference>
@@ -2547,4 +2543,13 @@
       <Reference ReferenceType="HasEncoding" IsForward="false">ns=2;i=1236</Reference>
     </References>
   </UAObject>
+  <UAVariable NodeId="ns=2;i=5193" BrowseName="2:ManifestDigest" ParentNodeId="ns=2;i=1107" DataType="String" ValueRank="-1">
+    <DisplayName>ManifestDigest</DisplayName>
+    <Description>Immutable exact OCI manifest digest with its lower-case algorithm prefix and lower-case hexadecimal value. It is Mandatory for every OCI-backed Version, is the sole authority for that Version's identity, and produces its always-hashed symbolic VersionId; a mutable tag is never identity. It verifies only the exact manifest bytes, never the returned package blob. The verified manifest has exactly one package-layer descriptor whose algorithm and encoded digest map to DigestAlg and Digest; the Server verifies this chain before publication and a Consumer repeats it before use.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1107</Reference>
+    </References>
+  </UAVariable>
 </UANodeSet>

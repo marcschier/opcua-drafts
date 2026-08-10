@@ -1,6 +1,6 @@
 # OPC UA for Asset Administration Shell
 
-**Draft 3.02**
+**Draft 3.03**
 
 > **Status — working draft.** This document specifies an OPC UA mapping for the AAS V3 metamodel.
 > It is not normative, official or endorsed by the OPC Foundation. Namespace URIs and NodeIds are
@@ -513,7 +513,7 @@ into a loadable NodeSet, and a Server that loads the NodeSet serves the AAS.
 
 ## 6 AAS metamodel ObjectTypes
 
-The companion namespace is `http://opcfoundation.org/UA/I4AAS/v3/`, model version 3.02. Draft numeric
+The companion namespace is `http://opcfoundation.org/UA/I4AAS/v3/`, model version 3.03. Draft numeric
 NodeIds use the `1001+` block; final NodeIds are assigned by the OPC Foundation. The normative node
 reference is [Annex A](#annex-a); this clause describes intent.
 
@@ -1120,7 +1120,8 @@ for the same shell, and both carry the same identifiers, so a Client can move be
 and the live tree without re-resolving anything.
 
 `AASSubmodelFileType` is one submodel document. `AASConceptDescriptionFileType` and
-`AASPackageFileType` are the corresponding resources for concept definitions and packages.
+`AASPackageFileType` are the corresponding resources for concept definitions and packages. Every
+package carries the strong integrity metadata defined in clause 9.4.
 
 <!-- model-figure: root=ns=2;i=1100 require=mandatory external=RegistryType,GroupType,ResourceType,Server -->
 
@@ -1180,6 +1181,9 @@ flowchart TD
   SI[StoreIdentifier]:::variable
   CI[ConceptIdentifier]:::variable
   PI[PackageIdentifier]:::variable
+  DG[Digest]:::variable
+  DA[DigestAlg]:::variable
+  MD[ManifestDigest]:::variable
 
   BGRP -->|HasSubtype| STG
   BGRP -->|HasSubtype| CDG
@@ -1191,6 +1195,9 @@ flowchart TD
   PSG -->|HasProperty| SI
   CDF -->|HasProperty| CI
   PFT -->|HasProperty| PI
+  PFT -->|HasProperty| DG
+  PFT -->|HasProperty| DA
+  PFT -->|HasProperty| MD
 
   classDef variable fill:#eef3fa,stroke:#444
   classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
@@ -1237,12 +1244,59 @@ controlled data, a Server implementing only the metamodel half has nothing to an
 The AAS version labels are carried unchanged in `Administration`; they are not reflected into the
 registry's version identifiers, which follow the base model's own rules.
 
+**Package integrity.** Every Version of an `AASPackageFileType` **shall** instantiate `Digest` and
+`DigestAlg`, and both Properties **shall** be immutable within that Version. `Digest` **shall** be
+the lowercase hexadecimal digest of the exact package blob bytes returned by `FileType.Read` and
+**shall not** contain an algorithm prefix. `DigestAlg` is case-sensitive and **shall** be exactly
+`Sha256`, `Sha384` or `Sha512`; every other algorithm or casing **shall** be rejected. An OCI
+descriptor algorithm of `sha256`, `sha384` or `sha512` **shall** map respectively to `Sha256`,
+`Sha384` or `Sha512`.
+
+Before publishing these Properties or making the package available for reading or materialization,
+the Server **shall** verify the exact returned blob against them. Before parsing, materializing or
+otherwise using a retrieved package, a Consumer **shall** independently recompute `Digest` over
+the exact returned bytes using `DigestAlg` and compare it with the published value.
+
+An OCI-backed package Version **shall** instantiate immutable `ManifestDigest` as the exact digest
+of the OCI manifest bytes, including a lower-case algorithm prefix and lower-case hexadecimal
+value, for example `sha256:<lowercase-hex>`. `ManifestDigest` verifies only those exact manifest
+bytes and **shall not** be treated as verification of the returned package blob. Before publishing
+or using the Version, respectively, the Server and Consumer **shall** perform all of these checks:
+
+1. recompute and compare `ManifestDigest` over the exact manifest bytes;
+2. parse the verified manifest and require exactly one package-layer descriptor;
+3. require that descriptor's algorithm and encoded digest, after the mapping above, equal
+   `DigestAlg` and `Digest`; and
+4. retrieve the package blob and independently recompute and compare `Digest` using `DigestAlg`.
+
+`ManifestDigest` **shall** be the sole authority for OCI Version identity, and `VersionId`
+**shall** be the always-hashed symbolic identifier of its exact value. A raw OCI tag **may** locate
+a current manifest only as a mutable Resource-level alias and **shall never** be a `VersionId`.
+The tag **shall** match `[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}` and **shall** be preserved byte-for-byte,
+including case and a leading underscore. Moving a tag to a previously unseen manifest **shall**
+create and retain a distinct immutable Version and **shall not** mutate or replace the old Version.
+An `AASPackageFileType` Version **shall not** instantiate `Subject` or `Attestations`. An
+attestation or other OCI referrer **shall** be represented as a separate immutable Resource and
+**shall not** become a Version of the package Resource it refers to. Adding, removing or discovering
+a referrer **shall not** change that package Resource's Version collection, default Version,
+document, attributes, `Epoch` or `ModifiedAt`.
+
 ### 9.5 Discovery and resolution
 
 `LookupShellsByAssetLink` answers the discovery question — given an asset key such as a serial
 number or a manufacturer part identifier, which shells describe it — without the Client browsing the
 whole collection. `GetSubmodel` returns a document and enough metadata to parse it, for a Client that
 holds an identifier rather than a node.
+
+`GetSubmodel` **shall** first resolve the selected `AASSubmodelFileType` and then apply, for the
+calling Session, the exact effective `RolePermissions`, `UserRolePermissions`, disclosure tier,
+authorization policy and access decision that direct `FileType.Open` and `FileType.Read` apply to
+that target. Permission to Call the registry Method **shall not** authorize the target resource.
+Where target access is denied, the Method **shall** return `Bad_UserAccessDenied`, or
+`Bad_NotFound` where the Server's policy conceals the target's existence. Before successful target
+authorization it **shall not** return document bytes, `Format`, `ContentType`, size, digest or other
+target metadata, and **shall** use the same externally observable failure behavior, including
+response timing, for a concealed unauthorized target and a nonexistent target.
 
 A Server **should** bound the results returned for an unauthenticated collection query. A registry
 serving regulated product data is subject to requirements to prevent bulk extraction of its
@@ -1260,6 +1314,22 @@ identifier derived from them, never by an endpoint. A Server exposing a local pr
 entity **shall** retain the remote entity's identifier attributes and **shall not** treat its own
 endpoint as part of that entity's identity. The external authority identifies the serving endpoint,
 not the entity.
+
+Every resolution of `ExternalReference.ServerUri` or `ResourceUrl` is an egress operation over
+untrusted registry metadata. A resolver **shall** apply the fail-closed federation policy of the
+AAS xRegistry binding before opening a connection: configured scheme, host and port allowlists;
+DNS resolution and connected-address checks that reject loopback, link-local, private,
+unique-local, unspecified, multicast, reserved and cloud-metadata destinations unless explicitly
+trusted; revalidation on every redirect and after connection to prevent DNS rebinding; finite
+redirect, time, response and decompressed-size bounds; and no ambient cookies, credentials,
+authorization headers or proxy credentials. A credential configured for one peer **shall not** be
+sent to another peer or redirect target.
+
+For an OPC UA peer, the resolver **shall** validate the endpoint certificate against its configured
+trust list and **shall** require the certificate ApplicationUri, the Server ApplicationUri returned
+by discovery and the configured federation-peer identity to agree. A policy, DNS, redirect,
+credential, certificate, identity or resource-bound failure **shall** terminate resolution without
+returning or caching any bytes obtained from the rejected destination.
 
 Because the construction of clause 9.3 is deterministic, the same shell has the same identifier in
 every registry that describes it, and a Client moving between registries re-resolves nothing.
@@ -1305,6 +1375,11 @@ to unauthenticated Clients, since advertising that a controlled submodel exists 
 disclosure.
 
 A registry that serves public data **shall not** require authentication to read it.
+
+The same disclosure decision applies through every access path. In particular, the
+`GetSubmodel` convenience Method is subject to the target-resource authorization and
+existence-concealment rule of clause 9.5; its Method-level Call permission is never a substitute for
+the target's disclosure and file-access controls.
 
 ### 9.8 The xRegistry API over OPC UA
 
@@ -1555,11 +1630,13 @@ declares the corresponding conformance units.
 | `AAS-DisclosureTiers` | `DisclosureTier` and `Authorization`, clause 9.7. |
 | `AAS-UpdateableRegistry` | Generational materialization from stored documents, clause 9.9. |
 | `AAS-EnvironmentExport` | The materialized environment served as filtered AAS and AASX documents, clause 9.10. Required of a Server claiming both `AAS-Registry` and `AAS-InstanceMaterialization`. |
-| `AAS-Packages` | Package stores and package resources. |
+| `AAS-Packages` | Package stores and package resources; requires `AAS-PackageIntegrity`. |
+| `AAS-PackageIntegrity` | Mandatory package-blob digest and algorithm, OCI manifest-to-blob binding, immutable identity and tag rules, referrer separation and verification requirements of clause 9.4. |
 
 `AAS-Metamodel` and `AAS-SubmodelElements` together are the baseline for the metamodel half;
 `AAS-Registry` and `AAS-RegistryIdentity` for the registry half. `AAS-ValueFidelity` is required by
-`AAS-LosslessRoundTrip`, which is the unit that makes source generation possible.
+`AAS-LosslessRoundTrip`, which is the unit that makes source generation possible. An implementation
+claiming `AAS-Packages` **shall** also claim `AAS-PackageIntegrity`.
 
 ## 11 NodeSet validation
 
@@ -2034,7 +2111,7 @@ The AAS Registry root - an xRegistry RegistryType, and therefore a FolderType - 
 | <PackageStoreGroup> | Object |  | OptionalPlaceholder | AASRegistryType | A package store held by the registry. |
 | <Environment> | Object |  | OptionalPlaceholder | AASRegistryType | A serialization of one materialized environment, held by the registry as a retrievable document. |
 | LookupShellsByAssetLink | Method |  | Optional | AASRegistryType | Return the shells discoverable by an asset key. This is the discovery question - given a serial number or a part identifier, which shells describe it - answered without the caller browsing the whole collection. |
-| GetSubmodel | Method |  | Optional | AASRegistryType | Return a submodel document and enough metadata to parse it, given its identifier. The method form of the document fast path, for a Client that has an identifier rather than a node. |
+| GetSubmodel | Method |  | Optional | AASRegistryType | Resolve the selected AASSubmodelFileType before returning its document and enforce the same Session-specific effective RolePermissions, UserRolePermissions, DisclosureTier, Authorization and FileType Open/Read decision as direct access to that target. Call permission on this Method does not authorize the target. Return Bad_UserAccessDenied, or Bad_NotFound where policy conceals existence, without exposing controlled bytes, Format, ContentType, other target metadata or a distinguishable timing path. |
 | AutoMaterialize | Variable | Boolean | Optional | AASRegistryType | Whether a change to a stored document re-materializes the AddressSpace without being asked. Part of the updateable registry profile. |
 | MaterializationGeneration | Variable | UInt32 | Optional | AASRegistryType | Increments once on each committed switch. A Client correlates a node's NodeVersion with the generation that produced it. |
 | Materialize | Method |  | Optional | AASRegistryType | Re-materialize the AddressSpace from the stored documents. Part of the updateable registry profile: the documents are canonical and the nodes are derived, so this is the operation that makes the derived side agree with the canonical one. |
@@ -2152,17 +2229,16 @@ An xRegistry GroupType holding packages - one store, or one namespace within one
 
 *Inherits from:* ns=1;i=63002
 
-An xRegistry ResourceType whose file content is one package: an immutable release addressed by digest and optionally attested by signatures.
+An xRegistry ResourceType whose file content is one package. Every package carries mandatory strong integrity metadata for the exact returned blob; an OCI-backed version also carries the immutable manifest digest that is its version identity. Mutable tags are Resource-level discovery aliases, never Version identity, and OCI referrers are separate Resources rather than package Versions and cannot affect the package default Version.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | PackageIdentifier | Variable | String | Mandatory | AASPackageFileType | The package's name as held by the backing store, verbatim. It is the resource's source identity. |
 | ArtifactType | Variable | String | Optional | AASPackageFileType | The media type identifying what the artifact is, where the backing store carries one. |
-| Digest | Variable | String | Optional | AASPackageFileType | Digest of the exact package bytes. This is the integrity anchor: a version identifies which release a Consumer wants, a digest identifies what that release contains. |
-| DigestAlg | Variable | String | Optional | AASPackageFileType | The algorithm used to compute Digest. |
+| Digest | Variable | String | Mandatory | AASPackageFileType | Immutable lower-case hexadecimal digest, without an algorithm prefix, of the exact package blob bytes returned by FileType Read. It is Mandatory on every Version. The Server verifies it before publication, and a Consumer recomputes it before parsing, materializing or otherwise using the package. |
+| DigestAlg | Variable | String | Mandatory | AASPackageFileType | Immutable case-sensitive algorithm used to compute Digest. Only the exact spellings Sha256, Sha384 and Sha512 are valid. OCI descriptor algorithms sha256, sha384 and sha512 map respectively to those values; all other algorithms or casing are rejected. |
 | AasIdentifiers | Variable | String\[\] | Optional | AASPackageFileType | The shell identifiers this package contains, so a Consumer can tell what it holds without retrieving and opening it. |
-| Subject | Variable | String | Optional | AASPackageFileType | The digest of the artifact this one attests, where it is an attestation rather than a package. |
-| Attestations | Variable | [AASAttestationDataType](#type-AASAttestationDataType)\[\] | Optional | AASPackageFileType | The signatures and attestations attached to this package. |
+| ManifestDigest | Variable | String | Optional | AASPackageFileType | Immutable exact OCI manifest digest with its lower-case algorithm prefix and lower-case hexadecimal value. It is Mandatory for every OCI-backed Version, is the sole authority for that Version's identity, and produces its always-hashed symbolic VersionId; a mutable tag is never identity. It verifies only the exact manifest bytes, never the returned package blob. The verified manifest has exactly one package-layer descriptor whose algorithm and encoded digest map to DigestAlg and Digest; the Server verifies this chain before publication and a Consumer repeats it before use. |
 
 <a id="type-AASEnvironmentFileType"></a>
 
@@ -2737,7 +2813,7 @@ One authorization option a Consumer may use. It is authorization configuration o
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
-A signature or attestation attached to a package. Its presence is not verification: a Consumer retrieves and verifies the artifact itself.
+A non-authoritative discovery hint for a separate attestation or OCI referrer Resource. It never represents a package Version, and its presence is not verification: a Consumer retrieves and verifies the separate artifact itself.
 
 | Field | DataType | Cardinality | Description |
 |---|---|---|---|
@@ -2973,6 +3049,10 @@ This annex is informative and follows the base model's own resolution algorithm.
 4. Where only `ResourceUrl` is present, use it as the external locator and treat the remote bytes
    and metadata as the representation of the same entity identity carried by the identifier
    attributes.
+
+Before step 3 or 4 opens a connection, apply the federation egress and peer-identity policy of
+§9.6 to the initial target and to every resolution, redirect and connected address. The metadata is
+an input to policy, never authorization to contact the target.
 
 Because identifiers are stable across registries while the endpoint identifies only where an entity
 is served, an entity federated from several registries keeps one identity and can be de-duplicated

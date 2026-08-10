@@ -70,6 +70,7 @@ if I4AAS != EXPECTED_I4AAS:
 sys.path.insert(0, str(HERE))
 
 from conformance import canonical  # noqa: E402
+from context_security import BundledContext, ContextPolicy  # noqa: E402
 from lift import Lifter, Ontology, Schema, iri, literal, serialize  # noqa: E402
 from lower import Lowerer, parse_nt  # noqa: E402
 
@@ -142,40 +143,33 @@ def verify_vendor() -> None:
                 f"{name}: pinned SHA-256 is {meta['sha256']}, got {actual}")
 
 
-def _loader_document(url: str, path: Path) -> dict:
-    return {
-        "contextUrl": None,
-        "documentUrl": url,
-        "document": json.loads(path.read_text(encoding="utf-8")),
-        "contentType": "application/ld+json",
-    }
+def example_context_policy() -> ContextPolicy:
+    sources = json.loads(VENDOR_SOURCES.read_text(encoding="utf-8"))
+    return ContextPolicy(
+        bundled={
+            TD_CONTEXT_URL: BundledContext(
+                TD_CONTEXT, sources[TD_CONTEXT.name]["sha256"]),
+            AAS_CONTEXT.resolve().as_uri(): BundledContext(AAS_CONTEXT),
+            BINDING_CONTEXT.resolve().as_uri(): BundledContext(
+                BINDING_CONTEXT,
+                sources[BINDING_CONTEXT.name]["sha256"]),
+        },
+    )
 
 
 def document_loader(url: str, options=None) -> dict:
-    if url == TD_CONTEXT_URL:
-        return _loader_document(url, TD_CONTEXT)
-    if url == AAS_CONTEXT_URL:
-        raise ValueError(
-            f"{AAS_CONTEXT_URL} is not the context strategy of the committed examples")
-    parsed = urllib.parse.urlparse(url)
-    if parsed.scheme == "file":
-        path = Path(urllib.request.url2pathname(parsed.path)).resolve()
-        try:
-            path.relative_to(AAS_DIR)
-        except ValueError as exc:
-            raise ValueError(f"context is outside the AAS tree: {path}") from exc
-        if not path.is_file():
-            raise ValueError(f"context does not exist: {path}")
-        return _loader_document(url, path)
-    raise ValueError(f"unbundled JSON-LD context: {url}")
+    """Compatibility entry point; processing uses one stateful loader per document."""
+    return example_context_policy().loader()(url, options)
 
 
 def process_jsonld(doc: object, path: Path) -> dict:
+    base = path.resolve().as_uri()
+    loader = example_context_policy().loader(doc, base=base)
     return jsonld.to_rdf(
         doc,
         {
-            "base": path.resolve().as_uri(),
-            "documentLoader": document_loader,
+            "base": base,
+            "documentLoader": loader,
         },
     )
 
@@ -1635,17 +1629,24 @@ def final_bytes_mutation_test() -> int:
     original = load_projection_bundle(root_path)
     mutations = []
 
-    missing_context = clone_bundle(original)
-    root = missing_context[0][1]
-    replaced = False
-    for index, entry in enumerate(root["@context"]):
-        if isinstance(entry, str) and entry != TD_CONTEXT_URL:
-            root["@context"][index] = "https://example.invalid/missing-context"
-            replaced = True
-            break
-    if not replaced:
-        raise AssertionError("context mutation found no bundled context")
-    mutations.append(("replace bundled context with a 404 URL", missing_context))
+    for name, url in (
+            ("replace bundled context with a localhost context",
+             "http://localhost/context.jsonld"),
+            ("replace bundled context with a metadata-service context",
+             "http://169.254.169.254/latest/meta-data"),
+            ("replace bundled context with an unpinned external context",
+             "https://contexts.example/unpinned.jsonld")):
+        remote_context = clone_bundle(original)
+        root = remote_context[0][1]
+        replaced = False
+        for index, entry in enumerate(root["@context"]):
+            if isinstance(entry, str) and entry != TD_CONTEXT_URL:
+                root["@context"][index] = url
+                replaced = True
+                break
+        if not replaced:
+            raise AssertionError("context mutation found no bundled context")
+        mutations.append((name, remote_context))
 
     array_container = clone_bundle(original)
     array_container[0] = (array_container[0][0], [array_container[0][1]])

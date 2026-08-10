@@ -13,6 +13,11 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 from authored import FOREIGN, add_foreign, author, load_context, lower_graph, read_back  # noqa: E402
+from context_security import (  # noqa: E402
+    ContextPolicy,
+    ContextSecurityError,
+    NetworkResponse,
+)
 from lift import AAS, Lifter, Ontology, Schema, serialize  # noqa: E402
 from lower import Lowerer, parse_nt  # noqa: E402
 import validate_examples  # noqa: E402
@@ -482,10 +487,280 @@ def adopted_type_binding_forms():
     print("  passed: both adopted type-binding forms are independently sufficient")
 
 
+def context_resolution_security() -> int:
+    caught = 0
+
+    def expect(label, action, text=None):
+        nonlocal caught
+        try:
+            action()
+        except Exception as exc:
+            messages = []
+            cause = exc
+            while cause is not None:
+                messages.append(str(cause))
+                cause = cause.__cause__
+            message = "\n".join(messages)
+            if text is not None and text not in message:
+                raise AssertionError(
+                    f"{label} failed for the wrong reason: {exc}") from exc
+            print(f"  caught: {label} ({type(exc).__name__}: {exc})")
+            caught += 1
+        else:
+            raise AssertionError(f"{label}: unsafe context was accepted")
+
+    expect(
+        "default loader rejects an unapproved remote context",
+        lambda: read_back(json.dumps({
+            "@context": "https://contexts.example/unapproved.jsonld",
+            "@id": "urn:example:context-security",
+        })),
+        "network JSON-LD context loading is disabled",
+    )
+
+    transport_calls = []
+
+    def forbidden_transport(url, addresses, timeout, max_bytes):
+        transport_calls.append(url)
+        raise AssertionError("network transport was invoked")
+
+    address_map = {
+        "localhost": ("127.0.0.1",),
+        "169.254.169.254": ("169.254.169.254",),
+        "shared.example": ("100.100.100.200",),
+        "site-local.example": ("fec0::1",),
+        "mapped-shared.example": ("::ffff:100.100.100.200",),
+        "compatible-shared.example": ("::100.100.100.200",),
+        "nat64-shared.example": ("64:ff9b::100.100.100.200",),
+        "contexts.example": ("93.184.216.34",),
+        "mapped-global.example": ("::ffff:93.184.216.34",),
+    }
+
+    def resolver(host, port):
+        return address_map[host]
+
+    pins = {
+        "https://localhost/context": "0" * 64,
+        "https://169.254.169.254/latest/meta-data": "0" * 64,
+        "https://shared.example/context": "0" * 64,
+        "https://site-local.example/context": "0" * 64,
+        "https://mapped-shared.example/context": "0" * 64,
+        "https://compatible-shared.example/context": "0" * 64,
+        "https://nat64-shared.example/context": "0" * 64,
+    }
+    guarded = ContextPolicy(
+        network_enabled=True,
+        allowlisted_origins=frozenset(
+            url.rsplit("/", 1)[0] for url in pins),
+        network_sha256=pins,
+        resolver=resolver,
+        transport=forbidden_transport,
+    )
+    for label, url in (
+            ("localhost context is rejected before transport",
+             "https://localhost/context"),
+            ("metadata context is rejected before transport",
+             "https://169.254.169.254/latest/meta-data"),
+            ("CGNAT/shared context is rejected before transport",
+             "https://shared.example/context"),
+            ("deprecated IPv6 site-local context is rejected before transport",
+             "https://site-local.example/context"),
+            ("IPv4-mapped shared context is rejected before transport",
+             "https://mapped-shared.example/context"),
+            ("IPv4-compatible shared context is rejected before transport",
+             "https://compatible-shared.example/context"),
+            ("NAT64-embedded shared context is rejected before transport",
+             "https://nat64-shared.example/context")):
+        expect(label, lambda url=url: guarded.loader()(url), "prohibited address")
+    if transport_calls:
+        raise AssertionError(
+            f"prohibited targets reached network transport: {transport_calls}")
+
+    unpinned = ContextPolicy(
+        network_enabled=True,
+        allowlisted_origins=frozenset({"https://contexts.example"}),
+        resolver=resolver,
+        transport=forbidden_transport,
+    )
+    expect(
+        "allowlisted but unpinned external context is rejected before transport",
+        lambda: unpinned.loader()(
+            "https://contexts.example/unpinned.jsonld"),
+        "not content-hash pinned",
+    )
+    if transport_calls:
+        raise AssertionError(
+            f"unpinned context reached network transport: {transport_calls}")
+
+    pinned_url = "https://contexts.example/pinned.jsonld"
+    pinned_body = b'{"@context":{"safe":"urn:example:safe"}}'
+    pinned_calls = []
+
+    def pinned_transport(url, addresses, timeout, max_bytes):
+        pinned_calls.append((url, addresses))
+        return NetworkResponse(200, {}, pinned_body)
+
+    pinned = ContextPolicy(
+        network_enabled=True,
+        allowlisted_origins=frozenset({"https://contexts.example"}),
+        network_sha256={
+            pinned_url: hashlib.sha256(pinned_body).hexdigest(),
+        },
+        resolver=resolver,
+        transport=pinned_transport,
+    )
+    loaded = pinned.loader()(pinned_url)
+    if (
+            loaded["document"] != {"@context": {"safe": "urn:example:safe"}}
+            or pinned_calls != [(pinned_url, ("93.184.216.34",))]):
+        raise AssertionError(
+            f"pinned allowlisted context was not loaded exactly: {loaded!r}")
+    print("  passed: allowlisted HTTPS context is loaded only by pinned bytes")
+
+    mapped_url = "https://mapped-global.example/pinned.jsonld"
+    mapped_calls = []
+
+    def mapped_transport(url, addresses, timeout, max_bytes):
+        mapped_calls.append((url, addresses))
+        return NetworkResponse(200, {}, pinned_body)
+
+    mapped = ContextPolicy(
+        network_enabled=True,
+        allowlisted_origins=frozenset({"https://mapped-global.example"}),
+        network_sha256={
+            mapped_url: hashlib.sha256(pinned_body).hexdigest(),
+        },
+        resolver=resolver,
+        transport=mapped_transport,
+    )
+    mapped_loaded = mapped.loader()(mapped_url)
+    if (
+            mapped_loaded["document"] != loaded["document"]
+            or mapped_calls != [
+                (mapped_url, ("93.184.216.34",)),
+            ]):
+        raise AssertionError(
+            "IPv4-mapped global address was not normalized and allowed: "
+            f"{mapped_calls!r}")
+    print("  passed: IPv4-mapped valid global address remains allowed")
+
+    mismatched = ContextPolicy(
+        network_enabled=True,
+        allowlisted_origins=frozenset({"https://contexts.example"}),
+        network_sha256={pinned_url: "0" * 64},
+        resolver=resolver,
+        transport=pinned_transport,
+    )
+    expect(
+        "network context with a mismatched content hash is rejected",
+        lambda: mismatched.loader()(pinned_url),
+        "context hash mismatch",
+    )
+
+    initial = "https://contexts.example/start.jsonld"
+    redirect_calls = []
+
+    def private_redirect(url, addresses, timeout, max_bytes):
+        redirect_calls.append(url)
+        return NetworkResponse(
+            302,
+            {"Location": "https://169.254.169.254/latest/meta-data"},
+            b"",
+        )
+
+    redirected = ContextPolicy(
+        network_enabled=True,
+        allowlisted_origins=frozenset({
+            "https://contexts.example",
+            "https://169.254.169.254",
+        }),
+        network_sha256={initial: "0" * 64},
+        resolver=resolver,
+        transport=private_redirect,
+    )
+    expect(
+        "redirect target is revalidated and metadata is rejected",
+        lambda: redirected.loader()(initial),
+        "prohibited address",
+    )
+    if redirect_calls != [initial]:
+        raise AssertionError(
+            f"redirect validation made unexpected requests: {redirect_calls}")
+
+    loop_calls = []
+
+    def redirect_loop(url, addresses, timeout, max_bytes):
+        loop_calls.append(url)
+        return NetworkResponse(302, {"Location": "/loop.jsonld"}, b"")
+
+    limited = ContextPolicy(
+        network_enabled=True,
+        allowlisted_origins=frozenset({"https://contexts.example"}),
+        network_sha256={initial: "0" * 64},
+        max_redirects=1,
+        resolver=resolver,
+        transport=redirect_loop,
+    )
+    expect(
+        "context redirect limit is enforced",
+        lambda: limited.loader()(initial),
+        "redirect limit exceeded",
+    )
+    if len(loop_calls) != 2:
+        raise AssertionError(
+            f"redirect limit expected two bounded requests, got {loop_calls}")
+
+    expect(
+        "ambient credentials in a context URL are rejected",
+        lambda: ContextPolicy(
+            network_enabled=True,
+            allowlisted_origins=frozenset({"https://contexts.example"}),
+            network_sha256={
+                "https://user:password@contexts.example/context": "0" * 64,
+            },
+            resolver=resolver,
+            transport=forbidden_transport,
+        ).loader()("https://user:password@contexts.example/context"),
+        "must not contain ambient credentials",
+    )
+    expect(
+        "context count bound is enforced",
+        lambda: ContextPolicy(max_contexts=2).loader({
+            "@context": [{}, {}, {}],
+        }),
+        "context count exceeds",
+    )
+    expect(
+        "context byte bound is enforced",
+        lambda: ContextPolicy(max_context_bytes=32).loader({
+            "@context": {"large": "urn:" + ("x" * 64)},
+        }),
+        "context bytes exceed",
+    )
+
+    nested = {"leaf": "urn:example:leaf"}
+    for index in range(4):
+        nested = {
+            f"level{index}": {
+                "@id": f"urn:example:level{index}",
+                "@context": nested,
+            },
+        }
+    expect(
+        "context nesting bound is enforced",
+        lambda: ContextPolicy(max_context_depth=2).loader({
+            "@context": nested,
+        }),
+        "context nesting exceeds",
+    )
+    return caught + 2
+
+
 def projection_mutations():
     caught = validate_examples.mutation_test()
-    if caught != 29:
-        raise AssertionError(f"expected 29 caught mutations, got {caught}")
+    if caught != 31:
+        raise AssertionError(f"expected 31 caught mutations, got {caught}")
+    return caught
 
 
 def main():
@@ -497,8 +772,9 @@ def main():
     derived_identifiable_browse_name_is_safe()
     derived_identifiable_browse_name_collisions()
     adopted_type_binding_forms()
-    projection_mutations()
-    print("regressions and mutations: 37 passed")
+    security_controls = context_resolution_security()
+    mutations = projection_mutations()
+    print(f"regressions and mutations: {8 + security_controls + mutations} passed")
     return 0
 
 
