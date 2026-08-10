@@ -4,15 +4,15 @@
 **Version:** 0.1.0 · **Date:** 2026-07-16
 **Target:** xRegistry submission as `core/opcua.md`, or an xRegistry extension proposal.
 
-> **Status — working draft.** This document defines the self-contained OPC UA API binding of the xRegistry core model, using the OPC UA FileTransfer-based information model defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md). xRegistry registries can be discovered, read, created, updated, deleted, exported and federated natively through OPC UA AddressSpace nodes, Services and FileTransfer Methods.
+> **Status — working draft.** This document defines the self-contained OPC UA API binding of the xRegistry core model, using the OPC UA FileTransfer-based information model defined by <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKE9QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link -->. xRegistry registries can be discovered, read, created, updated, deleted, exported and federated natively through OPC UA AddressSpace nodes, Services and FileTransfer Methods.
 
 ---
 
 ## 1 Scope
 
-This specification defines the OPC UA API binding for [xRegistry](https://github.com/xregistry/spec): how a registry, its groups, resources, versions, documents and attributes are discovered, read, created, updated and deleted natively over OPC UA Services while realizing the xRegistry core model on the OPC UA AddressSpace and FileTransfer model of [*OPC UA — xRegistry*](OPC-UA-xRegistry.md).
+This specification defines the OPC UA API binding for [xRegistry](https://github.com/xregistry/spec): how a registry, its groups, resources, versions, documents and attributes are discovered, read, created, updated and deleted natively over OPC UA Services while realizing the xRegistry core model on the OPC UA AddressSpace and FileTransfer model of <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKE9QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link -->.
 
-The abstract information model is defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md): a registry is a `RegistryType` folder (subtype of `FolderType`), each group is a `GroupType` folder (subtype of `FolderType`), and each resource or resource version document is a `ResourceType` file (subtype of `FileType`). This API specifies how clients interact with those nodes using Browse, BrowseNext, Read, Write, Call, TranslateBrowsePathsToNodeIds and the FileTransfer Methods inherited by `ResourceType`; deletion is an xRegistry `Delete(ExpectedEpoch)` Method call on the `GroupType` or `ResourceType` entity being deleted.
+The abstract information model is defined by <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKE9QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link -->: a registry is a `RegistryType` folder (subtype of `FolderType`), each group is a `GroupType` folder (subtype of `FolderType`), and each resource or resource version document is a `ResourceType` file (subtype of `FileType`). This API specifies how clients interact with those nodes using Browse, BrowseNext, Read, Write, Call, TranslateBrowsePathsToNodeIds and the FileTransfer Methods inherited by `ResourceType`; deletion is an xRegistry `Delete(ExpectedEpoch)` Method call on the `GroupType` or `ResourceType` entity being deleted.
 
 > Annex A provides an informative correspondence for readers familiar with sibling protocol bindings, while §9 describes federation, including references to registries hosted behind other APIs.
 
@@ -22,7 +22,7 @@ This binding is independent of any domain registry. A concrete companion specifi
 
 - [xRegistry Core specification, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/core/spec.md) — the registry, group, resource, version, document, attribute, request-flag, operation-processing and error model.
 - [xRegistry primer, v1.0-rc3](https://github.com/xregistry/spec/blob/v1.0-rc3/core/primer.md) — the xRegistry concepts, representations, request-shaping concepts and federation model.
-- [OPC UA — xRegistry](OPC-UA-xRegistry.md) — the OPC UA companion information model used by this API.
+- <!-- release-spec-link:W09QQyBVQSDigJQgeFJlZ2lzdHJ5XShPUEMtVUEteFJlZ2lzdHJ5Lm1kKQ== -->OPC UA — xRegistry<!-- /release-spec-link --> — the OPC UA companion information model used by this API.
 - [OPC 10000-3](https://reference.opcfoundation.org/specs/OPC-10000-3/) — Address Space Model, including NodeIds, References, TypeDefinitions and `ExpandedNodeId`.
 - [OPC 10000-4](https://reference.opcfoundation.org/specs/OPC-10000-4/) — Services, including Browse, BrowseNext, Read, Write, Call, TranslateBrowsePathsToNodeIds and StatusCodes.
 - [OPC 10000-5](https://reference.opcfoundation.org/specs/OPC-10000-5/) — Base Information Model, including `FolderType` and `PropertyType`.
@@ -34,7 +34,7 @@ Key words **shall**, **should**, **may**, **shall not** and **should not** are i
 
 The xRegistry terms registry, group, resource, version, document, attributes, collection, `xid`, `self`, `epoch`, `labels`, model, capabilities, request flags, representation and federation have the meanings defined by the xRegistry core specification and primer. In this document, an `xid` is the xRegistry relative identifier of an entity within a registry, for example `/schemagroups/g1/schemas/s1`; it is not a protocol URL and is resolved against the selected `RegistryType` root.
 
-OPC UA type and member names follow OPC UA naming conventions and are written exactly as defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md) Annex A and the corresponding NodeSet: `RegistryType`, `GroupType`, `ResourceType`, `AttributesType`, `RegistryCapabilitiesDataType`, `RegistryId`, `SpecVersion`, `Capabilities`, `CapabilitiesInfo`, `Model`, `GroupId`, `ResourceId`, `VersionId`, `Format`, `ContentType`, `ExternalReference`, `ResourceUrl`, `Xid`, `Epoch`, `Name`, `Description`, `Documentation`, `Labels`, `<Attribute>`, `CreatedAt`, `ModifiedAt`, `CreateGroup`, `GetOrCreateGroup`, `CreateResource`, `GetOrCreateResource`, `AddAttribute`, `RemoveAttribute`, `Delete` and `ExpectedEpoch`.
+OPC UA type and member names follow OPC UA naming conventions and are written exactly as defined by <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKE9QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link --> Annex A and the corresponding NodeSet: `RegistryType`, `GroupType`, `ResourceType`, `AttributesType`, `RegistryCapabilitiesDataType`, `RegistryId`, `SpecVersion`, `Capabilities`, `CapabilitiesInfo`, `Model`, `GroupId`, `ResourceId`, `VersionId`, `Format`, `ContentType`, `ExternalReference`, `ResourceUrl`, `Xid`, `Epoch`, `Name`, `Description`, `Documentation`, `Labels`, `<Attribute>`, `CreatedAt`, `ModifiedAt`, `CreateGroup`, `GetOrCreateGroup`, `CreateResource`, `GetOrCreateResource`, `AddAttribute`, `RemoveAttribute`, `Delete` and `ExpectedEpoch`.
 
 The OPC UA Services used by this API are Browse for collection enumeration, BrowseNext for continuation points, Read for Properties and node metadata, Write for writable Properties, Call for FileTransfer and xRegistry Methods including `Delete`, TranslateBrowsePathsToNodeIds for path resolution, and the FileTransfer Methods inherited from `FileType` by `ResourceType`.
 
@@ -78,7 +78,7 @@ The following table defines the native addressing model from xRegistry `xid` or 
 
 The collection names `<GROUPS>` and `<RESOURCES>` are xRegistry model names, not mandatory OPC UA base nodes. A domain registry may express collection names through subtype BrowseNames, domain Properties, folders or model metadata, but each concrete group instance shall be a `GroupType` or subtype and each concrete resource or version instance shall be a `ResourceType` or subtype.
 
-A server **shall** set each group's, resource's and version's BrowseName to its identifier: `groupid`, `resourceid` or `versionid`, respectively, and each group's and resource's DisplayName to its `Name`. A `groupid` and a `resourceid` are **symbolic identifiers** built from the entity's domain source identity by the construction of [*OPC UA — xRegistry*](OPC-UA-xRegistry.md) §6.9, so they are readable, safe in a URL, on a command line and as a file name, and never derived from a document. Because Browse results carry BrowseName, DisplayName, NodeClass, TypeDefinition and the target NodeId, a client selects and filters entities by identity and collection directly from the Browse result with no Read per candidate, and renders a readable list without one either; only filters on a dynamic label value or another attribute not present in the Browse result require reading the entity's `Labels` container or Properties.
+A server **shall** set each group's, resource's and version's BrowseName to its identifier: `groupid`, `resourceid` or `versionid`, respectively, and each group's and resource's DisplayName to its `Name`. A `groupid` and a `resourceid` are **symbolic identifiers** built from the entity's domain source identity by the construction of <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKE9QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link --> §6.9, so they are readable, safe in a URL, on a command line and as a file name, and never derived from a document. Because Browse results carry BrowseName, DisplayName, NodeClass, TypeDefinition and the target NodeId, a client selects and filters entities by identity and collection directly from the Browse result with no Read per candidate, and renders a readable list without one either; only filters on a dynamic label value or another attribute not present in the Browse result require reading the entity's `Labels` container or Properties.
 
 The xRegistry `self` value is not a mandatory OPC UA Property in the base model. In this API it is derived from the selected registry root and the entity's `Xid`; an OPC UA client can reconstruct a canonical self reference as a registry root NodeId plus the relative `Xid`, or as an implementation-defined URL or URN for display.
 
@@ -98,7 +98,7 @@ Deleting an entity is performed by Calling its `Delete(ExpectedEpoch: UInt32)` M
 
 Unless otherwise stated, a request to update a read-only Property shall be ignored only if xRegistry says that read-only attribute updates are ignored; otherwise the server shall reject the Write with `Bad_NotWritable` or `Bad_UserAccessDenied`. A request that supplies an identifier Property (`RegistryId`, `GroupId`, `ResourceId` or `VersionId`) whose value conflicts with the target entity shall fail with `Bad_InvalidArgument` or `Bad_IdentityChangeNotSupported`.
 
-Any successful create or update shall update `ModifiedAt` and increment `Epoch` on the modified entity. Creation shall initialize `CreatedAt`, `ModifiedAt`, `Epoch`, `Xid` and the appropriate identifier Properties according to [*OPC UA — xRegistry*](OPC-UA-xRegistry.md) §6.5 and the xRegistry core rules.
+Any successful create or update shall update `ModifiedAt` and increment `Epoch` on the modified entity. Creation shall initialize `CreatedAt`, `ModifiedAt`, `Epoch`, `Xid` and the appropriate identifier Properties according to <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKE9QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link --> §6.5 and the xRegistry core rules.
 
 ### 4.4 OPC UA-specific attribute processing
 
@@ -438,11 +438,11 @@ For a `ResourceType`, metadata serialization reads `ResourceId`, `VersionId`, `F
 
 The inverse import process creates or updates the same subtree: create group folders, create resource/version files, write document bytes, write mapped Properties, update `Labels` containers, and let the server auto-bootstrap `Xid`, `Epoch`, `CreatedAt` and `ModifiedAt` where they are not explicitly supplied or are server-managed.
 
-Serialization shall preserve the three-representation symmetry described by the xRegistry primer and by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md) §4.2 and §7: an entity has the same `Xid` and identity whether reached as a file, through OPC UA services, or in an exported xRegistry document.
+Serialization shall preserve the three-representation symmetry described by the xRegistry primer and by <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKE9QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link --> §4.2 and §7: an entity has the same `Xid` and identity whether reached as a file, through OPC UA services, or in an exported xRegistry document.
 
 ## 9 Federation
 
-Federation is realized by `ExternalReference` and `ResourceUrl` on `ResourceType`, as defined by the xRegistry primer, xRegistry core specification, and [*OPC UA — xRegistry*](OPC-UA-xRegistry.md) §8 and Annex B.
+Federation is realized by `ExternalReference` and `ResourceUrl` on `ResourceType`, as defined by the xRegistry primer, xRegistry core specification, and <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKE9QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link --> §8 and Annex B.
 
 `ExternalReference` is an `ExpandedNodeId`. Its `ServerUri` identifies the remote OPC UA server that hosts the referenced registry, and its `NamespaceUri` plus identifier identify the remote resource node independently of the server's local namespace indexes.
 
@@ -501,7 +501,7 @@ A server conforms to the export-capable OPC UA xRegistry API if it implements th
 
 A client conforms if it can select a `RegistryType` root, resolve xRegistry `xid`s or relative identifiers to AddressSpace nodes, use Browse/Read/FileTransfer operations for reading, use Write/Call operations for advertised write capabilities, interpret StatusCodes according to §10, and serialize or consume xRegistry document representations according to §8.
 
-A conforming implementation shall not require any node or Method name that is not defined by [*OPC UA — xRegistry*](OPC-UA-xRegistry.md), OPC 10000-20, or its own domain companion specification.
+A conforming implementation shall not require any node or Method name that is not defined by <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKE9QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link -->, OPC 10000-20, or its own domain companion specification.
 
 ## Annex A — Correspondence to the xRegistry HTTP binding (informative)
 

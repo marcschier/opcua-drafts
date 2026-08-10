@@ -1,0 +1,781 @@
+{
+  "id": "robot-intent",
+  "source": {
+    "markdown": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+    "nodeset": "metaverse-specs/robot-intent/Opc.Ua.RobotIntent.NodeSet2.xml"
+  },
+  "output": {
+    "docx": "word-drafts/OPC-UA-Robot-Intent.docx",
+    "docmodel": "word-drafts/OPC-UA-Robot-Intent.docmodel.json",
+    "figures": "word-drafts/figures"
+  },
+  "identity": {
+    "docNumber": "OPC nnnnn-m",
+    "partNumber": "Part 1",
+    "partName": "Robot Intent",
+    "title": "Robot Intent",
+    "subjectTerm": "robot controller",
+    "mainTitle": "OPC UA FOR ROBOT INTENT",
+    "subTitle": "Part 1: Task-level commanding, missions and safety awareness",
+    "shortName": "RI",
+    "capabilityIdentifier": "RI",
+    "namespaceUri": "http://opcfoundation.org/UA/RobotIntent/",
+    "namespaceIndexInDocument": 1,
+    "version": "0.1.0",
+    "publicationDate": "2026-08-02",
+    "releaseType": "Draft",
+    "mantisProjectId": "<nnn>",
+    "otherOrganization": "VDMA and the Alliance for OpenUSD",
+    "introduction": [
+      "OPC 40010-1 describes what a robot is — its topology, its axes, its loads and its operating state — and defines no way to tell it to do anything. A client can read that a robot exists, has six axes and is in Automatic mode, and then has no standard verb with which to move it. Commanding therefore happens below the interface, in vendor motion languages that differ from manufacturer to manufacturer, so a cell that mixes two robots mixes two integrations of work that is identical in both.",
+      "The gap is not motion planning, and this document does not try to close that one. Trajectory generation, inverse kinematics, collision avoidance and servo control belong to the robot controller, which does them better than anything reachable over a network could. What is missing is the layer above: a way to say *move there*, *grasp that*, *pick from here and place at that*, to watch the request through a lifecycle that survives a dropped connection, and to be told plainly when the robot refuses.",
+      "This document defines that layer. Intents are a DataType hierarchy rather than one Method each, so a single submission and a mission step are the same shape and a new verb is a subtyping act. Each submitted intent is an OPC 10000-10 program instance, so its outcome survives the Session that requested it. Queueing and blending are adopted unchanged from PLCopen and VDA 5050 rather than reinvented. And clause 10 says plainly what this interface is not: it is not safety-rated, it reports what the safety system enforces and refuses what would exceed it, and neither of those makes anything safe."
+    ],
+    "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation. The document number, the Mantis project identifier and every NodeId in this document are placeholders; the OPC Foundation assigns the real values."
+  },
+  "_comment_requiredModelNodes": "NodeIds this model borrows from the base UA namespace. A NodeSet names the required model but not the BrowseNames inside it, so without this table a borrowed type is printed as a bare NodeId. All three come from OPC 10000-10, which IntentOperationType and MissionType build on.",
+  "requiredModelNodes": {
+    "i=2391": "ProgramStateMachineType",
+    "i=15383": "ProgramDiagnostic2Type",
+    "i=24033": "ProgramDiagnostic2DataType"
+  },
+  "abbreviations": [
+    [
+      "CSS",
+      "Capability-Skill-Service"
+    ],
+    [
+      "DoF",
+      "Degrees of Freedom"
+    ],
+    [
+      "EGM",
+      "Externally Guided Motion"
+    ],
+    [
+      "FRI",
+      "Fast Research Interface"
+    ],
+    [
+      "HMI",
+      "Human Machine Interface"
+    ],
+    [
+      "IK",
+      "Inverse Kinematics"
+    ],
+    [
+      "RSI",
+      "Robot Sensor Interface"
+    ],
+    [
+      "RTDE",
+      "Real-Time Data Exchange"
+    ],
+    [
+      "TCP",
+      "Tool Centre Point"
+    ]
+  ],
+  "normativeReferences": [
+    {
+      "id": "UAPart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "UAPart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "UAPart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "UAPart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "UAPart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "UAPart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "UAPart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "UAPart10",
+      "label": "OPC 10000-10",
+      "title": "OPC Unified Architecture - Part 10: Programs",
+      "url": "http://www.opcfoundation.org/documents/10000-10/"
+    },
+    {
+      "id": "UAPart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "ISO8373",
+      "label": "ISO 8373:2021",
+      "title": "Robotics - Vocabulary",
+      "url": "https://www.iso.org/standard/75539.html"
+    },
+    {
+      "id": "ISO9787",
+      "label": "ISO 9787:2013",
+      "title": "Robots and robotic devices - Coordinate systems and motion nomenclatures",
+      "url": "https://www.iso.org/standard/59090.html"
+    },
+    {
+      "id": "ISO10218-1",
+      "label": "ISO 10218-1",
+      "title": "Robotics - Safety requirements - Part 1: Industrial robots",
+      "url": "https://www.iso.org/standard/73933.html"
+    },
+    {
+      "id": "ISO10218-2",
+      "label": "ISO 10218-2",
+      "title": "Robotics - Safety requirements - Part 2: Industrial robot applications and robot cells",
+      "url": "https://www.iso.org/standard/73934.html"
+    },
+    {
+      "id": "IEC60204",
+      "label": "IEC 60204-1",
+      "title": "Safety of machinery - Electrical equipment of machines - Part 1: General requirements",
+      "url": "https://webstore.iec.ch/publication/26037"
+    },
+    {
+      "id": "IEC61800",
+      "label": "IEC 61800-5-2",
+      "title": "Adjustable speed electrical power drive systems - Part 5-2: Safety requirements - Functional",
+      "url": "https://webstore.iec.ch/publication/22850"
+    },
+    {
+      "id": "IEC61131",
+      "label": "IEC 61131-3",
+      "title": "Programmable controllers - Part 3: Programming languages",
+      "url": "https://webstore.iec.ch/publication/4552"
+    }
+  ],
+  "clauseMap": [
+    {
+      "from": "1 Scope",
+      "number": "1",
+      "title": "Scope",
+      "region": "scope"
+    },
+    {
+      "from": "1.1 Motivation",
+      "number": "1.1",
+      "title": "Motivation"
+    },
+    {
+      "from": "1.3 What this specification does not do",
+      "number": "1.2",
+      "title": "What this specification does not do"
+    },
+    {
+      "from": "1.4 Capabilities and versioning",
+      "number": "1.3",
+      "title": "Capabilities and versioning"
+    },
+    {
+      "from": "2 Normative references",
+      "number": "2",
+      "title": "Normative references",
+      "region": "normative-references",
+      "generated": "normative-references"
+    },
+    {
+      "from": null,
+      "number": "3",
+      "title": "Terms, abbreviated terms and conventions",
+      "region": "terms"
+    },
+    {
+      "from": null,
+      "number": "3.1",
+      "title": "Overview",
+      "generated": "terms-overview"
+    },
+    {
+      "from": "3 Terms, definitions and abbreviations",
+      "number": "3.2",
+      "title": "Robot Intent terms",
+      "generated": "terms"
+    },
+    {
+      "from": null,
+      "number": "3.3",
+      "title": "Abbreviated terms",
+      "generated": "abbreviations"
+    },
+    {
+      "from": null,
+      "number": "3.4",
+      "title": "Conventions used in this document"
+    },
+    {
+      "from": null,
+      "number": "4",
+      "title": "General information to robot commanding and OPC UA",
+      "region": "general"
+    },
+    {
+      "from": null,
+      "number": "4.1",
+      "title": "Introduction to robot commanding",
+      "generated": "subject-introduction"
+    },
+    {
+      "from": null,
+      "number": "4.2",
+      "title": "Introduction to OPC Unified Architecture"
+    },
+    {
+      "from": "1.2 Motivating use cases",
+      "number": "5",
+      "title": "Use cases",
+      "region": "use-cases"
+    },
+    {
+      "from": "4 Overview and concepts",
+      "number": "6",
+      "title": "Robot Intent information model overview",
+      "region": "model-overview"
+    },
+    {
+      "from": "4.1 The layered contract",
+      "number": "6.1",
+      "title": "The layered contract"
+    },
+    {
+      "from": "4.2 Intent, not trajectory",
+      "number": "6.2",
+      "title": "Intent, not trajectory"
+    },
+    {
+      "from": "4.3 What this interface carries, and what it brokers",
+      "number": "6.3",
+      "title": "What this interface carries, and what it brokers"
+    },
+    {
+      "from": "4.4 Architecture",
+      "number": "6.4",
+      "title": "Architecture"
+    },
+    {
+      "from": "5 Information model",
+      "number": "6.5",
+      "title": "Organisation of the model"
+    },
+    {
+      "from": "5.1 Type hierarchy",
+      "number": "6.6",
+      "title": "Type hierarchy"
+    },
+    {
+      "from": "5.2 Poses, frames and units (normative)",
+      "number": "6.7",
+      "title": "Poses, frames and units"
+    },
+    {
+      "from": "5.3 The intent hierarchy",
+      "number": "6.8",
+      "title": "The intent hierarchy"
+    },
+    {
+      "from": "5.4 Motion intents",
+      "number": "6.9",
+      "title": "Motion intents"
+    },
+    {
+      "from": "5.4.1 Paths, trajectories and contact",
+      "number": "6.9.1",
+      "title": "Paths, trajectories and contact"
+    },
+    {
+      "from": "5.4.2 Process intents",
+      "number": "6.9.2",
+      "title": "Process intents"
+    },
+    {
+      "from": "5.5 Manipulation intents",
+      "number": "6.10",
+      "title": "Manipulation intents"
+    },
+    {
+      "from": "5.6 Auxiliary intents",
+      "number": "6.11",
+      "title": "Auxiliary intents"
+    },
+    {
+      "from": "5.7 Reference objects",
+      "number": "6.12",
+      "title": "Reference objects"
+    },
+    {
+      "from": "5.7.0 What the controller itself reports",
+      "number": "6.12.1",
+      "title": "What the controller itself reports"
+    },
+    {
+      "from": "5.7.1 `RobotDescriptionType`",
+      "number": "6.12.2",
+      "title": "RobotDescriptionType"
+    },
+    {
+      "from": "5.7.2 `SafetyStateType`",
+      "number": "6.12.3",
+      "title": "SafetyStateType"
+    },
+    {
+      "from": "5.7.3 `RealTimeChannelType`",
+      "number": "6.12.4",
+      "title": "RealTimeChannelType"
+    },
+    {
+      "from": "5.8 Enumerations",
+      "number": "6.13",
+      "title": "Enumerations"
+    },
+    {
+      "from": "6 Intent lifecycle (normative)",
+      "number": "6.14",
+      "title": "Intent lifecycle"
+    },
+    {
+      "from": "6.1 Why an intent is a program instance",
+      "number": "6.14.1",
+      "title": "Why an intent is a program instance"
+    },
+    {
+      "from": "6.2 Submission",
+      "number": "6.14.2",
+      "title": "Submission"
+    },
+    {
+      "from": "6.3 States",
+      "number": "6.14.3",
+      "title": "States"
+    },
+    {
+      "from": "6.4 Queueing and blending",
+      "number": "6.14.4",
+      "title": "Queueing and blending"
+    },
+    {
+      "from": "6.5 Cancellation — and what the `Cancel` Service is not",
+      "number": "6.14.5",
+      "title": "Cancellation, and what the Cancel Service is not"
+    },
+    {
+      "from": "6.6 Pause, resume and retry",
+      "number": "6.14.6",
+      "title": "Pause, resume and retry"
+    },
+    {
+      "from": "6.7 Results",
+      "number": "6.14.7",
+      "title": "Results"
+    },
+    {
+      "from": "6.8 Trajectory execution (normative)",
+      "number": "6.14.8",
+      "title": "Trajectory execution"
+    },
+    {
+      "from": "6.9 Brokering a real-time channel (normative)",
+      "number": "6.14.9",
+      "title": "Brokering a real-time channel"
+    },
+    {
+      "from": "7 Missions (normative)",
+      "number": "6.15",
+      "title": "Missions"
+    },
+    {
+      "from": "7.1 Purpose",
+      "number": "6.15.1",
+      "title": "Purpose"
+    },
+    {
+      "from": "7.2 Base and horizon",
+      "number": "6.15.2",
+      "title": "Base and horizon"
+    },
+    {
+      "from": "7.3 Execution",
+      "number": "6.15.3",
+      "title": "Execution"
+    },
+    {
+      "from": "7.4 The step graph (normative)",
+      "number": "6.15.4",
+      "title": "The step graph"
+    },
+    {
+      "from": "8 Command authority (normative)",
+      "number": "6.16",
+      "title": "Command authority"
+    },
+    {
+      "from": "9 Capabilities and discovery (normative)",
+      "number": "6.17",
+      "title": "Capabilities and discovery"
+    },
+    {
+      "from": "10 Safety (normative)",
+      "number": "6.18",
+      "title": "Safety"
+    },
+    {
+      "from": "10.1 This interface is not safety-rated",
+      "number": "6.18.1",
+      "title": "This interface is not safety-rated"
+    },
+    {
+      "from": "10.2 Operational mode gates submission",
+      "number": "6.18.2",
+      "title": "Operational mode gates submission"
+    },
+    {
+      "from": "10.3 A stop request is not a stop category",
+      "number": "6.18.3",
+      "title": "A stop request is not a stop category"
+    },
+    {
+      "from": "10.4 Safety awareness, and its limits",
+      "number": "6.18.4",
+      "title": "Safety awareness, and its limits"
+    },
+    {
+      "from": "10.5 Refusal is a normal outcome",
+      "number": "6.18.5",
+      "title": "Refusal is a normal outcome"
+    },
+    {
+      "from": "11 Security",
+      "number": "6.19",
+      "title": "Security"
+    },
+    {
+      "from": "11.1 Commanding is a privileged operation",
+      "number": "6.19.1",
+      "title": "Commanding is a privileged operation"
+    },
+    {
+      "from": "11.2 Command authority is not authorisation",
+      "number": "6.19.2",
+      "title": "Command authority is not authorisation"
+    },
+    {
+      "from": "11.3 NodeIds in intents are untrusted input",
+      "number": "6.19.3",
+      "title": "NodeIds in intents are untrusted input"
+    },
+    {
+      "from": "11.4 Cybersecurity is in scope of the safety case",
+      "number": "6.19.4",
+      "title": "Cybersecurity is in scope of the safety case"
+    },
+    {
+      "from": "13 Deliverables and reproducibility",
+      "number": "6.20",
+      "title": "Deliverables and reproducibility"
+    },
+    {
+      "from": null,
+      "number": "7",
+      "title": "OPC UA ObjectTypes",
+      "region": "objecttypes",
+      "generated": "types",
+      "nodeClass": "UAObjectType"
+    },
+    {
+      "from": null,
+      "number": "8",
+      "title": "OPC UA DataTypes",
+      "region": "datatypes",
+      "generated": "datatypes"
+    },
+    {
+      "from": null,
+      "number": "9",
+      "title": "OPC UA ReferenceTypes",
+      "region": "referencetypes",
+      "generated": "types",
+      "nodeClass": "UAReferenceType"
+    },
+    {
+      "from": null,
+      "number": "10",
+      "title": "Instances",
+      "region": "instances",
+      "generated": "types",
+      "nodeClass": "UAObject",
+      "select": {
+        "parentOutsideModel": true
+      }
+    },
+    {
+      "from": "12 Profiles and conformance units",
+      "number": "11",
+      "title": "Profiles and conformance units",
+      "region": "profiles"
+    },
+    {
+      "from": "12.1 Declaring conformance",
+      "number": "11.1",
+      "title": "Declaring conformance"
+    },
+    {
+      "from": "12.2 Facets",
+      "number": "11.2",
+      "title": "Facets"
+    },
+    {
+      "from": "12.3 Profiles",
+      "number": "11.3",
+      "title": "Profiles"
+    },
+    {
+      "from": "12.4 Profile and facet URIs",
+      "number": "11.4",
+      "title": "Profile and facet URIs"
+    },
+    {
+      "from": null,
+      "number": "12",
+      "title": "Namespaces",
+      "region": "namespaces"
+    },
+    {
+      "from": null,
+      "number": "12.1",
+      "title": "Namespace metadata",
+      "generated": "namespace-metadata"
+    },
+    {
+      "from": null,
+      "number": "12.2",
+      "title": "Handling of OPC UA namespaces",
+      "generated": "namespace-handling"
+    },
+    {
+      "from": "Annex A — Information model (generated)",
+      "number": "A",
+      "title": "Robot Intent namespace and mappings",
+      "region": "annex-a",
+      "annex": true,
+      "normative": true,
+      "slice": "annex-a"
+    },
+    {
+      "from": "Annex B — OPC 40010 interop profile (normative for RI-Interop-40010)",
+      "number": "B",
+      "title": "OPC 40010 interop profile",
+      "region": "annex-b",
+      "annex": true,
+      "normative": true
+    },
+    {
+      "from": "Annex C — Pose conversion (normative)",
+      "number": "C",
+      "title": "Pose conversion",
+      "region": "annex-c",
+      "annex": true,
+      "normative": true
+    },
+    {
+      "from": "Annex D — Informative alignments",
+      "number": "D",
+      "title": "Informative alignments",
+      "region": "annex-d",
+      "annex": true
+    },
+    {
+      "from": "Annex E — Vision interop profile (normative for RI-Interop-Vision)",
+      "number": "E",
+      "title": "Vision interop profile",
+      "region": "annex-e",
+      "annex": true,
+      "normative": true
+    }
+  ],
+  "_comment_dropped": "The contents listing is the template's own, and Annex A's subsections are regenerated from the NodeSet.",
+  "dropped": [
+    "Contents",
+    "Type overview",
+    "Object types",
+    "Data types",
+    "Objects",
+    "Variables",
+    "Methods",
+    "Reference types"
+  ],
+  "_comment_dropParagraphsContaining": "Paragraphs about the repository rather than the model. A submitted specification does not cite its own source tree.",
+  "dropParagraphsContaining": [
+    "metaverse-specs/",
+    "core-specs/",
+    "build_model.py",
+    "validate_local.py",
+    "model-reference.md",
+    "CHANGELOG.md",
+    "OPC-UA-Robot-Intent-Research.md"
+  ],
+  "_comment_citedAs": "How sibling documents name this one. A reference is rewritten only when anchored on one of these, so this document's clause map is never applied to a reference belonging elsewhere.",
+  "citedAs": [
+    "Robot Intent",
+    "robot intent specification"
+  ],
+  "unanchoredSiblings": [],
+  "_comment_foreignAnchors": "Names this document uses for other documents. A section reference anchored on one of them belongs to that document and is left exactly as written.",
+  "foreignAnchors": [
+    "Vision",
+    "AI Model Management",
+    "Data Channels",
+    "OpenUSD",
+    "OPC 40010",
+    "OPC 40100",
+    "OPC 40450",
+    "OPC 40451",
+    "PLCopen",
+    "VDA 5050"
+  ],
+  "annexMap": {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "D": "D",
+    "E": "E"
+  },
+  "xrefMap": {
+    "1": "1",
+    "1.1": "1.1",
+    "1.2": "5",
+    "1.3": "1.2",
+    "1.4": "1.3",
+    "2": "2",
+    "3": "3.2",
+    "4": "6",
+    "4.1": "6.1",
+    "4.2": "6.2",
+    "4.3": "6.3",
+    "4.4": "6.4",
+    "5": "6.5",
+    "5.1": "6.6",
+    "5.2": "6.7",
+    "5.3": "6.8",
+    "5.4": "6.9",
+    "5.4.1": "6.9.1",
+    "5.4.2": "6.9.2",
+    "5.5": "6.10",
+    "5.6": "6.11",
+    "5.7": "6.12",
+    "5.7.0": "6.12.1",
+    "5.7.1": "6.12.2",
+    "5.7.2": "6.12.3",
+    "5.7.3": "6.12.4",
+    "5.8": "6.13",
+    "6": "6.14",
+    "6.1": "6.14.1",
+    "6.2": "6.14.2",
+    "6.3": "6.14.3",
+    "6.4": "6.14.4",
+    "6.5": "6.14.5",
+    "6.6": "6.14.6",
+    "6.7": "6.14.7",
+    "6.8": "6.14.8",
+    "6.9": "6.14.9",
+    "7": "6.15",
+    "7.1": "6.15.1",
+    "7.2": "6.15.2",
+    "7.3": "6.15.3",
+    "7.4": "6.15.4",
+    "8": "6.16",
+    "9": "6.17",
+    "10": "6.18",
+    "10.1": "6.18.1",
+    "10.2": "6.18.2",
+    "10.3": "6.18.3",
+    "10.4": "6.18.4",
+    "10.5": "6.18.5",
+    "11": "6.19",
+    "11.1": "6.19.1",
+    "11.2": "6.19.2",
+    "11.3": "6.19.3",
+    "11.4": "6.19.4",
+    "12": "11",
+    "12.1": "11.1",
+    "12.2": "11.2",
+    "12.3": "11.3",
+    "12.4": "11.4",
+    "13": "6.20",
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "D": "D",
+    "E": "E"
+  },
+  "figures": [
+    {
+      "id": "fig-ri-layers",
+      "caption": "The layered contract",
+      "pptx": "RobotIntent-Fig1-Layers.pptx"
+    },
+    {
+      "id": "fig-ri-architecture",
+      "caption": "Architecture of an intent controller in the AddressSpace",
+      "pptx": "RobotIntent-Fig2-Architecture.pptx"
+    },
+    {
+      "id": "fig-ri-notation",
+      "caption": "Graphical notation used by the AddressSpace figures",
+      "pptx": "RobotIntent-FigNotation.pptx"
+    },
+    {
+      "id": "fig-ri-hierarchy",
+      "caption": "The type hierarchy",
+      "pptx": "RobotIntent-FigHierarchy.pptx"
+    },
+    {
+      "id": "fig-ri-controller",
+      "caption": "Instance structure of an intent controller",
+      "pptx": "RobotIntent-Fig3-Controller.pptx"
+    },
+    {
+      "id": "fig-ri-intenttree",
+      "caption": "The intent DataType hierarchy",
+      "pptx": "RobotIntent-Fig4-IntentTree.pptx"
+    },
+    {
+      "id": "fig-ri-lifecycle",
+      "caption": "The intent execution state model",
+      "pptx": "RobotIntent-Fig5-Lifecycle.pptx"
+    },
+    {
+      "id": "fig-ri-mission",
+      "caption": "A mission base and horizon",
+      "pptx": "RobotIntent-Fig6-Mission.pptx"
+    }
+  ]
+}
