@@ -10,6 +10,7 @@
       }
     ],
     "@type": [
+      "Thing",
       "uav:object",
       "aas:Submodel",
       "i4aas:AASSubmodelType"
@@ -33,7 +34,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Decimal"
         },
-        "aas:Property/value": "3.14159265358979323846264338327950288419716939937510582097494459"
+        "aas:Property/value": "3.14159265358979323846264338327950288419716939937510582097494459",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "UnboundedInteger": {
         "@type": [
@@ -49,7 +56,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Integer"
         },
-        "aas:Property/value": "170141183460469231731687303715884105727170141183460469231731687303715884105727"
+        "aas:Property/value": "170141183460469231731687303715884105727170141183460469231731687303715884105727",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TrailingZeros": {
         "@type": [
@@ -65,7 +78,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Decimal"
         },
-        "aas:Property/value": "1.500000"
+        "aas:Property/value": "1.500000",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "NegativeZero": {
         "@type": [
@@ -81,7 +100,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Double"
         },
-        "aas:Property/value": "-0.0"
+        "aas:Property/value": "-0.0",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "Duration": {
         "@type": [
@@ -97,7 +122,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Duration"
         },
-        "aas:Property/value": "P1Y2M3DT4H5M6.789S"
+        "aas:Property/value": "P1Y2M3DT4H5M6.789S",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "PartialDate": {
         "@type": [
@@ -113,7 +144,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/GYearMonth"
         },
-        "aas:Property/value": "2026-08"
+        "aas:Property/value": "2026-08",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "GDay": {
         "@type": [
@@ -129,7 +166,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/GDay"
         },
-        "aas:Property/value": "---07"
+        "aas:Property/value": "---07",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "OffsetDateTime": {
         "@type": [
@@ -145,7 +188,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/DateTime"
         },
-        "aas:Property/value": "2026-08-07T13:24:23.297+02:00"
+        "aas:Property/value": "2026-08-07T13:24:23.297+02:00",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "LeadingPlus": {
         "@type": [
@@ -161,7 +210,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Int"
         },
-        "aas:Property/value": "+42"
+        "aas:Property/value": "+42",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "EmptyString": {
         "@type": [
@@ -177,7 +232,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": ""
+        "aas:Property/value": "",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "UnboundedBelow": {
         "@type": [
@@ -193,7 +254,13 @@
         "aas:Range/valueType": {
           "@id": "aas:DataTypeDefXsd/Decimal"
         },
-        "aas:Range/max": "100.0"
+        "aas:Range/max": "100.0",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1023"
+          }
+        ]
       },
       "BoundedAtZero": {
         "@type": [
@@ -210,10 +277,21 @@
           "@id": "aas:DataTypeDefXsd/Decimal"
         },
         "aas:Range/min": "0",
-        "aas:Range/max": "100.0"
+        "aas:Range/max": "100.0",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1023"
+          }
+        ]
       }
     },
-    "links": [],
+    "links": [
+      {
+        "rel": "ua:HasTypeDefinition",
+        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
+      }
+    ],
     "aas:Identifiable/id": "https://fabrikam.com/ids/sm/awkward-values",
     "aas:Referable/idShort": "AwkwardValues",
     "aas:HasKind/kind": {

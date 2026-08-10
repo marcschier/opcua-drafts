@@ -10,6 +10,7 @@
       }
     ],
     "@type": [
+      "Thing",
       "uav:object",
       "aas:Submodel",
       "i4aas:AASSubmodelType"
@@ -37,6 +38,12 @@
         "aas:SubmodelElementList/valueTypeListElement": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://fabrikam.com/ids/sm/ordering#OrderMatters[0]"
@@ -66,6 +73,12 @@
           "@id": "aas:DataTypeDefXsd/String"
         },
         "aas:Property/value": "third",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "OrderMatters[1]": {
@@ -85,6 +98,12 @@
           "@id": "aas:DataTypeDefXsd/String"
         },
         "aas:Property/value": "first",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 1
       },
       "OrderMatters[2]": {
@@ -104,6 +123,12 @@
           "@id": "aas:DataTypeDefXsd/String"
         },
         "aas:Property/value": "second",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 2
       },
       "OrderDoesNotMatter": {
@@ -121,6 +146,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/Property"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://fabrikam.com/ids/sm/ordering#OrderDoesNotMatter[0]"
@@ -150,6 +181,12 @@
           "@id": "aas:DataTypeDefXsd/Int"
         },
         "aas:Property/value": "9",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "OrderDoesNotMatter[1]": {
@@ -169,6 +206,12 @@
           "@id": "aas:DataTypeDefXsd/Int"
         },
         "aas:Property/value": "8",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 1
       },
       "OrderDoesNotMatter[2]": {
@@ -188,6 +231,12 @@
           "@id": "aas:DataTypeDefXsd/Int"
         },
         "aas:Property/value": "7",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 2
       },
       "NestedLists": {
@@ -205,6 +254,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementList"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://fabrikam.com/ids/sm/ordering#NestedLists[0]"
@@ -231,6 +286,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/Property"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "uav:index": 0,
         "aas:SubmodelElementList/value": [
           {
@@ -258,6 +319,12 @@
           "@id": "aas:DataTypeDefXsd/String"
         },
         "aas:Property/value": "a0",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "NestedLists[0][1]": {
@@ -277,6 +344,12 @@
           "@id": "aas:DataTypeDefXsd/String"
         },
         "aas:Property/value": "a1",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 1
       },
       "NestedLists[1]": {
@@ -296,6 +369,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/Property"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "uav:index": 1,
         "aas:SubmodelElementList/value": [
           {
@@ -320,6 +399,12 @@
           "@id": "aas:DataTypeDefXsd/String"
         },
         "aas:Property/value": "b0",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "CollectionsInsideAList": {
@@ -337,6 +422,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]"
@@ -355,6 +446,12 @@
         "uav:modellingRule": "Optional",
         "uav:componentOf": [
           "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList"
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
+          }
         ],
         "uav:index": 0,
         "aas:SubmodelElementCollection/value": [
@@ -380,10 +477,20 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": "inside a list member"
+        "aas:Property/value": "inside a list member",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       }
     },
     "links": [
+      {
+        "rel": "ua:HasTypeDefinition",
+        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
+      },
       {
         "rel": "ua:HasOrderedComponent",
         "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#OrderMatters[0]",

@@ -10,6 +10,7 @@
       }
     ],
     "@type": [
+      "Thing",
       "uav:object",
       "aas:Submodel",
       "i4aas:AASSubmodelType"
@@ -78,6 +79,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -156,7 +163,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": "NMC"
+        "aas:Property/value": "NMC",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "BatteryChemistry.ClearName": {
         "@type": [
@@ -225,7 +238,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": "Lithium nickel manganese cobalt oxides"
+        "aas:Property/value": "Lithium nickel manganese cobalt oxides",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "BatteryMaterials": {
         "@type": [
@@ -292,6 +311,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://w3id.org/aas-jsonld/id/3880137ee1d436464999645ee9ed12eaed5abc52a92ca465c8fe2bc6079c994c"
@@ -360,6 +385,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "uav:index": 0,
@@ -443,6 +474,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -547,7 +584,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": "Anode"
+        "aas:Property/value": "Anode",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "BatteryMaterials[0].BatteryMaterialLocation.ComponentId": {
         "@type": [
@@ -641,7 +684,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "BatteryMaterials[0].BatteryMaterialIdentifier": {
         "@type": [
@@ -742,7 +791,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": "7439-93-2"
+        "aas:Property/value": "7439-93-2",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "BatteryMaterials[0].BatteryMaterialName": {
         "@type": [
@@ -828,7 +883,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": "Lithium"
+        "aas:Property/value": "Lithium",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "BatteryMaterials[0].BatteryMaterialMass": {
         "@type": [
@@ -922,7 +983,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "BatteryMaterials[0].IsCriticalRawMaterial": {
         "@type": [
@@ -991,7 +1058,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Boolean"
         },
-        "aas:Property/value": "true"
+        "aas:Property/value": "true",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "HazardousSubstances": {
         "@type": [
@@ -1058,6 +1131,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://w3id.org/aas-jsonld/id/60c64983ab5cb66c7f2bddc4f21c2b0b4f6fa4de8d387d24f7bb2f4d63aa754f"
@@ -1126,6 +1205,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "ZeroToMany"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "uav:index": 0,
@@ -1242,7 +1327,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "HazardousSubstances[0].HazardousSubstanceName": {
         "@type": [
@@ -1310,7 +1401,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "HazardousSubstances[0].HazardousSubstanceConcentration": {
         "@type": [
@@ -1404,7 +1501,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Double"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "HazardousSubstances[0].HazardousSubstanceImpact": {
         "@type": [
@@ -1477,6 +1580,12 @@
         "aas:SubmodelElementList/valueTypeListElement": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://w3id.org/aas-jsonld/id/c2b1124a41cc779c965153aeba1e0a1c644ad59bb24ab3da0150dcda40490dee"
@@ -1576,6 +1685,12 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "HazardousSubstances[0].HazardousSubstanceLocation": {
@@ -1640,6 +1755,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "ZeroToOne"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -1744,7 +1865,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": "Anode"
+        "aas:Property/value": "Anode",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "HazardousSubstances[0].HazardousSubstanceLocation.ComponentId": {
         "@type": [
@@ -1838,7 +1965,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "HazardousSubstances[0].HazardousSubstanceIdentifier": {
         "@type": [
@@ -1923,10 +2056,20 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       }
     },
     "links": [
+      {
+        "rel": "ua:HasTypeDefinition",
+        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
+      },
       {
         "rel": "ua:HasComponent",
         "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry.ShortName",

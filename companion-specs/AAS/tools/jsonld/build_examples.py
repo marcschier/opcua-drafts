@@ -147,8 +147,8 @@ def write_minimal_td(name, env, context_doc):
     # says what the document is.
     existing = doc.get("@type") or []
     existing = existing if isinstance(existing, list) else [existing]
-    doc["@type"] = ["uav:object", "i4aas:AASSubmodelType"] + [
-        t for t in existing if t not in ("uav:object", "i4aas:AASSubmodelType")]
+    doc["@type"] = ["Thing", "uav:object", "i4aas:AASSubmodelType"] + [
+        t for t in existing if t not in ("Thing", "uav:object", "i4aas:AASSubmodelType")]
     doc["title"] = title
     doc["securityDefinitions"] = {"nosec_sc": {"scheme": "nosec"}}
     doc["security"] = "nosec_sc"
@@ -254,12 +254,12 @@ def aas_graph_of(tds):
 
 def write_thing_descriptions(name, env, context_doc):
     """The same submodel as a Thing Description, with the WoT vocabulary added."""
-    tds = wot_bridge.generate(env, "attype")
+    tds = wot_bridge.generate(env, "both")
     want = wot_bridge.expected(env)
     if not want:
         raise SystemExit(f"{name}: no nodes expected, so the comparison would pass "
                          f"without testing anything")
-    got = wot_bridge.project(tds, honour_proposed_term=True, form="attype")
+    got = wot_bridge.project(tds, bind=True, form="both")
     missing, extra, differing = wot_bridge.compare(want, got)
     if missing or extra or differing:
         raise SystemExit(f"{name}: projection does not match clause 5.6 "

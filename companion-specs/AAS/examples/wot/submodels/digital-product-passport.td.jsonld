@@ -10,6 +10,7 @@
       }
     ],
     "@type": [
+      "Thing",
       "uav:object",
       "aas:Submodel",
       "i4aas:AASSubmodelType"
@@ -115,7 +116,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "uniqueProductIdentifier": {
         "@type": [
@@ -213,7 +220,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "granularity": {
         "@type": [
@@ -328,7 +341,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "dppSchemaVersion": {
         "@type": [
@@ -426,7 +445,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "dppStatus": {
         "@type": [
@@ -524,7 +549,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "lastUpdate": {
         "@type": [
@@ -639,7 +670,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/DateTime"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "economicOperatorId": {
         "@type": [
@@ -737,7 +774,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "facilityId": {
         "@type": [
@@ -835,7 +878,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "contentSpecificationIds": {
         "@type": [
@@ -912,6 +961,12 @@
         "aas:SubmodelElementList/valueTypeListElement": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds[0]"
@@ -1011,10 +1066,20 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       }
     },
     "links": [
+      {
+        "rel": "ua:HasTypeDefinition",
+        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
+      },
       {
         "rel": "ua:HasComponent",
         "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds[0]",

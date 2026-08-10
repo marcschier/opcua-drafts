@@ -10,6 +10,7 @@
       }
     ],
     "@type": [
+      "Thing",
       "uav:object",
       "aas:Submodel",
       "i4aas:AASSubmodelType"
@@ -87,6 +88,12 @@
         "aas:SubmodelElementList/valueTypeListElement": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://w3id.org/aas-jsonld/id/56269b14c1e8386fa7413d176d6fbb75017b2d50695e06a826e820c99f2e2313"
@@ -160,6 +167,12 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "SparePartSources": {
@@ -227,6 +240,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://w3id.org/aas-jsonld/id/0ec02a0e6a0cf909969d5b54061a67ed403d821d047a71dd0b58d40c12e0cecd"
@@ -295,6 +314,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "ZeroToMany"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "uav:index": 0,
@@ -396,6 +421,12 @@
             },
             "aas:Qualifier/value": "One"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
+          }
         ]
       },
       "SparePartSources[0].AddressOfSupplier": {
@@ -477,6 +508,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -576,6 +613,12 @@
             },
             "aas:Qualifier/value": "One"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
+          }
         ]
       },
       "SparePartSources[0].AddressOfSupplier.PostalCode": {
@@ -672,6 +715,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
           }
         ]
       },
@@ -775,6 +824,12 @@
             },
             "aas:Qualifier/value": "One"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
+          }
         ]
       },
       "SparePartSources[0].EmailAddressOfSupplier": {
@@ -861,6 +916,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -961,7 +1022,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "SparePartSources[0].EmailAddressOfSupplier.PublicKey": {
         "@type": [
@@ -1050,6 +1117,12 @@
             },
             "aas:Qualifier/value": "ZeroToOne"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
+          }
         ]
       },
       "SparePartSources[0].EmailAddressOfSupplier.TypeOfEmailAddress": {
@@ -1135,7 +1208,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "SparePartSources[0].EmailAddressOfSupplier.TypeOfPublicKey": {
         "@type": [
@@ -1216,6 +1295,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "ZeroToOne"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
           }
         ]
       },
@@ -1302,7 +1387,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "SparePartSources[0].Components": {
         "@type": [
@@ -1372,6 +1463,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://w3id.org/aas-jsonld/id/d14d5ed0273b3df2f6f9e74796689c3ac79cb11702299590275aa58c56269a4d"
@@ -1447,6 +1544,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "uav:index": 0,
@@ -1525,7 +1628,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "SparePartSources[0].Components[0].PartNumber": {
         "@type": [
@@ -1593,7 +1702,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "RecycledContentInformation": {
         "@type": [
@@ -1660,6 +1775,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://w3id.org/aas-jsonld/id/5a89f7a9630cdf962c63161cb14ccdbda830b55066e1df817310bc7c58815ca0"
@@ -1728,6 +1849,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "uav:index": 0,
@@ -1809,7 +1936,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "RecycledContentInformation[0].RecycledMaterial": {
         "@type": [
@@ -1877,7 +2010,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "RecycledContentInformation[0].PostConsumerShare": {
         "@type": [
@@ -1945,7 +2084,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "SafetyMeasures": {
         "@type": [
@@ -2006,6 +2151,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -2088,6 +2239,12 @@
         "aas:SubmodelElementList/valueTypeListElement": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://w3id.org/aas-jsonld/id/99cf352d50ef55b68ffe5949447180b2eb15d73beee5c0df7cecf5259f7845f1"
@@ -2161,6 +2318,12 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "SafetyMeasures.ExtinguishingAgents": {
@@ -2234,6 +2397,12 @@
         "aas:SubmodelElementList/valueTypeListElement": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://w3id.org/aas-jsonld/id/ff86578a3c3e1a87dc125301b7862764764680fbd6678ecc1b9d1f4c63966dfb"
@@ -2307,6 +2476,12 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "EndOfLifeInformation": {
@@ -2368,6 +2543,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -2470,6 +2651,12 @@
         "aas:SubmodelElementList/valueTypeListElement": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://w3id.org/aas-jsonld/id/e3ebea58414bbd3c7aa9a1cb605fc5542ff7d0dc84ffe916e320755184f23fe9"
@@ -2543,6 +2730,12 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "EndOfLifeInformation.SeparateCollection": {
@@ -2633,6 +2826,12 @@
         "aas:SubmodelElementList/valueTypeListElement": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://w3id.org/aas-jsonld/id/3c6a044d3fda26117cf522e0225b9469ce5e7ac202b9a6eaee5cbc5f5523adfd"
@@ -2706,6 +2905,12 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "EndOfLifeInformation.InformationOnCollection": {
@@ -2796,6 +3001,12 @@
         "aas:SubmodelElementList/valueTypeListElement": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://w3id.org/aas-jsonld/id/cf31224c73cc4ee80c75c312a5d2937e5515615fc663c0c60da631c37deaef4b"
@@ -2869,6 +3080,12 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "RenewableContent": {
@@ -2951,10 +3168,20 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       }
     },
     "links": [
+      {
+        "rel": "ua:HasTypeDefinition",
+        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
+      },
       {
         "rel": "ua:HasComponent",
         "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel#DismantlingAndRemovalInformation[0]",

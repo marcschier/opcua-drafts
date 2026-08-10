@@ -10,6 +10,7 @@
       }
     ],
     "@type": [
+      "Thing",
       "uav:object",
       "aas:Submodel",
       "i4aas:AASSubmodelType"
@@ -109,6 +110,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0]"
@@ -178,6 +185,12 @@
                 "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#ProductCarbonFootprint"
               }
             ]
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "uav:index": 0,
@@ -306,6 +319,12 @@
         "aas:SubmodelElementList/valueTypeListElement": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods[0]"
@@ -367,6 +386,12 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "ProductCarbonFootprints[0].PcfCO2eq": {
@@ -447,7 +472,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Decimal"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "ProductCarbonFootprints[0].ReferenceImpactUnitForCalculation": {
         "@type": [
@@ -527,7 +558,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "ProductCarbonFootprints[0].QuantityOfMeasureForCalculation": {
         "@type": [
@@ -607,7 +644,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Double"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "ProductCarbonFootprints[0].LifeCyclePhases": {
         "@type": [
@@ -720,6 +763,12 @@
         "aas:SubmodelElementList/valueTypeListElement": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].LifeCyclePhases[0]"
@@ -781,6 +830,12 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "ProductCarbonFootprints[0].PerformanceClass": {
@@ -845,6 +900,12 @@
             "@type": "aas:LangStringNameType",
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "performance class"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
           }
         ]
       },
@@ -913,6 +974,12 @@
             "@type": "aas:LangStringNameType",
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "web link to public carbon footprint study"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
           }
         ],
         "aas:SubmodelElementList/value": [
@@ -1010,10 +1077,20 @@
             "aas:AbstractLangString/text": "document identifier"
           }
         ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       }
     },
     "links": [
+      {
+        "rel": "ua:HasTypeDefinition",
+        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
+      },
       {
         "rel": "ua:HasOrderedComponent",
         "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0#ProductCarbonFootprints[0].PcfCalculationMethods[0]",

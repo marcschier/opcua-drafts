@@ -18,7 +18,6 @@ registry over HTTP, a DPP and battery passport identifier mapping, and the study
 | `aas.context.jsonld` | The JSON-LD authoring context, generated from the pinned ontology | IDTA |
 | `AAS-DPP-Vocabulary.md` | The DPP and battery passport identifier mapping | IDTA |
 | `dpp/mappings.sssom.tsv` | The mapping set, as SSSOM | IDTA |
-| `WOT-TYPE-BINDING-PROPOSAL.md` | The one WoT rule Annex F needs, proposed to `OPCF-Members/spec-drafts` | OPC Foundation |
 | `examples/jsonld/` | Seven published IDTA submodels as pure JSON-LD — the AAS and nothing else | — |
 | `examples/wot/minimal/` | The same seven, plus the least that makes each a loadable Thing Description | — |
 | `examples/wot/submodels/` | The same seven, projection-complete: each materializes the AddressSpace of Annex F | — |
@@ -90,11 +89,12 @@ lower back to the published template, the minimal form must still carry the grap
 once the WoT vocabulary is discarded, and the projection-complete form must carry every node of the
 source AAS and project without difference.
 
-It needs one rule the WoT drafts do not yet have: a member of `@type` naming an ObjectType the
-Server has already loaded types the projected node with it. `WOT-TYPE-BINDING-PROPOSAL.md` states
-the rule, presents the alternatives — including the dedicated term proposed first and withdrawn —
-and gives the converter behaviour it requires. It adds no vocabulary and is raised as
-`OPCF-Members/spec-drafts` PR #19.
+The type binding it relies on is §5.2.1 of the *WoT Binding*, which that specification has adopted —
+raised as `OPCF-Members/spec-drafts` PR #19 and merged. It adds no vocabulary and admits two
+spellings, both of which the generated documents carry: the ObjectType's compact model name in
+`@type`, which is readable, and a `ua:HasTypeDefinition` link carrying its ExpandedNodeId, which is
+definitive. The NodeIds of these types are published with the model, so a document can carry the
+definitive form and it means the same on every Server that loaded it.
 
 ## Regenerate and validate
 

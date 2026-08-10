@@ -10,6 +10,7 @@
       }
     ],
     "@type": [
+      "Thing",
       "uav:object",
       "aas:Submodel",
       "i4aas:AASSubmodelType"
@@ -122,6 +123,12 @@
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "URI of the product"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
         ]
       },
       "ManufacturerName": {
@@ -229,6 +236,12 @@
             "@type": "aas:LangStringNameType",
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "manufacturer name"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
           }
         ]
       },
@@ -361,6 +374,12 @@
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "address information"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
+          }
         ]
       },
       "SerialNumber": {
@@ -465,6 +484,12 @@
             "@type": "aas:LangStringNameType",
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "serial number"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
           }
         ]
       },
@@ -571,6 +596,12 @@
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "date of manufacture"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
         ]
       },
       "DateOfPuttingIntoService": {
@@ -622,7 +653,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Date"
         },
-        "aas:Property/value": "2022-06-01"
+        "aas:Property/value": "2022-06-01",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "UniqueFacilityIdentifier": {
         "@type": [
@@ -727,6 +764,12 @@
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "unique facility identifier"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
         ]
       },
       "LifeCycleStage": {
@@ -814,6 +857,12 @@
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "life cycle stage"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
         ]
       },
       "OperatorIdentifier": {
@@ -877,6 +926,12 @@
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "operator identifier"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
         ]
       },
       "ManufacturerIdentifier": {
@@ -939,6 +994,12 @@
             "@type": "aas:LangStringNameType",
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "manufacturer identifier"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
           }
         ]
       },
@@ -1043,6 +1104,12 @@
             "@type": "aas:LangStringNameType",
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "markings"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
           }
         ],
         "aas:SubmodelElementList/value": [
@@ -1152,6 +1219,12 @@
             "@type": "aas:LangStringNameType",
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "markings 00"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "uav:index": 0,
@@ -1282,6 +1355,12 @@
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "marking name"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
         ]
       },
       "Markings[0].DesignationOfCertificateOrApproval": {
@@ -1389,6 +1468,12 @@
             "@type": "aas:LangStringNameType",
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "designation of certificate or approval"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
           }
         ]
       },
@@ -1498,6 +1583,12 @@
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "issue date"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
         ]
       },
       "Markings[0].ExpiryDate": {
@@ -1606,6 +1697,12 @@
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "expiry date"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
         ]
       },
       "Markings[0].MarkingFile": {
@@ -1700,6 +1797,12 @@
             "@type": "aas:LangStringNameType",
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "marking file"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1025"
           }
         ]
       },
@@ -1809,6 +1912,12 @@
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "marking additional text"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
         ]
       },
       "EUDeclarationOfConformity": {
@@ -1899,6 +2008,12 @@
             "aas:AbstractLangString/text": "EU declaration of conformity"
           }
         ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#EUDeclarationOfConformity[0]"
@@ -1974,6 +2089,12 @@
             "@type": "aas:LangStringNameType",
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "document identifier"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
           }
         ],
         "uav:index": 0
@@ -2066,6 +2187,12 @@
             "aas:AbstractLangString/text": "results of test reports proving compliance"
           }
         ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#ResultsOfTestReportsProvingCompliance[0]"
@@ -2143,10 +2270,20 @@
             "aas:AbstractLangString/text": "document identifier"
           }
         ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       }
     },
     "links": [
+      {
+        "rel": "ua:HasTypeDefinition",
+        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
+      },
       {
         "rel": "ua:HasComponent",
         "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0#Markings[0].MarkingName",

@@ -10,6 +10,7 @@
       }
     ],
     "@type": [
+      "Thing",
       "uav:object",
       "aas:Submodel",
       "i4aas:AASSubmodelType"
@@ -29,7 +30,13 @@
         "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyCollection",
         "uav:browseName": "nsu=https://example.com/aas/instances/;EmptyCollection",
         "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "EmptyCollection"
+        "aas:Referable/idShort": "EmptyCollection",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
+          }
+        ]
       },
       "AbsentCollection": {
         "@type": [
@@ -41,7 +48,13 @@
         "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentCollection",
         "uav:browseName": "nsu=https://example.com/aas/instances/;AbsentCollection",
         "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "AbsentCollection"
+        "aas:Referable/idShort": "AbsentCollection",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
+          }
+        ]
       },
       "EmptyList": {
         "@type": [
@@ -57,7 +70,13 @@
         "aas:SubmodelElementList/orderRelevant": true,
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/Property"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ]
       },
       "AbsentList": {
         "@type": [
@@ -73,7 +92,13 @@
         "aas:SubmodelElementList/orderRelevant": true,
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/Property"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ]
       },
       "EmptyStatements": {
         "@type": [
@@ -88,7 +113,13 @@
         "aas:Referable/idShort": "EmptyStatements",
         "aas:Entity/entityType": {
           "@id": "aas:EntityType/CoManagedEntity"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1032"
+          }
+        ]
       },
       "AbsentStatements": {
         "@type": [
@@ -103,7 +134,13 @@
         "aas:Referable/idShort": "AbsentStatements",
         "aas:Entity/entityType": {
           "@id": "aas:EntityType/CoManagedEntity"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1032"
+          }
+        ]
       },
       "PresentButEmptyValue": {
         "@type": [
@@ -119,7 +156,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": ""
+        "aas:Property/value": "",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "AbsentValue": {
         "@type": [
@@ -134,7 +177,13 @@
         "aas:Referable/idShort": "AbsentValue",
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "EmptyLangStrings": {
         "@type": [
@@ -146,7 +195,13 @@
         "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#EmptyLangStrings",
         "uav:browseName": "nsu=https://example.com/aas/instances/;EmptyLangStrings",
         "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "EmptyLangStrings"
+        "aas:Referable/idShort": "EmptyLangStrings",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
+          }
+        ]
       },
       "AbsentLangStrings": {
         "@type": [
@@ -158,10 +213,21 @@
         "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty#AbsentLangStrings",
         "uav:browseName": "nsu=https://example.com/aas/instances/;AbsentLangStrings",
         "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "AbsentLangStrings"
+        "aas:Referable/idShort": "AbsentLangStrings",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
+          }
+        ]
       }
     },
-    "links": [],
+    "links": [
+      {
+        "rel": "ua:HasTypeDefinition",
+        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
+      }
+    ],
     "aas:Identifiable/id": "https://fabrikam.com/ids/sm/absent-vs-empty",
     "aas:Referable/idShort": "AbsentVersusEmpty",
     "aas:HasKind/kind": {

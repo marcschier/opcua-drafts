@@ -9108,6 +9108,7 @@
     }
   ],
   "@type": [
+    "Thing",
     "uav:object",
     "i4aas:AASSubmodelType"
   ],

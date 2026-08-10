@@ -10,6 +10,7 @@
       }
     ],
     "@type": [
+      "Thing",
       "uav:object",
       "aas:Submodel",
       "i4aas:AASSubmodelType"
@@ -132,6 +133,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0]"
@@ -243,6 +250,12 @@
             "@type": "aas:LangStringNameType",
             "aas:AbstractLangString/language": "en",
             "aas:AbstractLangString/text": "document"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "uav:index": 0,
@@ -374,6 +387,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0]"
@@ -490,6 +509,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "uav:index": 0,
@@ -626,6 +651,12 @@
             },
             "aas:Qualifier/value": "Certificates, declarations"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
+          }
         ]
       },
       "Documents[0].DocumentClassifications[0].ClassId": {
@@ -752,7 +783,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "Documents[0].DocumentClassifications[0].ClassificationSystem": {
         "@type": [
@@ -878,7 +915,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "Documents[0].DocumentIds": {
         "@type": [
@@ -996,6 +1039,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentIds[0]"
@@ -1112,6 +1161,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "uav:index": 0,
@@ -1251,7 +1306,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "Documents[0].DocumentIds[0].DocumentIdentifier": {
         "@type": [
@@ -1377,7 +1438,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "Documents[0].DocumentIds[0].DocumentIsPrimary": {
         "@type": [
@@ -1503,7 +1570,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Boolean"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "Documents[0].DocumentVersions": {
         "@type": [
@@ -1621,6 +1694,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0]"
@@ -1730,6 +1809,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "uav:index": 0,
@@ -1858,6 +1943,12 @@
         "aas:SubmodelElementList/valueTypeListElement": {
           "@id": "aas:DataTypeDefXsd/String"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].Language[0]"
@@ -1988,6 +2079,12 @@
             }
           ]
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "Documents[0].DocumentVersions[0].Version": {
@@ -2114,7 +2211,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "Documents[0].DocumentVersions[0].Title": {
         "@type": [
@@ -2236,6 +2339,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "Examplary title@en"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
           }
         ]
       },
@@ -2360,6 +2469,12 @@
             },
             "aas:Qualifier/value": "Examplary subtitle@en"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
+          }
         ]
       },
       "Documents[0].DocumentVersions[0].Description": {
@@ -2483,6 +2598,12 @@
             },
             "aas:Qualifier/value": "Abstract@en"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
+          }
         ]
       },
       "Documents[0].DocumentVersions[0].DigitalFiles": {
@@ -2586,6 +2707,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/File"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentVersions[0].DigitalFiles[0]"
@@ -2721,10 +2848,20 @@
           }
         ],
         "aas:File/contentType": "application/pdf",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1025"
+          }
+        ],
         "uav:index": 0
       }
     },
     "links": [
+      {
+        "rel": "ua:HasTypeDefinition",
+        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
+      },
       {
         "rel": "ua:HasComponent",
         "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0#Documents[0].DocumentClassifications[0].ClassName",

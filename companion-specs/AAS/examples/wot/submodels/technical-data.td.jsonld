@@ -10,6 +10,7 @@
       }
     ],
     "@type": [
+      "Thing",
       "uav:object",
       "aas:Submodel",
       "i4aas:AASSubmodelType"
@@ -85,6 +86,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -231,7 +238,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": "Example Company"
+        "aas:Property/value": "Example Company",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "GeneralInformation.CompanyLogo": {
         "@type": [
@@ -326,7 +339,13 @@
             "aas:Qualifier/value": "ZeroToOne"
           }
         ],
-        "aas:File/contentType": "image/png"
+        "aas:File/contentType": "image/png",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1025"
+          }
+        ]
       },
       "GeneralInformation.ManufacturerIdentifier": {
         "@type": [
@@ -384,7 +403,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "GeneralInformation.BatteryCategory": {
         "@type": [
@@ -467,7 +492,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": "ev"
+        "aas:Property/value": "ev",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "GeneralInformation.BatteryMass": {
         "@type": [
@@ -544,7 +575,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "1007"
+        "aas:Property/value": "1007",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "GeneralInformation.ProductImages": {
         "@type": [
@@ -657,6 +694,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/File"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.ProductImages[0]"
@@ -745,6 +788,12 @@
           }
         ],
         "aas:File/contentType": "image/png",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1025"
+          }
+        ],
         "uav:index": 0
       },
       "GeneralInformation.WarrantyInformation": {
@@ -798,6 +847,12 @@
                 "aas:Key/value": "0173-1#02-AAO677#004"
               }
             ]
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -887,7 +942,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": "P96M"
+        "aas:Property/value": "P96M",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas": {
         "@type": [
@@ -970,6 +1031,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -1069,6 +1136,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -1174,7 +1247,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "4.3"
+        "aas:Property/value": "4.3",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.CapacityEnergyVoltage.MinVoltage": {
         "@type": [
@@ -1258,7 +1337,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "2.04"
+        "aas:Property/value": "2.04",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.CapacityEnergyVoltage.MaxVoltage": {
         "@type": [
@@ -1342,7 +1427,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "6"
+        "aas:Property/value": "6",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.CapacityEnergyVoltage.RatedCapacity": {
         "@type": [
@@ -1426,7 +1517,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "210"
+        "aas:Property/value": "210",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.CapacityEnergyVoltage.CapacityFade": {
         "@type": [
@@ -1510,7 +1607,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "10"
+        "aas:Property/value": "10",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.CapacityEnergyVoltage.CertifiedUsableBatteryEnergy": {
         "@type": [
@@ -1594,7 +1697,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "100"
+        "aas:Property/value": "100",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.RoundTripEnergyEfficiency": {
         "@type": [
@@ -1672,6 +1781,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -1771,7 +1886,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Integer"
         },
-        "aas:Property/value": "100"
+        "aas:Property/value": "100",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.RoundTripEnergyEfficiency.RoundTripEnergyEfficiencyAt50PercentOfCycleLife": {
         "@type": [
@@ -1855,7 +1976,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Integer"
         },
-        "aas:Property/value": "100"
+        "aas:Property/value": "100",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.RoundTripEnergyEfficiency.EnergyRoundTripEfficiencyFade": {
         "@type": [
@@ -1939,7 +2066,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "10"
+        "aas:Property/value": "10",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.RoundTripEnergyEfficiency.InitialSelfDischargingRate": {
         "@type": [
@@ -2023,7 +2156,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Integer"
         },
-        "aas:Property/value": "2"
+        "aas:Property/value": "2",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.Resistance": {
         "@type": [
@@ -2101,6 +2240,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -2206,7 +2351,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "67"
+        "aas:Property/value": "67",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.Resistance.InitialInternalResistanceOnBatteryPackLevel": {
         "@type": [
@@ -2290,7 +2441,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "23"
+        "aas:Property/value": "23",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.Resistance.InitialInternalResistanceOnBatteryModuleLevel": {
         "@type": [
@@ -2374,7 +2531,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "10"
+        "aas:Property/value": "10",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.Resistance.InternalResistanceIncreaseOfBatteryCellLevel": {
         "@type": [
@@ -2458,7 +2621,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "10"
+        "aas:Property/value": "10",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.Resistance.InternalResistanceIncreaseOfBatteryPackLevel": {
         "@type": [
@@ -2542,7 +2711,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "10"
+        "aas:Property/value": "10",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.Resistance.InternalResistanceIncreaseOfBatteryModuleLevel": {
         "@type": [
@@ -2619,7 +2794,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "10"
+        "aas:Property/value": "10",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.PowerCapability": {
         "@type": [
@@ -2697,6 +2878,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -2796,7 +2983,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "0"
+        "aas:Property/value": "0",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.PowerCapability.PowerFade": {
         "@type": [
@@ -2880,7 +3073,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "23"
+        "aas:Property/value": "23",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.PowerCapability.RatioNorminalBatteryPowerAndBatteryEnergy": {
         "@type": [
@@ -2940,7 +3139,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "0.611"
+        "aas:Property/value": "0.611",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability": {
         "@type": [
@@ -3031,6 +3236,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0]"
@@ -3099,6 +3310,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "OneToMany"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "uav:index": 0,
@@ -3188,7 +3405,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/UnsignedInt"
         },
-        "aas:Property/value": "80"
+        "aas:Property/value": "80",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.PowerCapability.OriginalPowerCapability[0].powerCapabilityAt": {
         "@type": [
@@ -3267,7 +3490,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "500"
+        "aas:Property/value": "500",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.Temperature": {
         "@type": [
@@ -3345,6 +3574,12 @@
               "@id": "aas:DataTypeDefXsd/String"
             },
             "aas:Qualifier/value": "One"
+          }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
           }
         ],
         "aas:SubmodelElementCollection/value": [
@@ -3438,7 +3673,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "-19"
+        "aas:Property/value": "-19",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.Temperature.TemperatureRangeIdleState_UpperBoundary": {
         "@type": [
@@ -3522,7 +3763,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "49"
+        "aas:Property/value": "49",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.Lifetime": {
         "@type": [
@@ -3602,6 +3849,12 @@
             "aas:Qualifier/value": "One"
           }
         ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
+          }
+        ],
         "aas:SubmodelElementCollection/value": [
           {
             "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#TechnicalPropertyAreas.Lifetime.ExpectedLifetimeInCalendarYears"
@@ -3674,7 +3927,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/UnsignedInt"
         },
-        "aas:Property/value": "15"
+        "aas:Property/value": "15",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.Lifetime.ExpectedNumberOfCycles": {
         "@type": [
@@ -3749,7 +4008,13 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/UnsignedInt"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.Lifetime.CapacityThresholdExhaustion": {
         "@type": [
@@ -3840,7 +4105,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Float"
         },
-        "aas:Property/value": "23"
+        "aas:Property/value": "23",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "TechnicalPropertyAreas.Lifetime.CRateOfRelevantCycleLifeTest": {
         "@type": [
@@ -3905,10 +4176,20 @@
         ],
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Decimal"
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       }
     },
     "links": [
+      {
+        "rel": "ua:HasTypeDefinition",
+        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
+      },
       {
         "rel": "ua:HasComponent",
         "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0#GeneralInformation.ManufacturerName",

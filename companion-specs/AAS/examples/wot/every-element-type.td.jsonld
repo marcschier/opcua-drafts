@@ -10,6 +10,7 @@
       }
     ],
     "@type": [
+      "Thing",
       "uav:object",
       "aas:Submodel",
       "i4aas:AASSubmodelType"
@@ -43,6 +44,12 @@
             },
             "aas:Extension/value": "preserved verbatim"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
         ]
       },
       "AMultiLanguageProperty": {
@@ -72,6 +79,12 @@
             "aas:AbstractLangString/language": "fr",
             "aas:AbstractLangString/text": "Pompe"
           }
+        ],
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
+          }
         ]
       },
       "ARange": {
@@ -89,7 +102,13 @@
           "@id": "aas:DataTypeDefXsd/Int"
         },
         "aas:Range/min": "0",
-        "aas:Range/max": "100"
+        "aas:Range/max": "100",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1023"
+          }
+        ]
       },
       "ABlob": {
         "@type": [
@@ -103,7 +122,13 @@
         "uav:modellingRule": "Optional",
         "aas:Referable/idShort": "ABlob",
         "aas:Blob/contentType": "application/octet-stream",
-        "aas:Blob/value": "QUFTIFYz"
+        "aas:Blob/value": "QUFTIFYz",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1024"
+          }
+        ]
       },
       "AFile": {
         "@type": [
@@ -117,7 +142,13 @@
         "uav:modellingRule": "Optional",
         "aas:Referable/idShort": "AFile",
         "aas:File/contentType": "application/pdf",
-        "aas:File/value": "/aasx/docs/manual.pdf"
+        "aas:File/value": "/aasx/docs/manual.pdf",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1025"
+          }
+        ]
       },
       "AReferenceElement": {
         "@type": [
@@ -158,7 +189,13 @@
               "aas:Key/value": "Nested"
             }
           ]
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1026"
+          }
+        ]
       },
       "ARelationship": {
         "@type": [
@@ -200,7 +237,13 @@
               "aas:Key/value": "https://contoso.com/asset/motor/SN-9"
             }
           ]
-        }
+        },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1027"
+          }
+        ]
       },
       "AnAnnotatedRelationship": {
         "@type": [
@@ -243,6 +286,12 @@
             }
           ]
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1028"
+          }
+        ],
         "aas:AnnotatedRelationshipElement/annotations": [
           {
             "@id": "https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship.Quantity"
@@ -266,7 +315,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Int"
         },
-        "aas:Property/value": "2"
+        "aas:Property/value": "2",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "ACollection": {
         "@type": [
@@ -279,6 +334,12 @@
         "uav:browseName": "nsu=https://example.com/aas/instances/;ACollection",
         "uav:modellingRule": "Optional",
         "aas:Referable/idShort": "ACollection",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
+          }
+        ],
         "aas:SubmodelElementCollection/value": [
           {
             "@id": "https://fabrikam.com/ids/sm/every-element#ACollection.Nested"
@@ -302,7 +363,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/Boolean"
         },
-        "aas:Property/value": "true"
+        "aas:Property/value": "true",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "AList": {
         "@type": [
@@ -319,6 +386,12 @@
         "aas:SubmodelElementList/typeValueListElement": {
           "@id": "aas:AasSubmodelElements/Property"
         },
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
+          }
+        ],
         "aas:SubmodelElementList/value": [
           {
             "@id": "https://fabrikam.com/ids/sm/every-element#AList[0]"
@@ -342,6 +415,12 @@
           "@id": "aas:DataTypeDefXsd/Int"
         },
         "aas:Property/value": "1",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ],
         "uav:index": 0
       },
       "ASelfManagedEntity": {
@@ -359,6 +438,12 @@
           "@id": "aas:EntityType/SelfManagedEntity"
         },
         "aas:Entity/globalAssetId": "https://contoso.com/asset/motor/SN-9",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1032"
+          }
+        ],
         "aas:Entity/statements": [
           {
             "@id": "https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity.Position"
@@ -382,7 +467,13 @@
         "aas:Property/valueType": {
           "@id": "aas:DataTypeDefXsd/String"
         },
-        "aas:Property/value": "drive-end"
+        "aas:Property/value": "drive-end",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
+          }
+        ]
       },
       "AnEvent": {
         "@type": [
@@ -417,7 +508,13 @@
           ]
         },
         "aas:BasicEventElement/messageTopic": "fabrikam/pump/SN-001/events",
-        "aas:BasicEventElement/minInterval": "PT1S"
+        "aas:BasicEventElement/minInterval": "PT1S",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1033"
+          }
+        ]
       },
       "AnOperation": {
         "@type": [
@@ -429,7 +526,13 @@
         "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AnOperation",
         "uav:browseName": "nsu=https://example.com/aas/instances/;AnOperation",
         "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "AnOperation"
+        "aas:Referable/idShort": "AnOperation",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1034"
+          }
+        ]
       },
       "ACapability": {
         "@type": [
@@ -441,10 +544,20 @@
         "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ACapability",
         "uav:browseName": "nsu=https://example.com/aas/instances/;ACapability",
         "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "ACapability"
+        "aas:Referable/idShort": "ACapability",
+        "links": [
+          {
+            "rel": "ua:HasTypeDefinition",
+            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1035"
+          }
+        ]
       }
     },
     "links": [
+      {
+        "rel": "ua:HasTypeDefinition",
+        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
+      },
       {
         "rel": "ua:HasComponent",
         "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship.Quantity",

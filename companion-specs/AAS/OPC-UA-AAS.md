@@ -2868,7 +2868,8 @@ by identifier even though it is reachable through several links.
 
 This annex is informative, and is pinned to the *OPC UA — WoT Connectivity* and *OPC UA — WoT
 Binding* drafts as they stood at the date of this document. Both are under review by another body,
-and a change there can invalidate what follows.
+and a change there can invalidate what follows. The type binding this annex relies on is §5.2.1 of
+the *WoT Binding*, which that body has adopted; it needs nothing this document has to ask for.
 
 A Thing Description carrying the terms below, loaded through a WoT Connectivity registry,
 materializes the nodes clause 5.6 defines. An author therefore writes an AAS once, as a WoT
@@ -2915,7 +2916,8 @@ hundred resources, each versioned independently, to describe one document.
 | Node identity | `@id` | the subject term the JSON-LD mapping gives the node, so the AAS triples have a subject |
 | NodeId, clause 5.3 | `uav:id` | an ExpandedNodeId naming its namespace by URI |
 | BrowseName, clause 5.3 | `uav:browseName` | the portable QualifiedName form |
-| TypeDefinition, clause 6 | a member of `@type` | the prefix-qualified BrowseName of the ObjectType, for example `i4aas:AASPropertyType` |
+| TypeDefinition, clause 6, readably | a member of `@type` | the prefix-qualified BrowseName of the ObjectType, for example `i4aas:AASPropertyType` |
+| TypeDefinition, clause 6, definitively | a link `rel` `ua:HasTypeDefinition` | the ObjectType's ExpandedNodeId, for example `nsu=http://opcfoundation.org/UA/I4AAS/;i=1021` |
 | Containment, clause 5.6 | `uav:componentOf` | the ExpandedNodeId of the parent, where the parent is not the Thing |
 | Ordering, clause 5.4 | a link `rel` | `ua:HasOrderedComponent` with `uav:refId` `i=49`, or `ua:HasComponent` with `i=47` |
 | Position, clause 5.4 | `uav:index` | the zero-based position |
@@ -2927,17 +2929,28 @@ carried only the `uav` terms would describe a tree of empty nodes: it would name
 not what any of it is. The `uav` terms carry what the metamodel has no field for — a NodeId, a
 BrowseName, an ObjectType, a ReferenceType, a modelling rule — and nothing else.
 
-The type binding adds no term. `@type` already carries the `uav:object` node-class annotation, and
-the ObjectType is named alongside it. It carries the prefix-qualified BrowseName and no
-ExpandedNodeId alternative: the NodeId of a type in this companion model is assigned by the Server
-that loaded it, so an author cannot know it, and the name is unique by construction.
+The type binding adds no term. It is §5.2.1 of the *OPC UA — WoT Binding*, which admits two
+spellings and lets a document carry either or both:
 
-`@type` also carries ordinary semantic annotation, so a rule is needed to say which member is the
-type binding. A member whose namespace the Server holds as an information model is a type binding
-and **shall** resolve; a member in any other namespace is an annotation. A single `@type` carries at
-most one type binding, because a Node has one `HasTypeDefinition`. `WOT-TYPE-BINDING-PROPOSAL.md` states
-the rule, raised as `OPCF-Members/spec-drafts` PR #19; this annex is written as though it has been
-adopted.
+- the **compact model name** in `@type`, alongside the `uav:object` node-class annotation. It is
+  readable and portable, and like every compact model name it is a lookup hint, so it may fail to
+  resolve or resolve ambiguously.
+- a **`ua:HasTypeDefinition` link** whose `href` is the ObjectType's ExpandedNodeId. It admits no
+  ambiguity: an ExpandedNodeId matches one Node or none.
+
+A document generated from this specification carries **both**, and can, because the NodeIds of these
+ObjectTypes are published with the model in `Opc.Ua.I4AAS.NodeIds.csv`. They are written in the
+`nsu=<NamespaceUri>;i=<id>` form, not the session-local `ns=<index>` form, so they mean the same on
+every Server that has loaded this companion model. Where a document carries both and both resolve,
+they **shall** resolve to the same Node; the name is then a readable restatement of the identifier.
+
+`@type` also carries ordinary semantic annotation, so a rule is needed to say which member is a type
+binding. A member whose namespace the local context holds — a sibling document of the conversion, or
+a model the Server has loaded — is a type binding and **shall** resolve; a member in any other
+namespace is an annotation. Resolution is against that local context in the order §5.1.5 states:
+sibling documents first, the loaded AddressSpace as the fallback. A single `@type` carries at most
+one type binding and a document at most one `ua:HasTypeDefinition` link, because a Node has one
+`HasTypeDefinition`.
 
 The prefix `i4aas` binds to `http://opcfoundation.org/UA/I4AAS/` in the document's `@context`.
 
@@ -2953,10 +2966,9 @@ The `ordering-and-nesting` fixture contains a `SubmodelElementList` whose order 
       "aas":   "https://admin-shell.io/aas/3/0/",
       "i4aas": "http://opcfoundation.org/UA/I4AAS/",
       "ua":    "http://opcfoundation.org/UA/" } ],
-  "@type": ["uav:object", "aas:Submodel", "i4aas:AASSubmodelType"],
+  "@type": ["Thing", "uav:object", "aas:Submodel", "i4aas:AASSubmodelType"],
   "@id": "https://fabrikam.com/ids/sm/ordering",
   "title": "Ordering",
-  "id": "https://fabrikam.com/ids/sm/ordering",
   "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering",
   "uav:browseName": "nsu=https://example.com/aas/instances/;Ordering",
   "aas:Identifiable/id": "https://fabrikam.com/ids/sm/ordering",
@@ -2970,6 +2982,8 @@ The `ordering-and-nesting` fixture contains a `SubmodelElementList` whose order 
       "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList",
       "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList",
       "uav:modellingRule": "Optional",
+      "links": [ { "rel": "ua:HasTypeDefinition",
+                   "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031" } ],
       "aas:Referable/idShort": "CollectionsInsideAList",
       "aas:SubmodelElementList/orderRelevant": true,
       "aas:SubmodelElementList/value": [
@@ -2986,6 +3000,8 @@ The `ordering-and-nesting` fixture contains a `SubmodelElementList` whose order 
     }
   },
   "links": [
+    { "rel": "ua:HasTypeDefinition",
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013" },
     { "rel": "ua:HasOrderedComponent",
       "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
       "uav:refId": "i=49", "uav:refName": "0" }
@@ -3032,7 +3048,7 @@ This subclause is informative.
   the document structure states. A nested element's parent is another affordance and cannot be read
   off the document, so there it is written. It is directional and names the container; a converter
   that reverses it builds the tree upside down and the error surfaces only at the leaves.
-- *Do not synthesise a type when the `@type` binding resolves.* The types of this specification are loaded
+- *Do not synthesise a type when the type binding resolves.* The types of this specification are loaded
   from `Opc.Ua.I4AAS.NodeSet2.xml`. A converter that generates its own type of the same name leaves
   the Server holding two type hierarchies, and a Client written against this specification
   recognises neither.
@@ -3076,7 +3092,7 @@ Every BrowseName is already correct, as is every containment ReferenceType the f
 elements of a submodel. Only the type binding fails, because `uav:congruentType` is reconciliation
 metadata and does not produce a `HasTypeDefinition`.
 
-Until the type binding is adopted and implemented, a Server reaches the same result by loading one
+Until the type binding is implemented by a converter, a Server reaches the same result by loading one
 Thing Model per ObjectType of this specification and having each Thing Description instantiate the
 matching one. That produces types congruent with the ones defined here rather than the ones defined
 here, and an implementation **should not** describe the result as conforming to clause 6.
