@@ -251,11 +251,24 @@ def public_dependency_blockers(manifest, spec_id: str) -> list[str]:
 
 
 def moved_roots(manifest, closure: Iterable[str]) -> list[str]:
+    """The move entries that can be matched by prefix.
+
+    A move entry with a ``keepPublic`` path under it is **not** wholly moved, and using it
+    as a prefix would claim the kept file too — telling a reader to request member access
+    for a document still sitting in this repository. Such an entry is dropped here and its
+    concrete files are matched through the file set instead, which already excludes what
+    stays. Nothing is lost: a link to a path that does not exist would already have failed
+    the link check, so prefix matching only ever has to cover files that are really there.
+    """
     roots: list[str] = []
     for sid in closure:
         spec = manifest.spec(sid)
+        kept = [norm(k) for k in spec.get("keepPublic", [])]
         for value in spec.get("move", []):
-            roots.append(norm(value))
+            value = norm(value)
+            if any(k == value or k.startswith(value.rstrip("/") + "/") for k in kept):
+                continue
+            roots.append(value)
     return sorted(set(roots), key=lambda p: (p.count("/"), p))
 
 
@@ -469,8 +482,6 @@ def repair_markdown_table_rows_release(
     is encoded so a return restores it unchanged, and the replacement keeps the original
     cell count -- collapsing four cells into two fails MD056.
     """
-    if not moved_dirs:
-        return text, 0
     count = 0
     out: list[str] = []
     contract = False
@@ -812,11 +823,15 @@ def text_repairs_release(manifest, closure: list[str], files: list[str], roots: 
         if norm(path).endswith(".md")
     }
     moving_spec_ids = {sid.lower() for sid in closure}
+    # Derived from the manifest's move entries rather than from `roots`, because `roots`
+    # deliberately omits an entry that keeps something public — and a directory being
+    # partly kept does not stop prose from naming it in backticks.
     moved_dirs = {
-        Path(root).name
-        for root in roots
-        if Path(root).name.lower() in moving_spec_ids
-        and any(path == root or path.startswith(root.rstrip("/") + "/") for path in moving)
+        Path(entry).name
+        for sid in closure
+        for entry in (norm(v) for v in manifest.spec(sid).get("move", []))
+        if Path(entry).name.lower() in moving_spec_ids
+        and any(path == entry or path.startswith(entry.rstrip("/") + "/") for path in moving)
     }
 
     for aggregate in AGGREGATE_VALIDATORS:

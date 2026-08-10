@@ -262,21 +262,35 @@
       ]
     },
     "xregistry": {
-      "$comment": "Shared base model, not an independently releasable OPC Foundation submission. It stays public because Schema Registry and other public specs subtype it and xRegistry-OPC-UA-Api.md targets xregistry.org. Vendored as a closed set: the two generated artifacts so a released NodeSet's RequiredModel on http://opcfoundation.org/UA/xRegistry/ resolves, plus the two specification documents, which released documents link to and which link only to each other and to external URLs. README.md is deliberately excluded because it links onward to Schema Registry and WoT Connectivity, which stay public, and vendoring it would drag an unbounded set of public prose into the private repository.",
+      "$comment": "Releasable. The abstract base model is submitted to the OPC Foundation on its own, so the whole folder moves -- tools included, because build_model.py and validate_local.py generate and check the NodeSet that leaves, and a generator whose output is gone is not a public asset. Two files are kept public. xRegistry-OPC-UA-Api.md targets xregistry.org rather than the OPC Foundation, which is the same reason openusd-binding keeps xRegistry-OpenUsd.md. README.md navigates the public tree: it links onward to Schema Registry, which stays, so carrying it into the private repository would take a dangling link with it -- and the folder it describes still holds the kept API document. The public specifications that subtype this model carry the borrowed NodeIds as constants rather than reading its files, so they still build; Schema Registry's validator resolves its base-id cross-check only when the CSV is present and reports it skipped otherwise.",
       "title": "OPC UA — xRegistry",
-      "submitted": false,
-      "state": "public",
+      "submitted": true,
+      "state": "released",
       "move": [
-        "core-specs/xregistry/Opc.Ua.XRegistry.NodeSet2.xml",
-        "core-specs/xregistry/Opc.Ua.XRegistry.NodeIds.csv",
-        "core-specs/xregistry/OPC-UA-xRegistry.md",
+        "core-specs/xregistry",
+        "word-drafts/tools/specs/xregistry.json",
+        "word-drafts/OPC-UA-xRegistry.docx",
+        "word-drafts/OPC-UA-xRegistry.docmodel.json",
+        "word-drafts/OPC-UA-xRegistry.provenance.json",
+        "word-drafts/figures/xRegistry-Fig1-RegistryShape.pptx",
+        "word-drafts/figures/xRegistry-Fig1-RegistryShape.png",
+        "word-drafts/figures/xRegistry-FigNotation.pptx",
+        "word-drafts/figures/xRegistry-FigNotation.png",
+        "word-drafts/figures/xRegistry-FigRegistryType.pptx",
+        "word-drafts/figures/xRegistry-FigRegistryType.png",
+        "word-drafts/figures/xRegistry-FigGroupType.pptx",
+        "word-drafts/figures/xRegistry-FigGroupType.png"
+      ],
+      "keepPublic": [
+        "core-specs/xregistry/README.md",
         "core-specs/xregistry/xRegistry-OPC-UA-Api.md"
       ],
-      "keepPublic": [],
       "closure": [],
       "vendor": [],
-      "wordSpecs": [],
-      "validateAll": null,
+      "wordSpecs": [
+        "word-drafts/tools/specs/xregistry.json"
+      ],
+      "validateAll": "core-specs/extras/validate_all.py",
       "reverseRefs": [
         "README.md",
         "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",

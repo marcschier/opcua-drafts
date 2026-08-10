@@ -905,6 +905,8 @@ A Server declares conformance by exposing `RobotIntentRootType` under the Server
 
 A Server shall not list a facet whose structural requirements are unmet. The behavioural requirements are the Server's own attestation and are subject to the honesty rules of clause 9 — a Server that lists **RI-Blending** while treating the blending buffer modes as `Buffered` is making a false statement in exactly the sense clause 9 forbids, and is no more conformant than one that reports `BlendingSupported` true under the same conditions.
 
+The NodeSet assigns every Node to one of three conformance units: `RobotIntent` for the ObjectTypes and their members, `RobotIntent DataTypes` for the intent hierarchy and the enumerations, and `RobotIntent ReferenceTypes` for the references. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to.
+
 ### 12.2 Facets
 
 Requirements are of two kinds. **Structural** requirements are settled by reading the address space and the capability declaration: a client can check them, and so can a compliance tool, without commanding the robot. **Behavioural** requirements — written below as accepting, honouring, maintaining or observing a rule — cannot be settled by reading, only by exercising the Server, and are the Server's attestation under clause 9.
