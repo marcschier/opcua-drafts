@@ -30,7 +30,7 @@ How a model reaches the systems that consume it, rather than the operators who b
 | Specification | What it is, and why it exists | Status | Documents |
 |---|---|---|---|
 | **OPC UA — Schema Registry** | A concrete xRegistry whose resources are schema documents, exposed as a well-known object under the Server object. It exists because a schema-based encoding is not self-describing: a decoder that receives an Avro or Arrow payload needs the exact schema that produced it, and Binary, XML and JSON never had that problem. Deliberately decoupled from PubSub — a Server need not implement Part 14 to be a schema registry. | Draft 0.5.0 | [Specification](cloud-specs/schema-registry/OPC-UA-Schema-Registry.md) · [Word](word-drafts/OPC-UA-Schema-Registry.docx) |
-| **OPC UA — Observability Export** | A transport-neutral layer letting a Server, or a companion specification, declare how its data lands in an observability system as OpenTelemetry metrics, logs and traces. It exists so one generic read-only bridge can forward any conforming Server without understanding the domain, instead of a bespoke exporter per companion specification. Ships addenda for DI, Pumps, Robotics and the Machinery facets. | Draft 0.1.0 | [Specification](cloud-specs/observability-export/OPC-UA-Observability-Export.md) · [Word](word-drafts/OPC-UA-Observability-Export.docx) |
+|<!-- release-spec-link:ICoqT1BDIFVBIOKAlCBPYnNlcnZhYmlsaXR5IEV4cG9ydCoqIHwgQSB0cmFuc3BvcnQtbmV1dHJhbCBsYXllciBsZXR0aW5nIGEgU2VydmVyLCBvciBhIGNvbXBhbmlvbiBzcGVjaWZpY2F0aW9uLCBkZWNsYXJlIGhvdyBpdHMgZGF0YSBsYW5kcyBpbiBhbiBvYnNlcnZhYmlsaXR5IHN5c3RlbSBhcyBPcGVuVGVsZW1ldHJ5IG1ldHJpY3MsIGxvZ3MgYW5kIHRyYWNlcy4gSXQgZXhpc3RzIHNvIG9uZSBnZW5lcmljIHJlYWQtb25seSBicmlkZ2UgY2FuIGZvcndhcmQgYW55IGNvbmZvcm1pbmcgU2VydmVyIHdpdGhvdXQgdW5kZXJzdGFuZGluZyB0aGUgZG9tYWluLCBpbnN0ZWFkIG9mIGEgYmVzcG9rZSBleHBvcnRlciBwZXIgY29tcGFuaW9uIHNwZWNpZmljYXRpb24uIFNoaXBzIGFkZGVuZGEgZm9yIERJLCBQdW1wcywgUm9ib3RpY3MgYW5kIHRoZSBNYWNoaW5lcnkgZmFjZXRzLiB8IERyYWZ0IDAuMS4wIHwgW1NwZWNpZmljYXRpb25dKGNsb3VkLXNwZWNzL29ic2VydmFiaWxpdHktZXhwb3J0L09QQy1VQS1PYnNlcnZhYmlsaXR5LUV4cG9ydC5tZCkgwrcgW1dvcmRdKHdvcmQtZHJhZnRzL09QQy1VQS1PYnNlcnZhYmlsaXR5LUV4cG9ydC5kb2N4KSA= --> **OPC UA — Observability Export** | A transport-neutral layer letting a Server, or a companion specification, declare how its data lands in an observability system as OpenTelemetry metrics, logs and traces. It exists so one generic read-only bridge can forward any conforming Server without understanding the domain, instead of a bespoke exporter per companion specification. Ships addenda for DI, Pumps, Robotics and the Machinery facets. | *Under OPC Foundation review — moved to [OPCF-Members/spec-drafts](https://github.com/OPCF-Members/spec-drafts); OPC Foundation members can [request access](https://github.com/OPCF-Members/Help).* | [Specification](https://github.com/OPCF-Members/spec-drafts/blob/main/cloud-specs/observability-export/OPC-UA-Observability-Export.md) · [Word](https://github.com/OPCF-Members/spec-drafts/blob/main/word-drafts/OPC-UA-Observability-Export.docx) <!-- /release-spec-link -->|
 
 ### metaverse — virtual worlds, perception and robot control
 
@@ -63,7 +63,7 @@ Both specifications are under OPC Foundation review, so the `wot-specs/` tree is
 
 ## Specifications under OPC Foundation review
 
-Five drafts have been submitted to the OPC Foundation and are being reviewed under member confidentiality. They are **not in this repository while that review runs** — they live in [`OPCF-Members/spec-drafts`](https://github.com/OPCF-Members/spec-drafts), a private repository of the OPC Foundation members organization.
+Six drafts have been submitted to the OPC Foundation and are being reviewed under member confidentiality. They are **not in this repository while that review runs** — they live in [`OPCF-Members/spec-drafts`](https://github.com/OPCF-Members/spec-drafts), a private repository of the OPC Foundation members organization.
 
 They appear in the tables above with their status, and link to the private repository.
 
@@ -90,7 +90,7 @@ git submodule update --remote spec-drafts
 
 The submodule is a pinned commit like any other, so `git status` showing it behind is normal — it moves when someone commits a new pointer.
 
-Two documents that were part of the OpenUSD work stay here, because they are proposed to [xregistry.org](https://github.com/xregistry/spec) rather than to the OPC Foundation: [`xRegistry-OpenUsd.md`](metaverse-specs/openusd-binding/xRegistry-OpenUsd.md) and its model. The [`xregistry/`](core-specs/xregistry/) base model they build on also stays, because the specifications that subtype it are still public.
+Three documents stay here because they are proposed to [xregistry.org](https://github.com/xregistry/spec) rather than to the OPC Foundation: [`xRegistry-OpenUsd.md`](metaverse-specs/openusd-binding/xRegistry-OpenUsd.md) and its model, and the [xRegistry OPC UA API binding](core-specs/xregistry/xRegistry-OPC-UA-Api.md), which is a peer of that project's HTTP binding. The abstract [`xregistry/`](core-specs/xregistry/) base model they build on is itself under review, so only the binding remains in that folder.
 
 Each specification returns here once its review completes.
 
