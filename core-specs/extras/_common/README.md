@@ -29,6 +29,15 @@ from opcua_enc.values import canonical_equal
 
 Extensions **must treat `opcua_enc` as a read-only API** — add code only under your own folder. If you believe a shared module has a bug, report it rather than editing here (a change ripples to every encoding).
 
+## NodeSet fixtures
+
+`nodesets/Opc.Ua.ObservabilityExport.NodeSet2.xml` is a byte-identical fixture of the
+Observability Export model under OPC Foundation review in
+`spec-drafts/cloud-specs/observability-export/`. Arrow schema generation and the xRegistry
+catalog use it so public CI remains self-contained without credentials for the private
+repository. The reviewed NodeSet is authoritative; whenever it changes, copy it here
+byte-for-byte and regenerate every dependent artifact.
+
 ## Validate
 
 ```powershell

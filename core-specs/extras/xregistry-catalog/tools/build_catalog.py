@@ -31,13 +31,14 @@ import jsonschema_gen as jsg  # noqa: E402
 HERE = os.path.dirname(os.path.abspath(__file__))
 # After the reorg this tool lives under core-specs/extras/xregistry-catalog/tools,
 # so this resolves to core-specs/extras (where the sibling encodings' generated
-# schemas live). The source NodeSet is a cloud-specs specification, so it is
-# addressed from the repository root rather than counted out from here.
+# schemas live). The source model is under review, so the public tree carries a
+# byte-identical NodeSet fixture with the shared encoding tooling.
 EXTRAS = os.path.abspath(os.path.join(HERE, "..", ".."))
 CORE_SPECS = EXTRAS
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 DEFAULT_NODESET = os.path.join(
-    REPO, "cloud-specs", "observability-export", "Opc.Ua.ObservabilityExport.NodeSet2.xml")
+    REPO, "core-specs", "extras", "_common", "nodesets",
+    "Opc.Ua.ObservabilityExport.NodeSet2.xml")
 OUT = os.path.abspath(os.path.join(HERE, "..", "examples", "opcua-catalog.xregistry.json"))
 BASE_UA = "http://opcfoundation.org/UA/"
 _UA_NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"

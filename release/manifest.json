@@ -1,5 +1,5 @@
 {
-  "$comment": "Release manifest for moving OPC Foundation review drafts from marcschier/opcua-drafts to OPCF-Members/spec-drafts. Dependency closure is derived from RequiredModel declarations, validator/tool path reads, cross-tree markdown links, aggregate validators, and Word clause-map sources. Avro and Arrow tooling map cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml as a sample base model; that single generated artifact is a vendored dependency that remains public while the Observability Export specification itself is under review. A submitted spec moves its committed Word rendering and the figures its clause map declares, because Word is the review format and the .docx is the artifact under review; vendored specs do not, because they are not reviewed.",
+  "$comment": "Release manifest for moving OPC Foundation review drafts from marcschier/opcua-drafts to OPCF-Members/spec-drafts. Dependency closure is derived from RequiredModel declarations, validator/tool path reads, cross-tree markdown links, aggregate validators, and Word clause-map sources. Public tools that require a released specification's NodeSet consume a byte-identical fixture under shared tooling, so public CI remains self-contained without exposing private review content. A submitted spec moves its committed Word rendering and the figures its clause map declares, because Word is the review format and the .docx is the artifact under review; vendored specs do not, because they are not reviewed.",
   "publicRepo": "marcschier/opcua-drafts",
   "privateRepo": "OPCF-Members/spec-drafts",
   "accessInfo": "https://github.com/OPCF-Members/Help",
@@ -8,7 +8,7 @@
   ],
   "specs": {
     "avro-encoding": {
-      "$comment": "Releasable. Tooling imports shared _common and validate_local.py invokes build_schemas.py with no arguments, so the default Observability Export NodeSet is a private-side runtime dependency. The generated NodeSet is vendored from observability-export-nodeset; the submitted Observability Export prose and tooling are a separate review draft.",
+      "$comment": "Releasable. Tooling imports shared _common and validate_local.py invokes build_schemas.py with no arguments, so the default Observability Export NodeSet is a runtime dependency. The public Arrow tooling consumes the byte-identical fixture under shared _common; private Avro consumes the reviewed model in spec-drafts.",
       "title": "OPC UA — Apache Avro DataEncoding",
       "submitted": true,
       "state": "released",
@@ -28,9 +28,7 @@
       ],
       "keepPublic": [],
       "closure": [],
-      "vendor": [
-        "observability-export-nodeset"
-      ],
+      "vendor": [],
       "wordSpecs": [
         "word-drafts/tools/specs/avro-encoding.json"
       ],
@@ -42,29 +40,15 @@
         "word-drafts/tools/specs/batch.json"
       ]
     },
-    "observability-export-nodeset": {
-      "$comment": "Shared sample/base NodeSet for the Avro and Arrow schema generators. It remains public while the Observability Export specification is under review, and is vendored into private exports that need it.",
-      "title": "OPC UA — Observability Export NodeSet dependency",
-      "submitted": false,
-      "state": "public",
-      "move": [
-        "cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml"
-      ],
-      "keepPublic": [],
-      "closure": [],
-      "vendor": [],
-      "wordSpecs": [],
-      "validateAll": null,
-      "reverseRefs": []
-    },
     "observability-export": {
-      "$comment": "Releasable Observability Export companion specification. The generated base NodeSet remains public as observability-export-nodeset because public Avro and Arrow generators use it as their default sample model; every reviewed source, addendum, validator, example and Word artifact moves to the private repository.",
+      "$comment": "Releasable Observability Export companion specification. Its normative NodeSet has one authoritative review copy; the public repository carries a byte-identical fixture under shared tooling for self-contained generator validation.",
       "title": "OPC UA — Observability Export",
       "submitted": true,
       "state": "released",
       "move": [
         "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
         "cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeIds.csv",
+        "cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml",
         "cloud-specs/observability-export/README.md",
         "cloud-specs/observability-export/di",
         "cloud-specs/observability-export/facets",
@@ -110,9 +94,7 @@
       ],
       "keepPublic": [],
       "closure": [],
-      "vendor": [
-        "observability-export-nodeset"
-      ],
+      "vendor": [],
       "wordSpecs": [
         "word-drafts/tools/specs/observability-export.json"
       ],

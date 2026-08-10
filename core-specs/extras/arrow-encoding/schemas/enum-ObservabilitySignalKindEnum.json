@@ -1,0 +1,23 @@
+{
+  "arrow": {
+    "arrow": "int32",
+    "detail": "int32",
+    "opcua": "ObservabilitySignalKindEnum"
+  },
+  "kind": "Enumeration",
+  "members": [
+    {
+      "name": "Metrics",
+      "value": 0
+    },
+    {
+      "name": "Logs",
+      "value": 1
+    },
+    {
+      "name": "Traces",
+      "value": 2
+    }
+  ],
+  "name": "ObservabilitySignalKindEnum"
+}
