@@ -19,12 +19,11 @@ Moving one part without the other would leave the public part full of broken ref
 
 A release also exports its `vendor` dependencies to the private repository, but those dependencies stay public here.
 `vendor` means "copy into the private export": the private repository needs the base model so `RequiredModel` resolves and validators can read its NodeIds CSV, while public specifications still need the same base.
-For example, OpenUSD and WoT vendor `xregistry`, and Avro vendors `observability-export`.
+For example, OpenUSD and WoT vendor `xregistry`.
 Vendoring is the same design as shared tooling: duplicate and keep in step because moving the dependency would break one side.
 
 `submitted: false` marks a shared dependency that exists in the manifest only to be vendored and cannot be released on its own.
-`xregistry` and `observability-export` are shared public bases, not submitted Foundation-review drafts.
-Their files can appear in a private export, but they do not leave the public repository.
+Its files can appear in a private export, but they do not leave the public repository.
 
 The natural release units are Avro, OpenUSD and WoT.
 That is not a separate grouping field; it falls out of `closure`.

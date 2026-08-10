@@ -2,42 +2,38 @@
   "arrow": {
     "arrow": "int32",
     "detail": "int32",
-    "opcua": "BoundItemKindEnum"
+    "opcua": "MetricInstrumentTypeEnum"
   },
   "kind": "Enumeration",
   "members": [
     {
-      "name": "Telemetry",
+      "name": "Counter",
       "value": 0
     },
     {
-      "name": "Status",
+      "name": "UpDownCounter",
       "value": 1
     },
     {
-      "name": "Metric",
+      "name": "Histogram",
       "value": 2
     },
     {
-      "name": "Counter",
+      "name": "Gauge",
       "value": 3
     },
     {
-      "name": "Event",
+      "name": "ObservableCounter",
       "value": 4
     },
     {
-      "name": "Dimension",
+      "name": "ObservableUpDownCounter",
       "value": 5
     },
     {
-      "name": "Identification",
+      "name": "ObservableGauge",
       "value": 6
-    },
-    {
-      "name": "Other",
-      "value": 7
     }
   ],
-  "name": "BoundItemKindEnum"
+  "name": "MetricInstrumentTypeEnum"
 }
