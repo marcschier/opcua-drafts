@@ -24,9 +24,21 @@ def load_ids(p):
 _ua_csv = os.path.join(REF, "UA.NodeIds.csv")
 UA = load_ids(_ua_csv) if os.path.exists(_ua_csv) else None
 UA_EXTRA = {297, 2253}
-# xRegistry base NodeIds (the required model this spec extends), resolved across the two-file dependency.
-_xr_csv = os.path.join(GEN, "..", "..", "core-specs", "xregistry", "Opc.Ua.XRegistry.NodeIds.csv")
-XR = load_ids(_xr_csv) if os.path.exists(_xr_csv) else None
+
+# xRegistry base NodeIds (the required model this spec extends). The base model
+# was moved to the members-only review repository, so the table is not in this
+# tree; it is looked for beside this specification and in a sibling checkout, and
+# where it is found the cross-model references are checked rather than accepted.
+# Which of those happened is printed, because a check that silently accepts every
+# reference reads exactly like one that verified them.
+_XR_CANDIDATES = (
+    os.path.join(REF, "Opc.Ua.XRegistry.NodeIds.csv"),
+    os.path.join(GEN, "..", "..", "core-specs", "xregistry", "Opc.Ua.XRegistry.NodeIds.csv"),
+    os.path.join(GEN, "..", "..", "..", "spec-drafts", "core-specs", "xregistry",
+                 "Opc.Ua.XRegistry.NodeIds.csv"),
+)
+_xr_csv = next((p for p in _XR_CANDIDATES if os.path.exists(p)), None)
+XR = load_ids(_xr_csv) if _xr_csv else None
 errors, warnings = [], []
 ALIAS = {}
 tree = ET.parse(XML)
@@ -153,7 +165,7 @@ if os.path.exists(_annex) and os.path.exists(_spec):
     elif rendered.strip() not in spec_text.replace("\r\n", "\n"):
         errors.append("generated Annex A (tools/model-reference.md) is not embedded verbatim in the spec")
 
-print(f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   base ids: {len(UA) if UA is not None else 'skipped (no local base table)'}   xRegistry base ids: {len(XR) if XR is not None else 'skipped'}")
+print(f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   base ids: {len(UA) if UA is not None else 'skipped (no local base table)'}   xRegistry base ids: {str(len(XR)) + ' from ' + os.path.relpath(_xr_csv, GEN) if XR is not None else 'NOT CHECKED (no table found; cross-model references accepted unverified)'}")
 # --- AddressSpace figures agree with the model they draw ------------------------
 # A node table is generated from the NodeSet and so cannot drift. A figure is authored,
 # and a wrong arrow looks exactly like a right one, so it is re-derived from the model.
