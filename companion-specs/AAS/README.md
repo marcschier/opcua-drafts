@@ -99,6 +99,8 @@ pip install -r companion-specs\AAS\requirements.txt
 
 python companion-specs\AAS\tools\build_model.py
 python companion-specs\AAS\tools\validate_local.py
+# Clean checkout without the members-only xRegistry NodeId table:
+python companion-specs\AAS\tools\validate_local.py --self-contained
 python companion-specs\AAS\tools\roundtrip_check.py
 
 # xRegistry AAS: validate the HTTP model/prose semantics and run regression tests

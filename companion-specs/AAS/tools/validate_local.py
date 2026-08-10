@@ -4,6 +4,7 @@ import os, sys, csv, re
 import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+SELF_CONTAINED = "--self-contained" in sys.argv[1:]
 GEN = os.path.dirname(HERE)
 REF = os.path.join(HERE, "ref")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
@@ -125,8 +126,11 @@ else:
             continue
         if required_uri == XR_NAMESPACE:
             if XR is None:
-                errors.append(
-                    f"declared RequiredModel {XR_NAMESPACE} is unresolved")
+                message = f"declared RequiredModel {XR_NAMESPACE} is unresolved"
+                if SELF_CONTAINED:
+                    warnings.append(message + " (allowed only in self-contained mode)")
+                else:
+                    errors.append(message)
             continue
         errors.append(f"declared RequiredModel {required_uri!r} is unresolved")
     if XR_NAMESPACE not in required_models:

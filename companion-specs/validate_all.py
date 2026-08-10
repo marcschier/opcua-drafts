@@ -16,7 +16,10 @@ PYTHON = sys.executable
 
 COMMANDS = (
     ("Generators", (PYTHON, "companion-specs/Generators/tools/validate_local.py")),
-    ("AAS model", (PYTHON, "companion-specs/AAS/tools/validate_local.py")),
+    (
+        "AAS model",
+        (PYTHON, "companion-specs/AAS/tools/validate_local.py", "--self-contained"),
+    ),
     ("AAS round trip", (PYTHON, "companion-specs/AAS/tools/roundtrip_check.py")),
     ("AAS xRegistry semantics", (PYTHON, "companion-specs/AAS/tools/validate_xregistry_aas.py")),
     (
