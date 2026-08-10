@@ -1,16 +1,8 @@
-id: comp-01-generators
+id: comp-02-generators
 section: companion
-order: 510
+order: 220
 footer: OPC UA for Generators (GenSets)
 slides:
-  - layout: section
-    title: companion
-    subtitle: >-
-      domain companion specifications that make a class of assets look the same to every OPC UA client
-    contents:
-      - Generators (GenSets)
-      - Asset Administration Shell 3.0
-
   - layout: bullets
     title: Why the Generators model exists
     kicker: Generator data is already on the engine bus, but not in a client contract

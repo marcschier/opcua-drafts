@@ -1,6 +1,6 @@
 id: 01-opcua-mcp
 section: stack
-order: 710
+order: 720
 footer: OPC UA — MCP server
 slides:
   - layout: demo

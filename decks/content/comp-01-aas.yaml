@@ -1,8 +1,16 @@
-id: comp-02-aas
+id: comp-01-aas
 section: companion
-order: 520
+order: 210
 footer: OPC UA for Asset Administration Shell
 slides:
+  - layout: section
+    title: companion
+    subtitle: >-
+      domain companion specifications that make a class of assets look the same to every OPC UA client
+    contents:
+      - Asset Administration Shell 3.0
+      - Generators (GenSets)
+
   - layout: bullets
     title: Why the AAS revision exists
     kicker: OPC 30270 maps the old metamodel, and the new one is not compatible

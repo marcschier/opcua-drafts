@@ -1,6 +1,6 @@
 id: 04-pumps-wotcon
 section: wot
-order: 425
+order: 325
 footer: OPC UA demos — Pumps via WoT Connectivity
 slides:
   - layout: demo

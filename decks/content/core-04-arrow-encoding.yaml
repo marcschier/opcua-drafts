@@ -1,6 +1,6 @@
-id: core-02-arrow-encoding
+id: core-04-arrow-encoding
 section: core
-order: 120
+order: 140
 footer: OPC UA — Apache Arrow Encoding
 slides:
   - layout: bullets

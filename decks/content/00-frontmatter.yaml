@@ -4,31 +4,32 @@ order: 10
 footer: OPC UA specification drafts — overview
 slides:
   - layout: title
-    title: Eighteen OPC UA drafts, and what they run on
+    title: Evolving OPC UA
     subtitle: >-
-      Working drafts from `marcschier/opcua-drafts` — what each one is, the gap in OPC UA it
-      closes, and ten demos showing them on the OPC UA .NET Standard stack
+      Current status of all reviewed, in progress and in draft specifications — what each one is,
+      the gap in OPC UA it closes, and ten demos showing them on the OPC UA .NET Standard stack
     byline:
       - "Public drafts: github.com/marcschier/opcua-drafts  ·  Under OPC Foundation review: github.com/OPCF-Members/spec-drafts"
       - "Reference implementation: github.com/OPCFoundation/UA-.NETStandard"
 
   - layout: statement
     statement: >-
-      Every draft here started the same way: something that ought to be one line of OPC UA
-      turned out to need a bridge, a second port, or a private invention.
-    attribution: The eighteen documents are eighteen answers to that.
+      Something that should be easy with OPC UA, or should support the goal of OPC UA
+      interoperability, but is not — it requires a standardized bridge, or ends up making the
+      implementation proprietary.
+    attribution: Every draft here started that way. Eighteen documents, eighteen answers.
 
   - layout: bullets
     title: What this deck covers
-    kicker: Eighteen working drafts across five trees, and the ten demos that exercise them
+    kicker: Where each of the eighteen drafts stands, across five trees, and the ten demos that exercise them
     bullets:
       - text: "**Five trees, one argument**"
         children:
-          - "`core` — proposed additions to the base OPC UA namespace: Data Channels, Arrow, Async Services, Avro, xRegistry"
-          - "`cloud` — a Server's cloud-facing surface: Schema Registry, Observability Export"
-          - "`metaverse` — worlds, perception, robot control: OpenUSD Parts 1 and 2, Vision, Robot Intent, AI Model Management, USD Artifact Registry"
+          - "`core` — proposed additions to the base OPC UA namespace: xRegistry, xRegistry OPC UA API, Avro, Arrow, Data Channels, Async Services"
+          - "`companion` — domain models: Asset Administration Shell 3.0, Generators (GenSets)"
           - "`wot` — Web of Things: WoT Binding, WoT Connectivity"
-          - "`companion` — domain models: Generators (GenSets), Asset Administration Shell 3.0"
+          - "`cloud` — a Server's cloud-facing surface: Schema Registry, Observability Export"
+          - "`metaverse` — worlds, perception, robot control: OpenUSD Parts 1 and 2, AI Model Management, Vision, Robot Intent, USD Artifact Registry"
       - text: "**Ten demos**, each next to the draft it demonstrates"
         children:
           - "Six run on the stack's `master` today; two need a feature branch; two are walkthroughs while the code catches up"
@@ -37,9 +38,10 @@ slides:
       Nothing here is normative. Namespace URIs and NodeIds are provisional, and six drafts are
       under OPC Foundation review.
     notes: |
-      Set expectations up front. This is a scratch pad that grew into a coherent body of work: the
-      specifications were written against real gaps found while building the .NET Standard stack,
-      which is why most of them have running code behind them.
+      Set expectations up front. This deck is a status report on eighteen working drafts: what each
+      one is, the gap it closes, and where it stands right now. The specifications were written
+      against real gaps found while building the .NET Standard stack, which is why most of them
+      have running code behind them.
 
       The six under OPC Foundation review — Avro, xRegistry, OpenUSD Parts 1 and 2, WoT Binding and
       WoT Connectivity — moved to the members' repository while the review runs. They are covered
@@ -89,24 +91,24 @@ slides:
       columns: ["Draft", "Tree", "Status", "Demo"]
       widths: [0.44, 0.16, 0.22, 0.18]
       rows:
-        - ["Data Channels", "core", "Draft 0.1.1", "8 — media"]
-        - ["Apache Arrow Encoding", "core", "Draft 0.1.0", "—"]
-        - ["Asynchronous Service Execution", "core", "Draft 0.1.0", "—"]
-        - ["Apache Avro DataEncoding", "core", "Under OPCF review", "—"]
         - ["xRegistry (base model)", "core", "Under OPCF review", "7 — AAS/WoT"]
         - ["xRegistry — OPC UA API", "core", "Draft 0.1.0 → xregistry.org", "—"]
+        - ["Apache Avro DataEncoding", "core", "Under OPCF review", "—"]
+        - ["Apache Arrow Encoding", "core", "Draft 0.1.0", "—"]
+        - ["Data Channels", "core", "Draft 0.1.1", "8 — media"]
+        - ["Asynchronous Service Execution", "core", "Draft 0.1.0", "—"]
+        - ["Asset Administration Shell 3.0", "companion", "Draft 3.0.0 — open PR", "7 — walkthrough"]
+        - ["Generators (GenSets)", "companion", "Draft 1.0.0", "—"]
+        - ["WoT Binding", "wot", "Under OPCF review", "4, 7"]
+        - ["WoT Connectivity", "wot", "Under OPCF review", "4, 7"]
         - ["Schema Registry", "cloud", "Draft 0.5.0", "—"]
         - ["Observability Export", "cloud", "Draft 0.1.0", "—"]
         - ["OpenUSD Part 1 — Binding", "metaverse", "Under OPCF review", "2, 3"]
         - ["OpenUSD Part 2 — Scene Materialization", "metaverse", "Under OPCF review", "2, 3"]
+        - ["AI Model Management and Inference", "metaverse", "Draft 0.4.0", "10 — branch"]
         - ["Vision", "metaverse", "Draft 0.1.0", "9 — walkthrough"]
         - ["Robot Intent", "metaverse", "Draft 0.1.0", "2, 5"]
-        - ["AI Model Management and Inference", "metaverse", "Draft 0.4.0", "10 — branch"]
         - ["OpenUSD Artifact Registry", "metaverse", "Draft → xregistry.org", "—"]
-        - ["WoT Binding", "wot", "Under OPCF review", "4, 7"]
-        - ["WoT Connectivity", "wot", "Under OPCF review", "4, 7"]
-        - ["Generators (GenSets)", "companion", "Draft 1.0.0", "—"]
-        - ["Asset Administration Shell 3.0", "companion", "Draft 3.0.0 — open PR", "7 — walkthrough"]
     notes: |
       Use this as the map. Come back to it between trees if the audience loses the thread.
 
@@ -124,7 +126,6 @@ slides:
       columns: ["#", "Demo", "Shows", "State"]
       widths: [0.05, 0.34, 0.4, 0.21]
       rows:
-        - ["1", "OPC UA MCP server", "Any address space, driven by a language model", "Runs on `master`"]
         - ["2", "Robot + GPOS/RSL + USD", "Robot Intent, OpenUSD, Parts 210/211", "Runs on `master`"]
         - ["3", "Pump USD and composition", "OpenUSD Parts 1 and 2, site composition", "Runs on `master`"]
         - ["4", "Pumps via WoT Connectivity", "WoT Binding and Connectivity, TD-driven aggregation", "Runs on `master`"]
@@ -134,11 +135,16 @@ slides:
         - ["8", "Media over Data Channels", "Video on an open SecureChannel", "Feature branch"]
         - ["9", "Vision", "Camera, inference, published result", "Walkthrough"]
         - ["10", "AI model loading", "Model lifecycle, provenance, rollout", "Feature branch"]
+        - ["1", "OPC UA MCP server", "Any address space, driven by a language model", "Runs on `master`"]
     notes: |
       Every demo has a presenter walkthrough and, where the code exists, a runnable PowerShell
       script under decks/demos/. The scripts check prerequisites, build only what they need, start
       the servers, run the client and tear down — so a demo can be run cold on a machine with the
       .NET SDK and a clone of the stack.
+
+      The numbers are stable identifiers matching the folders under decks/demos/, not running
+      order. Demo 1 sits last because it shows the platform rather than a draft: it closes the
+      deck alongside server redundancy, after every specification has been covered.
 
       The two feature-branch demos print the exact git switch command and refuse to run on a branch
       that lacks the code, rather than failing obscurely halfway through.

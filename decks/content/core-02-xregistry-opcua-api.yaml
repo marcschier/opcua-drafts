@@ -1,6 +1,6 @@
-id: core-06-xregistry-opcua-api
+id: core-02-xregistry-opcua-api
 section: core
-order: 160
+order: 120
 footer: xRegistry — OPC UA API
 slides:
   - layout: bullets

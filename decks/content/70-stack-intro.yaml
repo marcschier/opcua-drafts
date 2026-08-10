@@ -11,7 +11,7 @@ slides:
     contents:
       - "`OPCFoundation/UA-.NETStandard` — the OPC Foundation's reference stack"
       - "Implemented here: OpenUSD Parts 1 and 2, Positioning, Robotics, WoT Connectivity, xRegistry"
-      - "Two demos show the stack itself: the MCP server, and server redundancy"
+      - "Two demos show the stack itself: server redundancy, and the MCP server"
 
   - layout: bullets
     title: What the stack already carries

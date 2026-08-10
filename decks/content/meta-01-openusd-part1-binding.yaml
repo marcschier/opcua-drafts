@@ -1,6 +1,6 @@
 id: meta-01-openusd-part1-binding
 section: metaverse
-order: 310
+order: 510
 footer: "OPC UA for OpenUSD — Part 1: Binding"
 slides:
   - layout: section
@@ -10,9 +10,9 @@ slides:
     contents:
       - OpenUSD Part 1 (Binding)
       - OpenUSD Part 2 (Scene Materialization)
+      - AI Model Management and Inference
       - Vision
       - Robot Intent
-      - AI Model Management and Inference
       - OpenUSD Artifact Registry Service
 
   - layout: bullets

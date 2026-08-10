@@ -1,6 +1,6 @@
 id: 08-media-data-channels
 section: core
-order: 115
+order: 155
 footer: OPC UA — Data Channels
 slides:
   - layout: demo

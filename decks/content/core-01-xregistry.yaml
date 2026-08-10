@@ -1,8 +1,21 @@
-id: core-05-xregistry
+id: core-01-xregistry
 section: core
-order: 150
+order: 110
 footer: OPC UA — xRegistry
 slides:
+  - layout: section
+    title: core
+    subtitle: >-
+      Proposed extensions to `http://opcfoundation.org/UA/` itself — encodings, Services,
+      transports and base models, not companion models beside the base namespace.
+    contents:
+      - OPC UA — xRegistry
+      - xRegistry — OPC UA API
+      - OPC UA — Apache Avro DataEncoding
+      - OPC UA — Apache Arrow Encoding
+      - OPC UA — Data Channels
+      - OPC UA — Asynchronous Service Execution
+
   - layout: bullets
     title: Why xRegistry exists
     kicker: Every domain registry should not become a private invention

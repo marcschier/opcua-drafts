@@ -1,6 +1,6 @@
 id: meta-06-openusd-artifact-registry
 section: metaverse
-order: 360
+order: 560
 footer: OpenUSD Artifact Registry Service
 slides:
   - layout: bullets

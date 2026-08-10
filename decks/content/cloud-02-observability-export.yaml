@@ -1,6 +1,6 @@
 id: cloud-02-observability-export
 section: cloud
-order: 220
+order: 420
 footer: OPC UA — Observability Export
 slides:
   - layout: bullets

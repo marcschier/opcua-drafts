@@ -40,9 +40,9 @@ confirms the deck matches its source.
 Every file under `content/` is one YAML document describing a run of slides:
 
 ```yaml
-id: core-01-data-channels          # stable identifier, matches the file name
+id: core-05-data-channels          # stable identifier, matches the file name
 section: core                      # core | cloud | metaverse | wot | companion | front | close
-order: 110                         # global sort key; files are emitted in ascending order
+order: 150                         # global sort key; files are emitted in ascending order
 footer: OPC UA — Data Channels     # per-file footer, overridable per slide
 slides:
   - layout: bullets
@@ -67,10 +67,11 @@ between the effort's slides. The convention is:
 |---|---|
 | 0–99 | front matter |
 | 100–199 | `core` |
-| 200–299 | `cloud` |
-| 300–399 | `metaverse` |
-| 400–499 | `wot` |
-| 500–599 | `companion` |
+| 200–299 | `companion` |
+| 300–399 | `wot` |
+| 400–499 | `cloud` |
+| 500–599 | `metaverse` |
+| 700–799 | the reference implementation and the demos that show the stack itself |
 | 900+ | closing |
 
 Within a range, each effort gets a block of ten (`110`, `120`, …) and its slides step by one.

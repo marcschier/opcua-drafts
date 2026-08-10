@@ -1,6 +1,6 @@
 id: 07-aas-wot-xregistry
 section: companion
-order: 525
+order: 215
 footer: OPC UA — AAS, WoT and xRegistry
 slides:
   - layout: demo

@@ -1,6 +1,6 @@
 id: wot-01-wot-binding
 section: wot
-order: 410
+order: 310
 footer: OPC UA — Web of Things Binding
 slides:
   - layout: section

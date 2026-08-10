@@ -1,6 +1,6 @@
 id: cloud-01-schema-registry
 section: cloud
-order: 210
+order: 410
 footer: OPC UA — Schema Registry
 slides:
   - layout: section

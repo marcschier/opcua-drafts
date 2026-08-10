@@ -1,6 +1,6 @@
 id: 06-server-redundancy
 section: stack
-order: 720
+order: 710
 footer: OPC UA — server redundancy
 slides:
   - layout: demo

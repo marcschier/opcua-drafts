@@ -1,6 +1,6 @@
-id: core-04-avro-encoding
+id: core-03-avro-encoding
 section: core
-order: 140
+order: 130
 footer: OPC UA — Apache Avro DataEncoding
 slides:
   - layout: bullets

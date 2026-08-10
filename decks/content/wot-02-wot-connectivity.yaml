@@ -1,6 +1,6 @@
 id: wot-02-wot-connectivity
 section: wot
-order: 420
+order: 320
 footer: OPC UA — WoT Connectivity
 slides:
   - layout: bullets

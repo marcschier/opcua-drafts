@@ -1,6 +1,6 @@
-id: meta-05-ai-model-management
+id: meta-03-ai-model-management
 section: metaverse
-order: 350
+order: 530
 footer: OPC UA — AI Model Management and Inference
 slides:
   - layout: bullets

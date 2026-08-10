@@ -1,6 +1,6 @@
 id: 02-robot-gpos-rsl-usd
 section: metaverse
-order: 345
+order: 555
 footer: OPC UA demos — Robot with GPOS/RSL and USD
 slides:
   - layout: demo

@@ -1,21 +1,8 @@
-id: core-01-data-channels
+id: core-05-data-channels
 section: core
-order: 110
+order: 150
 footer: OPC UA — Data Channels
 slides:
-  - layout: section
-    title: core
-    subtitle: >-
-      Proposed extensions to `http://opcfoundation.org/UA/` itself — encodings, Services,
-      transports and base models, not companion models beside the base namespace.
-    contents:
-      - OPC UA — Data Channels
-      - OPC UA — Apache Arrow Encoding
-      - OPC UA — Asynchronous Service Execution
-      - OPC UA — Apache Avro DataEncoding
-      - OPC UA — xRegistry
-      - xRegistry — OPC UA API
-
   - layout: bullets
     title: Why Data Channels exists
     kicker: Continuous content has no OPC UA primitive today
