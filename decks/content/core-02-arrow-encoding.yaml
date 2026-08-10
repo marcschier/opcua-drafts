@@ -47,9 +47,9 @@ slides:
     arrows:
       - {from: ds, to: schema, label: "fields"}
       - {from: schema, to: batch, label: "types"}
-      - {from: schema, to: id, from_site: 2, to_site: 3, label: "hash"}
+      - {from: schema, to: id, label: "hash"}
       - {from: cols, to: batch, label: "layout"}
-      - {from: batch, to: rows, from_site: 2, to_site: 0}
+      - {from: batch, to: rows}
     captions:
       - {x: 0, y: 4.2, w: 12, text: "Several DataSets are several batches, each with its own SchemaId", center: true}
     notes: |

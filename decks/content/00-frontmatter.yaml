@@ -61,11 +61,11 @@ slides:
       - {id: meta, x: 0, y: 4.6, w: 5.6, h: 0.95, text: "OpenUSD Parts 1 & 2 · Vision · Robot Intent", style: purple, font_size: 11}
       - {id: ops, x: 6.4, y: 4.6, w: 5.6, h: 0.95, text: "Observability Export · AI Model Management", style: green, font_size: 11}
     arrows:
-      - {from: ua, to: xreg, from_site: 2, to_site: 0}
-      - {from: xreg, to: schema, from_site: 2, to_site: 0}
-      - {from: xreg, to: wotcon, from_site: 2, to_site: 0}
-      - {from: xreg, to: usdreg, from_site: 2, to_site: 0}
-      - {from: xreg, to: aas, from_site: 2, to_site: 0}
+      - {from: ua, to: xreg}
+      - {from: xreg, to: schema}
+      - {from: xreg, to: wotcon}
+      - {from: xreg, to: usdreg}
+      - {from: xreg, to: aas}
     captions:
       - {x: 0, y: 5.72, w: 12, text: "One projection, defined once — every domain registry is the same shape rather than a private invention", center: true}
     notes: |

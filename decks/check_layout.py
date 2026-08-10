@@ -206,6 +206,118 @@ def shape_text_height(shape) -> float:
     return total
 
 
+A_NS = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
+P_NS = "{http://schemas.openxmlformats.org/presentationml/2006/main}"
+
+SITE_NAMES = {0: "top", 1: "left", 2: "bottom", 3: "right"}
+
+
+def connector_endpoints(shape) -> tuple[tuple[int, int], tuple[int, int]] | None:
+    """
+    Return ``((start shape id, start site), (end shape id, end site))`` for a connector.
+
+    ``python-pptx`` exposes no reader for the connection a connector was attached
+    to, so the ids come straight off ``a:stCxn`` and ``a:endCxn``. A connector that
+    floats free of any shape returns ``None``.
+    """
+    props = shape._element.find(f"{P_NS}nvCxnSpPr")
+    if props is None:
+        return None
+    non_visual = props.find(f"{P_NS}cNvCxnSpPr")
+    if non_visual is None:
+        return None
+    start = non_visual.find(f"{A_NS}stCxn")
+    end = non_visual.find(f"{A_NS}endCxn")
+    if start is None or end is None:
+        return None
+    return (
+        (int(start.get("id")), int(start.get("idx"))),
+        (int(end.get("id")), int(end.get("idx"))),
+    )
+
+
+def connector_is_elbow(shape) -> bool:
+    """
+    An elbow connector is routed as right angles by PowerPoint; a straight one is not.
+    """
+    geometry = shape._element.find(f".//{A_NS}prstGeom")
+    if geometry is None:
+        return False
+    return str(geometry.get("prst", "")).startswith("bentConnector")
+
+
+def site_faces(site: int, source, target) -> bool:
+    """
+    Is the edge an arrow leaves or enters pointing at the other shape?
+
+    Leaving the right edge to reach a shape on the left is what draws a line back
+    across the shape it just left, which is the defect this catches.
+    """
+    tolerance = Inches(0.05)
+    if site == 0:
+        return target.top + target.height <= source.top + tolerance
+    if site == 2:
+        return target.top >= source.top + source.height - tolerance
+    if site == 1:
+        return target.left + target.width <= source.left + tolerance
+    if site == 3:
+        return target.left >= source.left + source.width - tolerance
+    return True
+
+
+def check_connectors(slide, index: int, title: str) -> list[str]:
+    """
+    Report arrows that are not drawn as horizontal and vertical runs.
+
+    Two ways an arrow goes wrong. A straight connector between shapes that do not
+    share a centre line is a diagonal. And an edge that points away from the other
+    shape sends the line back across its own box before it can turn around.
+    """
+    findings: list[str] = []
+    by_id = {shape.shape_id: shape for shape in slide.shapes if not is_connector(shape)}
+
+    for shape in slide.shapes:
+        if not is_connector(shape):
+            continue
+        endpoints = connector_endpoints(shape)
+        if endpoints is None:
+            continue
+        (start_id, start_site), (end_id, end_site) = endpoints
+        source = by_id.get(start_id)
+        target = by_id.get(end_id)
+        if source is None or target is None:
+            continue
+
+        if not site_faces(start_site, source, target):
+            findings.append(
+                f"slide {index} ({title}): arrow from '{shape_label(source)}' to "
+                f"'{shape_label(target)}' leaves the {SITE_NAMES[start_site]} edge, "
+                f"which faces away from the target"
+            )
+        if not site_faces(end_site, target, source):
+            findings.append(
+                f"slide {index} ({title}): arrow from '{shape_label(source)}' to "
+                f"'{shape_label(target)}' enters the {SITE_NAMES[end_site]} edge, "
+                f"which faces away from the source"
+            )
+
+        if connector_is_elbow(shape):
+            continue
+
+        aligned_x = abs(
+            (source.left + source.width / 2) - (target.left + target.width / 2)
+        ) <= Inches(0.06)
+        aligned_y = abs(
+            (source.top + source.height / 2) - (target.top + target.height / 2)
+        ) <= Inches(0.06)
+        if not (aligned_x or aligned_y):
+            findings.append(
+                f"slide {index} ({title}): straight arrow from '{shape_label(source)}' "
+                f"to '{shape_label(target)}' is diagonal \u2014 the shapes share no centre line"
+            )
+    return findings
+
+
 def check(deck_path: Path) -> list[str]:
     """
     Walk every slide and report shapes that overflow, sit off-slide, or run empty.
@@ -227,8 +339,7 @@ def check(deck_path: Path) -> list[str]:
         for shape in slide.shapes:
             if shape.left is None or shape.top is None:
                 continue
-            if not is_connector(shape) and (shape.width <= 0 or shape.height <= 0):
-                findings.append(
+            if not is_connector(shape) and (shape.width <= 0 or shape.height <= 0):                findings.append(
                     f"slide {index} ({title}): shape '{shape_label(shape)}' has empty geometry"
                 )
             if (
@@ -297,6 +408,8 @@ def check(deck_path: Path) -> list[str]:
             notes = slide.notes_slide.notes_text_frame.text.strip()
             if notes and len(notes) < 120:
                 findings.append(f"slide {index} ({title}): speaker notes are very short")
+
+        findings.extend(check_connectors(slide, index, title))
 
     for index, slide in enumerate(prs.slides, start=1):
         tables = [s for s in slide.shapes if s.has_table]

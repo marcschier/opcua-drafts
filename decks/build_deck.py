@@ -636,6 +636,32 @@ BOX_STYLES = {
 }
 
 
+def connection_sites(source, target) -> tuple[int, int, str]:
+    """
+    Choose which edges an arrow leaves and enters, from the shapes' relative positions.
+
+    Connection sites on an autoshape are 0 top, 1 left, 2 bottom, 3 right. Picking
+    them by geometry is what keeps a line orthogonal: a child below its parent is
+    joined bottom-to-top, a peer beside it left-to-right. A fixed pair cannot do
+    that, and produces diagonals that cut straight through the boxes between them.
+
+    Returns the two sites and the dominant axis, ``"v"`` or ``"h"``.
+    """
+    source_x = source.left + source.width / 2
+    source_y = source.top + source.height / 2
+    target_x = target.left + target.width / 2
+    target_y = target.top + target.height / 2
+
+    # Compare edge gaps rather than centre distance, so a wide box beside a narrow
+    # one is still read as a horizontal relationship.
+    gap_x = max(target.left - (source.left + source.width), source.left - (target.left + target.width), 0)
+    gap_y = max(target.top - (source.top + source.height), source.top - (target.top + target.height), 0)
+
+    if gap_y >= gap_x:
+        return (2, 0, "v") if target_y >= source_y else (0, 2, "v")
+    return (3, 1, "h") if target_x >= source_x else (1, 3, "h")
+
+
 def layout_diagram(deck: Deck, slide, spec, doc) -> None:
     """
     Boxes and connectors on a 12x6 grid, for architecture and flow pictures.
@@ -700,8 +726,25 @@ def layout_diagram(deck: Deck, slide, spec, doc) -> None:
         if source is None or target is None:
             deck.problem(doc["_path"], f"arrow references unknown node: {arrow}")
             continue
+        from_site, to_site, axis = connection_sites(source, target)
+        from_site = arrow.get("from_site", from_site)
+        to_site = arrow.get("to_site", to_site)
+
+        # A straight line is only orthogonal when the two shapes share a centre on
+        # the connecting axis; otherwise an elbow routes it as right angles.
+        if axis == "v":
+            aligned = abs(
+                (source.left + source.width / 2) - (target.left + target.width / 2)
+            ) < Inches(0.05)
+        else:
+            aligned = abs(
+                (source.top + source.height / 2) - (target.top + target.height / 2)
+            ) < Inches(0.05)
+        kind = arrow.get("kind", "straight" if aligned else "elbow")
+        connector_type = MSO_CONNECTOR.STRAIGHT if kind == "straight" else MSO_CONNECTOR.ELBOW
+
         connector = slide.shapes.add_connector(
-            MSO_CONNECTOR.STRAIGHT,
+            connector_type,
             Emu(source.left + source.width // 2),
             Emu(source.top + source.height // 2),
             Emu(target.left + target.width // 2),
@@ -709,13 +752,25 @@ def layout_diagram(deck: Deck, slide, spec, doc) -> None:
         )
         connector.line.color.rgb = theme.GREY_MUTED
         connector.line.width = Pt(arrow.get("width", 1.25))
-        connector.begin_connect(source, arrow.get("from_site", 3))
-        connector.end_connect(target, arrow.get("to_site", 1))
+        connector.begin_connect(source, from_site)
+        connector.end_connect(target, to_site)
         if arrow.get("label"):
-            mid_x = (source.left + source.width // 2 + target.left + target.width // 2) // 2
-            mid_y = (source.top + source.height // 2 + target.top + target.height // 2) // 2
+            # Sit the label in the gap between the two shapes, not on the straight
+            # line between their centres, which would land it on top of a box.
+            if axis == "v":
+                upper, lower = sorted((source, target), key=lambda s: s.top)
+                mid_y = (upper.top + upper.height + lower.top) // 2
+                mid_x = (lower.left + lower.width // 2)
+            else:
+                left_shape, right_shape = sorted((source, target), key=lambda s: s.left)
+                mid_x = (left_shape.left + left_shape.width + right_shape.left) // 2
+                mid_y = (right_shape.top + right_shape.height // 2)
             box = textbox(
-                slide, Emu(int(mid_x - Inches(0.85))), Emu(int(mid_y - Inches(0.16))), Inches(1.7), Inches(0.3)
+                slide,
+                Emu(int(mid_x - Inches(0.85))),
+                Emu(int(mid_y - Inches(0.16))),
+                Inches(1.7),
+                Inches(0.3),
             )
             para = box.text_frame.paragraphs[0]
             para.alignment = PP_ALIGN.CENTER

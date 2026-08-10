@@ -39,12 +39,12 @@ slides:
       - {id: result, x: 8.5, y: 3.1, w: 3.1, h: 1.0, text: "VisionResultType", style: pale, font_size: 11, lines: ["Inspection · Detection · Segmentation"]}
       - {id: fb, x: 4.45, y: 4.75, w: 3.1, h: 0.8, text: "VisionFeedbackType", style: muted, font_size: 11, lines: ["corrections flow back"]}
     arrows:
-      - {from: root, to: sens, from_site: 2, to_site: 0}
-      - {from: root, to: pipe, from_site: 2, to_site: 0}
-      - {from: sens, to: media, from_site: 2, to_site: 0}
-      - {from: pipe, to: result, from_site: 2, to_site: 0}
-      - {from: sens, to: frames, from_site: 3, to_site: 1}
-      - {from: result, to: fb, from_site: 2, to_site: 0}
+      - {from: root, to: sens}
+      - {from: root, to: pipe}
+      - {from: sens, to: media}
+      - {from: pipe, to: result}
+      - {from: sens, to: frames}
+      - {from: result, to: fb}
     captions:
       - {x: 0, y: 5.72, w: 12, text: "The AI model lives in AI Model Management; Vision points to its deployment", center: true}
     notes: |

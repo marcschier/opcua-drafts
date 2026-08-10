@@ -44,11 +44,11 @@ slides:
       - {id: file, x: 8.4, y: 2.0, w: 3.2, h: 1.0, text: "<Schema>", style: pale, lines: ["SchemaFileType"]}
       - {id: doc, x: 8.4, y: 4.0, w: 3.2, h: 0.85, text: "schema document", style: green, lines: ["Avro · Arrow · JSON Schema"]}
     arrows:
-      - {from: srv, to: reg, from_site: 2, to_site: 0, label: HasComponent}
-      - {from: base, to: reg, from_site: 2, to_site: 0, label: subtypes}
-      - {from: reg, to: group, from_site: 3, to_site: 1}
-      - {from: group, to: file, from_site: 3, to_site: 1}
-      - {from: file, to: doc, from_site: 2, to_site: 0, label: Open/Read}
+      - {from: srv, to: reg, label: HasComponent}
+      - {from: base, to: reg, label: subtypes}
+      - {from: reg, to: group}
+      - {from: group, to: file}
+      - {from: file, to: doc, label: Open/Read}
     captions:
       - {x: 0, y: 5.4, w: 12, text: "The registry hangs from Server and narrows RegistryType, GroupType and ResourceType.", center: true}
     notes: |

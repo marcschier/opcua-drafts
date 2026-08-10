@@ -35,10 +35,10 @@ slides:
       - {id: binding, x: 8.4, y: 2.0, w: 3.2, h: 1.0, text: "ObservabilityBinding", style: accent, lines: ["Metrics · Logs · Traces"]}
       - {id: item, x: 8.4, y: 4.0, w: 3.2, h: 0.9, text: "BoundItems", style: green, lines: ["Variables or event fields"]}
     arrows:
-      - {from: server, to: obs, from_site: 2, to_site: 0, label: HasComponent}
-      - {from: obs, to: group, from_site: 3, to_site: 1, label: Collects}
-      - {from: group, to: binding, from_site: 3, to_site: 1}
-      - {from: binding, to: item, from_site: 2, to_site: 0}
+      - {from: server, to: obs, label: HasComponent}
+      - {from: obs, to: group, label: Collects}
+      - {from: group, to: binding}
+      - {from: binding, to: item}
     captions:
       - {x: 0, y: 5.4, w: 12, text: "A binding is exactly one signal; its items are homogeneous for that signal.", center: true}
     notes: |

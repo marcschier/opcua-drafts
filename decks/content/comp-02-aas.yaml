@@ -85,12 +85,12 @@ slides:
       - {id: dpp, x: 4.6, y: 4.1, w: 3.0, h: 0.9, text: "DPP identifiers", style: green}
       - {id: xraas, x: 8.4, y: 4.1, w: 3.0, h: 0.9, text: "`xRegistry-AAS.md`", style: purple}
     arrows:
-      - {from: aas, to: nodes, from_site: 2, to_site: 0}
-      - {from: aas, to: reg, from_site: 2, to_site: 0}
-      - {from: aas, to: wot, from_site: 2, to_site: 0}
-      - {from: nodes, to: jsonld, from_site: 2, to_site: 0}
-      - {from: reg, to: dpp, from_site: 2, to_site: 0}
-      - {from: reg, to: xraas, from_site: 3, to_site: 1}
+      - {from: aas, to: nodes}
+      - {from: aas, to: reg}
+      - {from: aas, to: wot}
+      - {from: nodes, to: jsonld}
+      - {from: reg, to: dpp}
+      - {from: reg, to: xraas}
     captions:
       - {x: 0, y: 5.45, w: 12, text: "The same identifiers make the OPC UA and HTTP registry bindings one registry.", center: true}
     notes: |

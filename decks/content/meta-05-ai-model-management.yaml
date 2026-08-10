@@ -60,11 +60,11 @@ slides:
       - {id: transfer, x: 0.2, y: 4.15, w: 3.0, h: 0.9, text: "InferenceTransferType", style: pale, font_size: 11, lines: ["FileType request/response"]}
       - {id: job, x: 8.7, y: 4.15, w: 3.0, h: 0.9, text: "InferenceJobType", style: purple, font_size: 11, lines: ["Part 10 async lifecycle"]}
     arrows:
-      - {from: client, to: dep, label: "Invoke", from_site: 3, to_site: 1}
-      - {from: dep, to: model, label: "UsesModel", from_site: 3, to_site: 1}
-      - {from: dep, to: source, label: "remote", from_site: 2, to_site: 0}
-      - {from: dep, to: transfer, label: "large payload", from_site: 1, to_site: 0}
-      - {from: dep, to: job, label: "answer later", from_site: 3, to_site: 0}
+      - {from: client, to: dep, label: "Invoke"}
+      - {from: dep, to: model, label: "UsesModel"}
+      - {from: dep, to: source, label: "remote"}
+      - {from: dep, to: transfer, label: "large payload"}
+      - {from: dep, to: job, label: "answer later"}
     captions:
       - {x: 0, y: 5.55, w: 12, text: "The caller sees one envelope; the Server records which model actually answered", center: true}
     notes: |

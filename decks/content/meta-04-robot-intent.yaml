@@ -60,11 +60,11 @@ slides:
       - {id: safety, x: 0.2, y: 4.2, w: 3.0, h: 0.9, text: "SafetyStateType", style: purple, font_size: 11, lines: ["reports limits; refuses excess"]}
       - {id: rt, x: 8.7, y: 4.2, w: 3.0, h: 0.9, text: "RealTimeChannelType", style: muted, font_size: 11, lines: ["brokered high-rate path"]}
     arrows:
-      - {from: client, to: ctl, label: "SubmitIntent", from_site: 3, to_site: 1}
-      - {from: ctl, to: op, label: "returns NodeId", from_site: 2, to_site: 0}
-      - {from: op, to: term, label: "observe", from_site: 3, to_site: 1}
-      - {from: safety, to: ctl, from_site: 0, to_site: 2}
-      - {from: ctl, to: rt, from_site: 3, to_site: 0}
+      - {from: client, to: ctl, label: "SubmitIntent"}
+      - {from: ctl, to: op, label: "returns NodeId"}
+      - {from: op, to: term, label: "observe"}
+      - {from: safety, to: ctl}
+      - {from: ctl, to: rt}
     captions:
       - {x: 0, y: 5.55, w: 12, text: "Refusals are structured operation outputs, not vague transport failures", center: true}
     notes: |

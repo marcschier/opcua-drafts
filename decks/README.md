@@ -115,14 +115,19 @@ Either a plain string or a mapping. Nesting is expressed with `children` (prefer
     - {id: reg, x: 4.5, y: 0, w: 3, h: 1, text: xRegistry, style: primary}
     - {id: sr,  x: 0.5, y: 2, w: 3, h: 1.2, text: Schema Registry, lines: ["subtypes the base model"]}
   arrows:
-    - {from: reg, to: sr, label: subtypes}
-  captions:
+    - {from: reg, to: sr, label: subtypes}  captions:
     - {x: 0, y: 5.4, w: 12, text: Everything below is a domain extension, center: true}
 ```
 
 `style` is one of `primary`, `accent`, `pale`, `muted`, `deep`, `green`, `purple`.
-Arrow endpoints attach to connection sites `0` top, `1` left, `2` bottom, `3` right — set with
-`from_site` and `to_site`.
+
+**Arrows route themselves.** Connection sites are derived from where the two shapes sit, so a
+child below its parent is joined bottom-to-top and a peer beside it left-to-right, and the
+connector becomes an elbow unless the shapes share a centre line. That keeps every line running
+top-to-bottom or left-to-right instead of cutting diagonally across the boxes between them.
+Override only when you have a reason: `from_site` and `to_site` take `0` top, `1` left, `2`
+bottom, `3` right, and `kind` takes `straight` or `elbow`. `check_layout.py` rejects an override
+that points an edge away from the shape it connects to, or that leaves a diagonal line.
 
 #### `demo`
 
@@ -151,6 +156,10 @@ backticks. Any that slip in are stripped.
 - a content slide (anything other than `title`, `section` or `statement`) has no `notes`;
 - a `table` slide is missing its columns or rows;
 - a `diagram` arrow names a node that does not exist.
+
+`check_layout.py` is separate and advisory: it estimates text overflow and reports shape overlap,
+footer intrusion, title collision, degenerate shapes, and arrows that are diagonal or leave an
+edge facing away from what they connect to.
 
 ## Conventions
 

@@ -63,13 +63,13 @@ slides:
       - {id: doc, x: 8.3, y: 2.3, w: 3.2, h: 1.0, text: "TD / TM versions", style: green, lines: ["WoTDocumentType"]}
       - {id: proj, x: 8.3, y: 4.4, w: 3.2, h: 0.9, text: "Derived nodes", style: purple, lines: ["types · instances · Views"]}
     arrows:
-      - {from: srv, to: reg, from_site: 2, to_site: 0, label: HasComponent}
-      - {from: base, to: reg, from_site: 2, to_site: 0, label: subtypes}
-      - {from: reg, to: tdg, from_site: 3, to_site: 1}
-      - {from: reg, to: tmg, from_site: 3, to_site: 1}
-      - {from: tdg, to: doc, from_site: 3, to_site: 1}
-      - {from: tmg, to: doc, from_site: 3, to_site: 1}
-      - {from: doc, to: proj, from_site: 2, to_site: 0, label: refresh}
+      - {from: srv, to: reg, label: HasComponent}
+      - {from: base, to: reg, label: subtypes}
+      - {from: reg, to: tdg}
+      - {from: reg, to: tmg}
+      - {from: tdg, to: doc}
+      - {from: tmg, to: doc}
+      - {from: doc, to: proj, label: refresh}
     captions:
       - {x: 0, y: 5.55, w: 12, text: "Resource bytes are read and written through inherited FileType methods.", center: true}
     notes: |
