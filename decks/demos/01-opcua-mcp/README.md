@@ -59,4 +59,4 @@ and by the later Robot Intent demo.
 - MCP server guide in the stack checkout: `docs/McpServer.md`
 - MCP source in the stack checkout: `tools/Opc.Ua.Mcp`
 - OPC UA reference server in the stack checkout: `samples/ConsoleReferenceServer`
-- Model Context Protocol: https://modelcontextprotocol.io
+- Model Context Protocol: <https://modelcontextprotocol.io>

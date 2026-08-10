@@ -82,7 +82,7 @@ A demo slide uses the order immediately after the effort's last slide.
 `**bold**` and `` `code` `` work inside any text field.
 
 > **YAML gotcha.** A backtick is a reserved indicator in YAML and cannot *begin* a plain scalar.
-> Quote any value that starts with one — `text: "`FolderType` is the projection"` — or put a word
+> Quote any value that starts with one — ``text: "`FolderType` is the projection"`` — or put a word
 > in front of it. The same applies to a leading `@`.
 
 ### Layouts
