@@ -1,11 +1,9 @@
 {
-  "enumCount": 2,
-  "source": "..\\..\\pubsub-binding\\Opc.Ua.PubSubBinding.NodeSet2.xml",
-  "structCount": 3,
+  "enumCount": 4,
+  "source": "..\\_common\\nodesets\\Opc.Ua.ObservabilityExport.NodeSet2.xml",
+  "structCount": 1,
   "unresolved": [
     "BoundItemDataType.BrowsePath -> i=540",
-    "BoundItemDataType.OwningObjectPath -> i=540",
-    "ScenarioBindingConfigurationDataType.ConfigurationVersion -> i=14593",
-    "ScenarioBindingDataType.ConfigurationVersion -> i=14593"
+    "BoundItemDataType.EventFieldOperand -> i=601"
   ]
 }

@@ -51,9 +51,7 @@ turn the discussion into concrete changes to the source and regenerate everythin
 
 | Artifact | What it is |
 |---|---|
-| `OPC-UA-xRegistry.docx` | xRegistry, the abstract registry base model. |
 | `OPC-UA-Schema-Registry.docx` | Schema Registry, a domain registry on that base. |
-| `OPC-UA-Observability-Export.docx` | Observability Export. |
 | `OPC-UA-Generators.docx` | Generators (generator sets). |
 | `OPC-UA-Data-Channels.docx` | Data Channels — extends the base namespace; see below. |
 | `OPC-UA-Arrow-Encoding.docx` | Apache Arrow DataEncoding — declares a template deviation; see below. |
@@ -66,7 +64,7 @@ turn the discussion into concrete changes to the source and regenerate everythin
 | `figures/*.png` | The preview image Word displays for each embedded object. |
 | `tools/` | The build, the validator, its mutation test, the batch runner and the ingest. |
 
-Five renderings are **not here** while their specifications are under OPC Foundation review — `OPC-UA-Avro-Encoding.docx`, `OPC-UA-OpenUSD-Binding-Part1.docx`, `OPC-UA-OpenUSD-Scene-Part2.docx`, `OPC-UA-WoT-Binding.docx` and `OPC-UA-WoT-Connectivity.docx`. They are built and reviewed the same way in [`OPCF-Members/spec-drafts`](https://github.com/OPCF-Members/spec-drafts), which carries this same tooling; OPC Foundation members can [request access](https://github.com/OPCF-Members/Help). See [*Specifications under OPC Foundation review*](../README.md#specifications-under-opc-foundation-review).
+Seven renderings are **not here** while their specifications are under OPC Foundation review — `OPC-UA-xRegistry.docx`, `OPC-UA-Observability-Export.docx`, `OPC-UA-Avro-Encoding.docx`, `OPC-UA-OpenUSD-Binding-Part1.docx`, `OPC-UA-OpenUSD-Scene-Part2.docx`, `OPC-UA-WoT-Binding.docx` and `OPC-UA-WoT-Connectivity.docx`. They are built and reviewed the same way in [`OPCF-Members/spec-drafts`](https://github.com/OPCF-Members/spec-drafts), which carries this same tooling; OPC Foundation members can [request access](https://github.com/OPCF-Members/Help). See [*Specifications under OPC Foundation review*](../README.md#specifications-under-opc-foundation-review).
 
 ## Commands
 
@@ -155,8 +153,6 @@ a new config file; a genuinely new shape needs a generalisation in `opcdocx/` fi
 |---|---|
 | `OPC-UA-OpenUSD-Binding-Part1.docx` | `metaverse-specs/openusd-binding/` + `Opc.Ua.OpenUsd.NodeSet2.xml` — plus two folded annexes; see below |
 | `OPC-UA-OpenUSD-Scene-Part2.docx` | `metaverse-specs/openusd-scene/` + `Opc.Ua.OpenUsdScene.NodeSet2.xml` |
-| `OPC-UA-xRegistry.docx` | `core-specs/xregistry/` + `Opc.Ua.XRegistry.NodeSet2.xml` |
-| `OPC-UA-Observability-Export.docx` | `cloud-specs/observability-export/` + `Opc.Ua.ObservabilityExport.NodeSet2.xml` — plus five folded annexes; see below |
 | `OPC-UA-WoT-Connectivity.docx` | `wot-specs/WoT-Connectivity/` + `Opc.Ua.WoTCon.NodeSet2.xml` |
 | `OPC-UA-WoT-Binding.docx` | `wot-specs/WoT-Binding/` — **no NodeSet**; see below |
 | `OPC-UA-Schema-Registry.docx` | `cloud-specs/schema-registry/` + `Opc.Ua.SchemaRegistry.NodeSet2.xml` |

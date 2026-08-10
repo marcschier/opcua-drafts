@@ -22,9 +22,10 @@ REPO = os.path.abspath(os.path.join(ROOT, "..", "..", ".."))
 SCHEMA_DIR = os.path.join(ROOT, "schemas")
 BASE_SCHEMA_DIR = os.path.join(STD, "schemas")
 EXAMPLES_DIR = os.path.join(ROOT, "examples")
-# The mapped base model is a cloud-specs specification, so this is anchored to the
-# repository root rather than counted out from a sibling encoding folder.
-NODESET = os.path.join(REPO, "cloud-specs", "observability-export",
+# The mapped base model is under OPC Foundation review. A byte-identical NodeSet
+# fixture lives with the shared encoding tooling so clean public CI does not need
+# credentials for the private repository.
+NODESET = os.path.join(REPO, "core-specs", "extras", "_common", "nodesets",
                        "Opc.Ua.ObservabilityExport.NodeSet2.xml")
 ARROW_SCHEMAID_BYTES = 8
 
