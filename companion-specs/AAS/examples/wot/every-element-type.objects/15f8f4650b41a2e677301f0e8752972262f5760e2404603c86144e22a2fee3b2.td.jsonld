@@ -1,0 +1,61 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@type": [
+    "uav:object",
+    "aas:Blob",
+    "i4aas:AASBlobType"
+  ],
+  "aas:Blob/contentType": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "application/octet-stream"
+  },
+  "aas:Blob/value": {
+    "@type": "http://www.w3.org/2001/XMLSchema#base64Binary",
+    "@value": "QUFTIFYz"
+  },
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "ABlob"
+  },
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:41:5:https://fabrikam.com/ids/sm/every-elementABlob",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUJsb2I",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUJsb2I",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "ABlob",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;ABlob",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:S:41:https://fabrikam.com/ids/sm/every-element"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:5:https://fabrikam.com/ids/sm/every-elementABlob",
+  "uav:modellingRule": "Optional"
+}

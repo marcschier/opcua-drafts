@@ -1,11 +1,10 @@
 # OPC UA for Asset Administration Shell
 
-**Draft 3.00** — supersedes OPC 30270 v1.00.
+**Draft 3.02**
 
-> **Status — working draft.** This document is a revision of the OPC Foundation companion
-> specification *OPC UA for Asset Administration Shell* (OPC 30270) to version 3.00. It is **not**
-> compatible with v1.00, and it is not normative, official or endorsed by the OPC Foundation.
-> Namespace URIs and NodeIds are provisional.
+> **Status — working draft.** This document specifies an OPC UA mapping for the AAS V3 metamodel.
+> It is not normative, official or endorsed by the OPC Foundation. Namespace URIs and NodeIds are
+> provisional.
 
 ## Agreement of Use
 
@@ -106,7 +105,7 @@ any prior understanding or agreement (oral or written) relating to, this compani
 - [4 General information](#4-general-information)
   - [4.1 The Asset Administration Shell](#41-the-asset-administration-shell)
   - [4.2 OPC UA](#42-opc-ua)
-  - [4.3 What changed in version 3.00, and why it is breaking](#43-what-changed-in-version-300-and-why-it-is-breaking)
+  - [4.3 Relationship to OPC 30270 v1.00](#43-relationship-to-opc-30270-v100)
 - [5 Mapping rules](#5-mapping-rules)
   - [5.1 General](#51-general)
   - [5.2 Canonical value representation](#52-canonical-value-representation)
@@ -145,7 +144,7 @@ any prior understanding or agreement (oral or written) relating to, this compani
   - [B.3 Submodel and concept description](#b3-submodel-and-concept-description)
   - [B.4 Submodel elements](#b4-submodel-elements)
   - [B.5 Value classes](#b5-value-classes)
-- [Annex C — Migration from version 1.00](#annex-c--migration-from-version-100)
+- [Annex C — OPC 30270 v1.00 correspondence](#annex-c--opc-30270-v100-correspondence)
 - [Annex D — Correspondence to the xRegistry HTTP binding](#annex-d--correspondence-to-the-xregistry-http-binding)
 - [Annex E — Federation resolution](#annex-e--federation-resolution)
 - [Annex F — Correspondence to a Thing Description projection](#annex-f--correspondence-to-a-thing-description-projection)
@@ -182,8 +181,8 @@ materialized from a package are the same nodes. [Annex F](#annex-f) states the c
 terms it uses and the one rule it requires, and `examples/wot/` holds a Thing Description for each
 fixture of the conformance corpus.
 
-This document supersedes OPC 30270 v1.00, which maps the AAS v1.x metamodel. Clause 4.3 explains why
-the revision is breaking rather than additive.
+OPC 30270 v1.00 maps the AAS v1.x metamodel in a separate namespace. Clause 4.3 defines its
+relationship to this specification.
 
 ## 2 Normative references
 
@@ -296,30 +295,19 @@ Transfer (OPC 10000-20) to move whole documents. It builds the registry half on 
 *OPC UA — xRegistry* base model, in which a registry and its groups are folders and a resource
 document is a file.
 
-### 4.3 What changed in version 3.00, and why it is breaking
+### 4.3 Relationship to OPC 30270 v1.00
 
-Version 1.00 maps the AAS v1.x metamodel. Three changes make this revision incompatible, and no
-ordering of them would have allowed a compatible one.
+OPC 30270 v1.00 models the AAS v1.x metamodel in
+`http://opcfoundation.org/UA/I4AAS/`. This specification models the incompatible AAS V3 metamodel
+in `http://opcfoundation.org/UA/I4AAS/v3/`. A model version does not change NodeId identity, so the
+two models use distinct namespace URIs and a Server may load both without rebinding a published
+NodeId.
 
-**The metamodel changed incompatibly.** AAS V3 is not backward compatible with v1.x. `Asset` and
-`View` no longer exist; `AssetInformation` and `SpecificAssetId` are new; the identifier type
-discriminator was removed, so an identifier is now a bare string; the submodel element set was
-reshaped, with `SubmodelElementList` and `SubmodelElementCollection` taking their present form. A
-node model that faithfully represents V3 cannot also represent v1.x.
-
-**The mapping is now lossless.** Version 1.00 was not designed to be reversible, and reversibility
-cannot be retrofitted compatibly: it requires each xsd type to be assigned its own OPC UA DataType,
-so that the declared type is read from the value node (clauses 5.2 and 7.1), an order
-to be carried by the ReferenceType and by `Index` where the original relies on Browse order
-(clause 5.4), and a distinction between absent and empty that the original does not draw
-(clause 5.5). Each of those adds Mandatory members and new DataTypes to existing types.
-
-**The registry is now part of the specification.** A shell is catalogued, versioned and federated as
-well as browsed. The types are additive, but claiming any of the registry conformance units of
-clause 10 requires the xRegistry base model, which changes what such a Server loads. A Server that
-implements only the metamodel half does not load it.
-
-Annex C maps v1.00 concepts onto their v3.00 counterparts for readers migrating.
+AAS V3 has `AssetInformation` and `SpecificAssetId` in place of the v1.x `Asset` and `View`
+shapes, carries identifiers as bare strings, and distinguishes `SubmodelElementList` from
+`SubmodelElementCollection`. This specification also carries the information required for a
+lossless round trip and defines the AAS registry as an xRegistry domain model. Annex C gives an
+informative concept correspondence for migration tooling.
 
 ## 5 Mapping rules
 
@@ -387,26 +375,77 @@ by a sibling field of the same Structure (clause 7.2). It is never the DataType 
 
 Assignment is deterministic: two implementations materializing the same AAS produce the same nodes.
 
-**NodeId.** Instance nodes use String identifiers in the Server's own namespace:
+**NodeId.** Instance nodes use String identifiers in the Server's own namespace. The identifier is
+a node-kind discriminator followed by decimal length prefixes and reversibly escaped source
+components:
 
-| Node | Identifier |
+| Node | String identifier |
 |---|---|
-| A shell, submodel or concept description | its AAS identifier, verbatim |
-| An element beneath one of those | the owner's identifier, a `#`, then the element's `idShortPath` |
+| Asset Administration Shell | `i4aas3:A:<n>:E(<id>)` |
+| Submodel | `i4aas3:S:<n>:E(<id>)` |
+| Concept Description | `i4aas3:C:<n>:E(<id>)` |
+| Submodel Element | `i4aas3:E:<n>:<m>:E(<owner-id>)E(<idShortPath>)` |
+
+`E` is applied independently to every raw identifier and path component. It scans the source
+Unicode scalar values without normalization. A literal `%`, every C0 control from U+0000 through
+U+001F, and every C1 control from U+007F through U+009F is encoded as its UTF-8 bytes, with each
+byte written as `%HH` using uppercase hexadecimal digits. Every other scalar value is copied
+unchanged. Decoding accepts only this canonical form: a raw C0 or C1 control, a malformed escape,
+or an escape whose decoded value would not be escaped by `E` is invalid. This also makes a literal
+percent unambiguous: `%` encodes as `%25`.
+
+`<n>` and `<m>` are the numbers of Unicode code points in the *encoded* components that follow,
+written with ASCII decimal digits and without leading zeroes. For an identifiable, `<n>` is the
+length of `E(<id>)`. For an element, `<n>` is the length of `E(<owner-id>)` and `<m>` is the length of
+`E(<idShortPath>)`; those lengths split the concatenated payload before either component is
+decoded, without relying on a delimiter that a source string may contain. `A`, `S`, `C` and `E`
+distinguish the four node kinds.
 
 The `idShortPath` is the metamodel's own path convention: short names joined by `.`, with `[n]` for
-a member of a list. Using it means the identifier a generator computes is the identifier the AAS API
-already uses, so a Client that holds one holds the other.
+a member of a list. The encoding is injective: for example, a shell whose identifier is `a#b`
+encodes as `i4aas3:A:3:a#b`, while element path `b` beneath owner `a` encodes as
+`i4aas3:E:1:1:ab`. An identifier containing LF between `a` and `b` encodes as
+`i4aas3:S:5:a%0Ab`; NUL in the same position encodes as `i4aas3:S:5:a%00b`; U+0085 by itself
+encodes as `i4aas3:S:6:%C2%85`; and the three source characters `%0A` encode as
+`i4aas3:S:5:%250A`, not as a line feed.
 
-An AAS identifier is arbitrary text of up to 2048 characters. It is legal in a String NodeId, which
-is why identity lives there rather than in the BrowseName.
+An `OperationVariable` wrapper is not a node. Its `value` element has the path
+`<operation-path>.<role>[<index>]`, where `<role>` is exactly `inputVariables`,
+`outputVariables` or `inoutputVariables` and `<index>` is its zero-based position in that role.
+For example, the first input value of `AnOperation` has path
+`AnOperation.inputVariables[0]`. The value element's own `idShort` remains its BrowseName and
+`IdShort` Property; the role and index, rather than that short name, identify its containment
+position.
 
-**BrowseName.** The element's short name, in the Server's namespace. An element inside a
-`SubmodelElementList` has no short name — the metamodel does not give it one — so its BrowseName is
-its index rendered as a decimal string. Order is carried by the `Index` Property, not by the
-BrowseName, because a BrowseName is a name and not a position.
+OPC UA limits a String NodeId identifier to 4096 characters. Before creating any nodes for one
+identifiable, a materializer **shall** derive every identifier in its subtree. If any derived
+identifier, after escaping and adding its discriminator and length prefixes, exceeds that limit, it
+**shall** reject that identifiable without exposing a partial subtree and **shall** report the
+overlength path in its diagnostic. It **shall not** truncate, replace or hash the source strings,
+because those operations would not implement the reversible encoding above.
 
-**DisplayName.** The short name where one exists; otherwise the index.
+**BrowseName.** A Referable that has a non-empty `idShort` uses that exact short name in the
+Server's namespace. The three top-level Identifiables permit `idShort` to be absent. In that case
+the BrowseName is `<kind>_<digest>`, where `<kind>` is exactly `AssetAdministrationShell`,
+`Submodel` or `ConceptDescription`, and `<digest>` is the lowercase hexadecimal SHA-256 digest of
+the exact, non-normalized UTF-8 bytes of `id`. The raw identifier is not included in the
+BrowseName.
+
+Before allocating derived BrowseNames, a materializer **shall** reserve every BrowseName supplied
+by an `idShort` among the environment's top-level children. Identifiers that produce one derived
+base name are processed in ascending lexicographic order of their UTF-8 bytes. The first available
+name is used: the unsuffixed base where it is free, otherwise the base followed by `_n`, where `n`
+is the smallest non-negative ASCII decimal integer that makes the name unused. This rule handles both
+a SHA-256 collision and a collision with an authored `idShort` without making source array order
+significant. Duplicate identifiers within one identifiable kind would produce the same NodeId and
+**shall** be rejected.
+
+An element inside a `SubmodelElementList` has no short name — the metamodel does not give it one —
+so its BrowseName is its index rendered as a decimal string. Order is carried by the `Index`
+Property, not by the BrowseName, because a BrowseName is a name and not a position.
+
+**DisplayName.** The short name where one exists; otherwise the index for a list member or the
+derived BrowseName for a top-level Identifiable.
 
 ### 5.4 Ordering
 
@@ -418,9 +457,11 @@ type system rather than in a Property, and it does:
   `SubmodelElementList` **shall** reference its members with `HasOrderedComponent` (`i=49`), the
   subtype of `HasComponent` whose semantic is that the order of the references is meaningful.
 - Where `orderRelevant` is **false**, it **shall** reference them with `HasComponent`.
-- Every other element collection **shall** use `HasComponent` or `Organizes` as its type declares.
+- Every other parent/child relationship between Submodel Elements **shall** use `HasComponent`.
 
 The ReferenceType carries `orderRelevant`; there is no `OrderRelevant` Property.
+`AASSubmodelElementListType.<Element>` is declared with `HasComponent`; an ordered instance uses
+the `HasOrderedComponent` subtype for that declaration.
 
 `Index` carries the position. The Browse Service is not required to return references in any
 particular order, and a NodeSet is a set of references rather than a sequence, so the order of a
@@ -431,6 +472,12 @@ materialize it there. Where a Server materializes `Index`, the values **shall** 
 
 Where the members are referenced with `HasComponent`, a serializer **may** emit them in any order,
 and clause 8 compares the collection as a bag.
+
+The three `Operation` variable roles are separately ordered arrays. Their value elements are direct
+`HasComponent` children, not `HasOrderedComponent` children. Each value element **shall** carry
+`Index` equal to its zero-based position within its role. The array position is authoritative; the
+`Index` Property and the role/index in the NodeId of clause 5.3 **shall** agree with it. Indices
+start again at zero for each role.
 
 ### 5.5 Absent versus empty
 
@@ -466,7 +513,7 @@ into a loadable NodeSet, and a Server that loads the NodeSet serves the AAS.
 
 ## 6 AAS metamodel ObjectTypes
 
-The companion namespace is `http://opcfoundation.org/UA/I4AAS/`, model version 3.00. Draft numeric
+The companion namespace is `http://opcfoundation.org/UA/I4AAS/v3/`, model version 3.02. Draft numeric
 NodeIds use the `1001+` block; final NodeIds are assigned by the OPC Foundation. The normative node
 reference is [Annex A](#annex-a); this clause describes intent.
 
@@ -484,7 +531,8 @@ byte-identical to the one that produced it, and the metamodel's serialization in
 discriminator.
 
 `AASIdentifiableType` carries the `Id` — up to 2048 characters of arbitrary text, which is why
-identity lives in a Property and in the String NodeId rather than in the BrowseName (clause 5.3).
+identity lives in a Property and in the encoded String NodeId rather than in the BrowseName
+(clause 5.3).
 
 <!-- model-figure: root=ns=2;i=1001 require=mandatory external=BaseObjectType -->
 
@@ -645,7 +693,7 @@ flowchart TD
 
   IDF -->|HasSubtype| SM
   IDF -->|HasSubtype| CD
-  SM -->|Organizes| SE
+  SM -->|HasComponent| SE
   SE ==> SET
   SM -->|HasProperty| KIN
   SM -->|HasProperty| SID
@@ -748,10 +796,11 @@ flowchart TD
 
 Figure 8 — A value and the type it is declared as
 
-**`AASSubmodelElementListType`** references its members with `HasOrderedComponent` where the list's
-order is relevant and `HasComponent` where it is not, and its members carry `Index` where the
-position has to be recoverable. `AASSubmodelElementCollectionType` is unordered and its members are
-identified by their own short names.
+**`AASSubmodelElementListType`** declares its member placeholder with `HasComponent`. An instance
+specializes that reference to `HasOrderedComponent` where the list's order is relevant and retains
+`HasComponent` where it is not; its members carry `Index` where the position has to be recoverable.
+`AASSubmodelElementCollectionType` is unordered and its members are identified by their own short
+names.
 
 <!-- model-figure: root=ns=2;i=1031 require=mandatory -->
 
@@ -770,8 +819,8 @@ flowchart TD
   SET -->|HasSubtype| SEL
   SET -->|HasSubtype| SEC
   SET -->|HasProperty| IDX
-  SEL -->|HasOrderedComponent| ELM
-  SEC -->|Organizes| SUB
+  SEL -->|HasComponent| ELM
+  SEC -->|HasComponent| SUB
   ELM ==> SET
   SUB ==> SET
   SEL -->|HasProperty| TVL
@@ -791,6 +840,15 @@ its own shell, so a bill of material is traversable across organizations.
 **`AASOperationType`** carries its variables as references to the element nodes that hold them,
 rather than duplicating those elements, so an operation's variables round-trip as the elements they
 are.
+
+For every `OperationVariable` in a present role array, a materializer **shall** create the wrapper's
+mandatory `value` as one direct `HasComponent` child of the `AASOperationType` node. It **shall not**
+create a node for the wrapper itself. The corresponding `InputVariables`, `OutputVariables` or
+`InoutputVariables` array entry **shall** be one `AASOperationVariableDataType` whose
+`ValueNodeId` is the local NodeId of that child. A child **shall** occur in exactly one role entry.
+The child uses its concrete AAS ObjectType and its own `idShort` as BrowseName; its NodeId and
+`Index` follow clauses 5.3 and 5.4. An absent role has no corresponding Property instance, while a
+present empty role has a Property whose value is an empty array.
 
 <!-- model-figure: root=ns=2;i=1032 require=mandatory -->
 
@@ -815,8 +873,8 @@ flowchart TD
   SET -->|HasSubtype| ENT
   SET -->|HasSubtype| OPR
   SET -->|HasSubtype| BEE
-  ENT -->|Organizes| STM
-  OPR -->|Organizes| VAR
+  ENT -->|HasComponent| STM
+  OPR -->|HasComponent| VAR
   ENT -->|HasProperty| ETY
   ENT -->|HasProperty| GAI
   ENT -->|HasProperty| SAI
@@ -939,10 +997,10 @@ outside the representable range **shall** be rejected rather than truncated, as 
 declared type is given by a sibling field of the same Structure.
 
 A Structure field has one static DataType and cannot vary with a declared type.
-`AASQualifierDataType`, `AASExtensionDataType` and `AASDataSpecificationIec61360DataType` each pair a
-value with a `ValueType` field, so the value field is lexical and the sibling field states how to
-read it. Where a Variable carries a value, clause 7.1 assigns the DataType of its declared xsd type
-instead.
+`AASQualifierDataType` and `AASExtensionDataType` pair a value with a `ValueType` field.
+`AASDataSpecificationIec61360DataType` pairs its value with a `DataType` field. In each case the
+value field is lexical and the sibling field states how to read it. Where a Variable carries a
+value, clause 7.1 assigns the DataType of its declared xsd type instead.
 
 A Server **shall not** use `AASValueString` as the DataType of a Variable.
 
@@ -956,12 +1014,20 @@ implementation rejects it rather than dropping it silently.
 
 The structures carry the metamodel's value classes: references and their ordered keys,
 language-tagged strings, specific asset identifiers, administrative information, qualifiers,
-extensions, data specifications and their IEC 61360 content. Three of them — `AASQualifierDataType`,
-`AASExtensionDataType` and `AASDataSpecificationIec61360DataType` — pair a value with a `ValueType`
-field, and carry that value as `AASValueString` for the reason given in clause 7.2.
+extensions, data specifications and their IEC 61360 content. `AASQualifierDataType` and
+`AASExtensionDataType` pair a value with `ValueType`;
+`AASDataSpecificationIec61360DataType` pairs it with `DataType`. Each carries the value as
+`AASValueString` for the reason given in clause 7.2.
 
 `AASReferenceDataType` carries its `Keys` as an ordered array. The order is part of the reference's
 meaning — it is the path — so it is preserved exactly.
+
+IEC 61360 permitted values are structured rather than flattened into strings.
+`AASValueReferencePairDataType` has Mandatory `Value` and `ValueId` fields.
+`AASValueListDataType` has a Mandatory, non-empty `ValueReferencePairs` array of those pairs.
+`AASLevelTypeDataType` has the four Mandatory Boolean fields `Min`, `Nom`, `Typ` and `Max`.
+`AASDataSpecificationIec61360DataType.ValueList` and `.LevelType` are Optional, so their absence
+remains distinct from a present structured value.
 
 ## 8 Round-trip conformance
 
@@ -1028,6 +1094,11 @@ A Server may implement either half or both. Where both are present the same shel
 `Server` Object so that any Client reaching the standard Server object discovers it. Its group
 folders hold shells, submodel template families, concept dictionaries and package stores; its
 Methods answer the discovery question and provide a document fast path.
+
+The UANodeSet representation of the concrete `LookupShellsByAssetLink`, `GetSubmodel` and
+`Materialize` Methods on the well-known `AASRegistry` Object **shall** set the
+`MethodDeclarationId` XML attribute to the NodeId of the same-named Method declaration on
+`AASRegistryType`.
 
 `AASShellGroupType` holds the submodel documents of one shell. It is a `GroupType`, and therefore a
 folder of resource files, whereas `AASType` is the shell's metamodel object tree. They are separate
@@ -1371,10 +1442,11 @@ Figure 14 — Materialization lifecycle of one stored document
 
 **Implementer notes.** This subclause is informative.
 
-- *NodeId stability.* The NodeIds of clause 5.3 are derived from the AAS identifier and the
-  `idShortPath`, not allocated by the Server. Two generations of the same document therefore contain
-  the *same* NodeIds. A shadow generation must be held in a separate node table until the switch, not
-  merged into the live one, or the preparation itself becomes visible.
+- *NodeId stability.* The NodeIds of clause 5.3 are the escaped, length-prefixed encodings of the
+  AAS identifier and `idShortPath`, not values allocated by the Server. Two generations of the same
+  document therefore contain the *same* NodeIds. A shadow generation must be held in a separate
+  node table until the switch, not merged into the live one, or the preparation itself becomes
+  visible.
 - *Retirement and NodeId reuse together.* Under graceful retirement two generations exist at once
   with overlapping NodeIds. A Session that resolved a NodeId before the switch must continue to
   reach the generation it started with; resolving NodeId to node per Session-and-generation rather
@@ -1501,92 +1573,95 @@ clause 8 over the fixture corpus.
 
 ## Annex A — Information model
 
-This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.I4AAS.NodeSet2.xml`. All nodes are defined in the companion namespace `http://opcfoundation.org/UA/xRegistry/` (which requires the base OPC UA namespace); the numeric NodeIds shown are **draft** identifiers within that namespace. The **Declared in** column marks members inherited from a supertype.
+This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.I4AAS.NodeSet2.xml`. All nodes are defined in the companion namespace `http://opcfoundation.org/UA/I4AAS/v3/` (which requires the base OPC UA and xRegistry namespaces); the numeric NodeIds shown are **draft** identifiers within that namespace. The **Declared in** column marks members inherited from a supertype.
 
 ### Type overview
 
 | NodeId | BrowseName | NodeClass | Subtype of |
 |---|---|---|---|
-| ns=1;i=1001 | [AASReferableType](#type-AASReferableType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
-| ns=1;i=1002 | [AASIdentifiableType](#type-AASIdentifiableType) | ObjectType | [AASReferableType](#type-AASReferableType) |
-| ns=1;i=1003 | [AASHasSemanticsType](#type-AASHasSemanticsType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
-| ns=1;i=1004 | [AASHasKindType](#type-AASHasKindType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
-| ns=1;i=1005 | [AASHasDataSpecificationType](#type-AASHasDataSpecificationType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
-| ns=1;i=1006 | [AASQualifiableType](#type-AASQualifiableType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
-| ns=1;i=1010 | [AASEnvironmentType](#type-AASEnvironmentType) | ObjectType | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) |
-| ns=1;i=1011 | [AASType](#type-AASType) | ObjectType | [AASIdentifiableType](#type-AASIdentifiableType) |
-| ns=1;i=1012 | [AASAssetInformationType](#type-AASAssetInformationType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
-| ns=1;i=1013 | [AASSubmodelType](#type-AASSubmodelType) | ObjectType | [AASIdentifiableType](#type-AASIdentifiableType) |
-| ns=1;i=1030 | [AASConceptDescriptionType](#type-AASConceptDescriptionType) | ObjectType | [AASIdentifiableType](#type-AASIdentifiableType) |
-| ns=1;i=1020 | [AASSubmodelElementType](#type-AASSubmodelElementType) | ObjectType | [AASReferableType](#type-AASReferableType) |
-| ns=1;i=1021 | [AASPropertyType](#type-AASPropertyType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1022 | [AASMultiLanguagePropertyType](#type-AASMultiLanguagePropertyType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1023 | [AASRangeType](#type-AASRangeType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1024 | [AASBlobType](#type-AASBlobType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1025 | [AASFileType](#type-AASFileType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1026 | [AASReferenceElementType](#type-AASReferenceElementType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1027 | [AASRelationshipElementType](#type-AASRelationshipElementType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1028 | [AASAnnotatedRelationshipElementType](#type-AASAnnotatedRelationshipElementType) | ObjectType | [AASRelationshipElementType](#type-AASRelationshipElementType) |
-| ns=1;i=1029 | [AASSubmodelElementCollectionType](#type-AASSubmodelElementCollectionType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1031 | [AASSubmodelElementListType](#type-AASSubmodelElementListType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1032 | [AASEntityType](#type-AASEntityType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1033 | [AASBasicEventElementType](#type-AASBasicEventElementType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1034 | [AASOperationType](#type-AASOperationType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1035 | [AASCapabilityType](#type-AASCapabilityType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
-| ns=1;i=1100 | [AASRegistryType](#type-AASRegistryType) | ObjectType | ns=1;i=63000 |
-| ns=1;i=1101 | [AASShellGroupType](#type-AASShellGroupType) | ObjectType | ns=1;i=63001 |
-| ns=1;i=1102 | [AASSubmodelFileType](#type-AASSubmodelFileType) | ObjectType | ns=1;i=63002 |
-| ns=1;i=1103 | [AASSubmodelTemplateGroupType](#type-AASSubmodelTemplateGroupType) | ObjectType | ns=1;i=63001 |
-| ns=1;i=1104 | [AASConceptDictionaryGroupType](#type-AASConceptDictionaryGroupType) | ObjectType | ns=1;i=63001 |
-| ns=1;i=1105 | [AASConceptDescriptionFileType](#type-AASConceptDescriptionFileType) | ObjectType | ns=1;i=63002 |
-| ns=1;i=1106 | [AASPackageStoreGroupType](#type-AASPackageStoreGroupType) | ObjectType | ns=1;i=63001 |
-| ns=1;i=1107 | [AASPackageFileType](#type-AASPackageFileType) | ObjectType | ns=1;i=63002 |
-| ns=1;i=1108 | [AASEnvironmentFileType](#type-AASEnvironmentFileType) | ObjectType | ns=1;i=63002 |
-| ns=1;i=1180 | [AASAnyUri](#type-AASAnyUri) | DataType | String |
-| ns=1;i=1181 | [AASHexBinary](#type-AASHexBinary) | DataType | ByteString |
-| ns=1;i=1182 | [AASNonPositiveInteger](#type-AASNonPositiveInteger) | DataType | Integer |
-| ns=1;i=1183 | [AASNegativeInteger](#type-AASNegativeInteger) | DataType | [AASNonPositiveInteger](#type-AASNonPositiveInteger) |
-| ns=1;i=1184 | [AASPositiveInteger](#type-AASPositiveInteger) | DataType | UInteger |
-| ns=1;i=1185 | [AASGYear](#type-AASGYear) | DataType | String |
-| ns=1;i=1186 | [AASGYearMonth](#type-AASGYearMonth) | DataType | String |
-| ns=1;i=1187 | [AASGMonth](#type-AASGMonth) | DataType | String |
-| ns=1;i=1188 | [AASGMonthDay](#type-AASGMonthDay) | DataType | String |
-| ns=1;i=1189 | [AASGDay](#type-AASGDay) | DataType | String |
-| ns=1;i=1199 | [AASValueString](#type-AASValueString) | DataType | String |
-| ns=1;i=1200 | [AASAssetKindDataType](#type-AASAssetKindDataType) | DataType | Enumeration |
-| ns=1;i=1201 | [AASModellingKindDataType](#type-AASModellingKindDataType) | DataType | Enumeration |
-| ns=1;i=1202 | [AASEntityTypeDataType](#type-AASEntityTypeDataType) | DataType | Enumeration |
-| ns=1;i=1203 | [AASDirectionDataType](#type-AASDirectionDataType) | DataType | Enumeration |
-| ns=1;i=1204 | [AASStateOfEventDataType](#type-AASStateOfEventDataType) | DataType | Enumeration |
-| ns=1;i=1205 | [AASQualifierKindDataType](#type-AASQualifierKindDataType) | DataType | Enumeration |
-| ns=1;i=1206 | [AASReferenceTypesDataType](#type-AASReferenceTypesDataType) | DataType | Enumeration |
-| ns=1;i=1207 | [AASKeyTypesDataType](#type-AASKeyTypesDataType) | DataType | Enumeration |
-| ns=1;i=1208 | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | DataType | Enumeration |
-| ns=1;i=1209 | [AASDataTypeIec61360DataType](#type-AASDataTypeIec61360DataType) | DataType | Enumeration |
-| ns=1;i=1210 | [AASSubmodelElementsDataType](#type-AASSubmodelElementsDataType) | DataType | Enumeration |
-| ns=1;i=1211 | [AASDisclosureTierDataType](#type-AASDisclosureTierDataType) | DataType | Enumeration |
-| ns=1;i=1212 | [AASLoadStateDataType](#type-AASLoadStateDataType) | DataType | Enumeration |
-| ns=1;i=1213 | [AASMaterializationOutcomeDataType](#type-AASMaterializationOutcomeDataType) | DataType | Enumeration |
-| ns=1;i=1220 | [AASKeyDataType](#type-AASKeyDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1221 | [AASReferenceDataType](#type-AASReferenceDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1222 | [AASLangStringDataType](#type-AASLangStringDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1223 | [AASSpecificAssetIdDataType](#type-AASSpecificAssetIdDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1224 | [AASAdministrativeInformationDataType](#type-AASAdministrativeInformationDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1225 | [AASQualifierDataType](#type-AASQualifierDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1226 | [AASEmbeddedDataSpecificationDataType](#type-AASEmbeddedDataSpecificationDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1227 | [AASDataSpecificationIec61360DataType](#type-AASDataSpecificationIec61360DataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1228 | [AASExtensionDataType](#type-AASExtensionDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1229 | [AASResourceDataType](#type-AASResourceDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1230 | [AASOperationVariableDataType](#type-AASOperationVariableDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1231 | [AASAuthorizationOptionDataType](#type-AASAuthorizationOptionDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1232 | [AASAttestationDataType](#type-AASAttestationDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
-| ns=1;i=1233 | [AASMaterializationResultDataType](#type-AASMaterializationResultDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1001 | [AASReferableType](#type-AASReferableType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| ns=2;i=1002 | [AASIdentifiableType](#type-AASIdentifiableType) | ObjectType | [AASReferableType](#type-AASReferableType) |
+| ns=2;i=1003 | [AASHasSemanticsType](#type-AASHasSemanticsType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| ns=2;i=1004 | [AASHasKindType](#type-AASHasKindType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| ns=2;i=1005 | [AASHasDataSpecificationType](#type-AASHasDataSpecificationType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| ns=2;i=1006 | [AASQualifiableType](#type-AASQualifiableType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| ns=2;i=1010 | [AASEnvironmentType](#type-AASEnvironmentType) | ObjectType | [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6) |
+| ns=2;i=1011 | [AASType](#type-AASType) | ObjectType | [AASIdentifiableType](#type-AASIdentifiableType) |
+| ns=2;i=1012 | [AASAssetInformationType](#type-AASAssetInformationType) | ObjectType | [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2) |
+| ns=2;i=1013 | [AASSubmodelType](#type-AASSubmodelType) | ObjectType | [AASIdentifiableType](#type-AASIdentifiableType) |
+| ns=2;i=1030 | [AASConceptDescriptionType](#type-AASConceptDescriptionType) | ObjectType | [AASIdentifiableType](#type-AASIdentifiableType) |
+| ns=2;i=1020 | [AASSubmodelElementType](#type-AASSubmodelElementType) | ObjectType | [AASReferableType](#type-AASReferableType) |
+| ns=2;i=1021 | [AASPropertyType](#type-AASPropertyType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1022 | [AASMultiLanguagePropertyType](#type-AASMultiLanguagePropertyType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1023 | [AASRangeType](#type-AASRangeType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1024 | [AASBlobType](#type-AASBlobType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1025 | [AASFileType](#type-AASFileType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1026 | [AASReferenceElementType](#type-AASReferenceElementType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1027 | [AASRelationshipElementType](#type-AASRelationshipElementType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1028 | [AASAnnotatedRelationshipElementType](#type-AASAnnotatedRelationshipElementType) | ObjectType | [AASRelationshipElementType](#type-AASRelationshipElementType) |
+| ns=2;i=1029 | [AASSubmodelElementCollectionType](#type-AASSubmodelElementCollectionType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1031 | [AASSubmodelElementListType](#type-AASSubmodelElementListType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1032 | [AASEntityType](#type-AASEntityType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1033 | [AASBasicEventElementType](#type-AASBasicEventElementType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1034 | [AASOperationType](#type-AASOperationType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1035 | [AASCapabilityType](#type-AASCapabilityType) | ObjectType | [AASSubmodelElementType](#type-AASSubmodelElementType) |
+| ns=2;i=1100 | [AASRegistryType](#type-AASRegistryType) | ObjectType | ns=1;i=63000 |
+| ns=2;i=1101 | [AASShellGroupType](#type-AASShellGroupType) | ObjectType | ns=1;i=63001 |
+| ns=2;i=1102 | [AASSubmodelFileType](#type-AASSubmodelFileType) | ObjectType | ns=1;i=63002 |
+| ns=2;i=1103 | [AASSubmodelTemplateGroupType](#type-AASSubmodelTemplateGroupType) | ObjectType | ns=1;i=63001 |
+| ns=2;i=1104 | [AASConceptDictionaryGroupType](#type-AASConceptDictionaryGroupType) | ObjectType | ns=1;i=63001 |
+| ns=2;i=1105 | [AASConceptDescriptionFileType](#type-AASConceptDescriptionFileType) | ObjectType | ns=1;i=63002 |
+| ns=2;i=1106 | [AASPackageStoreGroupType](#type-AASPackageStoreGroupType) | ObjectType | ns=1;i=63001 |
+| ns=2;i=1107 | [AASPackageFileType](#type-AASPackageFileType) | ObjectType | ns=1;i=63002 |
+| ns=2;i=1108 | [AASEnvironmentFileType](#type-AASEnvironmentFileType) | ObjectType | ns=1;i=63002 |
+| ns=2;i=1180 | [AASAnyUri](#type-AASAnyUri) | DataType | String |
+| ns=2;i=1181 | [AASHexBinary](#type-AASHexBinary) | DataType | ByteString |
+| ns=2;i=1182 | [AASNonPositiveInteger](#type-AASNonPositiveInteger) | DataType | Integer |
+| ns=2;i=1183 | [AASNegativeInteger](#type-AASNegativeInteger) | DataType | [AASNonPositiveInteger](#type-AASNonPositiveInteger) |
+| ns=2;i=1184 | [AASPositiveInteger](#type-AASPositiveInteger) | DataType | UInteger |
+| ns=2;i=1185 | [AASGYear](#type-AASGYear) | DataType | String |
+| ns=2;i=1186 | [AASGYearMonth](#type-AASGYearMonth) | DataType | String |
+| ns=2;i=1187 | [AASGMonth](#type-AASGMonth) | DataType | String |
+| ns=2;i=1188 | [AASGMonthDay](#type-AASGMonthDay) | DataType | String |
+| ns=2;i=1189 | [AASGDay](#type-AASGDay) | DataType | String |
+| ns=2;i=1199 | [AASValueString](#type-AASValueString) | DataType | String |
+| ns=2;i=1200 | [AASAssetKindDataType](#type-AASAssetKindDataType) | DataType | Enumeration |
+| ns=2;i=1201 | [AASModellingKindDataType](#type-AASModellingKindDataType) | DataType | Enumeration |
+| ns=2;i=1202 | [AASEntityTypeDataType](#type-AASEntityTypeDataType) | DataType | Enumeration |
+| ns=2;i=1203 | [AASDirectionDataType](#type-AASDirectionDataType) | DataType | Enumeration |
+| ns=2;i=1204 | [AASStateOfEventDataType](#type-AASStateOfEventDataType) | DataType | Enumeration |
+| ns=2;i=1205 | [AASQualifierKindDataType](#type-AASQualifierKindDataType) | DataType | Enumeration |
+| ns=2;i=1206 | [AASReferenceTypesDataType](#type-AASReferenceTypesDataType) | DataType | Enumeration |
+| ns=2;i=1207 | [AASKeyTypesDataType](#type-AASKeyTypesDataType) | DataType | Enumeration |
+| ns=2;i=1208 | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | DataType | Enumeration |
+| ns=2;i=1209 | [AASDataTypeIec61360DataType](#type-AASDataTypeIec61360DataType) | DataType | Enumeration |
+| ns=2;i=1210 | [AASSubmodelElementsDataType](#type-AASSubmodelElementsDataType) | DataType | Enumeration |
+| ns=2;i=1211 | [AASDisclosureTierDataType](#type-AASDisclosureTierDataType) | DataType | Enumeration |
+| ns=2;i=1212 | [AASLoadStateDataType](#type-AASLoadStateDataType) | DataType | Enumeration |
+| ns=2;i=1213 | [AASMaterializationOutcomeDataType](#type-AASMaterializationOutcomeDataType) | DataType | Enumeration |
+| ns=2;i=1220 | [AASKeyDataType](#type-AASKeyDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1221 | [AASReferenceDataType](#type-AASReferenceDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1222 | [AASLangStringDataType](#type-AASLangStringDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1223 | [AASSpecificAssetIdDataType](#type-AASSpecificAssetIdDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1224 | [AASAdministrativeInformationDataType](#type-AASAdministrativeInformationDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1225 | [AASQualifierDataType](#type-AASQualifierDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1226 | [AASEmbeddedDataSpecificationDataType](#type-AASEmbeddedDataSpecificationDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1227 | [AASDataSpecificationIec61360DataType](#type-AASDataSpecificationIec61360DataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1228 | [AASExtensionDataType](#type-AASExtensionDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1229 | [AASResourceDataType](#type-AASResourceDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1230 | [AASOperationVariableDataType](#type-AASOperationVariableDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1231 | [AASAuthorizationOptionDataType](#type-AASAuthorizationOptionDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1232 | [AASAttestationDataType](#type-AASAttestationDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1233 | [AASMaterializationResultDataType](#type-AASMaterializationResultDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1234 | [AASValueReferencePairDataType](#type-AASValueReferencePairDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1235 | [AASValueListDataType](#type-AASValueListDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+| ns=2;i=1236 | [AASLevelTypeDataType](#type-AASLevelTypeDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 
 ### Object types
 
 <a id="type-AASReferableType"></a>
 
-#### AASReferableType  (ns=1;i=1001)
+#### AASReferableType  (ns=2;i=1001)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
@@ -1603,7 +1678,7 @@ Abstract base of everything in the metamodel that can be referred to by a short 
 
 <a id="type-AASIdentifiableType"></a>
 
-#### AASIdentifiableType  (ns=1;i=1002)
+#### AASIdentifiableType  (ns=2;i=1002)
 
 *Inherits from:* [AASReferableType](#type-AASReferableType)
 
@@ -1616,7 +1691,7 @@ Abstract base of the metamodel elements that carry a globally unique identifier:
 
 <a id="type-AASHasSemanticsType"></a>
 
-#### AASHasSemanticsType  (ns=1;i=1003)
+#### AASHasSemanticsType  (ns=2;i=1003)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
@@ -1629,7 +1704,7 @@ Abstract base of the elements that declare what concept they are an occurrence o
 
 <a id="type-AASHasKindType"></a>
 
-#### AASHasKindType  (ns=1;i=1004)
+#### AASHasKindType  (ns=2;i=1004)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
@@ -1641,7 +1716,7 @@ Abstract base of the elements that distinguish a template from an instance.
 
 <a id="type-AASHasDataSpecificationType"></a>
 
-#### AASHasDataSpecificationType  (ns=1;i=1005)
+#### AASHasDataSpecificationType  (ns=2;i=1005)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
@@ -1653,7 +1728,7 @@ Abstract base of the elements that carry data specifications.
 
 <a id="type-AASQualifiableType"></a>
 
-#### AASQualifiableType  (ns=1;i=1006)
+#### AASQualifiableType  (ns=2;i=1006)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
@@ -1665,7 +1740,7 @@ Abstract base of the elements that can be qualified.
 
 <a id="type-AASEnvironmentType"></a>
 
-#### AASEnvironmentType  (ns=1;i=1010)
+#### AASEnvironmentType  (ns=2;i=1010)
 
 *Inherits from:* [FolderType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.6)
 
@@ -1679,7 +1754,7 @@ The container of shells, submodels and concept descriptions - the unit an AAS se
 
 <a id="type-AASType"></a>
 
-#### AASType  (ns=1;i=1011)
+#### AASType  (ns=2;i=1011)
 
 *Inherits from:* [AASIdentifiableType](#type-AASIdentifiableType)
 
@@ -1694,7 +1769,7 @@ An Asset Administration Shell: the digital representation of one asset, carrying
 
 <a id="type-AASAssetInformationType"></a>
 
-#### AASAssetInformationType  (ns=1;i=1012)
+#### AASAssetInformationType  (ns=2;i=1012)
 
 *Inherits from:* [BaseObjectType](https://reference.opcfoundation.org/specs/OPC-10000-5/6.2)
 
@@ -1710,7 +1785,7 @@ The identity of the asset a shell represents, as distinct from the identity of t
 
 <a id="type-AASSubmodelType"></a>
 
-#### AASSubmodelType  (ns=1;i=1013)
+#### AASSubmodelType  (ns=2;i=1013)
 
 *Inherits from:* [AASIdentifiableType](#type-AASIdentifiableType)
 
@@ -1727,7 +1802,7 @@ One coherent aspect of an asset, identified in its own right and typed by its Se
 
 <a id="type-AASConceptDescriptionType"></a>
 
-#### AASConceptDescriptionType  (ns=1;i=1030)
+#### AASConceptDescriptionType  (ns=2;i=1030)
 
 *Inherits from:* [AASIdentifiableType](#type-AASIdentifiableType)
 
@@ -1740,7 +1815,7 @@ The definition a SemanticId resolves to - what makes two submodels from differen
 
 <a id="type-AASSubmodelElementType"></a>
 
-#### AASSubmodelElementType  (ns=1;i=1020)
+#### AASSubmodelElementType  (ns=2;i=1020)
 
 *Inherits from:* [AASReferableType](#type-AASReferableType)
 
@@ -1752,11 +1827,11 @@ Abstract base of every element that can appear inside a submodel.
 | SupplementalSemanticIds | Variable | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Optional | AASSubmodelElementType | Further concepts this element corresponds to. |
 | Qualifiers | Variable | [AASQualifierDataType](#type-AASQualifierDataType)\[\] | Optional | AASSubmodelElementType | Qualifiers on this element. |
 | EmbeddedDataSpecifications | Variable | [AASEmbeddedDataSpecificationDataType](#type-AASEmbeddedDataSpecificationDataType)\[\] | Optional | AASSubmodelElementType | Data specifications carried by this element. |
-| Index | Variable | UInt32 | Optional | AASSubmodelElementType | The element's position within its parent SubmodelElementList. Optional, and recommended wherever the list's order is relevant, because Browse is not required to return references in order. |
+| Index | Variable | UInt32 | Optional | AASSubmodelElementType | The element's zero-based position within an ordered containing construct: its parent SubmodelElementList or one variable role of its parent Operation. For an Operation variable value it is mandatory and the role array position is authoritative. For a list member it is optional and recommended wherever the list's order is relevant, because Browse is not required to return references in order. |
 
 <a id="type-AASPropertyType"></a>
 
-#### AASPropertyType  (ns=1;i=1021)
+#### AASPropertyType  (ns=2;i=1021)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
@@ -1770,7 +1845,7 @@ A single typed value. The value node carries the OPC UA DataType clause 7.1 assi
 
 <a id="type-AASMultiLanguagePropertyType"></a>
 
-#### AASMultiLanguagePropertyType  (ns=1;i=1022)
+#### AASMultiLanguagePropertyType  (ns=2;i=1022)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
@@ -1783,7 +1858,7 @@ A value expressed in one or more languages. The array order is preserved, becaus
 
 <a id="type-AASRangeType"></a>
 
-#### AASRangeType  (ns=1;i=1023)
+#### AASRangeType  (ns=2;i=1023)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
@@ -1797,7 +1872,7 @@ A closed or half-open interval of a single typed value.
 
 <a id="type-AASBlobType"></a>
 
-#### AASBlobType  (ns=1;i=1024)
+#### AASBlobType  (ns=2;i=1024)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
@@ -1810,7 +1885,7 @@ Binary content carried inline.
 
 <a id="type-AASFileType"></a>
 
-#### AASFileType  (ns=1;i=1025)
+#### AASFileType  (ns=2;i=1025)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
@@ -1823,7 +1898,7 @@ A pointer to content held outside the element.
 
 <a id="type-AASReferenceElementType"></a>
 
-#### AASReferenceElementType  (ns=1;i=1026)
+#### AASReferenceElementType  (ns=2;i=1026)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
@@ -1835,7 +1910,7 @@ An element whose value is a reference.
 
 <a id="type-AASRelationshipElementType"></a>
 
-#### AASRelationshipElementType  (ns=1;i=1027)
+#### AASRelationshipElementType  (ns=2;i=1027)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
@@ -1848,7 +1923,7 @@ A directed relationship between two referenced things.
 
 <a id="type-AASAnnotatedRelationshipElementType"></a>
 
-#### AASAnnotatedRelationshipElementType  (ns=1;i=1028)
+#### AASAnnotatedRelationshipElementType  (ns=2;i=1028)
 
 *Inherits from:* [AASRelationshipElementType](#type-AASRelationshipElementType)
 
@@ -1860,7 +1935,7 @@ A relationship carrying data elements that annotate it, such as a quantity or a 
 
 <a id="type-AASSubmodelElementCollectionType"></a>
 
-#### AASSubmodelElementCollectionType  (ns=1;i=1029)
+#### AASSubmodelElementCollectionType  (ns=2;i=1029)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
@@ -1872,21 +1947,22 @@ An unordered set of elements, each identified by its own IdShort.
 
 <a id="type-AASSubmodelElementListType"></a>
 
-#### AASSubmodelElementListType  (ns=1;i=1031)
+#### AASSubmodelElementListType  (ns=2;i=1031)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
-A list of elements. Its members have no IdShort, so they are named by index. Whether the order carries meaning is stated by the ReferenceType the members are referenced with, not by a Property: HasOrderedComponent where it does, HasComponent where the list is a set or a bag.
+A list of elements. Its members have no IdShort, so they are named by index. Whether the order carries meaning is stated by the ReferenceType on each instance, not by a Property: HasOrderedComponent where it does, HasComponent where the list is a set or a bag. The declaration uses HasComponent, the base of both legal instance forms.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | TypeValueListElement | Variable | [AASSubmodelElementsDataType](#type-AASSubmodelElementsDataType) | Mandatory | AASSubmodelElementListType | The element kind every member is constrained to. |
 | SemanticIdListElement | Variable | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | AASSubmodelElementListType | The concept every member is an occurrence of, where they share one. |
 | ValueTypeListElement | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Optional | AASSubmodelElementListType | The xsd type every member's value is expressed in, where they share one. Mandatory in the metamodel when the members are Properties or Ranges. |
+| <Element> | Object |  | OptionalPlaceholder | AASSubmodelElementListType | A member of this list, named by its index. The declaration uses HasComponent; an instance uses HasOrderedComponent where the list's order is relevant and HasComponent where it is not. |
 
 <a id="type-AASEntityType"></a>
 
-#### AASEntityType  (ns=1;i=1032)
+#### AASEntityType  (ns=2;i=1032)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
@@ -1901,7 +1977,7 @@ A component of a composition. A self-managed entity carries the identifier of it
 
 <a id="type-AASBasicEventElementType"></a>
 
-#### AASBasicEventElementType  (ns=1;i=1033)
+#### AASBasicEventElementType  (ns=2;i=1033)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
@@ -1920,7 +1996,7 @@ An event source or sink.
 
 <a id="type-AASOperationType"></a>
 
-#### AASOperationType  (ns=1;i=1034)
+#### AASOperationType  (ns=2;i=1034)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
@@ -1928,15 +2004,15 @@ An invocable operation.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
-| InputVariables | Variable | [AASOperationVariableDataType](#type-AASOperationVariableDataType)\[\] | Optional | AASOperationType | The operation's input variables, in order. |
-| OutputVariables | Variable | [AASOperationVariableDataType](#type-AASOperationVariableDataType)\[\] | Optional | AASOperationType | The operation's output variables, in order. |
-| InoutputVariables | Variable | [AASOperationVariableDataType](#type-AASOperationVariableDataType)\[\] | Optional | AASOperationType | The operation's in-out variables, in order. |
-| <Variable> | Object |  | OptionalPlaceholder | AASOperationType | An element carrying one of the operation's variables. |
+| InputVariables | Variable | [AASOperationVariableDataType](#type-AASOperationVariableDataType)\[\] | Optional | AASOperationType | The operation's input variables, in order. Each entry points to one direct operation-variable child and the array position is authoritative. |
+| OutputVariables | Variable | [AASOperationVariableDataType](#type-AASOperationVariableDataType)\[\] | Optional | AASOperationType | The operation's output variables, in order. Each entry points to one direct operation-variable child and the array position is authoritative. |
+| InoutputVariables | Variable | [AASOperationVariableDataType](#type-AASOperationVariableDataType)\[\] | Optional | AASOperationType | The operation's in-out variables, in order. Each entry points to one direct operation-variable child and the array position is authoritative. |
+| <Variable> | Object |  | OptionalPlaceholder | AASOperationType | A direct HasComponent child carrying one operation variable value. Its role array entry points to it by ValueNodeId, and its Index equals its position within that role. |
 | Invoke | Method |  | Optional | AASOperationType | Invoke the operation and return its results. The Call counterpart of InvokeOperation in the AAS API of IDTA-01002 Part 2: a Client that has browsed to the Operation element calls this rather than reaching for the HTTP interface, and the two carry the same arguments in the same order. |
 
 <a id="type-AASCapabilityType"></a>
 
-#### AASCapabilityType  (ns=1;i=1035)
+#### AASCapabilityType  (ns=2;i=1035)
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
@@ -1944,7 +2020,7 @@ A declared capability of the asset. It carries no value of its own; the element'
 
 <a id="type-AASRegistryType"></a>
 
-#### AASRegistryType  (ns=1;i=1100)
+#### AASRegistryType  (ns=2;i=1100)
 
 *Inherits from:* ns=1;i=63000
 
@@ -1965,7 +2041,7 @@ The AAS Registry root - an xRegistry RegistryType, and therefore a FolderType - 
 
 <a id="type-AASShellGroupType"></a>
 
-#### AASShellGroupType  (ns=1;i=1101)
+#### AASShellGroupType  (ns=2;i=1101)
 
 *Inherits from:* ns=1;i=63001
 
@@ -1988,7 +2064,7 @@ An xRegistry GroupType holding the submodel documents of one shell. Its source i
 
 <a id="type-AASSubmodelFileType"></a>
 
-#### AASSubmodelFileType  (ns=1;i=1102)
+#### AASSubmodelFileType  (ns=2;i=1102)
 
 *Inherits from:* ns=1;i=63002
 
@@ -2014,7 +2090,7 @@ An xRegistry ResourceType whose file content is one submodel document. Each vers
 
 <a id="type-AASSubmodelTemplateGroupType"></a>
 
-#### AASSubmodelTemplateGroupType  (ns=1;i=1103)
+#### AASSubmodelTemplateGroupType  (ns=2;i=1103)
 
 *Inherits from:* ns=1;i=63001
 
@@ -2028,7 +2104,7 @@ An xRegistry GroupType holding one publisher's family of submodel templates. Tem
 
 <a id="type-AASConceptDictionaryGroupType"></a>
 
-#### AASConceptDictionaryGroupType  (ns=1;i=1104)
+#### AASConceptDictionaryGroupType  (ns=2;i=1104)
 
 *Inherits from:* ns=1;i=63001
 
@@ -2041,7 +2117,7 @@ An xRegistry GroupType holding one dictionary of concept definitions - the defin
 
 <a id="type-AASConceptDescriptionFileType"></a>
 
-#### AASConceptDescriptionFileType  (ns=1;i=1105)
+#### AASConceptDescriptionFileType  (ns=2;i=1105)
 
 *Inherits from:* ns=1;i=63002
 
@@ -2058,7 +2134,7 @@ An xRegistry ResourceType whose file content is one concept description document
 
 <a id="type-AASPackageStoreGroupType"></a>
 
-#### AASPackageStoreGroupType  (ns=1;i=1106)
+#### AASPackageStoreGroupType  (ns=2;i=1106)
 
 *Inherits from:* ns=1;i=63001
 
@@ -2072,7 +2148,7 @@ An xRegistry GroupType holding packages - one store, or one namespace within one
 
 <a id="type-AASPackageFileType"></a>
 
-#### AASPackageFileType  (ns=1;i=1107)
+#### AASPackageFileType  (ns=2;i=1107)
 
 *Inherits from:* ns=1;i=63002
 
@@ -2090,7 +2166,7 @@ An xRegistry ResourceType whose file content is one package: an immutable releas
 
 <a id="type-AASEnvironmentFileType"></a>
 
-#### AASEnvironmentFileType  (ns=1;i=1108)
+#### AASEnvironmentFileType  (ns=2;i=1108)
 
 *Inherits from:* ns=1;i=63002
 
@@ -2111,7 +2187,7 @@ An xRegistry ResourceType whose file content is one serialization of a materiali
 
 <a id="type-AASAnyUri"></a>
 
-#### AASAnyUri  (ns=1;i=1180)
+#### AASAnyUri  (ns=2;i=1180)
 
 *Subtype of:* String
 
@@ -2119,7 +2195,7 @@ An xs:anyURI value. A subtype of String, since String carries xs:string.
 
 <a id="type-AASHexBinary"></a>
 
-#### AASHexBinary  (ns=1;i=1181)
+#### AASHexBinary  (ns=2;i=1181)
 
 *Subtype of:* ByteString
 
@@ -2127,7 +2203,7 @@ An xs:hexBinary value. ByteString carries xs:base64Binary, whose octets are the 
 
 <a id="type-AASNonPositiveInteger"></a>
 
-#### AASNonPositiveInteger  (ns=1;i=1182)
+#### AASNonPositiveInteger  (ns=2;i=1182)
 
 *Subtype of:* Integer
 
@@ -2135,7 +2211,7 @@ An xs:nonPositiveInteger value: an integer at most zero.
 
 <a id="type-AASNegativeInteger"></a>
 
-#### AASNegativeInteger  (ns=1;i=1183)
+#### AASNegativeInteger  (ns=2;i=1183)
 
 *Subtype of:* [AASNonPositiveInteger](#type-AASNonPositiveInteger)
 
@@ -2143,7 +2219,7 @@ An xs:negativeInteger value: an integer below zero. A subtype of AASNonPositiveI
 
 <a id="type-AASPositiveInteger"></a>
 
-#### AASPositiveInteger  (ns=1;i=1184)
+#### AASPositiveInteger  (ns=2;i=1184)
 
 *Subtype of:* UInteger
 
@@ -2151,7 +2227,7 @@ An xs:positiveInteger value: an integer above zero. A subtype of UInteger, which
 
 <a id="type-AASGYear"></a>
 
-#### AASGYear  (ns=1;i=1185)
+#### AASGYear  (ns=2;i=1185)
 
 *Subtype of:* String
 
@@ -2159,7 +2235,7 @@ An xs:gYear value, such as 2026. A Gregorian year denotes a period, for which OP
 
 <a id="type-AASGYearMonth"></a>
 
-#### AASGYearMonth  (ns=1;i=1186)
+#### AASGYearMonth  (ns=2;i=1186)
 
 *Subtype of:* String
 
@@ -2167,7 +2243,7 @@ An xs:gYearMonth value, such as 2026-08.
 
 <a id="type-AASGMonth"></a>
 
-#### AASGMonth  (ns=1;i=1187)
+#### AASGMonth  (ns=2;i=1187)
 
 *Subtype of:* String
 
@@ -2175,7 +2251,7 @@ An xs:gMonth value, such as --08.
 
 <a id="type-AASGMonthDay"></a>
 
-#### AASGMonthDay  (ns=1;i=1188)
+#### AASGMonthDay  (ns=2;i=1188)
 
 *Subtype of:* String
 
@@ -2183,7 +2259,7 @@ An xs:gMonthDay value, such as --08-07.
 
 <a id="type-AASGDay"></a>
 
-#### AASGDay  (ns=1;i=1189)
+#### AASGDay  (ns=2;i=1189)
 
 *Subtype of:* String
 
@@ -2191,15 +2267,15 @@ An xs:gDay value, such as ---07.
 
 <a id="type-AASValueString"></a>
 
-#### AASValueString  (ns=1;i=1199)
+#### AASValueString  (ns=2;i=1199)
 
 *Subtype of:* String
 
-The xsd lexical form of a value whose declared type is carried in a sibling field of the same Structure. A Structure field has one static DataType and cannot vary with a declared type, so a qualifier, an extension or a data specification carries its value lexically and its ValueType field states how to read it. A subtype of String, as OPC UA defines DecimalString and DurationString. It is never the DataType of a Variable; a value node carries the DataType clause 7.1 assigns to its declared xsd type.
+The xsd lexical form of a value whose declared type is carried in a sibling field of the same Structure. A Structure field has one static DataType and cannot vary with a declared type, so a qualifier, an extension or a data specification carries its value lexically and its sibling ValueType or DataType field states how to read it. A subtype of String, as OPC UA defines DecimalString and DurationString. It is never the DataType of a Variable; a value node carries the DataType clause 7.1 assigns to its declared xsd type.
 
 <a id="type-AASAssetKindDataType"></a>
 
-#### AASAssetKindDataType  (ns=1;i=1200)
+#### AASAssetKindDataType  (ns=2;i=1200)
 
 *Subtype of:* Enumeration
 
@@ -2215,7 +2291,7 @@ Whether a shell describes a product model, an individual item, a batch, a role, 
 
 <a id="type-AASModellingKindDataType"></a>
 
-#### AASModellingKindDataType  (ns=1;i=1201)
+#### AASModellingKindDataType  (ns=2;i=1201)
 
 *Subtype of:* Enumeration
 
@@ -2228,7 +2304,7 @@ Whether an element defines a shape or carries values.
 
 <a id="type-AASEntityTypeDataType"></a>
 
-#### AASEntityTypeDataType  (ns=1;i=1202)
+#### AASEntityTypeDataType  (ns=2;i=1202)
 
 *Subtype of:* Enumeration
 
@@ -2241,7 +2317,7 @@ Whether a composition entity is managed within its parent or has a shell of its 
 
 <a id="type-AASDirectionDataType"></a>
 
-#### AASDirectionDataType  (ns=1;i=1203)
+#### AASDirectionDataType  (ns=2;i=1203)
 
 *Subtype of:* Enumeration
 
@@ -2254,7 +2330,7 @@ The direction of an event element.
 
 <a id="type-AASStateOfEventDataType"></a>
 
-#### AASStateOfEventDataType  (ns=1;i=1204)
+#### AASStateOfEventDataType  (ns=2;i=1204)
 
 *Subtype of:* Enumeration
 
@@ -2267,7 +2343,7 @@ Whether an event element is currently active.
 
 <a id="type-AASQualifierKindDataType"></a>
 
-#### AASQualifierKindDataType  (ns=1;i=1205)
+#### AASQualifierKindDataType  (ns=2;i=1205)
 
 *Subtype of:* Enumeration
 
@@ -2281,7 +2357,7 @@ What a qualifier qualifies, and therefore whether it may change.
 
 <a id="type-AASReferenceTypesDataType"></a>
 
-#### AASReferenceTypesDataType  (ns=1;i=1206)
+#### AASReferenceTypesDataType  (ns=2;i=1206)
 
 *Subtype of:* Enumeration
 
@@ -2294,7 +2370,7 @@ Whether a reference addresses something inside the model or outside it.
 
 <a id="type-AASKeyTypesDataType"></a>
 
-#### AASKeyTypesDataType  (ns=1;i=1207)
+#### AASKeyTypesDataType  (ns=2;i=1207)
 
 *Subtype of:* Enumeration
 
@@ -2329,7 +2405,7 @@ The kind of thing a reference key addresses. The enumeration is closed: a value 
 
 <a id="type-AASDataTypeDefXsdDataType"></a>
 
-#### AASDataTypeDefXsdDataType  (ns=1;i=1208)
+#### AASDataTypeDefXsdDataType  (ns=2;i=1208)
 
 *Subtype of:* Enumeration
 
@@ -2370,7 +2446,7 @@ The xsd type a value is expressed in. All thirty of the metamodel's values are l
 
 <a id="type-AASDataTypeIec61360DataType"></a>
 
-#### AASDataTypeIec61360DataType  (ns=1;i=1209)
+#### AASDataTypeIec61360DataType  (ns=2;i=1209)
 
 *Subtype of:* Enumeration
 
@@ -2400,7 +2476,7 @@ The data type of a concept definition expressed in the IEC 61360 data specificat
 
 <a id="type-AASSubmodelElementsDataType"></a>
 
-#### AASSubmodelElementsDataType  (ns=1;i=1210)
+#### AASSubmodelElementsDataType  (ns=2;i=1210)
 
 *Subtype of:* Enumeration
 
@@ -2428,7 +2504,7 @@ The element kind a SubmodelElementList constrains its members to.
 
 <a id="type-AASDisclosureTierDataType"></a>
 
-#### AASDisclosureTierDataType  (ns=1;i=1211)
+#### AASDisclosureTierDataType  (ns=2;i=1211)
 
 *Subtype of:* Enumeration
 
@@ -2441,7 +2517,7 @@ Whether an entity is readable without authentication. It advertises the tier so 
 
 <a id="type-AASLoadStateDataType"></a>
 
-#### AASLoadStateDataType  (ns=1;i=1212)
+#### AASLoadStateDataType  (ns=2;i=1212)
 
 *Subtype of:* Enumeration
 
@@ -2459,7 +2535,7 @@ The materialization state of one stored document under the updateable registry p
 
 <a id="type-AASMaterializationOutcomeDataType"></a>
 
-#### AASMaterializationOutcomeDataType  (ns=1;i=1213)
+#### AASMaterializationOutcomeDataType  (ns=2;i=1213)
 
 *Subtype of:* Enumeration
 
@@ -2474,216 +2550,256 @@ What a Materialize call did to one document.
 
 <a id="type-AASKeyDataType"></a>
 
-#### AASKeyDataType  (ns=1;i=1220)
+#### AASKeyDataType  (ns=2;i=1220)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 One step of a reference path. Keys are ordered, and the order is part of the reference's meaning.
 
-| Field | DataType | Description |
-|---|---|---|
-| Type | [AASKeyTypesDataType](#type-AASKeyTypesDataType) | The kind of thing this key addresses. |
-| Value | String | The identifier value at this key. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Type | [AASKeyTypesDataType](#type-AASKeyTypesDataType) | Mandatory | The kind of thing this key addresses. |
+| Value | String | Mandatory | The identifier value at this key. |
 
 <a id="type-AASReferenceDataType"></a>
 
-#### AASReferenceDataType  (ns=1;i=1221)
+#### AASReferenceDataType  (ns=2;i=1221)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 A reference, external or model-navigating, expressed as an ordered key path.
 
-| Field | DataType | Description |
-|---|---|---|
-| Type | [AASReferenceTypesDataType](#type-AASReferenceTypesDataType) | Whether the reference is external or navigates the model. |
-| ReferredSemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | The semantic identifier of the thing referred to, where known. |
-| Keys | [AASKeyDataType](#type-AASKeyDataType)\[\] | The ordered key path. At least one key is present. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Type | [AASReferenceTypesDataType](#type-AASReferenceTypesDataType) | Mandatory | Whether the reference is external or navigates the model. |
+| ReferredSemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | The semantic identifier of the thing referred to, where known. |
+| Keys | [AASKeyDataType](#type-AASKeyDataType)\[\] | Mandatory | The ordered key path. At least one key is present. |
 
 <a id="type-AASLangStringDataType"></a>
 
-#### AASLangStringDataType  (ns=1;i=1222)
+#### AASLangStringDataType  (ns=2;i=1222)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 One language-tagged string. A multi-language value is an array of these, and the array order is preserved.
 
-| Field | DataType | Description |
-|---|---|---|
-| Language | String | BCP 47 language tag. |
-| Text | String | The text in that language. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Language | String | Mandatory | BCP 47 language tag. |
+| Text | String | Mandatory | The text in that language. |
 
 <a id="type-AASSpecificAssetIdDataType"></a>
 
-#### AASSpecificAssetIdDataType  (ns=1;i=1223)
+#### AASSpecificAssetIdDataType  (ns=2;i=1223)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 A domain-specific key an asset is discoverable by.
 
-| Field | DataType | Description |
-|---|---|---|
-| Name | String | The key name, for example serialNumber or manufacturerPartId. |
-| Value | String | The key value. |
-| ExternalSubjectId | [AASReferenceDataType](#type-AASReferenceDataType) | The subject this key is disclosed to, where the key is not public. |
-| SemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | The concept this key is an occurrence of. |
-| SupplementalSemanticIds | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Further concepts this key corresponds to. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Name | String | Mandatory | The key name, for example serialNumber or manufacturerPartId. |
+| Value | String | Mandatory | The key value. |
+| ExternalSubjectId | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | The subject this key is disclosed to, where the key is not public. |
+| SemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | The concept this key is an occurrence of. |
+| SupplementalSemanticIds | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Optional | Further concepts this key corresponds to. |
 
 <a id="type-AASAdministrativeInformationDataType"></a>
 
-#### AASAdministrativeInformationDataType  (ns=1;i=1224)
+#### AASAdministrativeInformationDataType  (ns=2;i=1224)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 Administrative information. It records a single current revision: the entity's history is carried by the registry, which the metamodel has no equivalent of.
 
-| Field | DataType | Description |
-|---|---|---|
-| Version | String | Version label. |
-| Revision | String | Revision label; only meaningful when Version is present. |
-| Creator | [AASReferenceDataType](#type-AASReferenceDataType) | The party that created the entity. |
-| TemplateId | String | The template the entity was built from. |
-| EmbeddedDataSpecifications | [AASEmbeddedDataSpecificationDataType](#type-AASEmbeddedDataSpecificationDataType)\[\] | Data specifications carried by this administrative information. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Version | String | Optional | Version label. |
+| Revision | String | Optional | Revision label; only meaningful when Version is present. |
+| Creator | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | The party that created the entity. |
+| TemplateId | String | Optional | The template the entity was built from. |
+| EmbeddedDataSpecifications | [AASEmbeddedDataSpecificationDataType](#type-AASEmbeddedDataSpecificationDataType)\[\] | Optional | Data specifications carried by this administrative information. |
 
 <a id="type-AASQualifierDataType"></a>
 
-#### AASQualifierDataType  (ns=1;i=1225)
+#### AASQualifierDataType  (ns=2;i=1225)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 A qualifier constraining or annotating an element.
 
-| Field | DataType | Description |
-|---|---|---|
-| Kind | [AASQualifierKindDataType](#type-AASQualifierKindDataType) | What the qualifier qualifies. |
-| Type | String | The qualifier type name. |
-| ValueType | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | The xsd type the value is expressed in. |
-| Value | [AASValueString](#type-AASValueString) | The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type. |
-| ValueId | [AASReferenceDataType](#type-AASReferenceDataType) | A reference to the value, where it is itself an identified concept. |
-| SemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | The concept this qualifier is an occurrence of. |
-| SupplementalSemanticIds | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Further concepts this qualifier corresponds to. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Kind | [AASQualifierKindDataType](#type-AASQualifierKindDataType) | Optional | What the qualifier qualifies. |
+| Type | String | Mandatory | The qualifier type name. |
+| ValueType | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Mandatory | The xsd type the value is expressed in. |
+| Value | [AASValueString](#type-AASValueString) | Optional | The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type. |
+| ValueId | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | A reference to the value, where it is itself an identified concept. |
+| SemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | The concept this qualifier is an occurrence of. |
+| SupplementalSemanticIds | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Optional | Further concepts this qualifier corresponds to. |
 
 <a id="type-AASEmbeddedDataSpecificationDataType"></a>
 
-#### AASEmbeddedDataSpecificationDataType  (ns=1;i=1226)
+#### AASEmbeddedDataSpecificationDataType  (ns=2;i=1226)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 A data specification carried by an element, paired with its content.
 
-| Field | DataType | Description |
-|---|---|---|
-| DataSpecification | [AASReferenceDataType](#type-AASReferenceDataType) | Reference to the data specification template. |
-| DataSpecificationContent | [AASDataSpecificationIec61360DataType](#type-AASDataSpecificationIec61360DataType) | The content, in the IEC 61360 data specification. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| DataSpecification | [AASReferenceDataType](#type-AASReferenceDataType) | Mandatory | Reference to the data specification template. |
+| DataSpecificationContent | [AASDataSpecificationIec61360DataType](#type-AASDataSpecificationIec61360DataType) | Mandatory | The content, in the IEC 61360 data specification. |
 
 <a id="type-AASDataSpecificationIec61360DataType"></a>
 
-#### AASDataSpecificationIec61360DataType  (ns=1;i=1227)
+#### AASDataSpecificationIec61360DataType  (ns=2;i=1227)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 The IEC 61360 data specification content of a concept definition.
 
-| Field | DataType | Description |
-|---|---|---|
-| PreferredName | [AASLangStringDataType](#type-AASLangStringDataType)\[\] | Preferred name per language. |
-| ShortName | [AASLangStringDataType](#type-AASLangStringDataType)\[\] | Short name per language. |
-| Unit | String | Unit symbol. |
-| UnitId | [AASReferenceDataType](#type-AASReferenceDataType) | Reference to the unit concept. |
-| SourceOfDefinition | String | Where the definition comes from. |
-| Symbol | String | Symbol for the concept. |
-| DataType | [AASDataTypeIec61360DataType](#type-AASDataTypeIec61360DataType) | The IEC 61360 data type. |
-| Definition | [AASLangStringDataType](#type-AASLangStringDataType)\[\] | Definition per language. |
-| ValueFormat | String | Format of the value. |
-| ValueList | String | Permitted values, serialized in the metamodel's own form. |
-| Value | [AASValueString](#type-AASValueString) | The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type. |
-| LevelType | String | Which of min, nom, typ and max apply. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| PreferredName | [AASLangStringDataType](#type-AASLangStringDataType)\[\] | Mandatory | Preferred name per language. |
+| ShortName | [AASLangStringDataType](#type-AASLangStringDataType)\[\] | Optional | Short name per language. |
+| Unit | String | Optional | Unit symbol. |
+| UnitId | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | Reference to the unit concept. |
+| SourceOfDefinition | String | Optional | Where the definition comes from. |
+| Symbol | String | Optional | Symbol for the concept. |
+| DataType | [AASDataTypeIec61360DataType](#type-AASDataTypeIec61360DataType) | Optional | The IEC 61360 data type. |
+| Definition | [AASLangStringDataType](#type-AASLangStringDataType)\[\] | Optional | Definition per language. |
+| ValueFormat | String | Optional | Format of the value. |
+| ValueList | [AASValueListDataType](#type-AASValueListDataType) | Optional | Permitted values and the references identifying their meanings. |
+| Value | [AASValueString](#type-AASValueString) | Optional | The value in the xsd lexical form of the type declared in the sibling DataType field, because a Structure field has one static DataType and cannot vary with a declared type. |
+| LevelType | [AASLevelTypeDataType](#type-AASLevelTypeDataType) | Optional | Which of min, nom, typ and max apply. |
 
 <a id="type-AASExtensionDataType"></a>
 
-#### AASExtensionDataType  (ns=1;i=1228)
+#### AASExtensionDataType  (ns=2;i=1228)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 A proprietary extension carried on a Referable. Extensions round-trip verbatim; a reader that does not understand one preserves it unchanged.
 
-| Field | DataType | Description |
-|---|---|---|
-| Name | String | Extension name. |
-| ValueType | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | The xsd type the value is expressed in. |
-| Value | [AASValueString](#type-AASValueString) | The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type. |
-| RefersTo | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | What the extension refers to. |
-| SemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | The concept this extension is an occurrence of. |
-| SupplementalSemanticIds | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Further concepts this extension corresponds to. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Name | String | Mandatory | Extension name. |
+| ValueType | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Optional | The xsd type the value is expressed in. |
+| Value | [AASValueString](#type-AASValueString) | Optional | The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type. |
+| RefersTo | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Optional | What the extension refers to. |
+| SemanticId | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | The concept this extension is an occurrence of. |
+| SupplementalSemanticIds | [AASReferenceDataType](#type-AASReferenceDataType)\[\] | Optional | Further concepts this extension corresponds to. |
 
 <a id="type-AASResourceDataType"></a>
 
-#### AASResourceDataType  (ns=1;i=1229)
+#### AASResourceDataType  (ns=2;i=1229)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 A pointer to external content, such as a thumbnail.
 
-| Field | DataType | Description |
-|---|---|---|
-| Path | String | Path or URL to the resource. |
-| ContentType | String | Media type of the resource. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Path | String | Mandatory | Path or URL to the resource. |
+| ContentType | String | Optional | Media type of the resource. |
 
 <a id="type-AASOperationVariableDataType"></a>
 
-#### AASOperationVariableDataType  (ns=1;i=1230)
+#### AASOperationVariableDataType  (ns=2;i=1230)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 One input, output or in-out variable of an operation, carried as a reference to the element node that holds it so that the element's own representation is not duplicated.
 
-| Field | DataType | Description |
-|---|---|---|
-| ValueNodeId | NodeId | The submodel element node carrying this variable. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| ValueNodeId | NodeId | Mandatory | The direct HasComponent child of the Operation that carries this variable's value. |
 
 <a id="type-AASAuthorizationOptionDataType"></a>
 
-#### AASAuthorizationOptionDataType  (ns=1;i=1231)
+#### AASAuthorizationOptionDataType  (ns=2;i=1231)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 One authorization option a Consumer may use. It is authorization configuration only and never carries credentials, which are supplied out of band.
 
-| Field | DataType | Description |
-|---|---|---|
-| Type | String | Authorization type, for example OAuth2, Plain, SASL, X509Cert or APIKey. |
-| Mechanism | String | SASL mechanism name, used only when Type is SASL. |
-| ResourceUri | String | The resource authorization is requested for. |
-| AuthorityUri | String | The authority authorization is obtained from. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Type | String | Mandatory | Authorization type, for example OAuth2, Plain, SASL, X509Cert or APIKey. |
+| Mechanism | String | Optional | SASL mechanism name, used only when Type is SASL. |
+| ResourceUri | String | Optional | The resource authorization is requested for. |
+| AuthorityUri | String | Optional | The authority authorization is obtained from. |
 
 <a id="type-AASAttestationDataType"></a>
 
-#### AASAttestationDataType  (ns=1;i=1232)
+#### AASAttestationDataType  (ns=2;i=1232)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 A signature or attestation attached to a package. Its presence is not verification: a Consumer retrieves and verifies the artifact itself.
 
-| Field | DataType | Description |
-|---|---|---|
-| ArtifactType | String | Media type identifying what kind of attestation this is. |
-| Digest | String | Digest of the attestation artifact. |
-| Signer | String | The party that produced the attestation. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| ArtifactType | String | Mandatory | Media type identifying what kind of attestation this is. |
+| Digest | String | Mandatory | Digest of the attestation artifact. |
+| Signer | String | Optional | The party that produced the attestation. |
 
 <a id="type-AASMaterializationResultDataType"></a>
 
-#### AASMaterializationResultDataType  (ns=1;i=1233)
+#### AASMaterializationResultDataType  (ns=2;i=1233)
 
 *Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
 
 The result of materializing one document. A call returns one of these per document it considered, reporting per document whether it was unchanged, materialized, retired or failed.
 
-| Field | DataType | Description |
-|---|---|---|
-| Xid | String | The registry-relative path of the document this result is about. |
-| Outcome | [AASMaterializationOutcomeDataType](#type-AASMaterializationOutcomeDataType) | What the call did to it. |
-| VersionId | String | The version that is now active for this document, where one is. |
-| MaterializedNode | NodeId | The root node of the generation now serving this document, where it materialized. |
-| Diagnostic | String | Why the document failed, where it did. Empty otherwise. |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Xid | String | Mandatory | The registry-relative path of the document this result is about. |
+| Outcome | [AASMaterializationOutcomeDataType](#type-AASMaterializationOutcomeDataType) | Mandatory | What the call did to it. |
+| VersionId | String | Optional | The version that is now active for this document, where one is. |
+| MaterializedNode | NodeId | Optional | The root node of the generation now serving this document, where it materialized. |
+| Diagnostic | String | Optional | Why the document failed, where it did. Empty otherwise. |
+
+<a id="type-AASValueReferencePairDataType"></a>
+
+#### AASValueReferencePairDataType  (ns=2;i=1234)
+
+*Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
+
+One permitted value paired with the reference identifying its meaning.
+
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Value | String | Mandatory | One permitted IEC 61360 value. |
+| ValueId | [AASReferenceDataType](#type-AASReferenceDataType) | Mandatory | The reference identifying the meaning of Value. |
+
+<a id="type-AASValueListDataType"></a>
+
+#### AASValueListDataType  (ns=2;i=1235)
+
+*Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
+
+The non-empty list of permitted values for an IEC 61360 data specification.
+
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| ValueReferencePairs | [AASValueReferencePairDataType](#type-AASValueReferencePairDataType)\[\] | Mandatory | The permitted values. At least one pair is present. |
+
+<a id="type-AASLevelTypeDataType"></a>
+
+#### AASLevelTypeDataType  (ns=2;i=1236)
+
+*Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24)
+
+The four IEC 61360 level flags. Every flag is explicit.
+
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Min | Boolean | Mandatory | Whether a minimum value applies. |
+| Nom | Boolean | Mandatory | Whether a nominal value applies. |
+| Typ | Boolean | Mandatory | Whether a typical value applies. |
+| Max | Boolean | Mandatory | Whether a maximum value applies. |
 
 ### Methods
 
@@ -2714,7 +2830,7 @@ metamodel, and where it lives in the AddressSpace. A field absent from this tabl
 | `description` | `AASReferableType.DescriptionSet` |
 | `extensions` | `AASReferableType.Extensions` |
 | `modelType` | `AASReferableType.ModelType`, Mandatory |
-| `id` | `AASIdentifiableType.Id`, Mandatory, and the String NodeId identifier |
+| `id` | `AASIdentifiableType.Id`, Mandatory, and input to the String NodeId encoding |
 | `administration` | `AASIdentifiableType.Administration` |
 
 ### B.2 Shell and asset information
@@ -2783,9 +2899,9 @@ list — `Index`. Element-specific fields:
 | `BasicEventElement.messageBroker` | `AASBasicEventElementType.MessageBroker` |
 | `BasicEventElement.lastUpdate` | `AASBasicEventElementType.LastUpdate` (`AASValueString`) |
 | `BasicEventElement.minInterval`, `.maxInterval` | `AASBasicEventElementType.MinInterval`, `MaxInterval` (`AASValueString`) |
-| `Operation.inputVariables` | `AASOperationType.InputVariables`, referencing element nodes |
-| `Operation.outputVariables` | `AASOperationType.OutputVariables` |
-| `Operation.inoutputVariables` | `AASOperationType.InoutputVariables` |
+| `Operation.inputVariables` | `AASOperationType.InputVariables`; each ordered `AASOperationVariableDataType.ValueNodeId` references one direct `<Variable>` child |
+| `Operation.outputVariables` | `AASOperationType.OutputVariables`, with the same child contract |
+| `Operation.inoutputVariables` | `AASOperationType.InoutputVariables`, with the same child contract |
 | `Capability` | `AASCapabilityType`; the element has no own fields |
 
 ### B.5 Value classes
@@ -2805,22 +2921,22 @@ list — `Index`. Element-specific fields:
 
 <a id="annex-c"></a>
 
-## Annex C — Migration from version 1.00
+## Annex C — OPC 30270 v1.00 correspondence
 
 This annex is informative.
 
-| v1.00 | v3.00 |
+| OPC 30270 v1.00 | This specification |
 |---|---|
-| `AASAssetType` | Removed. The asset's identity is `AASAssetInformationType`, a component of the shell. |
-| `AASViewType` | Removed. The metamodel no longer has views. |
+| `AASAssetType` | No direct counterpart. The asset's identity is `AASAssetInformationType`, a component of the shell. |
+| `AASViewType` | No counterpart in the AAS V3 metamodel. |
 | Identifier with a type discriminator | `AASIdentifiableType.Id`, a bare String |
 | `AASSubmodelElementCollectionType` with ordering flags | Split into `AASSubmodelElementCollectionType`, unordered, and `AASSubmodelElementListType`, whose members are referenced with `HasOrderedComponent` and carry `Index` |
 | One DataType shared by several xsd types | Clause 7.1: each of the thirty `DataTypeDefXsd` values is assigned its own OPC UA DataType |
 | Data specification references | `EmbeddedDataSpecifications` |
 | No catalogue | The registry half, clause 9 |
 
-A Server cannot serve both versions from one namespace. The namespace URI is unchanged and the model
-version distinguishes them; a Client checks the model version before assuming either shape.
+The two models have distinct namespace URIs. A Server may load both, and a Client identifies the
+model by NamespaceUri rather than treating the model version as NodeId identity.
 
 <a id="annex-d"></a>
 
@@ -2881,9 +2997,10 @@ materializer produces from the same environment. Both sides of that comparison a
 alongside this document, so it establishes that the rules below are self-consistent and complete for
 the reference fixtures. It is not a test of a WoT Connectivity implementation.
 
-`examples/wot/` holds one Thing Description per fixture of the conformance corpus, generated by that
-tool: `absent-versus-empty`, `every-element-type`, `non-canonical-lexical-forms` and
-`ordering-and-nesting`. They are the normative examples of this annex.
+`examples/wot/` holds one generated projection bundle per fixture of the conformance corpus:
+`absent-versus-empty`, `every-element-type`, `identifiable-without-idshort`,
+`non-canonical-lexical-forms` and `ordering-and-nesting`. Every file in a bundle is one valid Thing
+Description object.
 
 ### F.1 Scope of the claim
 
@@ -2900,24 +3017,33 @@ present, not because an AAS is being mapped.
 
 ### F.2 Granularity
 
-One Thing Description per `Submodel`. Its submodel elements are contained nodes of that Thing, not
-Things of their own.
+The projection emits one Thing Description per projected OPC UA `Object`: one for the `Submodel`
+and one for every submodel element Object below it. The TDs form one publication bundle.
 
-A Thing Description is a top-level document with its own registry resource, version history and
-lifecycle. Emitting one per submodel element would give a submodel of a few hundred elements a few
-hundred resources, each versioned independently, to describe one document.
+This granularity follows the OPC UA WoT Binding term domains. `uav:object` is a Thing-level type,
+`uav:variable` is a property-affordance type and `uav:method` is an action-affordance type. A
+submodel element that maps to an OPC UA Object therefore cannot be represented as a member of the
+TD `properties` map. Sibling TD links carry containment between the Objects.
+
+The AAS RDF graph is distributed across the bundle. The union of the sibling TD datasets is the
+same AAS graph that clause 1 of the JSON-LD mapping defines, with the ordering occurrences that
+clause 3 requires. A blank-node identifier is scoped to its TD document when those datasets are
+combined.
 
 ### F.3 Terms
 
 | Fact of this specification | Term | Value |
 |---|---|---|
 | The AAS itself | the AAS vocabulary | `aas:Referable/idShort`, `aas:Property/value`, `aas:Submodel/submodelElements` and the rest, on the node they belong to |
-| Node identity | `@id` | the subject term the JSON-LD mapping gives the node, so the AAS triples have a subject |
+| AAS subject | TD `id` | the injectively encoded subject IRI that the JSON-LD mapping gives the node; `@id` is not also written |
+| TD document identity | a `self` link | a sibling TD document IRI distinct from the AAS subject |
 | NodeId, clause 5.3 | `uav:id` | an ExpandedNodeId naming its namespace by URI |
 | BrowseName, clause 5.3 | `uav:browseName` | the portable QualifiedName form |
 | TypeDefinition, clause 6 | a member of `@type` | the prefix-qualified BrowseName of the ObjectType, for example `i4aas:AASPropertyType` |
-| Containment, clause 5.6 | `uav:componentOf` | the ExpandedNodeId of the parent, where the parent is not the Thing |
-| Ordering, clause 5.4 | a link `rel` | `ua:HasOrderedComponent` with `uav:refId` `i=49`, or `ua:HasComponent` with `i=47` |
+| Protocol address | Thing-level `forms[].href` | an `opc.tcp` URL whose `id` query value decodes to `uav:id` |
+| Child-to-parent containment | `uav:componentOf` and a `uav:componentOf` link | the parent ExpandedNodeId and parent sibling TD IRI |
+| Parent-to-child containment | `uav:hasComponent` and a typed link | the child ExpandedNodeId and child sibling TD IRI |
+| ReferenceType, clause 5.4 | typed link `rel`, `uav:refId` and optional `uav:refName` | `ua:HasOrderedComponent` with `i=49`, or `ua:HasComponent` with `i=47`; the reference name is the target BrowseName local name |
 | Position, clause 5.4 | `uav:index` | the zero-based position |
 | Modelling rule | `uav:modellingRule` | `Mandatory`, `Optional`, `MandatoryPlaceholder` or `OptionalPlaceholder` |
 | Semantic identifier | `uav:semanticId` | the AAS `semanticId` as an IRI |
@@ -2927,10 +3053,25 @@ carried only the `uav` terms would describe a tree of empty nodes: it would name
 not what any of it is. The `uav` terms carry what the metamodel has no field for — a NodeId, a
 BrowseName, an ObjectType, a ReferenceType, a modelling rule — and nothing else.
 
-The type binding adds no term. `@type` already carries the `uav:object` node-class annotation, and
-the ObjectType is named alongside it. It carries the prefix-qualified BrowseName and no
-ExpandedNodeId alternative: the NodeId of a type in this companion model is assigned by the Server
-that loaded it, so an author cannot know it, and the name is unique by construction.
+The type binding adds no term. Every sibling TD root carries the `uav:object` node-class annotation,
+and the ObjectType is named alongside it in `@type`. A projected Object is never placed in
+`properties`. If a TD publishes actual OPC UA Variable or Method affordances, each property carries
+`uav:variable` and each action carries `uav:method`.
+
+Every projected Object carries one Thing-level `readallproperties` form. The form is the Object's
+protocol address, not a property affordance. Its `href` has the WoT Binding form
+`opc.tcp://<host>:<port>[/<resourcePath>]/?id=<ExpandedNodeId>`. URI decoding the `id` parameter
+produces the TD root's `uav:id`. A percent escape that is part of the ExpandedNodeId is itself
+percent-encoded in the URL.
+
+The parent is the source of each typed containment link, so the link has no `anchor`. A
+`uav:refName` on that link is the target BrowseName local name; the generated examples carry it.
+Where a target TD declares the BrowseName, a publication can instead omit the duplicate
+`uav:refName`. An Operation role index is not a BrowseName and is never used as one.
+
+The ObjectType member of `@type` carries the prefix-qualified BrowseName and no ExpandedNodeId
+alternative: the NodeId of a type in this companion model is assigned by the Server that loaded it,
+so an author cannot know it, and the name is unique by construction.
 
 `@type` also carries ordinary semantic annotation, so a rule is needed to say which member is the
 type binding. A member whose namespace the Server holds as an information model is a type binding
@@ -2939,67 +3080,128 @@ most one type binding, because a Node has one `HasTypeDefinition`. `WOT-TYPE-BIN
 the rule, raised as `OPCF-Members/spec-drafts` PR #19; this annex is written as though it has been
 adopted.
 
-The prefix `i4aas` binds to `http://opcfoundation.org/UA/I4AAS/` in the document's `@context`.
+The context contains the published W3C TD 1.1 context, relative references to the bundled AAS and
+OPC UA WoT Binding contexts, and an inline `id: "@id"` alias plus the `i4aas` prefix bound to
+`http://opcfoundation.org/UA/I4AAS/v3/`.
 
 ### F.4 A worked Thing Description
 
 The `ordering-and-nesting` fixture contains a `SubmodelElementList` whose order is relevant, holding
-`SubmodelElementCollection` members. It projects like this:
+`SubmodelElementCollection` members. It projects as a bundle. The following abridged root TD contains no Object-valued property
+affordance:
 
 ```jsonc
 {
-  "@context": [ "https://www.w3.org/2022/wot/td/v1.1",
-    { "uav":   "http://opcfoundation.org/UA/WoT-Binding/",
-      "aas":   "https://admin-shell.io/aas/3/0/",
-      "i4aas": "http://opcfoundation.org/UA/I4AAS/",
-      "ua":    "http://opcfoundation.org/UA/" } ],
-  "@type": ["uav:object", "aas:Submodel", "i4aas:AASSubmodelType"],
-  "@id": "https://fabrikam.com/ids/sm/ordering",
-  "title": "Ordering",
-  "id": "https://fabrikam.com/ids/sm/ordering",
-  "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering",
-  "uav:browseName": "nsu=https://example.com/aas/instances/;Ordering",
-  "aas:Identifiable/id": "https://fabrikam.com/ids/sm/ordering",
-  "aas:Referable/idShort": "Ordering",
-  "aas:Submodel/submodelElements": [
-    { "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList" }
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../aas.context.jsonld",
+    "../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    { "id": "@id", "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/" }
   ],
-  "properties": {
-    "CollectionsInsideAList": {
-      "@type": ["uav:object", "aas:SubmodelElementList", "i4aas:AASSubmodelElementListType"],
-      "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList",
-      "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList",
-      "uav:modellingRule": "Optional",
-      "aas:Referable/idShort": "CollectionsInsideAList",
-      "aas:SubmodelElementList/orderRelevant": true,
-      "aas:SubmodelElementList/value": [
-        { "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]" }
-      ]
-    },
-    "CollectionsInsideAList[0]": {
-      "@type": ["uav:object", "aas:SubmodelElementCollection", "i4aas:AASSubmodelElementCollectionType"],
-      "@id": "https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
-      "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
-      "uav:componentOf": ["nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList"],
-      "uav:index": 0,
-      "uav:modellingRule": "Optional"
+  "@type": ["uav:object", "aas:Submodel", "i4aas:AASSubmodelType"],
+  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n",
+  "title": "Ordering",
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:S:36:https://fabrikam.com/ids/sm/ordering",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;Ordering",
+  "uav:hasComponent": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:22:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList"
+  ],
+  "aas:Submodel/submodelElements": [
+    {
+      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA"
     }
-  },
+  ],
+  "forms": [{
+    "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:S:36:https://fabrikam.com/ids/sm/ordering",
+    "contentType": "application/octet-stream",
+    "op": "readallproperties"
+  }],
   "links": [
-    { "rel": "ua:HasOrderedComponent",
-      "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering#CollectionsInsideAList[0]",
-      "uav:refId": "i=49", "uav:refName": "0" }
+    {
+      "rel": "self",
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n",
+      "type": "application/td+json"
+    },
+    {
+      "rel": "ua:HasComponent",
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "CollectionsInsideAList"
+    }
   ]
 }
 ```
 
-**The document is the Asset Administration Shell, not a description of one.** Every node carries its
-own AAS content in the AAS vocabulary — `aas:Referable/idShort`, `aas:Property/value`,
-`aas:HasSemantics/semanticId` — and the containment properties of the metamodel,
-`aas:Submodel/submodelElements` and `aas:SubmodelElementList/value`, reference the nodes by `@id`.
-Discarding every triple outside the AAS namespace leaves the graph of clause 1 of the JSON-LD
-mapping; `tools/jsonld/build_examples.py` performs that discard and fails if any AAS property or
-literal value of the source submodel is missing from the result.
+The list Object is the root of a sibling TD. It names its parent in both forms required for
+connectivity and names its ordered child from the parent side:
+
+```jsonc
+{
+  "@type": ["uav:object", "aas:SubmodelElementList", "i4aas:AASSubmodelElementListType"],
+  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA",
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:22:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:S:36:https://fabrikam.com/ids/sm/ordering"
+  ],
+  "uav:hasComponent": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:25:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList[0]"
+  ],
+  "aas:SubmodelElementList/value": [
+    {
+      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXQ"
+    }
+  ],
+  "links": [
+    {
+      "rel": "uav:componentOf",
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n",
+      "type": "application/td+json"
+    },
+    {
+      "rel": "ua:HasOrderedComponent",
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXQ",
+      "type": "application/td+json",
+      "uav:refId": "i=49",
+      "uav:refName": "0"
+    }
+  ]
+}
+```
+
+The list member is another sibling TD. Its position is explicit and its `uav:componentOf` link
+points to the list TD, not to either node's AAS RDF subject:
+
+```jsonc
+{
+  "@type": ["uav:object", "aas:SubmodelElementCollection", "i4aas:AASSubmodelElementCollectionType"],
+  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXQ",
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:25:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList[0]",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;0",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:22:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList"
+  ],
+  "uav:index": 0,
+  "forms": [{
+    "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:36:25:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList%5B0%5D",
+    "contentType": "application/octet-stream",
+    "op": "readallproperties"
+  }],
+  "links": [{
+    "rel": "uav:componentOf",
+    "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA",
+    "type": "application/td+json"
+  }]
+}
+```
+
+**The bundle carries the Asset Administration Shell, not a description of one.** Every TD root
+carries its own AAS content in the AAS vocabulary — `aas:Referable/idShort`,
+`aas:Property/value`, `aas:HasSemantics/semanticId` — and the containment properties of the
+metamodel, `aas:Submodel/submodelElements` and `aas:SubmodelElementList/value`, reference the sibling
+subjects. Discarding every triple outside the AAS namespace from the union leaves the graph of
+clause 1 of the JSON-LD mapping. The independent final-byte validator performs that comparison in
+both directions and checks every ordering occurrence.
 
 **The `uav` terms carry only what the AAS does not say.** The AAS gives the tree and the order; the
 `uav` terms give the NodeId, the BrowseName, the ObjectType, the ReferenceType and the modelling
@@ -3010,12 +3212,10 @@ and the WoT drafts define no placeholder syntax for a namespace. `https://exampl
 above is the Server's instance namespace, written out. A document that cannot know the target
 namespace omits `uav:id` instead; see F.5.
 
-**The member key is not the model.** `properties` is a flat map and its keys must be unique, so each
-key is the `idShortPath` of clause 5.3 — IDTA's own path syntax, and also the fragment of the NodeId.
-The `[n]` in a key is a consequence of that syntax and carries nothing: containment is stated by
-`aas:SubmodelElementList/value` and `uav:componentOf`, and order by `ua:HasOrderedComponent` with
-`uav:refId` `i=49` and by `uav:index`. A converter that read the key instead of those terms would
-still be right by accident here and wrong on any document that named its members differently.
+**Subject, TD document and protocol address are separate.** The TD `id` is the injectively encoded
+AAS subject, the `self` link identifies the sibling TD document, and the `opc.tcp` form identifies
+the OPC UA Node. A converter does not derive one from another. It parses the ExpandedNodeId from the
+form, resolves containment through sibling TD links and uses the AAS subject only for RDF edges.
 
 A list member has no short name, so its BrowseName is its index — the rule clause 5.3 states.
 
@@ -3027,11 +3227,17 @@ This subclause is informative.
   states whether the collection is a sequence; `uav:index` states where each member sits. A
   converter that emits one without the other produces a list a serializer cannot restore, which
   clause 5.4 is about.
-- *`uav:componentOf` is written only where it says something.* Every affordance of a Thing
-  Description is already a member of that Thing, so naming the Thing as a node's parent repeats what
-  the document structure states. A nested element's parent is another affordance and cannot be read
-  off the document, so there it is written. It is directional and names the container; a converter
-  that reverses it builds the tree upside down and the error surfaces only at the leaves.
+- *`uav:componentOf` is directional and complete.* Every non-root Object TD names the parent
+  ExpandedNodeId and links to the parent sibling TD. The parent independently lists the child in
+  `uav:hasComponent` and links to it with the exact ReferenceType. Reversing either direction or
+  replacing either sibling TD target builds a different tree.
+- *A containment link does not rename its target.* If the typed parent-to-child link carries
+  `uav:refName`, it is the target TD's BrowseName local name. It may be omitted where the target TD
+  supplies that name. An Operation role and array index belong to the AAS role array, NodeId path
+  and `uav:index`; they are not substituted for the child's own BrowseName.
+- *A form address is not an RDF subject.* Every form is an `opc.tcp` URL with an explicit endpoint
+  and an `id` query parameter that decodes to the same TD root's `uav:id`. Characters significant
+  to a URI query and percent escapes inside the ExpandedNodeId are encoded at the URI layer.
 - *Do not synthesise a type when the `@type` binding resolves.* The types of this specification are loaded
   from `Opc.Ua.I4AAS.NodeSet2.xml`. A converter that generates its own type of the same name leaves
   the Server holding two type hierarchies, and a Client written against this specification
@@ -3039,11 +3245,11 @@ This subclause is informative.
 - *Mandatory members of the resolved type are populated, not duplicated.* `AASPropertyType` declares
   `ValueType` as Mandatory. A document that also declares `ValueType` populates that declaration; a
   converter that adds a sibling produces a node carrying the member twice.
-- *NodeIds are derived, not allocated.* Clause 5.3 fixes them from the AAS identifier and the
-  `idShortPath`, so two documents describing the same submodel produce the same NodeIds. A converter
-  that generates NodeIds from the browse path instead — which *WoT Connectivity* §9.4 permits where
-  a document supplies none — produces a subtree that no longer matches this specification. Supply
-  `uav:id` on every node.
+- *NodeIds are derived, not allocated.* Clause 5.3 fixes the node-kind-discriminated,
+  escaped, length-prefixed encoding of the AAS identifier and `idShortPath`, so two documents
+  describing the same submodel produce the same NodeIds. A converter that generates NodeIds from
+  the browse path instead — which *WoT Connectivity* §9.4 permits where a document supplies none —
+  produces a subtree that no longer matches this specification. Supply `uav:id` on every node.
 - *A document that cannot know the instance namespace omits `uav:id`.* An ExpandedNodeId names a
   namespace, and the namespace a Server materializes instances into is the Server's to choose. An
   author writing for a known Server writes it out. An author writing a portable document omits
@@ -3053,20 +3259,20 @@ This subclause is informative.
 
 ### F.6 What the published vocabulary achieves without the type binding
 
-Measured over the four fixtures, 61 nodes:
+Measured over the five fixtures, 67 nodes:
 
 | | with the type binding | published vocabulary only |
 |---|---|---|
-| nodes produced | 61 of 61 | 61 of 61 |
-| NodeIds correct | 61 | 61 |
-| BrowseNames correct | 61 | 61 |
-| containment ReferenceTypes correct | 17 of 17 compared | 17 of 17 |
-| TypeDefinitions correct | **61** | **0** |
+| nodes produced | 67 of 67 | 67 of 67 |
+| NodeIds correct | 67 | 67 |
+| BrowseNames correct | 67 | 67 |
+| containment ReferenceTypes correct | 62 of 62 compared | 62 of 62 |
+| TypeDefinitions correct | **67** | **0** |
 
 Every NodeId and every BrowseName is already correct, as is every containment ReferenceType the
-fixtures exercise — 17 of the 61 nodes are reached by a reference the comparison covers, the rest
-being top-level elements of a submodel. Only the type binding fails, because `uav:congruentType` is
-reconciliation metadata and does not produce a `HasTypeDefinition`.
+fixtures exercise — 62 of the 67 nodes are children reached by a compared containment reference;
+the five roots have no parent reference. Only the type binding fails, because
+`uav:congruentType` is reconciliation metadata and does not produce a `HasTypeDefinition`.
 
 Until the type binding is adopted and implemented, a Server reaches the same result by loading one
 Thing Model per ObjectType of this specification and having each Thing Description instantiate the
@@ -3110,9 +3316,9 @@ Three differences are structural rather than incidental, and an implementation s
 paper over them.
 
 **The path is a NodeId, not a string.** The AAS API addresses an element by a base64url-encoded
-identifier and an `idShortPath`. Clause 5.3 derives a String NodeId from the same two parts, so the
-mapping is mechanical, but the encoding is not the same and a gateway converts rather than passes
-through.
+identifier and an `idShortPath`. Clause 5.3 derives its escaped, length-prefixed String NodeId from
+the same two parts, so the mapping is mechanical, but the encoding is not the same and a gateway
+converts rather than passes through.
 
 **The level and extent parameters have no counterpart.** `level=core|deep` and
 `extent=withBlobValue|withoutBlobValue` shape one response document. OPC UA shapes a response by

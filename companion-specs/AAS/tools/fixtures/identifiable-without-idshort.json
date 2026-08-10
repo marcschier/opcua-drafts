@@ -1,0 +1,16 @@
+{
+  "submodels": [
+    {
+      "modelType": "Submodel",
+      "id": "urn:example:submodel\nwith-newline",
+      "submodelElements": [
+        {
+          "modelType": "Property",
+          "idShort": "Value",
+          "valueType": "xs:string",
+          "value": "safe BrowseName regression"
+        }
+      ]
+    }
+  ]
+}

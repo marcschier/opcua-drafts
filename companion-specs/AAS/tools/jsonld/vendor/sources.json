@@ -1,0 +1,18 @@
+{
+  "opc-ua-wot-binding.context.jsonld": {
+    "source": "https://raw.githubusercontent.com/OPCF-Members/spec-drafts/f6c8b3916329158f864de64cfe6d3e4305de0fb3/wot-specs/WoT-Binding/opc-ua-wot-binding.context.jsonld",
+    "sha256": "fcee3e43434ee2d54b757111fa411812fd8cc804c810e16b4b0a70720a4090a5"
+  },
+  "opc-ua-wot-binding.schema.json": {
+    "source": "https://raw.githubusercontent.com/OPCF-Members/spec-drafts/f6c8b3916329158f864de64cfe6d3e4305de0fb3/wot-specs/WoT-Binding/opc-ua-wot-binding.schema.json",
+    "sha256": "0d01ca1131760b9fc8bc3cb6cd3798ec0cab0341bc912b79ad0b0dd6d6df3ad1"
+  },
+  "td-context-1.1.jsonld": {
+    "source": "https://raw.githubusercontent.com/w3c/wot-resources/e3ea7952471626d9513dc17b9206fb6e275b2cbd/td/v1.1/context/td-context-1.1.jsonld",
+    "sha256": "9298ddacce1d023e584dcd4b0e639baa228fb9fa8743dcad6d9c9c29db6ca069"
+  },
+  "td-json-schema-validation.json": {
+    "source": "https://raw.githubusercontent.com/w3c/wot-resources/4076892f0fc0cbc3567382cb0cdf463e9c581723/td/v1.1/validation/td-json-schema-validation.json",
+    "sha256": "905ff1138b35e1e92ac99a5c9d6b9dd5b1b1335d90d61f312fb3b9c5b90eecef"
+  }
+}

@@ -12,7 +12,8 @@
           "name": "aasidentifier",
           "type": "string",
           "required": true,
-          "description": "The AAS Identifiable id as authored, an IRI, IRDI or URN of up to 2048 characters. It is the Group source identity and the authority: the shellid is the symbolic identifier constructed from it, a one-way construction that is never inverted"
+          "matchcase": true,
+          "description": "The AAS Identifiable id as authored, an IRI, IRDI or URN of up to 2048 characters. It is the sole Group source identity and the authority: the shellid is the always-hashed symbolic identifier constructed from it, a one-way construction that is never inverted"
         },
         "idshort": {
           "name": "idshort",
@@ -106,11 +107,12 @@
           "singular": "submodel",
           "modelversion": "1.0-rc3",
           "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
+          "maxversions": 0,
           "versionmode": "modifiedat",
           "singleversionroot": true,
           "validateformat": true,
           "strictvalidation": false,
-          "description": "A Submodel served as a document. Each Version is one revision of the Submodel, giving the shell a lifecycle history that the AAS metamodel does not itself provide",
+          "description": "A Submodel served as a document. Every content change creates a new immutable Version, and all Versions are retained and remain directly retrievable",
           "attributes": {
             "format": {
               "name": "format",
@@ -131,7 +133,9 @@
               "name": "submodelidentifier",
               "type": "string",
               "required": true,
-              "description": "The Submodel Identifiable id as authored. It is the Resource source identity and the authority: the submodelid is the symbolic identifier constructed from it, a one-way construction that is never inverted"
+              "matchcase": true,
+              "matchversions": true,
+              "description": "The Submodel Identifiable id as authored. It is the sole Resource source identity and the authority: the submodelid is the always-hashed symbolic identifier constructed from it, a one-way construction that is never inverted"
             },
             "semanticid": {
               "name": "semanticid",
@@ -171,6 +175,7 @@
             "digestalg": {
               "name": "digestalg",
               "type": "string",
+              "matchcase": true,
               "enum": [ "Sha256", "Sha384", "Sha512" ],
               "strict": true,
               "description": "The algorithm used to compute digest. REQUIRED when digest is present"
@@ -200,6 +205,18 @@
               }
             },
             "*": { "name": "*", "type": "any" }
+          },
+          "metaattributes": {
+            "historypolicy": {
+              "name": "historypolicy",
+              "type": "string",
+              "required": true,
+              "readonly": true,
+              "default": "retain-all",
+              "enum": [ "retain-all" ],
+              "strict": true,
+              "description": "The AAS domain retention policy. retain-all means every immutable Version is retained without expiration, remains directly retrievable for the operational lifetime of the registry, and neither the Version nor its owning Resource is destructively deleted"
+            }
           }
         }
       }
@@ -212,10 +229,17 @@
       "description": "Submodel Template families. Each Group is one publisher's template namespace and holds the Submodels whose kind is Template. The submodels Resource type is imported from the shells Group so that a template and the Submodels built from it are the same Resource model type",
       "ximportresources": [ "/shells/submodels" ],
       "attributes": {
+        "templatenamespace": {
+          "name": "templatenamespace",
+          "type": "string",
+          "required": true,
+          "matchcase": true,
+          "description": "The publisher's template namespace as authored. It is the sole Group source identity and the authority: the submodeltemplateid is the always-hashed symbolic identifier constructed from it"
+        },
         "publisher": {
           "name": "publisher",
           "type": "string",
-          "description": "The organization that publishes this template family"
+          "description": "The organization that publishes this template family. It is descriptive metadata and is not an identity"
         },
         "*": { "name": "*", "type": "any" }
       }
@@ -227,10 +251,12 @@
       "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
       "description": "Concept dictionaries. Each Group is one dictionary whose entries give meaning to the semanticid values used elsewhere in this registry",
       "attributes": {
-        "dictionary": {
-          "name": "dictionary",
+        "dictionaryidentifier": {
+          "name": "dictionaryidentifier",
           "type": "string",
-          "description": "The dictionary this Group mirrors, for example an industry classification system or a standards body's common data dictionary"
+          "required": true,
+          "matchcase": true,
+          "description": "The dictionary's identifier as authored. It is the sole Group source identity and the authority: the conceptdictionaryid is the always-hashed symbolic identifier constructed from it"
         },
         "*": { "name": "*", "type": "any" }
       },
@@ -239,9 +265,12 @@
           "singular": "conceptdescription",
           "modelversion": "1.0-rc3",
           "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
+          "maxversions": 0,
+          "versionmode": "modifiedat",
+          "singleversionroot": true,
           "validateformat": true,
           "strictvalidation": false,
-          "description": "A Concept Description served as a document: the definition a semanticid resolves to",
+          "description": "A Concept Description served as a document. Every content change creates a new immutable Version, and all Versions are retained and remain directly retrievable",
           "attributes": {
             "format": {
               "name": "format",
@@ -260,7 +289,9 @@
               "name": "conceptidentifier",
               "type": "string",
               "required": true,
-              "description": "The Concept Description Identifiable id as authored, which is the value a semanticid elsewhere in this registry refers to. It is the Resource source identity and the authority"
+              "matchcase": true,
+              "matchversions": true,
+              "description": "The Concept Description Identifiable id as authored, which is the value a semanticid elsewhere in this registry refers to. It is the sole Resource source identity and the authority: the conceptdescriptionid is the always-hashed symbolic identifier constructed from it"
             },
             "idshort": {
               "name": "idshort",
@@ -274,6 +305,18 @@
               "description": "The identifiers of concepts in other dictionaries this concept corresponds to"
             },
             "*": { "name": "*", "type": "any" }
+          },
+          "metaattributes": {
+            "historypolicy": {
+              "name": "historypolicy",
+              "type": "string",
+              "required": true,
+              "readonly": true,
+              "default": "retain-all",
+              "enum": [ "retain-all" ],
+              "strict": true,
+              "description": "The AAS domain retention policy. retain-all means every immutable Version is retained without expiration, remains directly retrievable for the operational lifetime of the registry, and neither the Version nor its owning Resource is destructively deleted"
+            }
           }
         }
       }
@@ -283,17 +326,24 @@
       "singular": "aasxregistry",
       "modelversion": "1.0-rc3",
       "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
-      "description": "Package stores. Each Group is one store holding AASX packages, and where that store is an OCI registry the Group is one registry or namespace within it. Defined by the AAS package binding rather than by the AAS registry model",
+      "description": "Package stores. Each Group is one store holding AASX package releases and their separate referrer artifacts, and where that store is an OCI registry the Group is one registry or namespace within it. Defined by the AAS package binding rather than by the AAS registry model",
       "attributes": {
+        "storeidentifier": {
+          "name": "storeidentifier",
+          "type": "string",
+          "required": true,
+          "matchcase": true,
+          "description": "The stable identifier of the package store or store namespace as authored. It is the sole Group source identity and the authority: the aasxregistryid is the always-hashed symbolic identifier constructed from it"
+        },
         "registryurl": {
           "name": "registryurl",
           "type": "url",
-          "description": "The base URL of the backing package store"
+          "description": "The current base URL of the backing package store. It is a routing location and is not an identity"
         },
         "namespace": {
           "name": "namespace",
           "type": "string",
-          "description": "The namespace within the backing store that this Group covers"
+          "description": "The current namespace within the backing store that this Group covers. It is routing metadata and is not an identity"
         },
         "*": { "name": "*", "type": "any" }
       },
@@ -302,15 +352,18 @@
           "singular": "package",
           "modelversion": "1.0-rc3",
           "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
+          "maxversions": 0,
+          "versionmode": "modifiedat",
+          "singleversionroot": true,
           "validateformat": true,
           "strictvalidation": false,
-          "description": "An AASX package served as a document. Each Version is one immutable release of the package, addressed by digest and optionally attested by signatures",
+          "description": "An AASX package release served as a document. Every content change creates a new immutable retained Version. In the OCI binding the Version source identity is manifestdigest; tags are mutable aliases in the Resource meta object. OCI referrer manifests MUST NOT be package Versions",
           "attributes": {
             "format": {
               "name": "format",
               "type": "string",
               "required": true,
-              "enum": [ "AASX/3.0", "AASX/3.1", "Opaque/1.0" ],
+              "enum": [ "AASX/3.0", "AASX/3.1" ],
               "strict": false,
               "description": "The package format of the document"
             },
@@ -318,7 +371,15 @@
               "name": "packageidentifier",
               "type": "string",
               "required": true,
-              "description": "The package name as held by the backing store, which for an OCI registry is the repository name. It is the Resource source identity and the authority"
+              "matchcase": true,
+              "matchversions": true,
+              "description": "The package name as held by the backing store, which for an OCI registry is the repository name. It is the sole Resource source identity and the authority: the packageid is the always-hashed symbolic identifier constructed from it"
+            },
+            "manifestdigest": {
+              "name": "manifestdigest",
+              "type": "string",
+              "matchcase": true,
+              "description": "The immutable OCI manifest digest, including its algorithm prefix. In the OCI binding this is REQUIRED, is the Version source identity, and the versionid is its always-hashed symbolic identifier. It is distinct from digest, which verifies the returned package blob"
             },
             "artifacttype": {
               "name": "artifacttype",
@@ -328,14 +389,17 @@
             "digest": {
               "name": "digest",
               "type": "string",
-              "description": "Lower-case hexadecimal digest of the exact package bytes a Consumer retrieves, computed with digestalg. This is the integrity anchor: a tag identifies a Version, a digest identifies its content"
+              "required": true,
+              "description": "Lower-case hexadecimal digest of the exact package blob bytes a Consumer retrieves, computed with digestalg. It is distinct from the OCI manifest digest and is the value used to verify the returned document"
             },
             "digestalg": {
               "name": "digestalg",
               "type": "string",
+              "required": true,
+              "matchcase": true,
               "enum": [ "Sha256", "Sha384", "Sha512" ],
               "strict": true,
-              "description": "The algorithm used to compute digest. REQUIRED when digest is present"
+              "description": "The exact algorithm mapped from the OCI package-layer descriptor and used to verify the package blob. A Producer MUST retain the mapped Sha256, Sha384 or Sha512 value and MUST NOT substitute a different algorithm"
             },
             "aasidentifiers": {
               "name": "aasidentifiers",
@@ -349,26 +413,109 @@
               "target": "/shells",
               "description": "The shell this package is the packaged form of, where the same registry also serves it as a Group"
             },
-            "subject": {
-              "name": "subject",
+            "*": { "name": "*", "type": "any" }
+          },
+          "metaattributes": {
+            "historypolicy": {
+              "name": "historypolicy",
               "type": "string",
-              "description": "The digest of the artifact this one is attached to, where this artifact is a signature, attestation or other referrer rather than a package in its own right"
+              "required": true,
+              "readonly": true,
+              "default": "retain-all",
+              "enum": [ "retain-all" ],
+              "strict": true,
+              "description": "The AAS domain retention policy. retain-all means every immutable Version is retained without expiration, remains directly retrievable for the operational lifetime of the registry, and neither the Version nor its owning Resource is destructively deleted"
             },
-            "attestations": {
-              "name": "attestations",
+            "tags": {
+              "name": "tags",
               "type": "array",
-              "description": "The signatures and attestations attached to this package, which a Consumer verifies before trusting its contents",
+              "description": "The current mutable OCI tag aliases for this repository as lossless entries in the Resource meta object. Each raw tag is a value rather than a map key, and identifies an immutable manifest Version; tags MUST NOT be used as versionids",
               "item": {
                 "type": "object",
                 "attributes": {
-                  "artifacttype": { "name": "artifacttype", "type": "string", "description": "The media type identifying what kind of attestation this is" },
-                  "digest": { "name": "digest", "type": "string", "description": "The digest of the attestation artifact" },
-                  "signer": { "name": "signer", "type": "string", "description": "The identifier of the party that produced the attestation" },
+                  "tag": { "name": "tag", "type": "string", "required": true, "matchcase": true, "description": "The raw OCI tag exactly as held by the registry, preserving case, leading underscore and the full value up to the OCI limit of 128 characters" },
+                  "manifestdigest": { "name": "manifestdigest", "type": "string", "required": true, "matchcase": true, "description": "The immutable manifest digest to which the raw tag currently points" },
                   "*": { "name": "*", "type": "any" }
                 }
               }
+            }
+          }
+        },
+        "referrers": {
+          "singular": "referrer",
+          "modelversion": "1.0-rc3",
+          "modelcompatiblewith": "https://xregistry.io/xreg/domains/aas/specs/model.json",
+          "maxversions": 1,
+          "versionmode": "modifiedat",
+          "singleversionroot": true,
+          "validateformat": true,
+          "strictvalidation": false,
+          "description": "An immutable OCI referrer artifact such as an attestation. Each referrer manifest is a separate Resource containing exactly one immutable Version, so its arrival cannot affect a package Resource's default Version",
+          "attributes": {
+            "format": {
+              "name": "format",
+              "type": "string",
+              "required": true,
+              "default": "Opaque/1.0",
+              "enum": [ "Opaque/1.0" ],
+              "strict": true,
+              "description": "The opaque attestation or referrer document format"
+            },
+            "manifestdigest": {
+              "name": "manifestdigest",
+              "type": "string",
+              "required": true,
+              "matchcase": true,
+              "matchversions": true,
+              "description": "The immutable OCI referrer manifest digest, including its algorithm prefix. It is the sole Resource source identity and also the Version source identity and authority: both referrerid and versionid are its always-hashed symbolic identifier"
+            },
+            "subjectmanifestdigest": {
+              "name": "subjectmanifestdigest",
+              "type": "string",
+              "required": true,
+              "matchcase": true,
+              "matchversions": true,
+              "description": "The immutable package manifest digest named by the OCI referrer manifest's subject field"
+            },
+            "artifacttype": {
+              "name": "artifacttype",
+              "type": "string",
+              "required": true,
+              "description": "The OCI artifactType identifying what kind of referrer or attestation this is"
+            },
+            "signer": {
+              "name": "signer",
+              "type": "string",
+              "description": "The identifier of the party that produced the attestation, where it is established when the immutable Resource is created"
+            },
+            "digest": {
+              "name": "digest",
+              "type": "string",
+              "required": true,
+              "description": "Lower-case hexadecimal digest of the exact attestation blob bytes a Consumer retrieves, computed with digestalg"
+            },
+            "digestalg": {
+              "name": "digestalg",
+              "type": "string",
+              "required": true,
+              "matchcase": true,
+              "enum": [ "Sha256", "Sha384", "Sha512" ],
+              "strict": true,
+              "description": "The exact case-sensitive algorithm mapped from the OCI referrer layer descriptor and used to verify the attestation blob"
             },
             "*": { "name": "*", "type": "any" }
+          },
+          "metaattributes": {
+            "historypolicy": {
+              "name": "historypolicy",
+              "type": "string",
+              "required": true,
+              "readonly": true,
+              "default": "retain-all",
+              "enum": [ "retain-all" ],
+              "strict": true,
+              "description": "The AAS domain retention policy. retain-all means the immutable referrer Version remains directly retrievable for the operational lifetime of the registry and neither it nor its owning Resource is destructively deleted"
+            }
           }
         }
       }

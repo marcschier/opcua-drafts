@@ -13,9 +13,8 @@ does not state and a JSON-LD context cannot perform:
   * inferring the class of a nested object that carries no `modelType`, from the
     range of the property that reaches it;
   * turning an enumeration value into a named individual;
-  * constructing the subject term of an `Identifiable`, including the case the
-    upstream specification leaves undefined - an `id` that is not a legal IRI
-    (defect D4);
+  * constructing an injective subject term for every root `Identifiable`,
+    including an `id` that is not a legal IRI (defect D4);
   * emitting the ordering that the upstream serialization discards (defect D2),
     into a separate enrichment graph.
 
@@ -24,17 +23,16 @@ comparing graphs is the whole point and N-Triples is the form a comparison can
 be done on without a parser.
 
 Usage:
-    python lift.py <input.json> --base https://example.org/aas/ [--profile linked]
+    python lift.py <input.json> [--profile linked]
 """
 from __future__ import annotations
 
 import argparse
-import hashlib
+import base64
 import json
 import os
 import re
 import sys
-import urllib.parse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "jsonld"))
@@ -47,6 +45,7 @@ RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 # Minted for what the upstream serialization cannot express. See the register.
 LD = "https://w3id.org/aas-jsonld/"
 ORDER_GRAPH = LD + "graph/order"
+SUBJECT_PREFIX = LD + "subject/v1/"
 
 # The three collections of an Environment, and the class each holds.
 ROOT_COLLECTIONS = {
@@ -186,38 +185,16 @@ class Schema:
 # ---------------------------------------------------------------------------
 # Terms
 # ---------------------------------------------------------------------------
-_IRI_OK = re.compile(r"^[A-Za-z][A-Za-z0-9+.\-]*:[^\s<>\"{}|\\^`]*$")
-# RFC 3986 relative-ref: a path, optional query, optional single fragment, with
-# no scheme and no character an IRI reference may not carry. An IRDI fails it on
-# the second `#`; `something#frag` passes, and is resolved against the base.
-_RELATIVE_OK = re.compile(r"^[^\s<>\"{}|\\^`:]*(?:\?[^\s<>\"{}|\\^`#]*)?(?:#[^\s<>\"{}|\\^`#]*)?$")
+def subject_iri(identifier: str) -> str:
+    """The injective subject IRI for a root Identifiable.
 
-
-def is_absolute_iri(value: str) -> bool:
-    """An absolute IRI with at most one '#'.
-
-    RFC 3986 forbids '#' inside a fragment, so an IRDI such as
-    `0173-1#02-AAO677#002` is not one, however inviting it looks.
+    Every identifier uses the same construction.  Encoding the complete UTF-8
+    byte sequence, rather than hashing only identifiers that are not legal IRIs,
+    means a raw identifier is never used as a subject and prevents a legal
+    identifier from colliding with a generated subject.
     """
-    return bool(_IRI_OK.match(value)) and value.count("#") <= 1
-
-
-def is_relative_reference(value: str) -> bool:
-    """Whether the identifier is a legal RFC 3986 relative reference."""
-    return bool(value) and bool(_RELATIVE_OK.match(value)) and value.count("#") <= 1
-
-
-def skolem(identifier: str) -> str:
-    """A deterministic IRI for an `id` that is not a legal IRI (defect D4).
-
-    The construction is one way and collision resistant: the full identifier is
-    hashed, so two different identifiers cannot share a subject, and the same
-    identifier always yields the same subject. The identifier itself is never
-    recovered from the IRI - it is recovered by reading `aas:Identifiable/id`,
-    which this lifting always emits.
-    """
-    digest = hashlib.sha256(identifier.encode("utf-8")).hexdigest()
-    return f"{LD}id/{digest}"
+    encoded = base64.urlsafe_b64encode(identifier.encode("utf-8")).decode("ascii").rstrip("=")
+    return SUBJECT_PREFIX + encoded
 
 
 class Sink:
@@ -252,11 +229,10 @@ def literal(value, datatype=None, language=None):
 # Lifting
 # ---------------------------------------------------------------------------
 class Lifter:
-    def __init__(self, onto: Ontology, base: str, profile: str = "core",
+    def __init__(self, onto: Ontology, profile: str = "core",
                  emit_root_idshort: bool = True, schema: "Schema | None" = None):
         self.onto = onto
         self.schema = schema or Schema()
-        self.base = base
         self.profile = profile
         # Upstream drops this (defect D1). The lifting emits it; the conformance
         # runner can suppress it to compare against the upstream corpus.
@@ -265,18 +241,8 @@ class Lifter:
 
     # -- subject terms ------------------------------------------------------
     def subject_for(self, identifier: str) -> str:
-        """Clause 2.2, in order.
-
-        The three rules are disjoint and are applied as written. An identifier is
-        never percent-encoded on the way in: the RDF mapping uses `id` verbatim,
-        so encoding it would produce a subject that cannot match the upstream
-        graph, and the encoding would not be idempotent.
-        """
-        if is_absolute_iri(identifier):
-            return iri(identifier)
-        if is_relative_reference(identifier):
-            return iri(urllib.parse.urljoin(self.base, identifier))
-        return iri(skolem(identifier))
+        """Clause 2.2: uniformly encode the complete identifier."""
+        return iri(subject_iri(identifier))
 
     # -- values -------------------------------------------------------------
     def enum_member(self, enum_name: str, value: str) -> str:
@@ -389,7 +355,6 @@ def serialize(sink, with_graphs=True):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("input")
-    ap.add_argument("--base", default="https://example.org/aas/")
     ap.add_argument("--profile", choices=("core", "linked"), default="core")
     ap.add_argument("--order-out",
                     help="write the ordering graph here, as N-Triples, so that lower.py --order "
@@ -400,7 +365,7 @@ def main():
 
     with open(args.input, encoding="utf-8") as f:
         doc = json.load(f)
-    lifter = Lifter(Ontology(), args.base, args.profile,
+    lifter = Lifter(Ontology(), args.profile,
                     emit_root_idshort=not args.no_root_idshort)
     sink = lifter.lift(doc)
     if args.order_out:

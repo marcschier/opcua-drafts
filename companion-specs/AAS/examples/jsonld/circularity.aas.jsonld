@@ -1,5 +1,5 @@
 {
-  "@context": "https://w3id.org/aas-jsonld/context",
+  "@context": "../../aas.context.jsonld",
   "@graph": [
     {
       "@id": "_:b1",
@@ -4780,18 +4780,6 @@
       "text": "endOfLifeInfo"
     },
     {
-      "@id": "https://admin-shell.io/idta/aas/CircularityForDBPAAS/1/0",
-      "@type": "aas:AssetAdministrationShell",
-      "aas:AssetAdministrationShell/submodels": {
-        "@id": "_:b3"
-      },
-      "administration": "_:b1",
-      "assetInformation": "_:b2",
-      "displayName": "_:b7",
-      "id": "https://admin-shell.io/idta/aas/CircularityForDBPAAS/1/0",
-      "idShort": "CircularityForDBPAAS"
-    },
-    {
       "@graph": [
         {
           "@id": "_:b10",
@@ -4807,7 +4795,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA"
           }
         },
         {
@@ -4858,7 +4846,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#endOfLifeInformation"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNlbmRPZkxpZmVJbmZvcm1hdGlvbg"
           }
         },
         {
@@ -4926,7 +4914,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#ExtinguishingAgent"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNFeHRpbmd1aXNoaW5nQWdlbnQ"
           }
         },
         {
@@ -4943,7 +4931,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#ExtinguishingAgent"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNFeHRpbmd1aXNoaW5nQWdlbnQ"
           }
         },
         {
@@ -4960,7 +4948,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#informationOnCollection"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNpbmZvcm1hdGlvbk9uQ29sbGVjdGlvbg"
           }
         },
         {
@@ -5062,7 +5050,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#informationOnCollection"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNpbmZvcm1hdGlvbk9uQ29sbGVjdGlvbg"
           }
         },
         {
@@ -5181,7 +5169,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5oYW5kb3Zlcl9kb2N1bWVudGF0aW9uOjIuMC4wI0RvY3VtZW50SWRlbnRpZmllcg"
           }
         },
         {
@@ -5198,7 +5186,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5oYW5kb3Zlcl9kb2N1bWVudGF0aW9uOjIuMC4wI0RvY3VtZW50SWRlbnRpZmllcg"
           }
         },
         {
@@ -6830,7 +6818,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA"
           }
         },
         {
@@ -7306,7 +7294,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA"
           }
         },
         {
@@ -7425,7 +7413,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA"
           }
         },
         {
@@ -7782,7 +7770,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA"
           }
         },
         {
@@ -8564,7 +8552,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA"
           }
         },
         {
@@ -8683,7 +8671,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA"
           }
         },
         {
@@ -8700,7 +8688,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA"
           }
         },
         {
@@ -8717,7 +8705,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eQ"
           }
         },
         {
@@ -8819,7 +8807,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eQ"
           }
         },
         {
@@ -8836,7 +8824,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eQ"
           }
         },
         {
@@ -8853,7 +8841,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#renewableContent"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNyZW5ld2FibGVDb250ZW50"
           }
         },
         {
@@ -8938,7 +8926,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#renewableContent"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNyZW5ld2FibGVDb250ZW50"
           }
         },
         {
@@ -8955,7 +8943,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#dismantlingAndRemovalInformation"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNkaXNtYW50bGluZ0FuZFJlbW92YWxJbmZvcm1hdGlvbg"
           }
         },
         {
@@ -9023,7 +9011,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#dismantlingAndRemovalInformation"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNkaXNtYW50bGluZ0FuZFJlbW92YWxJbmZvcm1hdGlvbg"
           }
         },
         {
@@ -9040,7 +9028,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#company"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2NvbXBhbnk"
           }
         },
         {
@@ -9142,7 +9130,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#company"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2NvbXBhbnk"
           }
         },
         {
@@ -9159,7 +9147,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#nationalCode"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI25hdGlvbmFsQ29kZQ"
           }
         },
         {
@@ -9176,7 +9164,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#nationalCode"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI25hdGlvbmFsQ29kZQ"
           }
         },
         {
@@ -9193,7 +9181,7 @@
             "@id": "aas:AssetAdministrationShell/submodels"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/aas/CircularityForDBPAAS/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9DaXJjdWxhcml0eUZvckRCUEFBUy8xLzA"
           }
         },
         {
@@ -9329,7 +9317,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#nationalCode"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI25hdGlvbmFsQ29kZQ"
           }
         },
         {
@@ -9346,7 +9334,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#postalCode"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3Bvc3RhbENvZGU"
           }
         },
         {
@@ -9431,7 +9419,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#postalCode"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3Bvc3RhbENvZGU"
           }
         },
         {
@@ -9465,7 +9453,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#street"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3N0cmVldA"
           }
         },
         {
@@ -9482,7 +9470,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#street"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3N0cmVldA"
           }
         },
         {
@@ -9601,7 +9589,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#street"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3N0cmVldA"
           }
         },
         {
@@ -9618,7 +9606,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#addressOfSupplier"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNhZGRyZXNzT2ZTdXBwbGllcg"
           }
         },
         {
@@ -9720,7 +9708,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#addressOfSupplier"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNhZGRyZXNzT2ZTdXBwbGllcg"
           }
         },
         {
@@ -9737,7 +9725,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#emailAddress"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2VtYWlsQWRkcmVzcw"
           }
         },
         {
@@ -9822,7 +9810,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#emailAddress"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2VtYWlsQWRkcmVzcw"
           }
         },
         {
@@ -9839,7 +9827,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#publicKey"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3B1YmxpY0tleQ"
           }
         },
         {
@@ -9941,7 +9929,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#publicKey"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3B1YmxpY0tleQ"
           }
         },
         {
@@ -9958,7 +9946,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfEmailAddress"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3R5cGVPZkVtYWlsQWRkcmVzcw"
           }
         },
         {
@@ -10060,7 +10048,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfEmailAddress"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3R5cGVPZkVtYWlsQWRkcmVzcw"
           }
         },
         {
@@ -10077,7 +10065,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfPublicKey"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3R5cGVPZlB1YmxpY0tleQ"
           }
         },
         {
@@ -10162,7 +10150,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfPublicKey"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3R5cGVPZlB1YmxpY0tleQ"
           }
         },
         {
@@ -10179,7 +10167,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#email"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2VtYWls"
           }
         },
         {
@@ -10196,7 +10184,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#email"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2VtYWls"
           }
         },
         {
@@ -10298,7 +10286,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#email"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2VtYWls"
           }
         },
         {
@@ -10315,7 +10303,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#addressOfAdditionalLink"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2FkZHJlc3NPZkFkZGl0aW9uYWxMaW5r"
           }
         },
         {
@@ -10400,7 +10388,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#addressOfAdditionalLink"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2FkZHJlc3NPZkFkZGl0aW9uYWxMaW5r"
           }
         },
         {
@@ -10434,7 +10422,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partName"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNwYXJ0TmFtZQ"
           }
         },
         {
@@ -10536,7 +10524,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partName"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNwYXJ0TmFtZQ"
           }
         },
         {
@@ -10553,7 +10541,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partNumber"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNwYXJ0TnVtYmVy"
           }
         },
         {
@@ -10638,7 +10626,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partNumber"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNwYXJ0TnVtYmVy"
           }
         },
         {
@@ -10655,7 +10643,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#components"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNjb21wb25lbnRz"
           }
         },
         {
@@ -10757,7 +10745,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#components"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNjb21wb25lbnRz"
           }
         },
         {
@@ -10774,7 +10762,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#sparePartSources"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNzcGFyZVBhcnRTb3VyY2Vz"
           }
         },
         {
@@ -10825,7 +10813,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/aas/CircularityForDBPAAS/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9DaXJjdWxhcml0eUZvckRCUEFBUy8xLzA"
           }
         },
         {
@@ -10859,7 +10847,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#sparePartSources"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNzcGFyZVBhcnRTb3VyY2Vz"
           }
         },
         {
@@ -10876,7 +10864,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#SparePartSupplier"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNTcGFyZVBhcnRTdXBwbGllcg"
           }
         },
         {
@@ -10944,7 +10932,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#SparePartSupplier"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNTcGFyZVBhcnRTdXBwbGllcg"
           }
         },
         {
@@ -10961,7 +10949,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#preConsumerShare"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNwcmVDb25zdW1lclNoYXJl"
           }
         },
         {
@@ -11063,7 +11051,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#preConsumerShare"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNwcmVDb25zdW1lclNoYXJl"
           }
         },
         {
@@ -11080,7 +11068,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledMaterial"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNyZWN5Y2xlZE1hdGVyaWFs"
           }
         },
         {
@@ -11471,7 +11459,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledMaterial"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNyZWN5Y2xlZE1hdGVyaWFs"
           }
         },
         {
@@ -11488,7 +11476,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#postConsumerShare"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNwb3N0Q29uc3VtZXJTaGFyZQ"
           }
         },
         {
@@ -11573,7 +11561,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#postConsumerShare"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNwb3N0Q29uc3VtZXJTaGFyZQ"
           }
         },
         {
@@ -11590,7 +11578,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#RecycledContent"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNSZWN5Y2xlZENvbnRlbnQ"
           }
         },
         {
@@ -11675,7 +11663,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#RecycledContent"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNSZWN5Y2xlZENvbnRlbnQ"
           }
         },
         {
@@ -11709,7 +11697,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledContent"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNyZWN5Y2xlZENvbnRlbnQ"
           }
         },
         {
@@ -11777,7 +11765,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledContent"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNyZWN5Y2xlZENvbnRlbnQ"
           }
         },
         {
@@ -11794,7 +11782,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyInstructions"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNzYWZldHlJbnN0cnVjdGlvbnM"
           }
         },
         {
@@ -11879,7 +11867,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyInstructions"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNzYWZldHlJbnN0cnVjdGlvbnM"
           }
         },
         {
@@ -11896,7 +11884,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#extinguishingAgents"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNleHRpbmd1aXNoaW5nQWdlbnRz"
           }
         },
         {
@@ -11981,7 +11969,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#extinguishingAgents"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNleHRpbmd1aXNoaW5nQWdlbnRz"
           }
         },
         {
@@ -11998,7 +11986,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyMeasures"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNzYWZldHlNZWFzdXJlcw"
           }
         },
         {
@@ -12100,7 +12088,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyMeasures"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNzYWZldHlNZWFzdXJlcw"
           }
         },
         {
@@ -12117,7 +12105,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#wastePrevention"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCN3YXN0ZVByZXZlbnRpb24"
           }
         },
         {
@@ -12202,7 +12190,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#wastePrevention"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCN3YXN0ZVByZXZlbnRpb24"
           }
         },
         {
@@ -12219,7 +12207,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#separateCollection"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNzZXBhcmF0ZUNvbGxlY3Rpb24"
           }
         },
         {
@@ -12304,7 +12292,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#separateCollection"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNzZXBhcmF0ZUNvbGxlY3Rpb24"
           }
         },
         {
@@ -12338,7 +12326,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#endOfLifeInformation"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNlbmRPZkxpZmVJbmZvcm1hdGlvbg"
           }
         },
         {
@@ -12379,7 +12367,27 @@
       "@id": "aasld:graph/order"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity",
+      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9DaXJjdWxhcml0eUZvckRCUEFBUy8xLzA",
+      "@type": "aas:AssetAdministrationShell",
+      "aas:AssetAdministrationShell/submodels": {
+        "@id": "_:b3"
+      },
+      "administration": "_:b1",
+      "assetInformation": "_:b2",
+      "displayName": "_:b7",
+      "id": "https://admin-shell.io/idta/aas/CircularityForDBPAAS/1/0",
+      "idShort": "CircularityForDBPAAS"
+    },
+    {
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCN3YXN0ZVByZXZlbnRpb24",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b962",
+      "embeddedDataSpecifications": "_:b964",
+      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#wastePrevention",
+      "idShort": "wastePrevention"
+    },
+    {
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eQ",
       "@type": "aas:ConceptDescription",
       "category": "APPLICATION_CLASS",
       "description": "_:b539",
@@ -12389,7 +12397,7 @@
       "idShort": "Circularity"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA",
       "@type": "aas:Submodel",
       "aas:HasKind/kind": {
         "@id": "aas:ModellingKind/Template"
@@ -12410,7 +12418,7 @@
       ]
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#ExtinguishingAgent",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNFeHRpbmd1aXNoaW5nQWdlbnQ",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b1014",
       "embeddedDataSpecifications": "_:b1004",
@@ -12418,7 +12426,7 @@
       "idShort": "ExtinguishingAgent"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#RecycledContent",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNSZWN5Y2xlZENvbnRlbnQ",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b898",
       "embeddedDataSpecifications": "_:b900",
@@ -12426,7 +12434,7 @@
       "idShort": "RecycledContent"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#SparePartSupplier",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNTcGFyZVBhcnRTdXBwbGllcg",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b803",
       "embeddedDataSpecifications": "_:b805",
@@ -12434,7 +12442,7 @@
       "idShort": "SparePartSupplier"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#addressOfSupplier",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNhZGRyZXNzT2ZTdXBwbGllcg",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b649",
       "embeddedDataSpecifications": "_:b651",
@@ -12442,7 +12450,7 @@
       "idShort": "addressOfSupplier"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#components",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNjb21wb25lbnRz",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b777",
       "embeddedDataSpecifications": "_:b779",
@@ -12450,7 +12458,7 @@
       "idShort": "components"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#dismantlingAndRemovalInformation",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNkaXNtYW50bGluZ0FuZFJlbW92YWxJbmZvcm1hdGlvbg",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b569",
       "embeddedDataSpecifications": "_:b571",
@@ -12458,7 +12466,7 @@
       "idShort": "dismantlingAndRemovalInformation"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#endOfLifeInformation",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNlbmRPZkxpZmVJbmZvcm1hdGlvbg",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b990",
       "embeddedDataSpecifications": "_:b992",
@@ -12466,7 +12474,7 @@
       "idShort": "endOfLifeInformation"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#extinguishingAgents",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNleHRpbmd1aXNoaW5nQWdlbnRz",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b936",
       "embeddedDataSpecifications": "_:b938",
@@ -12474,7 +12482,7 @@
       "idShort": "extinguishingAgents"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#informationOnCollection",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNpbmZvcm1hdGlvbk9uQ29sbGVjdGlvbg",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b1016",
       "embeddedDataSpecifications": "_:b1018",
@@ -12482,7 +12490,7 @@
       "idShort": "informationOnCollection"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partName",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNwYXJ0TmFtZQ",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b749",
       "embeddedDataSpecifications": "_:b751",
@@ -12490,7 +12498,7 @@
       "idShort": "partName"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partNumber",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNwYXJ0TnVtYmVy",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b763",
       "embeddedDataSpecifications": "_:b765",
@@ -12498,7 +12506,7 @@
       "idShort": "partNumber"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#postConsumerShare",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNwb3N0Q29uc3VtZXJTaGFyZQ",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b884",
       "embeddedDataSpecifications": "_:b886",
@@ -12506,7 +12514,7 @@
       "idShort": "postConsumerShare"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#preConsumerShare",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNwcmVDb25zdW1lclNoYXJl",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b815",
       "embeddedDataSpecifications": "_:b817",
@@ -12514,23 +12522,7 @@
       "idShort": "preConsumerShare"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledContent",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b910",
-      "embeddedDataSpecifications": "_:b912",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledContent",
-      "idShort": "recycledContent"
-    },
-    {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledMaterial",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b829",
-      "embeddedDataSpecifications": "_:b831",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledMaterial",
-      "idShort": "recycledMaterial"
-    },
-    {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#renewableContent",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNyZW5ld2FibGVDb250ZW50",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b555",
       "embeddedDataSpecifications": "_:b557",
@@ -12538,7 +12530,23 @@
       "idShort": "renewableContent"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyInstructions",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNyZWN5Y2xlZE1hdGVyaWFs",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b829",
+      "embeddedDataSpecifications": "_:b831",
+      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledMaterial",
+      "idShort": "recycledMaterial"
+    },
+    {
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNyZWN5Y2xlZENvbnRlbnQ",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b910",
+      "embeddedDataSpecifications": "_:b912",
+      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledContent",
+      "idShort": "recycledContent"
+    },
+    {
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNzYWZldHlJbnN0cnVjdGlvbnM",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b922",
       "embeddedDataSpecifications": "_:b924",
@@ -12546,7 +12554,7 @@
       "idShort": "safetyInstructions"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyMeasures",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNzYWZldHlNZWFzdXJlcw",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b948",
       "embeddedDataSpecifications": "_:b950",
@@ -12554,7 +12562,7 @@
       "idShort": "safetyMeasures"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#separateCollection",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNzZXBhcmF0ZUNvbGxlY3Rpb24",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b976",
       "embeddedDataSpecifications": "_:b978",
@@ -12562,7 +12570,7 @@
       "idShort": "separateCollection"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#sparePartSources",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNzcGFyZVBhcnRTb3VyY2Vz",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b791",
       "embeddedDataSpecifications": "_:b793",
@@ -12570,50 +12578,7 @@
       "idShort": "sparePartSources"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#wastePrevention",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b962",
-      "embeddedDataSpecifications": "_:b964",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#wastePrevention",
-      "idShort": "wastePrevention"
-    },
-    {
-      "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#addressOfAdditionalLink",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b737",
-      "embeddedDataSpecifications": "_:b739",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#addressOfAdditionalLink",
-      "idShort": "addressOfAdditionalLink"
-    },
-    {
-      "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#company",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b581",
-      "embeddedDataSpecifications": "_:b583",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#company",
-      "idShort": "company"
-    },
-    {
-      "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#email",
-      "@type": "aas:ConceptDescription",
-      "displayName": [
-        "_:b719",
-        "_:b721"
-      ],
-      "embeddedDataSpecifications": "_:b723",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#email",
-      "idShort": "email"
-    },
-    {
-      "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#emailAddress",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b663",
-      "embeddedDataSpecifications": "_:b665",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#emailAddress",
-      "idShort": "emailAddress"
-    },
-    {
-      "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#nationalCode",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI25hdGlvbmFsQ29kZQ",
       "@type": "aas:ConceptDescription",
       "displayName": [
         "_:b595",
@@ -12624,15 +12589,42 @@
       "idShort": "nationalCode"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#postalCode",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2FkZHJlc3NPZkFkZGl0aW9uYWxMaW5r",
       "@type": "aas:ConceptDescription",
-      "displayName": "_:b615",
-      "embeddedDataSpecifications": "_:b617",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#postalCode",
-      "idShort": "postalCode"
+      "displayName": "_:b737",
+      "embeddedDataSpecifications": "_:b739",
+      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#addressOfAdditionalLink",
+      "idShort": "addressOfAdditionalLink"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#publicKey",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2NvbXBhbnk",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b581",
+      "embeddedDataSpecifications": "_:b583",
+      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#company",
+      "idShort": "company"
+    },
+    {
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2VtYWls",
+      "@type": "aas:ConceptDescription",
+      "displayName": [
+        "_:b719",
+        "_:b721"
+      ],
+      "embeddedDataSpecifications": "_:b723",
+      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#email",
+      "idShort": "email"
+    },
+    {
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI2VtYWlsQWRkcmVzcw",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b663",
+      "embeddedDataSpecifications": "_:b665",
+      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#emailAddress",
+      "idShort": "emailAddress"
+    },
+    {
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3B1YmxpY0tleQ",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b677",
       "embeddedDataSpecifications": "_:b679",
@@ -12640,7 +12632,15 @@
       "idShort": "publicKey"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#street",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3Bvc3RhbENvZGU",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b615",
+      "embeddedDataSpecifications": "_:b617",
+      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#postalCode",
+      "idShort": "postalCode"
+    },
+    {
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3N0cmVldA",
       "@type": "aas:ConceptDescription",
       "displayName": [
         "_:b629",
@@ -12651,7 +12651,7 @@
       "idShort": "street"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfEmailAddress",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3R5cGVPZkVtYWlsQWRkcmVzcw",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b691",
       "embeddedDataSpecifications": "_:b693",
@@ -12659,7 +12659,7 @@
       "idShort": "typeOfEmailAddress"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfPublicKey",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5jb250YWN0X2luZm9ybWF0aW9uOjEuMC4wI3R5cGVPZlB1YmxpY0tleQ",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b705",
       "embeddedDataSpecifications": "_:b707",
@@ -12667,7 +12667,7 @@
       "idShort": "typeOfPublicKey"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5oYW5kb3Zlcl9kb2N1bWVudGF0aW9uOjIuMC4wI0RvY3VtZW50SWRlbnRpZmllcg",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b1044",
       "embeddedDataSpecifications": "_:b1030",

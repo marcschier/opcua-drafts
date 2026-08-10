@@ -1,0 +1,41 @@
+{
+  "repository": "admin-shell-io/submodel-templates",
+  "commit": "19735029b5268bf4a40ea078288071d8ce40d1a9",
+  "templates": {
+    "circularity": {
+      "file": "templates/circularity.json",
+      "path": "published/Digital Battery Passport/7_Circularity/1/0/1/IDTA 02035-7_DBP-Part-7_Circularity.json",
+      "sha256": "f3dd40ec1b8fa8ccc061cb82e93f8554d228eb49e04484d511407481d1b79cf1"
+    },
+    "digital-nameplate": {
+      "file": "templates/digital-nameplate.json",
+      "path": "published/Digital Battery Passport/1_Digital Nameplate/1/0/IDTA 02035-1_DBP-Part-1_Digital Nameplate.json",
+      "sha256": "0eec79b05fde3d62a287248d6dd8d17643bfa2b0bb8e2e4cecad04a28b90ccfe"
+    },
+    "digital-product-passport": {
+      "file": "templates/digital-product-passport.json",
+      "path": "published/Digital Product Passport/Digital Product Passport Part-1/1/0/1/IDTA 02099-1_Template Digital Product Passport - Part 1.json",
+      "sha256": "541cfd526ead764b6209eed96bf991d65c8e286a45be5ca3a6513e1a66ea5721"
+    },
+    "handover-documentation": {
+      "file": "templates/handover-documentation.json",
+      "path": "published/Digital Battery Passport/2_Handover Documentation/1/0/IDTA 02035-2_DBP-Part-2_HandoverDocumentation.json",
+      "sha256": "c7124116bd1011be696e0848c17001fe77026ec0d35266bc958feaca0d2336e5"
+    },
+    "material-composition": {
+      "file": "templates/material-composition.json",
+      "path": "published/Digital Battery Passport/6_Material Composition/1/0/1/IDTA 02035-6_DBP-Part-6_MaterialComposition.json",
+      "sha256": "e9197b3a2a3e7231d8943609a46359119a0dbd92bd7dd5e5b32c34c02f8aac10"
+    },
+    "product-carbon-footprint": {
+      "file": "templates/product-carbon-footprint.json",
+      "path": "published/Digital Battery Passport/3_Product Carbon Footprint/1/0/IDTA 02035-3_DBP-Part-3_ProductCarbonFootprint.json",
+      "sha256": "1555443c771bf427a459081b57106b4d3426176a074d1864c04f646f33154b85"
+    },
+    "technical-data": {
+      "file": "templates/technical-data.json",
+      "path": "published/Digital Battery Passport/4_Technical Data/1/0/1/IDTA 02035-4_DBP-Part-4_TechnicalData.json",
+      "sha256": "a90774b959c766efe596243c39934df266ee34ce1132ba85f4b382efff842cb0"
+    }
+  }
+}

@@ -20,7 +20,7 @@ What the context can do, using JSON-LD 1.1:
 What it cannot do, and why the lifting exists:
 
   * emit an `Identifiable`'s `id` as both the subject IRI and a literal;
-  * construct a subject term for an `id` that is not a legal IRI;
+  * construct the uniformly encoded subject term for an `Identifiable`;
   * turn `"xs:int"` into `aas:DataTypeDefXsd/Int` (attempted here with an
     explicit term definition, and measured rather than assumed);
   * record the order of an array.
@@ -264,7 +264,7 @@ def measure(context_doc, limit=0):
             via_context = Graph()
             via_context.parse(data=nq, format="nt")
 
-            lifter = Lifter(onto, base, "core", schema=schema)
+            lifter = Lifter(onto, "core", schema=schema)
             via_lift = Graph()
             via_lift.parse(data=serialize(lifter.lift(doc), with_graphs=False), format="nt")
         except Exception:  # noqa: BLE001

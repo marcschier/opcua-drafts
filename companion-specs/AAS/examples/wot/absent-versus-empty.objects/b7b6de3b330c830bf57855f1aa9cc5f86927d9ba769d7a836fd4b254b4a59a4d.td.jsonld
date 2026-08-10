@@ -1,0 +1,60 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@type": [
+    "uav:object",
+    "aas:SubmodelElementList",
+    "i4aas:AASSubmodelElementListType"
+  ],
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "EmptyList"
+  },
+  "aas:SubmodelElementList/orderRelevant": {
+    "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value": "true"
+  },
+  "aas:SubmodelElementList/typeValueListElement": {
+    "@id": "aas:AasSubmodelElements/Property"
+  },
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:43:9:https://fabrikam.com/ids/sm/absent-vs-emptyEmptyList",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2Fic2VudC12cy1lbXB0eQ/node/RW1wdHlMaXN0",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2Fic2VudC12cy1lbXB0eQ/node/RW1wdHlMaXN0",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2Fic2VudC12cy1lbXB0eQ",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "EmptyList",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;EmptyList",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:S:43:https://fabrikam.com/ids/sm/absent-vs-empty"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:43:9:https://fabrikam.com/ids/sm/absent-vs-emptyEmptyList",
+  "uav:modellingRule": "Optional"
+}

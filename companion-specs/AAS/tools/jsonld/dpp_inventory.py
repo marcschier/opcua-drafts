@@ -40,7 +40,7 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "jsonld"))
 CACHE = os.path.join(ROOT, ".templates")
 
 REPO = "admin-shell-io/submodel-templates"
-REF = "main"
+REF = "19735029b5268bf4a40ea078288071d8ce40d1a9"
 RAW = f"https://raw.githubusercontent.com/{REPO}/{REF}"
 TREE = f"https://api.github.com/repos/{REPO}/git/trees/{REF}?recursive=1"
 

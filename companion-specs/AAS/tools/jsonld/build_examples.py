@@ -4,18 +4,19 @@ Build the worked examples from the published IDTA submodel templates.
 
 The examples are generated rather than written. A hand-written example says what
 its author believes; a generated one says what the tools do, and the tools are
-the same ones the conformance runs use. Every file this writes has been through
-a check before it is written:
+the same ones the conformance runs use. An independent validator processes the
+final serialized bytes before each file is written:
 
 * an authored JSON-LD document is written only if reading it back gives the graph
   it was made from (clause 1 and `AASLD-Authored`); and
-* a Thing Description is written only if projecting it gives the AddressSpace
-  clause 5.6 of the AAS companion specification materializes (Annex F).
+* a Thing Description is written only if it passes JSON-LD processing, the
+  pinned W3C TD 1.1 schema and the complete hierarchy/order projection check.
 
-The sources are the templates `dpp_inventory.py` cached from
-`admin-shell-io/submodel-templates`. They are the submodels the Digital Product
-Passport and the Digital Battery Passport are actually made of, so the examples
-are the shapes an implementer meets rather than shapes invented for a document.
+The sources are seven templates vendored from an immutable
+`admin-shell-io/submodel-templates` commit with SHA-256 metadata. They are the
+submodels the Digital Product Passport and the Digital Battery Passport are
+actually made of, so a clean checkout regenerates the same shapes without a
+network request or an ignored cache.
 
 Usage:
     python build_examples.py [--list]
@@ -23,13 +24,14 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
+import shutil
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 AAS_DIR = os.path.normpath(os.path.join(HERE, "..", ".."))
-TEMPLATES = os.path.join(AAS_DIR, "jsonld", ".templates")
 OUT_LD = os.path.join(AAS_DIR, "examples", "jsonld")
 OUT_WOT = os.path.join(AAS_DIR, "examples", "wot", "submodels")
 OUT_MIN = os.path.join(AAS_DIR, "examples", "wot", "minimal")
@@ -38,48 +40,103 @@ RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 sys.path.insert(0, HERE)
 
 import wot_bridge  # noqa: E402
-from authored import (as_graph, author, load_context, lower_graph,  # noqa: E402
-                      read_back, term)
+import validate_examples  # noqa: E402
+from authored import as_graph, author, load_context, term  # noqa: E402
 from pyld import jsonld  # noqa: E402
 from rdflib import Literal  # noqa: E402
-from conformance import BASE, canonical  # noqa: E402
-from lift import Lifter, Ontology, Schema, serialize  # noqa: E402
+from lift import Lifter, Ontology, Schema, serialize, subject_iri  # noqa: E402
 
 ONTOLOGY = Ontology()
 SCHEMA = Schema()
 
-# The submodels a product passport is assembled from. One per subject area, and
-# the newest revision of each where the cache holds more than one.
-SELECTED = [
-    ("digital-nameplate",
-     "published__Digital Battery Passport__1_Digital Nameplate__1__0__"
-     "IDTA 02035-1_DBP-Part-1_Digital Nameplate.json"),
-    ("handover-documentation",
-     "published__Digital Battery Passport__2_Handover Documentation__1__0__"
-     "IDTA 02035-2_DBP-Part-2_HandoverDocumentation.json"),
-    ("product-carbon-footprint",
-     "published__Digital Battery Passport__3_Product Carbon Footprint__1__0__"
-     "IDTA 02035-3_DBP-Part-3_ProductCarbonFootprint.json"),
-    ("technical-data",
-     "published__Digital Battery Passport__4_Technical Data__1__0__1__"
-     "IDTA 02035-4_DBP-Part-4_TechnicalData.json"),
-    ("material-composition",
-     "published__Digital Battery Passport__6_Material Composition__1__0__1__"
-     "IDTA 02035-6_DBP-Part-6_MaterialComposition.json"),
-    ("circularity",
-     "published__Digital Battery Passport__7_Circularity__1__0__1__"
-     "IDTA 02035-7_DBP-Part-7_Circularity.json"),
-    ("digital-product-passport",
-     "published__Digital Product Passport__Digital Product Passport Part-1__1__0__1__"
-     "IDTA 02099-1_Template Digital Product Passport - Part 1.json"),
-]
+# The submodels a product passport is assembled from. One per subject area.
+SELECTED = validate_examples.TEMPLATE_SOURCES
 
 
 def graph_of(env):
-    sink = Lifter(ONTOLOGY, BASE, "linked", schema=SCHEMA).lift(env)
+    sink = Lifter(ONTOLOGY, "linked", schema=SCHEMA).lift(env)
     core = serialize(sink, with_graphs=False)
     order = "\n".join(f"{s} {p} {o} ." for s, p, o, _ in sink.quads)
     return core, order
+
+
+def relative_context(path, target):
+    return os.path.relpath(target, os.path.dirname(path)).replace("\\", "/")
+
+
+def final_text(doc):
+    return json.dumps(doc, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
+
+
+def bundle_td_context(doc, path):
+    inline = {}
+    for entry in doc.get("@context", []):
+        if isinstance(entry, dict):
+            inline.update(entry)
+    inline.pop("aas", None)
+    inline.pop("uav", None)
+    inline.pop("ua", None)
+    inline["id"] = "@id"
+    doc["@context"] = [
+        validate_examples.TD_CONTEXT_URL,
+        relative_context(path, validate_examples.AAS_CONTEXT),
+        relative_context(path, validate_examples.BINDING_CONTEXT),
+        inline,
+    ]
+    return doc
+
+
+def write_final(path, doc, *, td=False, source=None, projection=False):
+    text = final_text(doc)
+    validate_examples.validate_bytes(
+        os.path.abspath(path), text, td=td, source=source, projection=projection)
+    with open(path, "w", encoding="utf-8", newline="\n") as stream:
+        stream.write(text)
+
+
+def projection_paths(root_path, tds):
+    roots = [td for td in tds if not td.get("uav:componentOf")]
+    if len(roots) != 1:
+        raise SystemExit(
+            f"{root_path}: expected one projected Submodel root, got {len(roots)}")
+    object_dir = root_path.removesuffix(".td.jsonld") + ".objects"
+    paths = {}
+    for td in tds:
+        if td is roots[0]:
+            path = root_path
+        else:
+            self_links = [
+                link for link in td.get("links", [])
+                if link.get("rel") == "self"
+            ]
+            if len(self_links) != 1:
+                raise SystemExit(
+                    f"{td.get('uav:id')}: expected one self link")
+            digest = hashlib.sha256(
+                self_links[0]["href"].encode("utf-8")).hexdigest()
+            path = os.path.join(object_dir, digest + ".td.jsonld")
+        paths[id(td)] = path
+    return paths, object_dir
+
+
+def write_projection_bundle(root_path, tds, source):
+    paths, object_dir = projection_paths(root_path, tds)
+    serialized = []
+    for td in tds:
+        path = paths[id(td)]
+        serialized.append(
+            (os.path.abspath(path),
+             final_text(bundle_td_context(td, path))))
+    result = validate_examples.validate_projection_bundle(serialized, source)
+
+    if os.path.isdir(object_dir):
+        shutil.rmtree(object_dir)
+    os.makedirs(object_dir, exist_ok=True)
+    for path, text in serialized:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w", encoding="utf-8", newline="\n") as stream:
+            stream.write(text)
+    return result
 
 
 def write_authored(name, env, context_doc):
@@ -87,24 +144,58 @@ def write_authored(name, env, context_doc):
     core, order = graph_of(env)
     doc_text = author(core, order, context_doc)
     doc = json.loads(doc_text)
-    doc["@context"] = "https://w3id.org/aas-jsonld/context"
-
-    back_core, back_order = read_back(doc_text)
-    recovered = lower_graph(back_core, back_order, seed=20260809)
-    source = json.loads(json.dumps(env))
-    for collection in ("assetAdministrationShells", "submodels", "conceptDescriptions"):
-        if collection in source:
-            source[collection] = sorted(source[collection], key=lambda n: n.get("id", ""))
-    if canonical(recovered) != canonical(source):
-        raise SystemExit(f"{name}: the authored document does not lower to the source AAS")
-    if len(as_graph(back_core)) != len(as_graph(core)):
-        raise SystemExit(f"{name}: the authored document does not carry the whole graph")
-
     path = os.path.join(OUT_LD, f"{name}.aas.jsonld")
-    with open(path, "w", encoding="utf-8", newline="\n") as f:
-        json.dump(doc, f, indent=2, ensure_ascii=False, sort_keys=True)
-        f.write("\n")
+    doc["@context"] = relative_context(path, validate_examples.AAS_CONTEXT)
+    write_final(path, doc, source=env)
     return path, len(as_graph(core))
+
+
+def as_td_object(doc, env, name, path):
+    """Promote the Submodel node to the TD root without changing its graph."""
+    submodels = env.get("submodels") or []
+    if len(submodels) != 1:
+        raise SystemExit(f"{name}: a Thing Description example requires one submodel")
+    identifier = submodels[0]["id"]
+    graph = doc.get("@graph")
+    if not isinstance(graph, list):
+        raise SystemExit(f"{name}: authored JSON-LD did not produce an @graph")
+
+    root = None
+    included = []
+    for node in graph:
+        if isinstance(node, dict) and node.get("id") == identifier:
+            if root is not None:
+                raise SystemExit(f"{name}: more than one JSON-LD node carries the submodel id")
+            root = node
+        else:
+            included.append(node)
+    if root is None:
+        raise SystemExit(f"{name}: no JSON-LD node carries the submodel id")
+
+    for node in graph:
+        if isinstance(node, dict) and "id" in node:
+            node["aas:Identifiable/id"] = node.pop("id")
+    root.pop("@id", None)
+    root["id"] = subject_iri(identifier)
+    if included:
+        root["@included"] = included
+    types = root.get("@type", [])
+    if not isinstance(types, list):
+        types = [types]
+    root["@type"] = ["uav:object", "i4aas:AASSubmodelType", *types]
+    root["@context"] = [
+        validate_examples.TD_CONTEXT_URL,
+        relative_context(path, validate_examples.AAS_CONTEXT),
+        relative_context(path, validate_examples.BINDING_CONTEXT),
+        {
+            "id": "@id",
+            "i4aas": wot_bridge.I4AAS,
+        },
+    ]
+    root["title"] = submodels[0].get("idShort", name)
+    root["securityDefinitions"] = {"nosec_sc": {"scheme": "nosec"}}
+    root["security"] = "nosec_sc"
+    return root
 
 
 def write_minimal_td(name, env, context_doc):
@@ -130,27 +221,9 @@ def write_minimal_td(name, env, context_doc):
     why both are published.
     """
     core, order = graph_of(env)
-    doc = json.loads(author(core, order, context_doc))
-    submodels = env.get("submodels") or []
-    title = submodels[0].get("idShort", name) if submodels else name
-
-    doc["@context"] = ["https://www.w3.org/2022/wot/td/v1.1",
-                       "https://w3id.org/aas-jsonld/context",
-                       {"uav": "http://opcfoundation.org/UA/WoT-Binding/",
-                        "i4aas": wot_bridge.I4AAS}]
-    doc["@type"] = ["uav:object", "i4aas:AASSubmodelType"]
-    doc["title"] = title
-    doc["securityDefinitions"] = {"nosec_sc": {"scheme": "nosec"}}
-    doc["security"] = "nosec_sc"
-
-    for member in ("@context", "@type", "title", "securityDefinitions", "security"):
-        if member not in doc:
-            raise SystemExit(f"{name}: minimal Thing Description is missing {member}")
-
     path = os.path.join(OUT_MIN, f"{name}.td.jsonld")
-    with open(path, "w", encoding="utf-8", newline="\n") as f:
-        json.dump(doc, f, indent=2, ensure_ascii=False, sort_keys=True)
-        f.write("\n")
+    doc = as_td_object(json.loads(author(core, order, context_doc)), env, name, path)
+    write_final(path, doc, td=True, source=env)
     return path
 
 
@@ -162,10 +235,8 @@ def aas_graph_of(tds, context_doc):
     Administration Shell.
 
     The remote Thing Description context is replaced by a local stub rather than
-    fetched, so the check runs offline. The stub defines only what is needed to
-    reach the nested nodes - `properties` as an index container - because a term
-    the context does not define is dropped, and dropping `properties` would drop
-    every element with it. Nothing the stub defines survives the filter.
+    fetched, so the check runs offline. Blank nodes are scoped per TD document
+    before the datasets are combined, as JSON-LD requires.
     """
     stub = {"properties": {"@id": "https://example.invalid/wot#properties",
                            "@container": "@index"},
@@ -174,7 +245,7 @@ def aas_graph_of(tds, context_doc):
             "security": "https://example.invalid/wot#security",
             "securityDefinitions": "https://example.invalid/wot#securityDefinitions"}
     lines = []
-    for td in tds:
+    for document_index, td in enumerate(tds):
         local = json.loads(json.dumps(td))
         inline = [c for c in local["@context"] if isinstance(c, dict)]
         merged = dict(stub)
@@ -189,14 +260,21 @@ def aas_graph_of(tds, context_doc):
                     predicate == RDF_TYPE
                     and quad["object"]["value"].startswith(wot_bridge.AAS_NS))
                 if is_aas:
-                    lines.append("%s %s %s ." % (term(quad["subject"]),
-                                                 term(quad["predicate"]),
-                                                 term(quad["object"])))
+                    scoped = []
+                    for part in (
+                            quad["subject"], quad["predicate"], quad["object"]):
+                        part = dict(part)
+                        if part.get("type") == "blank node":
+                            part["value"] = (
+                                f"_:d{document_index}-"
+                                + part["value"].removeprefix("_:"))
+                        scoped.append(part)
+                    lines.append("%s %s %s ." % tuple(term(part) for part in scoped))
     return "\n".join(lines)
 
 
 def write_thing_descriptions(name, env, context_doc):
-    """The same submodel as a Thing Description, with the WoT vocabulary added."""
+    """The same submodel as binding-valid Object Thing Descriptions."""
     tds = wot_bridge.generate(env, "attype")
     want = wot_bridge.expected(env)
     got = wot_bridge.project(tds, honour_proposed_term=True, form="attype")
@@ -205,16 +283,12 @@ def write_thing_descriptions(name, env, context_doc):
         raise SystemExit(f"{name}: projection does not match clause 5.6 "
                          f"({len(missing)} missing, {len(extra)} unexpected, "
                          f"{len(differing)} differing)")
-    for td in tds:
-        td["securityDefinitions"] = {"nosec_sc": {"scheme": "nosec"}}
-        td["security"] = "nosec_sc"
-
     # The document has to be an AAS as well as a projection, or the `aas` prefix
     # is declared and never used. Every AAS property *and every literal value*
     # the reference lifting produces from the source submodels must be
-    # recoverable from the Thing Descriptions. Subjects are not compared: the
-    # Thing Description names its nodes by clause 5.3 and the lifting skolemizes
-    # them, so the two agree on what is said and not on what it is said about.
+    # recoverable from the Thing Descriptions. The independent final-byte check
+    # below also compares subjects and the complete graph; this early emitter
+    # check keeps a short diagnostic for dropped properties or literals.
     carried = as_graph(aas_graph_of(tds, context_doc))
     expected_aas = as_graph(graph_of({"submodels": env.get("submodels") or []})[0])
     lost_props = stated_properties(expected_aas) - stated_properties(carried)
@@ -225,12 +299,25 @@ def write_thing_descriptions(name, env, context_doc):
     if lost_values:
         raise SystemExit(f"{name}: the Thing Description drops {len(lost_values)} "
                          f"AAS values, for example {sorted(lost_values)[:3]}")
-
     path = os.path.join(OUT_WOT, f"{name}.td.jsonld")
-    with open(path, "w", encoding="utf-8", newline="\n") as f:
-        json.dump(tds, f, indent=2, ensure_ascii=False)
-        f.write("\n")
-    return path, len(want), len(carried)
+    result = write_projection_bundle(path, tds, env)
+    return path, len(want), len(carried), len(tds), result
+
+
+def write_fixture_thing_descriptions():
+    written = 0
+    fixtures = os.path.join(AAS_DIR, "tools", "fixtures")
+    for filename in sorted(os.listdir(fixtures)):
+        if not filename.endswith(".json"):
+            continue
+        name = filename[:-5]
+        with open(os.path.join(fixtures, filename), encoding="utf-8") as stream:
+            env = json.load(stream)
+        tds = wot_bridge.generate(env, "attype")
+        path = os.path.join(AAS_DIR, "examples", "wot", f"{name}.td.jsonld")
+        write_projection_bundle(path, tds, env)
+        written += len(tds)
+    return written
 
 
 def stated_properties(graph):
@@ -244,17 +331,14 @@ def stated_values(graph):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--list", action="store_true", help="list the cached templates and stop")
+    ap.add_argument("--list", action="store_true", help="list the vendored templates and stop")
     args = ap.parse_args()
 
+    validate_examples.verify_vendor()
     if args.list:
-        for entry in sorted(os.listdir(TEMPLATES)):
-            print("   ", entry)
+        for name, path in SELECTED:
+            print(f"    {name}: {path}")
         return 0
-
-    if not os.path.isdir(TEMPLATES):
-        print("no template cache: run dpp_inventory.py first", file=sys.stderr)
-        return 1
 
     os.makedirs(OUT_LD, exist_ok=True)
     os.makedirs(OUT_WOT, exist_ok=True)
@@ -263,24 +347,28 @@ def main():
     wot_bridge.load_type_nodeids()
 
     written = 0
-    for name, filename in SELECTED:
-        path = os.path.join(TEMPLATES, filename)
-        if not os.path.exists(path):
-            print(f"    missing from the cache, skipped: {filename}", file=sys.stderr)
-            continue
+    for name, path in SELECTED:
+        if not path.is_file():
+            print(f"    missing vendored template: {path}", file=sys.stderr)
+            return 1
         with open(path, encoding="utf-8") as f:
             env = json.load(f)
         ld_path, triples = write_authored(name, env, context_doc)
         write_minimal_td(name, env, context_doc)
-        td_path, nodes, aas_triples = write_thing_descriptions(name, env, context_doc)
+        td_path, nodes, aas_triples, td_count, _ = write_thing_descriptions(
+            name, env, context_doc)
         print(f"  {name:26s} {triples:5d} triples -> examples/jsonld/{os.path.basename(ld_path)}"
-              f"   {nodes:4d} nodes + {aas_triples:5d} AAS triples -> examples/wot/submodels/{os.path.basename(td_path)}")
+              f"   {nodes:4d} nodes in {td_count:3d} TDs + {aas_triples:5d} AAS triples "
+              f"-> examples/wot/submodels/{os.path.basename(td_path)}")
         written += 1
 
-    print(f"\n{written} submodel(s), three files each: the AAS as pure JSON-LD, the same "
-          f"document made loadable as a Thing Description, and the projection-complete\n"
-          f"Thing Description. Every authored document lowers back to its source AAS and "
-          f"every projection-complete document projects to the AddressSpace clause 5.6 defines.")
+    fixture_count = write_fixture_thing_descriptions()
+
+    print(f"\n{written} submodel bundle(s), plus {fixture_count} fixture TD(s): "
+          f"the AAS as pure JSON-LD, the same "
+          f"document made loadable as a Thing Description, and one projection-complete\n"
+          f"Thing Description per OPC UA Object. Every authored document lowers back to its "
+          f"source AAS and every projection bundle projects to the AddressSpace clause 5.6 defines.")
     return 0 if written else 1
 
 

@@ -19,16 +19,19 @@ not catch. The reason is given with each one; when a rule and a reason disagree,
 ```powershell
 # one-time
 pip install -r core-specs/extras/requirements.txt
+pip install -r companion-specs/AAS/requirements.txt
 
 # validate everything (three separate entrypoints — none covers another's tree)
 python core-specs/extras/validate_all.py
 python cloud-specs/validate_all.py
 python metaverse-specs/validate_all.py
+python companion-specs/validate_all.py --self-contained
 
 # what CI runs — only the checks that need no untracked base data
 python core-specs/extras/validate_all.py --self-contained
 python cloud-specs/validate_all.py --self-contained
 python metaverse-specs/validate_all.py --self-contained
+python companion-specs/validate_all.py
 
 # a single extension (the granular unit — there is no per-test runner)
 python metaverse-specs/extras/openusd-binding/tools/validate_local.py
@@ -87,9 +90,9 @@ Some sit under the spec folder (`core-specs/xregistry/tools/`, `cloud-specs/sche
 `companion-specs/Generators/tools/`) and others under `extras/`
 (`cloud-specs/extras/observability-export/tools/`, all of `metaverse-specs/extras/*/tools/`).
 
-**Validation is per-extension.** Each extension owns a `validate_local.py`; the three `validate_all.py`
-files just drive lists of them. `wot-specs/` and `companion-specs/` are in **no** aggregate —
-run their validators directly. A tree drives only its own validators: `core-specs/extras/validate_all.py`
+**Validation is per-extension.** Each extension owns a `validate_local.py`; the four `validate_all.py`
+files just drive lists of them. `wot-specs/` is in **no** aggregate — run its validators directly.
+A tree drives only its own validators: `core-specs/extras/validate_all.py`
 stops at `core-specs/`, so a specification that moves trees takes its entry with it or silently
 stops being validated.
 

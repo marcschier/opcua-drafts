@@ -1,13 +1,14 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    "https://w3id.org/aas-jsonld/context",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
     {
-      "i4aas": "http://opcfoundation.org/UA/I4AAS/",
-      "uav": "http://opcfoundation.org/UA/WoT-Binding/"
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
     }
   ],
-  "@graph": [
+  "@included": [
     {
       "@id": "_:b1",
       "@type": "aas:AssetInformation",
@@ -4763,35 +4764,6 @@
       "text": "Untertitel"
     },
     {
-      "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
-      "@type": "aas:Submodel",
-      "aas:HasKind/kind": {
-        "@id": "aas:ModellingKind/Template"
-      },
-      "administration": "_:b10",
-      "description": "_:b8",
-      "displayName": "_:b590",
-      "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
-      "idShort": "HandoverDocumentation",
-      "semanticId": "_:b11",
-      "submodelElements": "_:b22",
-      "supplementalSemanticIds": [
-        "_:b14",
-        "_:b18"
-      ]
-    },
-    {
-      "@id": "https://admin-shell.io/idta/aas/HandoverDocumentation/2/0",
-      "@type": "aas:AssetAdministrationShell",
-      "aas:AssetAdministrationShell/submodels": {
-        "@id": "_:b2"
-      },
-      "assetInformation": "_:b1",
-      "displayName": "_:b6",
-      "id": "https://admin-shell.io/idta/aas/HandoverDocumentation/2/0",
-      "idShort": "HandoverDocumentationAAS"
-    },
-    {
       "@graph": [
         {
           "@id": "_:b100",
@@ -4909,7 +4881,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/d8f46de6ffc6b731d0541b5e5f3c3559c39305d03be8d6e154ddbacd0dfb3ac1"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5OCMwMDM"
           }
         },
         {
@@ -4926,7 +4898,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/d26bf4e215547aa88915e12bb8f5f21c5e5c1c3f9a9d8737feb4d0b6af7e39d1"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTjQ2NiMwMDQ"
           }
         },
         {
@@ -4943,7 +4915,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/d26bf4e215547aa88915e12bb8f5f21c5e5c1c3f9a9d8737feb4d0b6af7e39d1"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTjQ2NiMwMDQ"
           }
         },
         {
@@ -5096,7 +5068,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/d26bf4e215547aa88915e12bb8f5f21c5e5c1c3f9a9d8737feb4d0b6af7e39d1"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTjQ2NiMwMDQ"
           }
         },
         {
@@ -5113,7 +5085,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/53f012a3a19d81e3500fd102d2a6205774302454979b4388cac50ccccda34d55"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSzEyNiMwMDI"
           }
         },
         {
@@ -5130,7 +5102,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/53f012a3a19d81e3500fd102d2a6205774302454979b4388cac50ccccda34d55"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSzEyNiMwMDI"
           }
         },
         {
@@ -5317,7 +5289,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/53f012a3a19d81e3500fd102d2a6205774302454979b4388cac50ccccda34d55"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSzEyNiMwMDI"
           }
         },
         {
@@ -5861,7 +5833,7 @@
             "@id": "aas:HasSemantics/supplementalSemanticIds"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w"
           }
         },
         {
@@ -6201,7 +6173,7 @@
             "@id": "aas:HasSemantics/supplementalSemanticIds"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w"
           }
         },
         {
@@ -8598,7 +8570,7 @@
             "@id": "aas:AssetAdministrationShell/submodels"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/aas/HandoverDocumentation/2/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9IYW5kb3ZlckRvY3VtZW50YXRpb24vMi8w"
           }
         },
         {
@@ -9397,7 +9369,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w"
           }
         },
         {
@@ -9414,7 +9386,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w"
           }
         },
         {
@@ -9431,7 +9403,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ff3677a5ce00446a76fcf1ea07791720dd3e1d6ba39f163fe1eb1a6a7c03ea6b"
+            "@id": "aasld:subject/v1/MDE3My0xIzAxLUFIRjU3OCMwMDM"
           }
         },
         {
@@ -9516,7 +9488,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ff3677a5ce00446a76fcf1ea07791720dd3e1d6ba39f163fe1eb1a6a7c03ea6b"
+            "@id": "aasld:subject/v1/MDE3My0xIzAxLUFIRjU3OCMwMDM"
           }
         },
         {
@@ -9533,7 +9505,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ff3677a5ce00446a76fcf1ea07791720dd3e1d6ba39f163fe1eb1a6a7c03ea6b"
+            "@id": "aasld:subject/v1/MDE3My0xIzAxLUFIRjU3OCMwMDM"
           }
         },
         {
@@ -9550,7 +9522,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/0da430d407cfff9ba631bc66ce81f92758e10d1d8bce90647e4a3f7e7c345e84"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMCMwMDM"
           }
         },
         {
@@ -9567,7 +9539,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/0da430d407cfff9ba631bc66ce81f92758e10d1d8bce90647e4a3f7e7c345e84"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMCMwMDM"
           }
         },
         {
@@ -9720,7 +9692,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/0da430d407cfff9ba631bc66ce81f92758e10d1d8bce90647e4a3f7e7c345e84"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMCMwMDM"
           }
         },
         {
@@ -9737,7 +9709,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/9d24b8ade3c51abf32c7d1e876036d1490ee91738c133a64e46ca971bb31b586"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMCMwMDMvMDE3My0xIzAxLUFIRjU3OSMwMDM"
           }
         },
         {
@@ -9754,7 +9726,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/9d24b8ade3c51abf32c7d1e876036d1490ee91738c133a64e46ca971bb31b586"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMCMwMDMvMDE3My0xIzAxLUFIRjU3OSMwMDM"
           }
         },
         {
@@ -9771,7 +9743,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:id/9d24b8ade3c51abf32c7d1e876036d1490ee91738c133a64e46ca971bb31b586"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMCMwMDMvMDE3My0xIzAxLUFIRjU3OSMwMDM"
           }
         },
         {
@@ -9924,7 +9896,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/9d24b8ade3c51abf32c7d1e876036d1490ee91738c133a64e46ca971bb31b586"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMCMwMDMvMDE3My0xIzAxLUFIRjU3OSMwMDM"
           }
         },
         {
@@ -9941,7 +9913,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/4ed609314ebe3a8bc3006200c4d5a9c9c8866904a4e8cf9c66eb89d35d2d65bb"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMSMwMDM"
           }
         },
         {
@@ -9958,7 +9930,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/4ed609314ebe3a8bc3006200c4d5a9c9c8866904a4e8cf9c66eb89d35d2d65bb"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMSMwMDM"
           }
         },
         {
@@ -10111,7 +10083,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/4ed609314ebe3a8bc3006200c4d5a9c9c8866904a4e8cf9c66eb89d35d2d65bb"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMSMwMDM"
           }
         },
         {
@@ -10128,7 +10100,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/28491dc511fd552c0c28b73adbc04bd6187e050707954162681345237f7692e7"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMSMwMDMvMDE3My0xIzAxLUFIRjU4MCMwMDM"
           }
         },
         {
@@ -10145,7 +10117,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/28491dc511fd552c0c28b73adbc04bd6187e050707954162681345237f7692e7"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMSMwMDMvMDE3My0xIzAxLUFIRjU4MCMwMDM"
           }
         },
         {
@@ -10298,7 +10270,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/28491dc511fd552c0c28b73adbc04bd6187e050707954162681345237f7692e7"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMSMwMDMvMDE3My0xIzAxLUFIRjU4MCMwMDM"
           }
         },
         {
@@ -10315,7 +10287,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/a60bc19f8be5bb6c7aa371c734a0e7de6d5877ab9db05a76bfa0a05e5ab38888"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NCMwMDM"
           }
         },
         {
@@ -10332,7 +10304,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/a60bc19f8be5bb6c7aa371c734a0e7de6d5877ab9db05a76bfa0a05e5ab38888"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NCMwMDM"
           }
         },
         {
@@ -10349,7 +10321,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/aas/HandoverDocumentation/2/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9IYW5kb3ZlckRvY3VtZW50YXRpb24vMi8w"
           }
         },
         {
@@ -10502,7 +10474,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/a60bc19f8be5bb6c7aa371c734a0e7de6d5877ab9db05a76bfa0a05e5ab38888"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NCMwMDM"
           }
         },
         {
@@ -10519,7 +10491,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/0fd44e0a29f686a7b5450c4c8ed16670536d31b1c220e79f0f580c213796ab73"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTzA5OSMwMDQ"
           }
         },
         {
@@ -10655,7 +10627,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/0fd44e0a29f686a7b5450c4c8ed16670536d31b1c220e79f0f580c213796ab73"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTzA5OSMwMDQ"
           }
         },
         {
@@ -10672,7 +10644,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/66f07188a980c68465b86adc955d794cf5eaa7aa6c5e5e63d28ceb0f7f053bee"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NSMwMDM"
           }
         },
         {
@@ -10706,7 +10678,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/66f07188a980c68465b86adc955d794cf5eaa7aa6c5e5e63d28ceb0f7f053bee"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NSMwMDM"
           }
         },
         {
@@ -10842,7 +10814,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/66f07188a980c68465b86adc955d794cf5eaa7aa6c5e5e63d28ceb0f7f053bee"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NSMwMDM"
           }
         },
         {
@@ -10859,7 +10831,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/6df62bd5ac3d5696244e1df1e9752ff1fb0628562faef0db7c283a0864ccd8c9"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMiMwMDM"
           }
         },
         {
@@ -10876,7 +10848,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/6df62bd5ac3d5696244e1df1e9752ff1fb0628562faef0db7c283a0864ccd8c9"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMiMwMDM"
           }
         },
         {
@@ -11046,7 +11018,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/6df62bd5ac3d5696244e1df1e9752ff1fb0628562faef0db7c283a0864ccd8c9"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMiMwMDM"
           }
         },
         {
@@ -11063,7 +11035,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/25ea93c33a40bc1aae6cd670c236aedb2847264bff1c2cc566f3ac8da5fec03e"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMiMwMDMvMDE3My0xIzAxLUFIRjU4MSMwMDM"
           }
         },
         {
@@ -11080,7 +11052,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/25ea93c33a40bc1aae6cd670c236aedb2847264bff1c2cc566f3ac8da5fec03e"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMiMwMDMvMDE3My0xIzAxLUFIRjU4MSMwMDM"
           }
         },
         {
@@ -11216,7 +11188,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/25ea93c33a40bc1aae6cd670c236aedb2847264bff1c2cc566f3ac8da5fec03e"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMiMwMDMvMDE3My0xIzAxLUFIRjU4MSMwMDM"
           }
         },
         {
@@ -11233,7 +11205,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/d8888b4433fc08d3c899facfb8be620855fd644e50a49826b5783da9c15c3d36"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NiMwMDM"
           }
         },
         {
@@ -11250,7 +11222,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/d8888b4433fc08d3c899facfb8be620855fd644e50a49826b5783da9c15c3d36"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NiMwMDM"
           }
         },
         {
@@ -11267,7 +11239,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:id/d8888b4433fc08d3c899facfb8be620855fd644e50a49826b5783da9c15c3d36"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NiMwMDM"
           }
         },
         {
@@ -11437,7 +11409,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/d8888b4433fc08d3c899facfb8be620855fd644e50a49826b5783da9c15c3d36"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NiMwMDM"
           }
         },
         {
@@ -11454,7 +11426,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ec3f34603e2f4a6967ec2f1ccbccf9ef3a7a61705010b721c853e0e630d9a92a"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSjIxOSMwMDI"
           }
         },
         {
@@ -11471,7 +11443,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ec3f34603e2f4a6967ec2f1ccbccf9ef3a7a61705010b721c853e0e630d9a92a"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSjIxOSMwMDI"
           }
         },
         {
@@ -11488,7 +11460,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ec3f34603e2f4a6967ec2f1ccbccf9ef3a7a61705010b721c853e0e630d9a92a"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSjIxOSMwMDI"
           }
         },
         {
@@ -11624,7 +11596,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ec3f34603e2f4a6967ec2f1ccbccf9ef3a7a61705010b721c853e0e630d9a92a"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSjIxOSMwMDI"
           }
         },
         {
@@ -11641,7 +11613,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/88278f03a9076176a6419fac36fc92177221df3f4e0f42bed6212a5db8fdb44d"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NyMwMDM"
           }
         },
         {
@@ -11658,7 +11630,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/88278f03a9076176a6419fac36fc92177221df3f4e0f42bed6212a5db8fdb44d"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NyMwMDM"
           }
         },
         {
@@ -11675,7 +11647,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:id/88278f03a9076176a6419fac36fc92177221df3f4e0f42bed6212a5db8fdb44d"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NyMwMDM"
           }
         },
         {
@@ -11845,7 +11817,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/88278f03a9076176a6419fac36fc92177221df3f4e0f42bed6212a5db8fdb44d"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NyMwMDM"
           }
         },
         {
@@ -11964,7 +11936,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/c30c26e589c2734384a97bbd7c9be2cd58e739d0cdc0cb32fe68d1cebe8a1161"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMyMwMDM"
           }
         },
         {
@@ -11981,7 +11953,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/c30c26e589c2734384a97bbd7c9be2cd58e739d0cdc0cb32fe68d1cebe8a1161"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMyMwMDM"
           }
         },
         {
@@ -11998,7 +11970,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/98b5119fdce400aa9b3b89485b67cd3f46311397d61f4a2708aa6bf939066b4c"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMyMwMDMvMDE3My0xIzAxLUFIRjU4MiMwMDM"
           }
         },
         {
@@ -12015,7 +11987,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/98b5119fdce400aa9b3b89485b67cd3f46311397d61f4a2708aa6bf939066b4c"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMyMwMDMvMDE3My0xIzAxLUFIRjU4MiMwMDM"
           }
         },
         {
@@ -12032,7 +12004,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w"
           }
         },
         {
@@ -12185,7 +12157,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/98b5119fdce400aa9b3b89485b67cd3f46311397d61f4a2708aa6bf939066b4c"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMyMwMDMvMDE3My0xIzAxLUFIRjU4MiMwMDM"
           }
         },
         {
@@ -12202,7 +12174,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/de76bc0b7513ad0e4af9a8829b508a70d992c1a959ec2145c270ed45bcbf718b"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTjQ2OCMwMDg"
           }
         },
         {
@@ -12219,7 +12191,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/de76bc0b7513ad0e4af9a8829b508a70d992c1a959ec2145c270ed45bcbf718b"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTjQ2OCMwMDg"
           }
         },
         {
@@ -12406,7 +12378,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/de76bc0b7513ad0e4af9a8829b508a70d992c1a959ec2145c270ed45bcbf718b"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTjQ2OCMwMDg"
           }
         },
         {
@@ -12423,7 +12395,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ffbf8841bc1b071a24fe385655633077135e7ef36963ecf5ac26f243d15d6ba8"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBUDAwMyMwMDU"
           }
         },
         {
@@ -12440,7 +12412,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ffbf8841bc1b071a24fe385655633077135e7ef36963ecf5ac26f243d15d6ba8"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBUDAwMyMwMDU"
           }
         },
         {
@@ -12593,7 +12565,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ffbf8841bc1b071a24fe385655633077135e7ef36963ecf5ac26f243d15d6ba8"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBUDAwMyMwMDU"
           }
         },
         {
@@ -12610,7 +12582,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/8df319ec313fbe2c7e8a01ab38b53e245e3a3d5f4b4ab854e8fded396eba0a9c"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzk0MCMwMDM"
           }
         },
         {
@@ -12627,7 +12599,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/8df319ec313fbe2c7e8a01ab38b53e245e3a3d5f4b4ab854e8fded396eba0a9c"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzk0MCMwMDM"
           }
         },
         {
@@ -12780,7 +12752,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/8df319ec313fbe2c7e8a01ab38b53e245e3a3d5f4b4ab854e8fded396eba0a9c"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzk0MCMwMDM"
           }
         },
         {
@@ -12797,7 +12769,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/d8f46de6ffc6b731d0541b5e5f3c3559c39305d03be8d6e154ddbacd0dfb3ac1"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5OCMwMDM"
           }
         },
         {
@@ -12814,7 +12786,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/d8f46de6ffc6b731d0541b5e5f3c3559c39305d03be8d6e154ddbacd0dfb3ac1"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5OCMwMDM"
           }
         },
         {
@@ -12855,242 +12827,269 @@
       "@id": "aasld:graph/order"
     },
     {
-      "@id": "aasld:id/0da430d407cfff9ba631bc66ce81f92758e10d1d8bce90647e4a3f7e7c345e84",
+      "@id": "aasld:subject/v1/MDE3My0xIzAxLUFIRjU3OCMwMDM",
       "@type": "aas:ConceptDescription",
-      "displayName": [
-        "_:b606",
-        "_:b608"
-      ],
-      "embeddedDataSpecifications": "_:b610",
-      "id": "0173-1#02-ABI500#003",
-      "idShort": "Documents"
+      "aas:Identifiable/id": "0173-1#01-AHF578#003",
+      "description": "_:b592",
+      "displayName": "_:b604",
+      "embeddedDataSpecifications": "_:b594",
+      "idShort": "HandoverDocumentation"
     },
     {
-      "@id": "aasld:id/0fd44e0a29f686a7b5450c4c8ed16670536d31b1c220e79f0f580c213796ab73",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTjQ2NiMwMDQ",
       "@type": "aas:ConceptDescription",
-      "displayName": "_:b718",
-      "embeddedDataSpecifications": "_:b720",
-      "id": "0173-1#02-AAO099#004",
-      "idShort": "DocumentIdentifier"
-    },
-    {
-      "@id": "aasld:id/25ea93c33a40bc1aae6cd670c236aedb2847264bff1c2cc566f3ac8da5fec03e",
-      "@type": "aas:ConceptDescription",
-      "displayName": [
-        "_:b782",
-        "_:b784"
-      ],
-      "embeddedDataSpecifications": "_:b786",
-      "id": "0173-1#02-ABI502#003/0173-1#01-AHF581#003",
-      "idShort": "DocumentClassification"
-    },
-    {
-      "@id": "aasld:id/28491dc511fd552c0c28b73adbc04bd6187e050707954162681345237f7692e7",
-      "@type": "aas:ConceptDescription",
-      "displayName": [
-        "_:b674",
-        "_:b676"
-      ],
-      "embeddedDataSpecifications": "_:b678",
-      "id": "0173-1#02-ABI501#003/0173-1#01-AHF580#003",
-      "idShort": "DocumentId"
-    },
-    {
-      "@id": "aasld:id/4ed609314ebe3a8bc3006200c4d5a9c9c8866904a4e8cf9c66eb89d35d2d65bb",
-      "@type": "aas:ConceptDescription",
-      "displayName": [
-        "_:b652",
-        "_:b654"
-      ],
-      "embeddedDataSpecifications": "_:b656",
-      "id": "0173-1#02-ABI501#003",
-      "idShort": "DocumentIds"
-    },
-    {
-      "@id": "aasld:id/53f012a3a19d81e3500fd102d2a6205774302454979b4388cac50ccccda34d55",
-      "@type": "aas:ConceptDescription",
-      "displayName": [
-        "_:b1032",
-        "_:b1034"
-      ],
-      "embeddedDataSpecifications": "_:b1036",
-      "id": "0173-1#02-ABK126#002",
-      "idShort": "DigitalFile"
-    },
-    {
-      "@id": "aasld:id/66f07188a980c68465b86adc955d794cf5eaa7aa6c5e5e63d28ceb0f7f053bee",
-      "@type": "aas:ConceptDescription",
-      "displayName": [
-        "_:b738",
-        "_:b740"
-      ],
-      "embeddedDataSpecifications": "_:b742",
-      "id": "0173-1#02-ABH995#003",
-      "idShort": "DocumentIsPrimary"
-    },
-    {
-      "@id": "aasld:id/6df62bd5ac3d5696244e1df1e9752ff1fb0628562faef0db7c283a0864ccd8c9",
-      "@type": "aas:ConceptDescription",
-      "displayName": [
-        "_:b760",
-        "_:b762"
-      ],
-      "embeddedDataSpecifications": "_:b764",
-      "id": "0173-1#02-ABI502#003",
-      "idShort": "DocumentClassifications"
-    },
-    {
-      "@id": "aasld:id/88278f03a9076176a6419fac36fc92177221df3f4e0f42bed6212a5db8fdb44d",
-      "@type": "aas:ConceptDescription",
-      "description": "_:b856",
-      "displayName": [
-        "_:b852",
-        "_:b854"
-      ],
-      "embeddedDataSpecifications": "_:b858",
-      "id": "0173-1#02-ABH997#003",
-      "idShort": "ClassificationSystem"
-    },
-    {
-      "@id": "aasld:id/8df319ec313fbe2c7e8a01ab38b53e245e3a3d5f4b4ab854e8fded396eba0a9c",
-      "@type": "aas:ConceptDescription",
-      "displayName": [
-        "_:b966",
-        "_:b968"
-      ],
-      "embeddedDataSpecifications": "_:b970",
-      "id": "0173-1#02-ABG940#003",
-      "idShort": "Title"
-    },
-    {
-      "@id": "aasld:id/98b5119fdce400aa9b3b89485b67cd3f46311397d61f4a2708aa6bf939066b4c",
-      "@type": "aas:ConceptDescription",
-      "displayName": [
-        "_:b894",
-        "_:b896"
-      ],
-      "embeddedDataSpecifications": "_:b898",
-      "id": "0173-1#02-ABI503#003/0173-1#01-AHF582#003",
-      "idShort": "DocumentVersion"
-    },
-    {
-      "@id": "aasld:id/9d24b8ade3c51abf32c7d1e876036d1490ee91738c133a64e46ca971bb31b586",
-      "@type": "aas:ConceptDescription",
-      "description": "_:b632",
-      "displayName": [
-        "_:b628",
-        "_:b630"
-      ],
-      "embeddedDataSpecifications": "_:b634",
-      "id": "0173-1#02-ABI500#003/0173-1#01-AHF579#003",
-      "idShort": "Document"
-    },
-    {
-      "@id": "aasld:id/a60bc19f8be5bb6c7aa371c734a0e7de6d5877ab9db05a76bfa0a05e5ab38888",
-      "@type": "aas:ConceptDescription",
-      "displayName": [
-        "_:b696",
-        "_:b698"
-      ],
-      "embeddedDataSpecifications": "_:b700",
-      "id": "0173-1#02-ABH994#003",
-      "idShort": "DocumentDomainId"
-    },
-    {
-      "@id": "aasld:id/c30c26e589c2734384a97bbd7c9be2cd58e739d0cdc0cb32fe68d1cebe8a1161",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b892",
-      "embeddedDataSpecifications": "_:b876",
-      "id": "0173-1#02-ABI503#003",
-      "idShort": "DocumentVersions"
-    },
-    {
-      "@id": "aasld:id/d26bf4e215547aa88915e12bb8f5f21c5e5c1c3f9a9d8737feb4d0b6af7e39d1",
-      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-AAN466#004",
       "displayName": [
         "_:b1010",
         "_:b1012"
       ],
       "embeddedDataSpecifications": "_:b1014",
-      "id": "0173-1#02-AAN466#004",
       "idShort": "Description"
     },
     {
-      "@id": "aasld:id/d8888b4433fc08d3c899facfb8be620855fd644e50a49826b5783da9c15c3d36",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTjQ2OCMwMDg",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-AAN468#008",
+      "displayName": [
+        "_:b916",
+        "_:b918"
+      ],
+      "embeddedDataSpecifications": "_:b920",
+      "idShort": "Language"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTzA5OSMwMDQ",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-AAO099#004",
+      "displayName": "_:b718",
+      "embeddedDataSpecifications": "_:b720",
+      "idShort": "DocumentIdentifier"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBUDAwMyMwMDU",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-AAP003#005",
+      "displayName": [
+        "_:b944",
+        "_:b946"
+      ],
+      "embeddedDataSpecifications": "_:b948",
+      "idShort": "Version"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzk0MCMwMDM",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABG940#003",
+      "displayName": [
+        "_:b966",
+        "_:b968"
+      ],
+      "embeddedDataSpecifications": "_:b970",
+      "idShort": "Title"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NCMwMDM",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABH994#003",
+      "displayName": [
+        "_:b696",
+        "_:b698"
+      ],
+      "embeddedDataSpecifications": "_:b700",
+      "idShort": "DocumentDomainId"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NSMwMDM",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABH995#003",
+      "displayName": [
+        "_:b738",
+        "_:b740"
+      ],
+      "embeddedDataSpecifications": "_:b742",
+      "idShort": "DocumentIsPrimary"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NiMwMDM",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABH996#003",
       "description": "_:b808",
       "displayName": [
         "_:b804",
         "_:b806"
       ],
       "embeddedDataSpecifications": "_:b810",
-      "id": "0173-1#02-ABH996#003",
       "idShort": "ClassId"
     },
     {
-      "@id": "aasld:id/d8f46de6ffc6b731d0541b5e5f3c3559c39305d03be8d6e154ddbacd0dfb3ac1",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5NyMwMDM",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABH997#003",
+      "description": "_:b856",
+      "displayName": [
+        "_:b852",
+        "_:b854"
+      ],
+      "embeddedDataSpecifications": "_:b858",
+      "idShort": "ClassificationSystem"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSDk5OCMwMDM",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABH998#003",
       "displayName": [
         "_:b988",
         "_:b990"
       ],
       "embeddedDataSpecifications": "_:b992",
-      "id": "0173-1#02-ABH998#003",
       "idShort": "Subtitle"
     },
     {
-      "@id": "aasld:id/de76bc0b7513ad0e4af9a8829b508a70d992c1a959ec2145c270ed45bcbf718b",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMCMwMDM",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABI500#003",
       "displayName": [
-        "_:b916",
-        "_:b918"
+        "_:b606",
+        "_:b608"
       ],
-      "embeddedDataSpecifications": "_:b920",
-      "id": "0173-1#02-AAN468#008",
-      "idShort": "Language"
+      "embeddedDataSpecifications": "_:b610",
+      "idShort": "Documents"
     },
     {
-      "@id": "aasld:id/ec3f34603e2f4a6967ec2f1ccbccf9ef3a7a61705010b721c853e0e630d9a92a",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMCMwMDMvMDE3My0xIzAxLUFIRjU3OSMwMDM",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABI500#003/0173-1#01-AHF579#003",
+      "description": "_:b632",
+      "displayName": [
+        "_:b628",
+        "_:b630"
+      ],
+      "embeddedDataSpecifications": "_:b634",
+      "idShort": "Document"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMSMwMDM",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABI501#003",
+      "displayName": [
+        "_:b652",
+        "_:b654"
+      ],
+      "embeddedDataSpecifications": "_:b656",
+      "idShort": "DocumentIds"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMSMwMDMvMDE3My0xIzAxLUFIRjU4MCMwMDM",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABI501#003/0173-1#01-AHF580#003",
+      "displayName": [
+        "_:b674",
+        "_:b676"
+      ],
+      "embeddedDataSpecifications": "_:b678",
+      "idShort": "DocumentId"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMiMwMDM",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABI502#003",
+      "displayName": [
+        "_:b760",
+        "_:b762"
+      ],
+      "embeddedDataSpecifications": "_:b764",
+      "idShort": "DocumentClassifications"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMiMwMDMvMDE3My0xIzAxLUFIRjU4MSMwMDM",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABI502#003/0173-1#01-AHF581#003",
+      "displayName": [
+        "_:b782",
+        "_:b784"
+      ],
+      "embeddedDataSpecifications": "_:b786",
+      "idShort": "DocumentClassification"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMyMwMDM",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABI503#003",
+      "displayName": "_:b892",
+      "embeddedDataSpecifications": "_:b876",
+      "idShort": "DocumentVersions"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSTUwMyMwMDMvMDE3My0xIzAxLUFIRjU4MiMwMDM",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABI503#003/0173-1#01-AHF582#003",
+      "displayName": [
+        "_:b894",
+        "_:b896"
+      ],
+      "embeddedDataSpecifications": "_:b898",
+      "idShort": "DocumentVersion"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSjIxOSMwMDI",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABJ219#002",
       "description": "_:b832",
       "displayName": [
         "_:b828",
         "_:b830"
       ],
       "embeddedDataSpecifications": "_:b834",
-      "id": "0173-1#02-ABJ219#002",
       "idShort": "ClassName"
     },
     {
-      "@id": "aasld:id/ff3677a5ce00446a76fcf1ea07791720dd3e1d6ba39f163fe1eb1a6a7c03ea6b",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSzEyNiMwMDI",
       "@type": "aas:ConceptDescription",
-      "description": "_:b592",
-      "displayName": "_:b604",
-      "embeddedDataSpecifications": "_:b594",
-      "id": "0173-1#01-AHF578#003",
-      "idShort": "HandoverDocumentation"
+      "aas:Identifiable/id": "0173-1#02-ABK126#002",
+      "displayName": [
+        "_:b1032",
+        "_:b1034"
+      ],
+      "embeddedDataSpecifications": "_:b1036",
+      "idShort": "DigitalFile"
     },
     {
-      "@id": "aasld:id/ffbf8841bc1b071a24fe385655633077135e7ef36963ecf5ac26f243d15d6ba8",
-      "@type": "aas:ConceptDescription",
-      "displayName": [
-        "_:b944",
-        "_:b946"
-      ],
-      "embeddedDataSpecifications": "_:b948",
-      "id": "0173-1#02-AAP003#005",
-      "idShort": "Version"
+      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9IYW5kb3ZlckRvY3VtZW50YXRpb24vMi8w",
+      "@type": "aas:AssetAdministrationShell",
+      "aas:AssetAdministrationShell/submodels": {
+        "@id": "_:b2"
+      },
+      "aas:Identifiable/id": "https://admin-shell.io/idta/aas/HandoverDocumentation/2/0",
+      "assetInformation": "_:b1",
+      "displayName": "_:b6",
+      "idShort": "HandoverDocumentationAAS"
     }
   ],
   "@type": [
     "uav:object",
-    "i4aas:AASSubmodelType"
+    "i4aas:AASSubmodelType",
+    "aas:Submodel"
   ],
+  "aas:HasKind/kind": {
+    "@id": "aas:ModellingKind/Template"
+  },
+  "aas:Identifiable/id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
+  "administration": "_:b10",
+  "description": "_:b8",
+  "displayName": "_:b590",
+  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w",
+  "idShort": "HandoverDocumentation",
   "security": "nosec_sc",
   "securityDefinitions": {
     "nosec_sc": {
       "scheme": "nosec"
     }
   },
+  "semanticId": "_:b11",
+  "submodelElements": "_:b22",
+  "supplementalSemanticIds": [
+    "_:b14",
+    "_:b18"
+  ],
   "title": "HandoverDocumentation"
 }

@@ -7,6 +7,7 @@
 <!-- words: dpp cosign attestation packageid registryurl namespace -->
 <!-- words: handover mediatype opencontainers openusd submodel submodels -->
 <!-- words: schemaVersion artifactType -->
+<!-- words: storeidentifier manifestdigest subjectmanifestdigest historypolicy packagebase64 aasxregistryid -->
 
 ## Abstract
 
@@ -30,7 +31,8 @@ how such a package store is projected into the xRegistry document format and API
   - [3. Package Store Model](#3-package-store-model)
     - [3.1. Package Stores](#31-package-stores)
     - [3.2. Packages](#32-packages)
-    - [3.3. Formats](#33-formats)
+    - [3.3. Referrers](#33-referrers)
+    - [3.4. Formats](#34-formats)
   - [4. The OCI Binding](#4-the-oci-binding)
     - [4.1. Structural Mapping](#41-structural-mapping)
     - [4.2. Media Types](#42-media-types)
@@ -116,11 +118,21 @@ is the integrity anchor:
 > has verified the artifact; a Consumer that has only matched a `versionid` has
 > verified nothing.
 
-The distinction matters because release labels are mutable in most package
-stores and digests are not. Where a store permits a label to be moved to
-different content, an implementation MUST reflect the move as a new Version
-rather than by changing an existing Version's `digest`. A Version's `digest` is
-immutable once published.
+Every accepted package content state MUST create an immutable retained Version
+under [Section 1.4 of the AAS Registry specification](xRegistry-AAS.md#14-versioning).
+A package Version's `digest`, `digestalg`, document bytes and domain attributes
+MUST NOT change after creation.
+
+The OCI binding has two different content addresses. `manifestdigest` identifies
+the immutable OCI manifest and is the source identity from which `versionid` is
+derived. `digest` and `digestalg` identify the package blob returned as the
+Version document. A tag identifies neither: it is a mutable alias whose raw
+value and current target are recorded in a Resource `meta.tags` entry.
+
+An OCI referrer manifest is not a package release. Each attestation or other
+referrer is represented by a separate `referrer` Resource and MUST NOT be added
+as a Version of a `package` Resource. A late referrer therefore cannot become
+the package Resource's default Version under `modifiedat` selection.
 
 ## 2. Notations and Terminology
 
@@ -148,13 +160,21 @@ the [AAS Registry specification](xRegistry-AAS.md). This document defines the
 
 An `aasxregistry` Group is one package store, or one namespace within one.
 
-- `registryurl` is the base URL of the backing store.
+- `storeidentifier` is REQUIRED and is the stable authored identifier of the
+  package store or store namespace. It is the sole authority for the Group's
+  identity, and `aasxregistryid` is its
+  [symbolic identifier](xRegistry-AAS.md#51-aas-identifiers-and-xids).
+- `registryurl` is the current base URL of the backing store.
 - `namespace` is the portion of that store this Group covers, where the store is
   subdivided.
 
 Separating stores into Groups rather than flattening them keeps a registry able
 to front several stores at once — a public one and an internal one, or one per
 supplier — while presenting a single collection to a Consumer.
+
+`registryurl` and `namespace` are routing metadata and MUST NOT be used as
+identity. Moving a store without changing `storeidentifier` does not change its
+Group `xid`.
 
 ### 3.2. Packages
 
@@ -164,33 +184,67 @@ A `package` Resource is one AASX package served as a document.
   backing store. It is the authority for the package's identity, and the
   `packageid` is the symbolic identifier derived from it
   ([Section 4.4](#44-identifiers)).
-- `format` is REQUIRED ([Section 3.3](#33-formats)).
-- `digest` and `digestalg` carry the content hash of the exact bytes a Consumer
-  retrieves. `digestalg` is REQUIRED when `digest` is present. A package Version
-  SHOULD carry a `digest`; a package store that cannot supply one is not
-  providing the property this binding exists for.
+- `format` is REQUIRED ([Section 3.4](#34-formats)).
+- `digest` and `digestalg` are REQUIRED and carry the content hash of the exact
+  package blob bytes a Consumer retrieves.
+- `manifestdigest` carries the immutable release-manifest digest. It is REQUIRED
+  by the OCI binding and is distinct from `digest`.
 - `aasidentifiers` lists the AAS Identifiable ids the package contains.
 - `artifacttype` is the media type declaring what the artifact is, where the
   backing store carries one ([Section 4.2](#42-media-types)).
 - `shell` points at the shell this package is the packaged form of, where the
   same registry serves it.
-- `subject` is the digest of the artifact this one is attached to, where this
-  Resource is itself an attestation rather than a package
-  ([Section 5](#5-signing-and-attestation)).
-- `attestations` lists the attestations attached to this package
-  ([Section 5.2](#52-surfacing-attestations)).
 
 A `package` MUST NOT carry a `digest` for bytes the registry has not verified.
+Its `meta.historypolicy` MUST be `retain-all`.
 
-### 3.3. Formats
+A package Resource's `meta` object MAY also carry mutable tag discovery
+metadata:
 
-| `format` | Document |
-|---|---|
-| `AASX/3.0`, `AASX/3.1` | An AASX package as defined by the AAS package file format specification of that version |
-| `Opaque/1.0` | An artifact this store serves but does not interpret |
+- `meta.tags` is an array of entries carrying a raw `tag` and its current
+  `manifestdigest`. The raw tag is a value, never a map or object key.
 
-The enumeration is not strict. An attestation surfaced as a Resource in its own
-right is served with `Opaque/1.0` and identified by its `artifacttype`.
+`historypolicy` and `tags` are domain extensions declared by `metaattributes`
+and serialized in the Resource `meta` object. A Producer MUST NOT place them in
+xRegistry's reserved system-managed `resourceattributes` object. `tags` MUST
+NOT be a Version attribute. Updating it MUST NOT alter a Version's document,
+attributes, `epoch` or `modifiedat`.
+
+### 3.3. Referrers
+
+A `referrer` Resource is one immutable OCI referrer manifest and the
+attestation or other artifact blob that its single layer describes. Each
+referrer manifest MUST create a separate Resource in the `referrers`
+collection. A `referrer` Resource MUST contain exactly one immutable Version.
+
+- `manifestdigest` is REQUIRED and is the exact OCI referrer manifest digest.
+  It is the sole Resource and Version source identity. Both `referrerid` and
+  `versionid` MUST be its
+  [symbolic identifier](xRegistry-AAS.md#51-aas-identifiers-and-xids).
+- `subjectmanifestdigest` is REQUIRED and is the package manifest digest named
+  by the OCI manifest's `subject` descriptor.
+- `artifacttype` is REQUIRED and identifies the kind of assertion.
+- `digest` and `digestalg` are REQUIRED and verify the exact referrer artifact
+  blob returned as the Resource document.
+- `signer`, where present, identifies the party established when the immutable
+  Resource is created.
+- `format` MUST be `Opaque/1.0`.
+
+A different referrer manifest digest creates a different `referrer` Resource;
+it MUST NOT create another Version of an existing referrer Resource. A
+Producer MUST NOT place `subject`, `attestations` or referrer summaries on a
+`package` Version. Consequently, adding a referrer cannot affect the package
+Resource's Version collection or its default Version.
+
+### 3.4. Formats
+
+| Resource | `format` | Document |
+|---|---|---|
+| `package` | `AASX/3.0`, `AASX/3.1` | An AASX package as defined by the AAS package file format specification of that version |
+| `referrer` | `Opaque/1.0` | An attestation or other referrer artifact the store serves but does not interpret |
+
+The package enumeration is not strict. A `referrer` Resource uses only
+`Opaque/1.0` and is identified more specifically by its `artifacttype`.
 
 ## 4. The OCI Binding
 
@@ -204,22 +258,32 @@ serve the same model over a different store.
 |---|---|
 | `aasxregistry` Group | one registry, or one namespace within it |
 | `package` Resource | one repository |
-| Version | one tag |
-| `digest` | the manifest digest |
+| Version `manifestdigest` | one immutable manifest digest |
+| Version `versionid` | symbolic identifier of `manifestdigest` |
+| Resource `meta.tags[].tag` and `meta.tags[].manifestdigest` | one mutable raw tag-to-manifest-digest alias |
+| `digest` and `digestalg` | the single package-layer blob digest |
 | document | the package blob |
 | `artifacttype` | the manifest `artifactType` |
-| `subject` | the manifest `subject` digest |
-| `attestations` | the entries returned for this manifest by the referrers interface |
+| `referrer` Resource | one immutable OCI referrer manifest |
+| Referrer `manifestdigest` | the referrer manifest digest and sole Resource and Version source identity |
+| Referrer `subjectmanifestdigest` | the manifest `subject.digest` |
+| Referrer `digest` and `digestalg` | the single referrer-layer blob digest |
 
 A Consumer retrieving a Version's document receives the package blob, not the
 manifest. The manifest is metadata about the artifact and is surfaced through
 the Resource's attributes; an implementation MUST NOT return a manifest where a
 document is requested.
 
-Untagged manifests — those reachable only by digest — MAY be omitted from the
-Versions collection. An implementation that omits them MUST still resolve a
-`digest` that names one, because an attestation's `subject` refers to a digest
-and not to a tag.
+A Consumer retrieving a `referrer` Resource receives the referrer artifact
+blob, not the referrer manifest. Package releases and referrers occupy separate
+Resource collections; an implementation MUST NOT project a referrer manifest
+as a package Version.
+
+An implementation MAY be unable to discover an untagged manifest that it has
+never observed. Once it has exposed a manifest as a Version, it MUST retain that
+Version after all tags move away from it. It MUST also resolve an observed
+manifest by `manifestdigest`, because an attestation's `subject` refers to the
+manifest digest and never to a tag or package-blob digest.
 
 ### 4.2. Media Types
 
@@ -279,9 +343,23 @@ separate configuration document: everything a Consumer needs is inside the
 package. An implementation MUST NOT invent a configuration blob to carry
 metadata that belongs in xRegistry attributes.
 
-A package with exactly one layer is the normal case. An implementation MAY store
-a package as several layers where the store benefits from it, and MUST then
-present the reassembled package as the document.
+The manifest MUST contain exactly one package layer. The layer descriptor's
+digest algorithm maps to `digestalg`, and its encoded digest value maps to
+`digest`. This one-to-one rule makes the Version document and the bytes covered
+by `digest` the same object; a multi-layer manifest is not a conforming package
+Version in this binding.
+
+The descriptor algorithms `sha256`, `sha384` and `sha512` map respectively to
+`digestalg` values `Sha256`, `Sha384` and `Sha512`. A Producer MUST compute the
+package-blob digest with the algorithm named by the descriptor and retain that
+exact mapped value in the immutable Version; it MUST NOT substitute `Sha256`.
+`digestalg` is case-sensitive: only the exact enum spellings `Sha256`, `Sha384`
+and `Sha512` are valid. A descriptor that uses any other digest algorithm MUST
+NOT be exposed as a conforming package Version.
+
+The digest of the exact manifest bytes is `manifestdigest`. It MUST NOT be copied
+into `digest`, because a Consumer receives the layer blob as the Version
+document and therefore cannot verify those bytes against the manifest digest.
 
 ### 4.4. Identifiers
 
@@ -296,10 +374,67 @@ the AAS Registry:
 > implementation MUST NOT recover a repository name by attempting to invert the
 > construction.
 
-A `versionid` is the tag as held by the store. Tags are already constrained to a
-character set that xRegistry accepts, so a tag is used unchanged; where a store
-permits a tag this specification's grammar does not, the symbolic identifier
-construction applies to it as well.
+An OCI Version's `manifestdigest` MUST be the digest returned for the exact
+manifest bytes, including its algorithm prefix, and its `versionid` MUST be the
+[symbolic identifier][symbolic identifier] of that `manifestdigest`.
+`manifestdigest` is the sole authority for Version identity. A tag MUST NOT be
+used as a `versionid`.
+
+Tags are represented only by the mutable Resource `meta.tags` array. Each entry
+MUST carry exactly one raw `tag` and one `manifestdigest`. The raw tag MUST match
+`[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}` and MUST be preserved byte-for-byte,
+including case and a leading underscore. An implementation MUST NOT use the raw
+tag as a map or object key because legal OCI tags are not necessarily legal
+xRegistry names.
+
+Each current raw tag MUST appear in exactly one entry. Moving a tag updates that
+entry's `manifestdigest`. If the target manifest has not previously been
+exposed, the move also creates a new immutable Version; it never edits or
+replaces the old Version.
+
+The following tag movement is illustrative. For compactness the rows use
+`Opaque/1.0` test blobs rather than complete AASX archives, and show them in
+base64 so that their byte verification is reproducible:
+
+| State | Tag `Release_2026.08` target | Version source identity | Package blob (`packagebase64`) | `digest` |
+|---|---|---|---|---|
+| Initial | `sha256:843f1b84d5129f49ddb26231c1f21fbe9ba5c78d3362731c27f16d1e467c20d0` | same `manifestdigest` | `QUFTWC1wYWNrYWdlLXYxCg==` | `bb9aa6f9880d42b5c4afa6e61baa9b4e4e510e65c332ab62e85a1231c8f7517c` |
+| After movement | `sha256:14acf7d897aac9be7dcbcbb3cf57debfb650646e238078b34b1ef301f925b4ad` | same `manifestdigest` | `QUFTWC1wYWNrYWdlLXYyCg==` | `e0c5a0a7d7a81a59853efc1b731eb1ffb8b54016c72dbca93ac33d32bb49f656` |
+
+The corresponding `versionid` values are
+`sha256-843f1b84d5129f49ddb26231c1f21fbe9ba5c78d3362731c27f16d1e.4bd67a322e75782f07dda3c551755917b7e8ab393d601e04330d83a34308a790`
+and
+`sha256-14acf7d897aac9be7dcbcbb3cf57debfb650646e238078b34b1ef301.a30f75ef2b758b023c6fb7d5f00cd82578775423eb4792b08f8b3e10e83aebf2`.
+
+Both rows use `digestalg` `Sha256`. After movement the Resource contains both
+immutable Versions, while the `Release_2026.08` entry contains only the second
+`manifestdigest`. Computing SHA-256 over each decoded package blob produces its
+row's `digest`; computing it over the manifest bytes produces `manifestdigest`,
+which is a different verification step.
+
+The array representation preserves legal tags that cannot be xRegistry map
+keys. The final entry below has the maximum OCI tag length of 128 characters:
+
+```json
+{
+  "meta": {
+    "tags": [
+      {
+        "tag": "Release_2026.08",
+        "manifestdigest": "sha256:14acf7d897aac9be7dcbcbb3cf57debfb650646e238078b34b1ef301f925b4ad"
+      },
+      {
+        "tag": "_stable",
+        "manifestdigest": "sha256:14acf7d897aac9be7dcbcbb3cf57debfb650646e238078b34b1ef301f925b4ad"
+      },
+      {
+        "tag": "Rxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "manifestdigest": "sha256:843f1b84d5129f49ddb26231c1f21fbe9ba5c78d3362731c27f16d1e467c20d0"
+      }
+    ]
+  }
+}
+```
 
 Note that the AAS identifiers a package contains are unaffected by any of this.
 They are carried verbatim in `aasidentifiers`, and a Consumer matching a package
@@ -313,10 +448,10 @@ establish who produced it and that it has not been altered since.
 
 ### 5.1. Attaching an Attestation
 
-An attestation is stored as a separate artifact whose `subject` is the digest of
-the manifest it attests, and whose `artifactType` declares what kind of
-assertion it makes. The store's referrers interface then returns it when queried
-for that subject.
+An attestation is stored as a separate artifact whose `subject` is the
+`manifestdigest` of the manifest it attests, and whose `artifactType` declares
+what kind of assertion it makes. The store's referrers interface then returns it
+when queried for that manifest digest.
 
 This shape is used rather than embedding a signature in the package because it
 lets a package be signed more than once, by different parties, at different
@@ -330,35 +465,72 @@ worthless.
 
 ### 5.2. Surfacing Attestations
 
-Attestations appear in two places, and an implementation MAY do either or both:
+An attestation MUST be represented by its own immutable `referrer` Resource in
+the package store Group. It MUST NOT be represented as a Version of the
+`package` Resource it attests and MUST NOT be summarized by mutable metadata on
+that package. A Consumer discovers attestations by selecting `referrer`
+Resources whose `subjectmanifestdigest` equals the package
+`manifestdigest`.
 
-- As entries in the `attestations` array of the package they attest. Each entry
-  carries the `artifacttype` of the assertion, its `digest`, and where the store
-  makes it available the `signer` that produced it. This is the convenient form:
-  a Consumer reading a package sees what has been asserted about it.
-- As `package` Resources in their own right, carrying a `subject` naming the
-  digest they attest and a `format` of `Opaque/1.0`. This is the complete form:
-  the attestation is retrievable, and its bytes can be verified.
+The referrer manifest digest is the sole source identity for the Resource and
+its one Version. The Resource is therefore retrievable by `referrerid`, its
+single Version is retrievable by `versionid`, and its returned blob bytes are
+verified with that Version's `digest` and exact case-sensitive `digestalg`.
 
-Where both are present they MUST agree. The `attestations` array is a summary of
-what the store holds; it is not itself evidence, and a Consumer MUST NOT treat
-the presence of an entry as verification.
+For example, later discovery of an attestation for the first manifest in
+[Section 4.4](#44-identifiers) creates a `referrer` Resource whose
+`referrerid` and `versionid` are both
+`sha256-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.9f447b1b473d359884f2b8541a1ad0b7d194ed59b79e8eee48047ec4830564fd`.
+The single Version has these domain attributes; decoding `attestationbase64`
+and computing SHA-256 produces the stated `digest`:
+
+```json
+{
+  "manifestdigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "subjectmanifestdigest": "sha256:843f1b84d5129f49ddb26231c1f21fbe9ba5c78d3362731c27f16d1e467c20d0",
+  "format": "Opaque/1.0",
+  "artifacttype": "application/vnd.dev.cosign.simplesigning.v1+json",
+  "signer": "did:example:manufacturer",
+  "digestalg": "Sha256",
+  "digest": "a5dec971ce22f8a8080036cbc2a16273368074ed1c0e7be8bcfe51970bccfe19",
+  "attestationbase64": "YXR0ZXN0YXRpb24tdjEK"
+}
+```
+
+`attestationbase64` is present only to make the example bytes reproducible; it
+is not a model attribute.
+
+Immediately before and after this Resource is added, the package Resource's
+default Version remains the Version identified by
+`sha256:14acf7d897aac9be7dcbcbb3cf57debfb650646e238078b34b1ef301f925b4ad`.
+Adding the referrer MUST NOT modify that package Resource's Version collection,
+`defaultversionid`, document, attributes, `epoch` or `modifiedat`. This remains
+true even when package defaults are selected automatically by `modifiedat`,
+because referrer Versions belong to a different Resource collection.
 
 ### 5.3. Verification
 
 A Consumer that requires provenance SHOULD:
 
-1. Retrieve the package Version and compute its digest.
-2. Compare that digest against the Version's `digest` attribute. A mismatch
-   MUST be treated as a failure, and the package MUST NOT be used.
-3. Retrieve the attestations whose `subject` is that digest.
-4. Verify each attestation against the trust material for its `artifacttype`,
+1. Retrieve the manifest by `manifestdigest`, compute the digest of the exact
+   manifest bytes and compare it with `manifestdigest`. A mismatch MUST be
+   treated as a failure.
+2. Read the single package-layer descriptor and confirm that its algorithm and
+   encoded digest equal the Version's `digestalg` and `digest`.
+3. Retrieve the package blob, compute its digest using `digestalg`, and compare
+   it with `digest`. A mismatch MUST be treated as a failure, and the package
+   MUST NOT be used.
+4. Retrieve `referrer` Resources whose `subjectmanifestdigest` is the package
+   `manifestdigest`, retrieve each referrer manifest by its `manifestdigest`,
+   verify the manifest against that digest, and verify the returned attestation
+   blob against the Resource's `digest` using its exact `digestalg`.
+5. Verify each attestation against the trust material for its `artifacttype`,
    by whatever means that attestation format defines.
-5. Establish that the verified signer is one the Consumer is willing to trust
+6. Establish that the verified signer is one the Consumer is willing to trust
    for this purpose. A valid signature by an unknown party establishes only that
    the artifact has not changed since that party signed it.
 
-Step 5 is the one most often skipped and the one that carries the meaning. This
+Step 6 is the one most often skipped and the one that carries the meaning. This
 specification defines where attestations live and how they are surfaced; it does
 not define whose attestations matter, which is a policy question for the
 Consumer and, for regulated artifacts, for the regulation.
@@ -369,14 +541,17 @@ This specification inherits the security considerations of the
 [xRegistry Core specification][xRegistry Core] and of the
 [AAS Registry specification](xRegistry-AAS.md), and adds the following.
 
-A `digest` attribute is a claim by the registry. A Consumer that has not itself
-computed the digest of the bytes it received has verified nothing, however
-authoritative the registry appears. Where a registry federates a package it does
-not host, it MUST NOT publish a `digest` for bytes it has not verified.
+A `manifestdigest` or `digest` attribute is a claim by the registry. A Consumer
+that has not itself computed the manifest digest over the manifest bytes and the
+package digest over the returned blob bytes has verified neither object,
+however authoritative the registry appears. Where a registry federates a
+package it does not host, it MUST NOT publish a `digest` for bytes it has not
+verified.
 
 Package stores commonly permit a release label to be moved to different content.
-Where the backing store allows this, a `versionid` alone is not a stable
-reference and a Consumer that requires one MUST refer to the `digest`.
+Where the backing store allows this, a tag is not a stable reference. A Consumer
+that requires one MUST refer to the immutable `manifestdigest` or its derived
+Version `xid`, and MUST verify the returned package bytes against `digest`.
 
 An attestation establishes what a signer asserted, not that the assertion is
 true. A package can be correctly signed and still contain incorrect data, and a
@@ -411,5 +586,5 @@ a different value, and SHOULD record whatever value it found in `artifacttype`
 rather than normalizing it.
 
 [xRegistry Core]: https://xregistry.io/xreg/xregistryspecs/core-v1/docs/spec.html
-[symbolic identifier]: ../../core-specs/xregistry/README.md
+[symbolic identifier]: xRegistry-AAS.md#51-aas-identifiers-and-xids
 [OCI Distribution]: https://github.com/opencontainers/distribution-spec

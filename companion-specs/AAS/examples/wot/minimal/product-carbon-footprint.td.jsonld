@@ -1,13 +1,14 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    "https://w3id.org/aas-jsonld/context",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
     {
-      "i4aas": "http://opcfoundation.org/UA/I4AAS/",
-      "uav": "http://opcfoundation.org/UA/WoT-Binding/"
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
     }
   ],
-  "@graph": [
+  "@included": [
     {
       "@id": "_:b1",
       "@type": "aas:AssetInformation",
@@ -2772,35 +2773,6 @@
       "aas:Key/value": "urn:samm:io.admin-shell.idta.carbon_footprint:1.0.0#pcfCo2eq"
     },
     {
-      "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
-      "@type": "aas:Submodel",
-      "aas:HasKind/kind": {
-        "@id": "aas:ModellingKind/Template"
-      },
-      "administration": "_:b14",
-      "description": "_:b12",
-      "displayName": [
-        "_:b10",
-        "_:b8"
-      ],
-      "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
-      "idShort": "CarbonFootprint",
-      "semanticId": "_:b15",
-      "submodelElements": "_:b22",
-      "supplementalSemanticIds": "_:b18"
-    },
-    {
-      "@id": "https://admin-shell.io/idta/aas/DigitalBatteryPassport/CarbonFootprint/1/0",
-      "@type": "aas:AssetAdministrationShell",
-      "aas:AssetAdministrationShell/submodels": {
-        "@id": "_:b2"
-      },
-      "assetInformation": "_:b1",
-      "displayName": "_:b6",
-      "id": "https://admin-shell.io/idta/aas/DigitalBatteryPassport/CarbonFootprint/1/0",
-      "idShort": "CarbonFootprintForDBPAAS"
-    },
-    {
       "@graph": [
         {
           "@id": "_:b100",
@@ -2918,7 +2890,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w"
           }
         },
         {
@@ -3088,7 +3060,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w"
           }
         },
         {
@@ -3734,7 +3706,7 @@
             "@id": "aas:HasSemantics/supplementalSemanticIds"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w"
           }
         },
         {
@@ -3836,7 +3808,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w"
           }
         },
         {
@@ -4584,7 +4556,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/36b62da882234b8eca404c65f6b45bf33fa34a73d89f6fc819e1b95c7cd5a62b"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NCMwMDM"
           }
         },
         {
@@ -4601,7 +4573,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/36b62da882234b8eca404c65f6b45bf33fa34a73d89f6fc819e1b95c7cd5a62b"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NCMwMDM"
           }
         },
         {
@@ -4703,7 +4675,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/a5e8fd02e995494cbfc65629310b533a046d0ab6aad2c29da40470919792c9b1"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NSMwMDM"
           }
         },
         {
@@ -4720,7 +4692,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/a5e8fd02e995494cbfc65629310b533a046d0ab6aad2c29da40470919792c9b1"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NSMwMDM"
           }
         },
         {
@@ -5179,7 +5151,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/3984c5c0ddb4d70d5f6b33f85ca9c9eb4eb235b7f767bc1580eeb0f4b8bf1920"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NiMwMDM"
           }
         },
         {
@@ -5196,7 +5168,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/3984c5c0ddb4d70d5f6b33f85ca9c9eb4eb235b7f767bc1580eeb0f4b8bf1920"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NiMwMDM"
           }
         },
         {
@@ -5213,7 +5185,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/8a882e2adbfb607d672828ca6409b5e5669ed4df21bd5ba635627641f5871c1b"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NyMwMDM"
           }
         },
         {
@@ -5264,7 +5236,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/8a882e2adbfb607d672828ca6409b5e5669ed4df21bd5ba635627641f5871c1b"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NyMwMDM"
           }
         },
         {
@@ -5366,7 +5338,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/8a882e2adbfb607d672828ca6409b5e5669ed4df21bd5ba635627641f5871c1b"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NyMwMDM"
           }
         },
         {
@@ -5995,7 +5967,7 @@
             "@id": "aas:AssetAdministrationShell/submodels"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/aas/DigitalBatteryPassport/CarbonFootprint/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9EaWdpdGFsQmF0dGVyeVBhc3Nwb3J0L0NhcmJvbkZvb3RwcmludC8xLzA"
           }
         },
         {
@@ -6369,7 +6341,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/018ed2092ff362c4837ded7eb0e34e29d7a49afd5147ce2ff26e1e3bcddee313"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1OCMwMDM"
           }
         },
         {
@@ -6386,7 +6358,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/018ed2092ff362c4837ded7eb0e34e29d7a49afd5147ce2ff26e1e3bcddee313"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1OCMwMDM"
           }
         },
         {
@@ -6403,7 +6375,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#performanceClass"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jYXJib25fZm9vdHByaW50OjEuMC4wI3BlcmZvcm1hbmNlQ2xhc3M"
           }
         },
         {
@@ -6488,7 +6460,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#performanceClass"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jYXJib25fZm9vdHByaW50OjEuMC4wI3BlcmZvcm1hbmNlQ2xhc3M"
           }
         },
         {
@@ -6505,7 +6477,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#webLinkToPublicCarbonFootprintStudy"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jYXJib25fZm9vdHByaW50OjEuMC4wI3dlYkxpbmtUb1B1YmxpY0NhcmJvbkZvb3RwcmludFN0dWR5"
           }
         },
         {
@@ -6590,7 +6562,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#webLinkToPublicCarbonFootprintStudy"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jYXJib25fZm9vdHByaW50OjEuMC4wI3dlYkxpbmtUb1B1YmxpY0NhcmJvbkZvb3RwcmludFN0dWR5"
           }
         },
         {
@@ -6607,7 +6579,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIdentifier"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5oYW5kb3Zlcl9kb2N1bWVudGF0aW9uOjIuMC4wI2RvY3VtZW50SWRlbnRpZmllcg"
           }
         },
         {
@@ -6624,7 +6596,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIdentifier"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5oYW5kb3Zlcl9kb2N1bWVudGF0aW9uOjIuMC4wI2RvY3VtZW50SWRlbnRpZmllcg"
           }
         },
         {
@@ -6760,7 +6732,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIdentifier"
+            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5oYW5kb3Zlcl9kb2N1bWVudGF0aW9uOjIuMC4wI2RvY3VtZW50SWRlbnRpZmllcg"
           }
         },
         {
@@ -6845,7 +6817,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/aas/DigitalBatteryPassport/CarbonFootprint/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9EaWdpdGFsQmF0dGVyeVBhc3Nwb3J0L0NhcmJvbkZvb3RwcmludC8xLzA"
           }
         },
         {
@@ -7015,7 +6987,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0"
+            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w"
           }
         },
         {
@@ -7090,85 +7062,112 @@
       "@id": "aasld:graph/order"
     },
     {
-      "@id": "aasld:id/018ed2092ff362c4837ded7eb0e34e29d7a49afd5147ce2ff26e1e3bcddee313",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NCMwMDM",
       "@type": "aas:ConceptDescription",
-      "displayName": "_:b545",
-      "embeddedDataSpecifications": "_:b416",
-      "id": "0173-1#02-ABG858#003",
-      "idShort": "LifeCyclePhase"
-    },
-    {
-      "@id": "aasld:id/36b62da882234b8eca404c65f6b45bf33fa34a73d89f6fc819e1b95c7cd5a62b",
-      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABG854#003",
       "displayName": "_:b318",
       "embeddedDataSpecifications": "_:b218",
-      "id": "0173-1#02-ABG854#003",
       "idShort": "PcfCalculationMethod"
     },
     {
-      "@id": "aasld:id/3984c5c0ddb4d70d5f6b33f85ca9c9eb4eb235b7f767bc1580eeb0f4b8bf1920",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NSMwMDM",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABG855#003",
+      "displayName": "_:b334",
+      "embeddedDataSpecifications": "_:b320",
+      "idShort": "PcfCo2eq"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NiMwMDM",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABG856#003",
       "displayName": "_:b396",
       "embeddedDataSpecifications": "_:b336",
-      "id": "0173-1#02-ABG856#003",
       "idShort": "ReferenceImpactUnitForCalculation"
     },
     {
-      "@id": "aasld:id/8a882e2adbfb607d672828ca6409b5e5669ed4df21bd5ba635627641f5871c1b",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1NyMwMDM",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "0173-1#02-ABG857#003",
       "displayName": [
         "_:b398",
         "_:b400"
       ],
       "embeddedDataSpecifications": "_:b402",
-      "id": "0173-1#02-ABG857#003",
       "idShort": "QuantityOfMeasureForCalculation"
     },
     {
-      "@id": "aasld:id/a5e8fd02e995494cbfc65629310b533a046d0ab6aad2c29da40470919792c9b1",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCRzg1OCMwMDM",
       "@type": "aas:ConceptDescription",
-      "displayName": "_:b334",
-      "embeddedDataSpecifications": "_:b320",
-      "id": "0173-1#02-ABG855#003",
-      "idShort": "PcfCo2eq"
+      "aas:Identifiable/id": "0173-1#02-ABG858#003",
+      "displayName": "_:b545",
+      "embeddedDataSpecifications": "_:b416",
+      "idShort": "LifeCyclePhase"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#performanceClass",
+      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9EaWdpdGFsQmF0dGVyeVBhc3Nwb3J0L0NhcmJvbkZvb3RwcmludC8xLzA",
+      "@type": "aas:AssetAdministrationShell",
+      "aas:AssetAdministrationShell/submodels": {
+        "@id": "_:b2"
+      },
+      "aas:Identifiable/id": "https://admin-shell.io/idta/aas/DigitalBatteryPassport/CarbonFootprint/1/0",
+      "assetInformation": "_:b1",
+      "displayName": "_:b6",
+      "idShort": "CarbonFootprintForDBPAAS"
+    },
+    {
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jYXJib25fZm9vdHByaW50OjEuMC4wI3BlcmZvcm1hbmNlQ2xhc3M",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#performanceClass",
       "displayName": "_:b547",
       "embeddedDataSpecifications": "_:b549",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#performanceClass",
       "idShort": "performanceClass"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#webLinkToPublicCarbonFootprintStudy",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jYXJib25fZm9vdHByaW50OjEuMC4wI3dlYkxpbmtUb1B1YmxpY0NhcmJvbkZvb3RwcmludFN0dWR5",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#webLinkToPublicCarbonFootprintStudy",
       "displayName": "_:b561",
       "embeddedDataSpecifications": "_:b563",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#webLinkToPublicCarbonFootprintStudy",
       "idShort": "webLinkToPublicCarbonFootprintStudy"
     },
     {
-      "@id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIdentifier",
+      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5oYW5kb3Zlcl9kb2N1bWVudGF0aW9uOjIuMC4wI2RvY3VtZW50SWRlbnRpZmllcg",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIdentifier",
       "displayName": [
         "_:b573",
         "_:b575"
       ],
       "embeddedDataSpecifications": "_:b577",
-      "id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#documentIdentifier",
       "idShort": "documentIdentifier"
     }
   ],
   "@type": [
     "uav:object",
-    "i4aas:AASSubmodelType"
+    "i4aas:AASSubmodelType",
+    "aas:Submodel"
   ],
+  "aas:HasKind/kind": {
+    "@id": "aas:ModellingKind/Template"
+  },
+  "aas:Identifiable/id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
+  "administration": "_:b14",
+  "description": "_:b12",
+  "displayName": [
+    "_:b10",
+    "_:b8"
+  ],
+  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w",
+  "idShort": "CarbonFootprint",
   "security": "nosec_sc",
   "securityDefinitions": {
     "nosec_sc": {
       "scheme": "nosec"
     }
   },
+  "semanticId": "_:b15",
+  "submodelElements": "_:b22",
+  "supplementalSemanticIds": "_:b18",
   "title": "CarbonFootprint"
 }

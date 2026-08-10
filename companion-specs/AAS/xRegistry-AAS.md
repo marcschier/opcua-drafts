@@ -14,6 +14,8 @@
 <!-- words: cencenelec changelog conceptdescriptionid dictid fsp iec -->
 <!-- words: irdi iri metamodel mitigations packageid regid -->
 <!-- words: shellid validateformat webstore supplementalsemanticids -->
+<!-- words: templatenamespace dictionaryidentifier storeidentifier -->
+<!-- words: submodeltemplateid conceptdictionaryid aasxregistryid historypolicy -->
 
 ## Abstract
 
@@ -114,8 +116,13 @@ useful for federation:
 
 > Whether an AAS Registry hosts an entity or merely describes it is a property
 > of that entity's storage, not of its identity. A Consumer resolves the same
-> `xid` either way, and a registry MAY convert between the two without the
-> entity's identity changing.
+> `xid` either way. A registry MAY begin hosting an entity that was created as
+> an `xref` descriptor without changing its identity. Once the registry has
+> accepted any local Version for that Resource, however, it MUST NOT convert
+> the Resource to `xref`: the Core conversion removes the local Version
+> collection and would violate the retain-all history contract. Such a
+> conversion request MUST fail without changing the Resource or any retained
+> Version.
 
 ### 1.3. Relationship to Other xRegistry Specs
 
@@ -151,13 +158,65 @@ correction from a new observation.
 
 This specification therefore does not reflect the AAS version label into
 [`versionid`][xRegistry version-ids]. The AAS labels are carried unchanged in
-the `administration` attribute, and the xRegistry Core versioning rules apply
-unchanged on top of them. A `submodel` is defined with `versionmode` set to
-`modifiedat`, so Versions are ordered by the time the revision was made, and a
-Consumer asking for the Submodel as it stood at a given moment reads the newest
-Version not later than that moment.
+the `administration` attribute. A `submodel`, `conceptdescription`, `package` or
+`referrer` is a **content-bearing Resource**. The first three are defined with
+`versionmode` set to `modifiedat`, `singleversionroot` set to `true` and
+`maxversions` set to `0`. A `referrer` is immutable and contains exactly one
+retained Version.
 
-Two rules follow:
+The xRegistry Core 1.0-rc3 lifecycle is intentionally permissive: it allows an
+existing Version to be replaced, and `maxversions: 0` means no numeric limit but
+still permits an implementation to prune Versions. Those permissions are not
+sufficient for an as-of-date or audit service. This specification narrows them
+as follows:
+
+- For a `submodel`, `conceptdescription` or `package`, the first accepted
+  content state MUST create a Version. Any later change to the document bytes,
+  document URL, `contenttype`, `format`, or any domain attribute defined for
+  the Version other than its source identity MUST create a new Version with a
+  new `versionid`. Correcting a value is a change; it MUST NOT overwrite the
+  Version that carried the incorrect value. A different source identity creates
+  a different Resource. For a `referrer`, the immutable manifest digest is the
+  Resource source identity, so any changed referrer is a different Resource; an
+  existing referrer MUST NOT gain a second Version.
+- Once created, a Version's document, document location, `contenttype`,
+  `format`, source identity and domain attributes MUST be immutable. Changing
+  which Version is the default, and the Core metadata that reports that choice,
+  does not alter a Version's content state.
+- Every Version MUST be retained without expiration and remain directly
+  retrievable by its Version `xid` for the operational lifetime of the
+  registry. A conforming implementation MUST NOT prune or delete a Version, and
+  MUST NOT destructively delete the owning Resource or Group. For history-bearing
+  Resources, explicit `maxversions: 0` declares that there is no numeric cap and
+  the Core permission to prune at that value does not apply. A `referrer` has
+  `maxversions: 1` because it contains exactly one immutable Version, which is
+  retained in full. The required `meta.historypolicy` value `retain-all` makes
+  this stronger retention rule discoverable. `historypolicy` is a domain
+  extension declared by `metaattributes`; a Producer MUST NOT place it in
+  xRegistry's reserved system-managed `resourceattributes` object.
+- A new Version's `modifiedat` is the time at which the registry accepted that
+  content state. To answer an as-of-time request for a history-bearing Resource,
+  a Consumer selects the Version with the greatest `modifiedat` not later than
+  the requested time, breaking a timestamp tie by the case-insensitive ordering
+  of `versionid`.
+
+The runtime representation of that domain retention policy is inside the
+Resource `meta` object:
+
+```json
+{
+  "meta": {
+    "historypolicy": "retain-all"
+  }
+}
+```
+
+These requirements are observable: a conformance test can write two different
+documents, retrieve both Version `xid`s, and verify that the first still returns
+its original state. A service that keeps only the latest document MUST NOT
+claim the as-of-date or audit behaviour defined by this specification.
+
+The following identity rules also apply:
 
 - **The identifier binds to the Resource, not to the Version.** All Versions of
   one `submodel` share one `submodelidentifier` and one `submodelid`; they
@@ -270,10 +329,12 @@ one definition of what a Submodel is.
 An AAS Registry MAY be served together with other xRegistry Group types in one
 registry, and an implementation MAY support any subset of the four Group types.
 
-This model is fully mutable: the create, update and delete semantics of the
-xRegistry Core specification apply to every entity. An implementation that
-projects a read-only backing system MUST declare the restriction through its
-[`capabilities`][xRegistry Core] rather than by rejecting the model.
+Group metadata and the Resource default selection are mutable. Content-bearing
+Resources are append-only under the requirements of
+[Section 1.4](#14-versioning): an update creates a Version and destructive
+Version or Resource deletion is not a conforming operation. An implementation
+that projects a read-only backing system MUST declare the restriction through
+its [`capabilities`][xRegistry Core].
 
 ### 4.1. Shells
 
@@ -321,7 +382,9 @@ the symbolic identifier of its `submodelidentifier`.
   from. It is an identifier and not a pointer, so that it resolves identically
   whether or not this registry also serves the template.
 - `digest` and `digestalg` carry the content hash of the exact bytes a Consumer
-  retrieves. `digestalg` is REQUIRED when `digest` is present.
+  retrieves. `digestalg` is REQUIRED when `digest` is present and is
+  case-sensitive; only the exact enum spellings `Sha256`, `Sha384` and
+  `Sha512` are valid.
 
 A `submodel` MUST NOT carry a `digest` for bytes the registry has not itself
 seen. Publishing a digest for a delegated document would assert an integrity
@@ -331,6 +394,12 @@ guarantee the registry cannot keep.
 
 A `submodeltemplate` Group is one publisher's family of Submodel Templates. Its
 Submodels are the ones whose `kind` is `Template`.
+
+- `templatenamespace` is REQUIRED and is the publisher's authored namespace for
+  the template family. It is the sole authority for the Group's identity, and
+  `submodeltemplateid` is its symbolic identifier.
+- `publisher` names the publishing organization. It is descriptive metadata
+  and MUST NOT be used as an identity.
 
 Separating templates from instances into different Group types, rather than
 mixing them in one collection, keeps the two listable independently: a Consumer
@@ -348,6 +417,9 @@ instances are published per-asset. This is an ordinary federation case; see
 A `conceptdictionary` Group is one dictionary of concept definitions, and its
 `conceptdescriptions` are the definitions a `semanticid` resolves to.
 
+- `dictionaryidentifier` is REQUIRED and is the dictionary's authored
+  identifier. It is the sole authority for the Group's identity, and
+  `conceptdictionaryid` is its symbolic identifier.
 - `conceptidentifier` is REQUIRED and is the authored Concept Description
   Identifiable id. It is the value that appears as a `semanticid` elsewhere.
 - `iscaseof` lists the identifiers of concepts in other dictionaries that this
@@ -400,13 +472,26 @@ This specification therefore does not equate them. It derives one from the other
 by a **closed-form, one-way construction**, and keeps the authored identifier as
 the authority:
 
-> A `shell`'s `aasidentifier` MUST be its authored AAS Identifiable id, and its
-> `shellid` MUST be the [symbolic identifier](#51-aas-identifiers-and-xids) of that
-> `aasidentifier`. A `submodel`'s `submodelidentifier` and a
-> `conceptdescription`'s `conceptidentifier` relate to `submodelid` and
-> `conceptdescriptionid` in the same way. Those attributes are REQUIRED and are
-> the authority: an implementation MUST NOT recover an AAS identifier by
-> attempting to invert the construction.
+| Entity type | REQUIRED source identity | Derived entity id |
+|---|---|---|
+| `shell` | `aasidentifier` | `shellid` |
+| `submodeltemplate` | `templatenamespace` | `submodeltemplateid` |
+| `conceptdictionary` | `dictionaryidentifier` | `conceptdictionaryid` |
+| `aasxregistry` | `storeidentifier` | `aasxregistryid` |
+| `submodel` | `submodelidentifier` | `submodelid` |
+| `conceptdescription` | `conceptidentifier` | `conceptdescriptionid` |
+| `package` | `packageidentifier` | `packageid` |
+| `referrer` | `manifestdigest` | `referrerid` |
+
+Each source identity in the table is the sole authority for that entity. The
+derived entity id MUST be the
+[symbolic identifier](#51-aas-identifiers-and-xids) of the exact source identity,
+and an implementation MUST NOT recover a source identity by attempting to
+invert the construction. Once an entity is created, its source identity MUST NOT
+change; a different source identity creates a different entity. A Resource's
+full source identity is the tuple of its parent Group source identity and its
+own source identity; consequently its full `xid` is a pure function of that
+tuple and the two model collection names.
 
 The construction is defined here in full. It builds a **symbolic identifier**
 from a source string; the result is a dot-separated token in the alphabet
@@ -417,11 +502,25 @@ simultaneously safe in a URL, on a command line and as a file name in the
 1. Split the source into an *authority* and a *path*. For an absolute URI with
    an authority component the authority is the host together with its port when
    present, and the path is the URI path; the scheme, userinfo, query and
-   fragment are discarded. For a URN the authority is empty and the path is the
-   URN split on `:`. Otherwise — the usual case for an IRDI — the authority is
-   empty and the path is the source split on `/`.
+   fragment are discarded. This authority form is used only when the untouched
+   source string is an RFC 3986 absolute URI with a syntactically valid scheme
+   and authority. The scheme MUST begin at the first character of the source,
+   raw whitespace is not permitted, percent escapes are well-formed, the path,
+   query and fragment use RFC 3986 characters, an IP literal is bracketed and
+   syntactically valid, and a present port is decimal in the range 0 through
+   65535. An implementation MUST validate the untouched source before using a
+   URI library's parsed result, because such libraries can discard leading
+   spaces or control characters.
+   For a URN the authority is empty and the path is the URN split on `:`.
+   Otherwise — including leading or trailing whitespace, a malformed bracketed
+   host, textual or out-of-range port, or other URI parsing failure in a
+   free-form source — the authority is empty and the exact source is split on
+   `/`. An implementation MUST NOT reject a source identity solely because URI
+   parsing fails.
 2. Reverse the authority's `.`-separated labels (`contoso.com` becomes `com`,
-   `contoso`), appending the port, where present, as a further label.
+   `contoso`), appending the port, where present, as a further label. A
+   bracketed IP literal is one label; dots within that literal are not label
+   separators.
 3. Percent-decode each path segment and discard the empty ones.
 4. Normalize each label: replace every run of characters outside
    `A-Z a-z 0-9 _ . -` with a single `-`; collapse runs of `-` and runs of `.`;
@@ -429,38 +528,41 @@ simultaneously safe in a URL, on a command line and as a file name in the
    Letter case is preserved.
 5. Join the surviving labels with `.`. If no label survives, the identifier is
    `_`.
-6. If the result is longer than 128 characters, drop trailing labels — never the
-   first — until it is at most 119 characters long; if that first label is itself
-   longer than 119 characters, truncate it to 119 and strip any trailing `-` or
-   `.`. Then append the disambiguator of step 7.
-7. Where step 6 truncated the result, or where the result would collide
-   case-insensitively with an existing sibling in the same collection, append `.`
-   followed by the first eight lower-case hexadecimal characters of the SHA-256
-   of the UTF-8 encoding of the **exact source string**. The disambiguator is a
-   function of the identifier, not of any document, so it does not change when a
-   new Version is written.
+6. If the readable prefix is longer than 63 characters, drop trailing labels —
+   never the first — until it is at most 63 characters long. If the first
+   surviving label is itself longer than 63 characters, truncate it to 63 and
+   strip any trailing `-` or `.`. If that produces an empty prefix, use `_`.
+7. Append `.` followed by all 64 lower-case hexadecimal characters of the
+   SHA-256 digest of the UTF-8 encoding of the **exact source string**. This
+   suffix is ALWAYS present. Its presence MUST NOT depend on the contents of a
+   registry, a collision lookup or insertion order.
 
-The construction is deterministic, so a Producer and a Consumer agree without a
-lookup table, and it is lossy, so only the forward direction is defined: an
+The construction is deterministic and closed-form, so a Producer and a Consumer
+agree without a registry lookup. The same source identity therefore produces the
+same id when it is the only entity in a collection, when a normalized-prefix
+collision is present, and when entities are inserted in any order. The
+construction is one-way, so only the forward direction is defined: an
 implementation recovers an AAS identifier by reading the `aasidentifier`,
-`submodelidentifier` or `conceptidentifier` attribute, never by inverting the
-construction. Applied to AAS identifiers it gives:
+`submodelidentifier`, `conceptidentifier` or other source-identity attribute,
+never by inverting the construction. Applied to AAS identifiers it gives:
 
-| Authored AAS id | Derived id |
+| Source identity | Derived id |
 |---|---|
-| `https://fabrikam.com/aas/pump/SN-001` | `com.fabrikam.aas.pump.SN-001` |
-| `https://contoso.com/ids/sm/nameplate` | `com.contoso.ids.sm.nameplate` |
-| `0173-1#02-AAO677#002` | `0173-1-02-AAO677-002` |
-| `urn:uuid:2c4c1b0e-0e2a-4e2f-9a7e-3b3a1b7c9d21` | `urn.uuid.2c4c1b0e-0e2a-4e2f-9a7e-3b3a1b7c9d21` |
+| `https://fabrikam.com/aas/pump/SN-001` | `com.fabrikam.aas.pump.SN-001.07e57fb738a86393146c877d2808f53a695b5c561676cf9e10a89a127e2124a3` |
+| `https://contoso.com/ids/sm/nameplate` | `com.contoso.ids.sm.nameplate.118270ac2b1c9a2ea6a8a1baa6f97baf78cc576226978fbbbf36afdab3f4ee0d` |
+| `0173-1#02-AAO677#002` | `0173-1-02-AAO677-002.4a508ebd70e19917cd187073e2ff250e75d464260868f755e40ccb04d95948ca` |
+| `urn:uuid:2c4c1b0e-0e2a-4e2f-9a7e-3b3a1b7c9d21` | `urn.uuid.2c4c1b0e-0e2a-4e2f-9a7e-3b3a1b7c9d21.4c1bae38c355378c18a8b6a293df1ffa4143c4c0e591150417973255a6d265e9` |
+| `http://[` | `http.0e5178f5dcc20d0b0c03a2996580308beaaad626bec2d6379bfa2e09aec87622` |
 
 Three properties of the construction matter here specifically:
 
-- **It disambiguates collisions.** The construction is lossy, and two distinct
-  AAS identifiers can normalize to one token. Where they would, a hash of the
-  exact source string is appended. This is not an optimization: an identifier
-  scheme that allowed two assets to share one id would violate the
-  no-reassignment and distinctness requirements that
-  [EN 18219][EN18219] places on product identifiers.
+- **It is independent of registry state.** The hash of the exact source string
+  is always present. For example, `https://example.com/ids/a+b` and
+  `https://example.com/ids/a:b` share the readable prefix
+  `com.example.ids.a-b` but have different suffixes, and either one has the
+  same id whether or not the other is present. This is not an optimization: an
+  identifier scheme that allowed registry contents or insertion order to
+  change an id would break federation and the no-reassignment requirement.
 - **The hash is of the identifier, not of the document.** A Submodel's values
   change constantly; its identity does not.
 - **Percent-encoding is not available.** It is the usual answer for characters
@@ -512,6 +614,14 @@ this registry describes but does not store is published with an
 [`xref`][xRegistry xref], or with a `<RESOURCE>url` naming its location, instead
 of a stored document.
 
+An `xref` descriptor MUST be established before this registry accepts a local
+Version for that Resource. A Resource with one or more retained local Versions
+MUST NOT be converted in place to `xref`, even if another registry now serves
+the same entity. A conforming implementation MUST reject that operation and
+leave every Version directly retrievable. This restriction narrows the Core
+`xref` conversion semantics in order to preserve the mandatory history in
+[Section 1.4](#14-versioning).
+
 This is what makes AAS registries composable across a supply chain. An
 integrator's registry can describe a supplier's component and delegate the bytes
 to the supplier's own registry, without copying the supplier's content and
@@ -519,17 +629,18 @@ without either party re-authoring anything.
 
 The identity rule is the one that makes it work, and it is absolute:
 
-> Identity is carried by the AAS identifier attributes and the `xid` derived
-> from them, never by an endpoint. A registry that exposes a local proxy for a
-> remote entity MUST retain the remote entity's identifier attributes, and MUST
-> NOT treat the local endpoint as part of that entity's identity. The external
-> authority identifies the serving endpoint, not the entity.
+> Identity is carried by the source-identity attributes of
+> [Section 5.1](#51-aas-identifiers-and-xids) and the `xid` derived from them,
+> never by an endpoint. A registry that exposes a local proxy for a remote
+> entity MUST retain the remote entity's source identities, and MUST NOT treat
+> the local endpoint as part of that entity's identity. The external authority
+> identifies the serving endpoint, not the entity.
 
 Consequently:
 
-- An `aasidentifier`, a `submodelidentifier` and a `conceptidentifier` MUST be
-  stable across federated registries. A federating registry MUST NOT rewrite
-  them.
+- Every source-identity attribute in the table of
+  [Section 5.1](#51-aas-identifiers-and-xids) MUST be stable across federated
+  registries. A federating registry MUST NOT rewrite one.
 - The same entity therefore has the same `xid` in every registry that describes
   it, because the construction of
   [Section 5.1](#51-aas-identifiers-and-xids) is deterministic. A Consumer
@@ -544,6 +655,10 @@ case of one Submodel shared by several shells within one registry. Both source
 and target are the same Resource model type, which the model definition
 guarantees.
 
+A conformance test for this rule creates and retains two local Versions,
+attempts to convert their Resource to `xref`, and verifies that the operation
+fails and both original Version `xid`s still return their original documents.
+
 ### 5.4. Discovery
 
 The AAS API series provides a discovery service that maps asset keys onto shell
@@ -553,7 +668,7 @@ separate service is needed:
 ```http
 GET /shells?filter=globalassetid=https://fabrikam.com/asset/SN-001
 GET /shells?filter=specificassetids[*].value=SN-001
-GET /shells?filter=assetkind=Instance,derivedfrom=/shells/com.fabrikam.type.pump
+GET /shells?filter=assetkind=Instance,derivedfrom=/shells/com.fabrikam.type.pump.053294821d06d4b69f58c3ff86c228fe5bc9f04ca3c0473a0ceb7c5296bd16c3
 ```
 
 Finding every Submodel of a given kind is likewise a filter on `semanticid`,
@@ -681,9 +796,9 @@ What this model does contribute is the part a plain AAS server cannot provide.
 [EN 18222][EN18222] requires a passport to be retrievable as it stood at a given
 date. The AAS metamodel has no version history, so an AAS server has nothing to
 answer that request from. An AAS Registry answers it from Versions
-([Section 1.4](#14-versioning)), and the same Version stack supplies the
-auditable, tamper-evident record of changes that access-rights requirements
-depend on.
+([Section 1.4](#14-versioning)). The retained immutable Version stack supplies
+the auditable record of content changes; where a Version also carries a digest,
+a Consumer can additionally verify the integrity of the bytes it retrieved.
 
 The `assetkind` attribute carries the granularity a passport is issued at.
 `Type` is a product model, `Instance` an individual item and `Batch` a
@@ -721,12 +836,12 @@ xRegistry equivalents, for readers who know that interface.
 | Get all shells | `GET /shells` |
 | Get shell by id | `GET /shells/<SHELLID>` |
 | Create shell | `POST /shells` |
-| Delete shell by id | `DELETE /shells/<SHELLID>` |
+| Delete shell by id | no destructive equivalent while the Group owns retained content-bearing Resources |
 | Get all submodels of a shell | `GET /shells/<SHELLID>/submodels` |
 | Get submodel by id | `GET /shells/<SHELLID>/submodels/<SUBMODELID>` |
 | Get submodel metadata | append the `$details` suffix |
 | Replace submodel | `PUT` the document, creating a new Version |
-| Delete submodel | `DELETE /shells/<SHELLID>/submodels/<SUBMODELID>` |
+| Delete submodel | no conforming destructive equivalent; all Versions remain addressable |
 | Get all shell descriptors | `GET /shells` where entries carry a URL or `xref` |
 | Get descriptor by id | `GET /shells/<SHELLID>` for the same entity |
 | Look up shells by asset link | `GET /shells?filter=specificassetids[*].value=<VALUE>` |

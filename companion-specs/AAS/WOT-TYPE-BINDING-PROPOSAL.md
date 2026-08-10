@@ -38,7 +38,7 @@ gap, which is why this is one rule and not a mechanism.
 ```jsonc
 "@context": [ "https://www.w3.org/2022/wot/td/v1.1",
               { "uav": "http://opcfoundation.org/UA/WoT-Binding/",
-                "i4aas": "http://opcfoundation.org/UA/I4AAS/" } ],
+                "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/" } ],
 "@type": ["uav:object", "i4aas:AASSubmodelType"]
 ```
 

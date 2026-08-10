@@ -10,8 +10,13 @@ NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 XML = os.path.join(GEN, "Opc.Ua.I4AAS.NodeSet2.xml")
 CSVF = os.path.join(GEN, "Opc.Ua.I4AAS.NodeIds.csv")
 XR_NS = 1          # required model: abstract xRegistry base (http://opcfoundation.org/UA/xRegistry/)
-OWN_NS = 2         # this specification's own namespace (SchemaRegistry)
+OWN_NS = 2         # this specification's own namespace (I4AAS V3)
 OWN_MIN = 1001
+UA_NAMESPACE = "http://opcfoundation.org/UA/"
+XR_NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"
+OWN_NAMESPACE = "http://opcfoundation.org/UA/I4AAS/v3/"
+
+errors, warnings = [], []
 
 def load_ids(p):
     s = set()
@@ -21,13 +26,40 @@ def load_ids(p):
                 s.add(int(row[1]))
     return s
 
+def resolve_required_csv(model_uri, candidates):
+    for candidate in candidates:
+        path = os.path.abspath(candidate)
+        if os.path.isfile(path):
+            return path
+    rendered = ", ".join(os.path.abspath(path) for path in candidates)
+    raise FileNotFoundError(
+        f"RequiredModel {model_uri} cannot be resolved; looked for {rendered}")
+
 _ua_csv = os.path.join(REF, "UA.NodeIds.csv")
 UA = load_ids(_ua_csv) if os.path.exists(_ua_csv) else None
 UA_EXTRA = {297, 2253}
-# xRegistry base NodeIds (the required model this spec extends), resolved across the two-file dependency.
-_xr_csv = os.path.join(GEN, "..", "xregistry", "Opc.Ua.XRegistry.NodeIds.csv")
-XR = load_ids(_xr_csv) if os.path.exists(_xr_csv) else None
-errors, warnings = [], []
+# xRegistry is a tracked core specification. It is not optional base data.
+_repo = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+_xr_override = os.environ.get("I4AAS_XREGISTRY_CSV")
+_xr_candidates = ([_xr_override] if _xr_override else [
+    os.path.join(_repo, "core-specs", "xregistry",
+                 "Opc.Ua.XRegistry.NodeIds.csv"),
+])
+try:
+    _xr_csv = resolve_required_csv(XR_NAMESPACE, _xr_candidates)
+except FileNotFoundError as exc:
+    _xr_csv = None
+    XR = None
+    errors.append(str(exc))
+else:
+    XR = load_ids(_xr_csv)
+
+if UA is None:
+    warnings.append(
+        "base OPC UA NodeId table is not installed under tools/ref; "
+        "base-node existence checks use the repository's sanctioned "
+        "self-contained mode")
+
 ALIAS = {}
 tree = ET.parse(XML)
 root = tree.getroot()
@@ -60,6 +92,37 @@ for el in root:
         defined[key] = (tag, el.get("BrowseName"))
     elems.append((tag, el))
 
+namespace_uris = [
+    uri.text for uri in root.findall(f"{NS}NamespaceUris/{NS}Uri")
+]
+if namespace_uris != [XR_NAMESPACE, OWN_NAMESPACE]:
+    errors.append(
+        f"NamespaceUris are {namespace_uris!r}, expected "
+        f"[{XR_NAMESPACE!r}, {OWN_NAMESPACE!r}]")
+model = root.find(f"{NS}Models/{NS}Model")
+if model is None:
+    errors.append("NodeSet has no Model declaration")
+    required_models = []
+else:
+    if model.get("ModelUri") != OWN_NAMESPACE:
+        errors.append(
+            f"ModelUri {model.get('ModelUri')!r} is not {OWN_NAMESPACE!r}")
+    required_models = [
+        required.get("ModelUri")
+        for required in model.findall(NS + "RequiredModel")
+    ]
+    for required_uri in required_models:
+        if required_uri == UA_NAMESPACE:
+            continue
+        if required_uri == XR_NAMESPACE:
+            if XR is None:
+                errors.append(
+                    f"declared RequiredModel {XR_NAMESPACE} is unresolved")
+            continue
+        errors.append(f"declared RequiredModel {required_uri!r} is unresolved")
+    if XR_NAMESPACE not in required_models:
+        errors.append(f"NodeSet does not declare RequiredModel {XR_NAMESPACE}")
+
 def check(t, ctx):
     parsed = parse_numeric_nodeid(t)
     if parsed is None:
@@ -71,7 +134,9 @@ def check(t, ctx):
         errors.append(f"{ctx}: ns={OWN_NS};i={v} not defined here")
         return
     if ns == XR_NS:
-        if XR is None or v in XR:
+        if XR is None:
+            return
+        if v in XR:
             return
         errors.append(f"{ctx}: ns={XR_NS};i={v} not defined in the xRegistry base model")
         return
@@ -154,6 +219,18 @@ if os.path.exists(_annex) and os.path.exists(_spec):
         errors.append("generated Annex A (tools/model-reference.md) is not embedded verbatim in the spec")
 
 print(f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   base ids: {len(UA) if UA is not None else 'skipped (no local base table)'}   xRegistry base ids: {len(XR) if XR is not None else 'skipped'}")
+
+# Negative control: a declared tracked dependency must never degrade into
+# "accept every reference" when its file disappears.
+try:
+    resolve_required_csv("urn:missing:test-model", [
+        os.path.join(HERE, "fixtures", "__missing_required_model__.csv"),
+    ])
+except FileNotFoundError:
+    print("detected missing RequiredModel dependency")
+else:
+    errors.append("missing RequiredModel dependency was silently accepted")
+
 # --- AddressSpace figures agree with the model they draw ------------------------
 # A node table is generated from the NodeSet and so cannot drift. A figure is authored,
 # and a wrong arrow looks exactly like a right one, so it is re-derived from the model.
