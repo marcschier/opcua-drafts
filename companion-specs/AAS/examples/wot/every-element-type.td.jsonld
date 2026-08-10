@@ -16,7 +16,6 @@
     ],
     "@id": "https://fabrikam.com/ids/sm/every-element",
     "title": "EveryElement",
-    "id": "https://fabrikam.com/ids/sm/every-element",
     "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element",
     "uav:browseName": "nsu=https://example.com/aas/instances/;EveryElement",
     "properties": {

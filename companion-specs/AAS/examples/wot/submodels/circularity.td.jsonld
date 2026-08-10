@@ -16,7 +16,6 @@
     ],
     "@id": "https://w3id.org/aas-jsonld/id/4255fd58458d6665154663b3f08bcb10a37805e87e4cc35853f2e3aca26cc50b",
     "title": "Circularity",
-    "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
     "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
     "uav:browseName": "nsu=https://example.com/aas/instances/;Circularity",
     "properties": {

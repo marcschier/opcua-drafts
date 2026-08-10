@@ -16,7 +16,6 @@
     ],
     "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
     "title": "CarbonFootprint",
-    "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
     "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0",
     "uav:browseName": "nsu=https://example.com/aas/instances/;CarbonFootprint",
     "properties": {

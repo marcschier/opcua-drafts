@@ -16,7 +16,6 @@
     ],
     "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0",
     "title": "TechnicalData",
-    "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0",
     "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0",
     "uav:browseName": "nsu=https://example.com/aas/instances/;TechnicalData",
     "properties": {

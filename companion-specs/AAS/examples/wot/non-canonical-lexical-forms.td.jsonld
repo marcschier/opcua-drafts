@@ -16,7 +16,6 @@
     ],
     "@id": "https://fabrikam.com/ids/sm/awkward-values",
     "title": "AwkwardValues",
-    "id": "https://fabrikam.com/ids/sm/awkward-values",
     "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/awkward-values",
     "uav:browseName": "nsu=https://example.com/aas/instances/;AwkwardValues",
     "properties": {

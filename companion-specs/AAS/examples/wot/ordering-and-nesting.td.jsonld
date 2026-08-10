@@ -16,7 +16,6 @@
     ],
     "@id": "https://fabrikam.com/ids/sm/ordering",
     "title": "Ordering",
-    "id": "https://fabrikam.com/ids/sm/ordering",
     "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/ordering",
     "uav:browseName": "nsu=https://example.com/aas/instances/;Ordering",
     "properties": {

@@ -16,7 +16,6 @@
     ],
     "@id": "https://w3id.org/aas-jsonld/id/5f00dd44ad9a719167fa8355e45ba587306727f8131428199a21a79dc2426b63",
     "title": "MaterialComposition",
-    "id": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel",
     "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel",
     "uav:browseName": "nsu=https://example.com/aas/instances/;MaterialComposition",
     "properties": {

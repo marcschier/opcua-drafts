@@ -269,9 +269,13 @@ def td_for_submodel(sm, form, namespace=None):
              "ua": UA},
         ],
         "@type": ["uav:object"],
+        # `@id` and not `id`. The Thing Description context aliases `id` to
+        # `@id`, so a document carrying both is two spellings of one keyword and
+        # a JSON-LD 1.1 processor rejects it outright with `colliding keywords`.
+        # The AAS identifier is not lost by leaving `id` out: `merge_aas` writes
+        # it as `aas:Identifiable/id`, which is what it is.
         "@id": node_iri(owner),
         "title": sm.get("idShort", owner),
-        "id": owner,
         "uav:id": expanded_node_id(owner, None, namespace),
         "uav:browseName": browse_name(sm.get("idShort", owner), namespace),
         "properties": {},

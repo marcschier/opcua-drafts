@@ -42,7 +42,7 @@ import re
 import sys
 
 from pyld import jsonld
-from rdflib import XSD, Dataset, Graph, Literal, Namespace
+from rdflib import XSD, Graph, Literal, Namespace
 from rdflib.compare import isomorphic
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -206,14 +206,6 @@ def drop_foreign(nt_text):
                      if f"<{FOREIGN}" not in line)
 
 
-def strip_foreign(g: Graph) -> Graph:
-    out = Graph()
-    for s, p, o in g:
-        if not str(p).startswith(str(FOREIGN)):
-            out.add((s, p, normalize_literal(o)))
-    return out
-
-
 def normalize_literal(term):
     """RDF 1.1 says a plain literal *is* `xsd:string`; rdflib keeps them apart.
 
@@ -244,12 +236,6 @@ def lower_graph(core_nt, order_nt, seed):
     lowerer = Lowerer(ONTOLOGY, SCHEMA)
     lowerer.load(triples, quads)
     return lowerer.lower()
-
-
-def serialize_graph(g: Graph):
-    if not len(g):
-        return []
-    return [line for line in g.serialize(format="nt").splitlines() if line.strip()]
 
 
 def check(name, jpath, tpath, context_doc, superset, dump=None):

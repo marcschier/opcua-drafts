@@ -16,7 +16,6 @@
     ],
     "@id": "https://fabrikam.com/ids/sm/absent-vs-empty",
     "title": "AbsentVersusEmpty",
-    "id": "https://fabrikam.com/ids/sm/absent-vs-empty",
     "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/absent-vs-empty",
     "uav:browseName": "nsu=https://example.com/aas/instances/;AbsentVersusEmpty",
     "properties": {

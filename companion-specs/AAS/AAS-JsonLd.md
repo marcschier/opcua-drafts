@@ -365,10 +365,15 @@ order. Where it is absent, the order of an array is implementation defined.
 
 ## 5 The JSON-LD context (normative)
 
-The context published with this document at `aas.context.jsonld`, and dereferenceable at
-`https://w3id.org/aas-jsonld/context`, is an **authoring convenience**. It shortens what an author
-writes; it does not decide what a document means. A document that uses a different context, or none,
-is conforming if its graph is the graph of clause 1.
+The context published with this document at `aas.context.jsonld` is an **authoring convenience**. It
+shortens what an author writes; it does not decide what a document means. A document that uses a
+different context, or none, is conforming if its graph is the graph of clause 1.
+
+The context is **to be** published at `https://w3id.org/aas-jsonld/context`. That redirect is not yet
+registered and the IRI does not resolve, so a document carrying it by reference — the examples of
+this document among them — requires a reader that maps the IRI to the local file. Nothing in this
+document depends on the IRI resolving: clause 1 is stated about the graph, and a document may carry
+the context by value instead.
 
 The context is a JSON-LD 1.1 context. It defines:
 
@@ -561,7 +566,7 @@ clause 1.2 does not define. The figures are the evidence for that decision.
 
 | | |
 |---|---|
-| predicate and object pairs of the core graph reproduced | 22 327 of 30 614 (72.9%) |
+| predicate and object pairs of the core graph reproduced | 22 325 of 30 614 (72.9%) |
 | documents whose graph is reproduced exactly | 0 of 2 424 |
 
 | Cause | Cases affected |

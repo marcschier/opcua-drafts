@@ -35,6 +35,7 @@ import argparse
 import json
 import os
 import sys
+from collections import Counter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "jsonld"))
@@ -209,15 +210,19 @@ def classify(via_context, via_lift, onto, schema):
     # A root Identifiable: the lifting gives it an IRI subject, a context can
     # only leave it a blank node, because `id` cannot be both subject and literal.
     id_prop = URIRef(AAS + "Identifiable/id")
-    lift_roots = {s for s, _, _ in via_lift.triples((None, id_prop, None))}
     ctx_roots = {s for s, _, _ in via_context.triples((None, id_prop, None))}
     bump("root subject is a blank node, not an IRI",
          sum(1 for s in ctx_roots if isinstance(s, BNode)))
 
     # A nested object with no `modelType` gets no rdf:type from a context.
-    for s, _, o in via_lift.triples((None, rdf_type, None)):
-        cls = str(o).rsplit("/", 1)[-1]
-        if cls not in schema.model_type and (s, rdf_type, o) not in via_context:
+    # Compared by class rather than by triple: the two graphs are parsed
+    # independently, so a blank node subject never carries the same label on both
+    # sides and a triple-level test would report every case as a failure.
+    ctx_classes = Counter(str(o) for _, _, o in via_context.triples((None, rdf_type, None)))
+    lift_classes = Counter(str(o) for _, _, o in via_lift.triples((None, rdf_type, None)))
+    for cls_iri, n in lift_classes.items():
+        cls = cls_iri.rsplit("/", 1)[-1]
+        if cls not in schema.model_type and ctx_classes[cls_iri] < n:
             bump("nested object has no rdf:type")
 
     # DataTypeDefXsd values cannot be aliased, so they land as `xs:int` IRIs.
@@ -274,11 +279,17 @@ def measure(context_doc, limit=0):
         # predicate and object, and only where the object is an IRI or a
         # literal: a blank node object cannot match by label, so counting those
         # would penalise the context for something neither side controls.
+        #
+        # Both sides are multisets. Counting a list against a set credits the
+        # context with every repetition of a pair it produced once, which
+        # inflates the figure by exactly the amount the corpus repeats itself.
         from rdflib.term import BNode as _BNode
-        lift_pairs = [(str(p), str(o)) for _, p, o in via_lift if not isinstance(o, _BNode)]
-        ctx_pairs = {(str(p), str(o)) for _, p, o in via_context if not isinstance(o, _BNode)}
-        total_lift += len(lift_pairs)
-        reproduced += sum(1 for pair in lift_pairs if pair in ctx_pairs)
+        lift_pairs = Counter((str(p), str(o)) for _, p, o in via_lift
+                             if not isinstance(o, _BNode))
+        ctx_pairs = Counter((str(p), str(o)) for _, p, o in via_context
+                            if not isinstance(o, _BNode))
+        total_lift += sum(lift_pairs.values())
+        reproduced += sum((lift_pairs & ctx_pairs).values())
         if isomorphic(via_context, via_lift):
             same += 1
         else:

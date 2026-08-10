@@ -3058,15 +3058,23 @@ Measured over the four fixtures, 61 nodes:
 | | with the type binding | published vocabulary only |
 |---|---|---|
 | nodes produced | 61 of 61 | 61 of 61 |
-| NodeIds correct | 61 | 61 |
 | BrowseNames correct | 61 | 61 |
 | containment ReferenceTypes correct | 17 of 17 compared | 17 of 17 |
 | TypeDefinitions correct | **61** | **0** |
 
-Every NodeId and every BrowseName is already correct, as is every containment ReferenceType the
-fixtures exercise — 17 of the 61 nodes are reached by a reference the comparison covers, the rest
-being top-level elements of a submodel. Only the type binding fails, because `uav:congruentType` is
-reconciliation metadata and does not produce a `HasTypeDefinition`.
+**What this table is, and what it is not.** Both sides of the comparison are implemented alongside
+this document, and two of the facts they compare are derived from the same rule on each side: the
+NodeId from the `idShortPath` construction of clause 5.3, and the ObjectType from the table of
+clause 6. An error in either rule produces the same wrong answer on both sides and the comparison
+reports no difference. Those rows are therefore a check that the annex is self-consistent, not a
+measurement, and the NodeId row is omitted for that reason — the NodeId is the key the two node sets
+are joined on, so it cannot disagree. The BrowseName is derived independently on the two sides and
+the type binding is the subject of the experiment, so those two rows discriminate.
+
+Every BrowseName is already correct, as is every containment ReferenceType the fixtures exercise —
+17 of the 61 nodes are reached by a reference the comparison covers, the rest being top-level
+elements of a submodel. Only the type binding fails, because `uav:congruentType` is reconciliation
+metadata and does not produce a `HasTypeDefinition`.
 
 Until the type binding is adopted and implemented, a Server reaches the same result by loading one
 Thing Model per ObjectType of this specification and having each Thing Description instantiate the

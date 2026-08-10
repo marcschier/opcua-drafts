@@ -26,6 +26,7 @@ import argparse
 import json
 import os
 import sys
+from collections import Counter, defaultdict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 AAS_DIR = os.path.normpath(os.path.join(HERE, "..", ".."))
@@ -34,6 +35,7 @@ OUT_LD = os.path.join(AAS_DIR, "examples", "jsonld")
 OUT_WOT = os.path.join(AAS_DIR, "examples", "wot", "submodels")
 OUT_MIN = os.path.join(AAS_DIR, "examples", "wot", "minimal")
 RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+CONTEXT_IRI = "https://w3id.org/aas-jsonld/context"
 
 sys.path.insert(0, HERE)
 
@@ -41,7 +43,7 @@ import wot_bridge  # noqa: E402
 from authored import (as_graph, author, load_context, lower_graph,  # noqa: E402
                       read_back, term)
 from pyld import jsonld  # noqa: E402
-from rdflib import Literal  # noqa: E402
+from rdflib import BNode, Graph  # noqa: E402
 from conformance import BASE, canonical  # noqa: E402
 from lift import Lifter, Ontology, Schema, serialize  # noqa: E402
 
@@ -87,9 +89,10 @@ def write_authored(name, env, context_doc):
     core, order = graph_of(env)
     doc_text = author(core, order, context_doc)
     doc = json.loads(doc_text)
-    doc["@context"] = "https://w3id.org/aas-jsonld/context"
+    doc["@context"] = CONTEXT_IRI
 
-    back_core, back_order = read_back(doc_text)
+    # The document is checked in the form it ships, context IRI and all.
+    back_core, back_order = read_back(as_written(doc, context_doc))
     recovered = lower_graph(back_core, back_order, seed=20260809)
     source = json.loads(json.dumps(env))
     for collection in ("assetAdministrationShells", "submodels", "conceptDescriptions"):
@@ -97,8 +100,8 @@ def write_authored(name, env, context_doc):
             source[collection] = sorted(source[collection], key=lambda n: n.get("id", ""))
     if canonical(recovered) != canonical(source):
         raise SystemExit(f"{name}: the authored document does not lower to the source AAS")
-    if len(as_graph(back_core)) != len(as_graph(core)):
-        raise SystemExit(f"{name}: the authored document does not carry the whole graph")
+    if fingerprints(as_graph(back_core)) != fingerprints(as_graph(core)):
+        raise SystemExit(f"{name}: the authored document does not carry its own graph")
 
     path = os.path.join(OUT_LD, f"{name}.aas.jsonld")
     with open(path, "w", encoding="utf-8", newline="\n") as f:
@@ -130,22 +133,36 @@ def write_minimal_td(name, env, context_doc):
     why both are published.
     """
     core, order = graph_of(env)
-    doc = json.loads(author(core, order, context_doc))
+    doc_text = author(core, order, context_doc)
+    doc = json.loads(doc_text)
     submodels = env.get("submodels") or []
     title = submodels[0].get("idShort", name) if submodels else name
 
     doc["@context"] = ["https://www.w3.org/2022/wot/td/v1.1",
-                       "https://w3id.org/aas-jsonld/context",
+                       CONTEXT_IRI,
                        {"uav": "http://opcfoundation.org/UA/WoT-Binding/",
                         "i4aas": wot_bridge.I4AAS}]
-    doc["@type"] = ["uav:object", "i4aas:AASSubmodelType"]
+    # Append, do not replace. The authored document's `@type` is the AAS class,
+    # and overwriting it deletes `rdf:type aas:Submodel` - the one triple that
+    # says what the document is.
+    existing = doc.get("@type") or []
+    existing = existing if isinstance(existing, list) else [existing]
+    doc["@type"] = ["uav:object", "i4aas:AASSubmodelType"] + [
+        t for t in existing if t not in ("uav:object", "i4aas:AASSubmodelType")]
     doc["title"] = title
     doc["securityDefinitions"] = {"nosec_sc": {"scheme": "nosec"}}
     doc["security"] = "nosec_sc"
 
-    for member in ("@context", "@type", "title", "securityDefinitions", "security"):
-        if member not in doc:
-            raise SystemExit(f"{name}: minimal Thing Description is missing {member}")
+    # The AAS content has to still be there. Checking for the five members
+    # assigned immediately above would check that Python performs assignment;
+    # this reads the document back, discards everything the WoT vocabulary added,
+    # and requires the graph it was made from - the bar `write_authored` is held
+    # to, allowing for the superset clause 1 permits.
+    back_core, back_order = read_back(as_written(doc, context_doc))
+    if not (fingerprints(aas_only(back_core)) == fingerprints(as_graph(core))
+            and fingerprints(as_graph(back_order)) == fingerprints(as_graph(order))):
+        raise SystemExit(f"{name}: the minimal Thing Description does not carry "
+                         f"the AAS it was made from")
 
     path = os.path.join(OUT_MIN, f"{name}.td.jsonld")
     with open(path, "w", encoding="utf-8", newline="\n") as f:
@@ -154,7 +171,41 @@ def write_minimal_td(name, env, context_doc):
     return path
 
 
-def aas_graph_of(tds, context_doc):
+def as_written(doc, context_doc):
+    """The document exactly as it ships, with its context IRIs resolved locally.
+
+    `write_authored` and `write_minimal_td` both replace the inline context with
+    the IRI the context is published under, so the file that ships is not the
+    string that was checked. Resolving that IRI against the local file, and the
+    Thing Description context against a stub, checks the artefact rather than its
+    predecessor - which matters while the `w3id.org` redirect is unregistered and
+    the IRI does not resolve at all.
+    """
+    local = json.loads(json.dumps(doc))
+    resolved = []
+    for entry in (local["@context"] if isinstance(local["@context"], list)
+                  else [local["@context"]]):
+        if entry == CONTEXT_IRI:
+            resolved.append(context_doc["@context"])
+        elif isinstance(entry, str) and entry.startswith("https://www.w3.org/"):
+            resolved.append({"id": "@id"})
+        else:
+            resolved.append(entry)
+    local["@context"] = resolved
+    return json.dumps(local, ensure_ascii=False)
+
+
+def aas_only(nt_text):
+    """The AAS triples of a graph: the vocabulary's predicates, and its classes."""
+    out = Graph()
+    for s, p, o in as_graph(nt_text):
+        if str(p).startswith(wot_bridge.AAS_NS) or (
+                str(p) == RDF_TYPE and str(o).startswith(wot_bridge.AAS_NS)):
+            out.add((s, p, o))
+    return out
+
+
+def aas_graph_of(tds):
     """The AAS triples a Thing Description carries, as N-Triples.
 
     Everything outside the AAS vocabulary is discarded - the `uav` terms, the WoT
@@ -162,13 +213,19 @@ def aas_graph_of(tds, context_doc):
     Administration Shell.
 
     The remote Thing Description context is replaced by a local stub rather than
-    fetched, so the check runs offline. The stub defines only what is needed to
-    reach the nested nodes - `properties` as an index container - because a term
-    the context does not define is dropped, and dropping `properties` would drop
-    every element with it. Nothing the stub defines survives the filter.
+    fetched, so the check runs offline. The stub has to reproduce the **keyword
+    aliases** the real context defines, not only the terms this check needs to
+    traverse. A stub that merely omits `id` makes a document carrying both `@id`
+    and `id` look well formed here while a conforming processor rejects it with
+    `colliding keywords`, which is exactly the defect this check exists to catch.
     """
-    stub = {"properties": {"@id": "https://example.invalid/wot#properties",
+    stub = {"id": "@id",
+            "properties": {"@id": "https://example.invalid/wot#properties",
                            "@container": "@index"},
+            "actions": {"@id": "https://example.invalid/wot#actions",
+                        "@container": "@index"},
+            "events": {"@id": "https://example.invalid/wot#events",
+                       "@container": "@index"},
             "links": {"@id": "https://example.invalid/wot#links"},
             "title": "https://example.invalid/wot#title",
             "security": "https://example.invalid/wot#security",
@@ -199,6 +256,9 @@ def write_thing_descriptions(name, env, context_doc):
     """The same submodel as a Thing Description, with the WoT vocabulary added."""
     tds = wot_bridge.generate(env, "attype")
     want = wot_bridge.expected(env)
+    if not want:
+        raise SystemExit(f"{name}: no nodes expected, so the comparison would pass "
+                         f"without testing anything")
     got = wot_bridge.project(tds, honour_proposed_term=True, form="attype")
     missing, extra, differing = wot_bridge.compare(want, got)
     if missing or extra or differing:
@@ -210,21 +270,14 @@ def write_thing_descriptions(name, env, context_doc):
         td["security"] = "nosec_sc"
 
     # The document has to be an AAS as well as a projection, or the `aas` prefix
-    # is declared and never used. Every AAS property *and every literal value*
-    # the reference lifting produces from the source submodels must be
-    # recoverable from the Thing Descriptions. Subjects are not compared: the
-    # Thing Description names its nodes by clause 5.3 and the lifting skolemizes
-    # them, so the two agree on what is said and not on what it is said about.
-    carried = as_graph(aas_graph_of(tds, context_doc))
+    # is declared and never used. What the Thing Descriptions say as an AAS is
+    # compared against what the reference lifting says from the same submodels.
+    carried = as_graph(aas_graph_of(tds))
     expected_aas = as_graph(graph_of({"submodels": env.get("submodels") or []})[0])
-    lost_props = stated_properties(expected_aas) - stated_properties(carried)
-    if lost_props:
-        raise SystemExit(f"{name}: the Thing Description drops AAS properties: "
-                         f"{sorted(lost_props)[:5]}")
-    lost_values = stated_values(expected_aas) - stated_values(carried)
-    if lost_values:
-        raise SystemExit(f"{name}: the Thing Description drops {len(lost_values)} "
-                         f"AAS values, for example {sorted(lost_values)[:3]}")
+    missing = fingerprints(expected_aas) - fingerprints(carried)
+    if missing:
+        raise SystemExit(f"{name}: the Thing Description does not carry {len(missing)} "
+                         f"of the source AAS's nodes, for example {sorted(missing)[:2]}")
 
     path = os.path.join(OUT_WOT, f"{name}.td.jsonld")
     with open(path, "w", encoding="utf-8", newline="\n") as f:
@@ -233,13 +286,28 @@ def write_thing_descriptions(name, env, context_doc):
     return path, len(want), len(carried)
 
 
-def stated_properties(graph):
-    return {str(p) for _, p, _ in graph}
+def fingerprints(graph):
+    """Each node of the graph as what it says about itself, counted.
 
+    Subjects are not compared directly: the Thing Description names its nodes by
+    clause 5.3 and the reference lifting leaves them blank, so no label is
+    shared. A node is identified instead by the multiset of statements it makes,
+    with any object that is *another node of the same graph* standing in as `[]`
+    because its label is arbitrary on both sides. An IRI that is not described in
+    the graph - an enumeration individual, an external reference - is kept
+    verbatim, because there it is the value rather than a name for one.
 
-def stated_values(graph):
-    """Every literal the graph states, with the property that states it."""
-    return {(str(p), str(o)) for _, p, o in graph if isinstance(o, Literal)}
+    Counting those, rather than collecting predicates and values into sets, is
+    what makes the check load-bearing: a set is unchanged by deleting every
+    repeated occurrence of a value, and by moving every value onto one node, and
+    neither of those is a document that still carries the AAS.
+    """
+    described = {s for s in graph.subjects()}
+    per_subject = defaultdict(list)
+    for s, p, o in graph:
+        anonymous = isinstance(o, BNode) or o in described
+        per_subject[s].append(f"{p.n3()} {'[]' if anonymous else o.n3()}")
+    return Counter(tuple(sorted(statements)) for statements in per_subject.values())
 
 
 def main():
@@ -279,8 +347,11 @@ def main():
 
     print(f"\n{written} submodel(s), three files each: the AAS as pure JSON-LD, the same "
           f"document made loadable as a Thing Description, and the projection-complete\n"
-          f"Thing Description. Every authored document lowers back to its source AAS and "
-          f"every projection-complete document projects to the AddressSpace clause 5.6 defines.")
+          f"Thing Description. Every authored document lowers back to its source AAS, every\n"
+          f"minimal document still carries that AAS once the WoT vocabulary is discarded, and\n"
+          f"every projection-complete document carries it and projects without difference\n"
+          f"against the reference materializer - which is a comparison of this document's own\n"
+          f"rules against its own implementation, as Annex F.6 states.")
     return 0 if written else 1
 
 
