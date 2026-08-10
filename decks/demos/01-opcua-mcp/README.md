@@ -19,7 +19,7 @@ and by the later Robot Intent demo.
 ## Run it
 
 ```powershell
-.\decks\demos\01-opcua-mcp\run-demo.ps1 -StackRoot D:\git\UA-.NETStandard6
+.\decks\demos\01-opcua-mcp\run-demo.ps1 -StackRoot $env:OPCUA_STACK_ROOT
 ```
 
 ## Step by step
@@ -56,7 +56,7 @@ and by the later Robot Intent demo.
 
 ## Links
 
-- MCP server guide: `D:\git\UA-.NETStandard6\docs\McpServer.md`
-- MCP source: `D:\git\UA-.NETStandard6\tools\Opc.Ua.Mcp`
-- OPC UA reference server: `D:\git\UA-.NETStandard6\samples\ConsoleReferenceServer`
+- MCP server guide in the stack checkout: `docs/McpServer.md`
+- MCP source in the stack checkout: `tools/Opc.Ua.Mcp`
+- OPC UA reference server in the stack checkout: `samples/ConsoleReferenceServer`
 - Model Context Protocol: https://modelcontextprotocol.io

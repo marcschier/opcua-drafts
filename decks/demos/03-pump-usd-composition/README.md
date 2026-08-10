@@ -18,7 +18,7 @@ It proves OpenUSD Part 1 and Part 2 can describe both the machine-to-prim bindin
 **Run it**
 
 ```powershell
-.\decks\demos\03-pump-usd-composition\run-demo.ps1 -StackRoot D:\git\UA-.NETStandard6
+.\decks\demos\03-pump-usd-composition\run-demo.ps1 -StackRoot $env:OPCUA_STACK_ROOT
 ```
 
 **Step by step**
@@ -56,10 +56,10 @@ It proves OpenUSD Part 1 and Part 2 can describe both the machine-to-prim bindin
 
 **Links**
 
-- Draft: `D:\git\spec-drafts\metaverse-specs\openusd-binding\`
-- Draft: `D:\git\spec-drafts\metaverse-specs\openusd-scene\`
-- Stack docs: `D:\git\UA-.NETStandard6\docs\OpenUsd.md`
-- Stack docs: `D:\git\UA-.NETStandard6\docs\DeviceIntegration.md`
-- Sample source: `D:\git\UA-.NETStandard6\samples\PumpDeviceIntegrationServer\`
-- Sample source: `D:\git\UA-.NETStandard6\samples\SiteCompositionServer\`
-- Viewer source: `D:\git\UA-.NETStandard6\tools\Opc.Ua.OpenUsd.Connector.Viewer\`
+- Draft in the private review repository: `spec-drafts/metaverse-specs/openusd-binding/`
+- Draft in the private review repository: `spec-drafts/metaverse-specs/openusd-scene/`
+- Stack docs in the stack checkout: `docs/OpenUsd.md`
+- Stack docs in the stack checkout: `docs/DeviceIntegration.md`
+- Sample source in the stack checkout: `samples/PumpDeviceIntegrationServer/`
+- Sample source in the stack checkout: `samples/SiteCompositionServer/`
+- Viewer source in the stack checkout: `tools/Opc.Ua.OpenUsd.Connector.Viewer/`

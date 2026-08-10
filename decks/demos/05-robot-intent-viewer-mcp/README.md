@@ -21,7 +21,7 @@ operations and the RI-Interop-40010 link, while an agent uses the standard OPC U
 ## Run it
 
 ```powershell
-.\decks\demos\05-robot-intent-viewer-mcp\run-demo.ps1 -StackRoot D:\git\UA-.NETStandard6
+.\decks\demos\05-robot-intent-viewer-mcp\run-demo.ps1 -StackRoot $env:OPCUA_STACK_ROOT
 ```
 
 ## Step by step
@@ -61,8 +61,8 @@ operations and the RI-Interop-40010 link, while an agent uses the standard OPC U
 
 ## Links
 
-- Robot Intent draft: `D:\git\marcschier\opcua-drafts\metaverse-specs\robot-intent\OPC-UA-Robot-Intent.md`
-- Robotics guide: `D:\git\UA-.NETStandard6\docs\Robotics.md`
-- Robotics samples: `D:\git\UA-.NETStandard6\samples\Robotics\README.md`
-- Intent server: `D:\git\UA-.NETStandard6\samples\Robotics\IntentEnabledRobot`
-- Viewer client: `D:\git\UA-.NETStandard6\samples\Robotics\IntentViewerClient`
+- Robot Intent draft: [OPC-UA-Robot-Intent.md](../../../metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md)
+- Robotics guide in the stack checkout: `docs/Robotics.md`
+- Robotics samples in the stack checkout: `samples/Robotics/README.md`
+- Intent server in the stack checkout: `samples/Robotics/IntentEnabledRobot`
+- Viewer client in the stack checkout: `samples/Robotics/IntentViewerClient`

@@ -13,7 +13,7 @@ It proves the missing layer between existing OPC UA machine vision specification
 
 ## Prerequisites
 
-- The drafts repository at `D:\git\marcschier\opcua-drafts`.
+- This repository.
 - The Vision draft and generated NodeSet under `metaverse-specs\vision`.
 - The Data Channels draft for the optional in-band media path.
 - The AI Model Management draft for the deployment that interprets the image.
@@ -23,10 +23,10 @@ It proves the missing layer between existing OPC UA machine vision specification
 Open the draft and use its architecture diagram and type inventory:
 
 ```powershell
-code D:\git\marcschier\opcua-drafts\metaverse-specs\vision\OPC-UA-Vision.md
-code D:\git\marcschier\opcua-drafts\metaverse-specs\vision\Opc.Ua.Vision.NodeSet2.xml
-code D:\git\marcschier\opcua-drafts\metaverse-specs\ai-model-management\OPC-UA-AI-Model-Management.md
-code D:\git\marcschier\opcua-drafts\core-specs\data-channels\OPC-UA-Data-Channels.md
+code metaverse-specs\vision\OPC-UA-Vision.md
+code metaverse-specs\vision\Opc.Ua.Vision.NodeSet2.xml
+code metaverse-specs\ai-model-management\OPC-UA-AI-Model-Management.md
+code core-specs\data-channels\OPC-UA-Data-Channels.md
 ```
 
 ## Step by step
@@ -64,9 +64,8 @@ code D:\git\marcschier\opcua-drafts\core-specs\data-channels\OPC-UA-Data-Channel
 
 ## Links
 
-- Vision draft: `D:\git\marcschier\opcua-drafts\metaverse-specs\vision\OPC-UA-Vision.md`
-- Vision research report: `D:\git\marcschier\opcua-drafts\metaverse-specs\vision\OPC-UA-Vision-Research.md`
-- Vision NodeSet: `D:\git\marcschier\opcua-drafts\metaverse-specs\vision\Opc.Ua.Vision.NodeSet2.xml`
-- Data Channels draft: `D:\git\marcschier\opcua-drafts\core-specs\data-channels\OPC-UA-Data-Channels.md`
-- AI Model Management draft: `D:\git\marcschier\opcua-drafts\metaverse-specs\ai-model-management\OPC-UA-AI-Model-Management.md`
-
+- [Vision draft](../../../metaverse-specs/vision/OPC-UA-Vision.md)
+- [Vision research report](../../../metaverse-specs/vision/OPC-UA-Vision-Research.md)
+- [Vision NodeSet](../../../metaverse-specs/vision/Opc.Ua.Vision.NodeSet2.xml)
+- [Data Channels draft](../../../core-specs/data-channels/OPC-UA-Data-Channels.md)
+- [AI Model Management draft](../../../metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md)

@@ -18,7 +18,7 @@ It proves the WoT Binding and WoT Connectivity drafts can materialize a companio
 **Run it**
 
 ```powershell
-.\decks\demos\04-pumps-wotcon\run-demo.ps1 -StackRoot D:\git\UA-.NETStandard6
+.\decks\demos\04-pumps-wotcon\run-demo.ps1 -StackRoot $env:OPCUA_STACK_ROOT
 ```
 
 **Step by step**
@@ -57,10 +57,10 @@ It proves the WoT Binding and WoT Connectivity drafts can materialize a companio
 
 **Links**
 
-- Draft: `D:\git\spec-drafts\wot-specs\WoT-Binding\`
-- Draft: `D:\git\spec-drafts\wot-specs\WoT-Connectivity\`
-- Stack docs: `D:\git\UA-.NETStandard6\docs\WoTConnectivity.md`
-- Stack docs: `D:\git\UA-.NETStandard6\docs\WotBindings.md`
-- Stack docs: `D:\git\UA-.NETStandard6\docs\WoTNodeSetConversion.md`
-- Sample source: `D:\git\UA-.NETStandard6\samples\WotCon\`
-- Documents: `D:\git\UA-.NETStandard6\samples\WotCon\AggregationClient\Documents\`
+- Draft in the private review repository: `spec-drafts/wot-specs/WoT-Binding/`
+- Draft in the private review repository: `spec-drafts/wot-specs/WoT-Connectivity/`
+- Stack docs in the stack checkout: `docs/WoTConnectivity.md`
+- Stack docs in the stack checkout: `docs/WotBindings.md`
+- Stack docs in the stack checkout: `docs/WoTNodeSetConversion.md`
+- Sample source in the stack checkout: `samples/WotCon/`
+- Documents in the stack checkout: `samples/WotCon/AggregationClient/Documents/`

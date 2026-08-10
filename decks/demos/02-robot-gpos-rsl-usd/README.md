@@ -18,7 +18,7 @@ It proves OpenUSD Part 1 and Part 2 can render a companion-model robot cell dire
 **Run it**
 
 ```powershell
-.\decks\demos\02-robot-gpos-rsl-usd\run-demo.ps1 -StackRoot D:\git\UA-.NETStandard6
+.\decks\demos\02-robot-gpos-rsl-usd\run-demo.ps1 -StackRoot $env:OPCUA_STACK_ROOT
 ```
 
 **Step by step**
@@ -57,11 +57,11 @@ It proves OpenUSD Part 1 and Part 2 can render a companion-model robot cell dire
 
 **Links**
 
-- Draft: `D:\git\spec-drafts\metaverse-specs\openusd-binding\`
-- Draft: `D:\git\spec-drafts\metaverse-specs\openusd-scene\`
-- Draft: `D:\git\marcschier\opcua-drafts\metaverse-specs\robot-intent\`
-- Stack docs: `D:\git\UA-.NETStandard6\docs\Robotics.md`
-- Stack docs: `D:\git\UA-.NETStandard6\docs\Positioning.md`
-- Stack docs: `D:\git\UA-.NETStandard6\docs\OpenUsd.md`
-- Sample source: `D:\git\UA-.NETStandard6\samples\Robotics\MinimalRobotServer\`
-- Viewer source: `D:\git\UA-.NETStandard6\tools\Opc.Ua.OpenUsd.Connector.Viewer\`
+- Draft in the private review repository: `spec-drafts/metaverse-specs/openusd-binding/`
+- Draft in the private review repository: `spec-drafts/metaverse-specs/openusd-scene/`
+- Draft: [metaverse-specs/robot-intent](../../../metaverse-specs/robot-intent/)
+- Stack docs in the stack checkout: `docs/Robotics.md`
+- Stack docs in the stack checkout: `docs/Positioning.md`
+- Stack docs in the stack checkout: `docs/OpenUsd.md`
+- Sample source in the stack checkout: `samples/Robotics/MinimalRobotServer/`
+- Viewer source in the stack checkout: `tools/Opc.Ua.OpenUsd.Connector.Viewer/`

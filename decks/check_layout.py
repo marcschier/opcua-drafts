@@ -18,8 +18,10 @@ import argparse
 import math
 from pathlib import Path
 
+import build_deck
+import theme
 from pptx import Presentation
-from pptx.util import Emu, Pt
+from pptx.util import Emu, Inches, Pt
 
 DEFAULT_DECK = Path(__file__).parent / "OPC-UA-Drafts-Overview.pptx"
 
@@ -27,6 +29,149 @@ DEFAULT_DECK = Path(__file__).parent / "OPC-UA-Drafts-Overview.pptx"
 AVG_CHAR_EM = 0.50
 LINE_SPACING = 1.18
 EMU_PER_PT = 12700
+EMU_PER_INCH = 914400
+OVERLAP_TOLERANCE = Emu(int(0.03 * EMU_PER_INCH))
+
+TITLE_COLLISION_LAYOUTS = {"bullets", "table", "code", "diagram", "demo"}
+
+
+def text(shape) -> str:
+    """
+    Return the shape's text, or an empty string for non-text shapes.
+    """
+    return shape.text_frame.text.strip() if shape.has_text_frame else ""
+
+
+def rect(shape) -> tuple[int, int, int, int]:
+    """
+    Return ``(left, top, right, bottom)`` in EMUs.
+    """
+    return (
+        int(shape.left),
+        int(shape.top),
+        int(shape.left + shape.width),
+        int(shape.top + shape.height),
+    )
+
+
+def shape_label(shape) -> str:
+    """
+    Human-readable shape label for findings.
+    """
+    value = text(shape)
+    if value:
+        return value.replace("\n", " ").encode("ascii", "replace").decode("ascii")[:50]
+    return str(shape.shape_type)
+
+
+def slide_specs() -> list[dict]:
+    """
+    Load source slide metadata so layout-sensitive geometry checks know intent.
+    """
+    docs, _ = build_deck.load_content()
+    specs: list[dict] = []
+    for doc in docs:
+        specs.extend(doc.get("slides", []) or [])
+    return specs
+
+
+def is_full_bleed_background(shape, slide_area: int) -> bool:
+    """
+    Title, section and statement slides use zero-text panels behind all content.
+    """
+    if text(shape):
+        return False
+    area = int(shape.width) * int(shape.height)
+    return area > slide_area * 0.70
+
+
+def is_accent_bar(shape, width: int, height: int) -> bool:
+    """
+    Accent bars are decoration: thin, zero-text strips on the top or left edge.
+    """
+    if text(shape):
+        return False
+    thin_h = int(shape.height) <= int(Inches(0.20))
+    thin_w = int(shape.width) <= int(Inches(0.20))
+    spans_width = int(shape.width) >= width * 0.50
+    spans_height = int(shape.height) >= height * 0.50
+    return (thin_h and spans_width) or (thin_w and spans_height)
+
+
+def is_chrome_text(shape) -> bool:
+    """
+    Shared title, kicker, footer text and page number are not slide content.
+    """
+    if not text(shape):
+        return False
+    top = int(shape.top)
+    left = int(shape.left)
+    bottom = int(shape.top + shape.height)
+    if top >= int(theme.FOOTER_TOP - Inches(0.12)):
+        return True
+    if bottom <= int(theme.BODY_TOP + Inches(0.04)):
+        return True
+    # Demo badges sit in the title band and are layout chrome, not body content.
+    if top < int(theme.BODY_TOP) and left > int(theme.SLIDE_WIDTH * 0.70):
+        return True
+    return False
+
+
+def is_decoration(shape, width: int, height: int) -> bool:
+    """
+    Non-content furniture should not participate in body geometry checks.
+    """
+    slide_area = width * height
+    return (
+        is_full_bleed_background(shape, slide_area)
+        or is_accent_bar(shape, width, height)
+        or is_chrome_text(shape)
+    )
+
+
+def is_connector(shape) -> bool:
+    """
+    Connectors intentionally have no content rectangle for these checks.
+    """
+    shape_type = str(shape.shape_type)
+    return "LINE" in shape_type or "CONNECTOR" in shape_type
+
+
+def is_arrow_label(shape, spec: dict | None) -> bool:
+    """
+    Diagram arrow labels are small text boxes deliberately centered on connectors.
+    """
+    if not spec or spec.get("layout") != "diagram" or not text(shape):
+        return False
+    labels = {str(arrow.get("label", "")).strip() for arrow in spec.get("arrows", []) or []}
+    if text(shape) not in labels:
+        return False
+    return int(shape.width) <= int(Inches(1.75)) and int(shape.height) <= int(Inches(0.34))
+
+
+def is_flow_text_region(shape) -> bool:
+    """
+    Bullet body text boxes reserve flow space; their actual glyphs may not fill it.
+    """
+    return (
+        "TEXT_BOX" in str(shape.shape_type)
+        and int(shape.width) >= int(theme.CONTENT_W * 0.80)
+        and int(shape.height) >= int(Inches(3.0))
+    )
+
+
+def content_shapes(slide, width: int, height: int) -> list:
+    """
+    Return shapes with content geometry, excluding decorative slide furniture.
+    """
+    shapes = []
+    for shape in slide.shapes:
+        if shape.left is None or shape.top is None:
+            continue
+        if is_connector(shape) or is_decoration(shape, width, height):
+            continue
+        shapes.append(shape)
+    return shapes
 
 
 def shape_text_height(shape) -> float:
@@ -68,9 +213,11 @@ def check(deck_path: Path) -> list[str]:
     prs = Presentation(deck_path)
     width = prs.slide_width
     height = prs.slide_height
+    specs = slide_specs()
     findings: list[str] = []
 
     for index, slide in enumerate(prs.slides, start=1):
+        spec = specs[index - 1] if index <= len(specs) else None
         title = ""
         for shape in slide.shapes:
             if shape.has_text_frame and shape.text_frame.text.strip():
@@ -80,6 +227,10 @@ def check(deck_path: Path) -> list[str]:
         for shape in slide.shapes:
             if shape.left is None or shape.top is None:
                 continue
+            if not is_connector(shape) and (shape.width <= 0 or shape.height <= 0):
+                findings.append(
+                    f"slide {index} ({title}): shape '{shape_label(shape)}' has empty geometry"
+                )
             if (
                 shape.left < Emu(-1000)
                 or shape.top < Emu(-1000)
@@ -88,6 +239,20 @@ def check(deck_path: Path) -> list[str]:
             ):
                 findings.append(
                     f"slide {index} ({title}): shape '{shape.shape_type}' extends past the slide"
+                )
+            if is_connector(shape) or is_decoration(shape, int(width), int(height)):
+                continue
+            if shape.top + shape.height > theme.FOOTER_TOP:
+                findings.append(
+                    f"slide {index} ({title}): shape '{shape_label(shape)}' intrudes into the footer"
+                )
+            if (
+                spec
+                and spec.get("layout") in TITLE_COLLISION_LAYOUTS
+                and shape.top < theme.BODY_TOP - OVERLAP_TOLERANCE
+            ):
+                findings.append(
+                    f"slide {index} ({title}): shape '{shape_label(shape)}' sits above the body area"
                 )
             if not shape.has_text_frame:
                 continue
@@ -101,6 +266,32 @@ def check(deck_path: Path) -> list[str]:
                     f"slide {index} ({title}): text needs ~{needed:.0f}pt in a "
                     f"{available:.0f}pt box \u2014 {int(needed / available * 100)}% full"
                 )
+
+        if spec and spec.get("layout") not in {"title", "section", "statement"}:
+            shapes = content_shapes(slide, int(width), int(height))
+            for left_index, left_shape in enumerate(shapes):
+                if (
+                    left_shape.has_table
+                    or is_arrow_label(left_shape, spec)
+                    or is_flow_text_region(left_shape)
+                ):
+                    continue
+                left_l, left_t, left_r, left_b = rect(left_shape)
+                for right_shape in shapes[left_index + 1 :]:
+                    if (
+                        right_shape.has_table
+                        or is_arrow_label(right_shape, spec)
+                        or is_flow_text_region(right_shape)
+                    ):
+                        continue
+                    right_l, right_t, right_r, right_b = rect(right_shape)
+                    overlap_w = min(left_r, right_r) - max(left_l, right_l)
+                    overlap_h = min(left_b, right_b) - max(left_t, right_t)
+                    if overlap_w > OVERLAP_TOLERANCE and overlap_h > OVERLAP_TOLERANCE:
+                        findings.append(
+                            f"slide {index} ({title}): shape '{shape_label(left_shape)}' overlaps "
+                            f"'{shape_label(right_shape)}'"
+                        )
 
         if slide.has_notes_slide:
             notes = slide.notes_slide.notes_text_frame.text.strip()

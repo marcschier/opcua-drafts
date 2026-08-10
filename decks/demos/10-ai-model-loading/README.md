@@ -22,20 +22,21 @@ It proves the control plane for model execution can be OPC UA. A client calls on
 Use a separate worktree if you keep `master` untouched:
 
 ```powershell
-git -C D:\git\UA-.NETStandard6 fetch --all
-git -C D:\git\UA-.NETStandard6 worktree add ..\ua-ai-models fork/marcschier/ai-model-management
+git -C $env:OPCUA_STACK_ROOT fetch --all
+git -C $env:OPCUA_STACK_ROOT worktree add -b marcschier/ai-model-management ..\ua-ai-models fork/marcschier/ai-model-management
 ```
 
 Or switch a disposable checkout:
 
 ```powershell
-git -C D:\git\ua-ai-models switch marcschier/ai-model-management
+git -C $env:OPCUA_STACK_ROOT\..\ua-ai-models fetch --all
+git -C $env:OPCUA_STACK_ROOT\..\ua-ai-models switch --track -c marcschier/ai-model-management fork/marcschier/ai-model-management
 ```
 
 ## Run it
 
 ```powershell
-.\decks\demos\10-ai-model-loading\run-demo.ps1 -StackRoot D:\git\ua-ai-models
+.\decks\demos\10-ai-model-loading\run-demo.ps1 -StackRoot $env:OPCUA_STACK_ROOT\..\ua-ai-models
 ```
 
 Use `-NoBuild` after a successful build. Use `-KeepRunning` if you want to leave the stub backend and server open for manual browsing.
@@ -69,6 +70,5 @@ Use `-NoBuild` after a successful build. Use `-KeepRunning` if you want to leave
 - Server sample: `samples\AiModelManagement\AiModelManagementServer`
 - Client sample: `samples\AiModelManagement\AiModelManagementClient`
 - Test backend: `samples\AiModelManagement\verify_backend.py`
-- Draft: `D:\git\marcschier\opcua-drafts\metaverse-specs\ai-model-management\OPC-UA-AI-Model-Management.md`
-- Implementation examples: `D:\git\marcschier\opcua-drafts\metaverse-specs\extras\ai-model-management\examples`
-
+- [Draft](../../../metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md)
+- [Implementation examples](../../../metaverse-specs/extras/ai-model-management/examples)

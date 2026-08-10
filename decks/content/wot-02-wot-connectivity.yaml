@@ -107,7 +107,7 @@ slides:
     kicker: Additive OPC 10100-1 revision under OPC Foundation review
     bullets:
       - text: "**Draft version:** Release 1.1-draft3, dated 2026-08-05"
-      - text: "**Target body:** OPC Foundation WoT Working Group"
+      - text: "**Status:** Under OPC Foundation review"
       - text: "**Review repository:** `OPCF-Members/spec-drafts`"
       - text: "**Source:** `wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md`"
       - text: "**Depends on:** `core-specs/xregistry` base model"
@@ -121,7 +121,6 @@ slides:
       repository overview says it is under OPC Foundation review in `OPCF-Members/spec-drafts`.
       The annex states that additive registry NodeIds in the `64000+` block are provisional while
       final identifiers are assigned by the OPC Foundation. Demos 4 and 7 exercise this model.
-
 
 
 

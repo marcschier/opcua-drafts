@@ -45,13 +45,13 @@ try {
 
     Write-DemoStep -Message 'Start the OPC UA reference server' `
         -Detail 'The endpoint is opc.tcp://localhost:62541/Quickstarts/ReferenceServer.'
-    Start-DemoProcess -Name 'Reference Server' -Project $referenceServer -Arguments @('--autoaccept', '--console')
+    $null = Start-DemoProcess -Name 'Reference Server' -Project $referenceServer -Arguments @('--autoaccept', '--console')
     Wait-DemoEndpoint -HostName 'localhost' -Port 62541
     Wait-DemoKeypress
 
     Write-DemoStep -Message 'Start the MCP server with the services profile' `
         -Detail 'Streamable HTTP listens on http://localhost:5100/mcp.'
-    Start-DemoProcess -Name 'OPC UA MCP Server' -Project $mcpServer `
+    $null = Start-DemoProcess -Name 'OPC UA MCP Server' -Project $mcpServer `
         -Arguments @('--transport', 'http', '--port', '5100', '--profile', 'services')
     Wait-DemoEndpoint -HostName 'localhost' -Port 5100
     Wait-DemoKeypress

@@ -67,13 +67,14 @@ slides:
 
   - layout: bullets
     title: Status and where it lives
-    kicker: Under OPC Foundation review as a standalone companion
+    kicker: Working draft as a standalone companion
     bullets:
       - text: "Version banner: **0.1.0**, dated 2026-07-22"
       - text: "Companion to Parts 6 and 14"
-      - text: "Source: `D:\\git\\spec-drafts\\core-specs\\avro-encoding\\OPC-UA-Avro-Encoding.md`"
+      - text: "Source: `core-specs/avro-encoding/OPC-UA-Avro-Encoding.md` in the review repository"
+      - text: "**Under OPC Foundation review** \u2014 in `OPCF-Members/spec-drafts`, not the public repository"
       - text: "Target: OPC UA core or Cloud Initiative numbering range"
       - text: "Open: final namespace, NodeIds and review disposition"
       - text: "No demo is listed for this draft"
     notes: |
-      The source banner identifies this as a working draft companion to OPC 10000-6 and OPC 10000-14, in the base OPC UA namespace. The status note says the standalone companion could land in the OPC UA core numbering range or the Cloud Initiative numbering range. The public repository overview marks this draft as under OPC Foundation review and points members to the private spec-drafts repository, which is why the source path used for this slide deck is under `D:\git\spec-drafts`. The draft ships a generated per-type reference and generated schema documents, but final registered namespace and NodeIds still depend on the standards process. The deck does not list a demo for Avro.
+      The source banner identifies this as a working draft companion to OPC 10000-6 and OPC 10000-14, in the base OPC UA namespace. The status note says the standalone companion could land in the OPC UA core numbering range or the Cloud Initiative numbering range. The source path used for this slide deck is under `D:\git\spec-drafts`. The draft ships a generated per-type reference and generated schema documents, but final registered namespace and NodeIds still depend on the standards process. The deck does not list a demo for Avro.

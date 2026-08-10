@@ -108,7 +108,7 @@ slides:
       - text: "Path: `metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md`"
       - text: "Dependency: xRegistry, for model and dataset catalogues"
       - text: "Guides: Azure AI Foundry, Bedrock, Triton, KServe, embedded runtimes"
-      - text: "Demo: **10 — AI model loading**, on branch `marcschier/ai-model-management`"
+      - text: "Demo: **10 — AI model loading**, on branch `fork/marcschier/ai-model-management`"
     takeaway: >-
       This is the large metaverse draft: lifecycle, inference, catalogue and audit in one model.
     notes: |
@@ -118,4 +118,4 @@ slides:
       Amazon SageMaker, NVIDIA NIM, NVIDIA Triton, Google Vertex AI, Hugging Face, KServe/Open Inference
       Protocol, embedded runtimes such as ONNX Runtime and llama.cpp, and another OPC UA Server. The index
       also states the important lesson from those mappings: many hosted systems give no artefact digest,
-      so evidence tracks custody. Demo 10 runs from the stack branch named in the deck input.
+      so evidence tracks custody. Demo 10 runs from the fork branch named in the deck input.

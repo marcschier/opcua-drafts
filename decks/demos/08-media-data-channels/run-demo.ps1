@@ -15,7 +15,7 @@
 .PARAMETER KeepRunning
     Leave started processes running when the script exits.
 .EXAMPLE
-    .\run-demo.ps1 -StackRoot D:\git\ua-datachannels
+    .\run-demo.ps1 -StackRoot C:\src\ua-datachannels
 #>
 [CmdletBinding()]
 param(

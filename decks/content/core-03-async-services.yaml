@@ -47,7 +47,7 @@ slides:
       Server -> Client: DeferredRequestCompletedEventType(42)
       Client -> Server: Complete(requestHandle=42)
       Server -> Client: original CallResponse or CompleteResponse
-    outro: "`Cancel(42)` abandons the answer; it does not promise to undo the work."
+    outro: "Calling `Cancel` for handle 42 abandons the answer; it does not undo the work."
     notes: |
       Section 4.4 is the draft in one paragraph, and the flow on the slide follows it. A Server that cannot answer in time parks the request and returns the existing `Bad_RequestNotComplete` with a `RetryAfter` hint. Later `Complete` calls use the same request handle. If work is still executing, the Server returns `Bad_RequestNotComplete` again with a fresh hint and enforces `MinRetryAfter` with `Bad_ServerTooBusy` when a Client polls too fast. When the result is ready, `Complete` returns the original Service response, such as `CallResponse` or `WriteResponse`. If the parked Service itself failed, a `CompleteResponse` carries the deferred service result separately from failures of `Complete` itself.
 
@@ -59,7 +59,7 @@ slides:
       - text: "The effect is executed once, never by `Complete`"
       - text: "A delivered response is retained for replay until expiry"
       - text: "The parked response belongs to the issuing Session"
-      - text: "Reconnect must not weaken `MessageSecurityMode`"
+      - text: "Reconnect must not weaken `SecurityMode`"
       - text: "Audit `Completed` records the outcome even if nobody collects"
     notes: |
       The lifecycle clauses are the safety story. Admission is decided before the work starts, and a Server reserves parking capacity before an irreversible effect can leave it with no place to store the outcome. The parked request belongs to the issuing Session; another Session gets `Bad_DeferredRequestUnknown`, not a disclosure that a handle exists. A Session may reconnect on a new SecureChannel, but the Server records the SecurityMode under which the request was parked and refuses a weaker channel with `Bad_SecurityModeInsufficient`. Delivery is also replayable until the response deadline, because the Server cannot know whether a transmitted response reached the Client. `Cancel` and expiry discard the answer; the draft explicitly says they do not imply rollback of a distributed effect.

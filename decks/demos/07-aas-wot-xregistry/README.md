@@ -13,8 +13,8 @@ It proves the design is one asset with three projections rather than three unrel
 
 ## Prerequisites
 
-- The drafts repository at `D:\git\marcschier\opcua-drafts`.
-- The stack checkout at `D:\git\UA-.NETStandard6` on `master` for the xRegistry implementation.
+- This repository.
+- The stack checkout from `$env:OPCUA_STACK_ROOT` on `master` for the xRegistry implementation.
 - Do not run the AAS tooling during the presentation; use the generated files and examples as evidence.
 
 ## How to present it without running it
@@ -22,10 +22,11 @@ It proves the design is one asset with three projections rather than three unrel
 Open these files side by side:
 
 ```powershell
-code D:\git\marcschier\opcua-drafts\companion-specs\AAS\README.md
-code D:\git\marcschier\opcua-drafts\companion-specs\AAS\OPC-UA-AAS.md
-code D:\git\marcschier\opcua-drafts\companion-specs\AAS\xRegistry-AAS.md
-code D:\git\UA-.NETStandard6\docs\XRegistry.md
+code companion-specs\AAS\README.md
+code companion-specs\AAS\OPC-UA-AAS.md
+code companion-specs\AAS\Opc.Ua.I4AAS.NodeSet2.xml
+code companion-specs\AAS\xRegistry-AAS.md
+code $env:OPCUA_STACK_ROOT\docs\XRegistry.md
 ```
 
 Then show the generated examples under `companion-specs\AAS\examples\jsonld` and `companion-specs\AAS\examples\wot`.
@@ -65,11 +66,10 @@ Then show the generated examples under `companion-specs\AAS\examples\jsonld` and
 
 ## Links
 
-- Draft overview: `D:\git\marcschier\opcua-drafts\companion-specs\AAS\README.md`
-- OPC UA AAS draft: `D:\git\marcschier\opcua-drafts\companion-specs\AAS\OPC-UA-AAS.md`
-- xRegistry AAS draft: `D:\git\marcschier\opcua-drafts\companion-specs\AAS\xRegistry-AAS.md`
-- AAS package draft: `D:\git\marcschier\opcua-drafts\companion-specs\AAS\xRegistry-AAS-Packages.md`
-- JSON-LD draft: `D:\git\marcschier\opcua-drafts\companion-specs\AAS\AAS-JsonLd.md`
-- Stack xRegistry guide: `D:\git\UA-.NETStandard6\docs\XRegistry.md`
-- Stack packages: `D:\git\UA-.NETStandard6\src\Opc.Ua.XRegistry*`
-
+- [Draft overview](../../../companion-specs/AAS/README.md)
+- [OPC UA AAS draft](../../../companion-specs/AAS/OPC-UA-AAS.md)
+- [xRegistry AAS draft](../../../companion-specs/AAS/xRegistry-AAS.md)
+- [AAS package draft](../../../companion-specs/AAS/xRegistry-AAS-Packages.md)
+- [JSON-LD draft](../../../companion-specs/AAS/AAS-JsonLd.md)
+- Stack xRegistry guide: `docs\XRegistry.md` in the stack checkout
+- Stack packages: `src\Opc.Ua.XRegistry*` in the stack checkout

@@ -26,7 +26,7 @@ slides:
         - ["List collections", "Browse folders; use BrowseNext for pages"]
         - ["Read metadata", "Read Properties and `Labels` entries"]
         - ["Read documents", "`Open` / `Read` / `Close` on `ResourceType`"]
-        - ["Create entities", "`Create*` or `GetOrCreate*` Methods"]
+        - ["Create entities", "`CreateGroup` / `CreateResource` Methods"]
         - ["Update labels", "`Labels.AddAttribute` / `RemoveAttribute`"]
         - ["Delete entities", "`Delete(ExpectedEpoch)` on the entity"]
         - ["Map HTTP paths", "Annex A cross-walks peer operations"]
@@ -41,6 +41,7 @@ slides:
       - text: "Target: xRegistry project as `core/opcua.md` or an extension"
       - text: "Path: `core-specs/xregistry/xRegistry-OPC-UA-Api.md`"
       - text: "Depends on the OPC UA — xRegistry base model"
+      - text: "**Submitted** as [xregistry/spec#511](https://github.com/xregistry/spec/pull/511)"
       - text: "Open: xregistry.org acceptance and final placement"
       - text: "No demo is listed for this binding document"
     notes: |

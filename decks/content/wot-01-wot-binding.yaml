@@ -110,7 +110,7 @@ slides:
     kicker: Standalone OPC 10101 revision under OPC Foundation review
     bullets:
       - text: "**Draft version:** Release 1.1-draft3, dated 2026-07-29"
-      - text: "**Target body:** OPC Foundation Web of Things review"
+      - text: "**Status:** Under OPC Foundation review"
       - text: "**Review repository:** `OPCF-Members/spec-drafts`"
       - text: "**Source:** `wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md`"
       - text: "**Implementation:** `WotNodeSetConverter` and protocol binders"
@@ -124,4 +124,3 @@ slides:
       implementation in `Opc.Ua.Wot.WotNodeSetConverter`, including `uav:nodes`, `uav:nodeSet`,
       residue preservation, Section 6 model vocabulary validation and view projection support; the
       binding runtime also ships HTTP, Modbus, OPC UA and MQTT execution paths for WoT forms.
-

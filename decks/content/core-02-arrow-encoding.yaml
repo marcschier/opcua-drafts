@@ -27,7 +27,7 @@ slides:
         - ["Part 14", "PubSub batch mapping", "RecordBatch rows as samples"]
         - ["Historian", "ADBC-style results", "`HistoryRead` to Arrow streams"]
         - ["Schema", "`SchemaId` handshake", "8 bytes from Arrow Schema bytes"]
-        - ["Config", "`Arrow*MessageDataType`", "Part 14 MessageSettings"]
+        - ["Config", "Arrow MessageSettings types", "Part 14 MessageSettings"]
         - ["Content", "Arrow stream and file types", "IPC stream or bounded file"]
     notes: |
       The key design is reuse. Section 5 maps every OPC UA DataType to an Arrow `DataType` and serializes values as Arrow IPC. Section 6 uses that same DataType for PubSub DataSet field columns, and Section 7 uses it again for the historian `Value` column. The draft defines a `SchemaId` as the first eight bytes of SHA-256 over the serialized Arrow Schema IPC message bytes, independent of PubSub `ConfigurationVersion`. The Part 14 configuration model receives Arrow-specific MessageSettings DataTypes for WriterGroup, DataSetWriter and DataSetReader, plus enums for IPC format, delta-frame mode and compression. The content types are the standard Arrow stream and file media types.

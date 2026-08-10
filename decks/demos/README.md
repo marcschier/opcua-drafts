@@ -36,7 +36,7 @@ stack's `master` — the script says which branch and refuses to run without it.
 3. **A checkout of the stack.** Point the scripts at it once per session:
 
    ```powershell
-   $env:OPCUA_STACK_ROOT = 'D:\git\UA-.NETStandard'
+   $env:OPCUA_STACK_ROOT = '<path-to-your-UA-.NETStandard-checkout>'
    ```
 
    or pass `-StackRoot` per run. With neither, the scripts look for a sibling checkout containing

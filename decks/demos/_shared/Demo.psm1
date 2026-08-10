@@ -135,10 +135,10 @@ function Resolve-StackRoot {
 Could not find a UA-.NETStandard checkout.
 
 Pass one explicitly:
-    .\run-demo.ps1 -StackRoot D:\git\UA-.NETStandard
+    .\run-demo.ps1 -StackRoot C:\src\UA-.NETStandard
 
 or set it once for the session:
-    $env:OPCUA_STACK_ROOT = 'D:\git\UA-.NETStandard'
+    $env:OPCUA_STACK_ROOT = 'C:\src\UA-.NETStandard'
 '@
 }
 

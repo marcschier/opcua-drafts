@@ -20,7 +20,7 @@ and subscription recovery patterns that drafts can rely on when they assume a hi
 ## Run it
 
 ```powershell
-.\decks\demos\06-server-redundancy\run-demo.ps1 -StackRoot D:\git\UA-.NETStandard6
+.\decks\demos\06-server-redundancy\run-demo.ps1 -StackRoot $env:OPCUA_STACK_ROOT
 ```
 
 ## Step by step
@@ -59,9 +59,9 @@ and subscription recovery patterns that drafts can rely on when they assume a hi
 
 ## Links
 
-- High availability guide: `D:\git\UA-.NETStandard6\docs\HighAvailability.md`
-- TransferSubscriptions guide: `D:\git\UA-.NETStandard6\docs\TransferSubscription.md`
-- PubSub HA guide: `D:\git\UA-.NETStandard6\docs\PubSubHighAvailability.md`
-- Sample tests: `D:\git\UA-.NETStandard6\docs\RedundancySampleTests.md`
-- Server sample: `D:\git\UA-.NETStandard6\samples\RedundantServer`
-- Client sample: `D:\git\UA-.NETStandard6\samples\RedundantClient`
+- High availability guide: `docs\HighAvailability.md` in the stack checkout
+- TransferSubscriptions guide: `docs\TransferSubscription.md` in the stack checkout
+- PubSub HA guide: `docs\PubSubHighAvailability.md` in the stack checkout
+- Sample tests: `docs\RedundancySampleTests.md` in the stack checkout
+- Server sample: `samples\RedundantServer` in the stack checkout
+- Client sample: `samples\RedundantClient` in the stack checkout

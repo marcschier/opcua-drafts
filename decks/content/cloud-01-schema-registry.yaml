@@ -67,14 +67,14 @@ slides:
     intro: A received schema-based message follows the ordered resolution flow.
     code: |
       if message.SchemaId:
-          node = OpaqueNodeId(SchemaRegistryNs, message.SchemaId)
-          document = ReadValue(node) or GetSchema(message.SchemaId)
+          node = Opaque SchemaId NodeId(message.SchemaId)
+          document = Read Value Attribute(node) or GetSchema(message.SchemaId)
           if document:
               cache[message.SchemaId] = document
               decode(document)
 
       format = content_type_to_format(message.ContentType)
-      reference = message.SchemaReference
+      reference = message.dataschema
       document = read(reference) if reference else lookup(namespace, name, version)
       decode(document)
     outro: The fast path is one Read; the fallback still ends at a schema file.

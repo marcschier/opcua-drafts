@@ -48,19 +48,19 @@ try {
 
     Write-DemoStep -Message 'Start the IntentEnabledRobot server' `
         -Detail 'The endpoint is opc.tcp://localhost:62840/IntentEnabledRobot.'
-    Start-DemoProcess -Name 'IntentEnabledRobot' -Project $server -Arguments @('--host', 'localhost', '--port', '62840')
+    $null = Start-DemoProcess -Name 'IntentEnabledRobot' -Project $server -Arguments @('--host', 'localhost', '--port', '62840')
     Wait-DemoEndpoint -HostName 'localhost' -Port 62840
     Wait-DemoKeypress
 
     Write-DemoStep -Message 'Start the viewer client in headless mode' `
         -Detail 'It discovers the controller, prints facets, takes authority and offers target pucks.'
-    Start-DemoProcess -Name 'Intent Viewer Client' -Project $viewer `
+    $null = Start-DemoProcess -Name 'Intent Viewer Client' -Project $viewer `
         -Arguments @('--server', 'opc.tcp://localhost:62840/IntentEnabledRobot', '--insecure', '--seconds', '600')
     Wait-DemoKeypress
 
     Write-DemoStep -Message 'Start the MCP server for the same endpoint' `
         -Detail 'Use the services profile at http://localhost:5100/mcp.'
-    Start-DemoProcess -Name 'OPC UA MCP Server' -Project $mcpServer `
+    $null = Start-DemoProcess -Name 'OPC UA MCP Server' -Project $mcpServer `
         -Arguments @('--transport', 'http', '--port', '5100', '--profile', 'services')
     Wait-DemoEndpoint -HostName 'localhost' -Port 5100
     Wait-DemoKeypress

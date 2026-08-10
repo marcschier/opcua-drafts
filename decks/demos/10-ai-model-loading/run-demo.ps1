@@ -14,7 +14,7 @@
 .PARAMETER KeepRunning
     Leave the verification backend and OPC UA Server running when the script exits.
 .EXAMPLE
-    .\run-demo.ps1 -StackRoot D:\git\ua-ai-models
+    .\run-demo.ps1 -StackRoot C:\src\ua-ai-models
 #>
 [CmdletBinding()]
 param(
@@ -80,8 +80,8 @@ try {
     $env:InferenceBackend__EndpointUri = 'http://127.0.0.1:5273/'
     $env:AiModelManagement__LearningStageInterval = '00:00:05'
     $env:AiModelManagement__AsyncInferenceDelay = '00:00:01'
-    Start-DemoProcess -Name 'AI Model Management Server' -Project $server `
-        -Arguments @('--host', '127.0.0.1', '--port', '62640')
+    [void](Start-DemoProcess -Name 'AI Model Management Server' -Project $server `
+            -Arguments @('--host', '127.0.0.1', '--port', '62640'))
     Wait-DemoEndpoint -HostName 'localhost' -Port 62640
     Wait-DemoKeypress
 
@@ -111,4 +111,3 @@ finally {
         }
     }
 }
-

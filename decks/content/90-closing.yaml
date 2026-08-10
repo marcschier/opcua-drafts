@@ -5,7 +5,7 @@ footer: Where this goes next
 slides:
   - layout: statement
     statement: >-
-      Eighteen drafts, nine with running code, five under OPC Foundation review — and every one of
+      Eighteen drafts, nine with running code, six under OPC Foundation review — and every one of
       them is a patch a person reads before it lands.
     attribution: Nothing here is normative. That is the point of a scratch pad.
 
@@ -20,7 +20,7 @@ slides:
         - ["Apache Arrow Encoding", "0.1.0", "OPCF — Part 6 / Part 14", "None"]
         - ["Async Service Execution", "0.1.0", "OPCF — Parts 4, 5 errata", "None"]
         - ["Apache Avro DataEncoding", "—", "OPCF — under review", "None"]
-        - ["xRegistry (base model)", "0.3.0", "OPCF — new Part", "`Opc.Ua.XRegistry`"]
+        - ["xRegistry (base model)", "0.3.0", "OPCF — under review", "`Opc.Ua.XRegistry`"]
         - ["xRegistry — OPC UA API", "0.1.0", "xregistry.org", "—"]
         - ["Schema Registry", "0.5.0", "OPCF — cloud surface", "None"]
         - ["Observability Export", "0.1.0", "OPCF — cloud surface", "None"]
@@ -46,7 +46,7 @@ slides:
       API and the OpenUSD Artifact Registry Service. They are peers of that project's HTTP binding,
       defined on both sides of the boundary so the projection cannot drift.
 
-      Five sit under OPC Foundation member confidentiality while the review runs, which is why they
+      Six sit under OPC Foundation member confidentiality while the review runs, which is why they
       are not in the public repository right now. If someone in the room reviewed one of them there,
       the discussion continues in the members' repository, not here.
 
@@ -95,7 +95,7 @@ slides:
     bullets:
       - text: "**Public drafts** — `github.com/marcschier/opcua-drafts`"
         children:
-          - "Thirteen drafts, the Word renderings under `word-drafts/`, and this deck under `decks/`"
+          - "Twelve drafts, the Word renderings under `word-drafts/`, and this deck under `decks/`"
       - text: "**Under OPC Foundation review** — `github.com/OPCF-Members/spec-drafts`"
         children:
           - "Registered as a submodule; members request access through the member portal, see `OPCF-Members/Help`"
@@ -110,10 +110,10 @@ slides:
     notes: |
       The practical close. Leave this on screen while questions run.
 
-      Three repositories. The public drafts repository holds thirteen of the eighteen plus the Word
+      Three repositories. The public drafts repository holds twelve of the eighteen plus the Word
       renderings, which are the format a submission is actually reviewed in and are rebuilt
       automatically whenever a specification changes on `main`. The members' repository holds the
-      five under review and carries the identical contribution model — same Word round trip, same
+      six under review and carries the identical contribution model — same Word round trip, same
       label-driven agents, same validation. The stack repository holds the implementations and the
       samples the demos drive.
 

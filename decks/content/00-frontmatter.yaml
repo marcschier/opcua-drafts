@@ -34,16 +34,16 @@ slides:
           - "Six run on the stack's `master` today; two need a feature branch; two are walkthroughs while the code catches up"
       - text: "**Every effort gets the same four beats** — why it exists, what it adds, how it works, where it stands"
     takeaway: >-
-      Nothing here is normative. Namespace URIs and NodeIds are provisional, and five drafts are
+      Nothing here is normative. Namespace URIs and NodeIds are provisional, and six drafts are
       under OPC Foundation review.
     notes: |
       Set expectations up front. This is a scratch pad that grew into a coherent body of work: the
       specifications were written against real gaps found while building the .NET Standard stack,
       which is why most of them have running code behind them.
 
-      The five under OPC Foundation review — Avro, OpenUSD Parts 1 and 2, WoT Binding, WoT
-      Connectivity — moved to the members' repository while the review runs. They are covered here
-      at the same depth as the rest.
+      The six under OPC Foundation review — Avro, xRegistry, OpenUSD Parts 1 and 2, WoT Binding and
+      WoT Connectivity — moved to the members' repository while the review runs. They are covered
+      here at the same depth as the rest.
 
   - layout: diagram
     title: How it all fits
@@ -93,7 +93,7 @@ slides:
         - ["Apache Arrow Encoding", "core", "Draft 0.1.0", "—"]
         - ["Asynchronous Service Execution", "core", "Draft 0.1.0", "—"]
         - ["Apache Avro DataEncoding", "core", "Under OPCF review", "—"]
-        - ["xRegistry (base model)", "core", "Draft 0.3.0", "7 — AAS/WoT"]
+        - ["xRegistry (base model)", "core", "Under OPCF review", "7 — AAS/WoT"]
         - ["xRegistry — OPC UA API", "core", "Draft 0.1.0 → xregistry.org", "—"]
         - ["Schema Registry", "cloud", "Draft 0.5.0", "—"]
         - ["Observability Export", "cloud", "Draft 0.1.0", "—"]

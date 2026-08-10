@@ -8,13 +8,13 @@ slides:
     kicker: Every domain registry should not become a private invention
     bullets:
       - text: "Many drafts need a catalogue of versioned documents"
-      - text: "Schemas, Things and USD artifacts are the same registry shape"
+      - text: "Schemas, assets and Thing Descriptions are the same registry shape"
       - text: "Without a base, each domain invents its own folders and APIs"
       - text: "Generic OPC UA Clients need Browse and FileTransfer to be enough"
       - text: "Federation needs one identity model across endpoints"
     takeaway: "xRegistry gives every domain registry the same AddressSpace shape."
     notes: |
-      The xRegistry source explains the gap by naming the repeated structure: a registry contains groups, groups contain resources, and resources have versions, documents and attributes. Schema Registry, WoT Thing Description registries and OpenUSD artifact registries all need that shape. Without a base OPC UA model, each domain would choose its own folder layout, document access method, identifiers and mutation rules, and a generic Client would have to learn each private invention. The draft instead maps the generic xRegistry structure once onto OPC UA folders, files, Properties and Methods. That is why this specification is the spine of the repository: domain registries subtype it rather than rebuilding the same registry grammar.
+      The xRegistry source explains the gap by naming the repeated structure: a registry contains groups, groups contain resources, and resources have versions, documents and attributes. Schema registries, asset registries and WoT Thing-Description registries all need that shape. Without a base OPC UA model, each domain would choose its own folder layout, document access method, identifiers and mutation rules, and a generic Client would have to learn each private invention. The draft instead maps the generic xRegistry structure once onto OPC UA folders, files, Properties and Methods. That is why this specification is the spine of the repository: domain registries subtype it rather than rebuilding the same registry grammar.
 
   - layout: table
     title: What it adds
@@ -51,7 +51,7 @@ slides:
     captions:
       - {x: 0, y: 4.55, w: 12, text: "Browse lists collections; FileTransfer streams bytes with `Open` / `Read` / `Close`", center: true}
     notes: |
-      The diagram is the normative idea in the overview: a registry and its groups are folders, and each resource or version document is a file. The physical backing can be a real file system or a virtual catalogue, but the OPC UA type system presented to the Client is the same. That gives the mandatory read path. A Client browses the folders to discover groups and resources, then opens the `ResourceType` file and reads its bytes. More capable Servers add registration, attribute updates, export and federation, but a conformant baseline is already useful with Browse and FileTransfer alone. Because every domain registry uses the same base shape, a generic Client can navigate a Schema Registry, a WoT Connectivity registry or an OpenUSD artifact registry without a different access pattern for each.
+      The diagram is the normative idea in the overview: a registry and its groups are folders, and each resource or version document is a file. The physical backing can be a real file system or a virtual catalogue, but the OPC UA type system presented to the Client is the same. That gives the mandatory read path. A Client browses the folders to discover groups and resources, then opens the `ResourceType` file and reads its bytes. More capable Servers add registration, attribute updates, export and federation, but a conformant baseline is already useful with Browse and FileTransfer alone. Because every domain registry uses the same base shape, a generic Client can navigate a Schema Registry, an Asset registry or a WoT Thing-Description registry without a different access pattern for each.
 
   - layout: bullets
     title: How mutation and identity work
@@ -73,8 +73,9 @@ slides:
       - text: "Version banner: **0.3.0**, dated 2026-07-31"
       - text: "Proposed Part: OPC 10000-2xx, number to be assigned"
       - text: "Namespace: `http://opcfoundation.org/UA/xRegistry/`"
-      - text: "Source read: `D:\\git\\spec-drafts\\core-specs\\xregistry\\OPC-UA-xRegistry.md`"
+      - text: "Source read: `core-specs/xregistry/OPC-UA-xRegistry.md` in the review repository"
+      - text: "**Under OPC Foundation review** \u2014 in `OPCF-Members/spec-drafts`, not in the public repository"
       - text: "Open: part number, final NodeIds and review outcome"
       - text: "Demo 7 uses xRegistry in the AAS + WoT walkthrough"
     notes: |
-      The xRegistry banner says this is a working draft for submission to the OPC Foundation Working Group, proposed as an OPC 10000-2xx Part with the number to be assigned. It also names the companion namespace and version. The public repository overview says xRegistry is under OPC Foundation review and describes it as the base model subtyped by Schema Registry, WoT Connectivity and the OpenUSD artifact registry. In this checkout the public source path named by the deck task is not present, so the content is verified from the corresponding private checkout under `D:\git\spec-drafts`. The open items are the same ones the banner and annex imply: final part number, registered NodeIds and standards review disposition. Demo 7 is the walkthrough where AAS, WoT and xRegistry are shown together.
+      The xRegistry banner says this is a working draft for submission to the OPC Foundation Working Group, proposed as an OPC 10000-2xx Part with the number to be assigned. It also names the companion namespace and version. The source describes xRegistry as the domain-neutral base for concrete registries such as Schema, Asset, Semantic and WoT Thing-Description registries. In this checkout the public source path named by the deck task is not present, so the content is verified from the corresponding private checkout under `D:\git\spec-drafts`. The open items are the same ones the banner and annex imply: final part number, registered NodeIds and standards review disposition. Demo 7 is the walkthrough where AAS, WoT and xRegistry are shown together.

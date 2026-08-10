@@ -21,20 +21,21 @@ It proves the Data Channels draft is concrete enough to move media-like bytes on
 Use a separate worktree if you keep `master` untouched:
 
 ```powershell
-git -C D:\git\UA-.NETStandard6 fetch --all
-git -C D:\git\UA-.NETStandard6 worktree add ..\ua-datachannels origin/data-channels-quic-experimental
+git -C $env:OPCUA_STACK_ROOT fetch --all
+git -C $env:OPCUA_STACK_ROOT worktree add -b data-channels-quic-experimental ..\ua-datachannels origin/data-channels-quic-experimental
 ```
 
 Or switch a disposable checkout:
 
 ```powershell
-git -C D:\git\ua-datachannels switch data-channels-quic-experimental
+git -C $env:OPCUA_STACK_ROOT\..\ua-datachannels fetch --all
+git -C $env:OPCUA_STACK_ROOT\..\ua-datachannels switch --track -c data-channels-quic-experimental origin/data-channels-quic-experimental
 ```
 
 ## Run it
 
 ```powershell
-.\decks\demos\08-media-data-channels\run-demo.ps1 -StackRoot D:\git\ua-datachannels
+.\decks\demos\08-media-data-channels\run-demo.ps1 -StackRoot $env:OPCUA_STACK_ROOT\..\ua-datachannels
 ```
 
 Use `-NoBuild` after a successful build. Use `-KeepRunning` only when you want to inspect a process the script started; this script normally runs foreground sample commands and exits.
@@ -64,10 +65,9 @@ Use `-NoBuild` after a successful build. Use `-KeepRunning` only when you want t
 
 ## Links
 
-- Branch documentation: `D:\git\UA-.NETStandard6\docs\DataChannels.md` on `origin/data-channels-quic-experimental`
+- Branch documentation: `docs\DataChannels.md` in the stack checkout on `origin/data-channels-quic-experimental`
 - Sample: `samples\ConsoleDataChannelStreaming`
 - QUIC binding: `src\Opc.Ua.Bindings.Quic`
 - Core implementation: `src\Opc.Ua.Core\Stack\DataChannels`
-- Draft: `D:\git\marcschier\opcua-drafts\core-specs\data-channels\OPC-UA-Data-Channels.md`
-- Vision draft: `D:\git\marcschier\opcua-drafts\metaverse-specs\vision\OPC-UA-Vision.md`
-
+- [Draft](../../../core-specs/data-channels/OPC-UA-Data-Channels.md)
+- [Vision draft](../../../metaverse-specs/vision/OPC-UA-Vision.md)
