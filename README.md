@@ -62,7 +62,7 @@ Both specifications are under OPC Foundation review, so the `wot-specs/` tree is
 
 ## Specifications under OPC Foundation review
 
-Five drafts have been submitted to the OPC Foundation and are being reviewed under member confidentiality. They are **not in this repository while that review runs** — they live in [`OPCF-Members/spec-drafts`](https://github.com/OPCF-Members/spec-drafts), a private repository of the OPC Foundation members organization.
+Six drafts have been submitted to the OPC Foundation and are being reviewed under member confidentiality. They are **not in this repository while that review runs** — they live in [`OPCF-Members/spec-drafts`](https://github.com/OPCF-Members/spec-drafts), a private repository of the OPC Foundation members organization.
 
 They appear in the tables above with their status, and link to the private repository.
 
@@ -89,7 +89,7 @@ git submodule update --remote spec-drafts
 
 The submodule is a pinned commit like any other, so `git status` showing it behind is normal — it moves when someone commits a new pointer.
 
-Two documents that were part of the OpenUSD work stay here, because they are proposed to [xregistry.org](https://github.com/xregistry/spec) rather than to the OPC Foundation: [`xRegistry-OpenUsd.md`](metaverse-specs/openusd-binding/xRegistry-OpenUsd.md) and its model. The [`xregistry/`](core-specs/xregistry/) base model they build on also stays, because the specifications that subtype it are still public.
+Three documents stay here because they are proposed to [xregistry.org](https://github.com/xregistry/spec) rather than to the OPC Foundation: [`xRegistry-OpenUsd.md`](metaverse-specs/openusd-binding/xRegistry-OpenUsd.md) and its model, and the [xRegistry OPC UA API binding](core-specs/xregistry/xRegistry-OPC-UA-Api.md), which is a peer of that project's HTTP binding. The abstract [`xregistry/`](core-specs/xregistry/) base model they build on is itself under review, so only the binding remains in that folder.
 
 Each specification returns here once its review completes.
 
