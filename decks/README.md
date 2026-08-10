@@ -9,6 +9,7 @@ running on the [OPC UA .NET Standard stack](https://github.com/OPCFoundation/UA-
 | Deck | [`OPC-UA-Drafts-Overview.pptx`](OPC-UA-Drafts-Overview.pptx) |
 | Slide source | [`content/`](content/) — one YAML file per effort, one per demo |
 | Generator | [`build_deck.py`](build_deck.py) (structure) and [`theme.py`](theme.py) (look) |
+| Checks | [`check_layout.py`](check_layout.py) (geometry) and [`export_slides.ps1`](export_slides.ps1) (look at it) |
 | Demo material | [`demos/`](demos/) — a presenter walkthrough and a runnable script per demo |
 
 ## The deck is generated — never edit the `.pptx`
@@ -160,6 +161,20 @@ backticks. Any that slip in are stripped.
 `check_layout.py` is separate and advisory: it estimates text overflow and reports shape overlap,
 footer intrusion, title collision, degenerate shapes, and arrows that are diagonal or leave an
 edge facing away from what they connect to.
+
+## Looking at it
+
+Geometry checks cannot tell you whether a slide *reads* well, and they cannot see a connector
+routed across a box. Where PowerPoint is installed, export real renderings and look:
+
+```powershell
+.\decks\export_slides.ps1                          # every slide
+.\decks\export_slides.ps1 -Slides 4,31,74          # just these
+.\decks\export_slides.ps1 -Deck review.pptx -OutputDirectory $env:TEMP\review
+```
+
+PNG files land in `%TEMP%\deck-render` by default. Build to a scratch `--out` file when you are
+iterating, so the committed deck only changes when you mean it to.
 
 ## Conventions
 

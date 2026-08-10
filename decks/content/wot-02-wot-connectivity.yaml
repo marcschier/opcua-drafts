@@ -52,16 +52,16 @@ slides:
   - layout: diagram
     title: What it adds
     kicker: A WoT document registry over the xRegistry base model
-    cols: 12
-    rows: 6
+    cols: 14
+    rows: 7
     nodes:
-      - {id: srv, x: 0.2, y: 0.2, w: 3.0, h: 0.8, text: "Server Object", style: deep}
-      - {id: base, x: 4.1, y: 0.2, w: 3.8, h: 0.8, text: "xRegistry base", style: primary}
-      - {id: reg, x: 0.2, y: 2.0, w: 3.0, h: 1.0, text: "WoTRegistry", style: accent, lines: ["WoTRegistryType"]}
-      - {id: tdg, x: 4.1, y: 1.6, w: 3.1, h: 0.9, text: "TD groups", style: pale, lines: ["ThingDescriptionGroupType"]}
-      - {id: tmg, x: 4.1, y: 3.0, w: 3.1, h: 0.9, text: "TM groups", style: pale, lines: ["ThingModelGroupType"]}
-      - {id: doc, x: 8.3, y: 2.3, w: 3.2, h: 1.0, text: "TD / TM versions", style: green, lines: ["WoTDocumentType"]}
-      - {id: proj, x: 8.3, y: 4.4, w: 3.2, h: 0.9, text: "Derived nodes", style: purple, lines: ["types · instances · Views"]}
+      - {id: srv, x: 0.2, y: 0.35, w: 3.1, h: 0.8, text: "Server Object", style: deep}
+      - {id: base, x: 0.2, y: 2.35, w: 3.1, h: 0.9, text: "xRegistry base", style: primary}
+      - {id: reg, x: 4.0, y: 2.25, w: 3.2, h: 1.0, text: "WoTRegistry", style: accent, lines: ["WoTRegistryType"]}
+      - {id: tdg, x: 7.55, y: 1.7, w: 3.0, h: 0.9, text: "TD groups", style: pale, lines: ["ThingDescriptionGroupType"]}
+      - {id: tmg, x: 7.55, y: 3.1, w: 3.0, h: 0.9, text: "TM groups", style: pale, lines: ["ThingModelGroupType"]}
+      - {id: doc, x: 10.9, y: 2.4, w: 2.9, h: 1.0, text: "TD / TM versions", style: green, lines: ["WoTDocumentType"]}
+      - {id: proj, x: 10.9, y: 5.15, w: 2.9, h: 0.9, text: "Derived nodes", style: purple, lines: ["types · instances · Views"]}
     arrows:
       - {from: srv, to: reg, label: HasComponent}
       - {from: base, to: reg, label: subtypes}
@@ -71,7 +71,7 @@ slides:
       - {from: tmg, to: doc}
       - {from: doc, to: proj, label: refresh}
     captions:
-      - {x: 0, y: 5.55, w: 12, text: "Resource bytes are read and written through inherited FileType methods.", center: true}
+      - {x: 0, y: 6.45, w: 14, text: "Resource bytes are read and written through inherited FileType methods.", center: true}
     notes: |
       The normative node reference states that WoT Connectivity 1.1 extends the abstract OPC UA
       xRegistry base types: `WoTRegistryType` subtypes `RegistryType`, the Thing Description and
@@ -121,6 +121,4 @@ slides:
       repository overview says it is under OPC Foundation review in `OPCF-Members/spec-drafts`.
       The annex states that additive registry NodeIds in the `64000+` block are provisional while
       final identifiers are assigned by the OPC Foundation. Demos 4 and 7 exercise this model.
-
-
 

@@ -50,15 +50,15 @@ slides:
   - layout: diagram
     title: How invocation works
     kicker: One deployment call surface covers local, edge, cloud and simulator execution
-    cols: 12
-    rows: 6
+    cols: 14
+    rows: 7
     nodes:
-      - {id: client, x: 0.2, y: 0.55, w: 2.4, h: 0.85, text: "Client", style: deep, font_size: 13}
-      - {id: dep, x: 4.0, y: 0.35, w: 3.8, h: 1.1, text: "DeploymentType", style: primary, font_size: 12, lines: ["Invoke · InvokeAsync · BeginTransfer"]}
-      - {id: model, x: 8.9, y: 0.55, w: 2.8, h: 0.85, text: "ModelType", style: green, font_size: 12, lines: ["Digest · Version"]}
-      - {id: source, x: 4.0, y: 2.4, w: 3.8, h: 1.05, text: "ModelSourceType", style: accent, font_size: 12, lines: ["ApiDialect · credential ref"]}
-      - {id: transfer, x: 0.2, y: 4.15, w: 3.0, h: 0.9, text: "InferenceTransferType", style: pale, font_size: 11, lines: ["FileType request/response"]}
-      - {id: job, x: 8.7, y: 4.15, w: 3.0, h: 0.9, text: "InferenceJobType", style: purple, font_size: 11, lines: ["Part 10 async lifecycle"]}
+      - {id: client, x: 0.2, y: 0.7, w: 2.5, h: 0.85, text: "Client", style: deep, font_size: 13}
+      - {id: dep, x: 4.4, y: 0.45, w: 4.4, h: 1.1, text: "DeploymentType", style: primary, font_size: 12, lines: ["Invoke · InvokeAsync · BeginTransfer"]}
+      - {id: model, x: 10.8, y: 0.7, w: 3.0, h: 0.85, text: "ModelType", style: green, font_size: 12, lines: ["Digest · Version"]}
+      - {id: source, x: 10.0, y: 2.8, w: 3.5, h: 1.05, text: "ModelSourceType", style: accent, font_size: 12, lines: ["ApiDialect · credential ref"]}
+      - {id: transfer, x: 0.2, y: 5.15, w: 3.3, h: 0.9, text: "InferenceTransferType", style: pale, font_size: 11, lines: ["FileType request/response"]}
+      - {id: job, x: 4.95, y: 5.15, w: 3.3, h: 0.9, text: "InferenceJobType", style: purple, font_size: 11, lines: ["Part 10 async lifecycle"]}
     arrows:
       - {from: client, to: dep, label: "Invoke"}
       - {from: dep, to: model, label: "UsesModel"}
@@ -66,7 +66,7 @@ slides:
       - {from: dep, to: transfer, label: "large payload"}
       - {from: dep, to: job, label: "answer later"}
     captions:
-      - {x: 0, y: 5.55, w: 12, text: "The caller sees one envelope; the Server records which model actually answered", center: true}
+      - {x: 0, y: 6.45, w: 14, text: "The caller sees one envelope; the Server records which model actually answered", center: true}
     notes: |
       Clause 8 makes `DeploymentType` the invocation surface. `Invoke` is the shortcut for payloads that
       fit inline; `MaxInlinePayloadSize` tells the client before it calls whether that path is available.

@@ -38,9 +38,14 @@ import yaml
 from pptx import Presentation
 from pptx.enum.shapes import MSO_CONNECTOR, MSO_SHAPE
 from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
+from pptx.oxml.ns import qn
+from pptx.oxml import parse_xml
 from pptx.util import Emu, Inches, Pt
 
 import theme
+
+DRAWINGML_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
+A_NS = f"{{{DRAWINGML_NS}}}"
 
 CONTENT_DIR = Path(__file__).parent / "content"
 DEFAULT_OUT = Path(__file__).parent / "OPC-UA-Drafts-Overview.pptx"
@@ -645,21 +650,75 @@ def connection_sites(source, target) -> tuple[int, int, str]:
     joined bottom-to-top, a peer beside it left-to-right. A fixed pair cannot do
     that, and produces diagonals that cut straight through the boxes between them.
 
+    The test is whether the two shapes share a row. Shapes whose vertical extents
+    overlap are side by side, so the arrow runs horizontally; anything else is one
+    above the other and runs vertically. Comparing the size of the gaps instead
+    looks reasonable but tips to horizontal on a near-tie, which sends a child's
+    arrow out of its parent's side and back around.
+
     Returns the two sites and the dominant axis, ``"v"`` or ``"h"``.
     """
-    source_x = source.left + source.width / 2
-    source_y = source.top + source.height / 2
-    target_x = target.left + target.width / 2
-    target_y = target.top + target.height / 2
+    source_bottom = source.top + source.height
+    target_bottom = target.top + target.height
+    shares_row = min(source_bottom, target_bottom) - max(source.top, target.top) > 0
 
-    # Compare edge gaps rather than centre distance, so a wide box beside a narrow
-    # one is still read as a horizontal relationship.
-    gap_x = max(target.left - (source.left + source.width), source.left - (target.left + target.width), 0)
-    gap_y = max(target.top - (source.top + source.height), source.top - (target.top + target.height), 0)
+    if shares_row:
+        source_x = source.left + source.width / 2
+        target_x = target.left + target.width / 2
+        return (3, 1, "h") if target_x >= source_x else (1, 3, "h")
 
-    if gap_y >= gap_x:
-        return (2, 0, "v") if target_y >= source_y else (0, 2, "v")
-    return (3, 1, "h") if target_x >= source_x else (1, 3, "h")
+    return (2, 0, "v") if target.top >= source.top else (0, 2, "v")
+
+
+def set_bend(connector, fraction: float) -> None:
+    """
+    Place an elbow connector's bend at ``fraction`` of the way along its run.
+
+    Without this each connector bends at its own midpoint, so a parent's children
+    each get a private horizontal run at a slightly different height. Driving them
+    all to one fraction gives the siblings a shared bus line.
+    """
+    shape_properties = connector._element.spPr
+    geometry = shape_properties.find(f"{A_NS}prstGeom")
+    if geometry is None:
+        return
+    adjust_list = geometry.find(f"{A_NS}avLst")
+    if adjust_list is None:
+        adjust_list = parse_xml(f'<a:avLst xmlns:a="{DRAWINGML_NS}"/>')
+        geometry.append(adjust_list)
+    for existing in adjust_list.findall(f"{A_NS}gd"):
+        adjust_list.remove(existing)
+    value = int(max(0.05, min(0.95, fraction)) * 100000)
+    adjust_list.append(
+        parse_xml(f'<a:gd xmlns:a="{DRAWINGML_NS}" name="adj1" fmla="val {value}"/>')
+    )
+
+
+def sibling_bus(arrows, shapes) -> dict[int, float]:
+    """
+    Choose one horizontal run per parent whose children all sit below it.
+
+    Returns the bus position in EMU, keyed by the parent shape's id. A parent with
+    a single child is left out; there is nothing to line up.
+    """
+    families: dict[int, list] = {}
+    for arrow in arrows or []:
+        source = shapes.get(arrow.get("from"))
+        target = shapes.get(arrow.get("to"))
+        if source is None or target is None:
+            continue
+        if target.top < source.top + source.height:
+            continue
+        families.setdefault(id(source), []).append((source, target))
+
+    buses: dict[int, float] = {}
+    for key, pairs in families.items():
+        if len(pairs) < 2:
+            continue
+        source = pairs[0][0]
+        nearest_top = min(target.top for _, target in pairs)
+        buses[key] = (source.top + source.height + nearest_top) / 2
+    return buses
 
 
 def layout_diagram(deck: Deck, slide, spec, doc) -> None:
@@ -720,6 +779,8 @@ def layout_diagram(deck: Deck, slide, spec, doc) -> None:
         if node.get("id"):
             shapes[node["id"]] = shape
 
+    buses = sibling_bus(spec.get("arrows", []), shapes)
+
     for arrow in spec.get("arrows", []) or []:
         source = shapes.get(arrow.get("from"))
         target = shapes.get(arrow.get("to"))
@@ -754,26 +815,39 @@ def layout_diagram(deck: Deck, slide, spec, doc) -> None:
         connector.line.width = Pt(arrow.get("width", 1.25))
         connector.begin_connect(source, from_site)
         connector.end_connect(target, to_site)
+
+        bus = buses.get(id(source))
+        if bus is not None and kind != "straight" and from_site == 2 and to_site == 0:
+            start = source.top + source.height
+            end = target.top
+            if end > start:
+                set_bend(connector, (bus - start) / (end - start))
         if arrow.get("label"):
-            # Sit the label in the gap between the two shapes, not on the straight
-            # line between their centres, which would land it on top of a box.
+            # Offset the label clear of the line it names. Sitting it on the centre
+            # of the run puts the connector straight through the text.
             if axis == "v":
                 upper, lower = sorted((source, target), key=lambda s: s.top)
+                line_x = lower.left + lower.width // 2
                 mid_y = (upper.top + upper.height + lower.top) // 2
-                mid_x = (lower.left + lower.width // 2)
+                box_left = line_x - Inches(1.82)
+                box_top = mid_y - Inches(0.15)
+                alignment = PP_ALIGN.RIGHT
             else:
                 left_shape, right_shape = sorted((source, target), key=lambda s: s.left)
+                line_y = right_shape.top + right_shape.height // 2
                 mid_x = (left_shape.left + left_shape.width + right_shape.left) // 2
-                mid_y = (right_shape.top + right_shape.height // 2)
+                box_left = mid_x - Inches(0.85)
+                box_top = line_y - Inches(0.42)
+                alignment = PP_ALIGN.CENTER
             box = textbox(
                 slide,
-                Emu(int(mid_x - Inches(0.85))),
-                Emu(int(mid_y - Inches(0.16))),
+                Emu(int(box_left)),
+                Emu(int(box_top)),
                 Inches(1.7),
                 Inches(0.3),
             )
             para = box.text_frame.paragraphs[0]
-            para.alignment = PP_ALIGN.CENTER
+            para.alignment = alignment
             run = para.add_run()
             run.text = arrow["label"]
             style_run(run, size=Pt(9), color=theme.GREY_MUTED, italic=True)

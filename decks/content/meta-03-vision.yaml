@@ -29,15 +29,15 @@ slides:
     title: What it adds
     kicker: One root describes sensors, media, calibration, inference pipelines, results and feedback
     cols: 12
-    rows: 6
+    rows: 8
     nodes:
-      - {id: root, x: 4.2, y: 0.0, w: 3.6, h: 0.75, text: "VisionRootType", style: primary, font_size: 13, lines: ["well-known `Server/Vision`"]}
-      - {id: sens, x: 0.4, y: 1.25, w: 3.1, h: 1.0, text: "VisionSensorType", style: pale, font_size: 12, lines: ["ImageSensorType · Depth3DSensorType"]}
-      - {id: media, x: 0.4, y: 3.1, w: 3.1, h: 1.0, text: "VisionMediaManagementType", style: accent, font_size: 11, lines: ["StreamEndpointType · ClipEndpointType"]}
-      - {id: frames, x: 4.45, y: 3.1, w: 3.1, h: 1.0, text: "CoordinateFrameType", style: purple, font_size: 11, lines: ["Intrinsic · Extrinsic calibration"]}
-      - {id: pipe, x: 8.5, y: 1.25, w: 3.1, h: 1.0, text: "InferencePipelineType", style: green, font_size: 11, lines: ["Deployment is a `NodeId`"]}
-      - {id: result, x: 8.5, y: 3.1, w: 3.1, h: 1.0, text: "VisionResultType", style: pale, font_size: 11, lines: ["Inspection · Detection · Segmentation"]}
-      - {id: fb, x: 4.45, y: 4.75, w: 3.1, h: 0.8, text: "VisionFeedbackType", style: muted, font_size: 11, lines: ["corrections flow back"]}
+      - {id: root, x: 4.2, y: 0.0, w: 3.6, h: 0.8, text: "VisionRootType", style: primary, font_size: 13, lines: ["well-known `Server/Vision`"]}
+      - {id: sens, x: 0.6, y: 2.0, w: 3.1, h: 1.05, text: "VisionSensorType", style: pale, font_size: 12, lines: ["ImageSensorType · Depth3DSensorType"]}
+      - {id: media, x: 0.4, y: 4.95, w: 3.1, h: 1.05, text: "VisionMediaManagementType", style: accent, font_size: 11, lines: ["StreamEndpointType · ClipEndpointType"]}
+      - {id: frames, x: 4.45, y: 2.0, w: 3.1, h: 1.05, text: "CoordinateFrameType", style: purple, font_size: 11, lines: ["Intrinsic · Extrinsic calibration"]}
+      - {id: pipe, x: 7.8, y: 2.0, w: 3.1, h: 1.05, text: "InferencePipelineType", style: green, font_size: 11, lines: ["Deployment is a `NodeId`"]}
+      - {id: result, x: 8.5, y: 4.95, w: 3.1, h: 1.05, text: "VisionResultType", style: pale, font_size: 11, lines: ["Inspection · Detection · Segmentation"]}
+      - {id: fb, x: 8.5, y: 6.65, w: 3.1, h: 0.85, text: "VisionFeedbackType", style: muted, font_size: 11, lines: ["corrections flow back"]}
     arrows:
       - {from: root, to: sens}
       - {from: root, to: pipe}
@@ -46,7 +46,7 @@ slides:
       - {from: sens, to: frames}
       - {from: result, to: fb}
     captions:
-      - {x: 0, y: 5.72, w: 12, text: "The AI model lives in AI Model Management; Vision points to its deployment", center: true}
+      - {x: 0, y: 7.65, w: 12, text: "The AI model lives in AI Model Management; Vision points to its deployment", center: true}
     notes: |
       Clause 5 groups the model into sensing, media, spatial, AI and outcome. `VisionRootType` is the
       deterministic discovery point under the Server object. `VisionSensorType` is abstract so generic

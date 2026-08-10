@@ -36,14 +36,14 @@ slides:
     title: How the batch mapping works
     kicker: A DataSet becomes one homogeneous RecordBatch
     cols: 12
-    rows: 5
+    rows: 6
     nodes:
-      - {id: ds, x: 0.3, y: 0.5, w: 2.7, h: 0.8, text: "PublishedDataSet", style: deep}
-      - {id: schema, x: 4.0, y: 0.5, w: 3.4, h: 0.8, text: "Arrow Schema", style: primary}
-      - {id: batch, x: 8.4, y: 0.5, w: 3.0, h: 0.8, text: "RecordBatch", style: accent}
-      - {id: rows, x: 8.4, y: 2.0, w: 3.0, h: 0.9, text: "Rows = samples", style: pale}
-      - {id: cols, x: 4.0, y: 2.0, w: 3.4, h: 0.9, text: "Columns = fields", style: pale}
-      - {id: id, x: 0.3, y: 2.0, w: 2.7, h: 0.9, text: "SchemaId", style: green, lines: ["cache or announce"]}
+      - {id: ds, x: 0.3, y: 0.45, w: 2.7, h: 0.85, text: "PublishedDataSet", style: deep}
+      - {id: schema, x: 4.0, y: 0.45, w: 3.4, h: 0.85, text: "Arrow Schema", style: primary}
+      - {id: id, x: 8.6, y: 0.45, w: 2.7, h: 0.85, text: "SchemaId", style: green, lines: ["cache or announce"]}
+      - {id: cols, x: 0.3, y: 2.85, w: 3.4, h: 0.95, text: "Columns = fields", style: pale}
+      - {id: batch, x: 4.2, y: 2.85, w: 3.0, h: 0.95, text: "RecordBatch", style: accent}
+      - {id: rows, x: 4.2, y: 4.45, w: 3.0, h: 0.85, text: "Rows = samples", style: pale}
     arrows:
       - {from: ds, to: schema, label: "fields"}
       - {from: schema, to: batch, label: "types"}
@@ -51,7 +51,7 @@ slides:
       - {from: cols, to: batch, label: "layout"}
       - {from: batch, to: rows}
     captions:
-      - {x: 0, y: 4.2, w: 12, text: "Several DataSets are several batches, each with its own SchemaId", center: true}
+      - {x: 0, y: 5.65, w: 12, text: "Several DataSets are several batches, each with its own SchemaId", center: true}
     notes: |
       The Arrow PubSub mapping is columnar all the way down. A PublishedDataSet maps to one Arrow schema, with one column per `FieldMetaData` entry. A RecordBatch row is one DataSetMessage sample. The draft is explicit that an Arrow NetworkMessage is one homogeneous RecordBatch whose schema is that DataSet's schema; it does not introduce the fixed Avro envelope that can carry several opaque DataSet payloads. Sparse data uses nullable columns so the column set, schema and SchemaId remain stable. Delta frames can either use nullable columns or an explicit selected-columns mode that changes the column set and therefore the SchemaId. Bare RecordBatch framing omits the schema from the payload, so the SchemaId must be available from metadata, an announcement or a registry before decoding.
 

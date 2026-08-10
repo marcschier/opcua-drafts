@@ -35,14 +35,14 @@ slides:
     title: What it adds
     kicker: A concrete xRegistry whose resources are schema files
     cols: 12
-    rows: 6
+    rows: 8
     nodes:
-      - {id: srv, x: 0.3, y: 0.2, w: 3.0, h: 0.8, text: "Server Object", style: deep}
-      - {id: base, x: 4.2, y: 0.2, w: 3.6, h: 0.8, text: "xRegistry base model", style: primary}
-      - {id: reg, x: 0.3, y: 2.0, w: 3.0, h: 1.0, text: "SchemaRegistry", style: accent, lines: ["SchemaRegistryType"]}
-      - {id: group, x: 4.2, y: 2.0, w: 3.2, h: 1.0, text: "<SchemaGroup>", style: pale, lines: ["SchemaGroupType"]}
-      - {id: file, x: 8.4, y: 2.0, w: 3.2, h: 1.0, text: "<Schema>", style: pale, lines: ["SchemaFileType"]}
-      - {id: doc, x: 8.4, y: 4.0, w: 3.2, h: 0.85, text: "schema document", style: green, lines: ["Avro · Arrow · JSON Schema"]}
+      - {id: srv, x: 4.2, y: 0.1, w: 3.0, h: 0.85, text: "Server Object", style: deep}
+      - {id: base, x: 0.3, y: 2.15, w: 3.6, h: 1.0, text: "xRegistry base model", style: primary}
+      - {id: reg, x: 4.2, y: 2.15, w: 3.0, h: 1.0, text: "SchemaRegistry", style: accent, lines: ["SchemaRegistryType"]}
+      - {id: group, x: 8.4, y: 2.15, w: 3.2, h: 1.0, text: "<SchemaGroup>", style: pale, lines: ["SchemaGroupType"]}
+      - {id: file, x: 8.4, y: 4.4, w: 3.2, h: 1.0, text: "<Schema>", style: pale, lines: ["SchemaFileType"]}
+      - {id: doc, x: 8.4, y: 6.2, w: 3.2, h: 0.85, text: "schema document", style: green, lines: ["Avro · Arrow · JSON Schema"]}
     arrows:
       - {from: srv, to: reg, label: HasComponent}
       - {from: base, to: reg, label: subtypes}
@@ -50,7 +50,7 @@ slides:
       - {from: group, to: file}
       - {from: file, to: doc, label: Open/Read}
     captions:
-      - {x: 0, y: 5.4, w: 12, text: "The registry hangs from Server and narrows RegistryType, GroupType and ResourceType.", center: true}
+      - {x: 0, y: 7.55, w: 12, text: "The registry hangs from Server and narrows RegistryType, GroupType and ResourceType.", center: true}
     notes: |
       The model is not a private schema table. It is a domain extension of the abstract OPC UA
       xRegistry companion model. The specification states that its registry, group and resource

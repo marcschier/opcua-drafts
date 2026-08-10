@@ -51,14 +51,14 @@ slides:
     title: How it works
     kicker: Submit once, then subscribe to the operation instead of waiting on the Method call
     cols: 12
-    rows: 6
+    rows: 7
     nodes:
-      - {id: client, x: 0.2, y: 0.55, w: 2.4, h: 0.85, text: "Client", style: deep, font_size: 13}
-      - {id: ctl, x: 4.15, y: 0.35, w: 3.7, h: 1.1, text: "IntentControllerType", style: primary, font_size: 12, lines: ["RequestControl · SubmitIntent"]}
-      - {id: op, x: 4.15, y: 2.3, w: 3.7, h: 1.1, text: "IntentOperationType", style: green, font_size: 12, lines: ["Accepted → Queued → Executing"]}
-      - {id: term, x: 8.95, y: 2.3, w: 2.75, h: 1.1, text: "Terminal result", style: accent, font_size: 12, lines: ["Succeeded · Failed · Cancelled"]}
-      - {id: safety, x: 0.2, y: 4.2, w: 3.0, h: 0.9, text: "SafetyStateType", style: purple, font_size: 11, lines: ["reports limits; refuses excess"]}
-      - {id: rt, x: 8.7, y: 4.2, w: 3.0, h: 0.9, text: "RealTimeChannelType", style: muted, font_size: 11, lines: ["brokered high-rate path"]}
+      - {id: client, x: 0.2, y: 0.65, w: 2.4, h: 0.85, text: "Client", style: deep, font_size: 13}
+      - {id: ctl, x: 4.15, y: 0.45, w: 3.7, h: 1.1, text: "IntentControllerType", style: primary, font_size: 12, lines: ["RequestControl · SubmitIntent"]}
+      - {id: op, x: 4.15, y: 2.75, w: 3.7, h: 1.1, text: "IntentOperationType", style: green, font_size: 12, lines: ["Accepted → Queued → Executing"]}
+      - {id: term, x: 8.95, y: 2.75, w: 2.75, h: 1.1, text: "Terminal result", style: accent, font_size: 12, lines: ["Succeeded · Failed · Cancelled"]}
+      - {id: safety, x: 0.2, y: 5.0, w: 3.0, h: 0.9, text: "SafetyStateType", style: purple, font_size: 11, lines: ["reports limits; refuses excess"]}
+      - {id: rt, x: 8.95, y: 0.5, w: 2.75, h: 1.0, text: "RealTimeChannelType", style: muted, font_size: 11, lines: ["brokered high-rate path"]}
     arrows:
       - {from: client, to: ctl, label: "SubmitIntent"}
       - {from: ctl, to: op, label: "returns NodeId"}
@@ -66,7 +66,7 @@ slides:
       - {from: safety, to: ctl}
       - {from: ctl, to: rt}
     captions:
-      - {x: 0, y: 5.55, w: 12, text: "Refusals are structured operation outputs, not vague transport failures", center: true}
+      - {x: 0, y: 6.45, w: 12, text: "Refusals are structured operation outputs, not vague transport failures", center: true}
     notes: |
       Clause 6 explains why the operation is a program instance. `SubmitIntent` admits work and returns an
       operation NodeId; the client subscribes to that node for progress and reads the terminal result. The
