@@ -1,0 +1,83 @@
+id: meta-02-openusd-part2-scene
+section: metaverse
+order: 320
+footer: "OPC UA for OpenUSD — Part 2: Scene Materialization"
+slides:
+  - layout: bullets
+    title: Why scene materialization exists
+    kicker: OPC UA can point at a USD stage, but cannot browse the scene itself
+    bullets:
+      - text: A composed USD scene is usually opaque to OPC UA clients
+      - text: Prims, attributes and relationships are not native OPC UA nodes
+      - text: Time-varying USD attributes need subscriptions and history
+      - text: "`.usd` conversion needs a lossless composed-scene contract"
+    takeaway: The gap is a scene graph that OPC UA clients can read as OPC UA.
+    notes: |
+      Part 2 approaches the OpenUSD problem from the opposite end to Part 1. Part 1 tells an external connector which USD prim represents an OPC UA Object and which Variables drive USD attributes. Part 2 says the composed USD scene itself can be the OPC UA address space. Without that, a client can browse the machine model but cannot browse the prim tree, subscribe to a USD attribute as a normal Variable, or export a composed scene back to `.usd` through a defined contract. The draft makes Stage, Prim, Attribute, Relationship, composition arcs and variants first-class OPC UA nodes.
+
+  - layout: two-column
+    title: What it adds — scene, not binding
+    kicker: The OpenUSD model becomes OPC UA nodes
+    left:
+      heading: Part 1 — Binding
+      bullets:
+        - External USD stage
+        - OPC UA carries which prim/attribute a value maps to
+        - Connector writes into a USD sink
+        - Depends on xRegistry for artifact delivery
+    right:
+      heading: Part 2 — Scene
+      bullets:
+        - "`UsdStageType`, `UsdPrimType`, `UsdAttributeType`"
+        - Relationships, composition arcs and variants
+        - Typed schemas as ObjectType subtypes
+        - Client browses, subscribes or exports `.usd`
+        - Self-contained on base OPC UA
+    notes: |
+      The metaverse README and the Part 2 specification make the contrast explicit. Part 1 keeps the USD scene outside OPC UA and publishes the binding from domain Objects and Variables into that scene. Part 2 brings the composed USD scene graph into the AddressSpace and does not require Part 1. Its model covers `UsdStageType`, `UsdPrimType`, `UsdAttributeType`, `UsdRelationshipType`, composition arcs, variant sets, typed schemas and applied API schemas. The two parts interoperate when both are present, but neither model is a prerequisite for the other, and Part 2's NodeSet requires only the base OPC UA model.
+
+  - layout: code
+    title: How it works — materialized tree
+    kicker: Browsing the Server is browsing the composed stage
+    intro: The prim hierarchy becomes the OPC UA `HasComponent` hierarchy.
+    code: |
+      UsdStageType  (Server/OpenUSD/Stages/<stage>)
+        DefaultPrim, UpAxis, MetersPerUnit
+        <Prim> : UsdPrimType / UsdGeom...Type
+          <ChildPrim> : UsdPrimType
+          <Attribute> : UsdAttributeType
+          <Relationship> : UsdRelationshipType
+          AppliedSchemas/ : UsdApiSchemaType AddIns
+          Composition/ : UsdCompositionArcType
+          VariantSets/ : UsdVariantSetType
+    outro: Unknown schemas and value types are retained, not dropped.
+    font_size: 16
+    notes: |
+      The import process opens and composes the USD stage, creates a `UsdStageType`, and then walks the composed prim tree depth first. Each prim becomes a `UsdPrimType` or a more specific typed-schema subtype, each attribute becomes a `UsdAttributeType` Variable, and each relationship becomes a `UsdRelationshipType` with ordered target paths and target references. The draft is explicit that importers do not discard what they do not understand. Unknown typed schemas degrade to the concrete base while retaining `TypeName`; unknown API schemas become generic `UsdApiSchemaType` AddIns carrying `SchemaName`; unknown values retain the exact `UsdTypeName` so export can reproduce them.
+
+  - layout: bullets
+    title: How it works — conversion and live data
+    kicker: The contract is composed-scene lossless, not layer-stack lossless
+    bullets:
+      - text: Import creates nodes from the composed prim tree
+      - text: "Export maps nodes back to a flattened composed `.usd` layer"
+      - text: "`UsdTypeName` preserves the exact USD value type"
+      - text: Live attributes are ordinary Variables with optional history
+      - text: Part 1 bindings may target materialized attribute Variables
+    takeaway: The model preserves the composed scene while exposing OPC UA semantics.
+    notes: |
+      The conversion contract is precise. Import to export is composed-scene lossless: the exported composed stage is equivalent prim-for-prim, attribute-for-attribute, relationship-for-relationship, with metadata, variant selections, kind, specifier and the recorded composition arc list preserved. It is not authoring-layer lossless; per-layer opinions, sublayer structure and value clips are summarized as provenance metadata rather than reproduced layer by layer. Live data is the OPC UA addition: a materialized `UsdAttributeType` is just a Variable, so its Value can change, Subscriptions can deliver updates, and HistoryRead can expose a timeline when the Server retains samples.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Working-group draft under OPC Foundation review
+    bullets:
+      - text: "Specification banner: **Release 0.4.0 — Draft**"
+      - text: "Target body: OPC Foundation companion-model review"
+      - text: "Review repository: `OPCF-Members/spec-drafts`"
+      - text: "Source path: `metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md`"
+      - text: "Reference implementation: `src/Opc.Ua.OpenUsdScene*`"
+      - text: "Demos: **2** robot cell and **3** pump/site composition"
+    takeaway: Open questions are value clips, layer editing and full domain-schema surfaces.
+    notes: |
+      The source banner identifies Part 2 as `Release 0.4.0 — Draft`, namespace `http://opcfoundation.org/UA/OpenUSD/Scene/`, publication date 2026-07-29. Like Part 1, it is under OPC Foundation review in `OPCF-Members/spec-drafts`. The .NET stack guide documents `OPCFoundation.NetStandard.Opc.Ua.OpenUsdScene` and `.OpenUsdScene.Server`, including the scene document model, `.usda` reader/writer, materializer, exporter, discovery and Part 1 interop. The same robot and pump/site demos exercise the OpenUSD flow. The draft reserves value clips, per-layer opinion editing, full UsdShade/UsdLux/UsdSkel/UsdPhysics surfaces and renderer-specific semantics.

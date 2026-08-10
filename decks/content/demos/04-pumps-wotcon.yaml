@@ -1,0 +1,33 @@
+id: 04-pumps-wotcon
+section: wot
+order: 425
+footer: OPC UA demos — Pumps via WoT Connectivity
+slides:
+  - layout: demo
+    title: Demo 4 — Pumps via WoT Connectivity
+    kicker: Documents are canonical; the Pump address space is derived
+    state: master
+    see:
+      - Two flat tag sources start with simple variables
+      - The client uploads DI, Machinery, Pumps and Pump TDs
+      - Refresh materializes a PumpType hierarchy
+      - Ten values read Good through the Pump projection
+    parts:
+      - FlatTagServer provides Source A and Source B
+      - AggregationServer hosts the WoT registry
+      - AggregationClient uploads the document set
+      - WoT binding maps tags onto Pump variables
+    run:
+      - pwsh decks\demos\04-pumps-wotcon\run-demo.ps1
+    proves: >-
+      WoT Binding and WoT Connectivity can turn flat device tags into a companion-spec-shaped
+      Pump projection without changing the device server.
+    notes: |
+      Present the inversion clearly. The flat tag servers are intentionally unimpressive: they expose
+      source values and no Pump companion hierarchy. The Thing Models define DI, Machinery, and Pumps,
+      while the Sample Pump Thing Description says where this pump's values come from and where each
+      value maps in the projected namespace. The aggregation server stores those documents, refreshes
+      their dependency closure, materializes a runtime Pump address space, and binds the variables to
+      the upstream OPC UA forms. The client reads through the Pump nodes, not directly from the
+      sources, which is why the documents are the source of truth and the address space is a projection.
+

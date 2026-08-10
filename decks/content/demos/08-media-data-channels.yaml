@@ -1,0 +1,31 @@
+id: 08-media-data-channels
+section: core
+order: 115
+footer: OPC UA — Data Channels
+slides:
+  - layout: demo
+    title: "Demo 8 — media over Data Channels"
+    kicker: Video-shaped bytes on the open SecureChannel
+    state: branch
+    see:
+      - Streaming sample opens a real Session
+      - '`OpenDataChannel` negotiates channel limits'
+      - TCP framing shares the SecureChannel
+      - '`opc.quic` uses a per-channel QUIC stream'
+    parts:
+      - "`samples\\ConsoleDataChannelStreaming`"
+      - "`src\\Opc.Ua.Core\\Stack\\DataChannels`"
+      - "`src\\Opc.Ua.Bindings.Quic`"
+      - "`docs\\DataChannels.md`"
+    run:
+      - "pwsh decks\\demos\\08-media-data-channels\\run-demo.ps1 -StackRoot <data-channels worktree>"
+    proves: Media-like streams can ride the trusted OPC UA channel instead of a second endpoint.
+    notes: |
+      This demo needs the `origin/data-channels-quic-experimental` branch. The script checks marker
+      paths rather than branch name so a worktree or merged checkout also works, then builds only the
+      streaming sample. The important claim is not raw throughput; it is that a real Server and real
+      Client create a Session, call OpenDataChannel and carry opaque bytes without a separate media
+      trust anchor. If QUIC is unavailable, the TCP leg still proves the service and framing path,
+      while the branch documentation explains the QUIC stream binding and its platform limits.
+
+

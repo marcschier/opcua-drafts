@@ -1,0 +1,121 @@
+id: meta-05-ai-model-management
+section: metaverse
+order: 350
+footer: OPC UA — AI Model Management and Inference
+slides:
+  - layout: bullets
+    title: Why AI Model Management exists
+    kicker: OPC UA has no standard answer to which model produced a decision
+    bullets:
+      - text: An industrial AI model is an operator-supplied artefact, not firmware
+      - text: The same equipment runs different models over its life
+      - text: OPC UA cannot say what it was trained on or who promoted it
+      - text: It cannot say where inference runs or whether plant data leaves the site
+      - text: Six months later, an auditor still needs the provenance chain
+    takeaway: >-
+      The missing answer is: which model produced this result, and can I audit it?
+    notes: |
+      The motivation clause states the gap in exactly those terms. A model is an artefact the operator or
+      integrator supplies, versions and approves; it is not factory nameplate data and not device firmware.
+      Over the life of a machine the same equipment can run several models. Today OPC UA has no common
+      model for which artefact ran, what dataset trained it, where it executed, how it was invoked or who
+      promoted it. The draft is domain-neutral by construction: `TaskKind` is a string, source kind
+      distinguishes real and synthetic data, and the learning loop is usable for vision, vibration,
+      soft-sensor and quality models without bringing in any lens or camera vocabulary.
+
+  - layout: table
+    title: What it adds
+    kicker: Model, dataset, deployment, source, job and catalogue become address-space objects
+    table:
+      columns: ["Type", "Question", "Important member"]
+      widths: [0.31, 0.42, 0.27]
+      rows:
+        - ["`AiRootType`", "Where do I browse?", "Models, Deployments"]
+        - ["`ModelType`", "Which artefact is it?", "Digest"]
+        - ["`DatasetType`", "What trained it?", "SourceKind"]
+        - ["`DeploymentType`", "Where does it run?", "InferenceLocation"]
+        - ["`ModelSourceType`", "How is remote inference called?", "ApiDialect"]
+        - ["`LearningJobType`", "How is it replaced?", "PromoteModel"]
+        - ["`ModelRegistryType`", "Where did it come from?", "xRegistry"]
+    notes: |
+      Clause 6 lists the core ObjectTypes. `AiRootType` is the entry point with mandatory `Models` and
+      `Deployments` folders and optional datasets and jobs. `ModelType` describes a trained artefact; its
+      mandatory identity and digest fields make later provenance possible. `DatasetType` describes the
+      samples used for training or validation and records whether they are real, synthetic or mixed.
+      `DeploymentType` is the executable arrangement, with location, latency and state. `ModelSourceType`
+      describes a remote execution site. `LearningJobType`, `ModelImportJobType` and `InferenceJobType` are
+      Part 10 jobs. The catalogue types subtype xRegistry's registry, group and resource types rather than
+      inventing a private catalogue.
+
+  - layout: diagram
+    title: How invocation works
+    kicker: One deployment call surface covers local, edge, cloud and simulator execution
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: client, x: 0.2, y: 0.55, w: 2.4, h: 0.85, text: "Client", style: deep, font_size: 13}
+      - {id: dep, x: 4.0, y: 0.35, w: 3.8, h: 1.1, text: "DeploymentType", style: primary, font_size: 12, lines: ["Invoke · InvokeAsync · BeginTransfer"]}
+      - {id: model, x: 8.9, y: 0.55, w: 2.8, h: 0.85, text: "ModelType", style: green, font_size: 12, lines: ["Digest · Version"]}
+      - {id: source, x: 4.0, y: 2.4, w: 3.8, h: 1.05, text: "ModelSourceType", style: accent, font_size: 12, lines: ["ApiDialect · credential ref"]}
+      - {id: transfer, x: 0.2, y: 4.15, w: 3.0, h: 0.9, text: "InferenceTransferType", style: pale, font_size: 11, lines: ["FileType request/response"]}
+      - {id: job, x: 8.7, y: 4.15, w: 3.0, h: 0.9, text: "InferenceJobType", style: purple, font_size: 11, lines: ["Part 10 async lifecycle"]}
+    arrows:
+      - {from: client, to: dep, label: "Invoke", from_site: 3, to_site: 1}
+      - {from: dep, to: model, label: "UsesModel", from_site: 3, to_site: 1}
+      - {from: dep, to: source, label: "remote", from_site: 2, to_site: 0}
+      - {from: dep, to: transfer, label: "large payload", from_site: 1, to_site: 0}
+      - {from: dep, to: job, label: "answer later", from_site: 3, to_site: 0}
+    captions:
+      - {x: 0, y: 5.55, w: 12, text: "The caller sees one envelope; the Server records which model actually answered", center: true}
+    notes: |
+      Clause 8 makes `DeploymentType` the invocation surface. `Invoke` is the shortcut for payloads that
+      fit inline; `MaxInlinePayloadSize` tells the client before it calls whether that path is available.
+      `BeginTransfer` creates an `InferenceTransferType` whose request and response are Part 5 `FileType`
+      objects, so OPC UA's existing Open/Write/Read/Close mechanics carry large payloads. `InvokeAsync`
+      returns an `InferenceJobType` for work that finishes later. Clause 9 then covers a deployment whose
+      execution site is remote: the source declares the API dialect, credential reference, capabilities,
+      reachability, rate limit and fallback data. The client still calls the deployment through the same
+      envelope.
+
+  - layout: bullets
+    title: Provenance and rollout
+    kicker: The model records evidence, not just names
+    bullets:
+      - text: "`UsesModel` is exactly one, so a deployment has one current artefact"
+      - text: "`Digest` and `DigestAlgorithm` are mandatory on `ModelType`"
+      - text: "`DigestProvenance` says whether evidence is available or verified"
+      - text: "`VersionBinding` distinguishes `Pinned` from `FollowsRef`"
+      - text: "`LearningJobType` runs `Idle → Collecting → ... → Promoted`"
+      - text: "`PromoteModel` changes what equipment decides and needs distinct authorization"
+    takeaway: >-
+      Provenance is strong only when the Server can point to, compute or verify the artefact.
+    notes: |
+      Clause 12 says a published result is traceable through the consuming specification's deployment
+      property to `DeploymentType`, then through `UsesModel` to `ModelType`, and finally to `Digest`.
+      `DigestProvenance` exists because hosted endpoints often cannot provide a hash of the weights that
+      answered; absence must be recorded explicitly rather than disguised. Clause 9.3 distinguishes a
+      pinned immutable version from a followed reference that can move under the same deployment. Clause 7
+      defines the learning loop, with states from idle through collection, labelling, training, validation,
+      ready and promoted. The draft treats promotion as the operation that changes equipment behaviour and
+      requires authorization distinct from ordinary inference or data collection.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Working-group draft 0.4.0; eleven implementation guides map real systems to the model
+    bullets:
+      - text: "Version: **Release 0.4.0 — working-group draft**"
+      - text: "Target: OPC Foundation companion model, provisional and not endorsed"
+      - text: "Path: `metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md`"
+      - text: "Dependency: xRegistry, for model and dataset catalogues"
+      - text: "Guides: Azure AI Foundry, Bedrock, Triton, KServe, embedded runtimes"
+      - text: "Demo: **10 — AI model loading**, on branch `marcschier/ai-model-management`"
+    takeaway: >-
+      This is the large metaverse draft: lifecycle, inference, catalogue and audit in one model.
+    notes: |
+      The banner identifies Release 0.4.0. Clause 1.3 says the NodeSet requires both base OPC UA and the
+      OPC UA xRegistry draft because the model catalogue is a domain extension of the registry model. The
+      examples index contains eleven implementation guides: Azure AI Foundry, OpenAI, Amazon Bedrock,
+      Amazon SageMaker, NVIDIA NIM, NVIDIA Triton, Google Vertex AI, Hugging Face, KServe/Open Inference
+      Protocol, embedded runtimes such as ONNX Runtime and llama.cpp, and another OPC UA Server. The index
+      also states the important lesson from those mappings: many hosted systems give no artefact digest,
+      so evidence tracks custody. Demo 10 runs from the stack branch named in the deck input.

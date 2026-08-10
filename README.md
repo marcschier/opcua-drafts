@@ -132,6 +132,7 @@ Each tree holds only the **normative** documents and the generated base artifact
 | [`companion-specs/`](companion-specs/) | Domain companion specifications, one folder per domain. |
 | [`word-drafts/`](word-drafts/) | Submission-ready Word renderings built into the official OPC Foundation template, and the build that produces them. Never edit a `.docx` by hand — see [`word-drafts/README.md`](word-drafts/README.md). |
 | [`templates/`](templates/) | The official OPC Foundation companion specification template the Word build clones. |
+| [`decks/`](decks/) | One slide deck covering every draft, and a presenter walkthrough plus runnable script for each of the ten demos. Generated from YAML — never edit the `.pptx` by hand; see [`decks/README.md`](decks/README.md). |
 | [`skills/`](skills/) | Reusable authoring skills — agent instructions that operate on the drafts. |
 | [`release/`](release/) | The tooling that moves a specification to the private review repository and brings it back, and the manifest recording what has been submitted. |
 | [`spec-drafts/`](https://github.com/OPCF-Members/spec-drafts) | The private review repository, registered as a submodule. Empty unless you are an OPC Foundation member who asked for it. |

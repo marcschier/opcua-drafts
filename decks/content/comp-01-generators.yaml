@@ -1,0 +1,108 @@
+id: comp-01-generators
+section: companion
+order: 510
+footer: OPC UA for Generators (GenSets)
+slides:
+  - layout: section
+    title: companion
+    subtitle: >-
+      domain companion specifications that make a class of assets look the same to every OPC UA client
+    contents:
+      - Generators (GenSets)
+      - Asset Administration Shell 3.0
+
+  - layout: bullets
+    title: Why the Generators model exists
+    kicker: Generator data is already on the engine bus, but not in a client contract
+    bullets:
+      - text: "A GenSet is both an **asset** and an engine-driven machine"
+      - text: "SAE J1939 over CAN already carries most engine telemetry"
+      - text: "Clients still see vendor registers, panels or cloud APIs"
+      - text: "Nameplate, state, mode, health and control need one shape"
+      - text: "Multi-set plants add ATS and paralleling without a common model"
+    takeaway: The gap is not sensing the generator; it is standardizing what the OPC UA client sees.
+    notes: |
+      The draft frames a generator set as two things at once: an automation asset with a nameplate,
+      health and lifecycle, and a machine built around a prime-mover engine coupled to an
+      alternator. The scope says that the engine typically exposes a CAN bus / SAE J1939 interface,
+      and the general description says every set exposes broadly the same information: identity,
+      ratings, operating state and mode, engine and alternator telemetry, fuel, cooling,
+      lubrication, battery status, protections, alarms and start/stop control. The problem is that
+      this common information is not standardized for an OPC UA client, especially once the plant
+      includes transfer switches, paralleling switchgear and several sets.
+
+  - layout: table
+    title: What it adds
+    kicker: A generator set, its subsystems and the plant around it
+    table:
+      columns: ["ObjectType", "Base", "Carries"]
+      widths: [0.34, 0.24, 0.42]
+      rows:
+        - ["`GeneratorSetType`", "DI `DeviceType`", "whole set, state, mode, methods"]
+        - ["`EngineType`", "DI `ComponentType`", "J1939 telemetry and DTCs"]
+        - ["`AlternatorType`", "DI `ComponentType`", "aggregate and per-phase values"]
+        - ["`GeneratorControllerType`", "DI `ComponentType`", "panel and remote status"]
+        - ["`GeneratorRatingType`", "`BaseObjectType`", "ISO 8528 duties and limits"]
+        - ["`GeneratorProtectionAlarmType`", "`OffNormalAlarmType`", "warnings, trips, shutdowns"]
+        - ["`AutomaticTransferSwitchType`", "DI `DeviceType`", "source and transfer state"]
+        - ["`GeneratorSystemType`", "`BaseObjectType`", "sets, ATS and paralleling"]
+    notes: |
+      The model deliberately layers on Devices, Machinery, Alarms and Conditions, and the state
+      machine parts of OPC UA rather than inventing a parallel machine model. `GeneratorSetType`
+      derives from DI `DeviceType`, so it inherits the ordinary device nameplate and `DeviceHealth`.
+      Components such as the engine, alternator, controller and support subsystems derive from DI
+      `ComponentType`. The set adds an `Identification` add-in, detailed `OperatingState`, an
+      `OperatingMode`, a ratings folder, optional start and stop methods, and an alarm event type.
+      A multi-set installation is represented separately by `GeneratorSystemType`, with optional
+      transfer switch and paralleling controller content, so a data-center or healthcare plant is
+      more than a list of individual generators.
+
+  - layout: code
+    title: How it works
+    kicker: J1939 signals become typed OPC UA members, not a private gateway table
+    intro: The engine and CAN add-in carry the signals a gateway maps from the bus.
+    code: |
+      Engine
+        Speed                 # SPN 190, r/min
+        OilPressure           # SPN 100, kPa
+        CoolantTemperature    # SPN 110, degC
+        FuelRate              # SPN 183, L/h
+        EngineHours           # SPN 247, h
+        CanInterface
+          ProtocolName = "SAE J1939"
+          AmberWarningLamp
+          RedStopLamp
+          ActiveDiagnosticTroubleCodes[]
+            Spn, Fmi, OccurrenceCount, Severity
+    outro: J1939 remains the field source; OPC UA is the client-facing model.
+    font_size: 16
+    notes: |
+      Clause 6.2 makes the CAN bus explicit because a generator is part engine with a CAN bus
+      interface. `EngineType` exposes the classic engine telemetry and records the SAE J1939 SPN in
+      the variable description: speed is SPN 190, oil pressure SPN 100, coolant temperature SPN 110,
+      fuel rate SPN 183 and engine hours SPN 247. The `CanInterface` add-in is a
+      `J1939DiagnosticInterfaceType` with the protocol name, network parameters, bus state, the four
+      DM1 lamp states and arrays for active and previously active diagnostic trouble codes. Each DTC
+      carries the SPN, FMI, occurrence count, source address or name, and severity, so a gateway can
+      expose engine ECU diagnostics without hiding them behind a vendor-specific register map.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Draft companion model, generated NodeSet, no demo yet
+    bullets:
+      - text: "**Draft version:** Release 1.0.0 — Draft"
+      - text: "**Target body:** OPC Foundation companion specification"
+      - text: "**Source:** `companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md`"
+      - text: "**Generated:** `Opc.Ua.Generators.NodeSet2.xml` and NodeIds CSV"
+      - text: "**Open questions:** none called out beyond draft status"
+      - text: "**Demo:** none yet; say so plainly"
+    takeaway: The model is concrete and validated; the overview deck has no generator demo to point at.
+    notes: |
+      The version banner identifies the document as `Release 1.0.0 — Draft`, with namespace
+      `http://opcfoundation.org/UA/Generators/` and publication date 2026-07-01. Its status box
+      calls it a working-group draft and names the companion markdown, NodeSet and NodeIds CSV as
+      the information model deliverables. The deliverables clause says the NodeSet is generated from
+      `tools/build_model.py`, and the reproducibility clause says the generated model has passed
+      structural checks, CSV-to-NodeSet consistency, external NodeId resolution and selected OPC
+      Foundation modelling-validator checks with zero errors. The front-matter table lists no demo
+      for Generators, so the status slide does not imply one exists.

@@ -1,0 +1,31 @@
+id: 10-ai-model-loading
+section: metaverse
+order: 355
+footer: OPC UA — AI model loading
+slides:
+  - layout: demo
+    title: "Demo 10 — AI model loading"
+    kicker: Invoke a model and keep the provenance
+    state: branch
+    see:
+      - Local test backend answers model calls
+      - Server publishes deployments and sources
+      - Client invokes inline, transfer and async paths
+      - Output reports which model answered
+    parts:
+      - "`samples\\AiModelManagement\\AiModelManagementServer`"
+      - "`samples\\AiModelManagement\\AiModelManagementClient`"
+      - "`samples\\AiModelManagement\\AiModelManagement.Bridge`"
+      - "`samples\\AiModelManagement\\Model`"
+    run:
+      - "pwsh decks\\demos\\10-ai-model-loading\\run-demo.ps1 -StackRoot <ai-models worktree>"
+    proves: A model call can be OPC UA while the execution location stays an implementation detail.
+    notes: |
+      This demo needs the `fork/marcschier/ai-model-management` branch and does contain a runnable
+      sample. The script starts the branch's HTTP verification backend, starts the OPC UA Server and
+      runs the sample client. Be clear about what is real: the address space, Methods, provenance,
+      transfer path, async job path and OpenAI-compatible bridge are implemented. The backend is a
+      test double and the learning loop is simulated; it does not train or promote a real model.
+      The proof point is `ModelUsed` and the references that let an auditor trace an answer later.
+
+

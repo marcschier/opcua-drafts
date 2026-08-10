@@ -1,0 +1,100 @@
+id: meta-03-vision
+section: metaverse
+order: 330
+footer: OPC UA — Vision
+slides:
+  - layout: bullets
+    title: Why Vision exists
+    kicker: OPC UA can orchestrate vision work, but it does not standardize what the camera concluded
+    bullets:
+      - text: OPC 40100-1 leaves result content **application-specific**
+        children:
+          - "A verdict, a measurement, and a detection have no shared payload shape"
+      - text: OPC 40100-2 models lenses and lamps, not the image sensor's data
+      - text: OPC 40010-1 has no vision, camera, perception or calibration types
+      - text: No OPC UA model describes the AI artefact that interpreted the image
+      - text: Two conformant Servers can still be mutually unintelligible
+    takeaway: >-
+      The problem is not getting pixels; it is publishing the meaning of those pixels.
+    notes: |
+      The motivation clause is blunt: existing OPC UA vision and robotics companion specifications do
+      not describe the four things a client needs after a camera has looked at something. OPC 40100-1
+      can orchestrate a job, but its result content is application-specific. OPC 40100-2 has rich lens
+      and lamp vocabulary, but adds no members to its image sensor type. OPC 40010-1 is a robotics
+      topology model and has no camera, perception or calibration types. The draft says the consequence
+      is bespoke integration: two Servers can conform to existing specifications and still not agree on
+      what an inspection result or a grasp pose looks like.
+
+  - layout: diagram
+    title: What it adds
+    kicker: One root describes sensors, media, calibration, inference pipelines, results and feedback
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: root, x: 4.2, y: 0.0, w: 3.6, h: 0.75, text: "VisionRootType", style: primary, font_size: 13, lines: ["well-known `Server/Vision`"]}
+      - {id: sens, x: 0.4, y: 1.25, w: 3.1, h: 1.0, text: "VisionSensorType", style: pale, font_size: 12, lines: ["ImageSensorType · Depth3DSensorType"]}
+      - {id: media, x: 0.4, y: 3.1, w: 3.1, h: 1.0, text: "VisionMediaManagementType", style: accent, font_size: 11, lines: ["StreamEndpointType · ClipEndpointType"]}
+      - {id: frames, x: 4.45, y: 3.1, w: 3.1, h: 1.0, text: "CoordinateFrameType", style: purple, font_size: 11, lines: ["Intrinsic · Extrinsic calibration"]}
+      - {id: pipe, x: 8.5, y: 1.25, w: 3.1, h: 1.0, text: "InferencePipelineType", style: green, font_size: 11, lines: ["Deployment is a `NodeId`"]}
+      - {id: result, x: 8.5, y: 3.1, w: 3.1, h: 1.0, text: "VisionResultType", style: pale, font_size: 11, lines: ["Inspection · Detection · Segmentation"]}
+      - {id: fb, x: 4.45, y: 4.75, w: 3.1, h: 0.8, text: "VisionFeedbackType", style: muted, font_size: 11, lines: ["corrections flow back"]}
+    arrows:
+      - {from: root, to: sens, from_site: 2, to_site: 0}
+      - {from: root, to: pipe, from_site: 2, to_site: 0}
+      - {from: sens, to: media, from_site: 2, to_site: 0}
+      - {from: pipe, to: result, from_site: 2, to_site: 0}
+      - {from: sens, to: frames, from_site: 3, to_site: 1}
+      - {from: result, to: fb, from_site: 2, to_site: 0}
+    captions:
+      - {x: 0, y: 5.72, w: 12, text: "The AI model lives in AI Model Management; Vision points to its deployment", center: true}
+    notes: |
+      Clause 5 groups the model into sensing, media, spatial, AI and outcome. `VisionRootType` is the
+      deterministic discovery point under the Server object. `VisionSensorType` is abstract so generic
+      clients can work against image, depth and later sensor kinds. `VisionMediaManagementType` owns the
+      stream and clip endpoints. `CoordinateFrameType` and calibration types make a pose meaningful.
+      `InferencePipelineType` is the bridge to the AI deployment, and the result types define the
+      inspection, detection and segmentation content that OPC 40100-1 leaves open. The diagram keeps the
+      model's important separation: models and learning jobs are not under Vision; they are reached via
+      AI Model Management.
+
+  - layout: bullets
+    title: How it works
+    kicker: The media plane is brokered by OPC UA; it is not the OPC UA payload
+    bullets:
+      - text: A conforming Server exposes exactly one `Server/Vision` root
+      - text: "`Sensors` is mandatory; `Pipelines` and `Frames` are optional"
+      - text: Media defaults to **RTSP** streams and **JPEG** clips
+      - text: "`GetStreamEndpoint` leases a URI; `ReleaseStreamEndpoint` is idempotent"
+      - text: Inline clips and Data Channels are optional facets, not the default
+      - text: Results carry frames, calibration context and a provenance path to the model
+    takeaway: >-
+      OPC UA describes, authorizes and correlates media; the bulk bytes normally travel elsewhere.
+    notes: |
+      Clause 4.2 fixes discovery: a Server exposes one well-known `Vision` object, with `Sensors` as the
+      mandatory folder and optional `Pipelines` and `Frames`. Clause 6 is the key mechanics slide. Media
+      is obtained out of band; OPC UA describes and controls the endpoint. A Server claiming the base
+      media facets offers RTSP for streams and JPEG for clips, while `GetStreamEndpoint` returns a leased
+      session URI and expiry rather than publishing credentials as browsable state. The optional inline
+      still path is bounded by `MaxByteStringLength`, channel and Session limits. The optional Data
+      Channels path is additive and only used by clients that explicitly ask for it.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Working-group draft 0.1.0; Demo 9 is a walkthrough, not an implementation
+    bullets:
+      - text: "Version: **Release 0.1.0 — working-group draft**"
+      - text: "Target: OPC Foundation companion model, provisional and not endorsed"
+      - text: "Path: `metaverse-specs/vision/OPC-UA-Vision.md`"
+      - text: "NodeSet: `Opc.Ua.Vision.NodeSet2.xml`; base OPC UA is the only required model"
+      - text: "Open: recipes and normative interop dependencies remain out of scope"
+      - text: "Demo: **9 — Vision** is a walkthrough only; no stack implementation yet"
+    takeaway: >-
+      The draft is the semantic contract for a future implementation, not running code today.
+    notes: |
+      The banner names this as a working-group draft, Release 0.1.0, with provisional namespace URIs and
+      NodeIds. Clause 1.4 says the release covers sensors, media, coordinate frames and calibration,
+      inference pipelines, results and feedback, and that the NodeSet declares only the base OPC UA
+      namespace as a required model. The status slide should be explicit about the two deferrals in
+      clause 1.3: no portable inspection recipe format is defined, and interop with OPC 40100, OPC 40010,
+      DI, Machinery or OpenUSD remains optional profile material. For the deck, Demo 9 is only a
+      walkthrough of camera, inference and published result; there is no implementation to run yet.

@@ -1,0 +1,31 @@
+id: 06-server-redundancy
+section: stack
+order: 720
+footer: OPC UA — server redundancy
+slides:
+  - layout: demo
+    title: "Demo 6 — server redundancy"
+    kicker: Kill the active server during a subscription
+    state: master
+    see:
+      - Three server replicas publish redundancy metadata
+      - A managed client subscribes through one endpoint
+      - The active replica is stopped by process id
+      - Client logs reconnect, failover and data impact
+    parts:
+      - "`samples\\RedundantServer`"
+      - "`samples\\RedundantClient`"
+      - "`src\\Opc.Ua.Redundancy.Server`"
+      - "`src\\Opc.Ua.Redundancy.Client`"
+    run:
+      - "pwsh decks\\demos\\06-server-redundancy\\run-demo.ps1"
+    proves: Drafts that assume a highly available Server need redundancy metadata, state sharing and client failover.
+    notes: |
+      This slide is about cost, not magic. A client subscription continues only because the Server
+      set publishes redundancy metadata, peers have comparable address spaces, service level gives
+      the client a selection signal, shared state lets a standby continue useful values, and the
+      managed client has a failover policy. Point out the difference between availability and
+      losslessness. The client may log HA OK for preserved state or DATA LOSS for missed samples;
+      both are useful because the application sees what happened instead of silently assuming
+      continuity.
+

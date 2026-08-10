@@ -1,0 +1,79 @@
+id: core-04-avro-encoding
+section: core
+order: 140
+footer: OPC UA — Apache Avro DataEncoding
+slides:
+  - layout: bullets
+    title: Why Avro exists
+    kicker: Avro-native systems cannot decode UA Binary
+    bullets:
+      - text: "Stream processors and data lakes already speak Apache Avro"
+      - text: "OPC UA telemetry often reaches them through custom bridges"
+      - text: "JSON is verbose and UA Binary is not their native contract"
+      - text: "Schemas must preserve OPC UA semantics without a live Session"
+      - text: "PubSub Actions need request and response payloads too"
+    takeaway: "Avro is the compact bridge for Avro-native consumers, not a new Service encoding."
+    notes: |
+      Section 4.1 says Avro targets downstream systems that speak Apache Avro but not OPC UA Binary: stream processors, data lakes, message-bus consumers and hot-path analytics pipelines. Those systems increasingly ingest OPC UA telemetry, but without a standard mapping each deployment builds its own bridge and decides how much OPC UA type information survives. The draft is careful about scope. It does not replace Service request and response encodings over a SecureChannel; normal OPC UA Services continue to use Binary, XML or JSON. Avro applies to DataSet and value payloads, and to PubSub Actions, where action invoke and response messages are DataSetMessages carried over the PubSub mapping.
+
+  - layout: table
+    title: What it adds
+    kicker: Full type-model mapping plus a Part 14 message mapping
+    table:
+      columns: ["Area", "Adds", "Why it matters"]
+      widths: [0.24, 0.38, 0.38]
+      rows:
+        - ["Types", "All built-ins and composites", "Preserves UA value semantics"]
+        - ["Variant", "Typed body and dimensions", "Keeps runtime type identity"]
+        - ["ExtensionObject", "Known structs or fallback", "Handles abstract fields"]
+        - ["Schema", "Deterministic generator", "NodeSet drives the contract"]
+        - ["PubSub", "Network/DataSet records", "Maps key and delta frames"]
+        - ["Actions", "Invoke and response records", "Carries PubSub request/response"]
+        - ["Discovery", "Avro announcements", "Lets late joiners decode"]
+    notes: |
+      The scope lists the covered OPC UA type model in detail: all built-in DataTypes, Enumerations, OptionSets, Structures, optional fields, Union DataTypes, arrays, matrices, Variant, ExtensionObject, DataValue and DiagnosticInfo. It requires a canonical Avro form and `decode(encode(x)) == x`. The deterministic schema generator reads the OPC UA type model, emits fields in DataTypeDefinition order, applies explicit nullability rules and computes the SchemaId from the Avro Parsing Canonical Form. The PubSub mapping represents NetworkMessages and DataSetMessages as canonical Avro records, with key and delta frames and field representation following `DataSetFieldContentMask`. Unlike Arrow, Avro includes PubSub Action invoke and response messages and Discovery records.
+
+  - layout: code
+    title: How schemas are produced
+    kicker: The encoder derives the schema before it writes bytes
+    intro: "The SchemaId is a fingerprint of the generated Avro schema, not of PubSub state."
+    code: |
+      DataTypeDefinition + runtime type
+          -> deterministic Avro schema
+          -> Parsing Canonical Form
+          -> CRC-64-AVRO SchemaId
+          -> publish / announce schema
+          -> encode value or DataSetMessage
+
+      decode(payload, SchemaId)
+          -> resolve schema from cache, registry or AddressSpace
+          -> reconstruct OPC UA value
+    outro: "The required invariant is `decode(encode(x)) == x`."
+    notes: |
+      Section 6 is the heart of the mapping. An encoder is not handed an arbitrary foreign schema. It derives the schema from the OPC UA DataTypeDefinition, referenced DataTypes and the concrete runtime types needed for Variant or ExtensionObject values. The schema is made self-contained and canonical before calculating the CRC-64-AVRO Rabin fingerprint, represented as eight little-endian bytes. That SchemaId identifies the exact self-contained Avro Parsing Canonical Form, not a DataType NodeId or PubSub ConfigurationVersion. A decoder resolves by SchemaId from a schema registry or announcement, or re-derives from the AddressSpace or DataSetMetaData. The notes matter because the slide's short pipeline is what lets disconnected consumers decode payloads they did not negotiate through an OPC UA Session.
+
+  - layout: bullets
+    title: How schema evolution stays reversible
+    kicker: Only Variant and ExtensionObject unions grow
+    bullets:
+      - text: "A first schema can be data-driven or schema-driven"
+      - text: "New Variant body forms append union branches"
+      - text: "New ExtensionObject concrete types append branches"
+      - text: "Existing branches keep their Avro union index"
+      - text: "A grown schema gets a new SchemaId and MinorVersion"
+      - text: "A reset starts a new MajorVersion"
+    notes: |
+      The draft makes evolution narrow. Most Avro unions are closed after generation. The Variant body-type union and ExtensionObject known-struct union are the two places that may grow, and they grow append-only. This matters because Avro binary encodes a union as a branch index followed by the value. If an existing branch moved, old payloads would decode as the wrong type. The procedure is therefore: append the newly observed body form or concrete structured type, leave every existing branch at the same index, recompute SchemaId, advance the DataSet ConfigurationVersion MinorVersion and publish and announce the new schema before sending data that uses the branch. Reordering, removal or retyping is a MajorVersion reset.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Under OPC Foundation review as a standalone companion
+    bullets:
+      - text: "Version banner: **0.1.0**, dated 2026-07-22"
+      - text: "Companion to Parts 6 and 14"
+      - text: "Source: `D:\\git\\spec-drafts\\core-specs\\avro-encoding\\OPC-UA-Avro-Encoding.md`"
+      - text: "Target: OPC UA core or Cloud Initiative numbering range"
+      - text: "Open: final namespace, NodeIds and review disposition"
+      - text: "No demo is listed for this draft"
+    notes: |
+      The source banner identifies this as a working draft companion to OPC 10000-6 and OPC 10000-14, in the base OPC UA namespace. The status note says the standalone companion could land in the OPC UA core numbering range or the Cloud Initiative numbering range. The public repository overview marks this draft as under OPC Foundation review and points members to the private spec-drafts repository, which is why the source path used for this slide deck is under `D:\git\spec-drafts`. The draft ships a generated per-type reference and generated schema documents, but final registered namespace and NodeIds still depend on the standards process. The deck does not list a demo for Avro.

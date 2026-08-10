@@ -1,0 +1,120 @@
+id: meta-04-robot-intent
+section: metaverse
+order: 340
+footer: OPC UA — Robot Intent
+slides:
+  - layout: bullets
+    title: Why Robot Intent exists
+    kicker: OPC UA Robotics describes a robot, but gives a client no portable motion verbs
+    bullets:
+      - text: OPC 40010-1 describes topology, axes, drives, controller and safety states
+      - text: It defines **no motion verbs** beyond `Start`, `Stop` and program loading
+      - text: Every integrator writes vendor motion code for the same cell tasks
+      - text: A blocking Method loses the outcome if the Session drops mid-task
+      - text: A pick or path can run for minutes; a `Call` cannot be the lifecycle
+    takeaway: >-
+      The missing primitive is a portable task request with an observable lifetime.
+    notes: |
+      The motivation clause separates two gaps. The first is vocabulary: OPC 40010-1 lets a client
+      discover a robot's construction, axes, power trains, controller and safety states, but it cannot ask
+      the robot to move to a pose. The vendor verbs exist, but only in URScript, RAPID, KRL, TP, INFORM
+      and similar languages. The second gap is lifecycle. OPC UA Method results are tied to the Session
+      and request; if the Session ends, the result is discarded even when the robot continues to move.
+      The draft therefore cannot be one long-running blocking `Call`. It has to admit work and then expose
+      a stateful operation the client observes.
+
+  - layout: table
+    title: What it adds
+    kicker: Intents are DataTypes; execution is represented as Part 10 program instances
+    table:
+      columns: ["Model element", "Role", "Key point"]
+      widths: [0.34, 0.34, 0.32]
+      rows:
+        - ["`RobotIntentRootType`", "Entry point", "`Server/RobotIntent`"]
+        - ["`IntentControllerType`", "One controllable robot", "Capabilities and Methods"]
+        - ["`IntentDataType`", "Abstract request", "One hierarchy of verbs"]
+        - ["`IntentOperationType`", "One submitted intent", "Part 10 lifecycle"]
+        - ["`MissionType`", "Ordered intent set", "Base plus horizon"]
+        - ["`SafetyStateType`", "Safety awareness", "Read-only reports"]
+        - ["`RealTimeChannelType`", "High-rate brokerage", "Samples travel elsewhere"]
+    notes: |
+      Clause 5 gives the type hierarchy. The root holds controllers, and a controller holds the folders a
+      client browses: capabilities, frames, tools, locations, axes, intents and missions. The key design is
+      that the verbs are a DataType hierarchy, not one Method per verb. `IntentDataType` is abstract;
+      motion, process and manipulation requests derive from it, so a mission step and a single submitted
+      intent carry the same shape. Each admitted submission becomes an `IntentOperationType`, a subtype of
+      `ProgramStateMachineType`, and a mission is also a Part 10 program instance. The model adds safety
+      reports and real-time channel descriptors without claiming either as its own transport or safety
+      function.
+
+  - layout: diagram
+    title: How it works
+    kicker: Submit once, then subscribe to the operation instead of waiting on the Method call
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: client, x: 0.2, y: 0.55, w: 2.4, h: 0.85, text: "Client", style: deep, font_size: 13}
+      - {id: ctl, x: 4.15, y: 0.35, w: 3.7, h: 1.1, text: "IntentControllerType", style: primary, font_size: 12, lines: ["RequestControl · SubmitIntent"]}
+      - {id: op, x: 4.15, y: 2.3, w: 3.7, h: 1.1, text: "IntentOperationType", style: green, font_size: 12, lines: ["Accepted → Queued → Executing"]}
+      - {id: term, x: 8.95, y: 2.3, w: 2.75, h: 1.1, text: "Terminal result", style: accent, font_size: 12, lines: ["Succeeded · Failed · Cancelled"]}
+      - {id: safety, x: 0.2, y: 4.2, w: 3.0, h: 0.9, text: "SafetyStateType", style: purple, font_size: 11, lines: ["reports limits; refuses excess"]}
+      - {id: rt, x: 8.7, y: 4.2, w: 3.0, h: 0.9, text: "RealTimeChannelType", style: muted, font_size: 11, lines: ["brokered high-rate path"]}
+    arrows:
+      - {from: client, to: ctl, label: "SubmitIntent", from_site: 3, to_site: 1}
+      - {from: ctl, to: op, label: "returns NodeId", from_site: 2, to_site: 0}
+      - {from: op, to: term, label: "observe", from_site: 3, to_site: 1}
+      - {from: safety, to: ctl, from_site: 0, to_site: 2}
+      - {from: ctl, to: rt, from_site: 3, to_site: 0}
+    captions:
+      - {x: 0, y: 5.55, w: 12, text: "Refusals are structured operation outputs, not vague transport failures", center: true}
+    notes: |
+      Clause 6 explains why the operation is a program instance. `SubmitIntent` admits work and returns an
+      operation NodeId; the client subscribes to that node for progress and reads the terminal result. The
+      `ExecutionStateEnum` refines the Part 10 state so the client can distinguish accepted, queued,
+      executing, cancelling and terminal outcomes. Clause 6.2 fixes refusal order and says refusal is an
+      ordinary output from `SubmitIntent`, with `Accepted` false and an `IntentFailureEnum`, not a bad
+      Service StatusCode. Clause 6.5 is the other essential mechanic: OPC UA `Cancel` cancels an
+      outstanding service request; stopping a robot is `CancelIntent`, `CancelMission` or `CancelAll`.
+
+  - layout: bullets
+    title: The safety boundary
+    kicker: The interface is safety-aware, but it is explicitly not safety-rated
+    bullets:
+      - text: No Method in this model is a safety function
+      - text: Safety-rated control stays in the independent safety system
+      - text: "`SafetyStateType` reports active limits and stop conditions"
+      - text: Submission is allowed only in `Automatic` or `AutomaticExternal`
+      - text: The Server refuses work that would exceed an enforced safe limit
+      - text: High-rate servo loops use a brokered channel, never repeated submissions
+    takeaway: >-
+      The model reports what the safety system enforces; it does not replace that system.
+    notes: |
+      Clause 10 says the important thing plainly: this specification defines a non-safety-rated
+      application interface. The draft ties that to the technology, not to a policy choice. OPC UA Safety
+      carries cyclic safety data, while a Method call has no channel for safety-rated arguments and no
+      defined fail-safe behaviour when it stops being called. What the model can do is report the safety
+      system's state and refuse work that contradicts it. `SafetyStateType` exposes active functions,
+      emergency or protective stops, safe speed limits and whether the safety controller is OK. The Server
+      refuses submissions in the wrong operational mode or when the request exceeds an enforced safe speed
+      limit.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Working-group draft 0.1.0; implemented in the OPC UA .NET Standard stack
+    bullets:
+      - text: "Version: **Release 0.1.0 — working-group draft**"
+      - text: "Target: OPC Foundation companion model, provisional and not endorsed"
+      - text: "Path: `metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md`"
+      - text: "Stack: `docs/Robotics.md`, `src/Opc.Ua.Robotics*`, `samples/Robotics/`"
+      - text: "Open: high-rate payloads are brokered; safety remains external"
+      - text: "Demos: **2** robot + USD, and **5** robot intent viewer plus MCP"
+    takeaway: >-
+      This one is not only prose: the stack has server, client and sample support.
+    notes: |
+      The specification banner states Release 0.1.0 and identifies the NodeSet and NodeIds for the Robot
+      Intent model. Clause 1.4 says the release covers the intent vocabulary, lifecycle, queueing,
+      blending, cancellation, missions, command authority, safety awareness, kinematics, real-time channel
+      brokerage and capability declaration. The implementation is reflected in the stack documentation:
+      `Opc.Ua.Robotics` carries the generated models and common contracts, `Opc.Ua.Robotics.Server` carries
+      the node managers and hosting extensions, and `Opc.Ua.Robotics.Client` carries discovery and the
+      awaitable operation handle. In this deck, demos 2 and 5 exercise it.

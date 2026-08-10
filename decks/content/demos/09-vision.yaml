@@ -1,0 +1,31 @@
+id: 09-vision
+section: metaverse
+order: 335
+footer: OPC UA — Vision
+slides:
+  - layout: demo
+    title: "Demo 9 — Vision"
+    kicker: Camera, media, model and result shape
+    state: walkthrough
+    see:
+      - Sensor is physical or simulated by property
+      - Media is brokered by endpoint references
+      - Pipeline points at an AI deployment
+      - Results have standard OPC UA shapes
+    parts:
+      - "`metaverse-specs\\vision\\OPC-UA-Vision.md`"
+      - "`metaverse-specs\\vision\\Opc.Ua.Vision.NodeSet2.xml`"
+      - "`core-specs\\data-channels\\OPC-UA-Data-Channels.md`"
+      - "`metaverse-specs\\ai-model-management`"
+    run:
+      - "decks\\demos\\09-vision\\README.md"
+    proves: Vision needs a standard result model, not only a camera job coordinator.
+    notes: |
+      Present this as paper. There is a draft and generated NodeSet in the drafts repository, but no
+      stack project or sample Server. The walkthrough fills the gap left by existing OPC UA vision
+      work: media location, calibration, inference pipeline and result content are described with a
+      standard shape. Tie it to Data Channels carefully. Vision brokers media by reference by
+      default; a Data Channel is only an optional in-band path. Tie it to AI Model Management because
+      the result is not auditable unless it can point at the deployment and model that produced it.
+
+

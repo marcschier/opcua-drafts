@@ -1,0 +1,101 @@
+id: core-01-data-channels
+section: core
+order: 110
+footer: OPC UA — Data Channels
+slides:
+  - layout: section
+    title: core
+    subtitle: >-
+      Proposed extensions to `http://opcfoundation.org/UA/` itself — encodings, Services,
+      transports and base models, not companion models beside the base namespace.
+    contents:
+      - OPC UA — Data Channels
+      - OPC UA — Apache Arrow Encoding
+      - OPC UA — Asynchronous Service Execution
+      - OPC UA — Apache Avro DataEncoding
+      - OPC UA — xRegistry
+      - xRegistry — OPC UA API
+
+  - layout: bullets
+    title: Why Data Channels exists
+    kicker: Continuous content has no OPC UA primitive today
+    bullets:
+      - text: "OPC UA moves data as complete requests and responses"
+        children:
+          - "`Read`, `Publish`, `HistoryRead` and `FileType` all make the Client keep asking"
+      - text: "Cameras, microphones and point clouds need a flow"
+        children:
+          - "Start, throttle, discard stale frames, prioritize and stop are not expressible"
+      - text: "The usual answer is a second protocol beside the Server"
+        children:
+          - "That means another port, handshake, trust anchor and authorization model"
+      - text: "Reverse connect makes the second port unobtainable"
+    takeaway: "The missing primitive is an authorized stream on the connection that already exists."
+    notes: |
+      The problem clause is explicit: OPC UA Secure Conversation is built around whole messages, and the Services above it return whole responses. That shape is right for values, notifications and files, but it cannot say "start sending and keep sending while I grant credit". The draft lists cameras, microphones, log tails, point clouds and firmware streams as examples whose value decays with age. Today those flows are usually solved with RTSP, WebRTC, gRPC or a private socket beside OPC UA. That creates the second security surface the slide names: firewall rules, endpoint discovery, certificates and authorization all become separate from the Session that already governs the device. In reverse-connect deployments the second listener may not even be possible.
+
+  - layout: table
+    title: What it adds
+    kicker: A streamable source, a Service set and a frame model
+    table:
+      columns: ["Piece", "What it is", "Why it matters"]
+      widths: [0.28, 0.34, 0.38]
+      rows:
+        - ["`IDataChannelSourceType`", "Interface on a source", "Streams without a new NodeClass"]
+        - ["`HasDataChannel`", "Reference to a source", "A camera can expose streams"]
+        - ["`OpenDataChannel`", "Service to create a stream", "Negotiates direction and terms"]
+        - ["`ModifyDataChannel`", "Service to revise terms", "Adapts bitrate or frame size"]
+        - ["`CloseDataChannel`", "Service to end a stream", "Drains or resets queued bytes"]
+        - ["`STR` frames", "Secured stream frames", "Carry payload and control"]
+        - ["`opc.quic`", "Outer-protocol transport", "Uses QUIC streams/datagrams"]
+    notes: |
+      The specification defines the feature end to end: the AddressSpace model, the Services, the frame format, and the transports that carry the frame. A type becomes streamable by implementing `IDataChannelSourceType`, so an existing companion type does not need a different supertype or a new NodeClass. `HasDataChannel` lets a functional object point to one or more concrete stream endpoints, for example a camera main stream and substream. The Service set opens, modifies and closes exactly one channel at a time, with parameters revised by the Server where a weakened form is still acceptable. Inline transports add the `STR` MessageType inside the already secured body. `opc.quic` and `opc.wt` use the carrier's own multiplexing and datagrams where genuine loss is needed.
+
+  - layout: code
+    title: How it opens
+    kicker: The handshake stays at the Service layer
+    intro: "A capable Client never sends stream frames before the Server grants a channel."
+    code: |
+      Client -> Server: Browse ServerCapabilities
+      Server -> Client: DataChannelCapabilities present
+      Client -> Server: OpenDataChannel(sourceNodeId, offerId=0,
+                                        requestedParameters)
+      Server -> Client: channelId, revisedParameters
+      Server -> Client: STR DATA / CREDIT / GAP / END frames
+      Client -> Server: ModifyDataChannel(channelId, revisedParameters)
+      Client -> Server: CloseDataChannel(channelId, reason, deleteQueued)
+    outro: "A legacy Server never sees an unknown `STR` frame."
+    notes: |
+      Section 3 says the `Hello` and `Acknowledge` handshake is untouched and `ProtocolVersion` is not bumped. That is why discovery and negotiation happen through the model and Services instead of by sending a new frame first. The Client checks for `DataChannelCapabilities` under `ServerCapabilities`; absence means the Server does not support the Service set. `OpenDataChannel` names a source implementing `IDataChannelSourceType` or reached through `HasDataChannel`, carries requested parameters, and receives a `channelId` plus the revised parameters. Only after the response has been handed to the transport may frames for the assigned ChannelId appear. This avoids the interoperability trap called out by the draft: an unrecognized MessageType closes a SecureChannel, so a capable peer must never lead with `STR`.
+
+  - layout: bullets
+    title: How bytes stay bounded
+    kicker: Flow control, scheduling and loss are explicit
+    bullets:
+      - text: "Every channel has a byte credit window"
+        children:
+          - "The connection has its own window, in each direction"
+      - text: "Service traffic keeps precedence"
+        children:
+          - "A video stream cannot starve `Publish` or Session traffic"
+      - text: "`Paused` and `Closing` are per direction"
+      - text: "Inline loss is sender-side discard"
+        children:
+          - "Genuine datagram loss requires `opc.quic` or `opc.wt`"
+      - text: "Discarded runs are reported with `GAP` frames"
+    takeaway: "Backpressure affects the stream that caused it, not the whole SecureChannel."
+    notes: |
+      The draft spends substantial space on backpressure because a streaming primitive that can exhaust its receiver is not safe to put under OPC UA security. Credit is maintained per channel and for the whole connection, independently in each direction. Control frames are exempt so a stalled channel can still be reset or granted more credit. Scheduling has two obligations: Service chunks cannot be delayed by more than one maximum-size frame, and no channel can starve another. The state machine makes `Paused` and `Closing` directional, so a half-close in one direction does not destroy a transfer in the other. The loss rule is precise: over TCP, bytes already written to the socket are reliable, so "unreliable" means stale queued frames are discarded before transmission. QUIC or WebTransport datagrams are needed for true in-flight loss.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Draft errata for base OPC UA plus a new transport profile
+    bullets:
+      - text: "Version banner: **0.1.1**, dated 2026-07-29"
+      - text: "Targets Parts 3, 4 and 6, with Part 5 nodes and Part 7 profiles"
+      - text: "Adds an `opc.quic` transport and also defines `opc.wt`"
+      - text: "Path: `core-specs/data-channels/OPC-UA-Data-Channels.md`"
+      - text: "Open: final NodeIds, StatusCodes and clause numbers are provisional"
+      - text: "Demo 8 shows media over data channels on a feature branch"
+    notes: |
+      The file banner says this is a working draft for OPC Foundation Working Group submission. It is a combined read over three insertion-ready errata documents: Part 6 transport, Part 4 Services and Part 3 model, with instance declarations and profiles around them. The source also says the errata documents remain authoritative if the combined read differs. The draft's own status note marks numeric NodeIds, StatusCode values and proposed clause numbers as provisional, which is the concrete open question to carry on the slide. The deck frontmatter identifies demo 8 as "Media over Data Channels" and marks it as a feature-branch demo; that matches the notable fact that this draft has a demonstration of media over the already open SecureChannel rather than beside it.

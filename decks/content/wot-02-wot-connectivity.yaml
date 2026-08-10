@@ -1,0 +1,127 @@
+id: wot-02-wot-connectivity
+section: wot
+order: 420
+footer: OPC UA — WoT Connectivity
+slides:
+  - layout: bullets
+    title: Why WoT Connectivity exists
+    kicker: The 1.02 surface makes nodes look canonical when the documents are
+    bullets:
+      - text: Thing Models and TDs are the authored source of truth
+      - text: A browsed AddressSpace is a projection that can be rebuilt
+      - text: A flat asset-management surface cannot model document lifecycle
+      - text: Operators need desired, active and failed versions to remain visible
+      - text: Existing 1.02 clients still need the published NodeIds
+    takeaway: "The inversion is the effort: documents canonical, AddressSpace derived."
+    notes: |
+      The connectivity draft opens by saying it is registry-first. It stores, validates, versions
+      and projects W3C Thing Model and Thing Description documents. The published OPC 10100-1 v1.02
+      model exposed a useful asset connection surface, but the draft identifies the documents and
+      their versions as the single source of truth. The AddressSpace that a client browses is a
+      derived projection: types from Thing Models, instances from Thing Descriptions, references
+      from links and monitored values from compiled form plans. That projected model can be rebuilt
+      from the stored documents, the pinned vocabulary and the registry model.
+
+  - layout: two-column
+    title: What it changes
+    kicker: The source of truth moves from nodes to documents
+    left:
+      heading: OPC 10100-1 v1.02 shape
+      bullets:
+        - Flat asset-management surface
+        - "`WoTAssetConnectionManagement` is central"
+        - TD upload materializes asset nodes
+        - Published NodeIds define client compatibility
+    right:
+      heading: This draft shape
+      bullets:
+        - xRegistry document registry is central
+        - TD and TM files are versioned resources
+        - AddressSpace is a shadow-switched projection
+        - Published NodeIds are preserved as a profile
+    takeaway: The 1.02 surface remains; it is no longer the only shape.
+    notes: |
+      The banner and scope are explicit that this is an additive revision in the same namespace,
+      not a replacement namespace. Revision 1.1 incorporates the full OPC 10100-1 v1.02 model into
+      one combined NodeSet, preserving every published NodeId, type and method signature. The 1.02
+      surface is not deprecated; it is a conformance profile named WoT-Con Minimal. The draft adds
+      the registry-first model beside it, where stored documents and versions are authoritative and
+      the AddressSpace is refreshed from them. This is why the same server can serve existing
+      clients while giving new clients a registry lifecycle and document API.
+
+  - layout: diagram
+    title: What it adds
+    kicker: A WoT document registry over the xRegistry base model
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: srv, x: 0.2, y: 0.2, w: 3.0, h: 0.8, text: "Server Object", style: deep}
+      - {id: base, x: 4.1, y: 0.2, w: 3.8, h: 0.8, text: "xRegistry base", style: primary}
+      - {id: reg, x: 0.2, y: 2.0, w: 3.0, h: 1.0, text: "WoTRegistry", style: accent, lines: ["WoTRegistryType"]}
+      - {id: tdg, x: 4.1, y: 1.6, w: 3.1, h: 0.9, text: "TD groups", style: pale, lines: ["ThingDescriptionGroupType"]}
+      - {id: tmg, x: 4.1, y: 3.0, w: 3.1, h: 0.9, text: "TM groups", style: pale, lines: ["ThingModelGroupType"]}
+      - {id: doc, x: 8.3, y: 2.3, w: 3.2, h: 1.0, text: "TD / TM versions", style: green, lines: ["WoTDocumentType"]}
+      - {id: proj, x: 8.3, y: 4.4, w: 3.2, h: 0.9, text: "Derived nodes", style: purple, lines: ["types · instances · Views"]}
+    arrows:
+      - {from: srv, to: reg, from_site: 2, to_site: 0, label: HasComponent}
+      - {from: base, to: reg, from_site: 2, to_site: 0, label: subtypes}
+      - {from: reg, to: tdg, from_site: 3, to_site: 1}
+      - {from: reg, to: tmg, from_site: 3, to_site: 1}
+      - {from: tdg, to: doc, from_site: 3, to_site: 1}
+      - {from: tmg, to: doc, from_site: 3, to_site: 1}
+      - {from: doc, to: proj, from_site: 2, to_site: 0, label: refresh}
+    captions:
+      - {x: 0, y: 5.55, w: 12, text: "Resource bytes are read and written through inherited FileType methods.", center: true}
+    notes: |
+      The normative node reference states that WoT Connectivity 1.1 extends the abstract OPC UA
+      xRegistry base types: `WoTRegistryType` subtypes `RegistryType`, the Thing Description and
+      Thing Model groups subtype `GroupType`, and `WoTDocumentType` subtypes `ResourceType`.
+      Because `ResourceType` is a FileType, the JSON-LD document bytes are transferred with the
+      inherited file methods rather than a new upload protocol. The well-known `WoTRegistry`
+      instance is a component of the Server object. Clients discover groups, documents and versions
+      there, and then read lifecycle and projection state from the registry and document nodes.
+
+  - layout: bullets
+    title: How it works — refresh
+    kicker: Projection is generational, atomic and dependency-aware
+    bullets:
+      - text: A refresh builds a dependency DAG before writing nodes
+      - text: Closure resolution checks documents first, then the loaded AddressSpace
+      - text: Invalid documents stay stored and the last valid projection serves
+      - text: Shadow generation switches atomically, then older generations retire
+      - text: Forms compile into binding plans; forms do not become nodes
+    takeaway: Clients never have to observe a half-built projection.
+    notes: |
+      The lifecycle section is the mechanics that make the inversion safe. A refresh constructs a
+      dependency graph before projection; Thing Descriptions depend on their Thing Models and
+      parent links, while Thing Models depend on extended or referenced models. The Binding's local
+      context becomes concrete here: the closure of the refresh is searched first and the loaded
+      AddressSpace is the fallback. If a desired version is invalid, it remains stored, its failure
+      state is visible, and the previous valid projection remains active. Projection is prepared as
+      a shadow generation, then switched atomically and retired under a documented graceful or
+      immediate policy.
+
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Additive OPC 10100-1 revision under OPC Foundation review
+    bullets:
+      - text: "**Draft version:** Release 1.1-draft3, dated 2026-08-05"
+      - text: "**Target body:** OPC Foundation WoT Working Group"
+      - text: "**Review repository:** `OPCF-Members/spec-drafts`"
+      - text: "**Source:** `wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md`"
+      - text: "**Depends on:** `core-specs/xregistry` base model"
+      - text: "**Demos:** **4** pumps via WoT and **7** AAS + WoT + xRegistry"
+    takeaway: Open questions are final registry-block NodeIds and review disposition.
+    notes: |
+      The source banner identifies this draft as `Release 1.1-draft3 — Draft`, an additive revision
+      of OPC 10100-1 v1.02, namespace `http://opcfoundation.org/UA/WoT-Con/`, publication date
+      2026-08-05. Its status line says it is intended for submission to the OPC Foundation Web of
+      Things Working Group and is registry-first over the abstract OPC UA xRegistry base model. The
+      repository overview says it is under OPC Foundation review in `OPCF-Members/spec-drafts`.
+      The annex states that additive registry NodeIds in the `64000+` block are provisional while
+      final identifiers are assigned by the OPC Foundation. Demos 4 and 7 exercise this model.
+
+
+
+

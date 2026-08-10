@@ -1,0 +1,82 @@
+id: core-02-arrow-encoding
+section: core
+order: 120
+footer: OPC UA — Apache Arrow Encoding
+slides:
+  - layout: bullets
+    title: Why Arrow exists
+    kicker: Analytics consumers read columns; OPC UA usually hands them rows
+    bullets:
+      - text: "Historian and analytics pipelines work in column batches"
+      - text: "OPC UA values arrive as UA encodings, one value or row at a time"
+      - text: "Every edge bridge re-encodes the same semantics into Arrow"
+      - text: "Schema-based payloads need a stable schema identity"
+      - text: "Actions are deliberately not mapped here"
+    takeaway: "Arrow removes repeated row-to-column conversion without replacing OPC UA Services."
+    notes: |
+      The scope says this draft defines OPC UA values as Apache Arrow columnar data: a DataEncoding, a Part 14 batch message mapping, and a historian or ADBC access result mapping. The motivation is not that Binary, XML or JSON are broken; it is that analytics and historian consumers operate on columns and RecordBatches. Without a standard mapping, every publisher, gateway or historian surface translates OPC UA types into Arrow in its own way. The draft also draws a clear boundary: Arrow is for columnar historian access and batch publish/subscribe payloads. OPC UA Actions and action invoke/response messages are excluded from Arrow and are assigned to the Avro mapping instead.
+
+  - layout: table
+    title: What it adds
+    kicker: One Part 6 value mapping reused in three places
+    table:
+      columns: ["Surface", "Adds", "Shape"]
+      widths: [0.27, 0.39, 0.34]
+      rows:
+        - ["Part 6", "Default Arrow value mapping", "One Arrow `DataType` per UA type"]
+        - ["Part 14", "PubSub batch mapping", "RecordBatch rows as samples"]
+        - ["Historian", "ADBC-style results", "`HistoryRead` to Arrow streams"]
+        - ["Schema", "`SchemaId` handshake", "8 bytes from Arrow Schema bytes"]
+        - ["Config", "`Arrow*MessageDataType`", "Part 14 MessageSettings"]
+        - ["Content", "Arrow stream and file types", "IPC stream or bounded file"]
+    notes: |
+      The key design is reuse. Section 5 maps every OPC UA DataType to an Arrow `DataType` and serializes values as Arrow IPC. Section 6 uses that same DataType for PubSub DataSet field columns, and Section 7 uses it again for the historian `Value` column. The draft defines a `SchemaId` as the first eight bytes of SHA-256 over the serialized Arrow Schema IPC message bytes, independent of PubSub `ConfigurationVersion`. The Part 14 configuration model receives Arrow-specific MessageSettings DataTypes for WriterGroup, DataSetWriter and DataSetReader, plus enums for IPC format, delta-frame mode and compression. The content types are the standard Arrow stream and file media types.
+
+  - layout: diagram
+    title: How the batch mapping works
+    kicker: A DataSet becomes one homogeneous RecordBatch
+    cols: 12
+    rows: 5
+    nodes:
+      - {id: ds, x: 0.3, y: 0.5, w: 2.7, h: 0.8, text: "PublishedDataSet", style: deep}
+      - {id: schema, x: 4.0, y: 0.5, w: 3.4, h: 0.8, text: "Arrow Schema", style: primary}
+      - {id: batch, x: 8.4, y: 0.5, w: 3.0, h: 0.8, text: "RecordBatch", style: accent}
+      - {id: rows, x: 8.4, y: 2.0, w: 3.0, h: 0.9, text: "Rows = samples", style: pale}
+      - {id: cols, x: 4.0, y: 2.0, w: 3.4, h: 0.9, text: "Columns = fields", style: pale}
+      - {id: id, x: 0.3, y: 2.0, w: 2.7, h: 0.9, text: "SchemaId", style: green, lines: ["cache or announce"]}
+    arrows:
+      - {from: ds, to: schema, label: "fields"}
+      - {from: schema, to: batch, label: "types"}
+      - {from: schema, to: id, from_site: 2, to_site: 3, label: "hash"}
+      - {from: cols, to: batch, label: "layout"}
+      - {from: batch, to: rows, from_site: 2, to_site: 0}
+    captions:
+      - {x: 0, y: 4.2, w: 12, text: "Several DataSets are several batches, each with its own SchemaId", center: true}
+    notes: |
+      The Arrow PubSub mapping is columnar all the way down. A PublishedDataSet maps to one Arrow schema, with one column per `FieldMetaData` entry. A RecordBatch row is one DataSetMessage sample. The draft is explicit that an Arrow NetworkMessage is one homogeneous RecordBatch whose schema is that DataSet's schema; it does not introduce the fixed Avro envelope that can carry several opaque DataSet payloads. Sparse data uses nullable columns so the column set, schema and SchemaId remain stable. Delta frames can either use nullable columns or an explicit selected-columns mode that changes the column set and therefore the SchemaId. Bare RecordBatch framing omits the schema from the payload, so the SchemaId must be available from metadata, an announcement or a registry before decoding.
+
+  - layout: bullets
+    title: How historians expose it
+    kicker: Part 11 stays the access basis
+    bullets:
+      - text: "The logical surface is `Connection → Statement → ExecuteQuery`"
+      - text: "The result is an `ArrowArrayStream` of RecordBatches"
+      - text: "`HistoryRead` details define the rows returned"
+      - text: "Canonical results use long form"
+        children:
+          - "`NodeId`, timestamps, `Value` and `StatusCode` identify each sample"
+      - text: "Mixed value types split streams or use Variant values"
+    notes: |
+      Section 7 keeps Historical Access as the normative basis. It does not define a new database wire protocol and does not replace OPC UA Services. An ADBC-style statement is parameterized with HistoryRead inputs: node ids, start and end time, the HistoryRead detail, limits and aggregate parameters where needed. `ExecuteQuery` returns an ArrowArrayStream. The canonical result shape is long form because it is stable for query clients and avoids schema changes when the node set changes. Each row identifies the source `NodeId`, source and server timestamps, the OPC UA value mapped through the same Part 6 Arrow rules, and a `StatusCode`. If a request mixes value DataTypes, the access layer either splits by value type or intentionally uses a Variant-valued result.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Stand-alone companion in the core or cloud numbering range
+    bullets:
+      - text: "Version banner: **0.1.0**, dated 2026-07-22"
+      - text: "Companion to Parts 6, 14 and 11"
+      - text: "Path: `core-specs/arrow-encoding/OPC-UA-Arrow-Encoding.md`"
+      - text: "Open: final namespace, NodeIds and numbering range"
+      - text: "No demo is listed for this draft"
+    notes: |
+      The banner says this is a working draft and a standalone companion specification. The status note says it may be added in the OPC UA core numbering range or the Cloud Initiative numbering range, so the precise numbering and registered NodeIds remain open. The draft defines the BrowseNames, type hierarchy and fields for the Part 14 configuration extension, but says NodeIds are assigned by the OPC Foundation when the namespace is registered and are provisional until then. The repository deck overview does not list a demo for Arrow. The important status message for a presenter is that this is already written as a complete mapping across DataEncoding, PubSub batch messages and Historical Access, while still awaiting its final standards home.

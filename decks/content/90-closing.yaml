@@ -1,0 +1,126 @@
+id: 90-closing
+section: close
+order: 900
+footer: Where this goes next
+slides:
+  - layout: statement
+    statement: >-
+      Eighteen drafts, nine with running code, five under OPC Foundation review — and every one of
+      them is a patch a person reads before it lands.
+    attribution: Nothing here is normative. That is the point of a scratch pad.
+
+  - layout: table
+    title: Where each draft stands
+    kicker: What is public, what is under review, and what is aimed somewhere other than the OPC Foundation
+    table:
+      columns: ["Draft", "Version", "Target", "Implementation"]
+      widths: [0.36, 0.14, 0.28, 0.22]
+      rows:
+        - ["Data Channels", "0.1.1", "OPCF — Parts 3, 4, 6 errata", "Feature branch"]
+        - ["Apache Arrow Encoding", "0.1.0", "OPCF — Part 6 / Part 14", "None"]
+        - ["Async Service Execution", "0.1.0", "OPCF — Parts 4, 5 errata", "None"]
+        - ["Apache Avro DataEncoding", "—", "OPCF — under review", "None"]
+        - ["xRegistry (base model)", "0.3.0", "OPCF — new Part", "`Opc.Ua.XRegistry`"]
+        - ["xRegistry — OPC UA API", "0.1.0", "xregistry.org", "—"]
+        - ["Schema Registry", "0.5.0", "OPCF — cloud surface", "None"]
+        - ["Observability Export", "0.1.0", "OPCF — cloud surface", "None"]
+        - ["OpenUSD Part 1 — Binding", "—", "OPCF — under review", "`Opc.Ua.OpenUsd`"]
+        - ["OpenUSD Part 2 — Scene", "—", "OPCF — under review", "`Opc.Ua.OpenUsdScene`"]
+        - ["Vision", "0.1.0", "OPCF — companion", "None"]
+        - ["Robot Intent", "0.1.0", "OPCF — companion", "`Opc.Ua.Robotics`"]
+        - ["AI Model Management", "0.4.0", "OPCF — companion", "Feature branch"]
+        - ["OpenUSD Artifact Registry", "—", "xregistry.org", "—"]
+        - ["WoT Binding", "—", "OPCF — under review", "`Opc.Ua.WotCon`"]
+        - ["WoT Connectivity", "—", "OPCF — under review", "`Opc.Ua.WotCon`"]
+        - ["Generators (GenSets)", "1.0.0", "OPCF — companion", "None"]
+        - ["Asset Administration Shell", "3.0.0", "OPCF — OPC 30270 revision", "Open pull request"]
+    notes: |
+      The honest scoreboard. Use it to close, and do not soften it.
+
+      Nine of the eighteen have no implementation at all. That is not an oversight — a specification
+      written to be implemented later is a different and riskier thing than one extracted from
+      working code, and the deck says which is which so a reviewer can weight their reading
+      accordingly.
+
+      Two rows are aimed at xregistry.org rather than at the OPC Foundation: the xRegistry OPC UA
+      API and the OpenUSD Artifact Registry Service. They are peers of that project's HTTP binding,
+      defined on both sides of the boundary so the projection cannot drift.
+
+      Five sit under OPC Foundation member confidentiality while the review runs, which is why they
+      are not in the public repository right now. If someone in the room reviewed one of them there,
+      the discussion continues in the members' repository, not here.
+
+  - layout: two-column
+    title: How to give feedback
+    kicker: You do not have to write specification text, and you do not have to touch git
+    left:
+      heading: The git route
+      bullets:
+        - text: "Fork `marcschier/opcua-drafts`, branch, open a pull request"
+          children:
+            - "Edit the **source** — a descriptor or `tools/build_model.py` — not the generated NodeSet or CSV"
+            - "Regenerate, then validate: `python core-specs/extras/validate_all.py` and the equivalent for the tree you touched"
+        - text: "**Annotation counts as contribution** — inline comments, notes and open questions are enough"
+    right:
+      heading: The no-git route
+      bullets:
+        - text: "Open an issue and say what you want; a maintainer applies a label"
+          children:
+            - "`word-review` — attach a marked-up `.docx`; tracked changes become the diff, comments become the review"
+            - "`needs pr` — an agent reads the issue and every comment and opens a pull request implementing it"
+        - text: "Agents run with **no write credential** and treat issue text as untrusted input, not instructions"
+        - text: "Whatever they produce is a patch a person reads before it lands"
+    notes: |
+      Close on this, because the most common reason a draft goes unreviewed is that reviewing it
+      looks like work.
+
+      The left column is the ordinary open-source path, with one repository-specific rule that
+      catches everyone the first time: most specifications here are generated from a single source
+      of truth, so hand-editing a NodeSet or a NodeId CSV is the most common way to break the
+      repository. Edit the descriptor or the build script and regenerate.
+
+      The right column is the part worth emphasising to a working-group audience, who are used to
+      reviewing Word documents. Attach a marked-up `.docx` to an issue, a maintainer applies the
+      `word-review` label, and the tracked changes become a pull request diff with the comments as
+      a review on it. Nothing about how a reviewer gives feedback has to change.
+
+      Say the security sentence out loud. Only a maintainer can apply a label, so running an agent
+      is always a deliberate decision; the agent has no write credential, is handed the issue text
+      as a file marked untrusted rather than as instructions, and can only propose changes under the
+      specification trees.
+
+  - layout: bullets
+    title: Where to find everything
+    kicker: Repositories, access, and the two commands that regenerate this deck
+    bullets:
+      - text: "**Public drafts** — `github.com/marcschier/opcua-drafts`"
+        children:
+          - "Thirteen drafts, the Word renderings under `word-drafts/`, and this deck under `decks/`"
+      - text: "**Under OPC Foundation review** — `github.com/OPCF-Members/spec-drafts`"
+        children:
+          - "Registered as a submodule; members request access through the member portal, see `OPCF-Members/Help`"
+          - "A plain clone leaves it empty and everything else works exactly as before"
+      - text: "**Reference implementation** — `github.com/OPCFoundation/UA-.NETStandard`"
+        children:
+          - "Demo walkthroughs and scripts: `decks/demos/`, one folder per demo"
+      - text: "**This deck is generated** — edit `decks/content/*.yaml` and run `python decks/build_deck.py`"
+    takeaway: >-
+      Working drafts throughout. Namespace URIs and NodeIds are provisional, and everything here is
+      subject to change or removal without notice.
+    notes: |
+      The practical close. Leave this on screen while questions run.
+
+      Three repositories. The public drafts repository holds thirteen of the eighteen plus the Word
+      renderings, which are the format a submission is actually reviewed in and are rebuilt
+      automatically whenever a specification changes on `main`. The members' repository holds the
+      five under review and carries the identical contribution model — same Word round trip, same
+      label-driven agents, same validation. The stack repository holds the implementations and the
+      samples the demos drive.
+
+      If someone asks how to get both specification repositories side by side: clone with
+      `--recurse-submodules`, or run `git submodule update --init spec-drafts` in a checkout you
+      already have. If they are not a member, nothing changes — only the submodule fetch fails, and
+      only if they ask for it.
+
+      Finally, the deck itself is a build artifact of the YAML beside it, exactly like the Word
+      renderings. If a slide is wrong, fix the YAML and rebuild rather than editing the PowerPoint.

@@ -1,0 +1,32 @@
+id: 07-aas-wot-xregistry
+section: companion
+order: 525
+footer: OPC UA — AAS, WoT and xRegistry
+slides:
+  - layout: demo
+    title: "Demo 7 — AAS + WoT + xRegistry"
+    kicker: One asset, three projections
+    state: walkthrough
+    see:
+      - AAS shell mapped as live OPC UA nodes
+      - Same shell catalogued as xRegistry resources
+      - Thing Description carries the OPC UA binding
+      - Stack has xRegistry; AAS server is not built
+    parts:
+      - "`companion-specs\\AAS\\OPC-UA-AAS.md`"
+      - "`companion-specs\\AAS\\xRegistry-AAS.md`"
+      - "`companion-specs\\AAS\\examples\\wot`"
+      - "`src\\Opc.Ua.XRegistry*` on stack `master`"
+    run:
+      - "decks\\demos\\07-aas-wot-xregistry\\README.md"
+    proves: One asset can have live, registry and WoT views when they share identity.
+    notes: |
+      Be explicit that this is a walkthrough. The stack has the generic xRegistry base model today:
+      registry folders, resource versions as FileType, content identity, fast-path nodes and server
+      and client packages. The AAS model, NodeSet, JSON-LD tooling and WoT examples live in the
+      drafts repository and have not been integrated into the stack as a runnable Server. The point
+      of the slide is the shape: a shell browsed as live nodes, the same shell versioned as a
+      registry resource, and a Thing Description that lets a WoT client find the same asset without
+      inventing a second identifier.
+
+

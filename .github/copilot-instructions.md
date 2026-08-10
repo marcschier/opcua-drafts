@@ -51,6 +51,11 @@ python word-drafts/tools/build_docx.py word-drafts/tools/specs/openusd-binding.j
 python word-drafts/tools/validate_docx.py word-drafts/tools/specs/openusd-binding.json
 python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/openusd-binding.json
 pwsh word-drafts/tools/finalize_word.ps1 -Path word-drafts/OPC-UA-OpenUSD-Binding-Part1.docx
+
+# the slide deck (see decks/README.md) — the .pptx is generated, never hand-edited
+python decks/build_deck.py                    # regenerate
+python decks/build_deck.py --check --strict   # validate content, write nothing
+python decks/check_layout.py                  # estimate overflow on the generated deck
 ```
 
 `--self-contained` means **"needs no untracked base data"**, not "no dependencies". Full runs
@@ -75,6 +80,7 @@ Five independent specification trees, plus `skills/` (agent instructions that op
 | `companion-specs/` | Domain companion specifications |
 | `word-drafts/` | Submission-ready Word renderings built into the official OPC Foundation template, plus the build that produces them |
 | `templates/` | The official OPC Foundation companion specification template the Word build clones |
+| `decks/` | One slide deck covering every draft, plus the ten demo walkthroughs and scripts. Generated from `decks/content/*.yaml` by `decks/build_deck.py` — the `.pptx` is a build artifact, like the Word renderings |
 
 **Normative / tooling split.** A spec folder holds only the normative documents and generated
 base artifacts; tooling, descriptors and examples live in a mirrored `extras/` tree — for example

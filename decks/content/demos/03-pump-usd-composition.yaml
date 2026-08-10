@@ -1,0 +1,33 @@
+id: 03-pump-usd-composition
+section: metaverse
+order: 325
+footer: OPC UA demos — Pump USD and composition
+slides:
+  - layout: demo
+    title: Demo 3 — Pump USD and composition
+    kicker: Device server owns pumps; site server owns composition
+    state: master
+    see:
+      - Several live pumps appear in one stage
+      - The site shell comes from a separate server
+      - Federation follows a component endpoint
+      - USD composition replaces a bespoke aggregator
+    parts:
+      - PumpDeviceIntegrationServer publishes PumpType machines
+      - SiteCompositionServer publishes the site shell
+      - OpenUSD connector runs with --federate
+      - Viewer renders the composed site
+    run:
+      - pwsh decks\demos\03-pump-usd-composition\run-demo.ps1
+    proves: >-
+      OpenUSD Part 1 and Part 2 let machines and sites compose through declared USD
+      relationships instead of through a custom aggregation service.
+    notes: |
+      Emphasize ownership. The pump server is where the PumpType instances, live simulation, alarms,
+      and pump OpenUSD bindings live. The site server does not proxy those nodes and does not cache
+      those values; it publishes a site stage and a cross-server component binding that names the
+      pump server. When the connector runs with federation enabled, it opens the subordinate endpoint,
+      discovers that server's own representations, and writes them into the same stage. The demo is
+      about composition as a contract: the site assembles the scene while each machine remains owned by
+      the server that actually models and simulates it.
+

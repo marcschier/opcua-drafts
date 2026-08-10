@@ -1,0 +1,126 @@
+id: cloud-02-observability-export
+section: cloud
+order: 220
+footer: OPC UA — Observability Export
+slides:
+  - layout: bullets
+    title: Why Observability Export exists
+    kicker: Observability is still wired one model and one project at a time
+    bullets:
+      - text: "Companion specs say what a thing is, not how to export its operations"
+      - text: "Metrics, logs and traces are selected by bespoke bridges today"
+      - text: "Each exporter has to know pumps, robots or generators by hand"
+      - text: "Disconnected consumers lose the model meaning of each field"
+      - text: "The export path must stay read-only and transport-neutral"
+    takeaway: The gap is not telemetry; it is a discoverable contract for generic export.
+    notes: |
+      The motivation clause says companion specifications describe what a thing is, while getting
+      live data into an observability system is a separate and repetitive integration problem.
+      Someone must decide which Variables are metrics, which event fields become log records, which
+      Program or audit events become spans, and how each is labelled. Today that is usually solved
+      by hand-wiring an OPC UA client to a metrics or log agent for each model and project. The
+      draft exists so a server advertises these choices as part of the model. A read-only bridge
+      discovers the binding, uses classic Subscriptions and Reads or an optional PubSub realization,
+      and emits OpenTelemetry without understanding the domain.
+
+  - layout: diagram
+    title: What it adds
+    kicker: A server-wide registry of bindings, each for one OTEL signal
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: server, x: 0.2, y: 0.2, w: 3.0, h: 0.8, text: "Server Object", style: deep}
+      - {id: obs, x: 0.2, y: 2.0, w: 3.0, h: 1.0, text: "Observability", style: primary, lines: ["ObservabilityFolderType"]}
+      - {id: group, x: 4.2, y: 2.0, w: 3.1, h: 1.0, text: "Binding group", style: pale, lines: ["per companion spec"]}
+      - {id: binding, x: 8.4, y: 2.0, w: 3.2, h: 1.0, text: "ObservabilityBinding", style: accent, lines: ["Metrics · Logs · Traces"]}
+      - {id: item, x: 8.4, y: 4.0, w: 3.2, h: 0.9, text: "BoundItems", style: green, lines: ["Variables or event fields"]}
+    arrows:
+      - {from: server, to: obs, from_site: 2, to_site: 0, label: HasComponent}
+      - {from: obs, to: group, from_site: 3, to_site: 1, label: Collects}
+      - {from: group, to: binding, from_site: 3, to_site: 1}
+      - {from: binding, to: item, from_site: 2, to_site: 0}
+    captions:
+      - {x: 0, y: 5.4, w: 12, text: "A binding is exactly one signal; its items are homogeneous for that signal.", center: true}
+    notes: |
+      The information model starts at a server-wide Observability Object of ObservabilityFolderType
+      exposed as a component of the standard Server Object. That object is the discovery entry
+      point and uses non-hierarchical Collects references to every ObservabilityBindingGroup in the
+      Server. Each group anchors the bindings contributed by one companion specification for an
+      observable instance and carries CompanionSpecificationUri plus ModelNamespaceUris. Each
+      ObservabilityBindingType represents exactly one binding and exactly one signal kind:
+      Metrics, Logs or Traces. The binding then lists bound items, either as browsable BoundItem
+      objects or as the compact BoundItems array, and those items are Variables for metrics or
+      event fields for logs and traces.
+
+  - layout: bullets
+    title: How it works
+    kicker: Browse once, then realize the binding through classic OPC UA or PubSub
+    bullets:
+      - text: "Browse `Server/Observability` and follow `Collects` to groups"
+      - text: "Read `SignalKind`, `DataSetClassId`, cardinality and fields"
+      - text: "Resolve type-level `BrowsePath` entries per live instance"
+      - text: "Subscribe to Variables or Events on the classic path"
+      - text: "Use `ExportedBy` Part 14 nodes only when the Server provides them"
+      - text: "Emit OTEL metrics, LogRecords or Spans with dimensions"
+    takeaway: PubSub is an optional realization; classic Subscriptions and Reads are baseline.
+    notes: |
+      The informative walkthrough is the operational heart of the draft. A bridge first browses
+      Server/Observability, follows Collects to the binding groups, then browses the group's
+      ObservabilityBinding children. It recognizes a class by DataSetClassId and signal kind, and
+      composes any inherited bindings from subtypes, HasInterface facets and HasAddIn children.
+      On the classic path, which is the default and works on a Server with no PubSub surface, it
+      resolves DataSetCardinalityPath and each bound-item BrowsePath with
+      TranslateBrowsePathsToNodeIds, then creates MonitoredItems for metric Variables or subscribes
+      to Events for logs and traces. If a binding is ExportedBy a Part 14 node, the bridge can use
+      the PubSub path instead, but the emitted OTEL is the same.
+
+  - layout: two-column
+    title: How companion models adopt it
+    kicker: Bind at the type or facet, then let instances inherit it
+    left:
+      heading: Base model mechanics
+      bullets:
+        - "Apply `IObservableType` to a type or instance"
+        - "Author type-level `BrowsePath` bindings"
+        - "Compose subtype, Interface and AddIn bindings"
+        - "Tag base fields with `SourceBindingClassId`"
+    right:
+      heading: Addenda shipped
+      bullets:
+        - "`di/`"
+        - "`pumps/`"
+        - "`robotics/`"
+        - "`facets/` — Machinery facets"
+    takeaway: A companion spec contributes binding metadata, not another exporter.
+    notes: |
+      The draft is designed for adoption by companion specifications. Clause 5.9 says a model may
+      apply IObservableType, typically at type level, and contain ObservabilityBindingGroup objects
+      directly. Clause 5.12 then makes inheritance uniform across the OPC UA composition axes: a
+      subtype inherits bindings from its supertype, a type or component implementing an Interface
+      inherits facet bindings, and a host composing an AddIn inherits the AddIn's bindings. The
+      composition algorithm re-anchors paths, unions fields, applies override-by-FieldName and
+      records base-class provenance with SourceBindingClassId and BaseDataSetClassIds. The
+      deliverables clause names per-companion addenda in di, pumps, robotics and facets, with
+      generated instance-overlay NodeSets and descriptors.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Working draft, addenda included, no demo yet
+    bullets:
+      - text: "**Draft version:** 0.1.0, dated 2026-07-15"
+      - text: "**Target body:** OPC Foundation Working Group"
+      - text: "**Proposed Part:** OPC 10000-2xx, number to be assigned"
+      - text: "**Source:** `cloud-specs/observability-export/OPC-UA-Observability-Export.md`"
+      - text: "**Open questions:** assigned Part number and final NodeIds"
+      - text: "**Demo:** none yet; the deck leaves that gap visible"
+    takeaway: The model and addenda are draft content; the generic bridge demo is still absent.
+    notes: |
+      The source banner says this is a working draft for submission to the OPC Foundation Working
+      Group, with Proposed Part OPC 10000-2xx, number to be assigned, namespace
+      http://opcfoundation.org/UA/ObservabilityExport/, and Version 0.1.0 dated 2026-07-15. The
+      status paragraph says all NodeIds are draft identifiers in the specification's namespace and
+      that the draft defines a transport-neutral layer served over the classic client/server
+      interface and optionally realized over PubSub. The deliverables include the NodeSet, NodeIds
+      CSV, generated Annex A, per-companion addenda for pumps, robotics, facets and DI, and
+      machine-readable examples. The overview table lists no demo for Observability Export, so the
+      status slide says there is no demo yet.

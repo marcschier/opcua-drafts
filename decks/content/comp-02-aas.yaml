@@ -1,0 +1,129 @@
+id: comp-02-aas
+section: companion
+order: 520
+footer: OPC UA for Asset Administration Shell
+slides:
+  - layout: bullets
+    title: Why the AAS revision exists
+    kicker: OPC 30270 maps the old metamodel, and the new one is not compatible
+    bullets:
+      - text: "Published OPC 30270 maps AAS v1.x, not the V3 metamodel"
+      - text: "AAS V3 removes and reshapes core concepts, so this is breaking"
+      - text: "The v1 mapping is not reversible enough for source generation"
+      - text: "AAS records the current revision, not version history"
+      - text: "Live nodes, documents, WoT and DPP identifiers must stay aligned"
+    takeaway: The gap is a V3, reversible, version-aware AAS projection rather than another view.
+    notes: |
+      The specification identifies itself as Draft 3.00 and says it supersedes OPC 30270 v1.00,
+      which mapped the AAS v1.x metamodel. Clause 4.3 explains why this is a breaking revision:
+      AAS V3 is not backward compatible with v1.x, `Asset` and `View` no longer exist,
+      `AssetInformation` and `SpecificAssetId` are new, the identifier discriminator is gone, and
+      the submodel element set has changed. The earlier mapping was not designed to be reversible,
+      while this one is lossless in both directions so a source generator can compile an AAS into a
+      Server and a client can read it back. The registry half addresses the other missing property:
+      the AAS metamodel has a current revision label but no history.
+
+  - layout: table
+    title: What it adds
+    kicker: The V3 metamodel as nodes, plus a registry as folders of files
+    table:
+      columns: ["Piece", "Type", "Carries"]
+      widths: [0.28, 0.34, 0.38]
+      rows:
+        - ["Environment", "`AASEnvironmentType`", "shells, submodels, concepts"]
+        - ["Shell", "`AASType`", "asset information and references"]
+        - ["Submodel", "`AASSubmodelType`", "one coherent aspect"]
+        - ["Concept", "`AASConceptDescriptionType`", "semantic definitions"]
+        - ["Elements", "`AASSubmodelElementType`", "properties, ranges, files, ops"]
+        - ["Values", "`AASPropertyType` / `AASRangeType`", "declared xsd type and value"]
+        - ["Ordering", "`AASSubmodelElementListType`", "reference type plus `Index`"]
+        - ["Registry", "`AASRegistryType`", "shell groups and document files"]
+    notes: |
+      The metamodel half materializes an AAS `Environment` as an `AASEnvironmentType` folder. That
+      folder holds shells, submodels and concept descriptions directly, because submodels are not
+      owned by the shell that references them and one submodel may be referenced by several shells.
+      The shell type carries asset information and references to submodels; the submodel type holds
+      its submodel elements; and the concept-description type is the definition a semantic
+      identifier resolves to. The element hierarchy covers properties, ranges, files, blobs,
+      reference elements, relationship elements, collections, lists, entities, events, operations
+      and capabilities. Beside that live tree, `AASRegistryType` is an xRegistry domain extension:
+      a registry root, shell groups and file resources for versioned documents.
+
+  - layout: bullets
+    title: How it works
+    kicker: Losslessness is designed into identity, values, order and absence
+    bullets:
+      - text: "String NodeIds use the AAS identifier and `idShortPath`"
+      - text: "Each `DataTypeDefXsd` value maps to one OPC UA DataType"
+      - text: "Round trips compare the xsd value space, not lexical spelling"
+      - text: "Ordered lists use `HasOrderedComponent` and zero-based `Index`"
+      - text: "Absent fields have no node; empty fields have an empty node"
+      - text: "Every metamodel field has one AddressSpace representation"
+    takeaway: A generated server does not make choices the specification leaves open.
+    notes: |
+      Clause 5 is the core of the mapping. Instance NodeIds are deterministic String identifiers:
+      a shell, submodel or concept description uses its AAS identifier verbatim, and an element uses
+      the owner identifier plus `#` and the metamodel's `idShortPath`. Values are represented once,
+      in a `Value` Variable whose DataType is the DataType assigned to the declared xsd type; the
+      declared `ValueType` remains mandatory even when a value is absent. The specification compares
+      values in the XML Schema value space and serializes them back in canonical lexical form, so a
+      decimal may return as `1.5` rather than the authored `1.500000` while still being the same
+      value. Lists use `HasOrderedComponent` only when order matters and carry an `Index` where a
+      lossless round trip needs position. Optional absent and present-but-empty fields are distinct.
+
+  - layout: diagram
+    title: How it connects
+    kicker: One shell is live nodes, a versioned document, linked data and a WoT Thing
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: aas, x: 4.0, y: 0.1, w: 4.0, h: 0.9, text: "AAS V3 source", style: deep}
+      - {id: nodes, x: 0.2, y: 2.0, w: 3.2, h: 1.0, text: "OPC UA nodes", style: primary, lines: ["read · write · call"]}
+      - {id: reg, x: 4.4, y: 2.0, w: 3.2, h: 1.0, text: "AAS Registry", style: accent, lines: ["xRegistry domain"]}
+      - {id: wot, x: 8.6, y: 2.0, w: 3.2, h: 1.0, text: "WoT TD", style: pale, lines: ["Thing + projection"]}
+      - {id: jsonld, x: 0.8, y: 4.1, w: 3.0, h: 0.9, text: "JSON-LD context", style: green}
+      - {id: dpp, x: 4.6, y: 4.1, w: 3.0, h: 0.9, text: "DPP identifiers", style: green}
+      - {id: xraas, x: 8.4, y: 4.1, w: 3.0, h: 0.9, text: "`xRegistry-AAS.md`", style: purple}
+    arrows:
+      - {from: aas, to: nodes, from_site: 2, to_site: 0}
+      - {from: aas, to: reg, from_site: 2, to_site: 0}
+      - {from: aas, to: wot, from_site: 2, to_site: 0}
+      - {from: nodes, to: jsonld, from_site: 2, to_site: 0}
+      - {from: reg, to: dpp, from_site: 2, to_site: 0}
+      - {from: reg, to: xraas, from_site: 3, to_site: 1}
+    captions:
+      - {x: 0, y: 5.45, w: 12, text: "The same identifiers make the OPC UA and HTTP registry bindings one registry.", center: true}
+    notes: |
+      The AAS folder shows that this effort is more than one companion specification. The OPC UA
+      document maps the V3 metamodel onto nodes and includes the AAS Registry as an xRegistry
+      domain extension. `xRegistry-AAS.md` is the mirrored xRegistry submission, and
+      `AAS-xRegistry-Study.md` explains why the same registry shape is useful: it collapses the AAS
+      registry/repository split into xRegistry's document-versus-URL distinction and supplies the
+      version history the AAS metamodel does not have. `AAS-JsonLd.md` defines JSON-LD as an
+      authored AAS format using the IDTA vocabulary and an ordering graph, so it can export as JSON,
+      XML and AASX. Annex F and the folder README connect that authored form to WoT Thing
+      Descriptions using the WoT Binding type rule, which is why demo 7 can walk one asset across
+      AAS, WoT and xRegistry. `AAS-DPP-Vocabulary.md` maps DPP and battery-passport identifiers into
+      RDF resources and disclosure tiers.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Draft 3.00, open PR, demo 7 walkthrough
+    bullets:
+      - text: "**Draft version:** Draft 3.00 — supersedes OPC 30270 v1.00"
+      - text: "**Target body:** OPC Foundation companion specification"
+      - text: "**Source:** `companion-specs/AAS/OPC-UA-AAS.md`"
+      - text: "**Related:** `xRegistry-AAS.md`, study, JSON-LD and DPP docs"
+      - text: "**Open PR:** #61 on branch `aas-opcua-v3`"
+      - text: "**Demo:** 7 — AAS + WoT + xRegistry walkthrough"
+    takeaway: The model is the current AAS V3 draft; the walkthrough centers on the registry bridge.
+    notes: |
+      The version banner says `Draft 3.00` and the status box says this is a revision of OPC 30270
+      to version 3.00, not compatible with v1.00 and not normative, official or endorsed. The
+      repository folder README identifies `OPC-UA-AAS.md` as OPC 30270 v3.00, the AAS V3 metamodel
+      mapped losslessly onto OPC UA together with an AAS Registry built on the abstract xRegistry
+      base. It also names the mirrored xRegistry proposal, the AAS JSON-LD mapping, the DPP and
+      battery-passport identifier mapping, and the study behind them. GitHub reports PR #61 open
+      from `aas-opcua-v3`. Annex F says the Thing Description correspondence depends on the WoT
+      Binding and WoT Connectivity drafts as they stood at the document date, so review changes
+      there can invalidate that annex. The deck's front matter lists demo 7 as a walkthrough.

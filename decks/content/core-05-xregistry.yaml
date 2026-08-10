@@ -1,0 +1,80 @@
+id: core-05-xregistry
+section: core
+order: 150
+footer: OPC UA — xRegistry
+slides:
+  - layout: bullets
+    title: Why xRegistry exists
+    kicker: Every domain registry should not become a private invention
+    bullets:
+      - text: "Many drafts need a catalogue of versioned documents"
+      - text: "Schemas, Things and USD artifacts are the same registry shape"
+      - text: "Without a base, each domain invents its own folders and APIs"
+      - text: "Generic OPC UA Clients need Browse and FileTransfer to be enough"
+      - text: "Federation needs one identity model across endpoints"
+    takeaway: "xRegistry gives every domain registry the same AddressSpace shape."
+    notes: |
+      The xRegistry source explains the gap by naming the repeated structure: a registry contains groups, groups contain resources, and resources have versions, documents and attributes. Schema Registry, WoT Thing Description registries and OpenUSD artifact registries all need that shape. Without a base OPC UA model, each domain would choose its own folder layout, document access method, identifiers and mutation rules, and a generic Client would have to learn each private invention. The draft instead maps the generic xRegistry structure once onto OPC UA folders, files, Properties and Methods. That is why this specification is the spine of the repository: domain registries subtype it rather than rebuilding the same registry grammar.
+
+  - layout: table
+    title: What it adds
+    kicker: An abstract base model for registry-shaped catalogues
+    table:
+      columns: ["Type", "Subtype", "Role"]
+      widths: [0.32, 0.28, 0.4]
+      rows:
+        - ["`RegistryType`", "`FolderType`", "Registry root and groups"]
+        - ["`GroupType`", "`FolderType`", "A group collection entry"]
+        - ["`ResourceType`", "`FileType`", "Resource or version document"]
+        - ["`AttributesType`", "`BaseObjectType`", "Dynamic labels and attributes"]
+        - ["`RegistryCapabilitiesDataType`", "Structure", "Typed `/capabilities` view"]
+        - ["`ExternalReference`", "`ExpandedNodeId`", "Federation to remote registries"]
+    notes: |
+      The type table is intentionally small. `RegistryType` and `GroupType` are folders because xRegistry's file and static-file-server representations are directory trees. `ResourceType` is a `FileType`, which is the essential design decision: the document is not hidden behind a custom method, it is read with standard `Open`, `Read` and `Close`. Common xRegistry attributes such as `Xid`, `Epoch`, `Name`, timestamps, `Format` and `ContentType` are Properties. Dynamic labels and extension attributes live in an `AttributesType` container so each key becomes a browsable `PropertyType` Variable, added or removed with explicit Methods. `RegistryCapabilitiesDataType` gives fixed `/capabilities` fields as one typed value, while the raw JSON remains available as a file.
+
+  - layout: diagram
+    title: How the projection works
+    kicker: The AddressSpace is the registry
+    cols: 12
+    rows: 5
+    nodes:
+      - {id: reg, x: 4.0, y: 0.2, w: 4.0, h: 0.8, text: "RegistryType", style: primary, lines: ["FolderType root"]}
+      - {id: g1, x: 1.0, y: 1.8, w: 3.0, h: 0.8, text: "GroupType", style: pale, lines: ["FolderType"]}
+      - {id: g2, x: 8.0, y: 1.8, w: 3.0, h: 0.8, text: "GroupType", style: pale, lines: ["FolderType"]}
+      - {id: r1, x: 1.0, y: 3.3, w: 3.0, h: 0.8, text: "ResourceType", style: accent, lines: ["FileType document"]}
+      - {id: r2, x: 8.0, y: 3.3, w: 3.0, h: 0.8, text: "ResourceType", style: accent, lines: ["FileType version"]}
+    arrows:
+      - {from: reg, to: g1, label: "Organizes"}
+      - {from: reg, to: g2, label: "Organizes"}
+      - {from: g1, to: r1, label: "Organizes"}
+      - {from: g2, to: r2, label: "Organizes"}
+    captions:
+      - {x: 0, y: 4.55, w: 12, text: "Browse lists collections; FileTransfer streams bytes with `Open` / `Read` / `Close`", center: true}
+    notes: |
+      The diagram is the normative idea in the overview: a registry and its groups are folders, and each resource or version document is a file. The physical backing can be a real file system or a virtual catalogue, but the OPC UA type system presented to the Client is the same. That gives the mandatory read path. A Client browses the folders to discover groups and resources, then opens the `ResourceType` file and reads its bytes. More capable Servers add registration, attribute updates, export and federation, but a conformant baseline is already useful with Browse and FileTransfer alone. Because every domain registry uses the same base shape, a generic Client can navigate a Schema Registry, a WoT Connectivity registry or an OpenUSD artifact registry without a different access pattern for each.
+
+  - layout: bullets
+    title: How mutation and identity work
+    kicker: Create folders and files, then bootstrap xRegistry attributes
+    bullets:
+      - text: "`CreateGroup` and `GetOrCreateGroup` create group folders"
+      - text: "`CreateResource` and `GetOrCreateResource` create files"
+      - text: "`Delete(ExpectedEpoch)` removes groups or resources"
+      - text: "`AddAttribute` and `RemoveAttribute` edit labels"
+      - text: "`GroupId` and `ResourceId` come from source identity"
+      - text: "Identifiers are never derived from document bytes"
+    notes: |
+      The base model defines the creation and mutation vocabulary. A registry creates groups with `CreateGroup` or the idempotent `GetOrCreateGroup`; a group creates resources or versions with `CreateResource` or `GetOrCreateResource`; deletion is an entity's own `Delete(ExpectedEpoch)` Method, with `ExpectedEpoch` providing optimistic concurrency. When a resource is created by writing a file, the Server auto-bootstraps the surrounding xRegistry structure: it assigns `Xid`, `Epoch`, timestamps, links the file under the group and the group under the registry, and sets domain-derived attributes. The identity rules matter: every domain companion names a source identity, and `GroupId` or `ResourceId` is a symbolic identifier derived from that identity. A digest such as a SchemaId is version-level metadata, never the stable entity identifier.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Abstract base model for OPC Foundation standardization
+    bullets:
+      - text: "Version banner: **0.3.0**, dated 2026-07-31"
+      - text: "Proposed Part: OPC 10000-2xx, number to be assigned"
+      - text: "Namespace: `http://opcfoundation.org/UA/xRegistry/`"
+      - text: "Source read: `D:\\git\\spec-drafts\\core-specs\\xregistry\\OPC-UA-xRegistry.md`"
+      - text: "Open: part number, final NodeIds and review outcome"
+      - text: "Demo 7 uses xRegistry in the AAS + WoT walkthrough"
+    notes: |
+      The xRegistry banner says this is a working draft for submission to the OPC Foundation Working Group, proposed as an OPC 10000-2xx Part with the number to be assigned. It also names the companion namespace and version. The public repository overview says xRegistry is under OPC Foundation review and describes it as the base model subtyped by Schema Registry, WoT Connectivity and the OpenUSD artifact registry. In this checkout the public source path named by the deck task is not present, so the content is verified from the corresponding private checkout under `D:\git\spec-drafts`. The open items are the same ones the banner and annex imply: final part number, registered NodeIds and standards review disposition. Demo 7 is the walkthrough where AAS, WoT and xRegistry are shown together.

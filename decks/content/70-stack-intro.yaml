@@ -1,0 +1,50 @@
+id: 70-stack-intro
+section: stack
+order: 700
+footer: The reference implementation
+slides:
+  - layout: section
+    title: The reference implementation
+    subtitle: >-
+      Most of these drafts exist because building them turned up the gap. The OPC UA .NET Standard
+      stack is where they were found, and where nine of them already run.
+    contents:
+      - "`OPCFoundation/UA-.NETStandard` — the OPC Foundation's reference stack"
+      - "Implemented here: OpenUSD Parts 1 and 2, Positioning, Robotics, WoT Connectivity, xRegistry"
+      - "Two demos show the stack itself: the MCP server, and server redundancy"
+
+  - layout: bullets
+    title: What the stack already carries
+    kicker: Draft models are not slideware here — they are libraries, samples and tests
+    bullets:
+      - text: "**Companion models as first-class libraries**"
+        children:
+          - "`Opc.Ua.OpenUsd` and `Opc.Ua.OpenUsdScene` — both OpenUSD parts, client and server halves"
+          - "`Opc.Ua.WotCon` — WoT Connectivity, with MQTT and HTTP bindings"
+          - "`Opc.Ua.XRegistry` — the base registry projection every domain registry subtypes"
+          - "`Opc.Ua.Robotics` and `Opc.Ua.Positioning` — robot intent, RSL frames and GPOS locations"
+      - text: "**Samples that are the demos** — `samples/Robotics`, `samples/WotCon`, `samples/SiteCompositionServer`, `samples/Redundant*`"
+      - text: "**Source generators** turn a NodeSet into typed proxies, so a companion model is code rather than string literals"
+      - text: "**An MCP server** exposing the full service set, so a language model can drive any address space"
+    takeaway: >-
+      A draft with a running implementation gets reviewed on what it does. A draft without one gets
+      reviewed on what it says.
+    notes: |
+      This slide is the bridge between the specification half of the deck and the demo half. It
+      matters because it changes how the drafts should be read.
+
+      Every model in this repository that has an implementation was shaped by that implementation.
+      The xRegistry base model looks the way it does because three different domain registries were
+      built before it was abstracted. The WoT Connectivity inversion — documents canonical, address
+      space derived — came from discovering that the published 1.02 ordering could not round-trip.
+      Robot Intent has a Part 10 lifecycle rather than a blocking Method because a blocking Method
+      was tried first.
+
+      The source generators are worth a sentence of their own: a companion model arrives as a
+      NodeSet, and the generator emits typed proxies from it, so implementing a draft is mostly
+      writing the behaviour rather than the plumbing. That is why the turnaround from draft to
+      running sample is short enough to be useful during review.
+
+      Point at the two demos in this section. They show the platform rather than a draft, and both
+      answer questions an audience will otherwise ask during the specification slides: how do I
+      explore any of this, and what happens when the Server dies.

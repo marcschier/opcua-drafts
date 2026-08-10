@@ -1,0 +1,132 @@
+id: cloud-01-schema-registry
+section: cloud
+order: 210
+footer: OPC UA — Schema Registry
+slides:
+  - layout: section
+    title: cloud
+    subtitle: >-
+      how a model reaches the systems that consume it, rather than the operators who browse it
+    contents:
+      - Schema Registry
+      - Observability Export
+
+  - layout: bullets
+    title: Why the Schema Registry exists
+    kicker: Schema-based payloads leave the self-describing world
+    bullets:
+      - text: "Avro and Arrow payloads need the **exact schema** that produced them"
+      - text: "Binary, XML and JSON can be decoded from the message or the AddressSpace"
+      - text: "A payload in MQTT, Kafka, a lake or a historian still needs its schema"
+      - text: "A cache miss must not force a client to Browse, infer or regenerate"
+      - text: "PubSub is only one consumer, not the reason the registry exists"
+    takeaway: A schema-based decoder needs a stable schema lookup before it can trust bytes.
+    notes: |
+      The draft opens with the problem, not the registry. Schema-based encodings such as Apache
+      Avro and Apache Arrow require a decoder to obtain the concrete schema document that matches
+      the received payload. OPC UA Binary, XML and JSON do not create the same operational gap:
+      they are self-describing enough, or can be resolved through the server AddressSpace. Once a
+      schema-based payload has left the server in PubSub, a file, a data lake, MQTT, AMQP, Kafka or
+      a historian stream, the consumer needs a reference or identifier that retrieves the exact
+      writer schema. The specification therefore makes schema resolution a server capability, and
+      explicitly says PubSub is a consumer of it rather than a prerequisite.
+
+  - layout: diagram
+    title: What it adds
+    kicker: A concrete xRegistry whose resources are schema files
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: srv, x: 0.3, y: 0.2, w: 3.0, h: 0.8, text: "Server Object", style: deep}
+      - {id: base, x: 4.2, y: 0.2, w: 3.6, h: 0.8, text: "xRegistry base model", style: primary}
+      - {id: reg, x: 0.3, y: 2.0, w: 3.0, h: 1.0, text: "SchemaRegistry", style: accent, lines: ["SchemaRegistryType"]}
+      - {id: group, x: 4.2, y: 2.0, w: 3.2, h: 1.0, text: "<SchemaGroup>", style: pale, lines: ["SchemaGroupType"]}
+      - {id: file, x: 8.4, y: 2.0, w: 3.2, h: 1.0, text: "<Schema>", style: pale, lines: ["SchemaFileType"]}
+      - {id: doc, x: 8.4, y: 4.0, w: 3.2, h: 0.85, text: "schema document", style: green, lines: ["Avro · Arrow · JSON Schema"]}
+    arrows:
+      - {from: srv, to: reg, from_site: 2, to_site: 0, label: HasComponent}
+      - {from: base, to: reg, from_site: 2, to_site: 0, label: subtypes}
+      - {from: reg, to: group, from_site: 3, to_site: 1}
+      - {from: group, to: file, from_site: 3, to_site: 1}
+      - {from: file, to: doc, from_site: 2, to_site: 0, label: Open/Read}
+    captions:
+      - {x: 0, y: 5.4, w: 12, text: "The registry hangs from Server and narrows RegistryType, GroupType and ResourceType.", center: true}
+    notes: |
+      The model is not a private schema table. It is a domain extension of the abstract OPC UA
+      xRegistry companion model. The specification states that its registry, group and resource
+      types are subtypes of the base RegistryType, GroupType and ResourceType, so the schema model
+      inherits the base folder tree, FileTransfer resource shape, labels, auto-bootstrap behavior
+      and federation. SchemaRegistryType is exposed as one well-known SchemaRegistry Object under
+      the standard Server Object, i=2253. SchemaGroupType represents one OPC UA namespace URI.
+      SchemaFileType represents one DataType or PublishedDataSet in one format, and because the
+      base ResourceType is a FileType, reading the schema is ordinary Open, Read and Close.
+
+  - layout: code
+    title: How it works
+    kicker: A decoder resolves by SchemaId first, then falls back
+    intro: A received schema-based message follows the ordered resolution flow.
+    code: |
+      if message.SchemaId:
+          node = OpaqueNodeId(SchemaRegistryNs, message.SchemaId)
+          document = ReadValue(node) or GetSchema(message.SchemaId)
+          if document:
+              cache[message.SchemaId] = document
+              decode(document)
+
+      format = content_type_to_format(message.ContentType)
+      reference = message.SchemaReference
+      document = read(reference) if reference else lookup(namespace, name, version)
+      decode(document)
+    outro: The fast path is one Read; the fallback still ends at a schema file.
+    font_size: 15
+    notes: |
+      The resolution flow is deliberately ordered. If a message carries a SchemaId, the consumer
+      resolves that fingerprint before namespace, name or version lookup. The in-server fast path
+      constructs an Opaque NodeId in the Schema Registry namespace whose identifier bytes are the
+      raw on-wire SchemaId bytes, then reads its Value Attribute. A client may call GetSchema with
+      the same bytes instead. If that path fails, the consumer determines the format from the
+      transport content type, uses an explicit schema reference when one is carried, or resolves the
+      namespace group, schema file and version. The last step is still ordinary FileTransfer over
+      the resolved SchemaFileType. The draft also defines federation and compatible-lineage cases,
+      but the central mechanic is the SchemaId-first cache miss path.
+
+  - layout: bullets
+    title: How it stays decoupled
+    kicker: PubSub integration is additive, not a dependency
+    bullets:
+      - text: "A Server without Part 14 can be a fully conformant schema registry"
+      - text: "`PublishSubscribe` may reference the same `SchemaRegistry` Object"
+      - text: "The optional profile keys DataSet schemas to `ConfigurationVersion`"
+      - text: "Append-only evolution lets compatible Avro and Arrow schemas grow"
+      - text: "xRegistry JSON export is another representation, not another transport"
+    takeaway: The registry is a Server capability first; PubSub uses it when present.
+    notes: |
+      The source is explicit that conformance does not require Part 14. The Schema Registry is a
+      stand-alone capability under the Server Object; a Server that does not implement PubSub is a
+      fully conformant registry if it exposes the mandatory download and identity units. When a
+      Server does implement PubSub, the integration is additive: it may add a reference from the
+      PublishSubscribe Object to the same well-known SchemaRegistry Object, and it may apply the
+      PubSub DataSet schema profile. That profile correlates DataSet schemas with
+      ConfigurationVersion and defines append-only Variant and ExtensionObject schema evolution.
+      The registry also serializes to the xRegistry Schema Registry JSON shape through the base
+      API, but the draft calls that a representation mapping, not a new transport.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Working draft, concrete model, no demo yet
+    bullets:
+      - text: "**Draft version:** 0.5.0, dated 2026-07-31"
+      - text: "**Target body:** OPC Foundation Working Group"
+      - text: "**Proposed Part:** OPC 10000-2xx, number to be assigned"
+      - text: "**Source:** `cloud-specs/schema-registry/OPC-UA-Schema-Registry.md`"
+      - text: "**Open questions:** assigned Part number and final NodeIds"
+      - text: "**Demo:** none yet; the deck leaves that gap visible"
+    takeaway: The draft defines the model now; standardization details are still draft identity.
+    notes: |
+      The version banner in the source says Working draft for submission to the OPC Foundation
+      Working Group, Proposed Part OPC 10000-2xx with the number to be assigned, companion namespace
+      http://opcfoundation.org/UA/SchemaRegistry/, and Version 0.5.0 dated 2026-07-31. The status
+      box also says all of this is a working draft and nothing is normative or endorsed by the OPC
+      Foundation. The Annex shows provisional 62000-range NodeIds for the model, with final NodeIds
+      to be assigned by the OPC Foundation. The overview deck's front-matter table lists no demo
+      for Schema Registry, so this status slide says plainly that there is no demo yet.

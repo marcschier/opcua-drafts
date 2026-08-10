@@ -1,0 +1,95 @@
+id: meta-01-openusd-part1-binding
+section: metaverse
+order: 310
+footer: "OPC UA for OpenUSD — Part 1: Binding"
+slides:
+  - layout: section
+    title: metaverse
+    subtitle: >-
+      Connecting OPC UA to the systems that visualize, perceive and command physical machines
+    contents:
+      - OpenUSD Part 1 (Binding)
+      - OpenUSD Part 2 (Scene Materialization)
+      - Vision
+      - Robot Intent
+      - AI Model Management and Inference
+      - OpenUSD Artifact Registry Service
+
+  - layout: bullets
+    title: Why the OpenUSD binding exists
+    kicker: OPC UA can describe the machine, but the viewer cannot see the mapping
+    bullets:
+      - text: Visual twins still hide OPC UA ↔ USD mapping in connector code
+        children:
+          - Each server-viewer pairing becomes another private bridge
+      - text: NodeIds hard-coded in a renderer break when the AddressSpace changes
+      - text: A USD asset can show a pump before it knows which Object it represents
+      - text: Live values, alarms, history and commands need one discoverable contract
+    takeaway: The gap is not rendering; it is the missing, browsable mapping authority.
+    notes: |
+      The Part 1 draft starts from an integration failure rather than from a graphics feature. Industrial visualizations repeatedly write a bespoke script that maps particular OPC UA NodeIds to particular USD prim attributes. That mapping is invisible to other tools, cannot be discovered, and cannot be reviewed or governed like the rest of the model. The specification calls this the N×M problem: every server and every visualization tool pair can require a new bridge. Part 1 makes the mapping data in the Server address space so a generic connector can browse it and apply it without knowing whether the domain is pumps, robotics, machinery or something else.
+
+  - layout: table
+    title: What it adds
+    kicker: A small binding layer over any companion model
+    table:
+      columns: ["Piece", "Browse shape", "Purpose"]
+      widths: [0.28, 0.32, 0.40]
+      rows:
+        - ["Root", "`Server/OpenUSD`", "One discovery entry point"]
+        - ["Stages", "`OpenUsdStageType`", "Named external USD stages"]
+        - ["Representations", "AddIn on domain Objects", "Object ↔ prim identity"]
+        - ["Telemetry", "`OpenUsdValueChangeBindingType`", "Variable Value → attribute"]
+        - ["Alarms/history", "Concrete binding subtypes", "State and playback intent"]
+        - ["Commands", "`OpenUsdCommandBindingType`", "Opt-in USD → UA action"]
+        - ["Composition", "`OpenUsdComponentBindingType`", "Components → prim hierarchy"]
+        - ["Artifacts", "xRegistry artifact registry", "Served layer closure"]
+    notes: |
+      The model is deliberately thin. The mandatory core is the well-known `Server/OpenUSD` Object, `OpenUsdStageType`, and the `OpenUsdRepresentation` AddIn. The root has `Stages` and `Representations` folders, and optionally `Artifacts` when the Server delivers USD content. A representation carries identity only: the targeted stage and the canonical `PrimPath`. Live bindings are separate children and the intent is their concrete type, such as value-change telemetry, alarm, history or command binding. This lets a Server publish identity alone, add telemetry later, and implement optional command, composition and asset-delivery capabilities only when needed.
+
+  - layout: code
+    title: How it works — discovery
+    kicker: A connector starts at one well-known browse path
+    intro: The contract is discoverable before the connector knows the domain model.
+    code: |
+      Server
+        OpenUSD : OpenUsdRootType
+          Stages
+            PlantStage : OpenUsdStageType
+          Representations
+            OpenUsdRepresentation : OpenUsdRepresentationType
+              Stage = PlantStage
+              PrimPath = /Plant/Pumps/P101
+              Speed : OpenUsdValueChangeBindingType
+              Alarm : OpenUsdAlarmBindingType
+    outro: Representation gives identity; child bindings give value, alarm or command intent.
+    font_size: 16
+    notes: |
+      The specification says a conforming Server exposes exactly one well-known Object named `OpenUSD` as a component of the Server Object. Under it, `Stages` organizes the `OpenUsdStageType` instances and `Representations` organizes every representation AddIn in the Server. A connector therefore does not scan the whole address space looking for a convention. It browses `Server/OpenUSD/Representations`, follows `Organizes` to each AddIn, reads the target stage and prim path, and then reads the concrete binding children to learn which OPC UA Variables drive which USD attributes.
+
+  - layout: bullets
+    title: How it works — safe binding
+    kicker: The mapping is explicit, typed by intent and fail-closed where it controls
+    bullets:
+      - text: Sources resolve by NodeId, RelativePath or semantic id
+      - text: Targets name a stage, prim path, property and USD type
+      - text: Connectors do not fall back to nearest prims or compatible names
+      - text: Commands require a command subtype, authorization and connector opt-in
+      - text: Asset bytes can be streamed as Part 5 files and digest-verified
+    takeaway: A generic connector can be portable without guessing.
+    notes: |
+      Part 1 is strict about both ends of a binding. The source resolves to one OPC UA Variable, preferably by a portable RelativePath or semantic id when a type-level declaration should work across instances or vendors. The target declares the stage, prim path, USD property name and expected `Sdf` type; when a Part 2 materialized scene is the target, a `TargetNodeId` may point directly at the `UsdAttributeType` Variable. The connector validates rather than guessing: no nearest-prim fallback, no first compatible name, and no creation of a property unless an explicit authoring profile permits it. In the reverse direction, command bindings are declared deliberately and actuated only when connector configuration and RolePermissions allow it.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Working-group draft under OPC Foundation review
+    bullets:
+      - text: "Specification banner: **Release 0.6.0 — Draft**"
+      - text: "Target body: OPC Foundation companion-model review"
+      - text: "Review repository: `OPCF-Members/spec-drafts`"
+      - text: "Source path: `metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md`"
+      - text: "Reference implementation: `src/Opc.Ua.OpenUsd*`"
+      - text: "Demos: **2** robot cell and **3** pump/site composition"
+    takeaway: "Open questions are the reserved profiles: Actions, PubSub and domain USD schemas."
+    notes: |
+      The source specification identifies itself as `Release 0.6.0 — Draft` with namespace `http://opcfoundation.org/UA/OpenUSD/` and publication date 2026-07-31. It is one of the OpenUSD parts under OPC Foundation review and is maintained in `OPCF-Members/spec-drafts` while that review runs. The .NET stack guide says the implemented libraries include the generated model, client connector, server authoring helpers, connector tool and optional viewer under the `Opc.Ua.OpenUsd` package family. The demos that exercise it are the robot cell, where RSL and GPOS values drive a live USD view, and the pump/site composition flow. The spec explicitly reserves Part 14 Actions, PubSub realization and normative geometry/material/skeleton/physics profiles for later work.

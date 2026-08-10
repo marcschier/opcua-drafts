@@ -1,0 +1,127 @@
+id: wot-01-wot-binding
+section: wot
+order: 410
+footer: OPC UA — Web of Things Binding
+slides:
+  - layout: section
+    title: wot — Web of Things
+    subtitle: >-
+      W3C Thing Description documents, OPC UA models and one registry-shaped way to serve them
+    contents:
+      - OPC UA — Web of Things Binding
+      - OPC UA — WoT Connectivity
+
+  - layout: bullets
+    title: Why the WoT Binding exists
+    kicker: Thing Descriptions cannot carry every OPC UA model fact today
+    bullets:
+      - text: A TD can target a value, but OPC UA knows more than a value path
+      - text: Session-local namespace indexes make persisted documents fragile
+      - text: ObjectTypes, references, units and modelling rules need readable terms
+      - text: A round-trip must not drop facts the vocabulary cannot yet express
+    takeaway: The gap is lossless model identity, not another wire protocol.
+    notes: |
+      The Binding draft defines how a W3C Thing Description and Thing Model describe an OPC UA
+      interface, and how those documents convert to and from NodeSet2. Its problem statement is
+      that the published OPC 10101 vocabulary already carries enough metadata for a client to open
+      a session and use Read, Write, Observe and Call, but an OPC UA information model contains
+      structural facts that are not just endpoint metadata. The draft therefore requires portable
+      identifiers and names rather than session-local namespace indexes, and it provides readable
+      vocabulary for the model facts that have to survive storage, conversion and review.
+
+  - layout: table
+    title: What it adds
+    kicker: Three layers, each usable on its own
+    table:
+      columns: ["Layer", "Adds", "Why it matters"]
+      widths: [0.25, 0.36, 0.39]
+      rows:
+        - ["Protocol", "Read / Write / Observe / Call", "Keeps OPC 10101 behaviour"]
+        - ["Security", "`uav:channelsec`, auth", "Selects UA security settings"]
+        - ["Model", "Types, refs, units, rules", "Carries ObjectType facts"]
+        - ["Native", "`uav:nodes` projection", "Covers incomplete vocabulary"]
+        - ["Archive", "`uav:nodeSet` envelope", "Pins exact NodeSet2 bytes"]
+        - ["View", "`uav:projection` terms", "Builds selected UA Views"]
+    notes: |
+      The scope section names the three layers. The preserved protocol binding is byte-for-byte
+      compatible with the published baseline vocabulary and semantics: a TD can describe how to
+      open an OPC UA session, choose security, and Read, Write, Observe or Call an affordance. The
+      model and platform vocabulary adds the structural side: composition, references,
+      containment, units, scaling, configuration, metadata and modelling rules. The NodeSet2
+      conversion makes the readable vocabulary primary, uses `uav:nodes` when the readable terms
+      are not complete, and reserves `uav:nodeSet` for explicit byte-exact archival or unsupported
+      future constructs.
+
+  - layout: code
+    title: How it works — readable vocabulary
+    kicker: A TD fragment can name OPC UA identity and operations
+    intro: The `uav` terms stay beside the W3C TD terms.
+    code: |
+      {
+        "@context": [
+          "https://www.w3.org/2022/wot/td/v1.1",
+          { "uav": "http://opcfoundation.org/UA/WoT-Binding/" }
+        ],
+        "@type": ["Thing", "uav:object"],
+        "uav:id": "nsu=http://example.com/demo/pump;s=Pump1",
+        "uav:browseName": "pump:PumpType",
+        "properties": {
+          "speed": {
+            "type": "number",
+            "uav:browsePath": "pump:Speed",
+            "forms": [{ "href": "opc.tcp://host/UA?s=Pump1.Speed",
+                         "op": ["readproperty", "observeproperty"] }]
+          }
+        }
+      }
+    outro: Identity is portable; the form still describes the route.
+    font_size: 12
+    notes: |
+      The actual examples in the specification bind the base WoT context, bind `uav` to the OPC UA
+      WoT Binding namespace, and then use terms such as `uav:id`, `uav:browseName` and
+      `uav:browsePath` on the Thing or affordance. The important rule is portability. A persisted
+      readable `uav:id` is an ExpandedNodeId and must not use the session-local `ns=<index>` form;
+      a BrowseName can use a context-bound compact prefix or the `nsu=<NamespaceUri>;Name` form.
+      The form remains the route to the endpoint and operations, while the `uav` terms describe the
+      OPC UA node identity and model meaning that route reaches.
+
+  - layout: bullets
+    title: How it round-trips
+    kicker: Readable terms are primary; preservation is explicit
+    bullets:
+      - text: NodeSet2 → WoT uses readable `uav` terms where they are complete
+      - text: "`uav:nodes` carries structured source facts the terms cannot express"
+      - text: "`uav:nodeSet` is reserved for byte-exact archival with a digest"
+      - text: Malformed vocabulary values invalidate the document, not the model silently
+      - text: Projection documents resolve selected affordances into OPC UA Views
+    takeaway: The converter can be readable without being lossy.
+    notes: |
+      The NodeSet conversion clauses make a strong distinction between ordinary readable mapping
+      and preservation. A converter emits semantic `uav` terms first. When a source NodeSet carries
+      information the readable vocabulary cannot express yet, the complete structured `uav:nodes`
+      projection carries the native model facts. The exceptional `uav:nodeSet` envelope is not the
+      default path; it is used for explicit byte-exact archival or future unsupported constructs
+      and is protected by a digest. The .NET implementation documents the same rule: the converter
+      preserves a byte-exact envelope when requested, otherwise uses `uav:nodes` or synthesizes
+      NodeSet2 from the readable terms, with invalid terms reported as diagnostics.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Standalone OPC 10101 revision under OPC Foundation review
+    bullets:
+      - text: "**Draft version:** Release 1.1-draft3, dated 2026-07-29"
+      - text: "**Target body:** OPC Foundation Web of Things review"
+      - text: "**Review repository:** `OPCF-Members/spec-drafts`"
+      - text: "**Source:** `wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md`"
+      - text: "**Implementation:** `WotNodeSetConverter` and protocol binders"
+      - text: "**Demos:** **4** pumps via WoT and **7** AAS + WoT + xRegistry"
+    takeaway: The binding supplies the vocabulary; Connectivity supplies the registry-backed server.
+    notes: |
+      The specification banner identifies the draft as `Release 1.1-draft3 — Draft`, a standalone
+      revision of OPC 10101 v1.00, namespace `http://opcfoundation.org/UA/WoT-Binding/`, prefix
+      `uav`, and publication date 2026-07-29. The repository overview says the WoT Binding is under
+      OPC Foundation review in `OPCF-Members/spec-drafts`. The .NET stack documents the current
+      implementation in `Opc.Ua.Wot.WotNodeSetConverter`, including `uav:nodes`, `uav:nodeSet`,
+      residue preservation, Section 6 model vocabulary validation and view projection support; the
+      binding runtime also ships HTTP, Modbus, OPC UA and MQTT execution paths for WoT forms.
+

@@ -1,0 +1,48 @@
+id: meta-06-openusd-artifact-registry
+section: metaverse
+order: 360
+footer: OpenUSD Artifact Registry Service
+slides:
+  - layout: bullets
+    title: Why the USD Artifact Registry exists
+    kicker: USD assets resolve by deployment convention, not by a standard registry
+    bullets:
+      - text: "A layer's `@...@` reference says nothing about where bytes live"
+      - text: File shares, object stores and vendor services do not interoperate
+      - text: A consumer must know whether the dependency closure is complete
+      - text: Integrity, version and federation metadata need one document shape
+    takeaway: The missing piece is a registry-backed asset resolver contract.
+    notes: |
+      The xRegistry OpenUSD draft begins with USD's asset-resolution gap. A USD layer writes an asset identifier such as `@./pump.usda@` and delegates retrieval to an asset resolver. In practice every deployment invents its own backing store, and those answers do not tell a consumer whether it has all referenced layers, packages, textures, MaterialX documents, volumes and schema plugins. The registry exists to make that set discoverable, verifiable, versioned and federatable. It is proposed to xregistry.org rather than to the OPC Foundation, which is why this document remains in the public repository while the OPC UA OpenUSD parts are under review.
+
+  - layout: table
+    title: What it adds
+    kicker: An xRegistry domain model for OpenUSD artifacts
+    table:
+      columns: ["Model piece", "Collection", "Contract"]
+      widths: [0.30, 0.30, 0.40]
+      rows:
+        - ["Asset container", "`usdassetgroups`", "Scene unit and root layer"]
+        - ["USD artifact", "`usdassets`", "Layer, texture, package, plugin"]
+        - ["Root layer", "`rootlayer`", "Composition entry point"]
+        - ["Identifier", "`assetidentifier`", "Authored USD reference"]
+        - ["Role", "`assetkind`", "Root, sublayer, payload, texture"]
+        - ["Closure", "`dependson`", "Direct dependency list"]
+        - ["Integrity", "`digest` + `digestalg`", "Verify retrieved bytes"]
+        - ["Schema plugins", "`usdschemaplugingroups`", "PlugInfo and generated schema"]
+    notes: |
+      This is a domain extension of the `core-specs/xregistry` base model, not a new OPC UA companion model. It subtypes the xRegistry concepts by defining OpenUSD-specific groups and resources. Asset Container Groups use the `usdassetgroups` collection and hold the artifacts that compose one scene unit. The resource collection is `usdassets`; a resource is a versioned umbrella over concrete artifact bytes. The `assetidentifier` is required and remains the authored USD identifier, while the `usdassetid` is a symbolic identifier derived from it. `assetkind` records the artifact's role in the composition closure, `dependson` records direct references, and `digest` plus `digestalg` let a consumer verify retrieved bytes.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: Public xRegistry-domain draft, peer to the OPC UA projection
+    bullets:
+      - text: "Specification banner: **Version 1.0-rc1**"
+      - text: "Target body: xregistry.org domain specification"
+      - text: "Source path: `metaverse-specs/openusd-binding/xRegistry-OpenUsd.md`"
+      - text: It stays public while OpenUSD Parts 1 and 2 are under OPCF review
+      - text: "It subtypes the `core-specs/xregistry` base model"
+      - text: It is the artifact store behind Part 1 asset delivery
+    takeaway: Open questions are cross-registry validation and resolver policy.
+    notes: |
+      The document title is `OpenUSD Artifact Registry Service - Version 1.0-rc1`. The repository README explains that it is proposed to xregistry.org rather than to the OPC Foundation, so it remains in the public `metaverse-specs/openusd-binding` tree while the two OPC UA OpenUSD parts are reviewed privately. Its relationship to OPC UA is as a peer projection: the same collections, attribute names and identifier rules can appear in an OPC UA AddressSpace where each artifact is read through the OPC UA file-transfer interface. Part 1 uses that shape for optional asset content delivery, but this draft itself is an xRegistry document and API specification.

@@ -1,0 +1,34 @@
+id: 02-robot-gpos-rsl-usd
+section: metaverse
+order: 345
+footer: OPC UA demos — Robot with GPOS/RSL and USD
+slides:
+  - layout: demo
+    title: Demo 2 — Robot with GPOS/RSL and USD
+    kicker: One robot server composes Robotics, RSL, GPOS and OpenUSD
+    state: master
+    see:
+      - Two mobile robots move in the OpenUSD viewport
+      - RSL frames drive robot-relative transforms
+      - GPOS values drive global location attributes
+      - The connector uses no robot-specific bridge
+    parts:
+      - MinimalRobotServer publishes the robot cell
+      - Opc.Ua.Positioning supplies RSL and GPOS
+      - Opc.Ua.OpenUsd.Connector renders the stage
+      - OpenUSD viewer shows live subscribed values
+    run:
+      - pwsh decks\demos\02-robot-gpos-rsl-usd\run-demo.ps1
+    proves: >-
+      OpenUSD bindings and scene materialization can make a companion-model robot cell visible
+      directly from OPC UA, with RSL and GPOS providing the pose context.
+    notes: |
+      Start by naming the three companion-model layers in the same server: OPC 40010 Robotics
+      describes the robot cell, OPC 10000-210 RSL gives the relative frame chain, and OPC
+      10000-211 GPOS gives the global position. Then point at the viewport. The connector is
+      generic; it discovers the OpenUSD representations under the Server object and streams
+      subscribed OPC UA values into the stage. The important claim is not that a robot can be
+      drawn. The claim is that the model, the spatial frame chain, the global position, and the
+      visual binding are all browseable OPC UA content, so another client can discover the same
+      contract without a private robot-viewer bridge.
+

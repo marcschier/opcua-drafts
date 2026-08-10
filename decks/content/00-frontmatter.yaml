@@ -1,0 +1,144 @@
+id: 00-frontmatter
+section: front
+order: 10
+footer: OPC UA specification drafts — overview
+slides:
+  - layout: title
+    title: Eighteen OPC UA drafts, and what they run on
+    subtitle: >-
+      Working drafts from `marcschier/opcua-drafts` — what each one is, the gap in OPC UA it
+      closes, and ten demos showing them on the OPC UA .NET Standard stack
+    byline:
+      - "Public drafts: github.com/marcschier/opcua-drafts  ·  Under OPC Foundation review: github.com/OPCF-Members/spec-drafts"
+      - "Reference implementation: github.com/OPCFoundation/UA-.NETStandard"
+
+  - layout: statement
+    statement: >-
+      Every draft here started the same way: something that ought to be one line of OPC UA
+      turned out to need a bridge, a second port, or a private invention.
+    attribution: The eighteen documents are eighteen answers to that.
+
+  - layout: bullets
+    title: What this deck covers
+    kicker: Eighteen working drafts across five trees, and the ten demos that exercise them
+    bullets:
+      - text: "**Five trees, one argument**"
+        children:
+          - "`core` — proposed additions to the base OPC UA namespace: Data Channels, Arrow, Async Services, Avro, xRegistry"
+          - "`cloud` — a Server's cloud-facing surface: Schema Registry, Observability Export"
+          - "`metaverse` — worlds, perception, robot control: OpenUSD Parts 1 and 2, Vision, Robot Intent, AI Model Management, USD Artifact Registry"
+          - "`wot` — Web of Things: WoT Binding, WoT Connectivity"
+          - "`companion` — domain models: Generators (GenSets), Asset Administration Shell 3.0"
+      - text: "**Ten demos**, each next to the draft it demonstrates"
+        children:
+          - "Six run on the stack's `master` today; two need a feature branch; two are walkthroughs while the code catches up"
+      - text: "**Every effort gets the same four beats** — why it exists, what it adds, how it works, where it stands"
+    takeaway: >-
+      Nothing here is normative. Namespace URIs and NodeIds are provisional, and five drafts are
+      under OPC Foundation review.
+    notes: |
+      Set expectations up front. This is a scratch pad that grew into a coherent body of work: the
+      specifications were written against real gaps found while building the .NET Standard stack,
+      which is why most of them have running code behind them.
+
+      The five under OPC Foundation review — Avro, OpenUSD Parts 1 and 2, WoT Binding, WoT
+      Connectivity — moved to the members' repository while the review runs. They are covered here
+      at the same depth as the rest.
+
+  - layout: diagram
+    title: How it all fits
+    kicker: xRegistry is the spine — almost everything else is a domain extension of it or an encoding beside it
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: ua, x: 0, y: 0, w: 12, h: 0.85, text: "OPC UA AddressSpace — Parts 3, 4, 5, 6, 11, 14", style: deep, font_size: 13}
+      - {id: xreg, x: 3.4, y: 1.25, w: 5.2, h: 0.95, text: "xRegistry base model", style: primary, font_size: 13, lines: ["registry = FolderType · version = FileType"]}
+      - {id: schema, x: 0, y: 3.0, w: 2.7, h: 1.15, text: "Schema Registry", style: pale, font_size: 11, lines: ["schemas for Avro and Arrow"]}
+      - {id: wotcon, x: 3.0, y: 3.0, w: 2.7, h: 1.15, text: "WoT Connectivity", style: pale, font_size: 11, lines: ["TM / TD documents"]}
+      - {id: usdreg, x: 6.0, y: 3.0, w: 2.7, h: 1.15, text: "USD Artifact Registry", style: pale, font_size: 11, lines: ["layers, assets, textures"]}
+      - {id: aas, x: 9.0, y: 3.0, w: 3.0, h: 1.15, text: "AAS Registry", style: pale, font_size: 11, lines: ["shells and submodels"]}
+      - {id: enc, x: 9.0, y: 1.25, w: 3.0, h: 0.95, text: "Encodings", style: accent, font_size: 12, lines: ["Avro · Arrow · Data Channels"]}
+      - {id: meta, x: 0, y: 4.6, w: 5.6, h: 0.95, text: "OpenUSD Parts 1 & 2 · Vision · Robot Intent", style: purple, font_size: 11}
+      - {id: ops, x: 6.4, y: 4.6, w: 5.6, h: 0.95, text: "Observability Export · AI Model Management", style: green, font_size: 11}
+    arrows:
+      - {from: ua, to: xreg, from_site: 2, to_site: 0}
+      - {from: xreg, to: schema, from_site: 2, to_site: 0}
+      - {from: xreg, to: wotcon, from_site: 2, to_site: 0}
+      - {from: xreg, to: usdreg, from_site: 2, to_site: 0}
+      - {from: xreg, to: aas, from_site: 2, to_site: 0}
+    captions:
+      - {x: 0, y: 5.72, w: 12, text: "One projection, defined once — every domain registry is the same shape rather than a private invention", center: true}
+    notes: |
+      The single most important structural claim in the deck: xRegistry is not one more
+      specification, it is the shape the others share.
+
+      Read it top down. The base OPC UA AddressSpace is the substrate. xRegistry projects any
+      registry onto it — a registry or group is a FolderType, a resource version is a Part 5
+      FileType, so a resource is streamed with Open/Read/Close rather than a bespoke method. Every
+      domain registry below subtypes that: schema documents, Thing Descriptions, USD artifacts, AAS
+      shells. On the right, the encodings sit beside the model rather than under it, because they
+      are Part 6 and Part 14 mappings, not address-space content.
+
+      The payoff: a client that can browse one registry can browse all of them, and a schema
+      registry is not a special case of PubSub.
+
+  - layout: table
+    title: The eighteen at a glance
+    kicker: Status, target body and whether there is running code
+    table:
+      columns: ["Draft", "Tree", "Status", "Demo"]
+      widths: [0.44, 0.16, 0.22, 0.18]
+      rows:
+        - ["Data Channels", "core", "Draft 0.1.1", "8 — media"]
+        - ["Apache Arrow Encoding", "core", "Draft 0.1.0", "—"]
+        - ["Asynchronous Service Execution", "core", "Draft 0.1.0", "—"]
+        - ["Apache Avro DataEncoding", "core", "Under OPCF review", "—"]
+        - ["xRegistry (base model)", "core", "Draft 0.3.0", "7 — AAS/WoT"]
+        - ["xRegistry — OPC UA API", "core", "Draft 0.1.0 → xregistry.org", "—"]
+        - ["Schema Registry", "cloud", "Draft 0.5.0", "—"]
+        - ["Observability Export", "cloud", "Draft 0.1.0", "—"]
+        - ["OpenUSD Part 1 — Binding", "metaverse", "Under OPCF review", "2, 3"]
+        - ["OpenUSD Part 2 — Scene Materialization", "metaverse", "Under OPCF review", "2, 3"]
+        - ["Vision", "metaverse", "Draft 0.1.0", "9 — walkthrough"]
+        - ["Robot Intent", "metaverse", "Draft 0.1.0", "2, 5"]
+        - ["AI Model Management and Inference", "metaverse", "Draft 0.4.0", "10 — branch"]
+        - ["OpenUSD Artifact Registry", "metaverse", "Draft → xregistry.org", "—"]
+        - ["WoT Binding", "wot", "Under OPCF review", "4, 7"]
+        - ["WoT Connectivity", "wot", "Under OPCF review", "4, 7"]
+        - ["Generators (GenSets)", "companion", "Draft 1.0.0", "—"]
+        - ["Asset Administration Shell 3.0", "companion", "Draft 3.0.0 — open PR", "7 — walkthrough"]
+    notes: |
+      Use this as the map. Come back to it between trees if the audience loses the thread.
+
+      Three things worth saying out loud. First, "Under OPC Foundation review" means submitted and
+      being read under member confidentiality — the drafts moved to OPCF-Members/spec-drafts, and
+      members can request access. Second, two drafts are aimed at xregistry.org rather than at the
+      OPC Foundation, which is why they stay public while the OPC UA parts are under review. Third,
+      the demo column is deliberately sparse: nine of the eighteen have no demo yet, and the deck
+      shows that rather than hiding it.
+
+  - layout: table
+    title: The ten demos
+    kicker: What runs today, what needs a branch, what is still a walkthrough
+    table:
+      columns: ["#", "Demo", "Shows", "State"]
+      widths: [0.05, 0.34, 0.4, 0.21]
+      rows:
+        - ["1", "OPC UA MCP server", "Any address space, driven by a language model", "Runs on `master`"]
+        - ["2", "Robot + GPOS/RSL + USD", "Robot Intent, OpenUSD, Parts 210/211", "Runs on `master`"]
+        - ["3", "Pump USD and composition", "OpenUSD Parts 1 and 2, site composition", "Runs on `master`"]
+        - ["4", "Pumps via WoT Connectivity", "WoT Binding and Connectivity, TD-driven aggregation", "Runs on `master`"]
+        - ["5", "Robot intent viewer plus MCP", "Robot Intent lifecycle, live viewer", "Runs on `master`"]
+        - ["6", "Server redundancy", "Transparent failover, subscription transfer", "Runs on `master`"]
+        - ["7", "AAS + WoT + xRegistry", "One asset, three projections", "Walkthrough"]
+        - ["8", "Media over Data Channels", "Video on an open SecureChannel", "Feature branch"]
+        - ["9", "Vision", "Camera, inference, published result", "Walkthrough"]
+        - ["10", "AI model loading", "Model lifecycle, provenance, rollout", "Feature branch"]
+    notes: |
+      Every demo has a presenter walkthrough and, where the code exists, a runnable PowerShell
+      script under decks/demos/. The scripts check prerequisites, build only what they need, start
+      the servers, run the client and tear down — so a demo can be run cold on a machine with the
+      .NET SDK and a clone of the stack.
+
+      The two feature-branch demos print the exact git switch command and refuse to run on a branch
+      that lacks the code, rather than failing obscurely halfway through.

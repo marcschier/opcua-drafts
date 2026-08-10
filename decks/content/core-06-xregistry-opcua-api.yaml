@@ -1,0 +1,47 @@
+id: core-06-xregistry-opcua-api
+section: core
+order: 160
+footer: xRegistry — OPC UA API
+slides:
+  - layout: bullets
+    title: Why the OPC UA API exists
+    kicker: The projection needs a protocol binding on both sides
+    bullets:
+      - text: "The base model defines the AddressSpace shape"
+      - text: "xRegistry also defines protocol APIs over that model"
+      - text: "If HTTP alone is specified, OPC UA becomes a private binding"
+      - text: "The OPC UA binding makes Browse, Read, Call and FileTransfer normative"
+      - text: "The same projection is defined once across the boundary"
+    takeaway: "This is the xRegistry peer of the HTTP binding, not another OPC UA model."
+    notes: |
+      The scope says this document defines how a registry, groups, resources, versions, documents and attributes are discovered, read, created, updated and deleted natively over OPC UA Services while realizing the xRegistry core model on the OPC UA AddressSpace and FileTransfer model. That is why it belongs beside xRegistry's HTTP binding. The information model says what nodes exist; the API binding says how a client uses Browse, BrowseNext, Read, Write, Call, TranslateBrowsePathsToNodeIds and FileTransfer Methods against those nodes. Without this document, every OPC UA Server could expose the same `RegistryType` tree but choose different operation sequences and error mappings, turning the projection back into private convention.
+
+  - layout: table
+    title: What it adds
+    kicker: A native OPC UA binding for xRegistry operations
+    table:
+      columns: ["xRegistry action", "OPC UA binding"]
+      widths: [0.42, 0.58]
+      rows:
+        - ["List collections", "Browse folders; use BrowseNext for pages"]
+        - ["Read metadata", "Read Properties and `Labels` entries"]
+        - ["Read documents", "`Open` / `Read` / `Close` on `ResourceType`"]
+        - ["Create entities", "`Create*` or `GetOrCreate*` Methods"]
+        - ["Update labels", "`Labels.AddAttribute` / `RemoveAttribute`"]
+        - ["Delete entities", "`Delete(ExpectedEpoch)` on the entity"]
+        - ["Map HTTP paths", "Annex A cross-walks peer operations"]
+    notes: |
+      The operation model is deliberately boring OPC UA. A collection is a folder, so listing is Browse with continuation points. Metadata is Properties plus the optional `Labels` `AttributesType` container. A resource or version document is a `ResourceType` file, so document bytes use inherited FileTransfer Methods. Creating and resolving groups and resources uses `CreateGroup`, `GetOrCreateGroup`, `CreateResource` and `GetOrCreateResource`; deletion calls `Delete(ExpectedEpoch)` on the group or resource node being removed. The document also defines the distinction between resource metadata and resource document as an operation choice on the same `ResourceType` node, not as a separate base `Meta` object. Annex A does not derive the OPC UA API from HTTP, but it shows the peer correspondence for readers who know the HTTP binding.
+
+  - layout: bullets
+    title: Status and where it lives
+    kicker: xregistry.org submission as `core/opcua.md`
+    bullets:
+      - text: "Version banner: **0.1.0**, dated 2026-07-16"
+      - text: "Target: xRegistry project as `core/opcua.md` or an extension"
+      - text: "Path: `core-specs/xregistry/xRegistry-OPC-UA-Api.md`"
+      - text: "Depends on the OPC UA — xRegistry base model"
+      - text: "Open: xregistry.org acceptance and final placement"
+      - text: "No demo is listed for this binding document"
+    notes: |
+      The file banner states the status and target directly: working draft for submission to the xRegistry project or organization, targeted as `core/opcua.md` or as an xRegistry extension proposal. It is not proposed as an OPC Foundation Part. The document references the OPC UA xRegistry information model as its substrate and then defines a self-contained OPC UA API binding. Its conformance clause distinguishes read-only, writable, export-capable and client conformance, and it requires no node or Method name beyond the base model, OPC 10000-20 or a domain companion specification. The public repository overview summarizes the point: the projection is defined once, on both sides of the boundary, with the OPC UA binding as a peer of xRegistry's HTTP binding.

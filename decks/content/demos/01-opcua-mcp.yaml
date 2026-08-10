@@ -1,0 +1,30 @@
+id: 01-opcua-mcp
+section: stack
+order: 710
+footer: OPC UA — MCP server
+slides:
+  - layout: demo
+    title: "Demo 1 — OPC UA MCP server"
+    kicker: Any OPC UA address space as model-callable tools
+    state: master
+    see:
+      - "Reference Server starts on `opc.tcp://localhost:62541`"
+      - "`opcua-mcp` exposes Streamable HTTP at `/mcp`"
+      - The model connects, browses, reads and subscribes
+      - "Method calls stay normal OPC UA `Call` service calls"
+    parts:
+      - "`samples\\ConsoleReferenceServer`"
+      - "`tools\\Opc.Ua.Mcp`"
+      - "`tools\\Opc.Ua.Mcp.Core`"
+      - Optional diagnostics and PubSub tool libraries
+    run:
+      - "pwsh decks\\demos\\01-opcua-mcp\\run-demo.ps1"
+    proves: The stack can make a standard Server operable by an agent without a bespoke client.
+    notes: |
+      The demo is deliberately plain. Start a normal OPC UA Reference Server, then put the MCP server
+      beside it. The model sees tools such as Connect, BrowseAll, ReadValue, WriteValue, CallMethod,
+      CreateSubscription, CreateMonitoredItems and Publish. It also sees MCP resources for sessions
+      and namespace tables. Stress that this does not add an AI protocol to the Server. The Server
+      still speaks OPC UA; MCP is a bounded client-side tool surface over the same Part 4 services.
+      That is why the same tool can later drive Robot Intent in demo 5.
+

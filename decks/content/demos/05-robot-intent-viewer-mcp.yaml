@@ -1,0 +1,30 @@
+id: 05-robot-intent-viewer-mcp
+section: metaverse
+order: 346
+footer: OPC UA — Robot Intent
+slides:
+  - layout: demo
+    title: "Demo 5 — robot intent viewer plus MCP"
+    kicker: Task-level robot commands with a live viewer
+    state: master
+    see:
+      - Intent robot publishes frames, tools and target locations
+      - Viewer discovers facets and tracks Part 10 operations
+      - MCP tools submit the same task intent
+      - Safety and authority refusals are visible outcomes
+    parts:
+      - "`samples\\Robotics\\IntentEnabledRobot`"
+      - "`samples\\Robotics\\IntentViewerClient`"
+      - "`tools\\Opc.Ua.Mcp`"
+      - Robot Intent draft NodeSet and client APIs
+    run:
+      - "pwsh decks\\demos\\05-robot-intent-viewer-mcp\\run-demo.ps1"
+    proves: Robot Intent commands OPC 40010 robots through RI-Interop-40010 without duplicating topology.
+    notes: |
+      The presenter should keep the distinction crisp. OPC 40010 describes the robot, while Robot
+      Intent commands it with task-level DataTypes and tracks each submission as a Part 10 operation.
+      The viewer is a normal OPC UA client: it discovers the controller, reads capabilities and target
+      mappings, requests command authority and subscribes to operation state. MCP is just another
+      client path over the same services. Emphasize that safety is not commanded here; the server
+      observes safety state and refuses work with structured outcomes.
+
