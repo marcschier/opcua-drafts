@@ -1,0 +1,31 @@
+{
+  "arrow": {
+    "arrow": "int32",
+    "detail": "int32",
+    "opcua": "ScenarioBindingDirectionEnum"
+  },
+  "kind": "Enumeration",
+  "members": [
+    {
+      "name": "Publisher",
+      "value": 0
+    },
+    {
+      "name": "Subscriber",
+      "value": 1
+    },
+    {
+      "name": "ActionInvoker",
+      "value": 2
+    },
+    {
+      "name": "ActionResponder",
+      "value": 3
+    },
+    {
+      "name": "Bidirectional",
+      "value": 4
+    }
+  ],
+  "name": "ScenarioBindingDirectionEnum"
+}

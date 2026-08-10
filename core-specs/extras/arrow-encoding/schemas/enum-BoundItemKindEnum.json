@@ -15,28 +15,36 @@
       "value": 1
     },
     {
-      "name": "Metric",
+      "name": "Configuration",
       "value": 2
     },
     {
-      "name": "Counter",
+      "name": "Metric",
       "value": 3
     },
     {
-      "name": "Event",
+      "name": "Counter",
       "value": 4
     },
     {
-      "name": "Dimension",
+      "name": "Event",
       "value": 5
     },
     {
-      "name": "Identification",
+      "name": "Command",
       "value": 6
     },
     {
-      "name": "Other",
+      "name": "Setpoint",
       "value": 7
+    },
+    {
+      "name": "Identification",
+      "value": 8
+    },
+    {
+      "name": "Other",
+      "value": 9
     }
   ],
   "name": "BoundItemKindEnum"
