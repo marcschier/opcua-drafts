@@ -30,6 +30,10 @@ python decks/build_deck.py --check --strict
 
 Requires `python-pptx` and `PyYAML`.
 
+The build is **deterministic** — like the generators elsewhere in this repository, rebuilding
+without a content change produces a byte-identical `.pptx`, so a clean `git status` after a rebuild
+confirms the deck matches its source.
+
 ## Content model
 
 Every file under `content/` is one YAML document describing a run of slides:

@@ -27,7 +27,9 @@ reference.
 from __future__ import annotations
 
 import argparse
+import io
 import sys
+import zipfile
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -915,6 +917,30 @@ def build(docs: list[dict[str, Any]]) -> Deck:
     return deck
 
 
+def make_deterministic(path: Path) -> None:
+    """
+    Rewrite the saved ``.pptx`` so two builds of the same content are byte-identical.
+
+    A ``.pptx`` is a zip, and zip members carry a modification time, so an
+    untouched rebuild would otherwise show up as a diff. Member order is
+    preserved because OOXML readers expect ``[Content_Types].xml`` first.
+    """
+    fixed_time = (1980, 1, 1, 0, 0, 0)
+    with zipfile.ZipFile(path) as source:
+        members = [(info, source.read(info.filename)) for info in source.infolist()]
+
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as target:
+        for info, data in members:
+            replacement = zipfile.ZipInfo(info.filename, date_time=fixed_time)
+            replacement.compress_type = zipfile.ZIP_DEFLATED
+            replacement.external_attr = info.external_attr
+            replacement.internal_attr = info.internal_attr
+            replacement.create_system = 0
+            target.writestr(replacement, data)
+    path.write_bytes(buffer.getvalue())
+
+
 def print_outline(docs: list[dict[str, Any]]) -> None:
     """
     Print the deck's running order: one line per slide, grouped by content file.
@@ -966,6 +992,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.check:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         deck.prs.save(args.out)
+        make_deterministic(args.out)
         print(f"wrote {args.out} \u2014 {deck.slide_count} slides from {len(docs)} content files")
     else:
         print(f"checked {deck.slide_count} slides from {len(docs)} content files")
