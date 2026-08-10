@@ -153,7 +153,7 @@ any prior understanding or agreement (oral or written) relating to, this compani
   - [F.3 Terms](#f3-terms)
   - [F.4 A worked Thing Description](#f4-a-worked-thing-description)
   - [F.5 Implementer notes](#f5-implementer-notes)
-  - [F.6 What the published vocabulary achieves without the type binding](#f6-what-the-published-vocabulary-achieves-without-the-type-binding)
+  - [F.6 Type-binding conformance](#f6-type-binding-conformance)
 - [Annex G — Correspondence to the AAS API of IDTA-01002 Part 2](#annex-g--correspondence-to-the-aas-api-of-idta-01002-part-2)
 
 ## 1 Scope
@@ -3039,7 +3039,8 @@ combined.
 | TD document identity | a `self` link | a sibling TD document IRI distinct from the AAS subject |
 | NodeId, clause 5.3 | `uav:id` | an ExpandedNodeId naming its namespace by URI |
 | BrowseName, clause 5.3 | `uav:browseName` | the portable QualifiedName form |
-| TypeDefinition, clause 6 | a member of `@type` | the prefix-qualified BrowseName of the ObjectType, for example `i4aas:AASPropertyType` |
+| TypeDefinition, clause 6, readably | a member of `@type` | the prefix-qualified BrowseName of the ObjectType, for example `i4aas:AASPropertyType` |
+| TypeDefinition, clause 6, definitively | a link with `rel` `ua:HasTypeDefinition` | the ObjectType's portable ExpandedNodeId, for example `nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1050` |
 | Protocol address | Thing-level `forms[].href` | an `opc.tcp` URL whose `id` query value decodes to `uav:id` |
 | Child-to-parent containment | `uav:componentOf` and a `uav:componentOf` link | the parent ExpandedNodeId and parent sibling TD IRI |
 | Parent-to-child containment | `uav:hasComponent` and a typed link | the child ExpandedNodeId and child sibling TD IRI |
@@ -3053,10 +3054,14 @@ carried only the `uav` terms would describe a tree of empty nodes: it would name
 not what any of it is. The `uav` terms carry what the metamodel has no field for — a NodeId, a
 BrowseName, an ObjectType, a ReferenceType, a modelling rule — and nothing else.
 
-The type binding adds no term. Every sibling TD root carries the `uav:object` node-class annotation,
-and the ObjectType is named alongside it in `@type`. A projected Object is never placed in
-`properties`. If a TD publishes actual OPC UA Variable or Method affordances, each property carries
-`uav:variable` and each action carries `uav:method`.
+The type binding is §5.2.1 of *OPC UA — Web of Things Binding*. It admits two forms: the
+prefix-qualified model name alongside the node-class term in `@type`, and a
+`ua:HasTypeDefinition` link whose `href` is the ObjectType's portable ExpandedNodeId. A document
+may carry either or both; the published examples carry both because the name is readable and the
+link is definitive. A converter **shall** reject a document in which both resolve and disagree.
+Every sibling TD root carries `Thing` and the `uav:object` node-class annotation. A projected Object
+is never placed in `properties`. If a TD publishes actual OPC UA Variable or Method affordances,
+each property carries `uav:variable` and each action carries `uav:method`.
 
 Every projected Object carries one Thing-level `readallproperties` form. The form is the Object's
 protocol address, not a property affordance. Its `href` has the WoT Binding form
@@ -3069,16 +3074,12 @@ The parent is the source of each typed containment link, so the link has no `anc
 Where a target TD declares the BrowseName, a publication can instead omit the duplicate
 `uav:refName`. An Operation role index is not a BrowseName and is never used as one.
 
-The ObjectType member of `@type` carries the prefix-qualified BrowseName and no ExpandedNodeId
-alternative: the NodeId of a type in this companion model is assigned by the Server that loaded it,
-so an author cannot know it, and the name is unique by construction.
-
-`@type` also carries ordinary semantic annotation, so a rule is needed to say which member is the
-type binding. A member whose namespace the Server holds as an information model is a type binding
-and **shall** resolve; a member in any other namespace is an annotation. A single `@type` carries at
-most one type binding, because a Node has one `HasTypeDefinition`. `WOT-TYPE-BINDING-PROPOSAL.md` states
-the rule, raised as `OPCF-Members/spec-drafts` PR #19; this annex is written as though it has been
-adopted.
+The `@type` form is resolved in the local model context defined by the WoT Binding. The link form
+uses `nsu=<NamespaceUri>;i=<id>`, not the session-local `ns=<index>` form: these ObjectType NodeIds
+are published in `Opc.Ua.I4AAS.NodeIds.csv`, so the link means the same on every Server that loads
+this model. `@type` may also carry semantic annotations; only a model name that resolves in the
+local context is a type binding. A TD carries at most one such name and one
+`ua:HasTypeDefinition` link because an OPC UA Node has one `HasTypeDefinition`.
 
 The context contains the published W3C TD 1.1 context, relative references to the bundled AAS and
 OPC UA WoT Binding contexts, and an inline `id: "@id"` alias plus the `i4aas` prefix bound to
@@ -3098,7 +3099,7 @@ affordance:
     "../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
     { "id": "@id", "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/" }
   ],
-  "@type": ["uav:object", "aas:Submodel", "i4aas:AASSubmodelType"],
+  "@type": ["Thing", "uav:object", "aas:Submodel", "i4aas:AASSubmodelType"],
   "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n",
   "title": "Ordering",
   "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:S:36:https://fabrikam.com/ids/sm/ordering",
@@ -3123,6 +3124,10 @@ affordance:
       "type": "application/td+json"
     },
     {
+      "rel": "ua:HasTypeDefinition",
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1013"
+    },
+    {
       "rel": "ua:HasComponent",
       "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA",
       "type": "application/td+json",
@@ -3138,7 +3143,7 @@ connectivity and names its ordered child from the parent side:
 
 ```jsonc
 {
-  "@type": ["uav:object", "aas:SubmodelElementList", "i4aas:AASSubmodelElementListType"],
+  "@type": ["Thing", "uav:object", "aas:SubmodelElementList", "i4aas:AASSubmodelElementListType"],
   "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA",
   "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:22:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList",
   "uav:componentOf": [
@@ -3153,6 +3158,10 @@ connectivity and names its ordered child from the parent side:
     }
   ],
   "links": [
+    {
+      "rel": "ua:HasTypeDefinition",
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1031"
+    },
     {
       "rel": "uav:componentOf",
       "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n",
@@ -3174,7 +3183,7 @@ points to the list TD, not to either node's AAS RDF subject:
 
 ```jsonc
 {
-  "@type": ["uav:object", "aas:SubmodelElementCollection", "i4aas:AASSubmodelElementCollectionType"],
+  "@type": ["Thing", "uav:object", "aas:SubmodelElementCollection", "i4aas:AASSubmodelElementCollectionType"],
   "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXQ",
   "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:25:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList[0]",
   "uav:browseName": "nsu=https://example.com/aas/instances/;0",
@@ -3187,11 +3196,17 @@ points to the list TD, not to either node's AAS RDF subject:
     "contentType": "application/octet-stream",
     "op": "readallproperties"
   }],
-  "links": [{
-    "rel": "uav:componentOf",
-    "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA",
-    "type": "application/td+json"
-  }]
+  "links": [
+    {
+      "rel": "ua:HasTypeDefinition",
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1029"
+    },
+    {
+      "rel": "uav:componentOf",
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA",
+      "type": "application/td+json"
+    }
+  ]
 }
 ```
 
@@ -3257,27 +3272,22 @@ This subclause is informative.
   placeholder: nothing in the WoT drafts defines one, and a document carrying an invented one
   produces ExpandedNodeIds that name a namespace no Server has.
 
-### F.6 What the published vocabulary achieves without the type binding
+### F.6 Type-binding conformance
 
-Measured over the five fixtures, 67 nodes:
+The type binding is part of the published WoT Binding. The examples carry both forms of §5.2.1 and
+the validation runs honour them independently:
 
-| | with the type binding | published vocabulary only |
-|---|---|---|
-| nodes produced | 67 of 67 | 67 of 67 |
-| NodeIds correct | 67 | 67 |
-| BrowseNames correct | 67 | 67 |
-| containment ReferenceTypes correct | 62 of 62 compared | 62 of 62 |
-| TypeDefinitions correct | **67** | **0** |
+| Form honoured | Required outcome |
+|---|---|
+| compact model name in `@type` only | every projected Object has the clause 6 ObjectType |
+| `ua:HasTypeDefinition` link only | the same nodes have the same ObjectTypes |
+| both forms | both resolve to the same Node; disagreement invalidates the document |
+| neither form | the projection falls back to `BaseObjectType` unless a Thing Model supplies a type |
 
-Every NodeId and every BrowseName is already correct, as is every containment ReferenceType the
-fixtures exercise — 62 of the 67 nodes are children reached by a compared containment reference;
-the five roots have no parent reference. Only the type binding fails, because
-`uav:congruentType` is reconciliation metadata and does not produce a `HasTypeDefinition`.
-
-Until the type binding is adopted and implemented, a Server reaches the same result by loading one
-Thing Model per ObjectType of this specification and having each Thing Description instantiate the
-matching one. That produces types congruent with the ones defined here rather than the ones defined
-here, and an implementation **should not** describe the result as conforming to clause 6.
+`uav:congruentType` remains reconciliation metadata and **shall not** substitute for either form.
+The compact name is resolved through the local model context of WoT Binding §5.1.5. The link is
+resolved by exact ExpandedNodeId. A converter **shall not** manufacture a second ObjectType with the
+same name: the target is the ObjectType already loaded from `Opc.Ua.I4AAS.NodeSet2.xml`.
 
 <a id="annex-g"></a>
 

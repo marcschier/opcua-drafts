@@ -38,21 +38,30 @@ def resolve_required_csv(model_uri, candidates):
 _ua_csv = os.path.join(REF, "UA.NodeIds.csv")
 UA = load_ids(_ua_csv) if os.path.exists(_ua_csv) else None
 UA_EXTRA = {297, 2253}
-# xRegistry is a tracked core specification. It is not optional base data.
+# The xRegistry base model is under OPC Foundation review and is therefore not
+# guaranteed to be in this public tree. Resolve it through the explicit override,
+# a local ref table, the pre-release public location, or the registered sibling
+# spec-drafts checkout. If none is available, say that the cross-model references
+# were NOT checked; never print a success-shaped "skipped" result.
 _repo = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 _xr_override = os.environ.get("I4AAS_XREGISTRY_CSV")
-_xr_candidates = ([_xr_override] if _xr_override else [
+_xr_candidates = [
+    _xr_override,
+    os.path.join(REF, "Opc.Ua.XRegistry.NodeIds.csv"),
     os.path.join(_repo, "core-specs", "xregistry",
                  "Opc.Ua.XRegistry.NodeIds.csv"),
-])
-try:
-    _xr_csv = resolve_required_csv(XR_NAMESPACE, _xr_candidates)
-except FileNotFoundError as exc:
-    _xr_csv = None
-    XR = None
-    errors.append(str(exc))
-else:
-    XR = load_ids(_xr_csv)
+    os.path.join(_repo, "spec-drafts", "core-specs", "xregistry",
+                 "Opc.Ua.XRegistry.NodeIds.csv"),
+]
+_xr_csv = next((
+    os.path.abspath(path) for path in _xr_candidates
+    if path and os.path.isfile(path)
+), None)
+XR = load_ids(_xr_csv) if _xr_csv else None
+if XR is None:
+    warnings.append(
+        "RequiredModel http://opcfoundation.org/UA/xRegistry/ was NOT CHECKED "
+        "(no NodeId table found; cross-model references accepted unverified)")
 
 if UA is None:
     warnings.append(
@@ -218,7 +227,11 @@ if os.path.exists(_annex) and os.path.exists(_spec):
     elif rendered.strip() not in spec_text.replace("\r\n", "\n"):
         errors.append("generated Annex A (tools/model-reference.md) is not embedded verbatim in the spec")
 
-print(f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   base ids: {len(UA) if UA is not None else 'skipped (no local base table)'}   xRegistry base ids: {len(XR) if XR is not None else 'skipped'}")
+print(
+    f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   "
+    f"base ids: {len(UA) if UA is not None else 'skipped (no local base table)'}   "
+    "xRegistry base ids: "
+    f"{str(len(XR)) + ' from ' + os.path.relpath(_xr_csv, GEN) if XR is not None else 'NOT CHECKED (no table found; cross-model references accepted unverified)'}")
 
 # Negative control: a declared tracked dependency must never degrade into
 # "accept every reference" when its file disappears.

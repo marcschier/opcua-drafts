@@ -84,6 +84,11 @@ def unescape(raw):
     consumes the second half of the backslash escape, turning a backslash and an
     n into a newline. No example in the corpus contains one; the published
     submodel templates do.
+
+    Malformed input is passed through rather than raised on. A truncated or
+    non-hexadecimal `\\u` escape is a defect in whatever produced the text, and a
+    lowering that stops with a `ValueError` from `int()` reports it as a crash in
+    the reader; keeping the characters lets the caller see what it was given.
     """
     out = []
     i = 0
@@ -99,7 +104,15 @@ def unescape(raw):
             i += 2
         elif nxt in ("u", "U"):
             width = 4 if nxt == "u" else 8
-            out.append(chr(int(raw[i + 2:i + 2 + width], 16)))
+            digits = raw[i + 2:i + 2 + width]
+            try:
+                if len(digits) != width:
+                    raise ValueError("truncated")
+                out.append(chr(int(digits, 16)))
+            except (ValueError, OverflowError):
+                out.append(ch)
+                i += 1
+                continue
             i += 2 + width
         else:
             out.append(nxt)

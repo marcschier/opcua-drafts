@@ -17,19 +17,15 @@ document resource, its versions, the `HasWoTProjection` reference. Comparing the
 whole AddressSpace would fail for reasons that have nothing to do with the
 mapping, so the comparison covers the identified projection subgraph only.
 
-**The type binding is not assumed.** With the vocabulary as published,
-`uav:congruentType` is reconciliation metadata and does not set a
-`HasTypeDefinition`. The generator therefore names the ObjectType in `@type`, and
-the projector honours it only when `--proposed` is passed. Without that flag the
-run reports what the published vocabulary actually achieves, which is less.
-
-`--form term` writes the same binding as a dedicated `uav:typeref` member
-instead. That form was proposed first and withdrawn; the option is kept because
-the two produce identical node sets, and that is the measurement that decided
-between them.
+**The type binding is measured rather than assumed.** WoT Binding §5.2.1 admits
+the compact model name in `@type`, a `ua:HasTypeDefinition` link whose `href` is
+the type's ExpandedNodeId, or both. Published examples carry both: the name is
+readable and the link is definitive. `--form` selects which form the projector
+honours so each is proved independently, and a disagreement is an error.
 
 Usage:
-    python wot_bridge.py <environment.json> [--proposed] [--form attype|term]
+    python wot_bridge.py <environment.json> [--bind-type]
+                         [--form both|attype|link]
                          [--dump-dir output-directory]
 """
 from __future__ import annotations
@@ -97,18 +93,17 @@ def load_type_nodeids():
 
 
 def typeref(type_name):
-    """The single form a document carries: the prefix-qualified BrowseName.
-
-    One form, not two. A document that carried both a compact name and an
-    ExpandedNodeId would have to keep them consistent, and the pair adds nothing:
-    the prefix binds to the NamespaceUri in the `@context`, so the compact name
-    already identifies the type unambiguously wherever the model is loaded.
-    """
+    """The readable type-binding form: the prefix-qualified BrowseName."""
     return f"i4aas:{type_name}"
 
 
+def type_node_id(type_name):
+    """The definitive type-binding form: its portable ExpandedNodeId."""
+    return TYPE_NODEIDS.get(type_name)
+
+
 def resolve_typeref(value):
-    """Resolve a `uav:typeref` the way a Server does: by name, in what it has.
+    """Resolve a compact model name the way a Server does: by name, in what it has.
 
     The candidate space is the loaded AddressSpace. This resolves the compact
     name through the NodeId table the specification publishes, which is the same
@@ -125,8 +120,20 @@ def resolve_typeref(value):
 
 # The node-class terms of the Binding. A member of `@type` that is one of these
 # says which NodeClass the entry projects to; it is never a TypeDefinition.
-NODE_CLASS_TERMS = {"uav:object", "uav:variable", "uav:method", "uav:objectType",
+NODE_CLASS_TERMS = {"Thing", "uav:object", "uav:variable", "uav:method", "uav:objectType",
                     "uav:variableType", "uav:referenceType", "uav:dataType", "uav:view"}
+
+
+def resolve_type_link(links):
+    """Resolve the definitive `ua:HasTypeDefinition` link of §5.2.1."""
+    found = [
+        link.get("href")
+        for link in links or []
+        if link.get("rel") == "ua:HasTypeDefinition"
+    ]
+    if len(found) != 1:
+        return None
+    return found[0] if found[0] in set(TYPE_NODEIDS.values()) else None
 
 
 def resolve_attype(types):
@@ -347,11 +354,15 @@ def merge_aas(entry, node, skip_field=None, state=None):
 
 
 def bind_type(entry, type_name, form):
-    """Write the type reference in whichever form is under test."""
-    if form == "attype":
+    """Write either or both type-binding forms admitted by WoT Binding §5.2.1."""
+    if form in ("attype", "both"):
         entry["@type"] = entry["@type"] + [typeref(type_name)]
-    else:
-        entry["uav:typeref"] = typeref(type_name)
+    if form in ("link", "both"):
+        node_id = type_node_id(type_name)
+        if node_id is None:
+            raise ValueError(f"no published NodeId for {type_name!r}")
+        entry.setdefault("links", []).append(
+            {"rel": "ua:HasTypeDefinition", "href": node_id})
     return entry
 
 
@@ -388,7 +399,7 @@ def td_for_submodel(sm, form, namespace=None, root_browse_name=None):
                  "i4aas": I4AAS,
                  "ua": UA},
             ],
-            "@type": ["uav:object"],
+            "@type": ["Thing", "uav:object"],
             "id": node_iri(owner, path),
             "title": browse,
             "uav:id": node_id,
@@ -543,7 +554,7 @@ def td_for_submodel(sm, form, namespace=None, root_browse_name=None):
     return documents
 
 
-def generate(env, form="term", *, digest_function=None):
+def generate(env, form="both", *, digest_function=None):
     load_type_nodeids()
     root_browse_names = rt.identifiable_browse_names(
         env, digest_function=digest_function)
@@ -559,7 +570,7 @@ def generate(env, form="term", *, digest_function=None):
 # ---------------------------------------------------------------------------
 # Projection: the rules Annex F states, applied to the generated documents
 # ---------------------------------------------------------------------------
-def project(tds, honour_proposed_term, form="term"):
+def project(tds, honour_type_binding, form="both"):
     """Return the node set a WoT Connectivity registry would materialize."""
     nodes = {}
     by_subject = {}
@@ -573,7 +584,7 @@ def project(tds, honour_proposed_term, form="term"):
         nodes[root] = {
             "Subject": root_subject,
             "BrowseName": td["uav:browseName"].split(";")[-1],
-            "TypeDefinition": type_of(td, honour_proposed_term, form),
+            "TypeDefinition": type_of(td, honour_type_binding, form),
             "Parent": (
                 None if not parents
                 else parents[0] if len(parents) == 1
@@ -639,21 +650,21 @@ def project(tds, honour_proposed_term, form="term"):
     return nodes
 
 
-def type_of(entry, honour_proposed_term, form="term"):
+def type_of(entry, honour_type_binding, form="both"):
     """Which ObjectType the projection gives a node.
 
-    With the published vocabulary a Thing Description projects to an Object typed
-    `BaseObjectType` unless it instantiates a Thing Model, and `uav:congruentType`
-    does not change that: it is reconciliation metadata and is retained as
-    residue. The proposed binding names an ObjectType that is already loaded and
-    resolves it by name against what the Server has, not by reading back a NodeId
-    the document carries - in either of the two forms under test.
+    Without the binding a Thing Description projects to BaseObjectType unless it
+    instantiates a Thing Model. With it, §5.2.1 admits a compact name, an
+    ExpandedNodeId link, or both. If both resolve they must identify one type.
     """
-    if honour_proposed_term:
-        resolved = (resolve_attype(entry.get("@type")) if form == "attype"
-                    else resolve_typeref(entry.get("uav:typeref")))
-        if resolved:
-            return resolved
+    if honour_type_binding:
+        by_name = resolve_attype(entry.get("@type")) if form in ("attype", "both") else None
+        by_id = resolve_type_link(entry.get("links")) if form in ("link", "both") else None
+        if by_name and by_id and by_name != by_id:
+            raise ValueError(
+                f"the two forms of the type binding disagree: {by_name} against {by_id}")
+        if by_id or by_name:
+            return by_id or by_name
     return f"nsu={UA};i=58"  # BaseObjectType
 
 
@@ -829,12 +840,10 @@ def compare(want, got):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("environment")
-    ap.add_argument("--proposed", action="store_true",
-                    help="honour the proposed type binding of spec-drafts#19")
-    ap.add_argument("--form", choices=("attype", "term"), default="attype",
-                    help="how the type reference is written: a member of @type "
-                         "(the proposed form), or a dedicated uav:typeref member "
-                         "(the withdrawn alternative, kept so the two can be compared)")
+    ap.add_argument("--bind-type", action="store_true",
+                    help="honour the adopted type binding of WoT Binding §5.2.1")
+    ap.add_argument("--form", choices=("both", "attype", "link"), default="both",
+                    help="which admitted type-binding form the projection honours")
     ap.add_argument("--dump-td", help="write the generated Thing Descriptions here")
     ap.add_argument(
         "--dump-dir",
@@ -863,7 +872,7 @@ def main():
             f.write("\n")
 
     want = expected(env)
-    got = project(tds, honour_proposed_term=args.proposed, form=args.form)
+    got = project(tds, honour_type_binding=args.bind_type, form=args.form)
     missing, extra, differing = compare(want, got)
 
     if not want:
@@ -871,8 +880,7 @@ def main():
               "would pass without testing anything", file=sys.stderr)
         return 1
 
-    binding = ("uav:typeref" if args.form == "term" else "a member of @type")
-    print(f"vocabulary: {'published + ' + binding if args.proposed else 'published only'}")
+    print(f"type binding: {args.form if args.bind_type else 'not honoured'}")
     print(f"nodes expected by clause 5.6 : {len(want)}")
     print(f"nodes produced by projection : {len(got)}")
     print(f"  missing   : {len(missing)}")

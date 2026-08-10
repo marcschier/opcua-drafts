@@ -288,6 +288,7 @@
     }
   ],
   "@type": [
+    "Thing",
     "uav:object",
     "aas:SubmodelElementCollection",
     "i4aas:AASSubmodelElementCollectionType"
@@ -470,6 +471,10 @@
       "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w/node/RG9jdW1lbnRzWzBdLkRvY3VtZW50VmVyc2lvbnM",
       "rel": "uav:componentOf",
       "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1029",
+      "rel": "ua:HasTypeDefinition"
     },
     {
       "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w/node/RG9jdW1lbnRzWzBdLkRvY3VtZW50VmVyc2lvbnNbMF0uTGFuZ3VhZ2U",

@@ -447,6 +447,41 @@ def derived_identifiable_browse_name_collisions():
     print("  passed: forced BrowseName collisions use deterministic _0 suffixes")
 
 
+def adopted_type_binding_forms():
+    source = {
+        "submodels": [{
+            "modelType": "Submodel",
+            "id": "urn:example:type-binding",
+            "idShort": "TypeBinding",
+            "submodelElements": [],
+        }],
+    }
+    expected = wot_bridge.expected(source)
+    for form in ("attype", "link", "both"):
+        documents = wot_bridge.generate(source, form)
+        actual = wot_bridge.project(
+            documents, honour_type_binding=True, form=form)
+        missing, extra, differing = wot_bridge.compare(expected, actual)
+        if missing or extra or differing:
+            raise AssertionError(
+                f"{form} type binding did not project identically: "
+                f"{missing!r}, {extra!r}, {differing!r}")
+    documents = wot_bridge.generate(source, "both")
+    validate_examples.validate_published_type_binding(documents[0])
+    links = [
+        link for link in documents[0]["links"]
+        if link.get("rel") == "ua:HasTypeDefinition"
+    ]
+    links[0]["href"] = wot_bridge.TYPE_NODEIDS["AASPropertyType"]
+    try:
+        wot_bridge.project(documents, honour_type_binding=True, form="both")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("disagreeing type-binding forms were accepted")
+    print("  passed: both adopted type-binding forms are independently sufficient")
+
+
 def projection_mutations():
     caught = validate_examples.mutation_test()
     if caught != 29:
@@ -461,8 +496,9 @@ def main():
     nested_reference_order_survives_shuffle()
     derived_identifiable_browse_name_is_safe()
     derived_identifiable_browse_name_collisions()
+    adopted_type_binding_forms()
     projection_mutations()
-    print("regressions and mutations: 36 passed")
+    print("regressions and mutations: 37 passed")
     return 0
 
 

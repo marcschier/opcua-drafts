@@ -182,7 +182,12 @@ def as_td_object(doc, env, name, path):
     types = root.get("@type", [])
     if not isinstance(types, list):
         types = [types]
-    root["@type"] = ["uav:object", "i4aas:AASSubmodelType", *types]
+    wot_bridge.load_type_nodeids()
+    root["@type"] = ["Thing", "uav:object", "i4aas:AASSubmodelType", *types]
+    root["links"] = [{
+        "rel": "ua:HasTypeDefinition",
+        "href": wot_bridge.type_node_id("AASSubmodelType"),
+    }]
     root["@context"] = [
         validate_examples.TD_CONTEXT_URL,
         relative_context(path, validate_examples.AAS_CONTEXT),
@@ -211,7 +216,8 @@ def write_minimal_td(name, env, context_doc):
       `title`               required of every Thing Description
       `securityDefinitions` required, even when the scheme is `nosec`
       `security`            required
-      `@type`               `uav:object`, plus the ObjectType, per Annex F
+      `@type`               `Thing`, `uav:object`, plus the readable ObjectType
+      `links`               the definitive `ua:HasTypeDefinition` binding
 
     What it does not carry is the per-node `uav:id`, `uav:browseName`,
     `uav:componentOf` and ordering links. Without those a converter still
@@ -275,9 +281,9 @@ def aas_graph_of(tds, context_doc):
 
 def write_thing_descriptions(name, env, context_doc):
     """The same submodel as binding-valid Object Thing Descriptions."""
-    tds = wot_bridge.generate(env, "attype")
+    tds = wot_bridge.generate(env, "both")
     want = wot_bridge.expected(env)
-    got = wot_bridge.project(tds, honour_proposed_term=True, form="attype")
+    got = wot_bridge.project(tds, honour_type_binding=True, form="both")
     missing, extra, differing = wot_bridge.compare(want, got)
     if missing or extra or differing:
         raise SystemExit(f"{name}: projection does not match clause 5.6 "
@@ -313,7 +319,7 @@ def write_fixture_thing_descriptions():
         name = filename[:-5]
         with open(os.path.join(fixtures, filename), encoding="utf-8") as stream:
             env = json.load(stream)
-        tds = wot_bridge.generate(env, "attype")
+        tds = wot_bridge.generate(env, "both")
         path = os.path.join(AAS_DIR, "examples", "wot", f"{name}.td.jsonld")
         write_projection_bundle(path, tds, env)
         written += len(tds)

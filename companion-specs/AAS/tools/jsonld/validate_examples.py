@@ -83,7 +83,7 @@ TEMPLATE_SOURCES = tuple(
 )
 
 NODE_CLASS_TERMS = {
-    "uav:object", "uav:variable", "uav:method", "uav:objectType",
+    "Thing", "uav:object", "uav:variable", "uav:method", "uav:objectType",
     "uav:variableType", "uav:referenceType", "uav:dataType", "uav:view",
 }
 
@@ -372,6 +372,8 @@ def type_terms(value) -> set[str]:
 
 def validate_node_class_domains(doc: dict) -> None:
     root_types = type_terms(doc.get("@type"))
+    if "Thing" not in root_types:
+        raise AssertionError("a projected OPC UA Object TD root must carry Thing")
     if "uav:object" not in root_types:
         raise AssertionError("a projected OPC UA Object TD root must carry uav:object")
     if root_types & {"uav:variable", "uav:method"}:
@@ -573,6 +575,21 @@ def parse_expanded_node_id(value: str, label: str) -> tuple[str, str, str, str |
     return namespace, kind, owner, path
 
 
+def parse_type_expanded_node_id(value: str, label: str) -> str:
+    """A portable numeric ExpandedNodeId naming a published ObjectType."""
+    if not isinstance(value, str) or not value.startswith("nsu="):
+        raise AssertionError(f"{label} is not an nsu= ExpandedNodeId: {value!r}")
+    namespace, separator, identifier = value[4:].partition(";")
+    if not separator:
+        raise AssertionError(f"{label} has no ExpandedNodeId identifier")
+    validate_absolute_uri(namespace, f"{label} namespace")
+    if not identifier.startswith("i=") or not is_ascii_digits(identifier[2:]):
+        raise AssertionError(f"{label} is not a numeric ExpandedNodeId")
+    if value not in set(TYPE_NODEIDS.values()):
+        raise AssertionError(f"{label} does not name a published I4AAS ObjectType")
+    return value
+
+
 def parse_qualified_name(value: str, label: str) -> tuple[str, str]:
     if not isinstance(value, str) or not value.startswith("nsu="):
         raise AssertionError(f"{label} is not an nsu= QualifiedName: {value!r}")
@@ -651,8 +668,17 @@ def validate_expanded_namespaces(dataset: dict, doc: dict | None, td: bool) -> N
                 if obj.get("type") not in {"IRI", "literal"}:
                     raise AssertionError(
                         f"{subject} {predicate} is not a URI-valued RDF term")
-                validate_absolute_uri(
-                    obj["value"], f"{subject} {predicate}")
+                value = obj["value"]
+                if isinstance(value, str) and value.startswith(("nsu=", "svr=")):
+                    # WoT Binding §5.2.1 uses a portable ExpandedNodeId as the
+                    # HasTypeDefinition link target; it is deliberately not an
+                    # HTTP document IRI.
+                    if ";i=" in value:
+                        parse_type_expanded_node_id(value, f"{subject} {predicate}")
+                    else:
+                        parse_expanded_node_id(value, f"{subject} {predicate}")
+                else:
+                    validate_absolute_uri(value, f"{subject} {predicate}")
     if td:
         root = doc.get("id") if isinstance(doc, dict) else None
         if not root:
@@ -862,14 +888,42 @@ TYPE_NODEIDS = load_type_nodeids()
 
 
 def resolve_type(entry: dict) -> str:
+    by_name = None
     for value in entry.get("@type", []):
         if value in NODE_CLASS_TERMS:
             continue
         if isinstance(value, str) and value.startswith("i4aas:"):
-            resolved = TYPE_NODEIDS.get(value.split(":", 1)[1])
-            if resolved:
-                return resolved
-    return f"nsu={UA};i=58"
+            by_name = TYPE_NODEIDS.get(value.split(":", 1)[1])
+            if by_name:
+                break
+    links = [
+        link.get("href")
+        for link in entry.get("links", [])
+        if isinstance(link, dict) and link.get("rel") == "ua:HasTypeDefinition"
+    ]
+    if len(links) > 1:
+        raise AssertionError("a projected Object carries more than one HasTypeDefinition link")
+    by_id = links[0] if links and links[0] in set(TYPE_NODEIDS.values()) else None
+    if by_name and by_id and by_name != by_id:
+        raise AssertionError(
+            f"the two type-binding forms disagree: {by_name} against {by_id}")
+    return by_id or by_name or f"nsu={UA};i=58"
+
+
+def validate_published_type_binding(doc: dict) -> None:
+    """Published projection TDs carry both forms admitted by WoT Binding §5.2.1."""
+    by_name = [
+        value for value in type_terms(doc.get("@type"))
+        if isinstance(value, str) and value.startswith("i4aas:")
+    ]
+    links = [
+        link for link in doc.get("links", [])
+        if isinstance(link, dict) and link.get("rel") == "ua:HasTypeDefinition"
+    ]
+    if len(by_name) != 1 or len(links) != 1:
+        raise AssertionError(
+            "a published projection TD must carry one compact and one link type binding")
+    resolve_type(doc)
 
 
 def expected_node_id(owner: str, path: str | None, namespace: str) -> str:
@@ -1425,6 +1479,7 @@ def validate_projection_bundle(
         validate_td(doc)
         validate_context_strategy(doc, path, True)
         validate_node_class_domains(doc)
+        validate_published_type_binding(doc)
         validate_object_form(doc)
         dataset = process_jsonld(doc, path)
         if not any(dataset.values()):

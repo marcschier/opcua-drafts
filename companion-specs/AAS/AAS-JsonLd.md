@@ -482,6 +482,14 @@ not turn the Object into a property affordance. Every Object TD **MUST** also ca
 `self` link whose target is the sibling TD document IRI and is distinct from the AAS RDF subject in
 `id`.
 
+The ObjectType binding is the one defined by §5.2.1 of *OPC UA — Web of Things Binding*. It admits
+the compact model name as a member of `@type`, a `ua:HasTypeDefinition` link whose `href` is the
+ObjectType's portable ExpandedNodeId, or both. Published examples **MUST** carry both: the name is
+readable and the link is definitive. A converter **MUST** obtain the same ObjectType from each form
+and **MUST** reject a document in which they disagree. One form is sufficient for a conforming
+consumer, but neither `uav:congruentType` nor an application-defined type term creates a
+`HasTypeDefinition`.
+
 Every non-root Object TD **MUST** carry exactly one `uav:componentOf` naming its immediate parent's
 ExpandedNodeId and exactly one `uav:componentOf` link targeting the parent sibling TD IRI. The
 parent TD **MUST** carry the child's ExpandedNodeId in `uav:hasComponent` and exactly one typed link

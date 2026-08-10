@@ -33,6 +33,7 @@
     }
   ],
   "@type": [
+    "Thing",
     "uav:object",
     "aas:Submodel",
     "i4aas:AASSubmodelType"
@@ -59,6 +60,10 @@
       "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l",
       "rel": "self",
       "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1013",
+      "rel": "ua:HasTypeDefinition"
     },
     {
       "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l/node/VmFsdWU",

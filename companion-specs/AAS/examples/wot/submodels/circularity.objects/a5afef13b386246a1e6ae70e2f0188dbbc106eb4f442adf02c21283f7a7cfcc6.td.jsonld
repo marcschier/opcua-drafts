@@ -101,6 +101,7 @@
     }
   ],
   "@type": [
+    "Thing",
     "uav:object",
     "aas:SubmodelElementList",
     "i4aas:AASSubmodelElementListType"
@@ -213,6 +214,10 @@
       "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA",
       "rel": "uav:componentOf",
       "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1031",
+      "rel": "ua:HasTypeDefinition"
     },
     {
       "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA/node/U3BhcmVQYXJ0U291cmNlc1swXQ",

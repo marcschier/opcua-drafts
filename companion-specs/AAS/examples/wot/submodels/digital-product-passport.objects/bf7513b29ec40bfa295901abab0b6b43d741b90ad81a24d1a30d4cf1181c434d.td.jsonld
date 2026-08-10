@@ -169,6 +169,7 @@
     }
   ],
   "@type": [
+    "Thing",
     "uav:object",
     "aas:Property",
     "i4aas:AASPropertyType"
@@ -346,6 +347,10 @@
       "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w",
       "rel": "uav:componentOf",
       "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1021",
+      "rel": "ua:HasTypeDefinition"
     }
   ],
   "security": "nosec_sc",

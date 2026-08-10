@@ -12663,6 +12663,7 @@
     }
   ],
   "@type": [
+    "Thing",
     "uav:object",
     "i4aas:AASSubmodelType",
     "aas:Submodel"
@@ -12676,6 +12677,12 @@
   "displayName": "_:b537",
   "id": "https://w3id.org/aas-jsonld/subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA",
   "idShort": "Circularity",
+  "links": [
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1013",
+      "rel": "ua:HasTypeDefinition"
+    }
+  ],
   "security": "nosec_sc",
   "securityDefinitions": {
     "nosec_sc": {
