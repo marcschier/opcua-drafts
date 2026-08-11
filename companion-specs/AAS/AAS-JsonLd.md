@@ -1,0 +1,951 @@
+# Asset Administration Shell — JSON-LD Mapping
+
+**Status — working draft.** This document specifies a JSON-LD mapping for the Asset Administration
+Shell, as a fourth technical data format alongside the XML, JSON and RDF mappings of IDTA-01001
+Part 1. It is not published by, endorsed by, or submitted to the Industrial Digital Twin Association.
+
+**Target:** IDTA-01001 Part 1, chapter *Mappings (normative)*.
+
+| | |
+|---|---|
+| Version | 0.1.0, working draft |
+| Metamodel | Asset Administration Shell V3.0 |
+| Upstream baseline | `admin-shell-io/aas-specs-metamodel` tag `V3.0.7`, commit `21e68502e367` |
+| Licence | Creative Commons Attribution 4.0 International, `SPDX-License-Identifier: CC-BY-4.0` |
+
+All clauses whose heading carries the suffix *(normative)* are normative. All other clauses,
+including every annex of this document, are informative.
+
+The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD
+NOT**, **RECOMMENDED**, **MAY** and **OPTIONAL** are to be interpreted as described in RFC 2119.
+
+## Contents
+
+- [Preamble](#preamble)
+  - [Scope of this document](#scope-of-this-document)
+  - [Structure of the document](#structure-of-the-document)
+  - [Working principles](#working-principles)
+- [Terms and definitions](#terms-and-definitions)
+- [1 The JSON-LD form (normative)](#1-the-json-ld-form-normative)
+  - [1.1 What an authored document looks like](#11-what-an-authored-document-looks-like)
+  - [1.2 Reading an AAS JSON document as JSON-LD](#12-reading-an-aas-json-document-as-json-ld)
+- [2 Lifting (normative)](#2-lifting-normative)
+  - [2.1 Parameters](#21-parameters)
+  - [2.2 Subject terms](#22-subject-terms)
+  - [2.3 Class assignment](#23-class-assignment)
+  - [2.4 Member resolution](#24-member-resolution)
+  - [2.5 Values](#25-values)
+  - [2.6 Enumerations](#26-enumerations)
+- [3 The ordering graph (normative)](#3-the-ordering-graph-normative)
+- [4 Lowering (normative)](#4-lowering-normative)
+- [5 The JSON-LD context (normative)](#5-the-json-ld-context-normative)
+  - [5.1 Context resolution and integrity](#51-context-resolution-and-integrity)
+- [5A Converting to the other formats (normative)](#5a-converting-to-the-other-formats-normative)
+- [5B Authoring an AAS inside a Thing Description (normative)](#5b-authoring-an-aas-inside-a-thing-description-normative)
+  - [5B.1 Published examples](#5b1-published-examples)
+  - [5B.2 Projection-complete documents](#5b2-projection-complete-documents)
+- [6 Conformance (normative)](#6-conformance-normative)
+- [Annex A — Constraints](#annex-a--constraints)
+- [Annex B — Deviations from the RDF mapping](#annex-b--deviations-from-the-rdf-mapping)
+- [Annex C — Conformance results](#annex-c--conformance-results)
+- [Annex D — Worked example](#annex-d--worked-example)
+- [Bibliography](#bibliography)
+
+## Preamble
+
+### Scope of this document
+
+This document defines **JSON-LD as a format an Asset Administration Shell is authored in**, and the
+conversions that make an authored document usable everywhere an AAS is expected.
+
+The goal is that an author writes an AAS as linked data, using the vocabulary the OWL ontology of
+IDTA-01001 Part 1 already publishes, and that the result is:
+
+- **an AAS**, convertible to JSON, to XML and to an AASX package without loss;
+- **RDF**, so it can be queried, linked to other data and validated against the published SHACL
+  schema; and
+- **extensible without leaving the document**, so a conformity assessment, a supplier or a product
+  passport is stated about the same subject, in its own vocabulary, and travels with the AAS instead
+  of beside it.
+
+An authored document is linked data, not the JSON mapping's document with a `@context` on top.
+Clause 1.2 says why that other form is not defined here, and Annex B reports the measurement that
+settled it.
+
+A JSON-LD document may also be a W3C Thing Description, so one document can describe an asset both
+as a Thing and as an Asset Administration Shell. Clause 5B states what that requires. A consumer may
+materialize such a document into a system of its own — an OPC UA AddressSpace, for instance —
+but what it materializes is stated by that consumer's binding, not here.
+
+It defines:
+
+- the **JSON-LD form**, which an author writes and a processor reads (clause 1);
+- a **lifting**, which converts a plain AAS JSON document to an RDF graph;
+- an **ordering graph**, which carries the information the RDF mapping does not represent;
+- a **lowering**, which converts an RDF graph to an AAS JSON document, and so to XML and AASX
+  through the existing serializations;
+- a **JSON-LD context**, which shortens what an author writes;
+- four **conformance claims**, which are independent of one another.
+
+It does not define a new vocabulary. The class and property IRIs are those of the OWL ontology
+published with IDTA-01001 Part 1, in the namespace `https://admin-shell.io/aas/3/0/`. Terms this
+document adds, and only those, are in the namespace `https://w3id.org/aas-jsonld/`.
+
+### Structure of the document
+
+Clause 1 defines the format. Clauses 2 to 4 define the conversion in both directions. Clause 5
+defines the context. Clause 5A defines conversion to the other serializations and clause 5B the use
+inside a Thing Description. Clause 6 defines conformance. The annexes list the constraints, record
+the deviations from the RDF mapping, report the measured results, and give a worked example.
+
+### Working principles
+
+**The vocabulary is not restated.** The class hierarchy, the property IRIs, the datatype and object
+ranges, and the enumeration members are read from the published ontology. A property IRI does not
+appear in this document except in an example.
+
+**The two directions are specified separately and tested separately.** Agreement with the RDF
+mapping and preservation of the source document are different properties, and a document can have
+one without the other.
+
+**The document's surface is not constrained.** Everything normative here is stated about the graph,
+because that is what a JSON-LD processor leaves once the spelling is gone. A rule about member names
+would be a rule about one of the many documents that denote the same AAS. This freedom does not
+authorize a processor to retrieve an arbitrary context: context resolution and integrity are
+constrained by clause 5.1 before the graph is interpreted.
+
+## Terms and definitions
+
+**lifting** — the conversion of an AAS JSON document into an RDF graph.
+
+**lowering** — the conversion of an RDF graph into an AAS JSON document.
+
+**authored document** — a JSON-LD document written as linked data, whose RDF interpretation contains
+the graph the RDF mapping defines. Clause 1.
+
+**core graph** — the RDF graph a lifting produces, containing only triples that the RDF mapping of
+IDTA-01001 Part 1 also produces.
+
+**ordering graph** — a separate named graph carrying the position of each member of each
+array-valued member of the source document.
+
+**enrichment graph** — the ordering graph together with any further graph a profile of this document
+defines.
+
+**foreign vocabulary** — any vocabulary other than the AAS vocabulary and the vocabularies this
+document defines. Triples in one are carried by an authored document and are not carried into the
+AAS JSON document.
+
+**root Identifiable** — an `AssetAdministrationShell`, `Submodel` or `ConceptDescription` that
+appears in one of the three top-level collections of an `Environment`.
+
+## 1 The JSON-LD form (normative)
+
+IDTA-01001 Part 1 defines the technical data formats XML, JSON and RDF. This document defines a
+fourth, **JSON-LD**, whose media type is `application/ld+json`.
+
+An Asset Administration Shell in JSON-LD is a **JSON-LD 1.1 document whose RDF interpretation
+simple-entails the graph the RDF mapping of IDTA-01001 Part 1 defines for that Asset Administration
+Shell, with every root subject replaced by the construction in clause 2.2**. That is the whole of
+the requirement. It says nothing about the document's surface, and deliberately so: the member
+names, the nesting, the choice of prefixes, whether a term is written compact or as an absolute IRI,
+and whether the document is expanded, compacted, flattened or framed are all free, because a JSON-LD
+processor removes those differences before anything in this document looks at the result.
+
+A document **MUST**:
+
+- use the class and property IRIs of the OWL ontology published with IDTA-01001 Part 1, in the
+  namespace `https://admin-shell.io/aas/3/0/`;
+- denote each `Identifiable` by the subject term of clause 2.2; and
+- expand, per JSON-LD 1.1, to a graph that simple-entails every triple that mapping produces.
+
+Any context needed for that expansion **MUST** be resolved under clause 5.1. Graph conformance does
+not grant permission to dereference a context IRI.
+
+Simple entailment permits a named subject to witness a non-root blank node in that graph. This is
+the RDF skolemization used when a projection must address a contained element. It does not permit a
+different root subject: root identity remains the construction in clause 2.2.
+
+A document **MAY** carry further triples, in any vocabulary. An authored AAS is linked data, and the
+reason to author one is to say things about the asset that the metamodel has no field for — a
+conformity assessment, a supplier, a product passport — and to link it to data held elsewhere. Those
+triples remain part of the authored JSON-LD graph unchanged; they are not part of the AAS, and
+clause 4 does not carry them into the exported JSON. A foreign predicate whose local name is the same
+as an AAS member remains foreign and **MUST NOT** supply or replace that member.
+
+A document **MUST NOT** carry a triple whose predicate is in the AAS namespace and which the RDF
+mapping does not define. The vocabulary is not extended by use.
+
+### 1.1 What an authored document looks like
+
+This subclause is informative.
+
+The requirement above admits many spellings. The one below is what a processor produces from the
+graph and what an author writing by hand would recognise: prefixed IRIs, `@id` for identity, `@type`
+for class, and nesting that follows the graph.
+
+```jsonc
+{
+  "@context": "aas.context.jsonld",
+  "@id": "https://fabrikam.com/ids/sm/nameplate",
+  "@type": "aas:Submodel",
+  "id": "https://fabrikam.com/ids/sm/nameplate",
+  "idShort": "Nameplate",
+  "aas:Submodel/submodelElements": [
+    {
+      "@type": "aas:Property",
+      "idShort": "ManufacturerName",
+      "aas:Property/valueType": "aas:DataTypeDefXsd/String",
+      "aas:Property/value": "Fabrikam"
+    }
+  ]
+}
+```
+
+Two things in it are worth naming. `id` and `idShort` are written bare because the context aliases
+every local name that belongs to exactly one property in the vocabulary; `aas:Property/value` is
+written out because `value` belongs to several classes and a bare `value` would be ambiguous. For an ordinary absolute IRI such as this one, `@id` and the
+`aas:Identifiable/id` literal carry the same string. Clause 2.2 encodes only an identifier that
+cannot be written directly as an absolute IRI, or one inside a namespace reserved for generated
+subjects.
+
+An author is free to write neither — to expand every term, or to compact against a context of their
+own. Clause 6 is checked on the graph, so it does not notice.
+
+### 1.2 Reading an AAS JSON document as JSON-LD
+
+This document does **not** define a form in which an AAS JSON document, plus a `@context`, is a
+JSON-LD document.
+
+That form is the obvious thing to try, and it does not work. A JSON-LD context maps a member either
+to `@id` or to a literal, and `id` is required as both; supplying an `rdf:type` for an object the
+JSON mapping does not discriminate requires redefining the `@type` keyword inside a scoped context,
+which JSON-LD forbids; and `"xs:int"` cannot be aliased to `aas:DataTypeDefXsd/Int` because a term
+containing `:` is read as a compact IRI. Measured over the corpus, a context of that kind reproduces
+72.9% of the graph's predicates and non-blank objects, and **no document exactly**. Annex B records
+the measurement and how it was made.
+
+The conversion between the two formats is therefore an algorithm, not a context: clause 2 converts an
+AAS JSON document to the graph, and clause 4 converts the graph back.
+
+## 2 Lifting (normative)
+
+### 2.1 Parameters
+
+A lifting takes one parameter:
+
+- the AAS JSON document.
+
+The lifting does not take a base IRI. Root identity is independent of the document location.
+
+### 2.2 Subject terms
+
+The subject term of a **root Identifiable** whose `id` is an absolute IRI and does not begin with
+either reserved prefix below **MUST** be that `id` verbatim. This is the ordinary authoring case:
+an author who already has a stable IRI writes it once as both `@id` and `aas:Identifiable/id`.
+
+The reserved prefixes are:
+
+```text
+https://w3id.org/aas-jsonld/subject/v1/<encoded>
+https://w3id.org/aas-jsonld/node/v1/
+```
+
+The first is for encoded root subjects and the second for projected contained-node subjects. An
+authored `id` beginning with either prefix **MUST NOT** be used verbatim: those namespaces belong to
+this mapping.
+
+For every other `id` — a relative IRI reference, an identifier that is not a legal IRI, or an
+identifier inside a reserved prefix — the subject term **MUST** be
+
+```text
+https://w3id.org/aas-jsonld/subject/v1/<encoded>
+```
+
+where `<encoded>` is the RFC 4648 base64url encoding, without `=` padding, of the complete UTF-8
+encoding of `id`.
+
+This division is collision-free. A generated root or child subject is always inside a reserved
+prefix, and an authored identifier inside either prefix is encoded rather than admitted into that
+generated namespace. Outside the reserved prefixes an absolute IRI is used unchanged. Within the
+encoded root namespace, different UTF-8 identifiers cannot produce the same encoded value.
+
+An implementation **MUST** recover the AAS identifier from `aas:Identifiable/id`, not by decoding
+the subject term. A lowering **MUST** reject a root whose subject term is not the construction above
+for its `aas:Identifiable/id`.
+
+The subject term of every node other than a root Identifiable **MUST** be a blank node.
+
+### 2.3 Class assignment
+
+Every node **MUST** carry exactly one `rdf:type`, naming its concrete class. An implementation
+**MUST NOT** assert a superclass; a consumer obtains superclasses from the ontology.
+
+The class of a node is determined as follows:
+
+1. Where the JSON object carries `modelType`, the class **MUST** be the value of `modelType`.
+2. Otherwise, the class **MUST** be the range of the property that reaches the object, as declared
+   by the ontology.
+
+Rule 2 covers `Reference`, `Key`, `Qualifier`, `AssetInformation`, `AdministrativeInformation`, the
+language-string types, and every other class the JSON mapping does not discriminate.
+
+Where rule 2 applies and the declared range is abstract, the document is invalid (`AASLD-002`).
+
+### 2.4 Member resolution
+
+For each member of a JSON object other than `modelType`, an implementation **MUST** determine the
+property IRI by taking the class of the object and its superclasses, in order from the class
+upwards, and selecting the first property whose name matches the member name.
+
+Where no property matches, the document is invalid (`AASLD-001`).
+
+The member `modelType` **MUST NOT** produce a triple of its own; it determines the class per
+clause 2.3.
+
+### 2.5 Values
+
+Where the resolved property is an `owl:DatatypeProperty`, the object of the triple **MUST** be a
+literal whose datatype IRI is the declared range.
+
+Where the resolved property is an `owl:ObjectProperty` whose range is not an enumeration, the object
+**MUST** be the subject term of the node produced by lifting the nested JSON object.
+
+A JSON array **MUST** produce one triple per member, all with the same predicate. The order of the
+members is not represented in the core graph; clause 3 defines how it is carried.
+
+### 2.6 Enumerations
+
+Where the resolved property is an `owl:ObjectProperty` whose range is an enumeration, the object
+**MUST** be the individual of that enumeration whose local name corresponds to the JSON value.
+
+The correspondence is by case-insensitive comparison of the JSON value, with any prefix up to and
+including the first `:` removed, against the local name of each individual. The JSON value
+`"xs:int"` therefore denotes `aas:DataTypeDefXsd/Int`.
+
+Where no individual corresponds, the document is invalid (`AASLD-003`).
+
+## 3 The ordering graph (normative)
+
+The RDF mapping of IDTA-01001 Part 1 represents multiple values by repeating the property. RDF
+imposes no order on the resulting triples, so the order of every JSON array is lost. This is
+material for `Reference/keys`, where the key sequence is the reference path, for a
+`SubmodelElementList` whose `orderRelevant` is true, and for a multi-language value.
+
+An implementation producing an ordering graph **MUST** place it in the named graph
+
+```text
+https://w3id.org/aas-jsonld/graph/order
+```
+
+and **MUST NOT** place any triple of the core graph in it.
+
+For each member of each array-valued member of the source document, the ordering graph **MUST**
+contain one occurrence node with the following properties, in the namespace
+`https://w3id.org/aas-jsonld/`:
+
+| Property | Object |
+|---|---|
+| `rdf:type` | `aas-ld:Occurrence` |
+| `aas-ld:subject` | the subject term of the object that carries the array |
+| `aas-ld:property` | the property IRI the array produced |
+| `aas-ld:member` | the object term of the triple this occurrence positions |
+| `aas-ld:index` | the zero-based position, as `xsd:nonNegativeInteger` |
+
+An implementation **MUST** record the position of every member of every array-valued member. It
+**MUST NOT** record positions only for those members whose order the metamodel gives meaning to.
+
+A conformance check **MUST** compare every occurrence by its complete
+`(subject, property, member, index)` tuple. Comparing only the number of occurrence triples, or
+using the ordering graph only to obtain a successful lowering, does not establish that the graph
+positions the correct member of the correct property.
+
+> Restricting the ordering graph to an enumerated set of properties leaves the remaining arrays
+> restored by chance, and a multi-language value is among them.
+
+The ordering graph **MUST NOT** use `rdf:List`. An `rdf:List` is not the shape the RDF mapping
+produces, is not accepted by the SHACL schema published with IDTA-01001 Part 1, and turns a direct
+SPARQL pattern into a traversal.
+
+## 4 Lowering (normative)
+
+A lowering takes a core graph and, optionally, an ordering graph.
+
+An implementation **MUST** treat the core graph as a set. It **MUST NOT** derive the order of an
+array from the order in which triples were received.
+
+For each subject that carries `aas:Identifiable/id` and whose class is `AssetAdministrationShell`,
+`Submodel` or `ConceptDescription`, the implementation **MUST** emit a JSON object in the
+corresponding top-level collection.
+
+For each node:
+
+- only predicates in the AAS namespace **MUST** be considered for AAS members; a predicate in any
+  other namespace **MUST** be ignored by the AAS conversion even where its local name matches an AAS
+  member;
+- the member name of a property **MUST** be the segment of the property IRI after the final `/`;
+- the complete property IRI **MUST** be the property declared for the node's class or a superclass;
+- a member **MUST** be an array where the JSON Schema published with IDTA-01001 Part 1 declares it
+  an array, and a single value otherwise;
+- `modelType` **MUST** be emitted where, and only where, that JSON Schema declares it;
+- an enumeration individual **MUST** be emitted in its JSON spelling.
+
+Where an ordering graph is present, the members of an array **MUST** be emitted in `aas-ld:index`
+order. Where it is absent, the order of an array is implementation defined.
+
+## 5 The JSON-LD context (normative)
+
+The context published with this document at `aas.context.jsonld` is an **authoring convenience**.
+Published examples reference that bundled file by a relative IRI, so their final bytes remain
+processable without depending on an external URL whose publication is outside this specification.
+An implementation **MAY** additionally publish the same bytes at a stable HTTPS IRI and use that IRI in
+its own documents. The context shortens what an author writes; it does not decide what a document
+means. A document that uses a different context, or none, is graph-conforming if its graph is the
+graph of clause 1, but a processor **MUST** apply clause 5.1 before resolving that context.
+
+The context is a JSON-LD 1.1 context. It defines:
+
+- the prefixes `aas`, `xsd`, `rdf`, `rdfs` and `aasld`; and
+- a bare alias for every property local name that belongs to **exactly one** property in the
+  vocabulary, so `idShort` may be written for `aas:Referable/idShort`.
+
+A name shared by more than one property is **not** aliased. `value` is a property of `Property`, of
+`MultiLanguageProperty` and of others, and a bare alias could only mean one of them; an author writes
+`aas:Property/value`. Which names are safe is read from the ontology when the context is generated,
+so the context cannot drift from the vocabulary it abbreviates.
+
+An object-valued property is coerced with `"@type": "@id"`, so a nested node is a node rather than a
+string. A property whose range is `xs:string` is **not** coerced: a plain literal already is
+`xsd:string` in RDF 1.1, and coercing the term would stop it matching the values it is for.
+
+The context does not define enumeration spellings. An enumeration value is an individual of the
+vocabulary and is written as one — `aas:DataTypeDefXsd/String`, not `"xs:string"`.
+
+### 5.1 Context resolution and integrity
+
+A processor **MUST NOT** load a JSON-LD context from the network by default. An unbundled or
+unapproved context **MUST** fail closed; the processor **MUST NOT** make a request first, silently
+substitute a mutable cached copy or continue with a partial expansion. This rule applies to every
+context-loading mechanism, including a context IRI, `@import`, a scoped context and a context
+discovered while processing another context.
+
+An implementation **MAY** enable network loading through explicit configuration. Such configuration
+**MUST** name each allowed HTTPS origin; a rule that accepts an arbitrary host, every HTTPS origin
+or a host-name suffix is not an allowlist. Before each request, and again before every redirect hop,
+the implementation **MUST**:
+
+- reject a non-HTTPS URL and a URL containing user information;
+- resolve the destination's current IP addresses and apply the deployment's egress policy to them;
+- reject every address that is not globally routable, including IPv4 shared address space
+  `100.64.0.0/10` and deprecated IPv6 site-local space `fec0::/10`, as well as multicast, reserved,
+  unspecified and cloud-metadata destinations, unless the particular destination or network is
+  explicitly trusted by that deployment;
+- normalize IPv4-mapped and standardized IPv4-embedded IPv6 forms and apply the same test to each
+  effective IPv4 address; and
+- revalidate the redirect origin and destination addresses and enforce a finite redirect limit.
+
+The request **MUST NOT** carry ambient cookies, authorization headers, proxy credentials, client
+credentials or other credentials inherited from an interactive user or host process. A deployment
+that deliberately supplies a credential for one allowlisted origin **MUST** scope it to that origin
+and **MUST NOT** forward it across a redirect.
+
+Context processing **MUST** enforce finite implementation-defined limits on the number of contexts,
+the bytes of each context and of all contexts together, context and `@import` nesting depth,
+redirects, response time and response bytes. Exceeding a limit **MUST** terminate processing with an
+error.
+
+Every context that affects a signed, reviewed, approved or otherwise integrity-protected document
+**MUST** either be bundled in the protected material or be verified against a cryptographic content
+hash covered by the same integrity mechanism. The protected integrity scope **MUST** cover either
+the exact context bytes and their IRI-to-hash bindings, or the canonical expanded RDF dataset
+obtained with those contexts. Where canonical expanded RDF is protected, the canonicalization
+algorithm and version **MUST** be identified. A mutable URL or an unverified cache entry does not
+satisfy this requirement.
+
+## 5A Converting to the other formats (normative)
+
+An authored JSON-LD document is convertible to every serialization IDTA-01001 Part 1 defines,
+without loss of its AAS content.
+
+- **JSON.** Lower the document's graph per clause 4. The result is the AAS JSON document.
+- **XML.** The JSON document is converted by the XML mapping of IDTA-01001 Part 1, unchanged.
+- **AASX.** The JSON or XML document is placed in a package by the mapping of IDTA-01005, unchanged.
+- **RDF.** The document's RDF interpretation is the graph, obtained by any JSON-LD 1.1 processor.
+
+The conversion to JSON is a **conversion**, not a projection: an authored document is linked data and
+the JSON mapping's document is not, so a step is required and this document defines it. What survives
+that step is stated by `AASLD-Authored` in clause 6, and what does not is stated here: triples outside
+the AAS vocabulary have no place in the JSON mapping's schema and are dropped.
+
+An implementation that must preserve those triples **SHOULD** keep the authored document as the
+record and treat the JSON, XML and AASX forms as exports of it, in the same way that a source file is
+kept and a compiled artefact is not edited.
+
+The converse direction, from an AAS JSON document to the graph, is clause 2. The two are inverse over
+the corpus; Annex C reports how exactly.
+
+## 5B Authoring an AAS inside a Thing Description (normative)
+
+The vocabulary of clause 1 is usable inside a W3C Thing Description, so that one document describes
+an asset both as a Thing and as an Asset Administration Shell. A Thing Description is a JSON-LD
+document, so this needs no new mechanism: it is clause 1 applied to a document that also carries the
+Thing Description vocabulary.
+
+A Thing Description carrying AAS content **MUST**:
+
+- bind the `aas` prefix to `https://admin-shell.io/aas/3/0/` in its `@context`, or reference the
+  context of clause 5;
+- carry the AAS content under members whose terms resolve to that namespace; and
+- satisfy clause 1 for the AAS part of its graph.
+
+The Thing Description's own vocabulary is a foreign vocabulary in the sense of clause 1: its triples
+are part of the document, they are not part of the AAS, and clause 5A does not carry them into the
+exported JSON. The converse also holds — a consumer that reads the document as a Thing Description
+ignores the AAS triples — so one document serves both readers without either having to know about
+the other.
+
+### 5B.1 Published examples
+
+Each published Thing Description example **MUST** be one JSON object, not an array of Thing
+Descriptions. It **MUST** use the Thing Description `id` alias as its JSON-LD identifier and
+**MUST NOT** also carry `@id`. The AAS identifier literal **MUST** be written under a term that
+resolves to `aas:Identifiable/id`; the bare `id` member remains the Thing Description alias for
+`@id`. The context **MUST** consist only of the W3C Thing Description 1.1 context, the bundled
+`aas.context.jsonld` and bundled OPC UA WoT Binding context referenced by relative IRIs, and an
+inline context that preserves `id` as the `@id` alias and binds companion-model prefixes.
+
+The final bytes of each published example **MUST** be processable as JSON-LD 1.1. A final Thing
+Description **MUST** also validate against the W3C Thing Description 1.1 JSON Schema and the pinned
+OPC UA WoT Binding extension schema. Validation of an intermediate document does not satisfy any
+of these requirements. The published examples **MUST** be processed without network access: the
+W3C context IRI resolves to the vendored bytes whose SHA-256 appears in
+`tools/jsonld/vendor/sources.json`, and the AAS and OPC UA WoT Binding contexts resolve only from
+their bundled relative files.
+
+Validation **MUST** be performed on the expanded RDF terms, not inferred from compact member names.
+The expanded graph **MUST** use `https://admin-shell.io/aas/3/0/`,
+`http://opcfoundation.org/UA/I4AAS/v3/` and
+`http://opcfoundation.org/UA/WoT-Binding/` exactly. Every `uav:id` and
+`uav:componentOf` value **MUST** be a syntactically valid `nsu=` ExpandedNodeId, every
+`uav:browseName` value **MUST** be a syntactically valid `nsu=` QualifiedName, and each link target
+**MUST** be an absolute IRI. An OPC UA form target **MUST** use the WoT Binding
+`opc.tcp://<host>:<port>[/<resourcePath>]/?id=<ExpandedNodeId>` form. URI decoding of the `id` query
+parameter **MUST** produce the `uav:id` on the same TD root, including the second layer of
+percent-encoding needed when the ExpandedNodeId itself contains a percent escape.
+
+### 5B.2 Projection-complete documents
+
+A projection-complete publication is a bundle containing one Thing Description for each OPC UA
+`Object` produced from the `Submodel` and its submodel elements. Every TD root **MUST** carry
+`uav:object`. A projected Object **MUST NOT** be placed in the TD `properties` map: the OPC UA WoT
+Binding reserves `uav:variable` for property affordances and `uav:method` for action affordances.
+Every property affordance that is present **MUST** carry `uav:variable`, and every action affordance
+that is present **MUST** carry `uav:method`.
+
+Every Object TD **MUST** carry one Thing-level `readallproperties` form whose `href` addresses that
+Object's `uav:id` at an OPC UA endpoint. This form gives the protocol address of the Thing; it does
+not turn the Object into a property affordance. Every Object TD **MUST** also carry exactly one
+`self` link whose target is the sibling TD document IRI and is distinct from the AAS RDF subject in
+`id`.
+
+The ObjectType binding is the one defined by §5.2.1 of *OPC UA — Web of Things Binding*. It admits
+the compact model name as a member of `@type`, a `ua:HasTypeDefinition` link whose `href` is the
+ObjectType's portable ExpandedNodeId, or both. Published examples **MUST** carry both: the name is
+readable and the link is definitive. A converter **MUST** obtain the same ObjectType from each form
+and **MUST** reject a document in which they disagree. One form is sufficient for a conforming
+consumer, but neither `uav:congruentType` nor an application-defined type term creates a
+`HasTypeDefinition`.
+
+Every non-root Object TD **MUST** carry exactly one `uav:componentOf` naming its immediate parent's
+ExpandedNodeId and exactly one `uav:componentOf` link targeting the parent sibling TD IRI. The
+parent TD **MUST** carry the child's ExpandedNodeId in `uav:hasComponent` and exactly one typed link
+to the child sibling TD IRI. That typed link **MUST** use `ua:HasComponent` with `uav:refId` `i=47`
+or `ua:HasOrderedComponent` with `uav:refId` `i=49`, as applicable. Its source is the containing TD,
+so it **MUST NOT** carry `anchor`. Where it carries `uav:refName`, that value **MUST** equal the
+target TD's `uav:browseName` local name. It **MAY** omit `uav:refName` where the target TD declares
+that BrowseName. In particular, an Operation role index **MUST NOT** be emitted as `uav:refName`.
+
+A member of a `SubmodelElementList` **MUST** carry `uav:index`; its value **MUST** equal the AAS list
+position. These rules preserve the complete containment hierarchy and order rather than only the
+set of projected nodes. The union of the bundle's JSON-LD datasets **MUST** carry the source AAS
+graph. The IRI that makes each projected element addressable witnesses the corresponding blank node
+of that graph under the simple-entailment rule of clause 1; all AAS predicates, RDF types, literal
+datatypes and values **MUST** remain unchanged. Blank-node identifiers are document-scoped and
+**MUST** be kept disjoint when datasets from sibling TDs are combined.
+
+The document **MUST** also carry the ordering graph of clause 3 for every array-valued AAS member,
+including an array nested inside a `Reference`, data specification, qualifier or other structured
+value. A plain JSON-LD array does not order the RDF triples it produces. `uav:index` orders projected
+containment only and **MUST NOT** substitute for an occurrence that orders a nested member such as
+`Reference/keys`. A lowering **MUST** reconstruct these arrays from the occurrences and obtain the
+same member order when the core and ordering triples are received in any order.
+
+The BrowseName of a projected root Identifiable **MUST** be its `idShort` when that member is
+present. Otherwise it **MUST** be `<class>_<digest>`, where `<class>` is
+`AssetAdministrationShell`, `Submodel` or `ConceptDescription` and `<digest>` is the lowercase
+64-digit SHA-256 hexadecimal digest of the exact, non-normalized UTF-8 bytes of the complete `id`.
+All authored BrowseNames and derived candidates in the environment **MUST** be considered before
+assignment. Derived entries that share a candidate **MUST** be processed in exact UTF-8 `id` byte
+order. Where a candidate is already used by an authored or assigned derived BrowseName, `_n`
+**MUST** be appended, where `n` is the smallest non-negative integer written with ASCII decimal
+digits that makes the name unique; `_0` is therefore the first suffix. Duplicate identifiers
+within one Identifiable kind **MUST** be rejected. The raw `id` **MUST NOT** be used as a
+BrowseName. This construction is deterministic and does not copy control characters from an
+identifier into a QualifiedName.
+
+The subject IRI of a projected element **MUST** be
+
+```text
+https://w3id.org/aas-jsonld/node/v1/<owner>/<path>
+```
+
+where `<owner>` and `<path>` are the unpadded base64url encodings of the complete UTF-8 root
+identifier and `idShortPath`, respectively. The base64url alphabet contains no `/`, so the two
+components are unambiguous. The child prefix is disjoint from every encoded root subject, different
+owners or paths cannot produce the same subject, and a root identifier inside this prefix is encoded
+by clause 2.2 instead of being used verbatim.
+
+Each `value` in an `Operation`'s `inputVariables`, `outputVariables` and `inoutputVariables` array
+**MUST** be projected as an element child of the `Operation`. Its path **MUST** be the operation path
+followed by `.<role>[<index>]`, where `<role>` is the source AAS member name and `<index>` is its
+zero-based position in that role. The child **MUST** carry that index. The corresponding
+`aas:OperationVariable/value` edge **MUST** name the projected child subject, and the
+`InputVariables`, `OutputVariables` or `InoutputVariables` entry materialized for
+`AASOperationType` **MUST** carry that child's NodeId as
+`AASOperationVariableDataType.ValueNodeId`. These three arrays preserve role and position
+independently; a child **MUST NOT** occur in more than one of them.
+
+The child's BrowseName **MUST** be the `idShort` of the variable's `value`; the role index **MUST
+NOT** be substituted as its BrowseName. An `OperationVariable` whose `value` is absent or whose
+value has no `idShort` is invalid.
+
+`examples/wot/minimal/` holds worked Thing Descriptions: seven published IDTA submodels, each the
+authored document of clause 1 made into one Thing Description object with the required TD members,
+the W3C context and the bundled AAS and OPC UA WoT Binding contexts. `examples/jsonld/` holds the
+same seven without the TD members, so what the WoT vocabulary contributes is visible in the
+difference between the two directories.
+
+`examples/wot/submodels/` and the five root Thing Descriptions directly under `examples/wot/` are
+projection-complete bundles. Each root `<name>.td.jsonld` is accompanied by generated sibling TDs
+under `<name>.objects/`. Every file contains one TD object; the bundle carries the complete AAS
+submodel graph, OPC UA Object addresses, containment sources and sibling targets, ReferenceTypes
+and list indices.
+
+Consumers of a Thing Description may materialize it into a system of their own; a protocol binding
+that does so states what it materializes, and that statement belongs to the binding rather than to
+this document.
+
+## 6 Conformance (normative)
+
+The four conformance units are independent. An implementation **MAY** claim any subset, and
+**MUST NOT** present one as implying another.
+
+Clause 5.1 is a mandatory processing prerequisite rather than an optional conformance unit. An
+implementation claiming any unit for an operation that resolves JSON-LD contexts **MUST** satisfy
+clause 5.1 for that operation.
+
+| Unit | Requires |
+|---|---|
+| `AASLD-Authored` | For every authored JSON-LD document, the RDF interpretation simple-entails the graph the RDF mapping of IDTA-01001 Part 1 defines, with root subjects selected per clause 2.2, and lowering per clause 4 produces an AAS JSON document. Triples in a foreign vocabulary remain in the authored graph, do not appear in that JSON document and do not affect it, including where a foreign predicate has the same local name as an AAS property. |
+| `AASLD-RdfCompatible` | For every AAS JSON document, the core graph of clause 2 is isomorphic to the graph the RDF mapping of IDTA-01001 Part 1 produces from the same document after each root subject is replaced by the construction of clause 2.2, **or** differs from it only by the `aas:Referable/idShort` triple of a root Identifiable. The allowance is necessary because the published examples do not agree with each other on that member; Annex B states it and Annex C reports the two cases separately. |
+| `AASLD-JsonRoundTrip` | For every AAS JSON document, lifting per clause 2 with the ordering graph of clause 3 and lowering per clause 4 produces the source document. Members of the three top-level collections may be reordered; no other difference is permitted. |
+| `AASLD-Linked` | The ordering graph of clause 3 is produced. |
+
+`AASLD-Authored` is the unit this document exists for: it is the claim that an AAS written as linked
+data is an AAS. The other three are the conversion mechanics it rests on.
+
+`AASLD-JsonRoundTrip` **MUST NOT** be claimed by an implementation that does not produce the
+ordering graph. Annex C reports the proportion of documents for which the core graph alone is
+sufficient; it is not all of them.
+
+## Annex A — Constraints
+
+| Constraint | Statement |
+|---|---|
+| `AASLD-001` | A member of a JSON object, other than `modelType`, shall resolve to a property of the object's class or of one of its superclasses. |
+| `AASLD-002` | A JSON object that carries no `modelType` shall be reached by a property whose declared range is a concrete class. |
+| `AASLD-003` | The value of a member whose property range is an enumeration shall correspond to an individual of that enumeration. |
+| `AASLD-004` | A root subject term shall be the verbatim absolute IRI or reserved base64url construction that clause 2.2 requires for its `aas:Identifiable/id`. |
+| `AASLD-005` | A lowering shall resolve an AAS member only from its complete AAS property IRI, never from a foreign predicate's local name. |
+| `AASLD-006` | Network context loading shall be disabled by default; an enabled request and every redirect shall be restricted to an explicitly allowlisted HTTPS origin and shall pass DNS/IP and egress checks. |
+| `AASLD-007` | A context affecting an integrity-protected document shall be bundled in the protected package or verified against a cryptographic content hash. |
+| `AASLD-008` | Context requests shall carry no ambient credentials or cookies. |
+| `AASLD-009` | Context count, bytes, nesting, redirects and response resources shall have finite enforced bounds. |
+
+## Annex B — Deviations from the RDF mapping
+
+This annex is informative.
+
+The lifting of clause 2 differs from the RDF mapping of IDTA-01001 Part 1 in two respects, both
+deliberate.
+
+**A root subject is encoded only where it cannot safely be authored directly.** The RDF mapping uses
+`id` verbatim as the subject term. That is the right authoring form for an ordinary absolute IRI and
+clause 2.2 preserves it. A relative reference would depend on a parser base, an IRDI such as
+`0173-1#02-AAO677#002` is not syntactically usable as an IRI, and an identifier inside a generated
+subject namespace could collide with a subject minted for another node. Clause 2.2 encodes those
+cases into a reserved, collision-free namespace. For the compatibility measurement, the
+independently parsed upstream graph is relabelled from its `aas:Identifiable/id` triples before
+comparison.
+
+**The root `idShort` allowance of clause 6.** For 2 361 of the 2 424 readable example pairs the
+published JSON carries an `idShort` on the root `Identifiable` for which the published Turtle has no
+`aas:Referable/idShort` triple. Clause 2.4 requires the triple, so the lifting emits it and the two
+graphs differ by exactly that. `AASLD-RdfCompatible` therefore admits this one difference and
+nothing else. Where the root carries no `idShort` — 41 of the pairs — no allowance is needed and the
+graphs are isomorphic outright. The deviation is in the published examples rather than in the
+mapping rules: the `idShortOverPattern` cases, where `idShort` is the subject of the test, do carry
+the triple.
+
+`UPSTREAM-DEFECTS.md`, beside this document, records these and the further defects found in the
+upstream artefacts while this document was prepared, with the evidence for each.
+
+## Annex C — Conformance results
+
+This annex is informative. The figures are produced by `tools/jsonld/authored.py`,
+`tools/jsonld/conformance.py` and `tools/jsonld/make_context.py` over the 2 426 matched JSON and
+Turtle example pairs published with the pinned upstream release, of which 2 424 are readable.
+Every JSON-LD processor call in the supplied tooling uses
+`tools/jsonld/context_security.py`; network loading is disabled unless a caller constructs an
+explicit network policy.
+
+**`AASLD-Authored`**
+
+Each document of the corpus is lifted to its graph, the graph is written as an authored JSON-LD
+document by a JSON-LD 1.1 processor compacting against the context of clause 5, that document is read
+back by the same processor, and the recovered graph is compared and then lowered.
+
+| | cases |
+|---|---|
+| the authored document carries the graph | 2 424 of 2 424 (100%) |
+| the authored document lowers to the source AAS JSON document | 2 424 of 2 424 (100%) |
+| both, with triples in a foreign vocabulary added to every document | 2 424 of 2 424 (100%) |
+
+The foreign-vocabulary run is the check that clause 1's superset allowance is real: `reviewedBy` and
+a foreign `idShort` whose local name collides with an AAS property are added to each authored graph.
+The complete unfiltered graph is passed to the lowerer; both foreign triples remain in the JSON-LD
+graph and the AAS that comes out is unchanged.
+
+The authored document in the run is generated rather than hand-written, which is the limit of what
+this measures: it establishes that the form is sufficient and that the conversions are inverse over
+it. It does not establish that a hand-written document of some other shape conforms — clause 1 says
+that is decided on the graph, and any processor decides it the same way.
+
+**Published JSON-LD and Thing Description examples**
+
+`tools/jsonld/validate_examples.py` reads the final committed bytes rather than an emitter's
+intermediate object. All 260 examples pass JSON-LD 1.1 processing; all 253 Thing Descriptions pass
+the pinned W3C Thing Description 1.1 and OPC UA WoT Binding schemas; and all 12
+projection-complete bundles carry the complete AAS submodel graph and match every projected node,
+containment parent and source, sibling TD target, ReferenceType, Operation-variable role and list
+index, covering 234 containment edges, 45 indices and 6 621 ordered array occurrences.
+
+The final-byte processor resolves only three exact resources: the W3C Thing Description context to
+its vendored SHA-256-pinned bytes, and the two bundled relative context files to their exact local
+paths. Its per-operation limits are 32 context entries, 1 MiB of aggregate context definitions,
+eight levels of context/reference nesting and 512 KiB per loaded context. No network transport is
+configured.
+
+The validator's negative controls replace a containment parent, replace a containment source,
+replace a projected subject, replace a list index, substitute an RDF subject for a sibling TD
+target, remove a sibling TD, replace a bundled context with localhost, the link-local metadata
+address or an unpinned external context, wrap a Thing Description in an array, add `@id` beside
+`id`, remove the `id` alias, remove required Thing Description security, and change an AAS literal
+datatype. Further controls rebind `uav` and `i4aas`, malform an ExpandedNodeId, replace an OPC UA
+form with an RDF subject, address the wrong NodeId, violate each node-class term domain, remove the
+URI layer from a NodeId percent escape, move an Operation variable between roles, duplicate its
+index, replace its `ValueNodeId` target, use its role index as `uav:refName`, replace an ordering
+occurrence's property, and replace the index of a nested `Reference/keys` occurrence. All 31
+mutations are rejected.
+
+`tools/jsonld/regression_tests.py` also exercises the loader independently with a fake resolver and
+transport. Sixteen negative controls cover default-deny loading, loopback, the
+`169.254.169.254` metadata address, IPv4 shared address space, deprecated IPv6 site-local space,
+IPv4-mapped, IPv4-compatible and NAT64-embedded shared addresses, an allowlisted but unpinned
+context, a content-hash mismatch, a redirect to metadata, the redirect limit, URL credentials,
+context count, aggregate bytes and nesting depth. The prohibited and unpinned targets are rejected
+before the transport is called, and a redirect destination is revalidated before a second request.
+Positive controls load both an ordinary global address and an IPv4-mapped global address only when
+the exact response bytes match the configured SHA-256.
+
+**`AASLD-RdfCompatible`**
+
+| | cases |
+|---|---|
+| isomorphic to the core graph of clause 2 | 41 of 2 424 (1.7%) |
+| isomorphic once the root `idShort` allowance is applied | 2 361 |
+| **conforming to the unit as clause 6 defines it** | **2 402 of 2 424 (99.1%)** |
+| differing | 22 |
+
+The 41 are the documents whose root carries no `idShort`, so the allowance is not needed. For the
+other 2 361 the published Turtle omits a triple the published JSON requires, and the two agree only
+once that triple is set aside. Annex B records this as a deviation.
+
+The 22 are cases in which the published JSON and Turtle examples describe different instances; they
+are recorded as an upstream defect and are not reconcilable by any lifting.
+
+**`AASLD-JsonRoundTrip`**
+
+| | cases |
+|---|---|
+| restored with the ordering graph | 2 424 of 2 424 (100%) |
+| **structurally order-bearing, so not guaranteed by the core graph** | **308 of 2 424 (12.7%)** |
+| restored from the core graph under every one of ten permutations | 2 117 |
+| failed under at least one permutation | 307 |
+
+A document carries an array of two or more members, or it does not. Where it does, the core graph
+does not represent that array's order and no lowering can guarantee it; a particular permutation may
+still come back right. The structural figure answers the question and does not sample. The
+ten-permutation figure is reported beside it because the two agreeing to within one case is what
+establishes that neither is an artefact of the sampling.
+
+**The member-name context of clause 1.2**
+
+This is the context that would map the JSON mapping's member names onto property IRIs — the form
+clause 1.2 does not define. The figures are the evidence for that decision.
+
+| | |
+|---|---|
+| predicate and object pairs of the core graph reproduced | 22 327 of 30 614 (72.9%) |
+| documents whose graph is reproduced exactly | 0 of 2 424 |
+
+| Cause | Cases affected |
+|---|---|
+| root subject is a blank node | 2 424 of 2 424 |
+| enumeration value left as a compact IRI | 2 291 |
+| node has no `rdf:type` | 1 385 |
+
+The pairs are counted with the subject discarded and blank node objects excluded, because a blank
+node cannot match by label. The figure is about predicates and their non-blank objects, not about
+the graph as a whole.
+
+The context of clause 5 is not measured this way and could not be: it does not claim to produce a
+graph from a document of some other shape. It abbreviates a document that already denotes the graph,
+and `AASLD-Authored` is where that document is checked.
+
+## Annex D — Worked example
+
+This annex is informative. The document is `jsonld/fixtures/example-irdi-identifier.json`; the graph
+is the output of `tools/jsonld/lift.py`.
+
+**The same AAS, authored as linked data.** This is what clause 1 asks for, and it is the form an
+author writes:
+
+```jsonc
+{
+  "@context": "aas.context.jsonld",
+  "@id": "https://w3id.org/aas-jsonld/subject/v1/MDE3My0xIzAyLUFBTzY3NyMwMDI",
+  "@type": "aas:Submodel",
+  "id": "0173-1#02-AAO677#002",
+  "idShort": "Nameplate",
+  "submodelElements": {
+    "@type": "aas:Property",
+    "idShort": "MaxTemperature",
+    "aas:Property/valueType": { "@id": "aas:DataTypeDefXsd/Decimal" },
+    "aas:Property/value": "85.0",
+    "semanticId": {
+      "@type": "aas:Reference",
+      "aas:Reference/type": { "@id": "aas:ReferenceTypes/ExternalReference" },
+      "keys": {
+        "@type": "aas:Key",
+        "aas:Key/type": { "@id": "aas:KeyTypes/GlobalReference" },
+        "aas:Key/value": "0173-1#02-AAO677#002"
+      }
+    }
+  }
+}
+```
+
+Its graph is the graph below, which is the point: nothing about the nesting or the spelling is
+required, and a flattened document listing the same nodes side by side denotes the same AAS. The
+values are individuals of the vocabulary — `aas:DataTypeDefXsd/Decimal`, not `"xs:decimal"` — because
+that is what they are in RDF.
+
+`id` and `idShort` are written bare because the context of clause 5 aliases them; `aas:Property/value`
+is written out because `value` belongs to more than one class.
+
+**The AAS JSON document.** Clause 5A converts the document above to this, and clause 2 converts this
+back:
+
+```json
+{
+  "submodels": [
+    {
+      "id": "0173-1#02-AAO677#002",
+      "idShort": "Nameplate",
+      "modelType": "Submodel",
+      "submodelElements": [
+        {
+          "idShort": "MaxTemperature",
+          "modelType": "Property",
+          "valueType": "xs:decimal",
+          "value": "85.0",
+          "semanticId": {
+            "type": "ExternalReference",
+            "keys": [ { "type": "GlobalReference", "value": "0173-1#02-AAO677#002" } ]
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+The `id` is an IRDI. Clause 2.2 applies the same base64url construction used for every other root
+identifier. The `id` itself remains available as a literal.
+
+**The graph.**
+
+```turtle
+@prefix aas:    <https://admin-shell.io/aas/3/0/> .
+@prefix aas-ld: <https://w3id.org/aas-jsonld/> .
+@prefix xs:     <http://www.w3.org/2001/XMLSchema#> .
+
+<https://w3id.org/aas-jsonld/subject/v1/MDE3My0xIzAyLUFBTzY3NyMwMDI>
+    a aas:Submodel ;
+    aas:Identifiable/id      "0173-1#02-AAO677#002"^^xs:string ;
+    aas:Referable/idShort    "Nameplate"^^xs:string ;
+    aas:Submodel/submodelElements [
+        a aas:Property ;
+        aas:Referable/idShort     "MaxTemperature"^^xs:string ;
+        aas:Property/valueType    aas:DataTypeDefXsd/Decimal ;
+        aas:Property/value        "85.0"^^xs:string ;
+        aas:HasSemantics/semanticId [
+            a aas:Reference ;
+            aas:Reference/type aas:ReferenceTypes/ExternalReference ;
+            aas:Reference/keys [
+                a aas:Key ;
+                aas:Key/type  aas:KeyTypes/GlobalReference ;
+                aas:Key/value "0173-1#02-AAO677#002"^^xs:string ] ] ] .
+```
+
+`valueType` is `"xs:decimal"` in JSON and the individual `aas:DataTypeDefXsd/Decimal` in RDF, per
+clause 2.6. The `semanticId` keys carry their position in the ordering graph:
+
+```turtle
+# graph https://w3id.org/aas-jsonld/graph/order
+[] a aas-ld:Occurrence ;
+   aas-ld:subject  _:reference ;
+   aas-ld:property aas:Reference/keys ;
+   aas-ld:member   _:key ;
+   aas-ld:index    "0"^^xs:nonNegativeInteger .
+```
+
+## Bibliography
+
+- IDTA-01001-3-0, *Specification of the Asset Administration Shell — Part 1: Metamodel*, Industrial
+  Digital Twin Association.
+- `admin-shell-io/aas-specs-metamodel`, tag `V3.0.7`: `schemas/rdf/rdf-ontology.ttl`,
+  `schemas/rdf/shacl-schema.ttl`, `schemas/json/aas.json`.
+- W3C, *JSON-LD 1.1*, W3C Recommendation, 16 July 2020.
+- W3C, *Web of Things (WoT) Thing Description 1.1*, W3C Recommendation, 5 December 2023.
+- `w3c/wot-resources`, Thing Description 1.1 context at commit
+  `e3ea7952471626d9513dc17b9206fb6e275b2cbd` and JSON Schema at commit
+  `4076892f0fc0cbc3567382cb0cdf463e9c581723`.
+- `admin-shell-io/submodel-templates`, seven DPP and battery-passport templates at commit
+  `19735029b5268bf4a40ea078288071d8ce40d1a9`, with per-file SHA-256 values in
+  `tools/jsonld/vendor/template-sources.json`.
+- W3C, *RDF 1.1 Concepts and Abstract Syntax*, W3C Recommendation, 25 February 2014.
+- W3C, *XML Schema Part 2: Datatypes Second Edition*, W3C Recommendation, 28 October 2004.
+- IETF, RFC 3986, *Uniform Resource Identifier (URI): Generic Syntax*.
+- IETF, RFC 2119, *Key words for use in RFCs to Indicate Requirement Levels*.

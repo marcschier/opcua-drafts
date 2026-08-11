@@ -1,0 +1,88 @@
+{
+  "assetAdministrationShells": [
+    {
+      "modelType": "AssetAdministrationShell",
+      "id": "https://fabrikam.com/aas/pump/SN-001",
+      "idShort": "Pump001",
+      "administration": { "version": "1", "revision": "3", "templateId": "https://fabrikam.com/aas/pump/type" },
+      "assetInformation": {
+        "assetKind": "Instance",
+        "globalAssetId": "https://fabrikam.com/asset/pump/SN-001",
+        "specificAssetIds": [
+          { "name": "serialNumber", "value": "SN-001" },
+          { "name": "manufacturerPartId", "value": "PMP-4711",
+            "externalSubjectId": { "type": "ExternalReference", "keys": [ { "type": "GlobalReference", "value": "https://contoso.com/bpn/1234" } ] } }
+        ]
+      },
+      "submodels": [
+        { "type": "ModelReference", "keys": [ { "type": "Submodel", "value": "https://fabrikam.com/ids/sm/every-element" } ] }
+      ]
+    }
+  ],
+  "submodels": [
+    {
+      "modelType": "Submodel",
+      "id": "https://fabrikam.com/ids/sm/every-element",
+      "idShort": "EveryElement",
+      "kind": "Instance",
+      "semanticId": { "type": "ExternalReference", "keys": [ { "type": "GlobalReference", "value": "https://admin-shell.io/idta/Example/1/0" } ] },
+      "qualifiers": [
+        { "kind": "ValueQualifier", "type": "Cardinality", "valueType": "xs:string", "value": "One" }
+      ],
+      "submodelElements": [
+        { "modelType": "Property", "idShort": "AProperty", "valueType": "xs:string", "value": "text",
+          "extensions": [ { "name": "vendorNote", "valueType": "xs:string", "value": "preserved verbatim" } ] },
+        { "modelType": "MultiLanguageProperty", "idShort": "AMultiLanguageProperty",
+          "value": [ { "language": "en", "text": "Pump" }, { "language": "de", "text": "Pumpe" }, { "language": "fr", "text": "Pompe" } ] },
+        { "modelType": "Range", "idShort": "ARange", "valueType": "xs:int", "min": "0", "max": "100" },
+        { "modelType": "Blob", "idShort": "ABlob", "contentType": "application/octet-stream", "value": "QUFTIFYz" },
+        { "modelType": "File", "idShort": "AFile", "contentType": "application/pdf", "value": "/aasx/docs/manual.pdf" },
+        { "modelType": "ReferenceElement", "idShort": "AReferenceElement",
+          "value": { "type": "ModelReference", "keys": [
+            { "type": "Submodel", "value": "https://fabrikam.com/ids/sm/every-element" },
+            { "type": "SubmodelElementCollection", "value": "ACollection" },
+            { "type": "Property", "value": "Nested" } ] } },
+        { "modelType": "RelationshipElement", "idShort": "ARelationship",
+          "first": { "type": "ModelReference", "keys": [ { "type": "Submodel", "value": "https://fabrikam.com/ids/sm/every-element" } ] },
+          "second": { "type": "ExternalReference", "keys": [ { "type": "GlobalReference", "value": "https://contoso.com/asset/motor/SN-9" } ] } },
+        { "modelType": "AnnotatedRelationshipElement", "idShort": "AnAnnotatedRelationship",
+          "first": { "type": "ExternalReference", "keys": [ { "type": "GlobalReference", "value": "https://fabrikam.com/a" } ] },
+          "second": { "type": "ExternalReference", "keys": [ { "type": "GlobalReference", "value": "https://fabrikam.com/b" } ] },
+          "annotations": [ { "modelType": "Property", "idShort": "Quantity", "valueType": "xs:int", "value": "2" } ] },
+        { "modelType": "SubmodelElementCollection", "idShort": "ACollection",
+          "value": [ { "modelType": "Property", "idShort": "Nested", "valueType": "xs:boolean", "value": "true" } ] },
+        { "modelType": "SubmodelElementList", "idShort": "AList", "orderRelevant": true, "typeValueListElement": "Property",
+          "value": [ { "modelType": "Property", "valueType": "xs:int", "value": "1" } ] },
+        { "modelType": "Entity", "idShort": "ASelfManagedEntity", "entityType": "SelfManagedEntity",
+          "globalAssetId": "https://contoso.com/asset/motor/SN-9",
+          "statements": [ { "modelType": "Property", "idShort": "Position", "valueType": "xs:string", "value": "drive-end" } ] },
+        { "modelType": "BasicEventElement", "idShort": "AnEvent", "direction": "output", "state": "on",
+          "observed": { "type": "ModelReference", "keys": [ { "type": "Submodel", "value": "https://fabrikam.com/ids/sm/every-element" } ] },
+          "messageTopic": "fabrikam/pump/SN-001/events", "minInterval": "PT1S" },
+        {
+          "modelType": "Operation",
+          "idShort": "AnOperation",
+          "inputVariables": [
+            { "value": { "modelType": "Property", "idShort": "InputTemperature", "valueType": "xs:decimal", "value": "21.5" } },
+            { "value": { "modelType": "Property", "idShort": "InputPressure", "valueType": "xs:int", "value": "5" } }
+          ],
+          "outputVariables": [
+            { "value": { "modelType": "Property", "idShort": "OutputAccepted", "valueType": "xs:boolean", "value": "true" } }
+          ],
+          "inoutputVariables": [
+            { "value": { "modelType": "Property", "idShort": "InoutputCounter", "valueType": "xs:integer", "value": "1" } }
+          ]
+        },
+        { "modelType": "Capability", "idShort": "ACapability" }
+      ]
+    }
+  ],
+  "conceptDescriptions": [
+    {
+      "modelType": "ConceptDescription",
+      "id": "https://admin-shell.io/idta/Example/1/0",
+      "idShort": "Example",
+      "isCaseOf": [ { "type": "ExternalReference", "keys": [ { "type": "GlobalReference", "value": "0173-1#02-AAO677#002" } ] } ]
+    }
+  ]
+}

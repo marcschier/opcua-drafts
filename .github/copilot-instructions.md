@@ -19,16 +19,19 @@ not catch. The reason is given with each one; when a rule and a reason disagree,
 ```powershell
 # one-time
 pip install -r core-specs/extras/requirements.txt
+pip install -r companion-specs/AAS/requirements.txt
 
 # validate everything (three separate entrypoints — none covers another's tree)
 python core-specs/extras/validate_all.py
 python cloud-specs/validate_all.py
 python metaverse-specs/validate_all.py
+python companion-specs/validate_all.py --self-contained
 
 # what CI runs — only the checks that need no untracked base data
 python core-specs/extras/validate_all.py --self-contained
 python cloud-specs/validate_all.py --self-contained
 python metaverse-specs/validate_all.py --self-contained
+python companion-specs/validate_all.py
 
 # a single extension (the granular unit — there is no per-test runner)
 python metaverse-specs/extras/openusd-binding/tools/validate_local.py
@@ -87,9 +90,9 @@ Some sit under the spec folder (`core-specs/xregistry/tools/`, `cloud-specs/sche
 `companion-specs/Generators/tools/`) and others under `extras/`
 (`cloud-specs/extras/observability-export/tools/`, all of `metaverse-specs/extras/*/tools/`).
 
-**Validation is per-extension.** Each extension owns a `validate_local.py`; the three `validate_all.py`
-files just drive lists of them. `wot-specs/` and `companion-specs/` are in **no** aggregate —
-run their validators directly. A tree drives only its own validators: `core-specs/extras/validate_all.py`
+**Validation is per-extension.** Each extension owns a `validate_local.py`; the four `validate_all.py`
+files just drive lists of them. `wot-specs/` is in **no** aggregate — run its validators directly.
+A tree drives only its own validators: `core-specs/extras/validate_all.py`
 stops at `core-specs/`, so a specification that moves trees takes its entry with it or silently
 stops being validated.
 
@@ -133,6 +136,32 @@ Some phrasing only looks like history and should stay: *"adding a viewer no long
 another bridge"* contrasts with an alternative design, and *"without invalidating previously
 deployed connectors"* is a forward-looking property. Judge by whether the sentence describes the
 model or its past.
+
+**State the decision, not the reasoning that produced it.** A specification says what a Server
+does. It does not narrate what its author analysed, what alternative was rejected, or how
+hard-won the conclusion was, and it does not market its own choices with superlatives.
+
+Avoid: *"This is the one place where this specification does not reproduce its input byte for
+byte, so it states plainly what it does instead"*, *"the reason is a cardinality mismatch rather
+than a modelling preference"*, *"The consequence, stated rather than buried:"*, *"Four rows
+deserve their reasoning stated, because in each the obvious choice is wrong"*, *"Nothing in that
+sequence requires judgement, which is the point"*, *"a negative control, because a check that
+cannot fail is not evidence"*, *"is the honest choice"*, *"a corpus chosen to hurt"*.
+
+Write instead the mechanics: *"A value is compared in the xsd value space, not the lexical
+space"*, *"`ValueType` is Mandatory. The metamodel makes `valueType` mandatory and `value`
+optional, so a Property with no value has no value node to carry the declaration"*, *"No step in
+that sequence is implementation-defined"*.
+
+A short causal clause that a reader needs in order to implement correctly is not narration and
+should stay — *"because Browse is not required to return references in order"* tells an
+implementer why `Index` exists and what breaks without it. Judge by whether removing the clause
+would leave a reader unable to implement the rule, or merely less impressed.
+
+**Exploratory material does not belong in the document.** A clause weighing whether the
+specification should exist, comparing it with an unrelated technology, or recording an avenue
+that was considered and dropped belongs in a study, a `CHANGELOG.md` entry, or a pull request
+discussion. Delete it from the specification.
 
 ## Normative language
 

@@ -58,6 +58,7 @@ turn the discussion into concrete changes to the source and regenerate everythin
 | `OPC-UA-Async-Services.docx` | Asynchronous Service Execution — extends the base namespace; see below. |
 | `OPC-UA-Vision.docx` | Vision — sensors, media, inference and results. |
 | `OPC-UA-AI-Model-Management.docx` | AI Model Management — models, deployments and the learning loop. |
+| `OPC-UA-AAS.docx` | OPC 30270 draft 3.00-draft3 — the Asset Administration Shell V3 metamodel and registry. |
 | `*.docmodel.json` | The intermediate representation each document was rendered from. Committed **because a `.docx` diff is unreadable** — review this instead. |
 | `*.provenance.json` | What each paragraph of the document was rendered from. This is what lets a marked-up copy be turned back into a change to the source. |
 | `figures/*.pptx` | The editable PowerPoint behind each figure, embedded in the document as an OLE object. |
@@ -83,6 +84,9 @@ python word-drafts/tools/build_all.py --list
 python word-drafts/tools/build_docx.py         word-drafts/tools/specs/generators.json
 python word-drafts/tools/validate_docx.py      word-drafts/tools/specs/generators.json
 python word-drafts/tools/test_validate_docx.py word-drafts/tools/specs/generators.json
+
+# the AAS draft
+python word-drafts/tools/build_all.py aas
 
 # update the table of contents, the table of figures, the table of tables and every
 # cross-reference, so the committed file opens fully paginated  (needs Word; local only)
@@ -156,6 +160,7 @@ a new config file; a genuinely new shape needs a generalisation in `opcdocx/` fi
 | `OPC-UA-WoT-Connectivity.docx` | `wot-specs/WoT-Connectivity/` + `Opc.Ua.WoTCon.NodeSet2.xml` |
 | `OPC-UA-WoT-Binding.docx` | `wot-specs/WoT-Binding/` — **no NodeSet**; see below |
 | `OPC-UA-Schema-Registry.docx` | `cloud-specs/schema-registry/` + `Opc.Ua.SchemaRegistry.NodeSet2.xml` |
+| `OPC-UA-AAS.docx` | `companion-specs/AAS/OPC-UA-AAS.md` + `Opc.Ua.I4AAS.NodeSet2.xml` |
 | `OPC-UA-Generators.docx` | `companion-specs/Generators/` + `Opc.Ua.Generators.NodeSet2.xml` |
 | `OPC-UA-Data-Channels.docx` | `core-specs/data-channels/` + `Opc.Ua.DataChannels.NodeSet2.xml` — **base namespace**; see below |
 | `OPC-UA-Avro-Encoding.docx` | `core-specs/encodings/avro/` — **no NodeSet**; see below |
@@ -181,7 +186,7 @@ under `notAFit`, naming the document it folds into.
 
 ## The one that owns no namespace
 
-Ten of the eleven documents own a namespace. **Data Channels does not**: it proposes additions to
+Eleven of the twelve documents own a namespace. **Data Channels does not**: it proposes additions to
 OPC 10000-3, -4 and -6, and its NodeSet declares `ModelUri = http://opcfoundation.org/UA/`, so its
 Nodes live in the base namespace. It is rendered without a declared deviation — the NamespaceUri in
 Annex A genuinely *is* that — but only because three things were made true first:
@@ -216,7 +221,7 @@ at all.
 
 ## Declared deviations
 
-Eight of the eleven documents comply with OPC 20020 without deviation. Three cannot, all for the
+Nine of the twelve documents comply with OPC 20020 without deviation. Three cannot, all for the
 same reason: **WoT Binding** defines a JSON-LD vocabulary and a NodeSet-to-WoT mapping, and the two
 **encoding** specifications define a wire format. None of them has a NodeSet, ObjectTypes or
 Instances, so the template's NodeClass clauses and Annex A NodeSet block have nothing to present.

@@ -5,3 +5,9 @@
 # digest would otherwise fail, and the destination files are consumed by Linux
 # Actions runners that require LF.
 release/private-repo/files/** -text
+
+# These are byte-pinned copies of external JSON-LD contexts, schemas and AAS
+# templates. Their SHA-256 digests are checked before examples are generated,
+# so line-ending normalization would make a clean Windows checkout fail before
+# any specification logic runs.
+companion-specs/AAS/tools/jsonld/vendor/** -text

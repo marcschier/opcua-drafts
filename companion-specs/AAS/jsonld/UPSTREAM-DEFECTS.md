@@ -1,0 +1,289 @@
+# Upstream defect register — AAS RDF serialization
+
+**Pinned upstream:** `admin-shell-io/aas-specs-metamodel` at tag **`V3.0.7`**, commit
+`21e68502e367b72fd82cfa29488a686cbd3892a5`. Namespace `https://admin-shell.io/aas/3/0/`.
+
+| Artefact | Path | Size |
+|---|---|---|
+| OWL ontology | `schemas/rdf/rdf-ontology.ttl` | 90 614 |
+| SHACL schema | `schemas/rdf/shacl-schema.ttl` | 49 645 |
+| JSON Schema | `schemas/json/aas.json` | 45 448 |
+| Matched examples | `schemas/{json,rdf}/examples/generated/` | 2 426 pairs |
+
+Copies of the first three are vendored beside this file in `upstream/`. The example corpus is
+fetched by `../tools/jsonld/fetch_corpus.py` into `.corpus/`, which is not tracked.
+
+## Artefact precedence
+
+Where the prose, the generated examples and the SHACL schema disagree, this specification takes
+them in this order, and records the disagreement below rather than silently choosing:
+
+1. **SHACL schema** — it is executable, so an implementation can be tested against it.
+2. **Generated examples** — they are produced by the same toolchain that produces the schemas.
+3. **`rdf.adoc` prose** — normative in intent, but demonstrably not what the artefacts do.
+
+## D1 — The JSON and RDF example generators emit different instances
+
+**Severity: high for anyone using the corpus as an oracle. Not a defect in the RDF *serialization
+rules*, which was my first reading of it, but in the *example corpus*.**
+
+The two halves of a matched pair are meant to describe one instance. Mostly they do not.
+
+In 2 361 of 2 424 readable pairs the JSON root `Identifiable` carries an `idShort` for which the
+Turtle has no `aas:Referable/idShort` triple. Lifting those pairs and comparing as RDF graphs shows
+the root `idShort` is the **only** difference: suppress it and the graphs are isomorphic.
+
+```jsonc
+// schemas/json/examples/generated/AdministrativeInformation/minimal.json
+{ "assetAdministrationShells": [ {
+    "id": "something_142922d6",
+    "idShort": "something_783819f1",     // present
+    "modelType": "AssetAdministrationShell", ... } ] }
+```
+
+```turtle
+# schemas/rdf/examples/generated/AdministrativeInformation/minimal.ttl
+<something_142922d6> rdf:type aas:AssetAdministrationShell ;
+    <https://admin-shell.io/aas/3/0/Identifiable/id> "something_142922d6"^^xs:string ;
+    # no Referable/idShort triple
+.
+```
+
+It is **not** a rule that the root `idShort` is dropped. In the `idShortOverPatternExamples` cases,
+where `idShort` is the subject of the test, the Turtle does carry it. The pattern is consistent with
+the two generators populating optional fields differently rather than with a serialization rule, and
+D7 below shows the divergence is not confined to `idShort`.
+
+**Consequence.** The corpus is usable as an oracle once this deviation is declared. The lifting
+defined here emits the triple; `../tools/jsonld/conformance.py` retries a failing case without it and counts
+the case as conforming when that alone reconciles the two.
+
+## D7 — The generators diverge on more than `idShort`
+
+**Severity: medium. 22 of 2 424 pairs.**
+
+In `Operation/idShortOverPatternExamples/*` the nested `Entity` differs in substance, not only in an
+optional label:
+
+| | JSON | Turtle |
+|---|---|---|
+| `entityType` | `SelfManagedEntity` | `SelfManagedEntity` |
+| `idShort` | `something_c8b0a9a0` | absent |
+| `globalAssetId` | absent | `urn:an-example03:cc3a7d47` |
+
+These are different instances, so no lifting can reconcile them and none should try. They are
+excluded from the oracle and reported upstream.
+
+## D2 — Order is discarded, including where order carries meaning
+
+**Severity: high. Stated by the specification as a design rule, so it is a design defect and not an
+implementation bug.**
+
+`rdf.adoc` design rule: *"Multiple object values are represented by repeating the property, one for
+each value object."* No `rdf:List`, no `rdf:Seq`, no container membership properties, no index.
+
+This is defensible for a set-valued aggregation. It is not defensible for two cases where the
+metamodel gives the order meaning:
+
+- **`Reference/keys`** — the key sequence *is* the reference path. Serialized as repeated,
+  unordered `aas:Reference/keys` triples, a three-key path `Submodel → Blob → FragmentReference`
+  cannot be reconstructed.
+- **`SubmodelElementList/value`** when `orderRelevant` is true. The `orderRelevant` flag itself
+  survives as `"true"^^xs:boolean`, so the graph asserts that the order matters while withholding
+  it.
+
+**Consequence.** No JSON-LD construct repairs this within the normative graph. `@list` emits an
+`rdf:List`, which is neither isomorphic to repeated triples nor matched by the published SHACL.
+Ordering is therefore carried in the enrichment graph, by an index predicate rather than an
+`rdf:List`, so the published SHACL and ordinary SPARQL both continue to work.
+
+**Measured cost.** 308 of 2 424 corpus documents (12.7%) carry an array of two or more members, so
+the core graph cannot guarantee them; all 2 424 are restored exactly once the ordering graph is
+present. See the result table below.
+
+The loss is not confined to the cases one would guess. Every array-valued property is affected,
+including multi-language values, whose array order the metamodel's own JSON serialization preserves.
+The lifting therefore records the position of every member of every array rather than of an
+enumerated list of properties, and which properties those are is read from the pinned JSON Schema.
+
+## D3 — Generated Turtle declares no base IRI
+
+**Severity: medium.**
+
+No generated file declares `@base`. Subject terms are written as relative IRI references:
+
+```turtle
+<something_142922d6> rdf:type aas:AssetAdministrationShell ;
+```
+
+Per Turtle 1.1 §2.4 a relative reference resolves against the retrieval URL, so the same document
+denotes different subjects depending on where it was fetched from. The prose does not require a
+base.
+
+**Consequence.** The lifting defined here **requires** a base IRI as an explicit parameter and
+defines the resulting subject terms in terms of it.
+
+## D4 — A non-IRI `id` has no defined serialization
+
+**Severity: high. A genuine gap, not a contradiction.**
+
+An AAS `Identifiable.id` is an `xs:string` and is routinely an IRDI, for example
+`0173-1#02-AAO677#002`. The RDF mapping uses the `id` **verbatim** as the subject term while also
+emitting it as an `xs:string` literal. Applied to an IRDI this yields `<0173-1#02-AAO677#002>`,
+which is not a legal IRI: the second `#` is forbidden in a fragment by RFC 3986 §3.5, and Turtle
+parsers reject it.
+
+`rdf.adoc` says only that *"if no IRI is predefined, a globally unique IRI is generated"*, and gives
+no algorithm. No generated example exercises an IRDI `id`; the generator emits only
+`something_…`, `urn:…` and `https://…` values, so the case is untested upstream.
+
+**Consequence.** The lifting defined here specifies a deterministic skolemization for an `id` that
+is not a legal IRI, and retains the `id` literal unchanged in every case.
+
+## D5 — Prose contradicts the artefacts
+
+**Severity: medium.**
+
+| `rdf.adoc` says | The artefacts do |
+|---|---|
+| multi-language values become `rdf:langString` | a typed node, `aas:LangStringTextType` / `LangStringNameType`, with separate `AbstractLangString/language` and `AbstractLangString/text` `xs:string` literals; the SHACL expects that node |
+| `rdfs:label` is added from `idShort`, `rdfs:comment` from `description` | no generated instance carries either; both appear only on class and property definitions in the ontology |
+
+**Consequence.** Precedence above applies: the artefacts win, and this specification does not emit
+`rdfs:label` or `rdfs:comment` on instances.
+
+## D6 — Two corpus files are not valid UTF-8 JSON
+
+**Severity: low. Noted so the counts reconcile.**
+
+`BasicEventElement/maxIntervalOverPatternExamples/only_seconds` and
+`Blob/contentTypeOverPatternExamples/number prefix and suffix` do not parse. 2 424 of the 2 426
+matched pairs are usable.
+
+## D8 — Three enumerations are spelled differently in the JSON schema and the ontology
+
+**Severity: high for anyone converting between the two mappings. Found by reading the published
+submodel templates, not the examples.**
+
+The JSON schema and the OWL ontology of the same release disagree on the spelling of enumeration
+members, in a way that has no single rule:
+
+| Enumeration | JSON schema | OWL ontology |
+|---|---|---|
+| `DataTypeDefXsd` | `xs:anyURI`, `xs:base64Binary` | `AnyUri`, `Base64Binary` |
+| `DataTypeIec61360` | `STRING_TRANSLATABLE`, `REAL_MEASURE` | `StringTranslatable`, `RealMeasure` |
+| `Direction` | `input`, `output` | `Input`, `Output` |
+| `StateOfEvent` | `off`, `on` | `Off`, `On` |
+
+Four different conventions across four enumerations: a prefixed lexical form, screaming snake case,
+lower camel case, and lower case. The remaining enumerations agree exactly. A converter cannot
+derive the correspondence from the metamodel and must carry a table or a set of rules; this document
+carries rules, in `lift.py` and `lower.py`.
+
+None of the 2 424 example pairs exercises `DataTypeIec61360`. The defect surfaced only when the
+published submodel templates of `admin-shell-io/submodel-templates` were read, which is a different
+corpus and a more representative one — every battery passport template contains
+`STRING_TRANSLATABLE`.
+
+## D9 — Published templates contain a literal backslash-n
+
+**Severity: low upstream, high for tooling.**
+
+`IDTA 02035-1_DBP-Part-1_Digital Nameplate` carries a `definition` whose text contains the two
+characters `\` and `n` where a line break was meant. It is harmless in JSON, and it is a trap for
+every serializer between JSON and RDF: escaped once it becomes `\\n`, and any decoder that unescapes
+by a sequence of independent replacements turns it into a backslash followed by a newline.
+
+Two implementations were caught by it while this document was prepared, one of them this document's
+own `lower.py`, which now decodes in a single left-to-right pass. The other is `pyld`, whose N-Quads
+reader and writer both corrupt the value; `authored.py` therefore exchanges datasets with it as
+structures rather than as text. No example in the upstream corpus contains the sequence.
+
+## What a JSON-LD context can and cannot do
+
+The plan originally proposed shipping a `@context` you drop into an unmodified AAS JSON file. That
+is impossible, and `../tools/jsonld/make_context.py` measures how impossible with a real JSON-LD 1.1 processor
+rather than arguing it. The generated `../aas.context.jsonld` uses every relevant JSON-LD 1.1 facility —
+`modelType` aliased to `@type`, type-scoped contexts to disambiguate keys that recur across classes
+with different property IRIs, property-scoped contexts to reach objects that carry no discriminator —
+and still reaches only part of the graph.
+
+Over the 2 424 readable corpus documents, against the lifting:
+
+| | |
+|---|---|
+| predicate/object pairs reproduced | **22 327 of 30 614 (72.9%)** |
+| documents whose graph matches exactly | **0 of 2 424** |
+
+Three causes, each measured, each a clause the lifting has to carry:
+
+| Cause | Cases affected |
+|---|---|
+| root subject is a blank node, not an IRI | 2 424 of 2 424 |
+| enumeration value left as a compact IRI | 2 291 |
+| nested object has no `rdf:type` | 1 385 |
+
+**The root subject.** The normative RDF uses an `Identifiable`'s `id` twice, as the subject IRI and
+as an `aas:Identifiable/id` literal. A context maps a key to one or the other, never both, so
+mapping `id` to the literal leaves every root a blank node.
+
+**The nested type.** `Reference`, `Key`, `Qualifier`, `AssetInformation` and the language-string
+types carry `rdf:type` in the normative RDF but have no `modelType` in the JSON for a context to
+alias. Injecting one would mean redefining the `@type` keyword inside a scoped context, which JSON-LD
+forbids outright: a processor rejects the context with *"keywords cannot be overridden"*.
+
+**The enumeration spelling.** `DataTypeDefXsd` is written `xs:int` in JSON and is the individual
+`aas:DataTypeDefXsd/Int` in RDF. A term containing a colon is read as a compact IRI, and JSON-LD
+requires it to expand to its own definition, so aliasing it is rejected with *"term in form of IRI
+must expand to definition"*. All 30 `DataTypeDefXsd` values are affected. The other ten enumerations alias correctly, but only
+because each spelling is defined inside the scoped context of the property that admits it: at the
+top level, seventeen spellings collide with a class of the same name, and `Instance` belongs to two
+enumerations at once.
+
+The context is therefore published as a convenience layer for JSON-LD-native consumers, and the
+lifting is the conformance mechanism.
+
+## Result
+
+Running `../tools/jsonld/conformance.py` over the pinned corpus.
+
+**`AASLD-RdfCompatible`** — the lifted graph against the upstream Turtle, by graph isomorphism:
+
+| | cases |
+|---|---|
+| isomorphic to the core graph of clause 2 | 41 |
+| isomorphic once the root `idShort` allowance is applied (D1) | 2 361 |
+| **conforming to `AASLD-RdfCompatible`** | **2 402 of 2 424 (99.1%)** |
+| differing — generator divergence (D7) | 22 |
+| unreadable (D6) | 2 |
+
+**`AASLD-JsonRoundTrip`** — lift, then lower, and compare against the source document. The triples
+are shuffled before lowering, because RDF is a set and a consumer gets no order guarantee; without
+shuffling the measurement records the serializer's sort order rather than the graph's content.
+
+| | cases |
+|---|---|
+| restored **with** the ordering graph | **2 424 of 2 424 (100%)** |
+| **structurally order-bearing, so not guaranteed by the core graph** | **308 of 2 424 (12.7%)** |
+| restored from the core graph under every one of ten permutations | 2 117 |
+| failed under at least one permutation | 307 |
+
+Those 308 documents are what defect D2 costs. They are not exotic: they are ordinary documents with
+a multi-key `Reference`, an ordered `SubmodelElementList`, or a multi-language value with more than
+one entry. The normative RDF serialization cannot express them faithfully, and the enrichment graph
+recovers every one.
+
+This is the measurement the specification rests on. It is also the answer to the question of whether
+the existing RDF serialization plus a framing tool would have been enough: for 87.3% of documents it
+would, and for the rest it may silently return a different document from the one that went in.
+
+The first version of this measurement shuffled the triples with one fixed seed and reported 175. The
+figure moved by six percentage points across seeds, so it described a permutation rather than the
+corpus. The structural count and a ten-permutation union agree to within one case.
+
+## Reporting
+
+D1 to D7 are to be reported upstream. D1, D3, D4, D6 and D7 are implementation or specification gaps
+that could be fixed without a breaking change. D2 is a design decision, and the report should
+present it as a question about `Reference/keys` specifically, where the loss is semantic rather than
+cosmetic, and should carry the 175-document measurement rather than an argument.
