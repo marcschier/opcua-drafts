@@ -154,15 +154,15 @@ authentication:
 
 The two controlled classes are distinguished by the authorization a Consumer must present, not by
 the tier. An implementation **MUST** advertise that authorization through the `Authorization`
-attribute of clause 9.7 and **MUST NOT** rely on the tier alone to separate them.
+attribute of clause 6.5.7 and **MUST NOT** rely on the tier alone to separate them.
 
-Where a Server serves a passport through the registry and also materializes it, clause 9.10 applies:
+Where a Server serves a passport through the registry and also materializes it, clause 6.5.10 applies:
 the environment document served to a Session **MUST** contain only what that Session may read. An
 implementation **MUST NOT** treat a `Public` tier on the submodel as permission to include
 `Controlled` elements in an environment document.
 
 An implementation **MUST NOT** infer from the absence of an element in a filtered document that the
-element is absent from the passport, per clause 9.10.
+element is absent from the passport, per clause 6.5.10.
 
 ## Annex A — The mapping set
 

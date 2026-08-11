@@ -1,160 +1,14 @@
-# OPC UA for Asset Administration Shell
+# OPC UA for Asset Administration Shell — Part 1: Asset Administration Shell
 
-**Draft 3.00-draft2**
+**Release 3.00-draft3 — Draft**
+**Namespace:** `http://opcfoundation.org/UA/I4AAS/v3/`
+**Publication date:** 2026-08-11
 
 > **Status — working draft.** This document specifies an OPC UA mapping for the AAS V3 metamodel.
 > It is not normative, official or endorsed by the OPC Foundation. Namespace URIs and NodeIds are
 > provisional.
 
-## Agreement of Use
-
-COPYRIGHT RESTRICTIONS
-
-This document is provided "as is" by the OPC Foundation, ZVEI, and VDMA.
-
-Right of use for this companion specification is restricted to this companion specification and
-does not grant rights of use for referred documents.
-
-Right of use for this companion specification will be granted without cost.
-
-This document may be distributed through computer systems, printed or copied as long as the content
-remains unchanged and the document is not modified.
-
-OPC Foundation, ZVEI, and VDMA do not guarantee usability for any purpose and shall not be made
-liable for any case using the content of this document.
-
-The user of the document agrees to indemnify OPC Foundation, ZVEI, and VDMA and their officers,
-directors and agents harmless from all demands, claims, actions, losses, damages (including damages
-from personal injuries), costs and expenses (including attorneys' fees) which are in any way related
-to activities associated with its use of content from this companion specification.
-
-The document shall not be used in conjunction with company advertising, shall not be sold or
-licensed to any party.
-
-The intellectual property and copyright is solely owned by the OPC Foundation, ZVEI, and VDMA.
-
-PATENTS
-
-The attention of adopters is directed to the possibility that compliance with or adoption of OPC
-Foundation, ZVEI, or VDMA specifications may require use of an invention covered by patent rights.
-OPC Foundation, ZVEI, or VDMA shall not be responsible for identifying patents for which a license
-may be required by any OPC Foundation, ZVEI, or VDMA specification, or for conducting legal
-inquiries into the legal validity or scope of those patents that are brought to its attention. OPC
-Foundation, ZVEI, or VDMA specifications are prospective and advisory only. Prospective users are
-responsible for protecting themselves against liability for infringement of patents.
-
-WARRANTY AND LIABILITY DISCLAIMERS
-
-WHILE THIS PUBLICATION IS BELIEVED TO BE ACCURATE, IT IS PROVIDED "AS IS" AND MAY CONTAIN ERRORS OR
-MISPRINTS. THE OPC FOUNDATION NOR ZVEI NOR VDMA MAKES NO WARRANTY OF ANY KIND, EXPRESSED OR IMPLIED,
-WITH REGARD TO THIS PUBLICATION, INCLUDING BUT NOT LIMITED TO ANY WARRANTY OF TITLE OR OWNERSHIP,
-IMPLIED WARRANTY OF MERCHANTABILITY OR WARRANTY OF FITNESS FOR A PARTICULAR PURPOSE OR USE. IN NO
-EVENT SHALL THE OPC FOUNDATION NOR ZVEI NOR VDMA BE LIABLE FOR ERRORS CONTAINED HEREIN OR FOR
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, RELIANCE OR COVER DAMAGES, INCLUDING LOSS OF
-PROFITS, REVENUE, DATA OR USE, INCURRED BY ANY USER OR ANY THIRD PARTY IN CONNECTION WITH THE
-FURNISHING, PERFORMANCE, OR USE OF THIS MATERIAL, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
-DAMAGES.
-
-The entire risk as to the quality and performance of software developed using this companion
-specification is borne by you.
-
-RESTRICTED RIGHTS LEGEND
-
-This companion specification is provided with Restricted Rights. Use, duplication or disclosure by
-the U.S. government is subject to restrictions as set forth in (a) this Agreement pursuant to DFARs
-227.7202-3(a); (b) subparagraph (c)(1)(i) of the Rights in Technical Data and Computer Software
-clause at DFARs 252.227-7013; or (c) the Commercial Computer Software Restricted Rights clause at
-FAR 52.227-19 subdivision (c)(1) and (2), as applicable. Contractor / manufacturer are the OPC
-Foundation, 16101 N. 82nd Street, Suite 3B, Scottsdale, AZ, 85260-1830
-
-COMPLIANCE
-
-The combination of ZVEI, VDMA, and OPC Foundation shall at all times be the sole entities that may
-authorize developers, suppliers and sellers of hardware and software to use certification marks,
-trademarks or other special designations to indicate compliance with these materials as specified
-within this document. Products developed using this companion specification may claim compliance or
-conformance with this companion specification if and only if the software satisfactorily meets the
-certification requirements set by ZVEI, VDMA, or the OPC Foundation. Products that do not meet these
-requirements may claim only that the product was based on this companion specification and must not
-claim compliance or conformance with this companion specification.
-
-TRADEMARKS
-
-Most computer and software brand names have trademarks or registered trademarks. The individual
-trademarks have not been listed here.
-
-GENERAL PROVISIONS
-
-Should any provision of this Agreement be held to be void, invalid, unenforceable or illegal by a
-court, the validity and enforceability of the other provisions shall not be affected thereby.
-
-This Agreement shall be governed by and construed under the laws of Germany.
-
-This Agreement embodies the entire understanding between the parties with respect to, and supersedes
-any prior understanding or agreement (oral or written) relating to, this companion specification.
-
-## Contents
-
-- [1 Scope](#1-scope)
-- [2 Normative references](#2-normative-references)
-- [3 Terms, definitions and conventions](#3-terms-definitions-and-conventions)
-  - [3.1 Terms](#31-terms)
-  - [3.2 Abbreviations](#32-abbreviations)
-  - [3.3 Conventions](#33-conventions)
-  - [3.4 AddressSpace figures](#34-addressspace-figures)
-- [4 General information](#4-general-information)
-  - [4.1 The Asset Administration Shell](#41-the-asset-administration-shell)
-  - [4.2 OPC UA](#42-opc-ua)
-  - [4.3 Relationship to OPC 30270 v1.00](#43-relationship-to-opc-30270-v100)
-- [5 Mapping rules](#5-mapping-rules)
-  - [5.1 General](#51-general)
-  - [5.2 Canonical value representation](#52-canonical-value-representation)
-  - [5.3 NodeId and BrowseName assignment](#53-nodeid-and-browsename-assignment)
-  - [5.4 Ordering](#54-ordering)
-  - [5.5 Absent versus empty](#55-absent-versus-empty)
-  - [5.6 Instance materialization](#56-instance-materialization)
-- [6 AAS metamodel ObjectTypes](#6-aas-metamodel-objecttypes)
-  - [6.1 Abstract bases](#61-abstract-bases)
-  - [6.2 Environment, shell and asset information](#62-environment-shell-and-asset-information)
-  - [6.3 Submodel and concept description](#63-submodel-and-concept-description)
-  - [6.4 Submodel elements](#64-submodel-elements)
-- [7 AAS DataTypes](#7-aas-datatypes)
-  - [7.1 The xsd type mapping](#71-the-xsd-type-mapping)
-  - [7.2 `AASValueString`](#72-aasvaluestring)
-  - [7.3 Enumerations](#73-enumerations)
-  - [7.4 Structures](#74-structures)
-- [8 Round-trip conformance](#8-round-trip-conformance)
-- [9 The AAS Registry](#9-the-aas-registry)
-  - [9.1 The registry is folders of files](#91-the-registry-is-folders-of-files)
-  - [9.2 Registry types](#92-registry-types)
-  - [9.3 Identifiers](#93-identifiers)
-  - [9.4 Versioning and the lifecycle record](#94-versioning-and-the-lifecycle-record)
-  - [9.5 Discovery and resolution](#95-discovery-and-resolution)
-  - [9.6 Federation](#96-federation)
-  - [9.7 Information disclosure tiers](#97-information-disclosure-tiers)
-  - [9.8 The xRegistry API over OPC UA](#98-the-xregistry-api-over-opc-ua)
-  - [9.9 Updateable registry (optional profile)](#99-updateable-registry-optional-profile)
-  - [9.10 Environment documents](#910-environment-documents)
-- [10 Profiles and conformance](#10-profiles-and-conformance)
-- [11 NodeSet validation](#11-nodeset-validation)
-- [Annex A — Information model](#annex-a--information-model)
-- [Annex B — Field coverage](#annex-b--field-coverage)
-  - [B.1 Referable and Identifiable](#b1-referable-and-identifiable)
-  - [B.2 Shell and asset information](#b2-shell-and-asset-information)
-  - [B.3 Submodel and concept description](#b3-submodel-and-concept-description)
-  - [B.4 Submodel elements](#b4-submodel-elements)
-  - [B.5 Value classes](#b5-value-classes)
-- [Annex C — OPC 30270 v1.00 correspondence](#annex-c--opc-30270-v100-correspondence)
-- [Annex D — Correspondence to the xRegistry HTTP binding](#annex-d--correspondence-to-the-xregistry-http-binding)
-- [Annex E — Federation resolution](#annex-e--federation-resolution)
-- [Annex F — Correspondence to a Thing Description projection](#annex-f--correspondence-to-a-thing-description-projection)
-  - [F.1 Scope of the claim](#f1-scope-of-the-claim)
-  - [F.2 Granularity](#f2-granularity)
-  - [F.3 Terms](#f3-terms)
-  - [F.4 A worked Thing Description](#f4-a-worked-thing-description)
-  - [F.5 Implementer notes](#f5-implementer-notes)
-  - [F.6 Type-binding conformance](#f6-type-binding-conformance)
-- [Annex G — Correspondence to the AAS API of IDTA-01002 Part 2](#annex-g--correspondence-to-the-aas-api-of-idta-01002-part-2)
+---
 
 ## 1 Scope
 
@@ -170,7 +24,7 @@ This companion specification defines an OPC UA information model for the Asset A
 
 The metamodel mapping is **lossless in both directions**: an AAS materialized into the AddressSpace
 and read back reproduces the original, and an AddressSpace subtree serialized and materialized again
-reproduces itself. Clause 5 defines the rules this requires and clause 8 defines how it is tested.
+reproduces itself. Clause 6.1 defines the rules this requires and clause 6.4 defines how it is tested.
 Losslessness is not decoration — it is what allows an AAS to be compiled into a Server by a source
 generator, because a mapping in which any choice is left to the implementer cannot be generated.
 
@@ -183,6 +37,8 @@ fixture of the conformance corpus.
 
 OPC 30270 v1.00 maps the AAS v1.x metamodel in a separate namespace. Clause 4.3 defines its
 relationship to this specification.
+
+---
 
 ## 2 Normative references
 
@@ -209,9 +65,17 @@ Informative:
 - OPC 30450-1 — OPC UA for Digital Product Passport: Part 1: Information Model. A passport served
   over that model and a registry served over this one share an address space.
 
-## 3 Terms, definitions and conventions
+---
 
-### 3.1 Terms
+## 3 Terms, abbreviated terms and conventions
+
+### 3.1 Overview
+
+It is assumed that basic concepts of OPC UA information modelling and of Asset Administration Shell are understood in this document. For the purposes of this document, the terms and definitions given in OPC 10000-1, OPC 10000-3, OPC 10000-4, OPC 10000-5 and OPC 10000-7, as well as the following, apply.
+
+OPC UA terms and terms defined in this document are italicized in the document.
+
+### 3.2 Asset Administration Shell terms
 
 The terms of OPC 10000-1 and of IDTA-01001 apply. In addition:
 
@@ -221,16 +85,44 @@ The terms of OPC 10000-1 and of IDTA-01001 apply. In addition:
 | Submodel | One coherent aspect of an asset, identified in its own right and typed by its semantic identifier. |
 | Element | A submodel element: one datum, collection or operation within a submodel. |
 | Environment | The container of shells, submodels and concept descriptions that an AAS serialization carries. |
-| Materialization | Producing an AddressSpace subtree from an AAS, per clause 5.6. |
+| Materialization | Producing an AddressSpace subtree from an AAS, per clause 6.1.6. |
 | Serialization | Producing an AAS from an AddressSpace subtree — the reverse direction. |
 | Registry | The catalogue half of this specification: shells and their documents as an xRegistry projection. |
 | Source identity | The domain string that names what a registry entity is, from which its identifier is derived. |
 
-### 3.2 Abbreviations
+### 3.3 Abbreviated terms
 
-AAS — Asset Administration Shell.
+| Abbreviation | Term |
+|---|---|
+| AAS | Asset Administration Shell |
+| AASX | Asset Administration Shell Package File Format |
+| API | Application Programming Interface |
+| DNS | Domain Name System |
+| DPP | Digital Product Passport |
+| HTTP | Hypertext Transfer Protocol |
+| IDTA | Industrial Digital Twin Association |
+| IRI | Internationalized Resource Identifier |
+| JSON | JavaScript Object Notation |
+| JSON-LD | JavaScript Object Notation for Linked Data |
+| OCI | Open Container Initiative |
+| OPC UA | OPC Unified Architecture |
+| RDF | Resource Description Framework |
+| TD | Thing Description |
+| URI | Uniform Resource Identifier |
+| URL | Uniform Resource Locator |
+| UTF-8 | Unicode Transformation Format, 8-bit |
+| W3C | World Wide Web Consortium |
+| WoT | Web of Things |
+| XML | Extensible Markup Language |
+| xRegistry | xRegistry |
 
-### 3.3 Conventions
+### 3.4 Conventions used in this document
+
+Node definitions in this document follow the table conventions of the OPC Foundation companion specification template: an Attribute/Value block, a References block giving the ReferenceType, NodeClass, BrowseName, DataType and TypeDefinition of each child Node, and the ConformanceUnits that require the Node in the AddressSpace. The Word rendering of this document carries that clause verbatim from the template.
+
+A BrowseName defined outside this document is prefixed with its namespace index; a BrowseName without a prefix belongs to this document’s namespace. Placeholder InstanceDeclarations are enclosed in angle brackets.
+
+### 3.5 Normative language
 
 Node definitions follow the conventions of OPC 20020. The normative node reference is
 [Annex A](#annex-a); the clauses below describe intent and the rules that Annex A cannot express.
@@ -238,7 +130,7 @@ Node definitions follow the conventions of OPC 20020. The normative node referen
 The key words **shall**, **shall not**, **should**, **should not** and **may** are to be interpreted
 as described in OPC 10000-1.
 
-### 3.4 AddressSpace figures
+### 3.6 AddressSpace figures
 
 The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node
 of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded
@@ -274,9 +166,11 @@ figure claims, and each edge must be a real Reference of that type in that direc
 is generated and so cannot drift; a figure is authored, and a wrong arrow looks exactly like a right
 one, so it is checked rather than trusted.
 
-## 4 General information
+---
 
-### 4.1 The Asset Administration Shell
+## 4 General information to Asset Administration Shell and OPC UA
+
+### 4.1 Introduction to Asset Administration Shell
 
 An AAS is the standardized digital representation of an asset. It carries the asset's identity and
 references the submodels that describe it — a nameplate, technical data, a carbon footprint, a bill
@@ -287,13 +181,9 @@ Three kinds of thing carry a globally unique identifier: shells, submodels and c
 Everything else is named only within its parent, by a short name, and is addressed by the path of
 short names that leads to it.
 
-### 4.2 OPC UA
+### 4.2 Introduction to OPC Unified Architecture
 
-OPC UA provides an information modelling framework, a service set and a security model. This
-specification uses the framework to type AAS content, the services to read and write it, and File
-Transfer (OPC 10000-20) to move whole documents. It builds the registry half on the abstract
-*OPC UA — xRegistry* base model, in which a registry and its groups are folders and a resource
-document is a file.
+The Word rendering of this document carries the standard OPC UA introduction from the OPC Foundation companion specification template, including its five figures. See OPC 10000-1 for the overview and OPC 10000-3 and OPC 10000-5 for the address space and information model.
 
 ### 4.3 Relationship to OPC 30270 v1.00
 
@@ -309,9 +199,17 @@ shapes, carries identifiers as bare strings, and distinguishes `SubmodelElementL
 lossless round trip and defines the AAS registry as an xRegistry domain model. Annex C gives an
 informative concept correspondence for migration tooling.
 
-## 5 Mapping rules
+---
 
-### 5.1 General
+## 5 Use cases
+
+---
+
+## 6 Asset Administration Shell information model overview
+
+### 6.1 Mapping rules
+
+#### 6.1.1 General
 
 An AAS `Environment` materializes as an `AASEnvironmentType` folder holding the shells, submodels
 and concept descriptions it contains. Submodels are held by the environment, not nested inside
@@ -326,29 +224,29 @@ Server catalogues. A Server may serve one, the other, or both over the same shel
 `AASEnvironmentType` a `RegistryType` would require every Server that materializes an AAS to
 implement the registry half.
 
-Where both halves are present, clause 9.2 defines the link between a catalogued shell and its
-materialized node tree, and clause 9.10 requires the registry to serve the materialized environment
+Where both halves are present, clause 6.5.2 defines the link between a catalogued shell and its
+materialized node tree, and clause 6.5.10 requires the registry to serve the materialized environment
 as retrievable AAS and AASX documents.
 
 Every metamodel field has exactly one representation in the AddressSpace. [Annex B](#annex-b) lists
 them all, field by field. A field with no entry in that annex is a defect in this specification, not
 a field an implementation may drop.
 
-### 5.2 Canonical value representation
+#### 6.1.2 Canonical value representation
 
-AAS types values with an xsd type. Clause 7.1 assigns each of the thirty values of `DataTypeDefXsd`
+AAS types values with an xsd type. Clause 6.3.1 assigns each of the thirty values of `DataTypeDefXsd`
 one OPC UA DataType, and no DataType is assigned to two of them. Where a built-in DataType denotes
 the xsd type on its own it is used; where two xsd types would otherwise share one built-in,
-clause 7.1 defines a subtype for one of them.
+clause 6.3.1 defines a subtype for one of them.
 
-A value materializes as one `Value` Variable, whose DataType is the one clause 7.1 assigns to its
+A value materializes as one `Value` Variable, whose DataType is the one clause 6.3.1 assigns to its
 declared xsd type. The declared type is read from that DataType.
 
 `ValueType` is a Mandatory Variable. The metamodel makes `Property.valueType` mandatory and
 `Property.value` optional, and the same holds for `Range`, so a Property that declares `xs:decimal`
-and carries no value is conformant AAS; clause 5.5 gives an absent field no node, leaving no value
+and carries no value is conformant AAS; clause 6.1.5 gives an absent field no node, leaving no value
 node to carry the declaration. Where both are present a Server **shall** keep them consistent: the
-`Value` node's DataType **shall** be the one clause 7.1 assigns to `ValueType`.
+`Value` node's DataType **shall** be the one clause 6.3.1 assigns to `ValueType`.
 
 **A value is compared in the xsd value space, not the lexical space.** XML Schema defines a
 datatype's *value space* and its *lexical space* separately, defines identity on the value space,
@@ -360,18 +258,18 @@ as `"true"`.
 
 A Server therefore:
 
-- **shall** materialize a value into the DataType of clause 7.1, and
+- **shall** materialize a value into the DataType of clause 6.3.1, and
 - **shall** serialize it back as the XSD canonical lexical representation of that type.
 
 A Property authored as `"1.500000"` with `ValueType` `xs:decimal` therefore serializes as `"1.5"`,
 and one authored `"+42"` with `xs:int` serializes as `"42"`. The documents are equivalent under
-clause 8, not identical. An implementation that requires the authored lexical form to survive
+clause 6.4, not identical. An implementation that requires the authored lexical form to survive
 verbatim expresses that in the metamodel, with a qualifier or an IEC 61360 `valueFormat`.
 
 `AASValueString` is used only where a Structure field carries a value whose declared type is given
-by a sibling field of the same Structure (clause 7.2). It is never the DataType of a Variable.
+by a sibling field of the same Structure (clause 6.3.2). It is never the DataType of a Variable.
 
-### 5.3 NodeId and BrowseName assignment
+#### 6.1.3 NodeId and BrowseName assignment
 
 Assignment is deterministic: two implementations materializing the same AAS produce the same nodes.
 
@@ -447,7 +345,7 @@ Property, not by the BrowseName, because a BrowseName is a name and not a positi
 **DisplayName.** The short name where one exists; otherwise the index for a list member or the
 derived BrowseName for a top-level Identifiable.
 
-### 5.4 Ordering
+#### 6.1.4 Ordering
 
 `SubmodelElementList.orderRelevant` says whether the order of a list's members carries meaning; when
 it is false the metamodel states that the list represents a set or a bag. OPC UA can say this in the
@@ -471,15 +369,15 @@ materialize it there. Where a Server materializes `Index`, the values **shall** 
 `0 … n-1` without gaps or repeats, and a serializer emits members in `Index` order.
 
 Where the members are referenced with `HasComponent`, a serializer **may** emit them in any order,
-and clause 8 compares the collection as a bag.
+and clause 6.4 compares the collection as a bag.
 
 The three `Operation` variable roles are separately ordered arrays. Their value elements are direct
 `HasComponent` children, not `HasOrderedComponent` children. Each value element **shall** carry
 `Index` equal to its zero-based position within its role. The array position is authoritative; the
-`Index` Property and the role/index in the NodeId of clause 5.3 **shall** agree with it. Indices
+`Index` Property and the role/index in the NodeId of clause 6.1.3 **shall** agree with it. Indices
 start again at zero for each role.
 
-### 5.5 Absent versus empty
+#### 6.1.5 Absent versus empty
 
 An optional field that is absent and one present but empty are distinct in the metamodel:
 
@@ -491,33 +389,33 @@ A Server **shall not** materialize a node for an absent field, and **shall not**
 present-but-empty field. A serializer distinguishes the two by the presence of the node, never by
 its value.
 
-### 5.6 Instance materialization
+#### 6.1.6 Instance materialization
 
 Materializing an `Environment` is mechanical:
 
 1. Create an `AASEnvironmentType` folder.
 2. For each shell, submodel and concept description, create a node of the corresponding type, with
-   the NodeId of clause 5.3 and the BrowseName of clause 5.3, organized by the environment folder.
+   the NodeId of clause 6.1.3 and the BrowseName of clause 6.1.3, organized by the environment folder.
 3. For each element within a submodel, recursively create a node of the type corresponding to its
    metamodel class, referenced by its parent with `HasComponent`.
 4. For each field present on the element, create the member node named in Annex B, with the value
-   the metamodel carries. Omit members for absent fields, per clause 5.5.
-5. For a value-bearing element, set `ValueType`, and set `Value` with the DataType clause 7.1
-   assigns to it, per clause 5.2.
+   the metamodel carries. Omit members for absent fields, per clause 6.1.5.
+5. For a value-bearing element, set `ValueType`, and set `Value` with the DataType clause 6.3.1
+   assigns to it, per clause 6.1.2.
 6. Reference the members of a `SubmodelElementList` with `HasOrderedComponent` where its
    `orderRelevant` is true and `HasComponent` where it is false, and set each member's `Index` to
-   its position, per clause 5.4.
+   its position, per clause 6.1.4.
 
 No step in that sequence is implementation-defined. A generator that implements it compiles an AAS
 into a loadable NodeSet, and a Server that loads the NodeSet serves the AAS.
 
-## 6 AAS metamodel ObjectTypes
+### 6.2 AAS metamodel ObjectTypes
 
-The companion namespace is `http://opcfoundation.org/UA/I4AAS/v3/`, model version 3.00-draft2.
+The companion namespace is `http://opcfoundation.org/UA/I4AAS/v3/`, model version 3.00-draft3.
 Draft numeric NodeIds use the `1001+` block; final NodeIds are assigned by the OPC Foundation. The
 normative node reference is [Annex A](#annex-a); this clause describes intent.
 
-### 6.1 Abstract bases
+#### 6.2.1 Abstract bases
 
 The abstract bases mirror the metamodel's own hierarchy, so that an element carries the members its
 metamodel class gives it and no others: `AASReferableType` for everything with a short name,
@@ -532,7 +430,7 @@ discriminator.
 
 `AASIdentifiableType` carries the `Id` — up to 2048 characters of arbitrary text, which is why
 identity lives in a Property and in the encoded String NodeId rather than in the BrowseName
-(clause 5.3).
+(clause 6.1.3).
 
 <!-- model-figure: root=ns=2;i=1001 require=mandatory external=BaseObjectType -->
 
@@ -596,7 +494,7 @@ flowchart TD
 
 Figure 3 — The orthogonal aspect bases
 
-### 6.2 Environment, shell and asset information
+#### 6.2.2 Environment, shell and asset information
 
 `AASEnvironmentType` is the container and the root a generator materializes into. Shells, submodels
 and concept descriptions are all held by it directly: a submodel is not owned by the shell that
@@ -670,7 +568,7 @@ flowchart TD
 
 Figure 5 — `AASType` and the asset identity it carries
 
-### 6.3 Submodel and concept description
+#### 6.2.3 Submodel and concept description
 
 `AASSubmodelType` is a submodel, holding its elements. `AASConceptDescriptionType` is the definition
 a semantic identifier resolves to — what makes two submodels from different vendors comparable.
@@ -710,11 +608,11 @@ flowchart TD
 
 Figure 6 — `AASSubmodelType` and `AASConceptDescriptionType`
 
-### 6.4 Submodel elements
+#### 6.2.4 Submodel elements
 
 The element types cover the metamodel's element set. Every one of them subtypes
 `AASSubmodelElementType`, which carries the semantics, qualifiers and data specifications an element
-may have, and the `Index` that gives a list member its position (clause 5.4).
+may have, and the `Index` that gives a list member its position (clause 6.1.4).
 
 <!-- model-figure: root=ns=2;i=1020 require=mandatory -->
 
@@ -761,8 +659,8 @@ Figure 7 — The submodel element hierarchy
 
 Three element types deserve note, and they are the three the losslessness rules bear on.
 
-**`AASPropertyType`** carries a value once, in a `Value` node whose DataType is the one clause 7.1
-assigns to the declared `ValueType` (clause 5.2). `ValueType` is Mandatory because the metamodel
+**`AASPropertyType`** carries a value once, in a `Value` node whose DataType is the one clause 6.3.1
+assigns to the declared `ValueType` (clause 6.1.2). `ValueType` is Mandatory because the metamodel
 makes it mandatory while making the value itself optional. **`AASRangeType`** carries its bounds the
 same way, and an absent bound means unbounded rather than zero.
 
@@ -847,7 +745,7 @@ create a node for the wrapper itself. The corresponding `InputVariables`, `Outpu
 `InoutputVariables` array entry **shall** be one `AASOperationVariableDataType` whose
 `ValueNodeId` is the local NodeId of that child. A child **shall** occur in exactly one role entry.
 The child uses its concrete AAS ObjectType and its own `idShort` as BrowseName; its NodeId and
-`Index` follow clauses 5.3 and 5.4. An absent role has no corresponding Property instance, while a
+`Index` follow clauses 6.1.3 and 6.1.4. An absent role has no corresponding Property instance, while a
 present empty role has a Property whose value is an empty array.
 
 <!-- model-figure: root=ns=2;i=1032 require=mandatory -->
@@ -893,7 +791,7 @@ flowchart TD
 
 Figure 10 — Composition, operations and events
 
-### 6.5 Invoking an operation
+#### 6.2.5 Invoking an operation
 
 An `Operation` submodel element is invocable. `AASOperationType` carries the Method `Invoke`, whose
 arguments correspond positionally to the element's `InputVariables`, `OutputVariables` and
@@ -918,7 +816,7 @@ StatusCode. Conflating the two would leave a Client unable to distinguish an unr
 a rejected workpiece.
 
 Positional correspondence, rather than a name-keyed structure, is what the metamodel supports:
-`InputVariables` is an ordered array and clause 5.4 already preserves that order, so the *n*-th value
+`InputVariables` is an ordered array and clause 6.1.4 already preserves that order, so the *n*-th value
 belongs to the *n*-th variable in both directions.
 
 The AAS API of IDTA-01002 Part 2 also defines an asynchronous form, `InvokeOperationAsync` with
@@ -926,9 +824,9 @@ The AAS API of IDTA-01002 Part 2 also defines an asynchronous form, `InvokeOpera
 synchronous, and a Server whose operations outlive a Call implements the Program interface of
 OPC 10000-10 on the element rather than a second Method here. Annex G records the correspondence.
 
-## 7 AAS DataTypes
+### 6.3 AAS DataTypes
 
-### 7.1 The xsd type mapping
+#### 6.3.1 The xsd type mapping
 
 Each of the thirty values of `AASDataTypeDefXsdDataType` is assigned one OPC UA DataType, and no
 DataType is assigned to two of them. A serializer reads the declared xsd type from the DataType of
@@ -989,9 +887,9 @@ Each is assigned its own `String` subtype.
 Two assignments have a range narrower than the xsd type. `Integer` and `UInteger` are the abstract
 unions of OPC UA's concrete integer types, so their range is that of `Int64` and `UInt64`, whereas
 `xs:integer` is unbounded; and `DateTime` begins in 1601, whereas `xs:dateTime` does not. A value
-outside the representable range **shall** be rejected rather than truncated, as in clause 7.3.
+outside the representable range **shall** be rejected rather than truncated, as in clause 6.3.3.
 
-### 7.2 `AASValueString`
+#### 6.3.2 AASValueString
 
 `AASValueString` is a subtype of `String` (`i=12`). It carries the xsd lexical form of a value whose
 declared type is given by a sibling field of the same Structure.
@@ -1000,24 +898,24 @@ A Structure field has one static DataType and cannot vary with a declared type.
 `AASQualifierDataType` and `AASExtensionDataType` pair a value with a `ValueType` field.
 `AASDataSpecificationIec61360DataType` pairs its value with a `DataType` field. In each case the
 value field is lexical and the sibling field states how to read it. Where a Variable carries a
-value, clause 7.1 assigns the DataType of its declared xsd type instead.
+value, clause 6.3.1 assigns the DataType of its declared xsd type instead.
 
 A Server **shall not** use `AASValueString` as the DataType of a Variable.
 
-### 7.3 Enumerations
+#### 6.3.3 Enumerations
 
 The enumerations are closed. `AASKeyTypesDataType`, `AASDataTypeDefXsdDataType` and the rest
 enumerate exactly the metamodel's values; a value outside the enumeration cannot round-trip, so an
 implementation rejects it rather than dropping it silently.
 
-### 7.4 Structures
+#### 6.3.4 Structures
 
 The structures carry the metamodel's value classes: references and their ordered keys,
 language-tagged strings, specific asset identifiers, administrative information, qualifiers,
 extensions, data specifications and their IEC 61360 content. `AASQualifierDataType` and
 `AASExtensionDataType` pair a value with `ValueType`;
 `AASDataSpecificationIec61360DataType` pairs it with `DataType`. Each carries the value as
-`AASValueString` for the reason given in clause 7.2.
+`AASValueString` for the reason given in clause 6.3.2.
 
 `AASReferenceDataType` carries its `Keys` as an ordered array. The order is part of the reference's
 meaning — it is the path — so it is preserved exactly.
@@ -1029,15 +927,15 @@ IEC 61360 permitted values are structured rather than flattened into strings.
 `AASDataSpecificationIec61360DataType.ValueList` and `.LevelType` are Optional, so their absence
 remains distinct from a present structured value.
 
-## 8 Round-trip conformance
+### 6.4 Round-trip conformance
 
 An implementation claiming the `AAS-LosslessRoundTrip` conformance unit **shall** satisfy both
 directions.
 
-**Materialize and serialize.** For any conformant AAS environment, materializing it per clause 5.6
+**Materialize and serialize.** For any conformant AAS environment, materializing it per clause 6.1.6
 and serializing the result **shall** produce an environment **equivalent** to the original.
 
-**Serialize and materialize.** For any AddressSpace subtree produced by clause 5.6, serializing it
+**Serialize and materialize.** For any AddressSpace subtree produced by clause 6.1.6, serializing it
 and materializing the result **shall** produce a subtree with the same nodes, NodeIds, BrowseNames,
 References and values.
 
@@ -1068,9 +966,9 @@ that digits are lost, restoring an ordered list in Browse order rather than by `
 absent field with an empty one — and asserts that the comparison reports each. It also asserts that
 re-writing a value into its canonical lexical form is **not** reported.
 
-## 9 The AAS Registry
+### 6.5 The AAS Registry
 
-### 9.1 The registry is folders of files
+#### 6.5.1 The registry is folders of files
 
 The registry half projects a catalogue of shells onto the AddressSpace using the abstract
 *OPC UA — xRegistry* base model: a registry and its groups are `FolderType` folders, and a resource
@@ -1088,7 +986,7 @@ It answers different questions from the metamodel half:
 A Server may implement either half or both. Where both are present the same shell appears twice, and
 `AASShellGroupType.ShellNode` links the catalogue entry to the live node tree.
 
-### 9.2 Registry types
+#### 6.5.2 Registry types
 
 `AASRegistryType` is the registry root, exposed as a well-known `AASRegistry` Object under the
 `Server` Object so that any Client reaching the standard Server object discovers it. Its group
@@ -1113,7 +1011,7 @@ give:
   shell its `AssetInformation` and its submodel references. Neither set belongs on the other.
 - **They have different lifetimes.** A catalogued shell has versions, and the current version of its
   submodel document need not be what the metamodel tree currently holds — that is the whole point of
-  clause 9.4.
+  clause 6.5.4.
 
 Where a Server implements both halves, `AASShellGroupType.ShellNode` points at the `AASType` node
 for the same shell, and both carry the same identifiers, so a Client can move between the catalogue
@@ -1121,7 +1019,7 @@ and the live tree without re-resolving anything.
 
 `AASSubmodelFileType` is one submodel document. `AASConceptDescriptionFileType` and
 `AASPackageFileType` are the corresponding resources for concept definitions and packages. Every
-package carries the strong integrity metadata defined in clause 9.4.
+package carries the strong integrity metadata defined in clause 6.5.4.
 
 <!-- model-figure: root=ns=2;i=1100 require=mandatory external=RegistryType,GroupType,ResourceType,Server -->
 
@@ -1205,7 +1103,7 @@ flowchart TD
 
 Figure 12 — Templates, concept dictionaries and package stores, each with its source identity
 
-### 9.3 Identifiers
+#### 6.5.3 Identifiers
 
 Base clause 6.9 requires every group and resource type to name exactly one **source identity** and to
 expose it verbatim as a Mandatory Property, and derives the identifier from it by the symbolic
@@ -1229,7 +1127,7 @@ An identifier is never derived from a document. A resource is a stable umbrella 
 so its identifier is invariant while its document changes; a content digest is version-level
 metadata and identifies bytes, not entities.
 
-### 9.4 Versioning and the lifecycle record
+#### 6.5.4 Versioning and the lifecycle record
 
 The AAS metamodel records a single current revision. `AdministrativeInformation` carries a version
 label and a revision label, and nothing retains what a submodel previously said or distinguishes a
@@ -1281,7 +1179,7 @@ attestation or other OCI referrer **shall** be represented as a separate immutab
 a referrer **shall not** change that package Resource's Version collection, default Version,
 document, attributes, `Epoch` or `ModifiedAt`.
 
-### 9.5 Discovery and resolution
+#### 6.5.5 Discovery and resolution
 
 `LookupShellsByAssetLink` answers the discovery question — given an asset key such as a serial
 number or a manufacturer part identifier, which shells describe it — without the Client browsing the
@@ -1302,7 +1200,7 @@ A Server **should** bound the results returned for an unauthenticated collection
 serving regulated product data is subject to requirements to prevent bulk extraction of its
 contents, and an unbounded collection endpoint is exactly such an extraction surface.
 
-### 9.6 Federation
+#### 6.5.6 Federation
 
 Federation follows the base model. A shell or submodel this registry describes but does not host
 carries an `ExternalReference` — an `ExpandedNodeId` whose `ServerUri` identifies the hosting
@@ -1331,10 +1229,10 @@ by discovery and the configured federation-peer identity to agree. A policy, DNS
 credential, certificate, identity or resource-bound failure **shall** terminate resolution without
 returning or caching any bytes obtained from the rejected destination.
 
-Because the construction of clause 9.3 is deterministic, the same shell has the same identifier in
+Because the construction of clause 6.5.3 is deterministic, the same shell has the same identifier in
 every registry that describes it, and a Client moving between registries re-resolves nothing.
 
-### 9.7 Information disclosure tiers
+#### 6.5.7 Information disclosure tiers
 
 Some assets carry data that cannot be shown to everyone: a product passport is public in part and
 restricted in part, and a supplier's technical data is commercially sensitive.
@@ -1378,21 +1276,21 @@ A registry that serves public data **shall not** require authentication to read 
 
 The same disclosure decision applies through every access path. In particular, the
 `GetSubmodel` convenience Method is subject to the target-resource authorization and
-existence-concealment rule of clause 9.5; its Method-level Call permission is never a substitute for
+existence-concealment rule of clause 6.5.5; its Method-level Call permission is never a substitute for
 the target's disclosure and file-access controls.
 
-### 9.8 The xRegistry API over OPC UA
+#### 6.5.8 The xRegistry API over OPC UA
 
 The registry subtree is simultaneously an xRegistry API server: the operations are realized natively
 by OPC UA Services over the same nodes, as defined by the base model and its API binding. Annex D
 gives the correspondence to the HTTP binding for readers who know that one.
 
-### 9.9 Updateable registry (optional profile)
+#### 6.5.9 Updateable registry
 
-Clauses 9.1 to 9.8 describe a registry that catalogues documents. A Server **may** additionally make
+Clauses 6.5.1 to 6.5.8 describe a registry that catalogues documents. A Server **may** additionally make
 the registry **updateable**: a Client writes a document into the registry, and the AddressSpace of
-clause 5 changes to match. This clause defines that profile. It is optional, it is declared by the
-`AAS-UpdateableRegistry` conformance unit, and a Server that implements clauses 9.1 to 9.8 without
+clause 6.1 changes to match. This clause defines that profile. It is optional, it is declared by the
+`AAS-UpdateableRegistry` conformance unit, and a Server that implements clauses 6.5.1 to 6.5.8 without
 it is fully conformant.
 
 **The documents are canonical; the nodes are derived.** A Server implementing this profile **shall**
@@ -1435,7 +1333,7 @@ concept descriptions its `SemanticId`s resolve to form a closure. A Server **sha
 closure into one shadow generation and commit it as a unit: a closure with an unresolved or invalid
 member **shall not** be partially activated, and no node of it becomes visible. A dependency is
 resolved against the registry itself first and, failing that, through a configured federation
-provider (clause 9.6). A Server **shall not** dereference an arbitrary URL found inside a document
+provider (clause 6.5.6). A Server **shall not** dereference an arbitrary URL found inside a document
 while materializing it — an `ExternalReference` is federation metadata, not permission to fetch.
 
 **Re-materializing an unchanged document changes nothing.** A document whose digest is unchanged
@@ -1517,7 +1415,7 @@ Figure 14 — Materialization lifecycle of one stored document
 
 **Implementer notes.** This subclause is informative.
 
-- *NodeId stability.* The NodeIds of clause 5.3 are the escaped, length-prefixed encodings of the
+- *NodeId stability.* The NodeIds of clause 6.1.3 are the escaped, length-prefixed encodings of the
   AAS identifier and `idShortPath`, not values allocated by the Server. Two generations of the same
   document therefore contain the *same* NodeIds. A shadow generation must be held in a separate
   node table until the switch, not merged into the live one, or the preparation itself becomes
@@ -1537,7 +1435,7 @@ The *OPC UA — WoT Connectivity* draft, currently under OPC Foundation review, 
 canonical-document-and-derived-projection discipline for a registry of Thing Descriptions. The rules
 above are stated here in full rather than incorporated by reference.
 
-### 9.10 Environment documents
+#### 6.5.10 Environment documents
 
 This clause applies to a Server that implements both halves — that is, one claiming `AAS-Registry`
 together with `AAS-InstanceMaterialization`. Such a Server **shall** claim `AAS-EnvironmentExport`
@@ -1548,13 +1446,13 @@ For each `AASEnvironmentType` folder it materializes, the registry **shall** hol
 `Format` attribute states which serialization; a Server **shall** offer at least the AAS JSON
 environment document (`aas/3.0+json`) and the AASX package (`aasx/3.0`), and **may** offer the AAS
 XML environment document (`aas/3.0+xml`). `EnvironmentNode` identifies the folder the document
-serializes. The document is retrieved with the File Transfer Methods of clause 9.1, like any other
+serializes. The document is retrieved with the File Transfer Methods of clause 6.5.1, like any other
 registry resource.
 
 **The document covers the whole environment.** A serialization **shall** contain every shell,
 submodel, concept description and submodel element materialized under that folder, serialized per
-clauses 5 and 8. A Server **shall not** offer a document that covers part of an environment under
-this type; a partial export is a submodel document (clause 9.2) or a package (clause 9.2), not an
+clauses 6.1 and 6.4. A Server **shall not** offer a document that covers part of an environment under
+this type; a partial export is a submodel document (clause 6.5.2) or a package (clause 6.5.2), not an
 environment document.
 
 **The document is filtered to the caller's permissions.** The content served to a Session **shall**
@@ -1566,13 +1464,13 @@ obtains content through a document that the AddressSpace would have withheld fro
 Filtering interacts with three earlier rules, and the interaction is resolved in favour of the
 permission check:
 
-- **Absent versus empty (clause 5.5) is not re-derived from filtering.** A field removed by
+- **Absent versus empty (clause 6.1.5) is not re-derived from filtering.** A field removed by
   filtering **shall** be omitted as though absent. A Consumer **shall not** infer from a filtered
   document that a field was absent in the environment.
-- **A filtered document is not lossless.** Clause 8 applies to an unfiltered serialization. A Server
+- **A filtered document is not lossless.** Clause 6.4 applies to an unfiltered serialization. A Server
   **shall** set `Filtered` on the resource to indicate that the content served to this Session omits
   content, and **shall not** publish a `Digest` for a document whose bytes depend on the caller.
-- **Disclosure tiers (clause 9.7) apply to the document itself.** `DisclosureTier` and
+- **Disclosure tiers (clause 6.5.7) apply to the document itself.** `DisclosureTier` and
   `Authorization` on the resource describe the document; they do not substitute for the per-node
   permission check above.
 
@@ -1609,7 +1507,167 @@ flowchart TD
 
 Figure 15 — The materialized environment served as a retrievable document
 
-## 10 Profiles and conformance
+---
+
+## 7 OPC UA ObjectTypes
+
+### 7.1 `AASReferableType`
+
+Abstract base of everything in the metamodel that can be referred to by a short name. Carries the identifying and descriptive attributes every element has.
+
+### 7.2 `AASIdentifiableType`
+
+Abstract base of the metamodel elements that carry a globally unique identifier: shells, submodels and concept descriptions.
+
+### 7.3 `AASHasSemanticsType`
+
+Abstract base of the elements that declare what concept they are an occurrence of.
+
+### 7.4 `AASHasKindType`
+
+Abstract base of the elements that distinguish a template from an instance.
+
+### 7.5 `AASHasDataSpecificationType`
+
+Abstract base of the elements that carry data specifications.
+
+### 7.6 `AASQualifiableType`
+
+Abstract base of the elements that can be qualified.
+
+### 7.7 `AASEnvironmentType`
+
+The container of shells, submodels and concept descriptions - the unit an AAS serialization carries and the root a source generator materializes into a Server.
+
+### 7.8 `AASType`
+
+An Asset Administration Shell: the digital representation of one asset, carrying the asset's identity and references to the submodels that describe it.
+
+### 7.9 `AASAssetInformationType`
+
+The identity of the asset a shell represents, as distinct from the identity of the shell itself.
+
+### 7.10 `AASSubmodelType`
+
+One coherent aspect of an asset, identified in its own right and typed by its SemanticId: a nameplate, technical data, a carbon footprint, a bill of material.
+
+### 7.11 `AASConceptDescriptionType`
+
+The definition a SemanticId resolves to - what makes two submodels from different vendors comparable.
+
+### 7.12 `AASSubmodelElementType`
+
+Abstract base of every element that can appear inside a submodel.
+
+### 7.13 `AASPropertyType`
+
+A single typed value. The value node carries the OPC UA DataType clause 6.3.1 assigns to the declared xsd type, from which the declared type is read.
+
+### 7.14 `AASMultiLanguagePropertyType`
+
+A value expressed in one or more languages. The array order is preserved, because the metamodel's serialization is ordered and a round trip that reordered it would not reproduce its input.
+
+### 7.15 `AASRangeType`
+
+A closed or half-open interval of a single typed value.
+
+### 7.16 `AASBlobType`
+
+Binary content carried inline.
+
+### 7.17 `AASFileType`
+
+A pointer to content held outside the element.
+
+### 7.18 `AASReferenceElementType`
+
+An element whose value is a reference.
+
+### 7.19 `AASRelationshipElementType`
+
+A directed relationship between two referenced things.
+
+### 7.20 `AASAnnotatedRelationshipElementType`
+
+A relationship carrying data elements that annotate it, such as a quantity or a position.
+
+### 7.21 `AASSubmodelElementCollectionType`
+
+An unordered set of elements, each identified by its own IdShort.
+
+### 7.22 `AASSubmodelElementListType`
+
+A list of elements. Its members have no IdShort, so they are named by index. Whether the order carries meaning is stated by the ReferenceType on each instance, not by a Property: HasOrderedComponent where it does, HasComponent where the list is a set or a bag. The declaration uses HasComponent, the base of both legal instance forms.
+
+### 7.23 `AASEntityType`
+
+A component of a composition. A self-managed entity carries the identifier of its own shell, so a bill of material is traversable across organizations.
+
+### 7.24 `AASBasicEventElementType`
+
+An event source or sink.
+
+### 7.25 `AASOperationType`
+
+An invocable operation.
+
+### 7.26 `AASCapabilityType`
+
+A declared capability of the asset. It carries no value of its own; the element's identity and semantics are the whole of its content.
+
+### 7.27 `AASRegistryType`
+
+The AAS Registry root - an xRegistry RegistryType, and therefore a FolderType - whose group folders hold shells, submodel templates, concept dictionaries and packages. Exposed as a well-known object under the Server object, so any Client that reaches the standard Server object discovers it.
+
+### 7.28 `AASShellGroupType`
+
+An xRegistry GroupType holding the submodel documents of one shell. Its source identity is the shell's authored identifier, from which the GroupId is constructed. It is distinct from AASType, which models the same shell as a live node tree rather than as a catalogue entry.
+
+### 7.29 `AASSubmodelFileType`
+
+An xRegistry ResourceType whose file content is one submodel document. Each version is one revision, which is what gives a shell the lifecycle history the metamodel does not itself provide.
+
+### 7.30 `AASSubmodelTemplateGroupType`
+
+An xRegistry GroupType holding one publisher's family of submodel templates. Templates are held in a group of their own so that a Consumer lists templates and instances separately.
+
+### 7.31 `AASConceptDictionaryGroupType`
+
+An xRegistry GroupType holding one dictionary of concept definitions - the definitions a SemanticId elsewhere in the registry resolves to.
+
+### 7.32 `AASConceptDescriptionFileType`
+
+An xRegistry ResourceType whose file content is one concept description document.
+
+### 7.33 `AASPackageStoreGroupType`
+
+An xRegistry GroupType holding packages - one store, or one namespace within one.
+
+### 7.34 `AASPackageFileType`
+
+An xRegistry ResourceType whose file content is one package. Every package carries mandatory strong integrity metadata for the exact returned blob; an OCI-backed version also carries the immutable manifest digest that is its version identity. Mutable tags are Resource-level discovery aliases, never Version identity, and OCI referrers are separate Resources rather than package Versions and cannot affect the package default Version.
+
+### 7.35 `AASEnvironmentFileType`
+
+An xRegistry ResourceType whose file content is one serialization of a materialized environment: an AAS JSON or XML environment document, or an AASX package. It is the retrievable form of an AASEnvironmentType folder, and its content is filtered to what the calling Session is permitted to read.
+
+---
+
+## 8 OPC UA DataTypes
+
+The DataTypes defined by this document are enumerations. Each is formally defined in the NodeSet and listed in Annex A.
+
+---
+
+## 9 Instances
+
+### 9.1 `AASRegistry`
+
+Server-wide AAS Registry, a well-known component of the Server object.
+
+---
+
+## 10 Profiles and conformance units
 
 An implementation conforms to this specification if it implements at least one of the two halves and
 declares the corresponding conformance units.
@@ -1618,37 +1676,58 @@ declares the corresponding conformance units.
 |---|---|
 | `AAS-Metamodel` | Shells, submodels and concept descriptions as typed nodes. |
 | `AAS-SubmodelElements` | The submodel element types. |
-| `AAS-ValueFidelity` | The xsd type assignment of clauses 5.2 and 7.1. |
-| `AAS-InstanceMaterialization` | Materialization per clause 5.6. |
-| `AAS-LosslessRoundTrip` | Both directions of clause 8. |
+| `AAS-ValueFidelity` | The xsd type assignment of clauses 6.1.2 and 6.3.1. |
+| `AAS-InstanceMaterialization` | Materialization per clause 6.1.6. |
+| `AAS-LosslessRoundTrip` | Both directions of clause 6.4. |
 | `AAS-Registry` | The registry root, groups and submodel documents. |
-| `AAS-RegistryIdentity` | Source identities and derived identifiers per clause 9.3. |
-| `AAS-RegistryVersioning` | Versions as the lifecycle record, clause 9.4. |
+| `AAS-RegistryIdentity` | Source identities and derived identifiers per clause 6.5.3. |
+| `AAS-RegistryVersioning` | Versions as the lifecycle record, clause 6.5.4. |
 | `AAS-Discovery` | `LookupShellsByAssetLink` and `GetSubmodel`. |
-| `AAS-OperationInvoke` | `AASOperationType.Invoke`, clause 6.5. |
-| `AAS-Federation` | External references and the identity rule of clause 9.6. |
-| `AAS-DisclosureTiers` | `DisclosureTier` and `Authorization`, clause 9.7. |
-| `AAS-UpdateableRegistry` | Generational materialization from stored documents, clause 9.9. |
-| `AAS-EnvironmentExport` | The materialized environment served as filtered AAS and AASX documents, clause 9.10. Required of a Server claiming both `AAS-Registry` and `AAS-InstanceMaterialization`. |
+| `AAS-OperationInvoke` | `AASOperationType.Invoke`, clause 6.2.5. |
+| `AAS-Federation` | External references and the identity rule of clause 6.5.6. |
+| `AAS-DisclosureTiers` | `DisclosureTier` and `Authorization`, clause 6.5.7. |
+| `AAS-UpdateableRegistry` | Generational materialization from stored documents, clause 6.5.9. |
+| `AAS-EnvironmentExport` | The materialized environment served as filtered AAS and AASX documents, clause 6.5.10. Required of a Server claiming both `AAS-Registry` and `AAS-InstanceMaterialization`. |
 | `AAS-Packages` | Package stores and package resources; requires `AAS-PackageIntegrity`. |
-| `AAS-PackageIntegrity` | Mandatory package-blob digest and algorithm, OCI manifest-to-blob binding, immutable identity and tag rules, referrer separation and verification requirements of clause 9.4. |
+| `AAS-PackageIntegrity` | Mandatory package-blob digest and algorithm, OCI manifest-to-blob binding, immutable identity and tag rules, referrer separation and verification requirements of clause 6.5.4. |
 
 `AAS-Metamodel` and `AAS-SubmodelElements` together are the baseline for the metamodel half;
 `AAS-Registry` and `AAS-RegistryIdentity` for the registry half. `AAS-ValueFidelity` is required by
 `AAS-LosslessRoundTrip`, which is the unit that makes source generation possible. An implementation
 claiming `AAS-Packages` **shall** also claim `AAS-PackageIntegrity`.
 
-## 11 NodeSet validation
+---
 
-The NodeSet, the NodeId CSV and Annex A are generated from `tools/build_model.py`. The local
-validator, `tools/validate_local.py`, checks XML well-formedness, unique NodeIds, that each
-ObjectType has a `HasSubtype` back-reference to its base, that members carry a `HasModellingRule` and
-a `HasTypeDefinition`, and that the CSV and the NodeSet agree. `tools/roundtrip_check.py` checks
-clause 8 over the fixture corpus.
+## 11 Namespaces
+
+### 11.1 Namespace metadata
+
+The namespace metadata provide standardized information about the elements of this namespace, which an aggregating Server relies on. All Nodes defined by this document are static.
+
+| Property | DataType | Value |
+|---|---|---|
+| NamespaceUri | String | `http://opcfoundation.org/UA/I4AAS/v3/` |
+| NamespaceVersion | String | 3.00-draft3 |
+| NamespacePublicationDate | DateTime | 2026-08-11 |
+| IsNamespaceSubset | Boolean | False |
+| StaticNodeIdTypes | IdType[] | 0 (Numeric) |
+| StaticNumericNodeIdRange | NumericRange[] | 1001:9999 |
+| StaticStringNodeIdPattern | String | -- |
+
+### 11.2 Handling of OPC UA namespaces
+
+Namespaces are used by OPC UA to create unique identifiers across different naming authorities. The following namespaces are used for BrowseNames in this document; the default namespace is not listed, because every BrowseName without a prefix uses it.
+
+| NamespaceURI | Namespace index | Example |
+|---|---|---|
+| `http://opcfoundation.org/UA/` | 0 | `0:EngineeringUnits` |
+| `http://opcfoundation.org/UA/xRegistry/` | 1 | `1:ResourceType` |
+
+---
 
 <a id="annex-a"></a>
 
-## Annex A — Information model
+## Annex A (normative) — Asset Administration Shell namespace and mappings
 
 This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.I4AAS.NodeSet2.xml`. All nodes are defined in the companion namespace `http://opcfoundation.org/UA/I4AAS/v3/` (which requires the base OPC UA and xRegistry namespaces); the numeric NodeIds shown are **draft** identifiers within that namespace. The **Declared in** column marks members inherited from a supertype.
 
@@ -1912,12 +1991,12 @@ Abstract base of every element that can appear inside a submodel.
 
 *Inherits from:* [AASSubmodelElementType](#type-AASSubmodelElementType)
 
-A single typed value. The value node carries the OPC UA DataType clause 7.1 assigns to the declared xsd type, from which the declared type is read.
+A single typed value. The value node carries the OPC UA DataType clause 6.3.1 assigns to the declared xsd type, from which the declared type is read.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | ValueType | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Mandatory | AASPropertyType | The xsd type the value is expressed in. Mandatory: the metamodel makes it mandatory and the value optional, so a Property with no value has no value node whose DataType could carry it. |
-| Value | Variable | BaseDataType | Optional | AASPropertyType | The value. Declared as BaseDataType here because the concrete DataType depends on ValueType; a materialized node carries the specific DataType clause 7.1 assigns. |
+| Value | Variable | BaseDataType | Optional | AASPropertyType | The value. Declared as BaseDataType here because the concrete DataType depends on ValueType; a materialized node carries the specific DataType clause 6.3.1 assigns. |
 | ValueId | Variable | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | AASPropertyType | A reference to the value, where the value is itself an identified concept. |
 
 <a id="type-AASMultiLanguagePropertyType"></a>
@@ -1944,7 +2023,7 @@ A closed or half-open interval of a single typed value.
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | ValueType | Variable | [AASDataTypeDefXsdDataType](#type-AASDataTypeDefXsdDataType) | Mandatory | AASRangeType | The xsd type the bounds are expressed in. Mandatory: both bounds are optional and the declared type is not. |
-| Min | Variable | BaseDataType | Optional | AASRangeType | The lower bound, carrying the DataType clause 7.1 assigns to ValueType. Absent means unbounded below, which is different from a bound of zero. |
+| Min | Variable | BaseDataType | Optional | AASRangeType | The lower bound, carrying the DataType clause 6.3.1 assigns to ValueType. Absent means unbounded below, which is different from a bound of zero. |
 | Max | Variable | BaseDataType | Optional | AASRangeType | The upper bound. Absent means unbounded above. |
 
 <a id="type-AASBlobType"></a>
@@ -2067,9 +2146,9 @@ An event source or sink.
 | State | Variable | [AASStateOfEventDataType](#type-AASStateOfEventDataType) | Mandatory | AASBasicEventElementType | Whether the event source is active. |
 | MessageTopic | Variable | String | Optional | AASBasicEventElementType | The topic events are delivered on. Where the delivery endpoint is itself catalogued, the registry entry points at it. |
 | MessageBroker | Variable | [AASReferenceDataType](#type-AASReferenceDataType) | Optional | AASBasicEventElementType | The broker delivering the events. |
-| LastUpdate | Variable | DateTime | Optional | AASBasicEventElementType | When the event last fired. The metamodel types this xs:dateTime, which clause 7.1 assigns DateTime. |
-| MinInterval | Variable | DurationString | Optional | AASBasicEventElementType | Minimum interval between events. The metamodel types this xs:duration, which clause 7.1 assigns DurationString. |
-| MaxInterval | Variable | DurationString | Optional | AASBasicEventElementType | Maximum interval between events. The metamodel types this xs:duration, which clause 7.1 assigns DurationString. |
+| LastUpdate | Variable | DateTime | Optional | AASBasicEventElementType | When the event last fired. The metamodel types this xs:dateTime, which clause 6.3.1 assigns DateTime. |
+| MinInterval | Variable | DurationString | Optional | AASBasicEventElementType | Minimum interval between events. The metamodel types this xs:duration, which clause 6.3.1 assigns DurationString. |
+| MaxInterval | Variable | DurationString | Optional | AASBasicEventElementType | Maximum interval between events. The metamodel types this xs:duration, which clause 6.3.1 assigns DurationString. |
 
 <a id="type-AASOperationType"></a>
 
@@ -2347,7 +2426,7 @@ An xs:gDay value, such as ---07.
 
 *Subtype of:* String
 
-The xsd lexical form of a value whose declared type is carried in a sibling field of the same Structure. A Structure field has one static DataType and cannot vary with a declared type, so a qualifier, an extension or a data specification carries its value lexically and its sibling ValueType or DataType field states how to read it. A subtype of String, as OPC UA defines DecimalString and DurationString. It is never the DataType of a Variable; a value node carries the DataType clause 7.1 assigns to its declared xsd type.
+The xsd lexical form of a value whose declared type is carried in a sibling field of the same Structure. A Structure field has one static DataType and cannot vary with a declared type, so a qualifier, an extension or a data specification carries its value lexically and its sibling ValueType or DataType field states how to read it. A subtype of String, as OPC UA defines DecimalString and DurationString. It is never the DataType of a Variable; a value node carries the DataType clause 6.3.1 assigns to its declared xsd type.
 
 <a id="type-AASAssetKindDataType"></a>
 
@@ -2485,7 +2564,7 @@ The kind of thing a reference key addresses. The enumeration is closed: a value 
 
 *Subtype of:* Enumeration
 
-The xsd type a value is expressed in. All thirty of the metamodel's values are listed. Clause 7.1 assigns each one OPC UA DataType, and no DataType to two of them.
+The xsd type a value is expressed in. All thirty of the metamodel's values are listed. Clause 6.3.1 assigns each one OPC UA DataType, and no DataType to two of them.
 
 | Field | DataType | Description |
 |---|---|---|
@@ -2889,7 +2968,7 @@ The four IEC 61360 level flags. Every flag is explicit.
 | GetSubmodel | AASRegistry | SubmodelIdentifier | Document, Format, ContentType |
 | Materialize | AASRegistry | Targets, Force | Generation, Results |
 
-## Annex B — Field coverage
+## Annex B (normative) — Field coverage
 
 <a id="annex-b"></a>
 
@@ -2945,12 +3024,12 @@ list — `Index`. Element-specific fields:
 | Element and field | Address space |
 |---|---|
 | `Property.valueType` | `AASPropertyType.ValueType`, Mandatory |
-| `Property.value` | `AASPropertyType.Value`, typed per clause 7.1 |
+| `Property.value` | `AASPropertyType.Value`, typed per clause 6.3.1 |
 | `Property.valueId` | `AASPropertyType.ValueId` |
 | `MultiLanguageProperty.value` | `AASMultiLanguagePropertyType.Value`, order preserved |
 | `MultiLanguageProperty.valueId` | `AASMultiLanguagePropertyType.ValueId` |
 | `Range.valueType` | `AASRangeType.ValueType`, Mandatory |
-| `Range.min`, `Range.max` | `AASRangeType.Min`, `Max`, typed per clause 7.1; absent means unbounded |
+| `Range.min`, `Range.max` | `AASRangeType.Min`, `Max`, typed per clause 6.3.1; absent means unbounded |
 | `Blob.value` | `AASBlobType.Value` |
 | `Blob.contentType` | `AASBlobType.ContentType`, Mandatory |
 | `File.value` | `AASFileType.Value` |
@@ -2959,7 +3038,7 @@ list — `Index`. Element-specific fields:
 | `RelationshipElement.first`, `.second` | `AASRelationshipElementType.First`, `Second`, Mandatory |
 | `AnnotatedRelationshipElement.annotations` | `AASAnnotatedRelationshipElementType` components |
 | `SubmodelElementCollection.value` | `AASSubmodelElementCollectionType` components |
-| `SubmodelElementList.orderRelevant` | the ReferenceType its members are referenced with: `HasOrderedComponent` when true, `HasComponent` when false (clause 5.4) |
+| `SubmodelElementList.orderRelevant` | the ReferenceType its members are referenced with: `HasOrderedComponent` when true, `HasComponent` when false (clause 6.1.4) |
 | `SubmodelElementList.typeValueListElement` | `AASSubmodelElementListType.TypeValueListElement`, Mandatory |
 | `SubmodelElementList.semanticIdListElement` | `AASSubmodelElementListType.SemanticIdListElement` |
 | `SubmodelElementList.valueTypeListElement` | `AASSubmodelElementListType.ValueTypeListElement` |
@@ -2997,7 +3076,9 @@ list — `Index`. Element-specific fields:
 
 <a id="annex-c"></a>
 
-## Annex C — OPC 30270 v1.00 correspondence
+---
+
+## Annex C (informative) — OPC 30270 v1.00 correspondence
 
 This annex is informative.
 
@@ -3007,16 +3088,18 @@ This annex is informative.
 | `AASViewType` | No counterpart in the AAS V3 metamodel. |
 | Identifier with a type discriminator | `AASIdentifiableType.Id`, a bare String |
 | `AASSubmodelElementCollectionType` with ordering flags | Split into `AASSubmodelElementCollectionType`, unordered, and `AASSubmodelElementListType`, whose members are referenced with `HasOrderedComponent` and carry `Index` |
-| One DataType shared by several xsd types | Clause 7.1: each of the thirty `DataTypeDefXsd` values is assigned its own OPC UA DataType |
+| One DataType shared by several xsd types | Clause 6.3.1: each of the thirty `DataTypeDefXsd` values is assigned its own OPC UA DataType |
 | Data specification references | `EmbeddedDataSpecifications` |
-| No catalogue | The registry half, clause 9 |
+| No catalogue | The registry half, clause 6.5 |
 
 The two models have distinct namespace URIs. A Server may load both, and a Client identifies the
 model by NamespaceUri rather than treating the model version as NodeId identity.
 
 <a id="annex-d"></a>
 
-## Annex D — Correspondence to the xRegistry HTTP binding
+---
+
+## Annex D (informative) — Correspondence to the xRegistry HTTP binding
 
 This annex is informative. The registry half of this specification and the xRegistry AAS model
 mirrored beside it describe one registry; this table maps the OPC UA realization onto the HTTP one.
@@ -3036,7 +3119,9 @@ mirrored beside it describe one registry; this table maps the OPC UA realization
 
 <a id="annex-e"></a>
 
-## Annex E — Federation resolution
+---
+
+## Annex E (informative) — Federation resolution
 
 This annex is informative and follows the base model's own resolution algorithm.
 
@@ -3051,7 +3136,7 @@ This annex is informative and follows the base model's own resolution algorithm.
    attributes.
 
 Before step 3 or 4 opens a connection, apply the federation egress and peer-identity policy of
-§9.6 to the initial target and to every resolution, redirect and connected address. The metadata is
+§6.5.6 to the initial target and to every resolution, redirect and connected address. The metadata is
 an input to policy, never authorization to contact the target.
 
 Because identifiers are stable across registries while the endpoint identifies only where an entity
@@ -3060,14 +3145,16 @@ by identifier even though it is reachable through several links.
 
 <a id="annex-f"></a>
 
-## Annex F — Correspondence to a Thing Description projection
+---
+
+## Annex F (informative) — Correspondence to a Thing Description projection
 
 This annex is informative, and is pinned to the *OPC UA — WoT Connectivity* and *OPC UA — WoT
 Binding* drafts as they stood at the date of this document. Both are under review by another body,
 and a change there can invalidate what follows.
 
 A Thing Description carrying the terms below, loaded through a WoT Connectivity registry,
-materializes the nodes clause 5.6 defines. An author therefore writes an AAS once, as a WoT
+materializes the nodes clause 6.1.6 defines. An author therefore writes an AAS once, as a WoT
 document, and obtains both the Thing and the AddressSpace of this specification; and by clause 5A of
 the JSON-LD mapping the same content exports as AAS JSON, XML and AASX through a registry.
 
@@ -3084,7 +3171,7 @@ Description object.
 
 ### F.1 Scope of the claim
 
-The claim covers the **projection subgraph**: the nodes clause 5.6 materializes for the submodels
+The claim covers the **projection subgraph**: the nodes clause 6.1.6 materializes for the submodels
 of one environment and their submodel elements, with their NodeIds, BrowseNames, TypeDefinitions
 and the ReferenceType each is reached by.
 
@@ -3117,15 +3204,15 @@ combined.
 | The AAS itself | the AAS vocabulary | `aas:Referable/idShort`, `aas:Property/value`, `aas:Submodel/submodelElements` and the rest, on the node they belong to |
 | AAS subject | TD `id` | the AAS identifier itself where it is an ordinary absolute IRI; otherwise the reserved encoded subject of the JSON-LD mapping; `@id` is not also written |
 | TD document identity | a `self` link | a sibling TD document IRI distinct from the AAS subject |
-| NodeId, clause 5.3 | `uav:id` | an ExpandedNodeId naming its namespace by URI |
-| BrowseName, clause 5.3 | `uav:browseName` | the portable QualifiedName form |
-| TypeDefinition, clause 6, readably | a member of `@type` | the prefix-qualified BrowseName of the ObjectType, for example `i4aas:AASPropertyType` |
-| TypeDefinition, clause 6, definitively | a link with `rel` `ua:HasTypeDefinition` | the ObjectType's portable ExpandedNodeId, for example `nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1050` |
+| NodeId, clause 6.1.3 | `uav:id` | an ExpandedNodeId naming its namespace by URI |
+| BrowseName, clause 6.1.3 | `uav:browseName` | the portable QualifiedName form |
+| TypeDefinition, clause 6.2, readably | a member of `@type` | the prefix-qualified BrowseName of the ObjectType, for example `i4aas:AASPropertyType` |
+| TypeDefinition, clause 6.2, definitively | a link with `rel` `ua:HasTypeDefinition` | the ObjectType's portable ExpandedNodeId, for example `nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1050` |
 | Protocol address | Thing-level `forms[].href` | an `opc.tcp` URL whose `id` query value decodes to `uav:id` |
 | Child-to-parent containment | `uav:componentOf` and a `uav:componentOf` link | the parent ExpandedNodeId and parent sibling TD IRI |
 | Parent-to-child containment | `uav:hasComponent` and a typed link | the child ExpandedNodeId and child sibling TD IRI |
-| ReferenceType, clause 5.4 | typed link `rel`, `uav:refId` and optional `uav:refName` | `ua:HasOrderedComponent` with `i=49`, or `ua:HasComponent` with `i=47`; the reference name is the target BrowseName local name |
-| Position, clause 5.4 | `uav:index` | the zero-based position |
+| ReferenceType, clause 6.1.4 | typed link `rel`, `uav:refId` and optional `uav:refName` | `ua:HasOrderedComponent` with `i=49`, or `ua:HasComponent` with `i=47`; the reference name is the target BrowseName local name |
+| Position, clause 6.1.4 | `uav:index` | the zero-based position |
 | Modelling rule | `uav:modellingRule` | `Mandatory`, `Optional`, `MandatoryPlaceholder` or `OptionalPlaceholder` |
 | Semantic identifier | `uav:semanticId` | the AAS `semanticId` as an IRI |
 
@@ -3314,7 +3401,7 @@ mapping. The `self` link identifies the sibling TD document, and the `opc.tcp` f
 OPC UA Node. A converter does not derive one from another. It parses the ExpandedNodeId from the
 form, resolves containment through sibling TD links and uses the AAS subject only for RDF edges.
 
-A list member has no short name, so its BrowseName is its index — the rule clause 5.3 states.
+A list member has no short name, so its BrowseName is its index — the rule clause 6.1.3 states.
 
 ### F.5 Implementer notes
 
@@ -3323,7 +3410,7 @@ This subclause is informative.
 - *The reference type is where the order lives, and the index is what recovers it.* The link `rel`
   states whether the collection is a sequence; `uav:index` states where each member sits. A
   converter that emits one without the other produces a list a serializer cannot restore, which
-  clause 5.4 is about.
+  clause 6.1.4 is about.
 - *`uav:componentOf` is directional and complete.* Every non-root Object TD names the parent
   ExpandedNodeId and links to the parent sibling TD. The parent independently lists the child in
   `uav:hasComponent` and links to it with the exact ReferenceType. Reversing either direction or
@@ -3342,10 +3429,10 @@ This subclause is informative.
 - *Mandatory members of the resolved type are populated, not duplicated.* `AASPropertyType` declares
   `ValueType` as Mandatory. A document that also declares `ValueType` populates that declaration; a
   converter that adds a sibling produces a node carrying the member twice.
-- *NodeIds are derived, not allocated.* Clause 5.3 fixes the node-kind-discriminated,
+- *NodeIds are derived, not allocated.* Clause 6.1.3 fixes the node-kind-discriminated,
   escaped, length-prefixed encoding of the AAS identifier and `idShortPath`, so two documents
   describing the same submodel produce the same NodeIds. A converter that generates NodeIds from
-  the browse path instead — which *WoT Connectivity* §9.4 permits where a document supplies none —
+  the browse path instead — which *WoT Connectivity* §6.5.4 permits where a document supplies none —
   produces a subtree that no longer matches this specification. Supply `uav:id` on every node.
 - *A document that cannot know the instance namespace omits `uav:id`.* An ExpandedNodeId names a
   namespace, and the namespace a Server materializes instances into is the Server's to choose. An
@@ -3361,7 +3448,7 @@ the validation runs honour them independently:
 
 | Form honoured | Required outcome |
 |---|---|
-| compact model name in `@type` only | every projected Object has the clause 6 ObjectType |
+| compact model name in `@type` only | every projected Object has the clause 6.2 ObjectType |
 | `ua:HasTypeDefinition` link only | the same nodes have the same ObjectTypes |
 | both forms | both resolve to the same Node; disagreement invalidates the document |
 | neither form | the projection falls back to `BaseObjectType` unless a Thing Model supplies a type |
@@ -3373,7 +3460,9 @@ same name: the target is the ObjectType already loaded from `Opc.Ua.I4AAS.NodeSe
 
 <a id="annex-g"></a>
 
-## Annex G — Correspondence to the AAS API of IDTA-01002 Part 2
+---
+
+## Annex G (informative) — Correspondence to the AAS API of IDTA-01002 Part 2
 
 This annex is informative.
 
@@ -3388,33 +3477,33 @@ the `$value` modifier, and Browse replaces the collection endpoints.
 
 | AAS API operation | OPC UA equivalent |
 |---|---|
-| `GetAllAssetAdministrationShells` | Browse the registry root, clause 9.2 |
-| `GetAssetAdministrationShellById` | Browse to the shell group whose identifier matches, clause 9.3 |
+| `GetAllAssetAdministrationShells` | Browse the registry root, clause 6.5.2 |
+| `GetAssetAdministrationShellById` | Browse to the shell group whose identifier matches, clause 6.5.3 |
 | `GetAllSubmodels`, `GetAllSubmodelReferences` | Browse the shell's submodel references |
 | `GetSubmodelById` | Read the `AASSubmodelType` subtree, or call `GetSubmodel` for the document form |
-| `GetSubmodelById-ValueOnly` (`$value`) | Read the value Variables of the subtree; clause 5.2 assigns each its xsd type |
+| `GetSubmodelById-ValueOnly` (`$value`) | Read the value Variables of the subtree; clause 6.1.2 assigns each its xsd type |
 | `GetSubmodelById-Metadata` (`$metadata`) | Read the subtree with the value Variables excluded |
 | `GetSubmodelById-Reference` (`$reference`) | Read the node's `AASReferenceDataType` form |
-| `GetSubmodelElementByPath` | Read the node whose NodeId clause 5.3 derives from that `idShortPath` |
+| `GetSubmodelElementByPath` | Read the node whose NodeId clause 6.1.3 derives from that `idShortPath` |
 | `PatchSubmodelElementValueByPath` | Write that node's `Value` |
 | `GetFileByPath`, `PutFileByPath` | `Open`, `Read`/`Write`, `Close` on the `AASFileType` node |
-| **`InvokeOperation`** | **Call `Invoke` on the `AASOperationType` node, clause 6.5** |
-| `InvokeOperationAsync`, `GetOperationAsyncResult` | no counterpart; see clause 6.5 |
-| `SearchAllAssetAdministrationShellIdsByAssetLink` | Call `LookupShellsByAssetLink`, clause 9.5 |
-| `GenerateSerializationByIds` | The environment documents of clause 9.10 |
+| **`InvokeOperation`** | **Call `Invoke` on the `AASOperationType` node, clause 6.2.5** |
+| `InvokeOperationAsync`, `GetOperationAsyncResult` | no counterpart; see clause 6.2.5 |
+| `SearchAllAssetAdministrationShellIdsByAssetLink` | Call `LookupShellsByAssetLink`, clause 6.5.5 |
+| `GenerateSerializationByIds` | The environment documents of clause 6.5.10 |
 | `GetSelfDescription` | Read `Server.ServerCapabilities.ServerProfileArray` |
 
 Three differences are structural rather than incidental, and an implementation should not try to
 paper over them.
 
 **The path is a NodeId, not a string.** The AAS API addresses an element by a base64url-encoded
-identifier and an `idShortPath`. Clause 5.3 derives its escaped, length-prefixed String NodeId from
+identifier and an `idShortPath`. Clause 6.1.3 derives its escaped, length-prefixed String NodeId from
 the same two parts, so the mapping is mechanical, but the encoding is not the same and a gateway
 converts rather than passes through.
 
 **The level and extent parameters have no counterpart.** `level=core|deep` and
 `extent=withBlobValue|withoutBlobValue` shape one response document. OPC UA shapes a response by
-what the caller asked to Read and by the disclosure tier of clause 9.7, which is a different
+what the caller asked to Read and by the disclosure tier of clause 6.5.7, which is a different
 mechanism with a different granularity.
 
 **Paging is a continuation point.** The AAS API returns a `cursor`; OPC UA returns a

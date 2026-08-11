@@ -226,10 +226,25 @@ if os.path.exists(_annex) and os.path.exists(_spec):
         rendered = f.read()
     with open(_spec, encoding="utf-8") as f:
         spec_text = f.read()
-    if '<a id="annex-a"></a>' not in spec_text:
-        errors.append('spec is missing the <a id="annex-a"></a> Annex A marker')
-    elif rendered.strip() not in spec_text.replace("\r\n", "\n"):
-        errors.append("generated Annex A (tools/model-reference.md) is not embedded verbatim in the spec")
+    normalized = spec_text.replace("\r\n", "\n")
+    restructured_annex = re.search(
+        r'^## Annex A \(normative\) — .+$', normalized, re.MULTILINE)
+    if ('<a id="annex-a"></a>' in normalized
+            and restructured_annex is None):
+        expected = rendered.strip()
+    else:
+        heading = re.search(r'^## Annex A .+$', rendered, re.MULTILINE)
+        if heading is None:
+            errors.append("generated Annex A has no heading")
+            expected = None
+        else:
+            expected = rendered[heading.end():].strip()
+        if restructured_annex is None:
+            errors.append("spec is missing the OPC 20020 Annex A heading")
+    if expected is not None and expected not in normalized:
+        errors.append(
+            "generated Annex A body (tools/model-reference.md) is not embedded "
+            "verbatim in the spec")
 
 print(
     f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   "

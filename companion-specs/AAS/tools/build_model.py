@@ -152,10 +152,10 @@ def method(owner, owner_sym, name, desc, rule=MR_Optional, inargs=None, outargs=
         _args(nid, f"{owner_sym}_{name}", "OutputArguments", outargs)
     return nid
 
-def _args(method_nid, method_sym, bname, args, instance=False):
+def _args(method_nid, method_sym, bname, args, instance=False, category=None):
     nid = _mid()
     add(nid, "UAVariable", bname, f"{method_sym}_{bname}", parent=T(method_nid), attrs={"DataType": Argument, "ValueRank": "1", "ArrayDimensions": str(len(args)), "_ns0bn": True},
-        category=(CAT_INST if instance else None))
+        category=(category if instance else None))
     if not instance:
         ref(nid, HasModellingRule, MR_Mandatory)
     ref(nid, HasTypeDefinition, PropertyType)
@@ -267,19 +267,22 @@ def ordered_placeholder(owner, owner_sym, name, typedef, desc):
     return obj_member(owner, owner_sym, name, typedef, desc, MR_OptionalPlaceholder, HasComponent)
 
 
-def instance_method(owner, owner_sym, name, decl_nid, desc, inargs=None, outargs=None):
+def instance_method(owner, owner_sym, name, decl_nid, desc, inargs=None, outargs=None,
+                    category=None):
     """Materialize a concrete method under a well-known instance object, so that loading the
     NodeSet yields a functional registry rather than a bare instance. Instances carry no
     HasModellingRule; MethodDeclarationId links to the type's method for the signature."""
     nid = _mid()
     add(nid, "UAMethod", name, f"{owner_sym}_{name}", desc=desc, parent=T(owner),
-        category=CAT_INST, attrs={"MethodDeclarationId": T(decl_nid)})
+        category=category, attrs={"MethodDeclarationId": T(decl_nid)})
     ref(nid, HasComponent, T(owner), forward=False)
     ref(owner, HasComponent, T(nid))
     if inargs:
-        _args(nid, f"{owner_sym}_{name}", "InputArguments", inargs, instance=True)
+        _args(nid, f"{owner_sym}_{name}", "InputArguments", inargs,
+              instance=True, category=category)
     if outargs:
-        _args(nid, f"{owner_sym}_{name}", "OutputArguments", outargs, instance=True)
+        _args(nid, f"{owner_sym}_{name}", "OutputArguments", outargs,
+              instance=True, category=category)
     return nid
 
 def enum_type(nid, name, members, desc, category=None):
@@ -372,15 +375,13 @@ CU_BY_NAME = {
 def _cu(name):
     return CU_BY_NAME.get(name, ())
 
-CAT_INST = "AAS Registry Instances"
-
 # ---------------------------------------------------------------------------
 # DataTypes - enumerations
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
 # DataTypes - the xsd value carriers
 # ---------------------------------------------------------------------------
-# Clause 7.1 assigns each of the 30 DataTypeDefXsd values one OPC UA DataType, and no
+# Clause 6.3.1 assigns each of the 30 DataTypeDefXsd values one OPC UA DataType, and no
 # DataType to two of them. Where a built-in denotes the xsd type on its own it is used;
 # where two xsd types would otherwise share one built-in, a subtype is defined here.
 def xsd_type(nid, name, base, desc):
@@ -419,7 +420,7 @@ add(1199, "UADataType", "AASValueString", "AASValueString",
          "type, so a qualifier, an extension or a data specification carries its value lexically and "
          "its sibling ValueType or DataType field states how to read it. A subtype of String, as OPC UA defines "
          "DecimalString and DurationString. It is never the DataType of a Variable; a value node "
-         "carries the DataType clause 7.1 assigns to its declared xsd type.",
+         "carries the DataType clause 6.3.1 assigns to its declared xsd type.",
     category=(CU_VALUES,))
 ref(1199, HasSubtype, String, forward=False)
 
@@ -485,7 +486,7 @@ enum_type(1208, "AASDataTypeDefXsdDataType", [
     ("NonPositiveInteger", 21, ""), ("PositiveInteger", 22, ""), ("Short", 23, ""),
     ("String", 24, ""), ("Time", 25, ""), ("UnsignedByte", 26, ""), ("UnsignedInt", 27, ""),
     ("UnsignedLong", 28, ""), ("UnsignedShort", 29, ""),
-], "The xsd type a value is expressed in. All thirty of the metamodel's values are listed. Clause 7.1 assigns each one OPC UA DataType, and no DataType to two of them.")
+], "The xsd type a value is expressed in. All thirty of the metamodel's values are listed. Clause 6.3.1 assigns each one OPC UA DataType, and no DataType to two of them.")
 
 enum_type(1209, "AASDataTypeIec61360DataType", [
     ("Blob", 0, ""), ("Boolean", 1, ""), ("Date", 2, ""), ("File", 3, ""), ("Html", 4, ""),
@@ -742,11 +743,11 @@ prop_var(1020, SE, "EmbeddedDataSpecifications", T(1226), "Data specifications c
 prop_var(1020, SE, "Index", UInt32, "The element's zero-based position within an ordered containing construct: its parent SubmodelElementList or one variable role of its parent Operation. For an Operation variable value it is mandatory and the role array position is authoritative. For a list member it is optional and recommended wherever the list's order is relevant, because Browse is not required to return references in order.")
 
 object_type(1021, "AASPropertyType", T(1020),
-            "A single typed value. The value node carries the OPC UA DataType clause 7.1 assigns to the "
+            "A single typed value. The value node carries the OPC UA DataType clause 6.3.1 assigns to the "
             "declared xsd type, from which the declared type is read.")
 PR = "AASPropertyType"
 prop_var(1021, PR, "ValueType", T(1208), "The xsd type the value is expressed in. Mandatory: the metamodel makes it mandatory and the value optional, so a Property with no value has no value node whose DataType could carry it.", rule=MR_Mandatory)
-prop_var(1021, PR, "Value", BaseDataType, "The value. Declared as BaseDataType here because the concrete DataType depends on ValueType; a materialized node carries the specific DataType clause 7.1 assigns.")
+prop_var(1021, PR, "Value", BaseDataType, "The value. Declared as BaseDataType here because the concrete DataType depends on ValueType; a materialized node carries the specific DataType clause 6.3.1 assigns.")
 prop_var(1021, PR, "ValueId", T(1221), "A reference to the value, where the value is itself an identified concept.")
 
 object_type(1022, "AASMultiLanguagePropertyType", T(1020),
@@ -759,7 +760,7 @@ prop_var(1022, ML, "ValueId", T(1221), "A reference to the value, where the valu
 object_type(1023, "AASRangeType", T(1020), "A closed or half-open interval of a single typed value.")
 RA = "AASRangeType"
 prop_var(1023, RA, "ValueType", T(1208), "The xsd type the bounds are expressed in. Mandatory: both bounds are optional and the declared type is not.", rule=MR_Mandatory)
-prop_var(1023, RA, "Min", BaseDataType, "The lower bound, carrying the DataType clause 7.1 assigns to ValueType. Absent means unbounded below, which is different from a bound of zero.")
+prop_var(1023, RA, "Min", BaseDataType, "The lower bound, carrying the DataType clause 6.3.1 assigns to ValueType. Absent means unbounded below, which is different from a bound of zero.")
 prop_var(1023, RA, "Max", BaseDataType, "The upper bound. Absent means unbounded above.")
 
 object_type(1024, "AASBlobType", T(1020), "Binary content carried inline.")
@@ -815,9 +816,9 @@ prop_var(1033, BE, "Direction", T(1203), "Whether the event is produced or consu
 prop_var(1033, BE, "State", T(1204), "Whether the event source is active.", rule=MR_Mandatory)
 prop_var(1033, BE, "MessageTopic", String, "The topic events are delivered on. Where the delivery endpoint is itself catalogued, the registry entry points at it.")
 prop_var(1033, BE, "MessageBroker", T(1221), "The broker delivering the events.")
-prop_var(1033, BE, "LastUpdate", DateTime, "When the event last fired. The metamodel types this xs:dateTime, which clause 7.1 assigns DateTime.")
-prop_var(1033, BE, "MinInterval", DurationString, "Minimum interval between events. The metamodel types this xs:duration, which clause 7.1 assigns DurationString.")
-prop_var(1033, BE, "MaxInterval", DurationString, "Maximum interval between events. The metamodel types this xs:duration, which clause 7.1 assigns DurationString.")
+prop_var(1033, BE, "LastUpdate", DateTime, "When the event last fired. The metamodel types this xs:dateTime, which clause 6.3.1 assigns DateTime.")
+prop_var(1033, BE, "MinInterval", DurationString, "Minimum interval between events. The metamodel types this xs:duration, which clause 6.3.1 assigns DurationString.")
+prop_var(1033, BE, "MaxInterval", DurationString, "Maximum interval between events. The metamodel types this xs:duration, which clause 6.3.1 assigns DurationString.")
 
 object_type(1034, "AASOperationType", T(1020), "An invocable operation.")
 OP = "AASOperationType"
@@ -997,23 +998,26 @@ prop_var(1108, EF, "Authorization", T(1231), "The authorization options a Consum
 # Well-known instance on the Server object.
 add(1150, "UAObject", "AASRegistry", "AASRegistry",
     desc="Server-wide AAS Registry, a well-known component of the Server object.",
-    parent=Server, category=CAT_INST)
+    parent=Server, category=(CU_REGISTRY,))
 ref(1150, HasTypeDefinition, T(1100))
 ref(1150, HasComponent, Server, forward=False)
 instance_method(1150, "AASRegistry", "LookupShellsByAssetLink", lookup_type,
     "Return the shells discoverable by an asset key. The functional method on the well-known AASRegistry object.",
     inargs=[("Name", String, "The key name, for example serialNumber."), ("Value", String, "The key value.")],
-    outargs=[("Shells", NodeId, "The shell group nodes matching the key.", 1)])
+    outargs=[("Shells", NodeId, "The shell group nodes matching the key.", 1)],
+    category=(CU_DISCOVERY,))
 instance_method(1150, "AASRegistry", "GetSubmodel", getsm_type,
     GET_SUBMODEL_DESCRIPTION,
     inargs=[("SubmodelIdentifier", String, "The submodel's authored identifier.")],
-    outargs=[("Document", ByteString, "The submodel document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Document media type.")])
+    outargs=[("Document", ByteString, "The submodel document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Document media type.")],
+    category=(CU_DISCOVERY,))
 instance_method(1150, "AASRegistry", "Materialize", materialize_type,
     "Re-materialize the AddressSpace from the stored documents. The functional method on the well-known AASRegistry object.",
     inargs=[("Targets", String, "The documents to consider, as registry-relative paths. An empty array means every document.", 1),
             ("Force", Boolean, "Re-materialize even a document whose digest is unchanged.")],
     outargs=[("Generation", UInt32, "The generation in force after the call."),
-             ("Results", T(1233), "One result per document considered.", 1)])
+             ("Results", T(1233), "One result per document considered.", 1)],
+    category=(CU_UPDATEABLE,))
 
 # Appended after every published declaration so their encoding nodes take the
 # next free member NodeIds without renumbering any existing node.
@@ -1046,8 +1050,8 @@ prop_var(1107, PF, "ManifestDigest", String,
          "before publication and a Consumer repeats it before use.")
 
 NAMESPACE = "http://opcfoundation.org/UA/I4AAS/v3/"
-VERSION = "3.00-draft2"
-PUBDATE = "2026-08-10T16:54:40Z"
+VERSION = "3.00-draft3"
+PUBDATE = "2026-08-11T06:39:30Z"
 UA_REQUIRED_VERSION = "1.05.04"
 UA_REQUIRED_PUBDATE = "2024-05-01T00:00:00Z"
 XR_NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"
@@ -1287,15 +1291,32 @@ def emit_md():
 def inject(path, rendered):
     """Replace the embedded Annex A in a specification document.
 
-    The annex runs from the ``annex-a`` anchor to the next ``## Annex`` heading, so the
-    document cannot drift from the model: it is the same text ``model-reference.md``
-    holds, and `validate_local.py` checks the two are equal.
+    Before Word onboarding the annex starts at the explicit ``annex-a`` anchor and the
+    generated text owns its heading. After restructuring, the OPC 20020 clause map owns
+    the heading (``Annex A (normative)``) and the generator owns only its body. Both
+    forms end at the next Annex heading. In either form the tables cannot drift from the
+    model: the body comes from the same text ``model-reference.md`` holds.
     """
     with open(path, encoding="utf-8") as f:
         text = f.read()
-    start = text.index('<a id="annex-a"></a>')
-    finish = text.index("\n## Annex ", text.index("## Annex A")) + 1
-    new_text = text[:start] + rendered.rstrip("\n") + "\n\n" + text[finish:]
+    old_anchor = '<a id="annex-a"></a>'
+    restructured_heading = re.search(
+        r'^## Annex A \(normative\) — .+$', text, re.MULTILINE)
+    if old_anchor in text and restructured_heading is None:
+        start = text.index(old_anchor)
+        finish = text.index("\n## Annex ", text.index("## Annex A")) + 1
+        replacement = rendered.rstrip("\n")
+    else:
+        annex = restructured_heading
+        if annex is None:
+            raise ValueError("Annex A heading not found")
+        start = annex.end()
+        finish = text.index("\n## Annex ", start) + 1
+        rendered_heading = re.search(r'^## Annex A .+$', rendered, re.MULTILINE)
+        if rendered_heading is None:
+            raise ValueError("generated Annex A heading not found")
+        replacement = rendered[rendered_heading.end():].strip("\n")
+    new_text = text[:start] + "\n\n" + replacement + "\n\n" + text[finish:]
     if new_text != text:
         with open(path, "w", encoding="utf-8", newline="\n") as f:
             f.write(new_text)

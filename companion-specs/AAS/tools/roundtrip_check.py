@@ -45,8 +45,8 @@ VENDORED_TEMPLATES = os.path.join(
 NS = 2  # the server namespace instances live in
 UANODESET_NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 MODEL_NAMESPACE = "http://opcfoundation.org/UA/I4AAS/v3/"
-MODEL_VERSION = "3.00-draft2"
-MODEL_PUBLICATION_DATE = "2026-08-10T16:54:40Z"
+MODEL_VERSION = "3.00-draft3"
+MODEL_PUBLICATION_DATE = "2026-08-11T06:39:30Z"
 PUBLISHED_NAMESPACE = "http://opcfoundation.org/UA/I4AAS/"
 MAX_STRING_NODEID_LENGTH = 4096
 
@@ -1526,18 +1526,18 @@ def _validate_security_integrity_contracts(root, aliases, spec_text):
         for node in root if node.get("NodeId") is not None
     }
 
-    discovery_clause = _markdown_clause(spec_text, "9.5")
+    discovery_clause = _markdown_clause(spec_text, "6.5.5")
     _require_fragments(
-        errors, "clause 9.5 GetSubmodel security contract",
+        errors, "clause 6.5.5 GetSubmodel security contract",
         discovery_clause, GET_SUBMODEL_SPEC_FRAGMENTS)
-    disclosure_clause = _markdown_clause(spec_text, "9.7")
+    disclosure_clause = _markdown_clause(spec_text, "6.5.7")
     _require_fragments(
-        errors, "clause 9.7 indirect-access disclosure contract",
-        disclosure_clause, ("`GetSubmodel`", "clause 9.5",
+        errors, "clause 6.5.7 indirect-access disclosure contract",
+        disclosure_clause, ("`GetSubmodel`", "clause 6.5.5",
                             "Method-level Call permission"))
-    federation_clause = _markdown_clause(spec_text, "9.6")
+    federation_clause = _markdown_clause(spec_text, "6.5.6")
     _require_fragments(
-        errors, "clause 9.6 federation security contract",
+        errors, "clause 6.5.6 federation security contract",
         federation_clause, FEDERATION_SECURITY_SPEC_FRAGMENTS)
 
     get_submodel_methods = [
@@ -1558,13 +1558,13 @@ def _validate_security_integrity_contracts(root, aliases, spec_text):
             _description(method_node),
             GET_SUBMODEL_DESCRIPTION_FRAGMENTS)
 
-    integrity_clause = _markdown_clause(spec_text, "9.4")
+    integrity_clause = _markdown_clause(spec_text, "6.5.4")
     _require_fragments(
-        errors, "clause 9.4 package integrity contract",
+        errors, "clause 6.5.4 package integrity contract",
         integrity_clause, PACKAGE_INTEGRITY_SPEC_FRAGMENTS)
     conformance_clause = spec_text[
         spec_text.find("## 10 Profiles and conformance"):
-        spec_text.find("## 11 NodeSet validation")]
+        spec_text.find("## 11 Namespaces")]
     _require_fragments(
         errors, "package integrity conformance profile",
         conformance_clause,

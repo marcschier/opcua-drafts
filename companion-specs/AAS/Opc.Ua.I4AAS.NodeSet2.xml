@@ -6,7 +6,7 @@
     <Uri>http://opcfoundation.org/UA/I4AAS/v3/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/I4AAS/v3/" Version="3.00-draft2" PublicationDate="2026-08-10T16:54:40Z">
+    <Model ModelUri="http://opcfoundation.org/UA/I4AAS/v3/" Version="3.00-draft3" PublicationDate="2026-08-11T06:39:30Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2024-05-01T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z" />
     </Model>
@@ -118,7 +118,7 @@
   </UADataType>
   <UADataType NodeId="ns=2;i=1199" BrowseName="2:AASValueString">
     <DisplayName>AASValueString</DisplayName>
-    <Description>The xsd lexical form of a value whose declared type is carried in a sibling field of the same Structure. A Structure field has one static DataType and cannot vary with a declared type, so a qualifier, an extension or a data specification carries its value lexically and its sibling ValueType or DataType field states how to read it. A subtype of String, as OPC UA defines DecimalString and DurationString. It is never the DataType of a Variable; a value node carries the DataType clause 7.1 assigns to its declared xsd type.</Description>
+    <Description>The xsd lexical form of a value whose declared type is carried in a sibling field of the same Structure. A Structure field has one static DataType and cannot vary with a declared type, so a qualifier, an extension or a data specification carries its value lexically and its sibling ValueType or DataType field states how to read it. A subtype of String, as OPC UA defines DecimalString and DurationString. It is never the DataType of a Variable; a value node carries the DataType clause 6.3.1 assigns to its declared xsd type.</Description>
     <Category>AAS-ValueFidelity</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
@@ -190,7 +190,7 @@
   </UADataType>
   <UADataType NodeId="ns=2;i=1208" BrowseName="2:AASDataTypeDefXsdDataType">
     <DisplayName>AASDataTypeDefXsdDataType</DisplayName>
-    <Description>The xsd type a value is expressed in. All thirty of the metamodel's values are listed. Clause 7.1 assigns each one OPC UA DataType, and no DataType to two of them.</Description>
+    <Description>The xsd type a value is expressed in. All thirty of the metamodel's values are listed. Clause 6.3.1 assigns each one OPC UA DataType, and no DataType to two of them.</Description>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
     </References>
@@ -1056,7 +1056,7 @@
   </UAVariable>
   <UAObjectType NodeId="ns=2;i=1021" BrowseName="2:AASPropertyType">
     <DisplayName>AASPropertyType</DisplayName>
-    <Description>A single typed value. The value node carries the OPC UA DataType clause 7.1 assigns to the declared xsd type, from which the declared type is read.</Description>
+    <Description>A single typed value. The value node carries the OPC UA DataType clause 6.3.1 assigns to the declared xsd type, from which the declared type is read.</Description>
     <Category>AAS-SubmodelElements</Category>
     <Category>AAS-ValueFidelity</Category>
     <References>
@@ -1077,7 +1077,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=5067" BrowseName="2:Value" ParentNodeId="ns=2;i=1021" DataType="BaseDataType" ValueRank="-1">
     <DisplayName>Value</DisplayName>
-    <Description>The value. Declared as BaseDataType here because the concrete DataType depends on ValueType; a materialized node carries the specific DataType clause 7.1 assigns.</Description>
+    <Description>The value. Declared as BaseDataType here because the concrete DataType depends on ValueType; a materialized node carries the specific DataType clause 6.3.1 assigns.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1145,7 +1145,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=5072" BrowseName="2:Min" ParentNodeId="ns=2;i=1023" DataType="BaseDataType" ValueRank="-1">
     <DisplayName>Min</DisplayName>
-    <Description>The lower bound, carrying the DataType clause 7.1 assigns to ValueType. Absent means unbounded below, which is different from a bound of zero.</Description>
+    <Description>The lower bound, carrying the DataType clause 6.3.1 assigns to ValueType. Absent means unbounded below, which is different from a bound of zero.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1462,7 +1462,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=5096" BrowseName="2:LastUpdate" ParentNodeId="ns=2;i=1033" DataType="DateTime" ValueRank="-1">
     <DisplayName>LastUpdate</DisplayName>
-    <Description>When the event last fired. The metamodel types this xs:dateTime, which clause 7.1 assigns DateTime.</Description>
+    <Description>When the event last fired. The metamodel types this xs:dateTime, which clause 6.3.1 assigns DateTime.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1471,7 +1471,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=5097" BrowseName="2:MinInterval" ParentNodeId="ns=2;i=1033" DataType="DurationString" ValueRank="-1">
     <DisplayName>MinInterval</DisplayName>
-    <Description>Minimum interval between events. The metamodel types this xs:duration, which clause 7.1 assigns DurationString.</Description>
+    <Description>Minimum interval between events. The metamodel types this xs:duration, which clause 6.3.1 assigns DurationString.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1480,7 +1480,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=5098" BrowseName="2:MaxInterval" ParentNodeId="ns=2;i=1033" DataType="DurationString" ValueRank="-1">
     <DisplayName>MaxInterval</DisplayName>
-    <Description>Maximum interval between events. The metamodel types this xs:duration, which clause 7.1 assigns DurationString.</Description>
+    <Description>Maximum interval between events. The metamodel types this xs:duration, which clause 6.3.1 assigns DurationString.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -2378,7 +2378,7 @@
   <UAObject NodeId="ns=2;i=1150" BrowseName="2:AASRegistry" ParentNodeId="i=2253">
     <DisplayName>AASRegistry</DisplayName>
     <Description>Server-wide AAS Registry, a well-known component of the Server object.</Description>
-    <Category>AAS Registry Instances</Category>
+    <Category>AAS-Registry</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">ns=2;i=1100</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">i=2253</Reference>
@@ -2390,7 +2390,7 @@
   <UAMethod NodeId="ns=2;i=5178" BrowseName="2:LookupShellsByAssetLink" ParentNodeId="ns=2;i=1150" MethodDeclarationId="ns=2;i=5111">
     <DisplayName>LookupShellsByAssetLink</DisplayName>
     <Description>Return the shells discoverable by an asset key. The functional method on the well-known AASRegistry object.</Description>
-    <Category>AAS Registry Instances</Category>
+    <Category>AAS-Discovery</Category>
     <References>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1150</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5179</Reference>
@@ -2399,7 +2399,7 @@
   </UAMethod>
   <UAVariable NodeId="ns=2;i=5179" BrowseName="InputArguments" ParentNodeId="ns=2;i=5178" DataType="Argument" ValueRank="1" ArrayDimensions="2">
     <DisplayName>InputArguments</DisplayName>
-    <Category>AAS Registry Instances</Category>
+    <Category>AAS-Discovery</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5178</Reference>
@@ -2408,7 +2408,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=5180" BrowseName="OutputArguments" ParentNodeId="ns=2;i=5178" DataType="Argument" ValueRank="1" ArrayDimensions="1">
     <DisplayName>OutputArguments</DisplayName>
-    <Category>AAS Registry Instances</Category>
+    <Category>AAS-Discovery</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5178</Reference>
@@ -2418,7 +2418,7 @@
   <UAMethod NodeId="ns=2;i=5181" BrowseName="2:GetSubmodel" ParentNodeId="ns=2;i=1150" MethodDeclarationId="ns=2;i=5114">
     <DisplayName>GetSubmodel</DisplayName>
     <Description>Resolve the selected AASSubmodelFileType before returning its document and enforce the same Session-specific effective RolePermissions, UserRolePermissions, DisclosureTier, Authorization and FileType Open/Read decision as direct access to that target. Call permission on this Method does not authorize the target. Return Bad_UserAccessDenied, or Bad_NotFound where policy conceals existence, without exposing controlled bytes, Format, ContentType, other target metadata or a distinguishable timing path.</Description>
-    <Category>AAS Registry Instances</Category>
+    <Category>AAS-Discovery</Category>
     <References>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1150</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5182</Reference>
@@ -2427,7 +2427,7 @@
   </UAMethod>
   <UAVariable NodeId="ns=2;i=5182" BrowseName="InputArguments" ParentNodeId="ns=2;i=5181" DataType="Argument" ValueRank="1" ArrayDimensions="1">
     <DisplayName>InputArguments</DisplayName>
-    <Category>AAS Registry Instances</Category>
+    <Category>AAS-Discovery</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5181</Reference>
@@ -2436,7 +2436,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=5183" BrowseName="OutputArguments" ParentNodeId="ns=2;i=5181" DataType="Argument" ValueRank="1" ArrayDimensions="3">
     <DisplayName>OutputArguments</DisplayName>
-    <Category>AAS Registry Instances</Category>
+    <Category>AAS-Discovery</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5181</Reference>
@@ -2446,7 +2446,7 @@
   <UAMethod NodeId="ns=2;i=5184" BrowseName="2:Materialize" ParentNodeId="ns=2;i=1150" MethodDeclarationId="ns=2;i=5119">
     <DisplayName>Materialize</DisplayName>
     <Description>Re-materialize the AddressSpace from the stored documents. The functional method on the well-known AASRegistry object.</Description>
-    <Category>AAS Registry Instances</Category>
+    <Category>AAS-UpdateableRegistry</Category>
     <References>
       <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1150</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=5185</Reference>
@@ -2455,7 +2455,7 @@
   </UAMethod>
   <UAVariable NodeId="ns=2;i=5185" BrowseName="InputArguments" ParentNodeId="ns=2;i=5184" DataType="Argument" ValueRank="1" ArrayDimensions="2">
     <DisplayName>InputArguments</DisplayName>
-    <Category>AAS Registry Instances</Category>
+    <Category>AAS-UpdateableRegistry</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5184</Reference>
@@ -2464,7 +2464,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=5186" BrowseName="OutputArguments" ParentNodeId="ns=2;i=5184" DataType="Argument" ValueRank="1" ArrayDimensions="2">
     <DisplayName>OutputArguments</DisplayName>
-    <Category>AAS Registry Instances</Category>
+    <Category>AAS-UpdateableRegistry</Category>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=5184</Reference>
