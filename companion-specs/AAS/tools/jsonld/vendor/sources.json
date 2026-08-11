@@ -1,11 +1,11 @@
 {
   "opc-ua-wot-binding.context.jsonld": {
-    "source": "https://raw.githubusercontent.com/OPCF-Members/spec-drafts/f6c8b3916329158f864de64cfe6d3e4305de0fb3/wot-specs/WoT-Binding/opc-ua-wot-binding.context.jsonld",
-    "sha256": "fcee3e43434ee2d54b757111fa411812fd8cc804c810e16b4b0a70720a4090a5"
+    "source": "https://raw.githubusercontent.com/OPCF-Members/spec-drafts/c57a84ae96f24a02b1d3a38da50c5e9e55950be9/wot-specs/WoT-Binding/opc-ua-wot-binding.context.jsonld",
+    "sha256": "1628d1747c1d1d95c0957a9fefbc614d4322f47e7612f52e36c358d026dc2187"
   },
   "opc-ua-wot-binding.schema.json": {
-    "source": "https://raw.githubusercontent.com/OPCF-Members/spec-drafts/f6c8b3916329158f864de64cfe6d3e4305de0fb3/wot-specs/WoT-Binding/opc-ua-wot-binding.schema.json",
-    "sha256": "0d01ca1131760b9fc8bc3cb6cd3798ec0cab0341bc912b79ad0b0dd6d6df3ad1"
+    "source": "https://raw.githubusercontent.com/OPCF-Members/spec-drafts/c57a84ae96f24a02b1d3a38da50c5e9e55950be9/wot-specs/WoT-Binding/opc-ua-wot-binding.schema.json",
+    "sha256": "6d900647ad7a8e644e84299e1484e107a18de26b77110e436b1f20f54d59109b"
   },
   "td-context-1.1.jsonld": {
     "source": "https://raw.githubusercontent.com/w3c/wot-resources/e3ea7952471626d9513dc17b9206fb6e275b2cbd/td/v1.1/context/td-context-1.1.jsonld",

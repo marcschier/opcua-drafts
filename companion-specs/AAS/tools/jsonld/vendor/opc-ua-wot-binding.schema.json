@@ -45,6 +45,47 @@
       "description": "An opaque JSON value carried verbatim; consumers that do not understand it preserve it unchanged.",
       "type": ["object", "array", "string", "number", "boolean", "null"]
     },
+    "severity": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000,
+      "description": "The default OPC UA Severity of an event affordance. OPC 10000-5 defines the range 1..1000."
+    },
+    "noSeverityAnywhere": {
+      "description": "Reject uav:severity outside the event affordance object itself, including inside nested forms, links, and data schemas.",
+      "if": { "type": "object" },
+      "then": {
+        "not": { "required": ["uav:severity"] },
+        "additionalProperties": { "$ref": "#/$defs/noSeverityAnywhere" }
+      },
+      "else": {
+        "if": { "type": "array" },
+        "then": { "items": { "$ref": "#/$defs/noSeverityAnywhere" } }
+      }
+    },
+    "eventAffordanceSeverity": {
+      "type": "object",
+      "properties": {
+        "uav:severity": { "$ref": "#/$defs/severity" }
+      },
+      "patternProperties": {
+        "^(?!uav:severity$).*": { "$ref": "#/$defs/noSeverityAnywhere" }
+      }
+    },
+    "eventSeverityDomain": {
+      "type": "object",
+      "description": "uav:severity belongs only on an event affordance. It is invalid at the document root, on another affordance kind, or nested below an event affordance.",
+      "not": { "required": ["uav:severity"] },
+      "properties": {
+        "events": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/eventAffordanceSeverity" }
+        }
+      },
+      "patternProperties": {
+        "^(?!events$).*": { "$ref": "#/$defs/noSeverityAnywhere" }
+      }
+    },
     "nodeSetEnvelope": {
       "type": "object",
       "description": "The exceptional uav:nodeSet preservation envelope: an explicit byte-exact archival baseline or a last-resort fallback when a future/unsupported construct cannot be represented by uav:nodes. A converter shall not emit it when the semantic mapping or structured projection is complete.",
@@ -234,9 +275,6 @@
         "uav:refId": { "$ref": "#/$defs/expandedNodeId" },
         "uav:contains": { "type": "array", "items": { "type": "string" } },
         "uav:containedIn": { "type": "string" },
-        "uav:congruentType": { "type": "string" },
-        "uav:congruentTypeName": { "$ref": "#/$defs/modelConceptName" },
-        "uav:nameNamespace": { "$ref": "#/$defs/absoluteIri" },
         "uav:scaleFactor": { "type": "number", "not": { "const": 0 } },
         "uav:decimalPlaces": { "type": "integer", "minimum": 0 },
         "uav:unitProperty": { "$ref": "#/$defs/jsonPointer" },
@@ -257,8 +295,7 @@
         "uav:nodeSet": { "$ref": "#/$defs/nodeSetEnvelope" }
       },
       "dependentRequired": {
-        "uav:mapToTypeName": ["uav:mapToType"],
-        "uav:congruentTypeName": ["uav:congruentType"]
+        "uav:mapToTypeName": ["uav:mapToType"]
       }
     },
     "securityChannelScheme": {
@@ -316,6 +353,7 @@
   },
   "allOf": [
     { "$ref": "#/$defs/uavMembers" },
+    { "$ref": "#/$defs/eventSeverityDomain" },
     { "$ref": "#/$defs/eventTypeAnnotation" },
     { "$ref": "#/$defs/projectionDocument" }
   ]
