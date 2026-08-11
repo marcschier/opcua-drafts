@@ -145,14 +145,35 @@ def _corrupt_cell(owner, row_marker, was, now):
 
 
 def _find_items_row(text, type_name, field_name, marker):
-    anchor = text.find(type_name + ' Items')
-    if anchor < 0:
+    bounds = _find_items_table(text, type_name)
+    if bounds is None:
         return None
+    table_start, table_end = bounds
     pattern = re.compile(
         r'<w:tr[^>]*>(?:(?!</w:tr>).)*?' + re.escape(field_name)
         + r'(?:(?!</w:tr>).)*?' + re.escape(marker)
         + r'(?:(?!</w:tr>).)*?</w:tr>', re.S)
-    return pattern.search(text, anchor)
+    return pattern.search(text, table_start, table_end)
+
+
+def _find_items_table(text, type_name):
+    needle = type_name + ' Items'
+    start = 0
+    while True:
+        anchor = text.find(needle, start)
+        if anchor < 0:
+            return None
+        para_start = text.rfind('<w:p', 0, anchor)
+        para_end = text.find('</w:p>', anchor)
+        if para_start >= 0 and para_end >= 0:
+            caption = text[para_start:para_end]
+            if 'w:pStyle w:val="TABLE-title"' in caption:
+                table_start = text.find('<w:tbl', para_end)
+                table_end = text.find('</w:tbl>', table_start)
+                if table_start >= 0 and table_end >= 0:
+                    return table_start, table_end + len('</w:tbl>')
+                return None
+        start = anchor + len(needle)
 
 
 def _corrupt_items_cell(type_name, field_name, was, now):
@@ -161,6 +182,40 @@ def _corrupt_items_cell(type_name, field_name, was, now):
         if not m:
             return text
         return text[:m.start()] + m.group(0).replace(was, now, 1) + text[m.end():]
+    return apply
+
+
+def _swap_first_structure_rows(type_name):
+    def apply(text):
+        bounds = _find_items_table(text, type_name)
+        if bounds is None:
+            return text
+        start, end = bounds
+        table = text[start:end]
+        rows = list(re.finditer(r'<w:tr[^>]*>.*?</w:tr>', table, re.S))
+        if len(rows) < 3:
+            return text
+        first, second = rows[1], rows[2]
+        swapped = (table[:first.start()] + second.group(0)
+                   + table[first.end():second.start()] + first.group(0)
+                   + table[second.end():])
+        return text[:start] + swapped + text[end:]
+    return apply
+
+
+def _duplicate_first_structure_row(type_name):
+    def apply(text):
+        bounds = _find_items_table(text, type_name)
+        if bounds is None:
+            return text
+        start, end = bounds
+        table = text[start:end]
+        rows = list(re.finditer(r'<w:tr[^>]*>.*?</w:tr>', table, re.S))
+        if len(rows) < 2:
+            return text
+        at = rows[1].end()
+        duplicated = table[:at] + rows[1].group(0) + table[at:]
+        return text[:start] + duplicated + text[end:]
     return apply
 
 
@@ -200,6 +255,10 @@ def derived_mutations(
             out.append(('an optional Structure field is printed as mandatory',
                         'data-type-items',
                         _corrupt_items_cell(type_name, field_name, cardinality, '1')))
+        out.append(('Structure fields are reordered',
+                    'data-type-items', _swap_first_structure_rows(type_name)))
+        out.append(('a Structure Items table contains a duplicate field',
+                    'data-type-items', _duplicate_first_structure_row(type_name)))
     else:
         skipped.append('data-type-items: the document defines no Structure fields')
 

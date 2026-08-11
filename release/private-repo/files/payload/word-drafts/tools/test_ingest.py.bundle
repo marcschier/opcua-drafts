@@ -14,6 +14,7 @@ removed.
 """
 
 import os
+import json
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -157,6 +158,24 @@ def test_an_edit_that_no_longer_applies_is_an_error():
     except ingest.IngestError:
         return
     raise AssertionError('a stale edit was applied silently')
+
+
+def test_current_provenance_wins_when_historical_mapping_is_stale():
+    current = {'sourceDigest': 'current', 'paragraphs': {'NEW': {}}}
+    historical = {'sourceDigest': 'old', 'paragraphs': {'OLD': {}}}
+    selected = ingest.select_provenance(
+        'current',
+        [('current', json.dumps(current)), ('historical', json.dumps(historical))])
+    assert selected == current, selected
+
+
+def test_provenance_without_the_document_digest_is_rejected():
+    try:
+        ingest.select_provenance(
+            'wanted', [('historical', json.dumps({'sourceDigest': 'old'}))])
+    except ingest.IngestError:
+        return
+    raise AssertionError('a stale provenance sidecar was accepted')
 
 
 def test_ownership_routes_away_from_the_markdown():

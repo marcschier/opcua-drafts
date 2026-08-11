@@ -149,7 +149,7 @@
     {
       "stored": "payload/word-drafts/tools/ingest_docx.py.bundle",
       "destination": "word-drafts/tools/ingest_docx.py",
-      "sha256": "d55a6f01992a86ed65e0463b831a038d5e184264295ad16b8049365db829cab3"
+      "sha256": "397b8744e3bd4221c6f59a90eaecc2f903fce6a4b57c2a51fffc088af3a32128"
     },
     {
       "stored": "payload/word-drafts/tools/make_review_fixture.ps1.bundle",
@@ -249,17 +249,17 @@
     {
       "stored": "payload/word-drafts/tools/test_ingest.py.bundle",
       "destination": "word-drafts/tools/test_ingest.py",
-      "sha256": "791d82a104d0e317d6b3759ad2e7fb3bc22356d4a459775f92d9cad5a226b1a2"
+      "sha256": "bd7cf60d83990e5224462ef59b5bd92768127756b604c5a11107959d13951696"
     },
     {
       "stored": "payload/word-drafts/tools/test_validate_docx.py.bundle",
       "destination": "word-drafts/tools/test_validate_docx.py",
-      "sha256": "2bdaa8bd3dc09728646ba734ae9ee9cc5022d703a040e7a10e2bd51bd118ffdf"
+      "sha256": "e1f4ccbfa83f9abcb3e083c0dd9db028b0deb3851e5dec278d2af61af905a56c"
     },
     {
       "stored": "payload/word-drafts/tools/validate_docx.py.bundle",
       "destination": "word-drafts/tools/validate_docx.py",
-      "sha256": "caa596b4c714f6467d24a467510c1e49d750af310369559219926488f17ce2a7"
+      "sha256": "9db37bc7762240e828d02faf2909dad402130f151a0acfbd78befdfc68a4693b"
     }
   ]
 }

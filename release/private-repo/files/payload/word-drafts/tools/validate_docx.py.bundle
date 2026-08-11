@@ -15,6 +15,7 @@ import os
 import re
 import sys
 import zipfile
+import xml.etree.ElementTree as ET
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -183,11 +184,31 @@ def check_provenance(doc, cfg, docx_path, res):
         res.error('provenance', 'no paragraph is attributed to markdown, so nothing '
                                 'could ever be written back')
 
-    props = doc.parts.get('docProps/custom.xml', b'').decode('utf-8', 'replace')
+    props_raw = doc.parts.get('docProps/custom.xml', b'')
+    props = props_raw.decode('utf-8', 'replace')
     for name in ('SpecId', 'SourceCommit', 'SourceDigest', 'PipelineVersion'):
         if 'name="%s"' % name not in props:
             res.error('provenance', 'the package does not record %s, so a reviewed copy '
                                     'could not be matched to its source' % name)
+    package_values = {}
+    if props_raw:
+        try:
+            for prop in ET.fromstring(props_raw):
+                package_values[prop.get('name')] = ''.join(prop.itertext())
+        except ET.ParseError:
+            res.error('provenance', 'docProps/custom.xml is not well-formed XML')
+    expected_values = {
+        'SpecId': prov.get('specId'),
+        'SourceCommit': prov.get('sourceCommit'),
+        'SourceDigest': prov.get('sourceDigest'),
+        'PipelineVersion': prov.get('pipelineVersion'),
+    }
+    for name, expected in expected_values.items():
+        actual = package_values.get(name)
+        if actual is not None and actual != expected:
+            res.error('provenance',
+                      'document %s is %r but the current sidecar says %r'
+                      % (name, actual, expected))
     if prov.get('sourceDigest') != _digest_of(prov.get('sources') or []):
         res.error('provenance',
                   'the sources have changed since the document was built; rebuild before '
@@ -477,23 +498,19 @@ def check_data_type_item_tables(
         rows = el.findall(q('w:tr'))
         cells = [[' '.join(iter_text(tc).split()) for tc in r.findall(q('w:tc'))]
                  for r in rows]
+        headers = (contract.STRUCTURE_HEADERS if expected['kind'] == 'structure'
+                   else contract.ENUM_HEADERS)
+        wanted = [headers]
         for field in expected['fields']:
-            match = [r for r in cells[1:] if r and r[0] == field['name']]
-            if not match:
-                res.error('data-type-items',
-                          '%s: field %s missing from Items table'
-                          % (name, field['name']))
-                continue
-            got = match[0]
             if expected['kind'] == 'structure':
-                want = [field['name'], field['type'], field['cardinality'],
-                        field['description']]
+                wanted.append([field['name'], field['type'], field['cardinality'],
+                               field['description']])
             else:
-                want = [field['name'], field['value'], field['description']]
-            if got != want:
-                res.error('data-type-items',
-                          '%s.%s row is %r, NodeSet says %r'
-                          % (name, field['name'], got, want))
+                wanted.append([field['name'], field['value'], field['description']])
+        if cells != wanted:
+            res.error('data-type-items',
+                      '%s Items rows differ from the ordered NodeSet definition; '
+                      'document=%r NodeSet=%r' % (name, cells, wanted))
     for name, node in model.by_name.items():
         if node.tag == 'UADataType' and node.definition and name not in seen:
             res.error('data-type-items',

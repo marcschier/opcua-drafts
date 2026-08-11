@@ -68,6 +68,26 @@ def git_show(commit, path):
     return out.stdout.decode('utf-8')
 
 
+def select_provenance(expected_digest, candidates):
+    """Choose the sidecar that describes the reviewed document's exact sources."""
+    found = []
+    for label, raw in candidates:
+        if raw is None:
+            continue
+        try:
+            provenance = json.loads(raw)
+        except (TypeError, json.JSONDecodeError) as exc:
+            raise IngestError('invalid %s provenance sidecar: %s' % (label, exc))
+        digest = provenance.get('sourceDigest')
+        found.append('%s=%s' % (label, digest or 'missing'))
+        if expected_digest is None or digest == expected_digest:
+            return provenance
+    raise IngestError(
+        'no provenance sidecar matches the document SourceDigest %s (%s). '
+        'Without an exact match, paragraph ids may be routed to stale sources.'
+        % (expected_digest or 'missing', ', '.join(found) or 'no sidecars found'))
+
+
 class Sources:
     """The markdown as the reviewer read it, and as it is now.
 
@@ -407,6 +427,7 @@ class Ingest:
         self.config['_specId'] = self.spec_id
 
         self.commit = props.get('SourceCommit') or 'unknown'
+        self.source_digest = props.get('SourceDigest')
         self.provenance = self._load_provenance()
         self.sources = Sources(self.commit, self.provenance.get('sources') or [])
         self.addresses = {pid: Address(pid, raw)
@@ -421,17 +442,16 @@ class Ingest:
     def _load_provenance(self):
         rel = os.path.splitext(self.config['output']['docmodel'])[0]
         rel = rel.replace('.docmodel', '') + '.provenance.json'
-        raw = git_show(self.commit, rel) if self.commit != 'unknown' else None
-        if raw is None:
-            full = os.path.join(REPO, rel)
-            if not os.path.exists(full):
-                raise IngestError(
-                    'no provenance sidecar for this document, at %s or at commit %s. '
-                    'Without it a mark cannot be traced to its source.'
-                    % (rel, self.commit[:12]))
+        full = os.path.join(REPO, rel)
+        current = None
+        if os.path.exists(full):
             with open(full, encoding='utf-8') as f:
-                raw = f.read()
-        return json.loads(raw)
+                current = f.read()
+        historical = git_show(
+            self.commit, rel) if self.commit != 'unknown' else None
+        return select_provenance(
+            self.source_digest,
+            (('current', current), ('historical at ' + self.commit[:12], historical)))
 
     # ------------------------------------------------------------------ the work
 
