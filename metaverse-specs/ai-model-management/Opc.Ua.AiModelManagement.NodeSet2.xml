@@ -55,7 +55,7 @@
     </References>
     <Definition Name="InferenceLocationEnum"><Field Name="OnServer" Value="0"><Description>In the OPC UA Server process or on its host.</Description></Field><Field Name="EdgeOffServer" Value="1"><Description>On a separate edge node reached over the network.</Description></Field><Field Name="Cloud" Value="2"><Description>In a remote or cloud service.</Description></Field><Field Name="InSimulator" Value="3"><Description>Inside a simulator that also produces the input.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3901" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3001" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
+  <UAVariable NodeId="ns=2;i=3901" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3001" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -74,7 +74,7 @@
     </References>
     <Definition Name="AcceleratorKindEnum"><Field Name="Cpu" Value="0"/><Field Name="Gpu" Value="1"/><Field Name="Npu" Value="2"/><Field Name="Fpga" Value="3"/><Field Name="Tpu" Value="4"/><Field Name="Other" Value="5"/></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3902" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3002" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
+  <UAVariable NodeId="ns=2;i=3902" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3002" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -93,7 +93,7 @@
     </References>
     <Definition Name="DeploymentStateEnum"><Field Name="Inactive" Value="0"><Description>Declared but not serving.</Description></Field><Field Name="Ready" Value="1"><Description>Able to serve; no work in progress.</Description></Field><Field Name="Active" Value="2"><Description>Serving at least one request.</Description></Field><Field Name="Degraded" Value="3"><Description>Serving below configured quality.</Description></Field><Field Name="Faulted" Value="4"><Description>Unable to serve.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3903" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3003" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
+  <UAVariable NodeId="ns=2;i=3903" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3003" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -112,7 +112,7 @@
     </References>
     <Definition Name="DatasetSourceEnum"><Field Name="Real" Value="0"><Description>Captured from physical equipment.</Description></Field><Field Name="Synthetic" Value="1"><Description>Generated or rendered by a simulator.</Description></Field><Field Name="Mixed" Value="2"><Description>Both, for example synthetic pre-training with real fine-tuning.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3904" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3004" DataType="LocalizedText" ValueRank="1" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=3904" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3004" DataType="LocalizedText" ValueRank="1" ArrayDimensions="3">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -131,7 +131,7 @@
     </References>
     <Definition Name="LearningJobStateEnum"><Field Name="Idle" Value="0"/><Field Name="Collecting" Value="1"/><Field Name="Labelling" Value="2"/><Field Name="Training" Value="3"/><Field Name="Validating" Value="4"/><Field Name="Ready" Value="5"><Description>A candidate model is available for promotion.</Description></Field><Field Name="Promoted" Value="6"/><Field Name="Failed" Value="7"/></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3905" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3005" DataType="LocalizedText" ValueRank="1" ArrayDimensions="8">
+  <UAVariable NodeId="ns=2;i=3905" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3005" DataType="LocalizedText" ValueRank="1" ArrayDimensions="8">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -150,7 +150,7 @@
     </References>
     <Definition Name="FinishReasonEnum"><Field Name="Stop" Value="0"><Description>The model finished normally.</Description></Field><Field Name="Length" Value="1"><Description>Output was truncated by a length or budget limit. The result is incomplete and SHALL NOT be treated as final.</Description></Field><Field Name="ToolCall" Value="2"><Description>The model requested a tool or function call and is waiting for its result.</Description></Field><Field Name="Filtered" Value="3"><Description>Output was withheld by a safety policy; see the SafetyAssessment.</Description></Field><Field Name="Cancelled" Value="4"><Description>The caller or the Server cancelled the call.</Description></Field><Field Name="Error" Value="5"><Description>The call failed; the StatusCode carries the reason.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3906" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3006" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
+  <UAVariable NodeId="ns=2;i=3906" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3006" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -169,7 +169,7 @@
     </References>
     <Definition Name="ApiDialectEnum"><Field Name="OpcUaInference" Value="0"><Description>Another OPC UA Server implementing this specification's Invoke Method.</Description></Field><Field Name="RestChatCompletions" Value="1"><Description>The de-facto REST contract for chat and embeddings that most serving runtimes expose, including ones that run on a single workstation.</Description></Field><Field Name="OpenInferenceProtocol" Value="2"><Description>The Open Inference Protocol (KServe v2) predict contract.</Description></Field><Field Name="TensorRemoteProcedure" Value="3"><Description>A tensor-oriented RPC contract such as those used by dedicated inference servers.</Description></Field><Field Name="EmbeddedRuntime" Value="4"><Description>An in-process runtime reached through a local library rather than a network protocol.</Description></Field><Field Name="Proprietary" Value="5"><Description>A contract this specification does not name. EndpointDescriptionUri SHOULD then say where it is documented.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3907" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3007" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
+  <UAVariable NodeId="ns=2;i=3907" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3007" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -188,7 +188,7 @@
     </References>
     <Definition Name="AuthenticationKindEnum"><Field Name="Anonymous" Value="0"><Description>No credential. Permitted only where the endpoint is reachable solely from a trusted network segment.</Description></Field><Field Name="ApiKey" Value="1"><Description>A shared secret presented as a key.</Description></Field><Field Name="BearerToken" Value="2"><Description>A token obtained from an authorization service.</Description></Field><Field Name="WorkloadIdentity" Value="3"><Description>An identity the hosting platform assigns to the Server, so no secret is stored at all. Preferred where the platform offers it.</Description></Field><Field Name="MutualTls" Value="4"><Description>Both ends present certificates.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3908" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3008" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
+  <UAVariable NodeId="ns=2;i=3908" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3008" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -207,7 +207,7 @@
     </References>
     <Definition Name="FallbackPolicyEnum"><Field Name="Fail" Value="0"><Description>Report the failure to the caller and produce nothing. The safe default: a caller that is told nothing happened can decide for itself.</Description></Field><Field Name="HoldLast" Value="1"><Description>Continue reporting the most recent successful result, marked stale. Legitimate only where a stale answer is safe, and the caller SHALL be able to see the staleness.</Description></Field><Field Name="FallBackTo" Value="2"><Description>Route to the deployment named by the FallsBackTo reference. The answer comes from a different model and the response SHALL say so.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3909" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3009" DataType="LocalizedText" ValueRank="1" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=3909" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3009" DataType="LocalizedText" ValueRank="1" ArrayDimensions="3">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -226,7 +226,7 @@
     </References>
     <Definition Name="VersionBindingEnum"><Field Name="Pinned" Value="0"><Description>Bound to one immutable version. The artefact behind this deployment cannot change without an observable change to the deployment.</Description></Field><Field Name="FollowsRef" Value="1"><Description>Bound to a mutable pointer such as a branch or channel. The artefact CAN change without any other change, which is why clause 12 requires the resulting promotion to be as authorized as an explicit one.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3910" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3010" DataType="LocalizedText" ValueRank="1" ArrayDimensions="2">
+  <UAVariable NodeId="ns=2;i=3910" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3010" DataType="LocalizedText" ValueRank="1" ArrayDimensions="2">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -245,7 +245,7 @@
     </References>
     <Definition Name="ImportModeEnum"><Field Name="Federate" Value="0"><Description>Materialize the catalogue entry as a ModelType and leave the artefact where it is. Nothing is downloaded and inference runs at the source.</Description></Field><Field Name="Stage" Value="1"><Description>Fetch the artefact, verify its Digest, and make it locally available so inference can run without the source.</Description></Field><Field Name="Auto" Value="2"><Description>Federate, then stage if the target deployment's InferenceLocation is OnServer or EdgeOffServer - because those cannot reach the source at inference time.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3911" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3011" DataType="LocalizedText" ValueRank="1" ArrayDimensions="3">
+  <UAVariable NodeId="ns=2;i=3911" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3011" DataType="LocalizedText" ValueRank="1" ArrayDimensions="3">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -264,7 +264,7 @@
     </References>
     <Definition Name="SafetySeverityEnum"><Field Name="None" Value="0"/><Field Name="Low" Value="1"/><Field Name="Medium" Value="2"/><Field Name="High" Value="3"/></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3912" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3012" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
+  <UAVariable NodeId="ns=2;i=3912" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3012" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -283,7 +283,7 @@
     </References>
     <Definition Name="ReachabilityEnum"><Field Name="Unknown" Value="0"><Description>Never attempted, or the Server does not probe.</Description></Field><Field Name="Reachable" Value="1"><Description>The most recent attempt succeeded.</Description></Field><Field Name="Unreachable" Value="2"><Description>The most recent attempt failed.</Description></Field><Field Name="Throttled" Value="3"><Description>Reachable, but the endpoint is refusing work for capacity reasons. RetryAfter SHOULD be populated.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3913" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3013" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
+  <UAVariable NodeId="ns=2;i=3913" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3013" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -302,7 +302,7 @@
     </References>
     <Definition Name="TransferStateEnum"><Field Name="Building" Value="0"><Description>The request is being written and is not yet complete.</Description></Field><Field Name="Ready" Value="1"><Description>The request is complete and inference has not started.</Description></Field><Field Name="Executing" Value="2"><Description>Inference is running.</Description></Field><Field Name="Completed" Value="3"><Description>The response is readable.</Description></Field><Field Name="Failed" Value="4"><Description>The exchange failed; LastError carries the reason.</Description></Field><Field Name="Expired" Value="5"><Description>The Server reclaimed the transfer before it completed.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3914" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3014" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
+  <UAVariable NodeId="ns=2;i=3914" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3014" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -321,7 +321,7 @@
     </References>
     <Definition Name="DigestProvenanceEnum"><Field Name="NotAvailable" Value="0"><Description>There is no digest and the source does not publish one. Digest is empty. This is the honest answer for an endpoint that names models but never their content, and it is what most hosted inference APIs require.</Description></Field><Field Name="DeclaredBySource" Value="1"><Description>Digest carries what the source declared. No party this Server can speak for has hashed the artefact, so the value is an assertion forwarded rather than evidence held.</Description></Field><Field Name="ComputedByServer" Value="2"><Description>This Server hashed the artefact it holds. The value is evidence, but nothing independent agrees with it - a substitution that happened before the Server obtained the bytes is not detected.</Description></Field><Field Name="VerifiedOnStage" Value="3"><Description>This Server hashed the artefact during a staging import (clause 10.4) and it matched what the source declared. Two independent parties agree, which is the strongest statement this model can carry.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=2;i=3915" BrowseName="2:EnumStrings" ParentNodeId="ns=2;i=3015" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
+  <UAVariable NodeId="ns=2;i=3915" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3015" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>

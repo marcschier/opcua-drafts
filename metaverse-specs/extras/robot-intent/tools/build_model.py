@@ -308,9 +308,11 @@ def enum_type(nid, name, desc, fields):
     NODES[nid].definition = "".join(dparts)
     es = nid + 900
     ref(nid, HasProperty, T(es))
+    # EnumStrings is a standard Property of an enumeration DataType (OPC 10000-3) and
+    # lives in namespace 0, exactly like the Method argument Properties above.
     add(es, "UAVariable", "EnumStrings", f"{name}_EnumStrings", parent=T(nid),
         attrs={"DataType": LocalizedText, "ValueRank": "1",
-               "ArrayDimensions": str(len(fields))})
+               "ArrayDimensions": str(len(fields)), "BrowseNameNamespace": 0})
     ref(es, HasModellingRule, MR_Mandatory)
     ref(es, HasTypeDefinition, PropertyType)
     ref(es, HasProperty, T(nid), forward=False)

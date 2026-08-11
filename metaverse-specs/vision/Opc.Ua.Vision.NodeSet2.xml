@@ -49,7 +49,7 @@
     </References>
     <Definition Name="VisionRealityKindEnum"><Field Name="Physical" Value="0"><Description>A physical device observing the real world.</Description></Field><Field Name="Simulated" Value="1"><Description>A synthetic sensor rendered by a simulator (e.g. NVIDIA Isaac Sim); ground truth may be available.</Description></Field><Field Name="Hybrid" Value="2"><Description>A physical device whose output is augmented or replayed through a simulation.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3901" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3001" DataType="LocalizedText" ValueRank="1" ArrayDimensions="3">
+  <UAVariable NodeId="ns=1;i=3901" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3001" DataType="LocalizedText" ValueRank="1" ArrayDimensions="3">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -68,7 +68,7 @@
     </References>
     <Definition Name="VisionStreamProtocolEnum"><Field Name="Rtsp" Value="0"><Description>RTSP (RFC 7826/2326). MANDATORY default streaming protocol.</Description></Field><Field Name="Rtsps" Value="1"><Description>RTSP over TLS.</Description></Field><Field Name="WebRtc" Value="2"><Description>WebRTC.</Description></Field><Field Name="Srt" Value="3"><Description>Secure Reliable Transport.</Description></Field><Field Name="Hls" Value="4"><Description>HTTP Live Streaming.</Description></Field><Field Name="Mjpeg" Value="5"><Description>Motion JPEG over HTTP.</Description></Field><Field Name="GenDc" Value="6"><Description>GenICam GenDC container stream.</Description></Field><Field Name="Other" Value="7"><Description>A protocol identified by the endpoint URI scheme.</Description></Field><Field Name="DataChannel" Value="8"><Description>The stream is carried on an OPC UA data channel multiplexed onto the SecureChannel the client already has, per the OPC UA - Data Channels errata proposal. OPTIONAL and never a default: see clause 6.7. That proposal is a DRAFT in this repository, not a released OPC UA specification, so a Server is fully conformant without it.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3902" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3002" DataType="LocalizedText" ValueRank="1" ArrayDimensions="9">
+  <UAVariable NodeId="ns=1;i=3902" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3002" DataType="LocalizedText" ValueRank="1" ArrayDimensions="9">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -87,7 +87,7 @@
     </References>
     <Definition Name="VisionClipFormatEnum"><Field Name="Jpeg" Value="0"><Description>JPEG (ISO/IEC 10918). MANDATORY default clip format.</Description></Field><Field Name="Png" Value="1"><Description>PNG.</Description></Field><Field Name="Tiff" Value="2"><Description>TIFF.</Description></Field><Field Name="Bmp" Value="3"><Description>BMP.</Description></Field><Field Name="WebP" Value="4"><Description>WebP.</Description></Field><Field Name="GenDc" Value="5"><Description>GenICam GenDC container.</Description></Field><Field Name="Other" Value="6"><Description>A format identified by the accompanying media type.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3903" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3003" DataType="LocalizedText" ValueRank="1" ArrayDimensions="7">
+  <UAVariable NodeId="ns=1;i=3903" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3003" DataType="LocalizedText" ValueRank="1" ArrayDimensions="7">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -106,7 +106,7 @@
     </References>
     <Definition Name="VisionVideoCodecEnum"><Field Name="H264" Value="0"/><Field Name="H265" Value="1"/><Field Name="Mjpeg" Value="2"/><Field Name="Av1" Value="3"/><Field Name="Raw" Value="4"><Description>Uncompressed frames.</Description></Field><Field Name="Other" Value="5"/></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3904" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3004" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
+  <UAVariable NodeId="ns=1;i=3904" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3004" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -125,7 +125,7 @@
     </References>
     <Definition Name="VisionEndpointStateEnum"><Field Name="Inactive" Value="0"><Description>Declared but not serving.</Description></Field><Field Name="Ready" Value="1"><Description>Able to serve; no active session.</Description></Field><Field Name="Active" Value="2"><Description>Serving at least one session.</Description></Field><Field Name="Degraded" Value="3"><Description>Serving below configured quality.</Description></Field><Field Name="Faulted" Value="4"><Description>Unable to serve.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3905" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3005" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
+  <UAVariable NodeId="ns=1;i=3905" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3005" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -144,7 +144,7 @@
     </References>
     <Definition Name="VisionEndpointAuthenticationEnum"><Field Name="None" Value="0"><Description>No authentication. Appropriate only on an isolated network.</Description></Field><Field Name="Basic" Value="1"><Description>HTTP/RTSP Basic.</Description></Field><Field Name="Digest" Value="2"><Description>HTTP/RTSP Digest.</Description></Field><Field Name="Token" Value="3"><Description>Bearer token, typically the time-limited token returned by GetStreamEndpoint or GetClip.</Description></Field><Field Name="MutualTls" Value="4"><Description>Client certificate.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3906" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3006" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
+  <UAVariable NodeId="ns=1;i=3906" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3006" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -163,7 +163,7 @@
     </References>
     <Definition Name="VisionResultEvaluationEnum"><Field Name="Undefined" Value="0"><Description>No verdict available.</Description></Field><Field Name="Ok" Value="1"><Description>Within tolerance / accepted.</Description></Field><Field Name="NotOk" Value="2"><Description>Out of tolerance / rejected.</Description></Field><Field Name="NotDecidable" Value="3"><Description>A verdict was not possible, typically because the measurement uncertainty spans a tolerance limit.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3909" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3009" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
+  <UAVariable NodeId="ns=1;i=3909" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3009" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -182,7 +182,7 @@
     </References>
     <Definition Name="VisionToleranceStatusEnum"><Field Name="InTolerance" Value="0"/><Field Name="OutOfTolerance" Value="1"/><Field Name="Indeterminate" Value="2"><Description>Uncertainty spans a tolerance limit.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3910" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3010" DataType="LocalizedText" ValueRank="1" ArrayDimensions="3">
+  <UAVariable NodeId="ns=1;i=3910" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3010" DataType="LocalizedText" ValueRank="1" ArrayDimensions="3">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -201,7 +201,7 @@
     </References>
     <Definition Name="VisionFeedbackPurposeEnum"><Field Name="Overlay" Value="0"><Description>Render the geometry onto the outgoing stream.</Description></Field><Field Name="Reconciliation" Value="1"><Description>Record a downstream verdict against the result.</Description></Field><Field Name="GroundTruthLabel" Value="2"><Description>Treat the payload as a corrected label for training.</Description></Field><Field Name="Trigger" Value="3"><Description>Use the payload as an acquisition or processing trigger.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3911" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3011" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
+  <UAVariable NodeId="ns=1;i=3911" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3011" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -220,7 +220,7 @@
     </References>
     <Definition Name="VisionCalibrationMountEnum"><Field Name="EyeInHand" Value="0"><Description>Camera mounted on the moving flange or tool.</Description></Field><Field Name="EyeToHand" Value="1"><Description>Camera fixed in the workspace observing the tool.</Description></Field><Field Name="Fixed" Value="2"><Description>Camera fixed with no associated kinematic chain.</Description></Field><Field Name="Unknown" Value="3"/></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3912" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3012" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
+  <UAVariable NodeId="ns=1;i=3912" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3012" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -239,7 +239,7 @@
     </References>
     <Definition Name="VisionFrameRoleEnum"><Field Name="World" Value="0"/><Field Name="Base" Value="1"/><Field Name="MechanicalInterface" Value="2"><Description>The flange at the end of the last link, to which an end effector is fitted. This is what an eye-in-hand extrinsic calibration resolves to.</Description></Field><Field Name="Tool" Value="3"><Description>A tool frame, whose origin is a tool centre point.</Description></Field><Field Name="Object" Value="4"/><Field Name="Other" Value="5"/><Field Name="Camera" Value="6"><Description>A camera frame. Numbered after the ISO 9787 roles because it is not one of them.</Description></Field></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3913" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3013" DataType="LocalizedText" ValueRank="1" ArrayDimensions="7">
+  <UAVariable NodeId="ns=1;i=3913" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3013" DataType="LocalizedText" ValueRank="1" ArrayDimensions="7">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -258,7 +258,7 @@
     </References>
     <Definition Name="VisionDistortionModelEnum"><Field Name="None" Value="0"/><Field Name="BrownConrady" Value="1"><Description>Radial and tangential (k1, k2, p1, p2, k3...).</Description></Field><Field Name="KannalaBrandt" Value="2"><Description>Fisheye / equidistant.</Description></Field><Field Name="RationalPolynomial" Value="3"/><Field Name="Other" Value="4"/></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3914" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3014" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
+  <UAVariable NodeId="ns=1;i=3914" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3014" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
@@ -277,7 +277,7 @@
     </References>
     <Definition Name="VisionSensorModalityEnum"><Field Name="Area2D" Value="0"><Description>Two-dimensional area-scan imaging.</Description></Field><Field Name="Line2D" Value="1"><Description>Line-scan imaging.</Description></Field><Field Name="Depth3D" Value="2"><Description>Depth or point-cloud sensing.</Description></Field><Field Name="Thermal" Value="3"/><Field Name="Multispectral" Value="4"/><Field Name="Event" Value="5"><Description>Event / neuromorphic camera.</Description></Field><Field Name="Other" Value="6"/></Definition>
   </UADataType>
-  <UAVariable NodeId="ns=1;i=3915" BrowseName="1:EnumStrings" ParentNodeId="ns=1;i=3015" DataType="LocalizedText" ValueRank="1" ArrayDimensions="7">
+  <UAVariable NodeId="ns=1;i=3915" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3015" DataType="LocalizedText" ValueRank="1" ArrayDimensions="7">
     <DisplayName>EnumStrings</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
