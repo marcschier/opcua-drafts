@@ -3207,7 +3207,7 @@ combined.
 | NodeId, clause 6.1.3 | `uav:id` | an ExpandedNodeId naming its namespace by URI |
 | BrowseName, clause 6.1.3 | `uav:browseName` | the portable QualifiedName form |
 | TypeDefinition, clause 6.2, readably | a member of `@type` | the prefix-qualified BrowseName of the ObjectType, for example `i4aas:AASPropertyType` |
-| TypeDefinition, clause 6.2, definitively | a link with `rel` `ua:HasTypeDefinition` | the ObjectType's portable ExpandedNodeId, for example `nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1050` |
+| TypeDefinition, clause 6.2, definitively | a link with `rel` `ua:HasTypeDefinition` | the ObjectType's portable ExpandedNodeId, for example `nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1021` |
 | Protocol address | Thing-level `forms[].href` | an `opc.tcp` URL whose `id` query value decodes to `uav:id` |
 | Child-to-parent containment | `uav:componentOf` and a `uav:componentOf` link | the parent ExpandedNodeId and parent sibling TD IRI |
 | Parent-to-child containment | `uav:hasComponent` and a typed link | the child ExpandedNodeId and child sibling TD IRI |
