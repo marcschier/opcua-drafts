@@ -546,7 +546,9 @@ class Build:
                 out.append(dm.text_para(node.description))
             if node.definition and node_class == 'UADataType':
                 out.append({'t': 'enumtable', 'id': clause_id(number) + '-items',
-                            'browseName': name})
+                            'browseName': name,
+                            'structureFields': self.cfg.get(
+                                'structureFieldTables', False)})
             out.append(dm.nodetable(clause_id(number) + '-def',
                                     '%s definition' % name, name))
             out.extend(self._method_clauses(number, name))

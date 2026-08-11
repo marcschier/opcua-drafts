@@ -91,8 +91,8 @@ ADDITIONAL_SUBCOMPONENTS_HEADERS = [
 ATTRIBUTE_VALUES_GRID = [2400, 2600, 3926]
 
 # Structure / enumeration tables (Tables 12-14, 31, 33).
-STRUCTURE_GRID = [2200, 1900, 4826]
-STRUCTURE_HEADERS = ['Name', 'Type', 'Description']
+STRUCTURE_GRID = [1800, 2200, 1000, 3926]
+STRUCTURE_HEADERS = ['Name', 'Type', 'Cardinality', 'Description']
 ENUM_GRID = [2200, 1200, 5526]
 ENUM_HEADERS = ['Name', 'Value', 'Description']
 

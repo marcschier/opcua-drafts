@@ -134,7 +134,7 @@
     {
       "stored": "payload/word-drafts/tools/build_docx.py.bundle",
       "destination": "word-drafts/tools/build_docx.py",
-      "sha256": "3b29eaa9da91e1b4e72a11225271c4395b289ad4b9cc8b7f8f788794eb8b70cc"
+      "sha256": "91962f594f38cbddcec45843dc7c9617f5101bd1e2a2975298627d8e77881c2d"
     },
     {
       "stored": "payload/word-drafts/tools/finalize_all.ps1.bundle",
@@ -164,7 +164,7 @@
     {
       "stored": "payload/word-drafts/tools/opcdocx/contract.py.bundle",
       "destination": "word-drafts/tools/opcdocx/contract.py",
-      "sha256": "b84db5316c0b89b4e94966b6d294aab7e4dc570a6d970360a3826327a025a72f"
+      "sha256": "6bb7baad84e9e4fe7024c458f6c6d9e9d58094c9917c471b586156941ed49e2c"
     },
     {
       "stored": "payload/word-drafts/tools/opcdocx/docmodel.py.bundle",
@@ -189,7 +189,7 @@
     {
       "stored": "payload/word-drafts/tools/opcdocx/nodeset_tables.py.bundle",
       "destination": "word-drafts/tools/opcdocx/nodeset_tables.py",
-      "sha256": "0603d2df8aaf319611e2963c062bc68a4b19d4bdd64c3d6a2906b3c3eb44ac36"
+      "sha256": "34620e03f735fd6637d4e97b3811fa35f23c457d74e6dda752cb5508c4edc316"
     },
     {
       "stored": "payload/word-drafts/tools/opcdocx/ole_embed.py.bundle",
@@ -214,7 +214,7 @@
     {
       "stored": "payload/word-drafts/tools/opcdocx/writer.py.bundle",
       "destination": "word-drafts/tools/opcdocx/writer.py",
-      "sha256": "b79af2ec5ad7978ac91037237211d224d6c0fee1d243a5c21c78d817d0ed41a0"
+      "sha256": "7e18c1ef3319253db207baa8848a222add88f11feebd4d4b8b93cdd2e5beb3fa"
     },
     {
       "stored": "payload/word-drafts/tools/render_docx.py.bundle",
@@ -254,12 +254,12 @@
     {
       "stored": "payload/word-drafts/tools/test_validate_docx.py.bundle",
       "destination": "word-drafts/tools/test_validate_docx.py",
-      "sha256": "22c786fbad66c4fa5ccf8b3673f84d932dd23c0d0cc9dff70ec8c7f36e0fd024"
+      "sha256": "2bdaa8bd3dc09728646ba734ae9ee9cc5022d703a040e7a10e2bd51bd118ffdf"
     },
     {
       "stored": "payload/word-drafts/tools/validate_docx.py.bundle",
       "destination": "word-drafts/tools/validate_docx.py",
-      "sha256": "ee9833ec7d4de5dee6205cd378acec61c0fd5c74a83c8c8fa6348529d624673f"
+      "sha256": "caa596b4c714f6467d24a467510c1e49d750af310369559219926488f17ce2a7"
     }
   ]
 }

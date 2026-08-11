@@ -1,8 +1,8 @@
 # OPC UA Companion Specification for Generators (Generator Sets)
 
-**Release 1.0.0 — Draft**
+**Release 1.2.0 — Draft**
 **Namespace:** `http://opcfoundation.org/UA/Generators/`
-**Publication date:** 2026-07-01
+**Publication date:** 2026-08-11
 
 > Status: Working-group draft. This document, together with `Opc.Ua.Generators.NodeSet2.xml` and `Opc.Ua.Generators.NodeIds.csv`, defines an OPC UA information model for electrical power **Generator Sets (GenSets)**. It is intended to be vendor-neutral and to cover the entire industry that supplies and operates generators, from small residential home‑standby units to house‑sized, multi‑megawatt industrial and data‑center sets. A representative vendor portfolio spanning the full size and application range is used to confirm coverage, but nothing in the model is specific to a single manufacturer.
 
@@ -180,7 +180,9 @@ flowchart TD
 
 `EngineType` exposes the classic engine telemetry — `Speed` (SPN 190), `OilPressure` (SPN 100), `CoolantTemperature` (SPN 110), `FuelRate` (SPN 183), `EngineHours` (SPN 247), boost, exhaust and intake temperatures, percent load/torque, etc. The referenced SPN for each variable is recorded in the variable description so that a gateway can map J1939 signals directly onto the model.
 
-The engine's `CanInterface` (a `J1939DiagnosticInterfaceType`) models the network itself: `ProtocolName` ("SAE J1939"), `NetworkName`, `SourceAddress`, `Baudrate` (250 000 or 500 000 bit/s), `BusState`, the four J1939 DM1 lamp statuses (`AmberWarningLamp`, `RedStopLamp`, `MalfunctionIndicatorLamp`, `ProtectLamp`, each a `J1939LampStatusEnum` conveying Off / On / SlowFlash / FastFlash), and the `ActiveDiagnosticTroubleCodes` (DM1) and `PreviouslyActiveDiagnosticTroubleCodes` (DM2) arrays of `DiagnosticTroubleCodeType`. Each DTC carries `Spn`, `Fmi`, `OccurrenceCount`, `SourceAddress`/`SourceName` (so faults from multiple ECUs on the bus remain distinguishable) and a `Severity`. The method `ClearPreviouslyActiveDtcs` corresponds to J1939 DM3/DM11.
+The engine's `CanInterface` (a `J1939DiagnosticInterfaceType`) models the network itself: `ProtocolName` ("SAE J1939"), `NetworkName`, `SourceAddress`, `Baudrate` (250 000 or 500 000 bit/s), `BusState`, the four J1939 DM1 lamp statuses (`AmberWarningLamp`, `RedStopLamp`, `MalfunctionIndicatorLamp`, `ProtectLamp`, each a `J1939LampStatusEnum` conveying Off / On / SlowFlash / FastFlash), and the `ActiveDiagnosticTroubleCodeDetails` (DM1) and `PreviouslyActiveDiagnosticTroubleCodeDetails` (DM2) arrays of `DiagnosticTroubleCodeDataType`. Each DTC carries `Spn`, `Fmi`, `OccurrenceCount`, `SourceAddress`/`SourceName` (so faults from multiple ECUs on the bus remain distinguishable) and an optional `ProtectionAction`. The method `ClearPreviouslyActiveDtcs` corresponds to J1939 DM3/DM11.
+
+The legacy `ActiveDiagnosticTroubleCodes` and `PreviouslyActiveDiagnosticTroubleCodes` arrays of `DiagnosticTroubleCodeType` remain for compatibility. A new Server **should** expose the `*Details` members. Where both forms are present, they **shall** describe the same DTCs in the same order. The legacy `Severity` field keeps its published semantics and **shall not** be derived mechanically from `ProtectionAction`; a Server populates it only when its legacy classification is true for the reported DTC.
 
 ### 6.3 [AlternatorType](#type-AlternatorType) and [AlternatorPhaseType](#type-AlternatorPhaseType)
 
@@ -232,11 +234,28 @@ stateDiagram-v2
 
 ### 6.8 Operating modes
 
-`OperatingMode` (a [`GeneratorOperatingModeEnum`](#type-GeneratorOperatingModeEnum) value) reflects the control‑panel selector: `Off`, `Manual`, `Auto`, `Test`, `Exercise`, `RemoteStart`, `Maintenance`, `Lockout`. For Machinery‑ecosystem interoperability the generic `MachineryOperationMode` state machine is also present under `MachineryBuildingBlocks`.
+`OperatingMode` (a [`GeneratorOperatingModeEnum`](#type-GeneratorOperatingModeEnum) value) is the authoritative control-panel selector: `Off`, `Manual`, `Auto`, `Test`, `Exercise`, `RemoteStart`, `Maintenance`, `Lockout`. `SetOperatingMode` changes this value; a Server **shall not** accept an independent command that changes the optional Machinery `MachineryOperationMode` state machine.
+
+Where `MachineryOperationMode` is present under `MachineryBuildingBlocks`, it is a derived interoperability projection. Its `CurrentState` **shall** equal the row below for the authoritative `OperatingMode` value:
+
+| `OperatingMode` | `MachineryOperationMode.CurrentState` |
+|---|---|
+| `Maintenance` | `Maintenance` |
+| `Test` or `Exercise` | `Setup` |
+| `Manual`, `Auto` or `RemoteStart` | `Processing` |
+| `Off` or `Lockout` | `None` |
+
+The projection does not create a second source of truth. `OperatingState` and `MachineryItemState` separately report whether the selected mode is executing, idle, unavailable or faulted. If the two operation-mode representations disagree, `OperatingMode` decides and the `MachineryOperationMode` state is incorrect.
 
 ### 6.9 Protections and alarms
 
-`GeneratorProtectionAlarmType` (subtype of [`OffNormalAlarmType`](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.24#5.8.24.2)) reports any protection or shutdown condition. Its `ProtectionFunction` property (a [`GeneratorProtectionFunctionEnum`](#type-GeneratorProtectionFunctionEnum) with 64 values — low oil pressure, high coolant temperature, overspeed, overcrank, over/under voltage and frequency, overload, reverse power, ground fault, emergency stop, aftertreatment faults, ATS/breaker failures, …) identifies the condition; `GeneratorAlarmSeverity`, `IsShutdown`, `Spn`, `Fmi` and `SubsystemName` add context. Because the type is an `OffNormalAlarmType`, the *normal* state is "healthy / not tripped": on an instance, the inherited `NormalState` references the node representing the healthy value, `InputNode` references the supervised input (e.g. the shutdown latch or the measured variable), and `SourceNode` references the owning `GeneratorSetType` or subsystem so that clients can locate the origin. Analog limit conditions (e.g. over/under voltage) may additionally be surfaced with standard [`ExclusiveLevelAlarmType`](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.21#5.8.21.3) instances on the corresponding measured variables.
+`GeneratorProtectionAlarmType` (subtype of [`OffNormalAlarmType`](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.24#5.8.24.2)) reports any protection or shutdown condition. Its `ProtectionFunction` property (a [`GeneratorProtectionFunctionEnum`](#type-GeneratorProtectionFunctionEnum) with 64 values — low oil pressure, high coolant temperature, overspeed, overcrank, over/under voltage and frequency, overload, reverse power, ground fault, emergency stop, aftertreatment faults, ATS/breaker failures, …) identifies the condition. `ProtectionAction` classifies the automatic response requested by that function: no automatic action, warning, derate, shutdown, electrical trip, lockout or emergency stop.
+
+The inherited Part 9 `Severity` field is the sole authority for event urgency and **shall** be populated independently of `ProtectionAction`. `IsShutdown` reports the actual engine outcome and **shall not** be inferred from `ProtectionAction`: for example, an alarm may request `Shutdown` while `IsShutdown` remains false until shutdown completes or if the action fails. `Spn`, `Fmi` and `SubsystemName` add origin context.
+
+The legacy `GeneratorAlarmSeverity` property remains for compatibility. A new Server **should** expose `ProtectionAction` instead. `GeneratorAlarmSeverity` keeps its published semantics and **shall not** be derived mechanically from `ProtectionAction`; for example, legacy `Shutdown` is valid only when the engine is shut down, not merely when shutdown was requested. Neither property changes the meaning or authority of inherited `Severity`.
+
+Because the type is an `OffNormalAlarmType`, the *normal* state is "healthy / not tripped": on an instance, the inherited `NormalState` references the node representing the healthy value, `InputNode` references the supervised input (e.g. the shutdown latch or the measured variable), and `SourceNode` references the owning `GeneratorSetType` or subsystem so that clients can locate the origin. Analog limit conditions (e.g. over/under voltage) may additionally be surfaced with standard [`ExclusiveLevelAlarmType`](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.21#5.8.21.3) instances on the corresponding measured variables.
 
 ### 6.10 Transfer switches and paralleling
 
@@ -248,7 +267,7 @@ Aggregates a paralleled plant: a mandatory `GeneratorSets` folder of `GeneratorS
 
 ## 7 DataTypes
 
-Seventeen enumerations and one structure are defined; see [Annex A](#annex-a) for the full value lists. The enumerations are extensible (each provides an `Other`/`Unknown` member where appropriate) and cover fuel types, application/duty ratings, electrical connection, excitation, cooling method, aspiration, emissions standard, CAN bus state, J1939 lamp status, transfer‑switch position/transition/state, alarm severity, the 64‑value protection‑function list, paralleling‑system state and aftertreatment state. The [`DiagnosticTroubleCodeType`](#type-DiagnosticTroubleCodeType) structure carries a single SAE J1939 DTC (`Spn`, `Fmi`, `OccurrenceCount`, `ConversionMethod`, `Active`, `SourceAddress`, `SourceName`, `Severity`, `Description`).
+Eighteen enumerations and two structures are defined; see [Annex A](#annex-a) for the full value lists. The enumerations are extensible (each provides an `Other`/`Unknown` member where appropriate) and cover fuel types, application/duty ratings, electrical connection, excitation, cooling method, aspiration, emissions standard, CAN bus state, J1939 lamp status, transfer-switch position/transition/state, generator protection action, the 64-value protection-function list, paralleling-system state and aftertreatment state. The [`DiagnosticTroubleCodeDataType`](#type-DiagnosticTroubleCodeDataType) structure carries a single SAE J1939 DTC (`Spn`, `Fmi`, `OccurrenceCount`, `ConversionMethod`, `Active`, `SourceAddress`, `SourceName`, optional `ProtectionAction`, `Description`). `DiagnosticTroubleCodeType` and `AlarmSeverityEnum` are retained only as compatibility types.
 
 ## 8 Coverage of the industry
 
@@ -345,7 +364,7 @@ Protection and condition events for operators, CMMS/EAM systems and safety funct
 
 | Event DataSet | Source | Delivery |
 |---|---|---|
-| `GenSet.Events` | `GeneratorProtectionAlarmType` events (`ProtectionFunction`, `GeneratorAlarmSeverity`, `IsShutdown`, `Spn`, `Fmi`, `SubsystemName`) plus the standard `AcknowledgeableConditionType` fields | event‑driven, reliable, with keep‑alive |
+| `GenSet.Events` | `GeneratorProtectionAlarmType` events (`ProtectionFunction`, `ProtectionAction`, `IsShutdown`, `Spn`, `Fmi`, `SubsystemName`) plus the standard `AcknowledgeableConditionType` fields, including the authoritative Part 9 `Severity`; `GeneratorAlarmSeverity` is a compatibility projection only | event‑driven, reliable, with keep‑alive |
 
 ### 10.7 Scenario — Fleet monitoring & compliance
 
@@ -417,6 +436,8 @@ This annex is the normative node reference. It is generated directly from `tools
 | ns=1;i=3016 | [AftertreatmentStateEnum](#type-AftertreatmentStateEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
 | ns=1;i=3017 | [J1939LampStatusEnum](#type-J1939LampStatusEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
 | ns=1;i=3050 | [DiagnosticTroubleCodeType](#type-DiagnosticTroubleCodeType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32) |
+| ns=1;i=3018 | [GeneratorProtectionActionEnum](#type-GeneratorProtectionActionEnum) | DataType | [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14) |
+| ns=1;i=3051 | [DiagnosticTroubleCodeDataType](#type-DiagnosticTroubleCodeDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32) |
 
 ### Object types
 
@@ -534,6 +555,8 @@ The engine CAN bus / SAE J1939 diagnostic interface. Surfaces the network connec
 | ActiveDiagnosticTroubleCodes | Variable | [DiagnosticTroubleCodeType](#type-DiagnosticTroubleCodeType)\[\] | Optional | J1939DiagnosticInterfaceType | Currently active DTCs (J1939 DM1). |
 | PreviouslyActiveDiagnosticTroubleCodes | Variable | [DiagnosticTroubleCodeType](#type-DiagnosticTroubleCodeType)\[\] | Optional | J1939DiagnosticInterfaceType | Previously active DTCs (J1939 DM2). |
 | ClearPreviouslyActiveDtcs | Method |  | Optional | J1939DiagnosticInterfaceType | Clear previously active diagnostic trouble codes (J1939 DM3/DM11). |
+| ActiveDiagnosticTroubleCodeDetails | Variable | [DiagnosticTroubleCodeDataType](#type-DiagnosticTroubleCodeDataType)\[\] | Optional | J1939DiagnosticInterfaceType | Currently active DTCs (J1939 DM1) using the current DataType. |
+| PreviouslyActiveDiagnosticTroubleCodeDetails | Variable | [DiagnosticTroubleCodeDataType](#type-DiagnosticTroubleCodeDataType)\[\] | Optional | J1939DiagnosticInterfaceType | Previously active DTCs (J1939 DM2) using the current DataType. |
 
 <a id="type-ExhaustAftertreatmentType"></a>
 
@@ -913,16 +936,17 @@ A single nameplate power rating point of a generator set for a given application
 
 *Inherits from:* [OffNormalAlarmType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.24#5.8.24.2)
 
-Alarm raised by a generator protection/shutdown function. Extends OffNormalAlarmType with the protection function, severity and J1939 origin.
+Alarm raised by a generator protection/shutdown function. Extends OffNormalAlarmType with the protection function, automatic protection action and J1939 origin. The inherited Severity field is the sole event urgency.
 
 | BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |
 |---|---|---|---|---|---|
 | ProtectionFunction | Variable | [GeneratorProtectionFunctionEnum](#type-GeneratorProtectionFunctionEnum) | Mandatory | GeneratorProtectionAlarmType | The protection function that raised the alarm. |
 | GeneratorAlarmSeverity | Variable | [AlarmSeverityEnum](#type-AlarmSeverityEnum) | Optional | GeneratorProtectionAlarmType | Severity class of the alarm. |
-| IsShutdown | Variable | Boolean | Optional | GeneratorProtectionAlarmType | TRUE if the condition caused an engine shutdown. |
+| IsShutdown | Variable | Boolean | Optional | GeneratorProtectionAlarmType | TRUE if the engine is actually shut down. This reports the outcome and is not inferred from ProtectionAction. |
 | Spn | Variable | UInt32 | Optional | GeneratorProtectionAlarmType | SAE J1939 SPN when the alarm originates from the engine ECU. |
 | Fmi | Variable | Byte | Optional | GeneratorProtectionAlarmType | SAE J1939 FMI when the alarm originates from the engine ECU. |
 | SubsystemName | Variable | String | Optional | GeneratorProtectionAlarmType | Name of the originating subsystem. |
+| ProtectionAction | Variable | [GeneratorProtectionActionEnum](#type-GeneratorProtectionActionEnum) | Optional | GeneratorProtectionAlarmType | Automatic response requested by the protection function. This classification does not replace or determine the inherited Part 9 Severity. |
 | NormalState | Variable | NodeId | Mandatory | [OffNormalAlarmType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.24#5.8.24.2) | |
 | EnabledState | Variable | LocalizedText | Mandatory | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
 | ActiveState | Variable | LocalizedText | Mandatory | [AlarmConditionType](https://reference.opcfoundation.org/specs/OPC-10000-9/5.8.2) | |
@@ -995,7 +1019,7 @@ A generator set (GenSet): a complete electrical power generation asset composed 
 | Identification | Object |  | Mandatory | GeneratorSetType | Generator identification and nameplate (Machinery building block). |
 | MachineryBuildingBlocks | Object |  | Optional | GeneratorSetType | Container for standardized Machinery building blocks. |
 | OperatingState | Object |  | Mandatory | GeneratorSetType | Detailed generator-set operating state machine. |
-| OperatingMode | Variable | [GeneratorOperatingModeEnum](#type-GeneratorOperatingModeEnum) | Mandatory | GeneratorSetType | Selector mode of the control panel (Off/Manual/Auto/Test/...). |
+| OperatingMode | Variable | [GeneratorOperatingModeEnum](#type-GeneratorOperatingModeEnum) | Mandatory | GeneratorSetType | Authoritative selector mode of the control panel (Off/Manual/Auto/Test/...). Where MachineryOperationMode is present, its CurrentState is derived from this value. |
 | EmissionsStandard | Variable | [EmissionsStandardEnum](#type-EmissionsStandardEnum) | Optional | GeneratorSetType | Emissions certification standard of the set. |
 | Application | Variable | String | Optional | GeneratorSetType | Application segment, e.g. Residential, DataCenter, Healthcare, Rental, PrimePower. |
 | GeneratorBreakerClosed | Variable | Boolean | Optional | GeneratorSetType | The generator (output) breaker is closed. |
@@ -1578,21 +1602,59 @@ SAE J1939 DM1 diagnostic lamp status (lamp state plus flash rate).
 
 A SAE J1939 diagnostic trouble code (DTC) reported by an engine ECU.
 
-| Field | DataType | Description |
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Spn | UInt32 | 1 | Suspect Parameter Number identifying the faulty subsystem. |
+| Fmi | Byte | 1 | Failure Mode Identifier describing the type of failure. |
+| OccurrenceCount | Byte | 1 | Number of times the fault has become active. |
+| ConversionMethod | Boolean | 1 | J1939 SPN conversion method flag. |
+| Active | Boolean | 1 | TRUE while the fault is currently active (DM1). |
+| SourceAddress | Byte | 1 | J1939 source address of the ECU that reported the code. |
+| SourceName | String | 1 | Name of the ECU/controller that reported the code. |
+| Severity | [AlarmSeverityEnum](#type-AlarmSeverityEnum) | 1 | Severity classification of the fault. |
+| Description | String | 1 | Human-readable description of the fault. |
+
+<a id="type-GeneratorProtectionActionEnum"></a>
+
+#### GeneratorProtectionActionEnum  (ns=1;i=3018)
+
+*Subtype of:* [Enumeration](https://reference.opcfoundation.org/specs/OPC-10000-3/8.14)
+
+Automatic response requested by a generator protection function. This is independent of the standard Part 9 event Severity.
+
+| Name | Value | Description |
 |---|---|---|
-| Spn | UInt32 | Suspect Parameter Number identifying the faulty subsystem. |
-| Fmi | Byte | Failure Mode Identifier describing the type of failure. |
-| OccurrenceCount | Byte | Number of times the fault has become active. |
-| ConversionMethod | Boolean | J1939 SPN conversion method flag. |
-| Active | Boolean | TRUE while the fault is currently active (DM1). |
-| SourceAddress | Byte | J1939 source address of the ECU that reported the code. |
-| SourceName | String | Name of the ECU/controller that reported the code. |
-| Severity | [AlarmSeverityEnum](#type-AlarmSeverityEnum) | Severity classification of the fault. |
-| Description | String | Human-readable description of the fault. |
+| NoAutomaticAction | 0 | No automatic response is requested. |
+| Warning | 1 | Notify an operator without changing generator operation. |
+| Derate | 2 | Continue to run at reduced output. |
+| Shutdown | 3 | Shut down the prime mover. |
+| ElectricalTrip | 4 | Trip the generator breaker. |
+| Lockout | 5 | Prevent restart until a manual reset. |
+| EmergencyStop | 6 | Perform an immediate emergency stop. |
+
+<a id="type-DiagnosticTroubleCodeDataType"></a>
+
+#### DiagnosticTroubleCodeDataType  (ns=1;i=3051)
+
+*Subtype of:* [Structure](https://reference.opcfoundation.org/specs/OPC-10000-3/8.32)
+
+A SAE J1939 diagnostic trouble code (DTC) reported by an engine ECU.
+
+| Field | DataType | Cardinality | Description |
+|---|---|---|---|
+| Spn | UInt32 | 1 | Suspect Parameter Number identifying the faulty subsystem. |
+| Fmi | Byte | 1 | Failure Mode Identifier describing the type of failure. |
+| OccurrenceCount | Byte | 1 | Number of times the fault has become active. |
+| ConversionMethod | Boolean | 1 | J1939 SPN conversion method flag. |
+| Active | Boolean | 1 | TRUE while the fault is currently active (DM1). |
+| SourceAddress | Byte | 1 | J1939 source address of the ECU that reported the code. |
+| SourceName | String | 1 | Name of the ECU/controller that reported the code. |
+| ProtectionAction | [GeneratorProtectionActionEnum](#type-GeneratorProtectionActionEnum) | 0..1 | Automatic generator response associated with the fault, when known. Event urgency is carried by the standard Part 9 Severity field when the DTC raises an alarm. |
+| Description | String | 1 | Human-readable description of the fault. |
 
 ### Objects
 
-All Object-class nodes in this model are instance declarations of the ObjectTypes above and appear in their structure tables. They fall into four groups: sub-assembly **components** referenced with [`HasComponent`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.7) (for example `Engine`, `Alternator`, `L1`/`L2`/`L3`, `Source1`/`Source2`); standardized **Machinery building-block add-ins** referenced with [`HasAddIn`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.20) (`Identification`, `MachineryBuildingBlocks`, `MachineryItemState`, `MachineryOperationMode`); the finite-state-machine **States and Transitions** of [`GeneratorStateMachineType`](#type-GeneratorStateMachineType); and the **DataType encodings** (`Default Binary`, `Default XML`) of [`DiagnosticTroubleCodeType`](#type-DiagnosticTroubleCodeType). This specification defines no free-standing Object instances; live instances are created by the server in its address space.
+All Object-class nodes in this model are instance declarations of the ObjectTypes above and appear in their structure tables. They fall into four groups: sub-assembly **components** referenced with [`HasComponent`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.7) (for example `Engine`, `Alternator`, `L1`/`L2`/`L3`, `Source1`/`Source2`); standardized **Machinery building-block add-ins** referenced with [`HasAddIn`](https://reference.opcfoundation.org/specs/OPC-10000-3/7.20) (`Identification`, `MachineryBuildingBlocks`, `MachineryItemState`, `MachineryOperationMode`); the finite-state-machine **States and Transitions** of [`GeneratorStateMachineType`](#type-GeneratorStateMachineType); and the **DataType encodings** (`Default Binary`, `Default XML`) of [`DiagnosticTroubleCodeType`](#type-DiagnosticTroubleCodeType) and [`DiagnosticTroubleCodeDataType`](#type-DiagnosticTroubleCodeDataType). This specification defines no free-standing Object instances; live instances are created by the server in its address space.
 
 ### Variables
 

@@ -174,8 +174,14 @@ class Model:
             defn = el.find(UANS + 'Definition')
             if defn is not None:
                 n.definition = [
-                    (f.get('Name'), f.get('Value'),
-                     (f.findtext(UANS + 'Description') or '').strip())
+                    {
+                        'name': f.get('Name'),
+                        'value': f.get('Value'),
+                        'dataType': f.get('DataType'),
+                        'valueRank': f.get('ValueRank'),
+                        'isOptional': f.get('IsOptional') == 'true',
+                        'description': (f.findtext(UANS + 'Description') or '').strip(),
+                    }
                     for f in defn.findall(UANS + 'Field')]
             for r in el.findall(UANS + 'References/' + UANS + 'Reference'):
                 n.refs.append((r.get('ReferenceType'),
@@ -548,18 +554,42 @@ def methods_of(model, type_name):
             if child.tag == 'UAMethod']
 
 
-def enum_table(model, type_name):
-    """The `<someEnumeration> Items` table (Table 31 of the template)."""
+def enum_table(model, type_name, *, doc_ns_index, structure_fields=False):
+    """The DataType Items table, for either an Enumeration or a Structure."""
     node = model.by_name.get(type_name)
     if node is None:
         raise KeyError('DataType not in NodeSet: %s' % type_name)
     if not node.definition:
         raise ValueError('%s has no Definition' % type_name)
+    is_enumeration = (not structure_fields
+                      or all(f['value'] is not None for f in node.definition))
+    if is_enumeration:
+        fields = [
+            {
+                'name': f['name'],
+                'value': f['value'] or '',
+                'description': f['description'],
+            }
+            for f in node.definition
+        ]
+    else:
+        fields = []
+        for f in node.definition:
+            data_type = model.browse_name_of(
+                f['dataType'], doc_ns_index=doc_ns_index)
+            if f['valueRank'] not in (None, '-1'):
+                data_type += '[]'
+            fields.append({
+                'name': f['name'],
+                'type': data_type,
+                'cardinality': '0..1' if f['isOptional'] else '1',
+                'description': f['description'],
+            })
     return {
         'browseName': node.name,
         'description': node.description,
-        'fields': [{'name': f[0], 'value': f[1], 'description': f[2]}
-                   for f in node.definition],
+        'kind': 'enumeration' if is_enumeration else 'structure',
+        'fields': fields,
         'conformanceUnits': list(node.categories),
     }
 

@@ -451,6 +451,55 @@ def check_node_tables(doc, model, res, doc_ns_index):
             res.error('node-tables', '%s has no definition table in the document' % name)
 
 
+def check_data_type_item_tables(
+        doc, model, res, doc_ns_index, structure_fields=False):
+    """Compare every generated Enumeration/Structure Items table with the NodeSet."""
+    kids = doc.blocks()
+    seen = set()
+    for i, el in enumerate(kids):
+        if el.tag != q('w:tbl'):
+            continue
+        caption = None
+        for j in range(i - 1, max(-1, i - 4), -1):
+            if kids[j].tag == q('w:p') and para_style(kids[j]) == 'TABLE-title':
+                caption = iter_text(kids[j])
+                break
+        if not caption or not caption.rstrip().endswith(' Items'):
+            continue
+        name = caption.split('\u2013')[-1].strip()[:-len(' Items')].strip()
+        node = model.by_name.get(name)
+        if node is None or node.tag != 'UADataType' or not node.definition:
+            continue
+        seen.add(name)
+        expected = nodeset_tables.enum_table(
+            model, name, doc_ns_index=doc_ns_index,
+            structure_fields=structure_fields)
+        rows = el.findall(q('w:tr'))
+        cells = [[' '.join(iter_text(tc).split()) for tc in r.findall(q('w:tc'))]
+                 for r in rows]
+        for field in expected['fields']:
+            match = [r for r in cells[1:] if r and r[0] == field['name']]
+            if not match:
+                res.error('data-type-items',
+                          '%s: field %s missing from Items table'
+                          % (name, field['name']))
+                continue
+            got = match[0]
+            if expected['kind'] == 'structure':
+                want = [field['name'], field['type'], field['cardinality'],
+                        field['description']]
+            else:
+                want = [field['name'], field['value'], field['description']]
+            if got != want:
+                res.error('data-type-items',
+                          '%s.%s row is %r, NodeSet says %r'
+                          % (name, field['name'], got, want))
+    for name, node in model.by_name.items():
+        if node.tag == 'UADataType' and node.definition and name not in seen:
+            res.error('data-type-items',
+                      '%s has no Items table in the document' % name)
+
+
 def _compare_type_table(name, expected, tbl, res):
     rows = tbl.findall(q('w:tr'))
     cells = [[' '.join(iter_text(tc).split()) for tc in r.findall(q('w:tc'))] for r in rows]
@@ -711,6 +760,9 @@ def main(argv=None):
                       'supplies a NodeSet')
     else:
         check_node_tables(doc, model, res, doc_ns_index)
+        check_data_type_item_tables(
+            doc, model, res, doc_ns_index,
+            structure_fields=cfg.get('structureFieldTables', False))
         check_browse_names_resolved(doc, model, res, doc_ns_index)
         check_conformance_units(doc, model, res)
     check_template_slices(doc, TEMPLATE, res, deviation_ids)

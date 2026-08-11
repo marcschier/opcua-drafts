@@ -9,6 +9,7 @@
     "docmodel": "word-drafts/OPC-UA-Generators.docmodel.json",
     "figures": "word-drafts/figures"
   },
+  "structureFieldTables": true,
 
   "identity": {
     "docNumber": "OPC nnnnn-m",
@@ -22,8 +23,8 @@
     "capabilityIdentifier": "GEN",
     "namespaceUri": "http://opcfoundation.org/UA/Generators/",
     "namespaceIndexInDocument": 1,
-    "version": "1.1.0",
-    "publicationDate": "2026-07-30",
+    "version": "1.2.0",
+    "publicationDate": "2026-08-11",
     "releaseType": "Draft",
     "mantisProjectId": "<nnn>",
     "otherOrganization": "OPC Foundation Machinery joint working group",
