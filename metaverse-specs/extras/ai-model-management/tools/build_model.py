@@ -262,11 +262,20 @@ def obj_member(owner, owner_sym, name, typedef, desc, rule=MR_Optional,
 
 
 def _args(method_nid, method_sym, bname, args):
-    """Emit an InputArguments / OutputArguments Property for a Method."""
+    """Emit an InputArguments / OutputArguments Property for a Method.
+
+    BrowseNameNamespace 0: InputArguments and OutputArguments are standard Properties
+    defined by OPC 10000-3 / 10000-5 and live in namespace 0. A stack resolves a
+    Method's signature by looking for the child Property named InputArguments IN
+    NAMESPACE 0; qualified into the model namespace it is not found, the Method is
+    treated as taking zero arguments, and every real call is rejected with
+    Bad_TooManyArguments. Setting the flag here fixes every Method of this model,
+    including ones added later.
+    """
     nid = _mid()
     add(nid, "UAVariable", bname, f"{method_sym}_{bname}", parent=T(method_nid),
         attrs={"DataType": Argument, "ValueRank": "1",
-               "ArrayDimensions": str(len(args))})
+               "ArrayDimensions": str(len(args)), "BrowseNameNamespace": 0})
     ref(nid, HasModellingRule, MR_Mandatory)
     ref(nid, HasTypeDefinition, PropertyType)
     ref(nid, HasProperty, T(method_nid), forward=False)
@@ -326,9 +335,11 @@ def enum_type(nid, name, desc, fields):
     NODES[nid].definition = "".join(dparts)
     es = nid + 900
     ref(nid, HasProperty, T(es))
+    # EnumStrings is a standard Property of an enumeration DataType (OPC 10000-3) and
+    # lives in namespace 0, exactly like the Method argument Properties above.
     add(es, "UAVariable", "EnumStrings", f"{name}_EnumStrings", parent=T(nid),
         attrs={"DataType": LocalizedText, "ValueRank": "1",
-               "ArrayDimensions": str(len(fields))})
+               "ArrayDimensions": str(len(fields)), "BrowseNameNamespace": 0})
     ref(es, HasModellingRule, MR_Mandatory)
     ref(es, HasTypeDefinition, PropertyType)
     ref(es, HasProperty, T(nid), forward=False)
