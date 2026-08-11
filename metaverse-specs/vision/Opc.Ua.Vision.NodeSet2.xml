@@ -5,7 +5,7 @@
     <Uri>http://opcfoundation.org/UA/Vision/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.1.0" PublicationDate="2026-08-02T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.2.0" PublicationDate="2026-08-11T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
     </Model>
   </Models>
@@ -285,6 +285,44 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3015</Reference>
     </References>
     <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>Area2D</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Line2D</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Depth3D</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Thermal</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Multispectral</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Event</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Other</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+  </UAVariable>
+  <UADataType NodeId="ns=1;i=3016" BrowseName="1:VisionLampTypeEnum">
+    <DisplayName>VisionLampTypeEnum</DisplayName>
+    <Description>Emitter technology of a light source. The named values are those OPC 40100-2 gives as examples for ILampType.LampType, which is a free String there.</Description>
+    <Category>Vision DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=3916</Reference>
+    </References>
+    <Definition Name="VisionLampTypeEnum"><Field Name="Led" Value="0"><Description>Light-emitting diode. The default because it is what the overwhelming majority of machine-vision illuminators use.</Description></Field><Field Name="Fluorescent" Value="1"/><Field Name="Laser" Value="2"><Description>Includes the line and pattern projectors of laser-triangulation and structured-light sensors.</Description></Field><Field Name="Xenon" Value="3"/><Field Name="Halogen" Value="4"/><Field Name="Other" Value="5"><Description>An emitter technology none of the above names.</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=3916" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3016" DataType="LocalizedText" ValueRank="1" ArrayDimensions="6">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3016</Reference>
+    </References>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>Led</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Fluorescent</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Laser</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Xenon</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Halogen</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Other</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+  </UAVariable>
+  <UADataType NodeId="ns=1;i=3017" BrowseName="1:VisionLightingModeEnum">
+    <DisplayName>VisionLightingModeEnum</DisplayName>
+    <Description>How a light source is being driven. The named values are those OPC 40100-2 gives as examples for ILightingControllerType.LightingMode, which is an unconstrained UInt32 there.</Description>
+    <Category>Vision DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=3917</Reference>
+    </References>
+    <Definition Name="VisionLightingModeEnum"><Field Name="Continuous" Value="0"><Description>Constant output, not synchronised to acquisition.</Description></Field><Field Name="Strobe" Value="1"><Description>Pulsed in synchronisation with acquisition, which is what makes a short exposure viable on a moving part.</Description></Field><Field Name="Modulated" Value="2"><Description>Driven at a carrier frequency, so the contribution of the illuminator can be separated from ambient light.</Description></Field><Field Name="Other" Value="3"><Description>A drive mode none of the above names.</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=3917" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3017" DataType="LocalizedText" ValueRank="1" ArrayDimensions="4">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3017</Reference>
+    </References>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>Continuous</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Strobe</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Modulated</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Other</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
   </UAVariable>
   <UADataType NodeId="ns=1;i=3050" BrowseName="1:VisionPose3DDataType">
     <DisplayName>VisionPose3DDataType</DisplayName>
@@ -567,9 +605,9 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6013</Reference>
     </References>
   </UAObjectType>
-  <UAVariable NodeId="ns=1;i=6009" BrowseName="1:LampType" ParentNodeId="ns=1;i=1006" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6009" BrowseName="1:LampType" ParentNodeId="ns=1;i=1006" DataType="ns=1;i=3016" ValueRank="-1">
     <DisplayName>LampType</DisplayName>
-    <Description>Emitter technology, for example LED, Laser, Xenon or Fluorescent.</Description>
+    <Description>Emitter technology of this light source.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -594,9 +632,9 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1006</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6012" BrowseName="1:LightingMode" ParentNodeId="ns=1;i=1006" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6012" BrowseName="1:LightingMode" ParentNodeId="ns=1;i=1006" DataType="ns=1;i=3017" ValueRank="-1">
     <DisplayName>LightingMode</DisplayName>
-    <Description>Operating mode, for example Continuous, Strobe or Modulated.</Description>
+    <Description>How this light source is currently being driven.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -673,9 +711,9 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1007</Reference>
     </References>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6019" BrowseName="1:ProfileName" ParentNodeId="ns=1;i=1007" DataType="String" ValueRank="-1">
-    <DisplayName>ProfileName</DisplayName>
-    <Description>Vendor profile label, for example main or sub.</Description>
+  <UAVariable NodeId="ns=1;i=6019" BrowseName="1:DefaultProfileName" ParentNodeId="ns=1;i=1007" DataType="String" ValueRank="-1">
+    <DisplayName>DefaultProfileName</DisplayName>
+    <Description>Name of the profile this endpoint uses when GetStreamEndpoint is called with an empty ProfileName. A profile is a Server-local named configuration and has no node of its own, so this is the one profile name a client can rely on without prior knowledge of the Server. Empty means the endpoint has a single configuration and takes no profile name at all. See clause 6.3.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1530,6 +1568,8 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6099</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6100</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6101</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6199</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6200</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6097" BrowseName="1:MinDepth" ParentNodeId="ns=1;i=1004" DataType="Double" ValueRank="-1">
@@ -1888,14 +1928,14 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6158</Reference>
     </References>
   </UAMethod>
-  <UAVariable NodeId="ns=1;i=6158" BrowseName="InputArguments" ParentNodeId="ns=1;i=6157" DataType="Argument" ValueRank="1" ArrayDimensions="4">
+  <UAVariable NodeId="ns=1;i=6158" BrowseName="InputArguments" ParentNodeId="ns=1;i=6157" DataType="Argument" ValueRank="1" ArrayDimensions="5">
     <DisplayName>InputArguments</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6157</Reference>
     </References>
-    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Purpose</uax:Name><uax:DataType><uax:Identifier>ns=1;i=3011</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Why the geometry is being sent.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Detections</uax:Name><uax:DataType><uax:Identifier>ns=1;i=3055</uax:Identifier></uax:DataType><uax:ValueRank>1</uax:ValueRank><uax:ArrayDimensions><uax:UInt32>0</uax:UInt32></uax:ArrayDimensions><uax:Description><uax:Text>The detections.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>FrameReference</uax:Name><uax:DataType><uax:Identifier>ns=1;i=3053</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Frame the detections belong to.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>InlineImage</uax:Name><uax:DataType><uax:Identifier>i=15</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Optional annotated image, accepted only within MaxInlineFeedbackImageSize; otherwise use SubmitImageReference.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
+    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Purpose</uax:Name><uax:DataType><uax:Identifier>ns=1;i=3011</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Why the geometry is being sent.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Detections</uax:Name><uax:DataType><uax:Identifier>ns=1;i=3055</uax:Identifier></uax:DataType><uax:ValueRank>1</uax:ValueRank><uax:ArrayDimensions><uax:UInt32>0</uax:UInt32></uax:ArrayDimensions><uax:Description><uax:Text>The detections.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>FrameReference</uax:Name><uax:DataType><uax:Identifier>ns=1;i=3053</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Frame the detections belong to.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>InlineImage</uax:Name><uax:DataType><uax:Identifier>i=15</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Optional annotated image, accepted only within MaxInlineFeedbackImageSize; otherwise use SubmitImageReference.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>SceneIsEmpty</uax:Name><uax:DataType><uax:Identifier>i=1</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>True asserts that the frame was examined and contains nothing to report, which is a deliberate observation and not a failed one. It is the only way Detections may be empty: an empty array with this false is rejected, so a call that lost its payload is still caught. False with a non-empty Detections is the ordinary case. Last in the list because argument order is part of the wire contract. See clause 9.5.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
   </UAVariable>
   <UAMethod NodeId="ns=1;i=6159" BrowseName="1:SubmitInspectionResult" ParentNodeId="ns=1;i=1024">
     <DisplayName>SubmitInspectionResult</DisplayName>
@@ -1924,14 +1964,14 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6162</Reference>
     </References>
   </UAMethod>
-  <UAVariable NodeId="ns=1;i=6162" BrowseName="InputArguments" ParentNodeId="ns=1;i=6161" DataType="Argument" ValueRank="1" ArrayDimensions="6">
+  <UAVariable NodeId="ns=1;i=6162" BrowseName="InputArguments" ParentNodeId="ns=1;i=6161" DataType="Argument" ValueRank="1" ArrayDimensions="7">
     <DisplayName>InputArguments</DisplayName>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6161</Reference>
     </References>
-    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>ResultId</uax:Name><uax:DataType><uax:Identifier>i=12</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Result being corrected.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Purpose</uax:Name><uax:DataType><uax:Identifier>ns=1;i=3011</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Normally GroundTruthLabel.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>CorrectedDetections</uax:Name><uax:DataType><uax:Identifier>ns=1;i=3055</uax:Identifier></uax:DataType><uax:ValueRank>1</uax:ValueRank><uax:ArrayDimensions><uax:UInt32>0</uax:UInt32></uax:ArrayDimensions><uax:Description><uax:Text>Corrected detections, where the result was a detection.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>CorrectedCharacteristics</uax:Name><uax:DataType><uax:Identifier>ns=1;i=3056</uax:Identifier></uax:DataType><uax:ValueRank>1</uax:ValueRank><uax:ArrayDimensions><uax:UInt32>0</uax:UInt32></uax:ArrayDimensions><uax:Description><uax:Text>Corrected characteristics, where the result was an inspection.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Reason</uax:Name><uax:DataType><uax:Identifier>i=21</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Why the correction was made.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>InlineImage</uax:Name><uax:DataType><uax:Identifier>i=15</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Optional corrected or annotated image, accepted only within MaxInlineFeedbackImageSize; otherwise use SubmitImageReference.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
+    <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>ResultId</uax:Name><uax:DataType><uax:Identifier>i=12</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Result being corrected.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Purpose</uax:Name><uax:DataType><uax:Identifier>ns=1;i=3011</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Normally GroundTruthLabel.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>CorrectedDetections</uax:Name><uax:DataType><uax:Identifier>ns=1;i=3055</uax:Identifier></uax:DataType><uax:ValueRank>1</uax:ValueRank><uax:ArrayDimensions><uax:UInt32>0</uax:UInt32></uax:ArrayDimensions><uax:Description><uax:Text>Corrected detections, where the result was a detection.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>CorrectedCharacteristics</uax:Name><uax:DataType><uax:Identifier>ns=1;i=3056</uax:Identifier></uax:DataType><uax:ValueRank>1</uax:ValueRank><uax:ArrayDimensions><uax:UInt32>0</uax:UInt32></uax:ArrayDimensions><uax:Description><uax:Text>Corrected characteristics, where the result was an inspection.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Reason</uax:Name><uax:DataType><uax:Identifier>i=21</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Why the correction was made.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>InlineImage</uax:Name><uax:DataType><uax:Identifier>i=15</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>Optional corrected or annotated image, accepted only within MaxInlineFeedbackImageSize; otherwise use SubmitImageReference.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>RetractAll</uax:Name><uax:DataType><uax:Identifier>i=1</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>True asserts that the corrected result should contain nothing at all - every detection or characteristic it reported was a false positive and nothing replaces it. It is the only way both corrected arrays may be empty. This is the most valuable correction shape for a learning loop, because a false positive is the error an operator is most able to label with confidence. Last in the list because argument order is part of the wire contract. See clause 9.5.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
   </UAVariable>
   <UAMethod NodeId="ns=1;i=6163" BrowseName="1:SubmitImageReference" ParentNodeId="ns=1;i=1024">
     <DisplayName>SubmitImageReference</DisplayName>
@@ -2148,6 +2188,24 @@
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1018</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6199" BrowseName="1:DepthWidth" ParentNodeId="ns=1;i=1004" DataType="UInt32" ValueRank="-1">
+    <DisplayName>DepthWidth</DisplayName>
+    <Description>Width in pixels of the sensor's native depth image. Present on a device whose depth output is an ordered image - structured-light, time-of-flight and stereo sensors - and absent on one whose output is an unordered point cloud, where there is no image to have a shape. PointsPerFrame is a nominal count and is not a substitute: it cannot be used to reproject a depth pixel, nor to size a decoder. See clause 5.6.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6200" BrowseName="1:DepthHeight" ParentNodeId="ns=1;i=1004" DataType="UInt32" ValueRank="-1">
+    <DisplayName>DepthHeight</DisplayName>
+    <Description>Height in pixels of the sensor's native depth image, under the same condition as DepthWidth. The two are present or absent together.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
     </References>
   </UAVariable>
 </UANodeSet>

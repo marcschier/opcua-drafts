@@ -40,8 +40,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/Vision/"
-VERSION = "0.1.0"
-PUBDATE = "2026-08-02T00:00:00Z"
+VERSION = "0.2.0"
+PUBDATE = "2026-08-11T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -520,6 +520,33 @@ enum_type(3015, "VisionSensorModalityEnum",
            ("Thermal", 3, None), ("Multispectral", 4, None),
            ("Event", 5, "Event / neuromorphic camera."), ("Other", 6, None)])
 
+# OPC 40100-2 types the corresponding members as an open String and an unconstrained
+# UInt32, and gives its permitted values only as prose examples. An open value space is
+# the failure clause 5.7 exists to prevent, so these close it over the values 40100-2
+# names and keep Other as the escape. Annex D gives the conversion in both directions.
+enum_type(3016, "VisionLampTypeEnum",
+          "Emitter technology of a light source. The named values are those OPC 40100-2 "
+          "gives as examples for ILampType.LampType, which is a free String there.",
+          [("Led", 0, "Light-emitting diode. The default because it is what the "
+                      "overwhelming majority of machine-vision illuminators use."),
+           ("Fluorescent", 1, None),
+           ("Laser", 2, "Includes the line and pattern projectors of laser-triangulation "
+                        "and structured-light sensors."),
+           ("Xenon", 3, None),
+           ("Halogen", 4, None),
+           ("Other", 5, "An emitter technology none of the above names.")])
+
+enum_type(3017, "VisionLightingModeEnum",
+          "How a light source is being driven. The named values are those OPC 40100-2 "
+          "gives as examples for ILightingControllerType.LightingMode, which is an "
+          "unconstrained UInt32 there.",
+          [("Continuous", 0, "Constant output, not synchronised to acquisition."),
+           ("Strobe", 1, "Pulsed in synchronisation with acquisition, which is what "
+                         "makes a short exposure viable on a moving part."),
+           ("Modulated", 2, "Driven at a carrier frequency, so the contribution of the "
+                            "illuminator can be separated from ambient light."),
+           ("Other", 3, "A drive mode none of the above names.")])
+
 VisionRealityKindEnum = T(3001)
 VisionStreamProtocolEnum = T(3002)
 VisionClipFormatEnum = T(3003)
@@ -533,6 +560,8 @@ VisionCalibrationMountEnum = T(3012)
 VisionFrameRoleEnum = T(3013)
 VisionDistortionModelEnum = T(3014)
 VisionSensorModalityEnum = T(3015)
+VisionLampTypeEnum = T(3016)
+VisionLightingModeEnum = T(3017)
 
 # ---------------------------------------------------------------------------
 # Structured DataTypes (3050+)
@@ -692,14 +721,14 @@ object_type(1006, "IlluminationType", BaseObjectType,
             "A controlled light source associated with a sensor. Member names align with "
             "the ILampType and ILightingControllerType of OPC 40100-2.")
 IL = 1006
-prop_var(IL, "IlluminationType", "LampType", String,
-         "Emitter technology, for example LED, Laser, Xenon or Fluorescent.")
+prop_var(IL, "IlluminationType", "LampType", VisionLampTypeEnum,
+         "Emitter technology of this light source.")
 prop_var(IL, "IlluminationType", "Wavelength", Double,
          "Dominant emission wavelength in nanometres.")
 prop_var(IL, "IlluminationType", "RelativeIntensity", Double,
          "Current output as a percentage of full capability.")
-prop_var(IL, "IlluminationType", "LightingMode", String,
-         "Operating mode, for example Continuous, Strobe or Modulated.")
+prop_var(IL, "IlluminationType", "LightingMode", VisionLightingModeEnum,
+         "How this light source is currently being driven.")
 prop_var(IL, "IlluminationType", "Quality", Double,
          "Remaining emitter quality as a percentage; 100 is new.")
 
@@ -729,8 +758,12 @@ prop_var(ME, "MediaEndpointType", "SecureTransport", Boolean,
          "SignAndEncrypt. A client SHALL treat false as meaning the media transport "
          "offers no confidentiality, whatever Authentication states.",
          MR_Mandatory)
-prop_var(ME, "MediaEndpointType", "ProfileName", String,
-         "Vendor profile label, for example main or sub.")
+prop_var(ME, "MediaEndpointType", "DefaultProfileName", String,
+         "Name of the profile this endpoint uses when GetStreamEndpoint is called with "
+         "an empty ProfileName. A profile is a Server-local named configuration and has "
+         "no node of its own, so this is the one profile name a client can rely on "
+         "without prior knowledge of the Server. Empty means the endpoint has a single "
+         "configuration and takes no profile name at all. See clause 6.3.")
 
 object_type(1008, "StreamEndpointType", T(ME),
             "A continuous media stream. A conformant Server SHALL expose at least one "
@@ -1129,7 +1162,14 @@ method(FB, "VisionFeedbackType", "SubmitDetections",
                 "Frame the detections belong to."),
                ("InlineImage", ByteString,
                 "Optional annotated image, accepted only within "
-                "MaxInlineFeedbackImageSize; otherwise use SubmitImageReference.")])
+                "MaxInlineFeedbackImageSize; otherwise use SubmitImageReference."),
+               ("SceneIsEmpty", Boolean,
+                "True asserts that the frame was examined and contains nothing to "
+                "report, which is a deliberate observation and not a failed one. It is "
+                "the only way Detections may be empty: an empty array with this false "
+                "is rejected, so a call that lost its payload is still caught. False "
+                "with a non-empty Detections is the ordinary case. Last in the list "
+                "because argument order is part of the wire contract. See clause 9.5.")])
 method(FB, "VisionFeedbackType", "SubmitInspectionResult",
        "Record a downstream inspection verdict against a result, for reconciliation with "
        "what the vision system originally reported.",
@@ -1151,7 +1191,15 @@ method(FB, "VisionFeedbackType", "SubmitCorrection",
                ("Reason", LocalizedText, "Why the correction was made."),
                ("InlineImage", ByteString,
                 "Optional corrected or annotated image, accepted only within "
-                "MaxInlineFeedbackImageSize; otherwise use SubmitImageReference.")])
+                "MaxInlineFeedbackImageSize; otherwise use SubmitImageReference."),
+               ("RetractAll", Boolean,
+                "True asserts that the corrected result should contain nothing at all - "
+                "every detection or characteristic it reported was a false positive and "
+                "nothing replaces it. It is the only way both corrected arrays may be "
+                "empty. This is the most valuable correction shape for a learning loop, "
+                "because a false positive is the error an operator is most able to "
+                "label with confidence. Last in the list because argument order is part "
+                "of the wire contract. See clause 9.5.")])
 method(FB, "VisionFeedbackType", "SubmitImageReference",
        "The default way to hand an image back: by reference. Used whenever the image "
        "exceeds MaxInlineFeedbackImageSize, and preferred in all cases.",
@@ -1265,6 +1313,19 @@ prop_var(IP, "InferencePipelineType", "LearningJob", NodeId_,
          "Section 9.5.1 requires this to be non-null wherever such a correction is "
          "retained - without it a client cannot establish whether its label reached a "
          "learning loop at all.")
+
+# Appended for the same reason: declaring these beside the other Depth3DSensorType
+# members would renumber every member declared after them.
+prop_var(D3, "Depth3DSensorType", "DepthWidth", UInt32,
+         "Width in pixels of the sensor's native depth image. Present on a device whose "
+         "depth output is an ordered image - structured-light, time-of-flight and stereo "
+         "sensors - and absent on one whose output is an unordered point cloud, where "
+         "there is no image to have a shape. PointsPerFrame is a nominal count and is "
+         "not a substitute: it cannot be used to reproject a depth pixel, nor to size a "
+         "decoder. See clause 5.6.")
+prop_var(D3, "Depth3DSensorType", "DepthHeight", UInt32,
+         "Height in pixels of the sensor's native depth image, under the same condition "
+         "as DepthWidth. The two are present or absent together.")
 
 
 # ===========================================================================

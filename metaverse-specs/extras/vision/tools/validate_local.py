@@ -566,6 +566,49 @@ def main():
                     f"nor the AI Model Management model declares {owner} - a type that "
                     "exists nowhere resolves to nothing")
 
+        # Every MEMBER the model declares must be named in the prose too. The check
+        # above covers types and enumeration literals only, which is how six members
+        # - CoordinateFrameType.Transform, SegmentationResultType.LabelClasses,
+        # IlluminationType.LampType and LightingMode, InferencePipelineType.LearningJob
+        # - shipped declared in the NodeSet and CSV and described nowhere, leaving an
+        # implementer to guess the semantics or read the XML. A member that no prose
+        # names is a member no two Servers will populate the same way.
+        #
+        # The standard namespace-0 Properties are excluded: they are generated from the
+        # Method and enumeration declarations, carry meanings OPC 10000-3 and -5 fix,
+        # and are not this document's to define.
+        GENERATED_MEMBERS = {"InputArguments", "OutputArguments", "EnumStrings",
+                             "Default Binary", "Default XML", "Default JSON"}
+        for owner, member in sorted(member_of):
+            if owner not in declared or member in GENERATED_MEMBERS:
+                continue
+            # A <Placeholder> is the instance-declaration idiom for "any number of
+            # these live here". The prose names the folder that holds them, which is
+            # the thing a client browses; the placeholder itself has no semantics to
+            # document beyond its ModellingRule.
+            if member.startswith("<"):
+                continue
+            if not re.search(rf"\b{re.escape(member)}\b", spec_text):
+                err(f"model declares {owner}.{member} but OPC-UA-Vision.md never "
+                    "names it - an undocumented member is one every implementer "
+                    "guesses differently")
+
+    # ---- standard BrowseNames stay in namespace 0 --------------------------
+    # The repo-wide guard in .github/scripts/check_browsename_namespace.py covers this
+    # for every NodeSet; repeating it here means a single-extension run catches it too,
+    # without the repo-wide job. A Method whose InputArguments is qualified into this
+    # model's namespace is not found by a client resolving the signature, so the Method
+    # appears to take no arguments and every call fails with Bad_TooManyArguments.
+    for n in nodes:
+        bn = n.get("BrowseName") or ""
+        if ":" not in bn:
+            continue
+        local = bn.split(":", 1)[1]
+        if local in ("InputArguments", "OutputArguments", "EnumStrings",
+                     "Default Binary", "Default XML", "Default JSON"):
+            err(f'{n.get("NodeId")} BrowseName="{bn}": {local} is a standard '
+                "namespace-0 BrowseName and must carry no namespace prefix")
+
     # ---- example overlays --------------------------------------------------
     # Each overlay instantiates the base model. Verify it is well-formed, declares the
     # Vision namespace as a RequiredModel, and only references type NodeIds that this
