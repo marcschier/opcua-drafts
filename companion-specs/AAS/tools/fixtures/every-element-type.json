@@ -59,7 +59,20 @@
         { "modelType": "BasicEventElement", "idShort": "AnEvent", "direction": "output", "state": "on",
           "observed": { "type": "ModelReference", "keys": [ { "type": "Submodel", "value": "https://fabrikam.com/ids/sm/every-element" } ] },
           "messageTopic": "fabrikam/pump/SN-001/events", "minInterval": "PT1S" },
-        { "modelType": "Operation", "idShort": "AnOperation" },
+        {
+          "modelType": "Operation",
+          "idShort": "AnOperation",
+          "inputVariables": [
+            { "value": { "modelType": "Property", "idShort": "InputTemperature", "valueType": "xs:decimal", "value": "21.5" } },
+            { "value": { "modelType": "Property", "idShort": "InputPressure", "valueType": "xs:int", "value": "5" } }
+          ],
+          "outputVariables": [
+            { "value": { "modelType": "Property", "idShort": "OutputAccepted", "valueType": "xs:boolean", "value": "true" } }
+          ],
+          "inoutputVariables": [
+            { "value": { "modelType": "Property", "idShort": "InoutputCounter", "valueType": "xs:integer", "value": "1" } }
+          ]
+        },
         { "modelType": "Capability", "idShort": "ACapability" }
       ]
     }

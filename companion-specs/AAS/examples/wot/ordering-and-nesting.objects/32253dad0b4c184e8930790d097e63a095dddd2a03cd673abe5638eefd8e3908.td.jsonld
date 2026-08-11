@@ -1,0 +1,62 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:Property",
+    "i4aas:AASPropertyType"
+  ],
+  "aas:Property/value": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "a1"
+  },
+  "aas:Property/valueType": {
+    "@id": "aas:DataTypeDefXsd/String"
+  },
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:36:17:https://fabrikam.com/ids/sm/orderingNestedLists%5B0%5D%5B1%5D",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/TmVzdGVkTGlzdHNbMF1bMV0",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/TmVzdGVkTGlzdHNbMF1bMV0",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/TmVzdGVkTGlzdHNbMF0",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1021",
+      "rel": "ua:HasTypeDefinition"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "1",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;1",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:14:https://fabrikam.com/ids/sm/orderingNestedLists[0]"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:17:https://fabrikam.com/ids/sm/orderingNestedLists[0][1]",
+  "uav:index": 1,
+  "uav:modellingRule": "Optional"
+}

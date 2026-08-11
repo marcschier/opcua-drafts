@@ -1,0 +1,298 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../../aas.context.jsonld",
+    "../../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@included": [
+    {
+      "@graph": [
+        {
+          "@id": "_:aas-occurrence-2",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-1"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Referable/description"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TGlmZUN5Y2xlU3RhZ2U"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-5",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-4"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-3"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-8",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-7"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-6"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-9",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-6"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/HasSemantics/supplementalSemanticIds"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TGlmZUN5Y2xlU3RhZ2U"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-13",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-12"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-11"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-14",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-10"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Qualifiable/qualifiers"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TGlmZUN5Y2xlU3RhZ2U"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-16",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-15"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Referable/displayName"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TGlmZUN5Y2xlU3RhZ2U"
+          }
+        }
+      ],
+      "@id": "https://w3id.org/aas-jsonld/graph/order"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:Property",
+    "i4aas:AASPropertyType"
+  ],
+  "aas:HasSemantics/semanticId": {
+    "@id": "_:aas-node-3",
+    "@type": "aas:Reference",
+    "aas:Reference/keys": [
+      {
+        "@id": "_:aas-node-4",
+        "@type": "aas:Key",
+        "aas:Key/type": {
+          "@id": "aas:KeyTypes/GlobalReference"
+        },
+        "aas:Key/value": {
+          "@type": "http://www.w3.org/2001/XMLSchema#string",
+          "@value": "0173-1#02-ABL841#001"
+        }
+      }
+    ],
+    "aas:Reference/type": {
+      "@id": "aas:ReferenceTypes/ExternalReference"
+    }
+  },
+  "aas:HasSemantics/supplementalSemanticIds": [
+    {
+      "@id": "_:aas-node-6",
+      "@type": "aas:Reference",
+      "aas:Reference/keys": [
+        {
+          "@id": "_:aas-node-7",
+          "@type": "aas:Key",
+          "aas:Key/type": {
+            "@id": "aas:KeyTypes/GlobalReference"
+          },
+          "aas:Key/value": {
+            "@type": "http://www.w3.org/2001/XMLSchema#string",
+            "@value": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#batteryStatus"
+          }
+        }
+      ],
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      }
+    }
+  ],
+  "aas:Property/value": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "Original"
+  },
+  "aas:Property/valueType": {
+    "@id": "aas:DataTypeDefXsd/String"
+  },
+  "aas:Qualifiable/qualifiers": [
+    {
+      "@id": "_:aas-node-10",
+      "@type": "aas:Qualifier",
+      "aas:HasSemantics/semanticId": {
+        "@id": "_:aas-node-11",
+        "@type": "aas:Reference",
+        "aas:Reference/keys": [
+          {
+            "@id": "_:aas-node-12",
+            "@type": "aas:Key",
+            "aas:Key/type": {
+              "@id": "aas:KeyTypes/GlobalReference"
+            },
+            "aas:Key/value": {
+              "@type": "http://www.w3.org/2001/XMLSchema#string",
+              "@value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+            }
+          }
+        ],
+        "aas:Reference/type": {
+          "@id": "aas:ReferenceTypes/ExternalReference"
+        }
+      },
+      "aas:Qualifier/type": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "SMT/Cardinality"
+      },
+      "aas:Qualifier/value": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "One"
+      },
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    }
+  ],
+  "aas:Referable/description": [
+    {
+      "@id": "_:aas-node-1",
+      "@type": "aas:LangStringTextType",
+      "aas:AbstractLangString/language": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "en"
+      },
+      "aas:AbstractLangString/text": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "A battery passport must include information on the life cycle status of the battery.\n\nThe status of the battery must be defined as 'original' (0173-1#07-ACC020#001), 'repurposed'(0173-1#07-ACC021#001), 're-used'(0173-1#07-ACC022#001), 'remanufactured' (0173-1#07-ACC023#001) or 'waste' (0173-1#07-ACC024#001).\n\nA new battery passport must be issued when a battery was subject to remanufacturing, repurpose or one of the treatment operations preparing for re-use and preparing for repurpose and is placed on the market again.\n\n\nDIN DKE Spec 99100 chapter reference: 6.1.3.7"
+      }
+    }
+  ],
+  "aas:Referable/displayName": [
+    {
+      "@id": "_:aas-node-15",
+      "@type": "aas:LangStringNameType",
+      "aas:AbstractLangString/language": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "en"
+      },
+      "aas:AbstractLangString/text": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "life cycle stage"
+      }
+    }
+  ],
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "LifeCycleStage"
+  },
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:88:14:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0LifeCycleStage",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TGlmZUN5Y2xlU3RhZ2U",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/node/TGlmZUN5Y2xlU3RhZ2U",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1021",
+      "rel": "ua:HasTypeDefinition"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "LifeCycleStage",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;LifeCycleStage",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:S:88:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:88:14:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0LifeCycleStage",
+  "uav:modellingRule": "Optional"
+}

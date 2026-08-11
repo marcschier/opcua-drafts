@@ -1,664 +1,533 @@
-[
-  {
-    "@context": [
-      "https://www.w3.org/2022/wot/td/v1.1",
-      {
-        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
-        "aas": "https://admin-shell.io/aas/3/0/",
-        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
-        "ua": "http://opcfoundation.org/UA/"
-      }
-    ],
-    "@type": [
-      "Thing",
-      "uav:object",
-      "aas:Submodel",
-      "i4aas:AASSubmodelType"
-    ],
-    "@id": "https://fabrikam.com/ids/sm/every-element",
-    "title": "EveryElement",
-    "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element",
-    "uav:browseName": "nsu=https://example.com/aas/instances/;EveryElement",
-    "properties": {
-      "AProperty": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#AProperty",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AProperty",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;AProperty",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "AProperty",
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "aas:Property/value": "text",
-        "aas:HasExtensions/extensions": [
-          {
-            "@type": "aas:Extension",
-            "aas:Extension/name": "vendorNote",
-            "aas:Extension/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Extension/value": "preserved verbatim"
-          }
-        ],
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "AMultiLanguageProperty": {
-        "@type": [
-          "uav:object",
-          "aas:MultiLanguageProperty",
-          "i4aas:AASMultiLanguagePropertyType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#AMultiLanguageProperty",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AMultiLanguageProperty",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;AMultiLanguageProperty",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "AMultiLanguageProperty",
-        "aas:MultiLanguageProperty/value": [
-          {
-            "@type": "aas:LangStringTextType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Pump"
-          },
-          {
-            "@type": "aas:LangStringTextType",
-            "aas:AbstractLangString/language": "de",
-            "aas:AbstractLangString/text": "Pumpe"
-          },
-          {
-            "@type": "aas:LangStringTextType",
-            "aas:AbstractLangString/language": "fr",
-            "aas:AbstractLangString/text": "Pompe"
-          }
-        ],
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1022"
-          }
-        ]
-      },
-      "ARange": {
-        "@type": [
-          "uav:object",
-          "aas:Range",
-          "i4aas:AASRangeType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#ARange",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ARange",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;ARange",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "ARange",
-        "aas:Range/valueType": {
-          "@id": "aas:DataTypeDefXsd/Int"
-        },
-        "aas:Range/min": "0",
-        "aas:Range/max": "100",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1023"
-          }
-        ]
-      },
-      "ABlob": {
-        "@type": [
-          "uav:object",
-          "aas:Blob",
-          "i4aas:AASBlobType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#ABlob",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ABlob",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;ABlob",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "ABlob",
-        "aas:Blob/contentType": "application/octet-stream",
-        "aas:Blob/value": "QUFTIFYz",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1024"
-          }
-        ]
-      },
-      "AFile": {
-        "@type": [
-          "uav:object",
-          "aas:File",
-          "i4aas:AASFileType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#AFile",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AFile",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;AFile",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "AFile",
-        "aas:File/contentType": "application/pdf",
-        "aas:File/value": "/aasx/docs/manual.pdf",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1025"
-          }
-        ]
-      },
-      "AReferenceElement": {
-        "@type": [
-          "uav:object",
-          "aas:ReferenceElement",
-          "i4aas:AASReferenceElementType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#AReferenceElement",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AReferenceElement",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;AReferenceElement",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "AReferenceElement",
-        "aas:ReferenceElement/value": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ModelReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/Submodel"
-              },
-              "aas:Key/value": "https://fabrikam.com/ids/sm/every-element"
-            },
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/SubmodelElementCollection"
-              },
-              "aas:Key/value": "ACollection"
-            },
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/Property"
-              },
-              "aas:Key/value": "Nested"
-            }
-          ]
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1026"
-          }
-        ]
-      },
-      "ARelationship": {
-        "@type": [
-          "uav:object",
-          "aas:RelationshipElement",
-          "i4aas:AASRelationshipElementType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#ARelationship",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ARelationship",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;ARelationship",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "ARelationship",
-        "aas:RelationshipElement/first": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ModelReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/Submodel"
-              },
-              "aas:Key/value": "https://fabrikam.com/ids/sm/every-element"
-            }
-          ]
-        },
-        "aas:RelationshipElement/second": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://contoso.com/asset/motor/SN-9"
-            }
-          ]
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1027"
-          }
-        ]
-      },
-      "AnAnnotatedRelationship": {
-        "@type": [
-          "uav:object",
-          "aas:AnnotatedRelationshipElement",
-          "i4aas:AASAnnotatedRelationshipElementType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;AnAnnotatedRelationship",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "AnAnnotatedRelationship",
-        "aas:RelationshipElement/first": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://fabrikam.com/a"
-            }
-          ]
-        },
-        "aas:RelationshipElement/second": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://fabrikam.com/b"
-            }
-          ]
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1028"
-          }
-        ],
-        "aas:AnnotatedRelationshipElement/annotations": [
-          {
-            "@id": "https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship.Quantity"
-          }
-        ]
-      },
-      "AnAnnotatedRelationship.Quantity": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship.Quantity",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship.Quantity",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;Quantity",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship"
-        ],
-        "aas:Referable/idShort": "Quantity",
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/Int"
-        },
-        "aas:Property/value": "2",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "ACollection": {
-        "@type": [
-          "uav:object",
-          "aas:SubmodelElementCollection",
-          "i4aas:AASSubmodelElementCollectionType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#ACollection",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ACollection",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;ACollection",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "ACollection",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
-          }
-        ],
-        "aas:SubmodelElementCollection/value": [
-          {
-            "@id": "https://fabrikam.com/ids/sm/every-element#ACollection.Nested"
-          }
-        ]
-      },
-      "ACollection.Nested": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#ACollection.Nested",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ACollection.Nested",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;Nested",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ACollection"
-        ],
-        "aas:Referable/idShort": "Nested",
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/Boolean"
-        },
-        "aas:Property/value": "true",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "AList": {
-        "@type": [
-          "uav:object",
-          "aas:SubmodelElementList",
-          "i4aas:AASSubmodelElementListType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#AList",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AList",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;AList",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "AList",
-        "aas:SubmodelElementList/orderRelevant": true,
-        "aas:SubmodelElementList/typeValueListElement": {
-          "@id": "aas:AasSubmodelElements/Property"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
-          }
-        ],
-        "aas:SubmodelElementList/value": [
-          {
-            "@id": "https://fabrikam.com/ids/sm/every-element#AList[0]"
-          }
-        ]
-      },
-      "AList[0]": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#AList[0]",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AList[0]",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AList"
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/Int"
-        },
-        "aas:Property/value": "1",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ],
-        "uav:index": 0
-      },
-      "ASelfManagedEntity": {
-        "@type": [
-          "uav:object",
-          "aas:Entity",
-          "i4aas:AASEntityType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;ASelfManagedEntity",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "ASelfManagedEntity",
-        "aas:Entity/entityType": {
-          "@id": "aas:EntityType/SelfManagedEntity"
-        },
-        "aas:Entity/globalAssetId": "https://contoso.com/asset/motor/SN-9",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1032"
-          }
-        ],
-        "aas:Entity/statements": [
-          {
-            "@id": "https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity.Position"
-          }
-        ]
-      },
-      "ASelfManagedEntity.Position": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity.Position",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity.Position",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;Position",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity"
-        ],
-        "aas:Referable/idShort": "Position",
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "aas:Property/value": "drive-end",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "AnEvent": {
-        "@type": [
-          "uav:object",
-          "aas:BasicEventElement",
-          "i4aas:AASBasicEventElementType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#AnEvent",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AnEvent",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;AnEvent",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "AnEvent",
-        "aas:BasicEventElement/direction": {
-          "@id": "aas:Direction/Output"
-        },
-        "aas:BasicEventElement/state": {
-          "@id": "aas:StateOfEvent/On"
-        },
-        "aas:BasicEventElement/observed": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ModelReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/Submodel"
-              },
-              "aas:Key/value": "https://fabrikam.com/ids/sm/every-element"
-            }
-          ]
-        },
-        "aas:BasicEventElement/messageTopic": "fabrikam/pump/SN-001/events",
-        "aas:BasicEventElement/minInterval": "PT1S",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1033"
-          }
-        ]
-      },
-      "AnOperation": {
-        "@type": [
-          "uav:object",
-          "aas:Operation",
-          "i4aas:AASOperationType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#AnOperation",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AnOperation",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;AnOperation",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "AnOperation",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1034"
-          }
-        ]
-      },
-      "ACapability": {
-        "@type": [
-          "uav:object",
-          "aas:Capability",
-          "i4aas:AASCapabilityType"
-        ],
-        "@id": "https://fabrikam.com/ids/sm/every-element#ACapability",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ACapability",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;ACapability",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "ACapability",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1035"
-          }
-        ]
-      }
-    },
-    "links": [
-      {
-        "rel": "ua:HasTypeDefinition",
-        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship.Quantity",
-        "uav:refId": "i=47",
-        "uav:refName": "Quantity"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ACollection.Nested",
-        "uav:refId": "i=47",
-        "uav:refName": "Nested"
-      },
-      {
-        "rel": "ua:HasOrderedComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#AList[0]",
-        "uav:refId": "i=49",
-        "uav:refName": "0"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity.Position",
-        "uav:refId": "i=47",
-        "uav:refName": "Position"
-      }
-    ],
-    "aas:Identifiable/id": "https://fabrikam.com/ids/sm/every-element",
-    "aas:Referable/idShort": "EveryElement",
-    "aas:HasKind/kind": {
-      "@id": "aas:ModellingKind/Instance"
-    },
-    "aas:HasSemantics/semanticId": {
-      "@type": "aas:Reference",
-      "aas:Reference/type": {
-        "@id": "aas:ReferenceTypes/ExternalReference"
-      },
-      "aas:Reference/keys": [
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../aas.context.jsonld",
+    "../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@included": [
+    {
+      "@graph": [
         {
-          "@type": "aas:Key",
-          "aas:Key/type": {
-            "@id": "aas:KeyTypes/GlobalReference"
+          "@id": "_:aas-occurrence-3",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
           },
-          "aas:Key/value": "https://admin-shell.io/idta/Example/1/0"
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-2"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-1"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-5",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-4"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Qualifiable/qualifiers"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-6",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVByb3BlcnR5"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-7",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "1"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QU11bHRpTGFuZ3VhZ2VQcm9wZXJ0eQ"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-8",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "2"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVJhbmdl"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-9",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "3"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUJsb2I"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-10",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "4"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUZpbGU"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-11",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "5"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVJlZmVyZW5jZUVsZW1lbnQ"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-12",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "6"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVJlbGF0aW9uc2hpcA"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-13",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "7"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5Bbm5vdGF0ZWRSZWxhdGlvbnNoaXA"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-14",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "8"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUNvbGxlY3Rpb24"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-15",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "9"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUxpc3Q"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-16",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "10"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVNlbGZNYW5hZ2VkRW50aXR5"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-17",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "11"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5FdmVudA"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-18",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "12"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-19",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "13"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUNhcGFiaWxpdHk"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://fabrikam.com/ids/sm/every-element"
+          }
         }
-      ]
-    },
-    "aas:Qualifiable/qualifiers": [
+      ],
+      "@id": "https://w3id.org/aas-jsonld/graph/order"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:Submodel",
+    "i4aas:AASSubmodelType"
+  ],
+  "aas:HasKind/kind": {
+    "@id": "aas:ModellingKind/Instance"
+  },
+  "aas:HasSemantics/semanticId": {
+    "@id": "_:aas-node-1",
+    "@type": "aas:Reference",
+    "aas:Reference/keys": [
       {
-        "@type": "aas:Qualifier",
-        "aas:Qualifier/kind": {
-          "@id": "aas:QualifierKind/ValueQualifier"
+        "@id": "_:aas-node-2",
+        "@type": "aas:Key",
+        "aas:Key/type": {
+          "@id": "aas:KeyTypes/GlobalReference"
         },
-        "aas:Qualifier/type": "Cardinality",
-        "aas:Qualifier/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "aas:Qualifier/value": "One"
+        "aas:Key/value": {
+          "@type": "http://www.w3.org/2001/XMLSchema#string",
+          "@value": "https://admin-shell.io/idta/Example/1/0"
+        }
       }
     ],
-    "aas:Submodel/submodelElements": [
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#AProperty"
+    "aas:Reference/type": {
+      "@id": "aas:ReferenceTypes/ExternalReference"
+    }
+  },
+  "aas:Identifiable/id": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "https://fabrikam.com/ids/sm/every-element"
+  },
+  "aas:Qualifiable/qualifiers": [
+    {
+      "@id": "_:aas-node-4",
+      "@type": "aas:Qualifier",
+      "aas:Qualifier/kind": {
+        "@id": "aas:QualifierKind/ValueQualifier"
       },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#AMultiLanguageProperty"
+      "aas:Qualifier/type": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Cardinality"
       },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#ARange"
+      "aas:Qualifier/value": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "One"
       },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#ABlob"
-      },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#AFile"
-      },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#AReferenceElement"
-      },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#ARelationship"
-      },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#AnAnnotatedRelationship"
-      },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#ACollection"
-      },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#AList"
-      },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#ASelfManagedEntity"
-      },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#AnEvent"
-      },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#AnOperation"
-      },
-      {
-        "@id": "https://fabrikam.com/ids/sm/every-element#ACapability"
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
       }
-    ]
-  }
-]
+    }
+  ],
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "EveryElement"
+  },
+  "aas:Submodel/submodelElements": [
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVByb3BlcnR5"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QU11bHRpTGFuZ3VhZ2VQcm9wZXJ0eQ"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVJhbmdl"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUJsb2I"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUZpbGU"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVJlZmVyZW5jZUVsZW1lbnQ"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVJlbGF0aW9uc2hpcA"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5Bbm5vdGF0ZWRSZWxhdGlvbnNoaXA"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUNvbGxlY3Rpb24"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUxpc3Q"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVNlbGZNYW5hZ2VkRW50aXR5"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5FdmVudA"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUNhcGFiaWxpdHk"
+    }
+  ],
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:S:41:https://fabrikam.com/ids/sm/every-element",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://fabrikam.com/ids/sm/every-element",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1013",
+      "rel": "ua:HasTypeDefinition"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVByb3BlcnR5",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "AProperty"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QU11bHRpTGFuZ3VhZ2VQcm9wZXJ0eQ",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "AMultiLanguageProperty"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVJhbmdl",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "ARange"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUJsb2I",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "ABlob"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUZpbGU",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "AFile"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVJlZmVyZW5jZUVsZW1lbnQ",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "AReferenceElement"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVJlbGF0aW9uc2hpcA",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "ARelationship"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5Bbm5vdGF0ZWRSZWxhdGlvbnNoaXA",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "AnAnnotatedRelationship"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUNvbGxlY3Rpb24",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "ACollection"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUxpc3Q",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "AList"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVNlbGZNYW5hZ2VkRW50aXR5",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "ASelfManagedEntity"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5FdmVudA",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "AnEvent"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "AnOperation"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUNhcGFiaWxpdHk",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "ACapability"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "EveryElement",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;EveryElement",
+  "uav:hasComponent": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:9:https://fabrikam.com/ids/sm/every-elementAProperty",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:22:https://fabrikam.com/ids/sm/every-elementAMultiLanguageProperty",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:6:https://fabrikam.com/ids/sm/every-elementARange",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:5:https://fabrikam.com/ids/sm/every-elementABlob",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:5:https://fabrikam.com/ids/sm/every-elementAFile",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:17:https://fabrikam.com/ids/sm/every-elementAReferenceElement",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:13:https://fabrikam.com/ids/sm/every-elementARelationship",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:23:https://fabrikam.com/ids/sm/every-elementAnAnnotatedRelationship",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:11:https://fabrikam.com/ids/sm/every-elementACollection",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:5:https://fabrikam.com/ids/sm/every-elementAList",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:18:https://fabrikam.com/ids/sm/every-elementASelfManagedEntity",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:7:https://fabrikam.com/ids/sm/every-elementAnEvent",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:11:https://fabrikam.com/ids/sm/every-elementAnOperation",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:11:https://fabrikam.com/ids/sm/every-elementACapability"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:S:41:https://fabrikam.com/ids/sm/every-element"
+}

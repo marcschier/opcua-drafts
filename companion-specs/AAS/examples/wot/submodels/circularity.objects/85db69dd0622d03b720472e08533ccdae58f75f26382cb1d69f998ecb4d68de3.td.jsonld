@@ -1,0 +1,210 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../../aas.context.jsonld",
+    "../../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@included": [
+    {
+      "@graph": [
+        {
+          "@id": "_:aas-occurrence-2",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-1"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Referable/displayName"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA/UmVjeWNsZWRDb250ZW50SW5mb3JtYXRpb25bMF0uUG9zdENvbnN1bWVyU2hhcmU"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-5",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-4"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-3"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-9",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-8"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-7"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-10",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-6"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Qualifiable/qualifiers"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA/UmVjeWNsZWRDb250ZW50SW5mb3JtYXRpb25bMF0uUG9zdENvbnN1bWVyU2hhcmU"
+          }
+        }
+      ],
+      "@id": "https://w3id.org/aas-jsonld/graph/order"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:Property",
+    "i4aas:AASPropertyType"
+  ],
+  "aas:HasSemantics/semanticId": {
+    "@id": "_:aas-node-3",
+    "@type": "aas:Reference",
+    "aas:Reference/keys": [
+      {
+        "@id": "_:aas-node-4",
+        "@type": "aas:Key",
+        "aas:Key/type": {
+          "@id": "aas:KeyTypes/GlobalReference"
+        },
+        "aas:Key/value": {
+          "@type": "http://www.w3.org/2001/XMLSchema#string",
+          "@value": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#postConsumerShare"
+        }
+      }
+    ],
+    "aas:Reference/type": {
+      "@id": "aas:ReferenceTypes/ExternalReference"
+    }
+  },
+  "aas:Property/valueType": {
+    "@id": "aas:DataTypeDefXsd/Float"
+  },
+  "aas:Qualifiable/qualifiers": [
+    {
+      "@id": "_:aas-node-6",
+      "@type": "aas:Qualifier",
+      "aas:HasSemantics/semanticId": {
+        "@id": "_:aas-node-7",
+        "@type": "aas:Reference",
+        "aas:Reference/keys": [
+          {
+            "@id": "_:aas-node-8",
+            "@type": "aas:Key",
+            "aas:Key/type": {
+              "@id": "aas:KeyTypes/GlobalReference"
+            },
+            "aas:Key/value": {
+              "@type": "http://www.w3.org/2001/XMLSchema#string",
+              "@value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+            }
+          }
+        ],
+        "aas:Reference/type": {
+          "@id": "aas:ReferenceTypes/ExternalReference"
+        }
+      },
+      "aas:Qualifier/kind": {
+        "@id": "aas:QualifierKind/TemplateQualifier"
+      },
+      "aas:Qualifier/type": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "SMT/Cardinality"
+      },
+      "aas:Qualifier/value": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "ZeroToOne"
+      },
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    }
+  ],
+  "aas:Referable/displayName": [
+    {
+      "@id": "_:aas-node-1",
+      "@type": "aas:LangStringNameType",
+      "aas:AbstractLangString/language": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "en"
+      },
+      "aas:AbstractLangString/text": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "post consumer share"
+      }
+    }
+  ],
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "PostConsumerShare"
+  },
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:79:47:urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0%23Circularity/submodelRecycledContentInformation%5B0%5D.PostConsumerShare",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/node/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA/UmVjeWNsZWRDb250ZW50SW5mb3JtYXRpb25bMF0uUG9zdENvbnN1bWVyU2hhcmU",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA/node/UmVjeWNsZWRDb250ZW50SW5mb3JtYXRpb25bMF0uUG9zdENvbnN1bWVyU2hhcmU",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5jaXJjdWxhcml0eToxLjAuMCNDaXJjdWxhcml0eS9zdWJtb2RlbA/node/UmVjeWNsZWRDb250ZW50SW5mb3JtYXRpb25bMF0",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1021",
+      "rel": "ua:HasTypeDefinition"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "PostConsumerShare",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;PostConsumerShare",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:79:29:urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodelRecycledContentInformation[0]"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:79:47:urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodelRecycledContentInformation[0].PostConsumerShare",
+  "uav:modellingRule": "Optional"
+}

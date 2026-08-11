@@ -6,8 +6,8 @@ Three claims are checked independently, because collapsing them would let
 fidelity to a lossy target stand in for fidelity to the source:
 
   AASLD-RdfCompatible  the lifted graph equals the normative RDF for the pinned
-                       upstream release, modulo the declared deviations D1 and
-                       D3 of UPSTREAM-DEFECTS.md
+                       upstream release after root subjects are relabelled by
+                       the JSON-LD subject construction, modulo deviation D1
   AASLD-JsonRoundTrip  not yet exercised here; it needs lower.py
   AASLD-Linked         the enrichment graph carries the ordering that the
                        normative serialization discards (D2)
@@ -30,7 +30,7 @@ import os
 import random
 import sys
 
-from rdflib import Graph
+from rdflib import Graph, RDF, URIRef
 from rdflib.compare import isomorphic, to_isomorphic, graph_diff
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -39,15 +39,21 @@ FIXTURES = os.path.join(ROOT, "fixtures")
 CORPUS = os.path.join(ROOT, ".corpus")
 
 sys.path.insert(0, HERE)
-from lift import AAS, Lifter, Ontology, Schema, serialize  # noqa: E402
+from lift import AAS, Lifter, Ontology, Schema, serialize, subject_iri  # noqa: E402
 from lower import Lowerer, parse_nt  # noqa: E402
 
 IDSHORT = AAS + "Referable/idShort"
+IDENTIFIER = URIRef(AAS + "Identifiable/id")
+ROOT_TYPES = {
+    URIRef(AAS + "AssetAdministrationShell"),
+    URIRef(AAS + "Submodel"),
+    URIRef(AAS + "ConceptDescription"),
+}
 
-# The upstream Turtle carries no base (D3), so a parser resolves its relative
-# subject terms against whatever it is given. Giving it the same base the
-# lifting uses removes that difference from the comparison, leaving only
-# differences the lifting is responsible for.
+# The upstream Turtle carries relative subjects (D3), so a parser needs a base
+# merely to load it. `canonical_root_subjects` then replaces every root subject
+# independently from its `aas:Identifiable/id`; the chosen parser base has no
+# bearing on the graph compared with the lifting.
 BASE = "https://example.org/aas/"
 
 # Permutations tried for the core-graph round trip. One shuffle measures one
@@ -56,16 +62,31 @@ BASE = "https://example.org/aas/"
 SEEDS = (20260809, 1, 2, 3, 5, 8, 13, 21, 12345, 99991)
 
 
+def canonical_root_subjects(graph):
+    """Relabel upstream root subjects with the clause 2.2 authoring rule."""
+    replacements = {}
+    for subject, cls in graph.subject_objects(RDF.type):
+        if cls not in ROOT_TYPES:
+            continue
+        identifiers = list(graph.objects(subject, IDENTIFIER))
+        if len(identifiers) == 1:
+            replacements[subject] = URIRef(subject_iri(str(identifiers[0])))
+    out = Graph()
+    for subject, predicate, obj in graph:
+        out.add((replacements.get(subject, subject), predicate, replacements.get(obj, obj)))
+    return out
+
+
 def load_expected(path):
     g = Graph()
     g.parse(path, format="turtle", publicID=BASE)
-    return g
+    return canonical_root_subjects(g)
 
 
 def load_actual(json_path, profile="core", emit_root_idshort=True):
     with open(json_path, encoding="utf-8") as f:
         doc = json.load(f)
-    lifter = Lifter(ONTOLOGY, BASE, profile, emit_root_idshort=emit_root_idshort, schema=SCHEMA)
+    lifter = Lifter(ONTOLOGY, profile, emit_root_idshort=emit_root_idshort, schema=SCHEMA)
     sink = lifter.lift(doc)
     g = Graph()
     g.parse(data=serialize(sink, with_graphs=False), format="nt")
@@ -135,7 +156,7 @@ def round_trip(jpath, with_order, seed=20260809):
     """
     with open(jpath, encoding="utf-8") as f:
         source = json.load(f)
-    lifter = Lifter(ONTOLOGY, BASE, "linked" if with_order else "core", schema=SCHEMA)
+    lifter = Lifter(ONTOLOGY, "linked" if with_order else "core", schema=SCHEMA)
     sink = lifter.lift(source)
     core = parse_nt(serialize(sink, with_graphs=False))
     random.Random(seed).shuffle(core)
@@ -238,7 +259,7 @@ def main():
     total = len(cases)
     print(f"source: {source}")
     print(f"cases: {total}")
-    print("\nAASLD-RdfCompatible (base supplied per D3)")
+    print("\nAASLD-RdfCompatible (upstream roots relabelled per clause 2.2)")
     print(f"  isomorphic to the core graph of clause 2 : {passed}")
     print(f"  isomorphic once the root idShort is set  : {d1}   <- corpus deviation D1")
     print(f"  differing                                : {len(failed)}")

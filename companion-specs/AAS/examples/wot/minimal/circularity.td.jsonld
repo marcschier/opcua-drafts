@@ -1,13 +1,14 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    "https://w3id.org/aas-jsonld/context",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
     {
-      "i4aas": "http://opcfoundation.org/UA/I4AAS/",
-      "uav": "http://opcfoundation.org/UA/WoT-Binding/"
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
     }
   ],
-  "@graph": [
+  "@included": [
     {
       "@id": "_:b1",
       "@type": "aas:AdministrativeInformation",
@@ -4792,10 +4793,10 @@
       "aas:AssetAdministrationShell/submodels": {
         "@id": "_:b3"
       },
+      "aas:Identifiable/id": "https://admin-shell.io/idta/aas/CircularityForDBPAAS/1/0",
       "administration": "_:b1",
       "assetInformation": "_:b2",
       "displayName": "_:b7",
-      "id": "https://admin-shell.io/idta/aas/CircularityForDBPAAS/1/0",
       "idShort": "CircularityForDBPAAS"
     },
     {
@@ -12388,304 +12389,299 @@
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity",
       "category": "APPLICATION_CLASS",
       "description": "_:b539",
       "displayName": "_:b553",
       "embeddedDataSpecifications": "_:b541",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity",
       "idShort": "Circularity"
-    },
-    {
-      "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
-      "@type": "aas:Submodel",
-      "aas:HasKind/kind": {
-        "@id": "aas:ModellingKind/Template"
-      },
-      "administration": "_:b11",
-      "description": "_:b9",
-      "displayName": "_:b537",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
-      "idShort": "Circularity",
-      "semanticId": "_:b12",
-      "submodelElements": [
-        "_:b15",
-        "_:b305",
-        "_:b365",
-        "_:b39",
-        "_:b425",
-        "_:b521"
-      ]
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#ExtinguishingAgent",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#ExtinguishingAgent",
       "displayName": "_:b1014",
       "embeddedDataSpecifications": "_:b1004",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#ExtinguishingAgent",
       "idShort": "ExtinguishingAgent"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#RecycledContent",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#RecycledContent",
       "displayName": "_:b898",
       "embeddedDataSpecifications": "_:b900",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#RecycledContent",
       "idShort": "RecycledContent"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#SparePartSupplier",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#SparePartSupplier",
       "displayName": "_:b803",
       "embeddedDataSpecifications": "_:b805",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#SparePartSupplier",
       "idShort": "SparePartSupplier"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#addressOfSupplier",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#addressOfSupplier",
       "displayName": "_:b649",
       "embeddedDataSpecifications": "_:b651",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#addressOfSupplier",
       "idShort": "addressOfSupplier"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#components",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#components",
       "displayName": "_:b777",
       "embeddedDataSpecifications": "_:b779",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#components",
       "idShort": "components"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#dismantlingAndRemovalInformation",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#dismantlingAndRemovalInformation",
       "displayName": "_:b569",
       "embeddedDataSpecifications": "_:b571",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#dismantlingAndRemovalInformation",
       "idShort": "dismantlingAndRemovalInformation"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#endOfLifeInformation",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#endOfLifeInformation",
       "displayName": "_:b990",
       "embeddedDataSpecifications": "_:b992",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#endOfLifeInformation",
       "idShort": "endOfLifeInformation"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#extinguishingAgents",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#extinguishingAgents",
       "displayName": "_:b936",
       "embeddedDataSpecifications": "_:b938",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#extinguishingAgents",
       "idShort": "extinguishingAgents"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#informationOnCollection",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#informationOnCollection",
       "displayName": "_:b1016",
       "embeddedDataSpecifications": "_:b1018",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#informationOnCollection",
       "idShort": "informationOnCollection"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partName",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partName",
       "displayName": "_:b749",
       "embeddedDataSpecifications": "_:b751",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partName",
       "idShort": "partName"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partNumber",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partNumber",
       "displayName": "_:b763",
       "embeddedDataSpecifications": "_:b765",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#partNumber",
       "idShort": "partNumber"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#postConsumerShare",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#postConsumerShare",
       "displayName": "_:b884",
       "embeddedDataSpecifications": "_:b886",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#postConsumerShare",
       "idShort": "postConsumerShare"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#preConsumerShare",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#preConsumerShare",
       "displayName": "_:b815",
       "embeddedDataSpecifications": "_:b817",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#preConsumerShare",
       "idShort": "preConsumerShare"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledContent",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledContent",
       "displayName": "_:b910",
       "embeddedDataSpecifications": "_:b912",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledContent",
       "idShort": "recycledContent"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledMaterial",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledMaterial",
       "displayName": "_:b829",
       "embeddedDataSpecifications": "_:b831",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#recycledMaterial",
       "idShort": "recycledMaterial"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#renewableContent",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#renewableContent",
       "displayName": "_:b555",
       "embeddedDataSpecifications": "_:b557",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#renewableContent",
       "idShort": "renewableContent"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyInstructions",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyInstructions",
       "displayName": "_:b922",
       "embeddedDataSpecifications": "_:b924",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyInstructions",
       "idShort": "safetyInstructions"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyMeasures",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyMeasures",
       "displayName": "_:b948",
       "embeddedDataSpecifications": "_:b950",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#safetyMeasures",
       "idShort": "safetyMeasures"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#separateCollection",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#separateCollection",
       "displayName": "_:b976",
       "embeddedDataSpecifications": "_:b978",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#separateCollection",
       "idShort": "separateCollection"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#sparePartSources",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#sparePartSources",
       "displayName": "_:b791",
       "embeddedDataSpecifications": "_:b793",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#sparePartSources",
       "idShort": "sparePartSources"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#wastePrevention",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#wastePrevention",
       "displayName": "_:b962",
       "embeddedDataSpecifications": "_:b964",
-      "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#wastePrevention",
       "idShort": "wastePrevention"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#addressOfAdditionalLink",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#addressOfAdditionalLink",
       "displayName": "_:b737",
       "embeddedDataSpecifications": "_:b739",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#addressOfAdditionalLink",
       "idShort": "addressOfAdditionalLink"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#company",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#company",
       "displayName": "_:b581",
       "embeddedDataSpecifications": "_:b583",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#company",
       "idShort": "company"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#email",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#email",
       "displayName": [
         "_:b719",
         "_:b721"
       ],
       "embeddedDataSpecifications": "_:b723",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#email",
       "idShort": "email"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#emailAddress",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#emailAddress",
       "displayName": "_:b663",
       "embeddedDataSpecifications": "_:b665",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#emailAddress",
       "idShort": "emailAddress"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#nationalCode",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#nationalCode",
       "displayName": [
         "_:b595",
         "_:b597"
       ],
       "embeddedDataSpecifications": "_:b599",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#nationalCode",
       "idShort": "nationalCode"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#postalCode",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#postalCode",
       "displayName": "_:b615",
       "embeddedDataSpecifications": "_:b617",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#postalCode",
       "idShort": "postalCode"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#publicKey",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#publicKey",
       "displayName": "_:b677",
       "embeddedDataSpecifications": "_:b679",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#publicKey",
       "idShort": "publicKey"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#street",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#street",
       "displayName": [
         "_:b629",
         "_:b631"
       ],
       "embeddedDataSpecifications": "_:b633",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#street",
       "idShort": "street"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfEmailAddress",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfEmailAddress",
       "displayName": "_:b691",
       "embeddedDataSpecifications": "_:b693",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfEmailAddress",
       "idShort": "typeOfEmailAddress"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfPublicKey",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfPublicKey",
       "displayName": "_:b705",
       "embeddedDataSpecifications": "_:b707",
-      "id": "urn:samm:io.admin-shell.idta.contact_information:1.0.0#typeOfPublicKey",
       "idShort": "typeOfPublicKey"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier",
       "displayName": "_:b1044",
       "embeddedDataSpecifications": "_:b1030",
-      "id": "urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#DocumentIdentifier",
       "idShort": "DocumentIdentifier"
     }
   ],
   "@type": [
     "Thing",
     "uav:object",
-    "i4aas:AASSubmodelType"
+    "i4aas:AASSubmodelType",
+    "aas:Submodel"
+  ],
+  "aas:HasKind/kind": {
+    "@id": "aas:ModellingKind/Template"
+  },
+  "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
+  "administration": "_:b11",
+  "description": "_:b9",
+  "displayName": "_:b537",
+  "id": "urn:samm:io.admin-shell.idta.batterypass.circularity:1.0.0#Circularity/submodel",
+  "idShort": "Circularity",
+  "links": [
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1013",
+      "rel": "ua:HasTypeDefinition"
+    }
   ],
   "security": "nosec_sc",
   "securityDefinitions": {
@@ -12693,5 +12689,14 @@
       "scheme": "nosec"
     }
   },
+  "semanticId": "_:b12",
+  "submodelElements": [
+    "_:b15",
+    "_:b305",
+    "_:b365",
+    "_:b39",
+    "_:b425",
+    "_:b521"
+  ],
   "title": "Circularity"
 }

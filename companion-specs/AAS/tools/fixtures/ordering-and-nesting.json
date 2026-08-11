@@ -9,6 +9,13 @@
         {
           "modelType": "SubmodelElementList",
           "idShort": "OrderMatters",
+          "semanticId": {
+            "type": "ModelReference",
+            "keys": [
+              { "type": "Submodel", "value": "https://fabrikam.com/ids/sm/ordering" },
+              { "type": "SubmodelElementList", "value": "OrderMatters" }
+            ]
+          },
           "orderRelevant": true,
           "typeValueListElement": "Property",
           "valueTypeListElement": "xs:string",

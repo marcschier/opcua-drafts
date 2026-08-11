@@ -1,1158 +1,399 @@
-[
-  {
-    "@context": [
-      "https://www.w3.org/2022/wot/td/v1.1",
-      {
-        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
-        "aas": "https://admin-shell.io/aas/3/0/",
-        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
-        "ua": "http://opcfoundation.org/UA/"
-      }
-    ],
-    "@type": [
-      "Thing",
-      "uav:object",
-      "aas:Submodel",
-      "i4aas:AASSubmodelType"
-    ],
-    "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
-    "title": "DppMetadata",
-    "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
-    "uav:browseName": "nsu=https://example.com/aas/instances/;DppMetadata",
-    "properties": {
-      "digitalProductPassportId": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#digitalProductPassportId",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#digitalProductPassportId",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;digitalProductPassportId",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "digitalProductPassportId",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Unique Product Passport Identifier (DPP ID)"
-          }
-        ],
-        "aas:Referable/description": [
-          {
-            "@type": "aas:LangStringTextType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Unique identifier of an instance of the digital product"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://admin-shell.io/idta/cds/digitalProductPassportId/1"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/ValueQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "https://www.example.org/dpp/1234545"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "uniqueProductIdentifier": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#uniqueProductIdentifier",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#uniqueProductIdentifier",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;uniqueProductIdentifier",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "uniqueProductIdentifier",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Unique Product Identifier"
-          }
-        ],
-        "aas:Referable/description": [
-          {
-            "@type": "aas:LangStringTextType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Unique string of characters for the identification of a product, that also enables a web link to the digital product passport."
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/ValueQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "https://www.example.org/1234545"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "granularity": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#granularity",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#granularity",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;granularity",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "granularity",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Granularity"
-          }
-        ],
-        "aas:Referable/description": [
-          {
-            "@type": "aas:LangStringTextType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "The granularity of the Product. There are three values: ‘Model‘, ‘Item‘ and ‘Batch‘."
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://admin-shell.io/idta/cds/granularity/1"
-            }
-          ]
-        },
-        "aas:HasSemantics/supplementalSemanticIds": [
-          {
-            "@type": "aas:Reference",
-            "aas:Reference/type": {
-              "@id": "aas:ReferenceTypes/ExternalReference"
-            },
-            "aas:Reference/keys": [
-              {
-                "@type": "aas:Key",
-                "aas:Key/type": {
-                  "@id": "aas:KeyTypes/GlobalReference"
-                },
-                "aas:Key/value": "https://admin-shell.io/aas/3/2/AssetKind"
-              }
-            ]
-          }
-        ],
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/ValueQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "Item"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "dppSchemaVersion": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#dppSchemaVersion",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#dppSchemaVersion",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;dppSchemaVersion",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "dppSchemaVersion",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "DPP Schema Version"
-          }
-        ],
-        "aas:Referable/description": [
-          {
-            "@type": "aas:LangStringTextType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Reference standard the DPP instance schema refers to."
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://admin-shell.io/idta/cds/dppSchemaVersion/1"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/ValueQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ENXXX:v1.0"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "dppStatus": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#dppStatus",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#dppStatus",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;dppStatus",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "dppStatus",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "DPP Status"
-          }
-        ],
-        "aas:Referable/description": [
-          {
-            "@type": "aas:LangStringTextType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Status of the DPP instance as digital resource."
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://admin-shell.io/idta/cds/dppStatus/1"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/ValueQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "Active"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "lastUpdate": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#lastUpdate",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#lastUpdate",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;lastUpdate",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "lastUpdate",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Last Update"
-          }
-        ],
-        "aas:Referable/description": [
-          {
-            "@type": "aas:LangStringTextType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Date and time of the latest update to the DPP instance."
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://admin-shell.io/idta/cds/lastUpdate/1"
-            }
-          ]
-        },
-        "aas:HasSemantics/supplementalSemanticIds": [
-          {
-            "@type": "aas:Reference",
-            "aas:Reference/type": {
-              "@id": "aas:ReferenceTypes/ExternalReference"
-            },
-            "aas:Reference/keys": [
-              {
-                "@type": "aas:Key",
-                "aas:Key/type": {
-                  "@id": "aas:KeyTypes/GlobalReference"
-                },
-                "aas:Key/value": "<https://admin-shell.io/aas/3/2/AdministrativeInformation/updatedAt"
-              }
-            ]
-          }
-        ],
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/ValueQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/DateTime"
-            },
-            "aas:Qualifier/value": "2025-08-22T03:12:00Z"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/DateTime"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "economicOperatorId": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#economicOperatorId",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#economicOperatorId",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;economicOperatorId",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "economicOperatorId",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Economic Operator ID"
-          }
-        ],
-        "aas:Referable/description": [
-          {
-            "@type": "aas:LangStringTextType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Unique string of characters for the identification of an actor involved in a product’s life cycle."
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://admin-shell.io/idta/cds/economicOperatorId/1"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/ValueQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "gxx:ppp456789"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "facilityId": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#facilityId",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#facilityId",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;facilityId",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "facilityId",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Facility ID"
-          }
-        ],
-        "aas:Referable/description": [
-          {
-            "@type": "aas:LangStringTextType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Unique string of characters for the identification of locations or buildings involved in a product’s value chain or used by actors involved in a product’s life cycle."
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://admin-shell.io/idta/cds/facilityId/1"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToOne"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/ValueQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "gxx:xxx987654"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "contentSpecificationIds": {
-        "@type": [
-          "uav:object",
-          "aas:SubmodelElementList",
-          "i4aas:AASSubmodelElementListType"
-        ],
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;contentSpecificationIds",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "contentSpecificationIds",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Content Specification IDs"
-          }
-        ],
-        "aas:Referable/description": [
-          {
-            "@type": "aas:LangStringTextType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Reference to horizontal or product-type related content specifications for the DPP."
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://admin-shell.io/idta/cds/contentSpecificationIds/1"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToOne"
-          }
-        ],
-        "aas:SubmodelElementList/orderRelevant": false,
-        "aas:SubmodelElementList/typeValueListElement": {
-          "@id": "aas:AasSubmodelElements/Property"
-        },
-        "aas:SubmodelElementList/valueTypeListElement": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
-          }
-        ],
-        "aas:SubmodelElementList/value": [
-          {
-            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds[0]"
-          }
-        ]
-      },
-      "contentSpecificationIds[0]": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds[0]",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds[0]",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds"
-        ],
-        "aas:Referable/idShort": "contentSpecificationId",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "Content Specification ID"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "https://admin-shell.io/idta/cds/contentSpecificationId/1"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "OneToMany"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/ValueQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "https://admin-shell-io/idta/digitalproductpassport/Circularity/1"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ],
-        "uav:index": 0
-      }
-    },
-    "links": [
-      {
-        "rel": "ua:HasTypeDefinition",
-        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds[0]",
-        "uav:refId": "i=47",
-        "uav:refName": "0"
-      }
-    ],
-    "aas:Referable/idShort": "DppMetadata",
-    "aas:Referable/description": [
-      {
-        "@type": "aas:LangStringTextType",
-        "aas:AbstractLangString/language": "en",
-        "aas:AbstractLangString/text": "\n   Digital record of product characteristics throughout its life cycle.\n   \n   SOURCE: FprEN 18223:2026(en)   \n   "
-      }
-    ],
-    "aas:Identifiable/administration": {
-      "@type": "aas:AdministrativeInformation",
-      "aas:AdministrativeInformation/version": "1",
-      "aas:AdministrativeInformation/revision": "0"
-    },
-    "aas:Identifiable/id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
-    "aas:HasKind/kind": {
-      "@id": "aas:ModellingKind/Template"
-    },
-    "aas:HasSemantics/semanticId": {
-      "@type": "aas:Reference",
-      "aas:Reference/type": {
-        "@id": "aas:ReferenceTypes/ModelReference"
-      },
-      "aas:Reference/keys": [
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@included": [
+    {
+      "@graph": [
         {
-          "@type": "aas:Key",
-          "aas:Key/type": {
-            "@id": "aas:KeyTypes/Submodel"
+          "@id": "_:aas-occurrence-2",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
           },
-          "aas:Key/value": "https://admin-shell.io/idta/cds/dppMetadata/1"
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-1"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Referable/description"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-6",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-5"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-4"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-7",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/ZGlnaXRhbFByb2R1Y3RQYXNzcG9ydElk"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-8",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "1"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/dW5pcXVlUHJvZHVjdElkZW50aWZpZXI"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-9",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "2"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/Z3JhbnVsYXJpdHk"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-10",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "3"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/ZHBwU2NoZW1hVmVyc2lvbg"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-11",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "4"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/ZHBwU3RhdHVz"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-12",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "5"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/bGFzdFVwZGF0ZQ"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-13",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "6"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/ZWNvbm9taWNPcGVyYXRvcklk"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-14",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "7"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/ZmFjaWxpdHlJZA"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-15",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "8"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/Y29udGVudFNwZWNpZmljYXRpb25JZHM"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+          }
         }
-      ]
-    },
-    "aas:Submodel/submodelElements": [
+      ],
+      "@id": "https://w3id.org/aas-jsonld/graph/order"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:Submodel",
+    "i4aas:AASSubmodelType"
+  ],
+  "aas:HasKind/kind": {
+    "@id": "aas:ModellingKind/Template"
+  },
+  "aas:HasSemantics/semanticId": {
+    "@id": "_:aas-node-4",
+    "@type": "aas:Reference",
+    "aas:Reference/keys": [
       {
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#digitalProductPassportId"
-      },
-      {
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#uniqueProductIdentifier"
-      },
-      {
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#granularity"
-      },
-      {
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#dppSchemaVersion"
-      },
-      {
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#dppStatus"
-      },
-      {
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#lastUpdate"
-      },
-      {
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#economicOperatorId"
-      },
-      {
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#facilityId"
-      },
-      {
-        "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0#contentSpecificationIds"
+        "@id": "_:aas-node-5",
+        "@type": "aas:Key",
+        "aas:Key/type": {
+          "@id": "aas:KeyTypes/Submodel"
+        },
+        "aas:Key/value": {
+          "@type": "http://www.w3.org/2001/XMLSchema#string",
+          "@value": "https://admin-shell.io/idta/cds/dppMetadata/1"
+        }
       }
     ],
-    "securityDefinitions": {
-      "nosec_sc": {
-        "scheme": "nosec"
-      }
+    "aas:Reference/type": {
+      "@id": "aas:ReferenceTypes/ModelReference"
+    }
+  },
+  "aas:Identifiable/administration": {
+    "@id": "_:aas-node-3",
+    "@type": "aas:AdministrativeInformation",
+    "aas:AdministrativeInformation/revision": {
+      "@type": "http://www.w3.org/2001/XMLSchema#string",
+      "@value": "0"
     },
-    "security": "nosec_sc"
-  }
-]
+    "aas:AdministrativeInformation/version": {
+      "@type": "http://www.w3.org/2001/XMLSchema#string",
+      "@value": "1"
+    }
+  },
+  "aas:Identifiable/id": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+  },
+  "aas:Referable/description": [
+    {
+      "@id": "_:aas-node-1",
+      "@type": "aas:LangStringTextType",
+      "aas:AbstractLangString/language": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "en"
+      },
+      "aas:AbstractLangString/text": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "\n   Digital record of product characteristics throughout its life cycle.\n   \n   SOURCE: FprEN 18223:2026(en)   \n   "
+      }
+    }
+  ],
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "DppMetadata"
+  },
+  "aas:Submodel/submodelElements": [
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/ZGlnaXRhbFByb2R1Y3RQYXNzcG9ydElk"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/dW5pcXVlUHJvZHVjdElkZW50aWZpZXI"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/Z3JhbnVsYXJpdHk"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/ZHBwU2NoZW1hVmVyc2lvbg"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/ZHBwU3RhdHVz"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/bGFzdFVwZGF0ZQ"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/ZWNvbm9taWNPcGVyYXRvcklk"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/ZmFjaWxpdHlJZA"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/Y29udGVudFNwZWNpZmljYXRpb25JZHM"
+    }
+  ],
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:S:60:https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1013",
+      "rel": "ua:HasTypeDefinition"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/node/ZGlnaXRhbFByb2R1Y3RQYXNzcG9ydElk",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "digitalProductPassportId"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/node/dW5pcXVlUHJvZHVjdElkZW50aWZpZXI",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "uniqueProductIdentifier"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/node/Z3JhbnVsYXJpdHk",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "granularity"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/node/ZHBwU2NoZW1hVmVyc2lvbg",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "dppSchemaVersion"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/node/ZHBwU3RhdHVz",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "dppStatus"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/node/bGFzdFVwZGF0ZQ",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "lastUpdate"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/node/ZWNvbm9taWNPcGVyYXRvcklk",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "economicOperatorId"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/node/ZmFjaWxpdHlJZA",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "facilityId"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w/node/Y29udGVudFNwZWNpZmljYXRpb25JZHM",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "contentSpecificationIds"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "DppMetadata",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;DppMetadata",
+  "uav:hasComponent": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:60:24:https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0digitalProductPassportId",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:60:23:https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0uniqueProductIdentifier",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:60:11:https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0granularity",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:60:16:https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0dppSchemaVersion",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:60:9:https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0dppStatus",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:60:10:https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0lastUpdate",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:60:18:https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0economicOperatorId",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:60:10:https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0facilityId",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:60:23:https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0contentSpecificationIds"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:S:60:https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
+}

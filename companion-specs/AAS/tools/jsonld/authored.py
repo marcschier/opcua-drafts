@@ -26,8 +26,9 @@ is one way of writing the document, chosen here because a generated example can
 be checked, where a hand-written one can only be admired.
 
 The superset allowance of clause 1 is exercised separately: `--superset` adds
-triples in a foreign vocabulary to the authored document before step 3, and the
-run must still produce the same AAS.
+foreign `reviewedBy` and a foreign `idShort` whose local name collides with the
+AAS property. The unfiltered graph is lowered, the foreign triples must remain
+in the JSON-LD graph, and the run must still produce the same AAS.
 
 Usage:
     python authored.py [--corpus] [--limit N] [--superset] [--dump-one out.jsonld]
@@ -48,9 +49,9 @@ from rdflib.compare import isomorphic
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-from conformance import (BASE, canonical, cases_from_corpus,  # noqa: E402
-                         cases_from_fixtures)
-from lift import Lifter, Ontology, Schema, iri, literal, serialize  # noqa: E402
+from conformance import canonical, cases_from_corpus, cases_from_fixtures  # noqa: E402
+from context_security import DEFAULT_POLICY  # noqa: E402
+from lift import AAS, Lifter, Ontology, Schema, iri, literal, serialize  # noqa: E402
 from lower import Lowerer, parse_nt, unescape  # noqa: E402
 
 ONTOLOGY = Ontology()
@@ -72,7 +73,7 @@ def load_actual(json_path):
     """
     with open(json_path, encoding="utf-8") as f:
         doc = json.load(f)
-    sink = Lifter(ONTOLOGY, BASE, "linked", schema=SCHEMA).lift(doc)
+    sink = Lifter(ONTOLOGY, "linked", schema=SCHEMA).lift(doc)
     core = serialize(sink, with_graphs=False)
     order = "\n".join(f"{s} {p} {o} ." for s, p, o, _ in sink.quads)
     return core, order
@@ -146,31 +147,36 @@ def author(core_nt, order_nt, context_doc) -> str:
     its own inside the document, which is how JSON-LD writes a dataset.
     """
     expanded = jsonld.from_rdf(to_dataset(core_nt, order_nt))
-    compacted = jsonld.compact(expanded, context_doc["@context"])
+    context = context_doc["@context"]
+    loader = DEFAULT_POLICY.loader({"@context": context})
+    compacted = jsonld.compact(
+        expanded, context, {"documentLoader": loader})
     return json.dumps(compacted, ensure_ascii=False, sort_keys=True)
 
 
-def add_foreign(doc_text):
-    """Exercise the superset allowance of clause 1.
+def add_foreign(core_nt):
+    """Add the complete foreign graph before JSON-LD serialization.
 
-    A document may carry triples the AAS vocabulary does not define. They must
-    survive the round trip to RDF untouched and must not reach the AAS JSON
-    document, because the lowering reads the AAS vocabulary and nothing else.
+    One predicate is ordinary extension data.  The other deliberately has the
+    local name `idShort`, so a lowerer that resolves by local name instead of by
+    the complete AAS property IRI corrupts the exported AAS.
     """
-    doc = json.loads(doc_text)
-    nodes = doc.get("@graph") if isinstance(doc, dict) else None
-    target = None
-    for node in (nodes if isinstance(nodes, list) else [doc]):
-        if isinstance(node, dict) and "@graph" not in node:
-            target = node
-            break
-    if target is not None:
-        target["https://example.org/vocab/reviewedBy"] = {"@id": "https://example.org/people/1"}
-        target["https://example.org/vocab/reviewNote"] = "carried through, not converted"
-    return json.dumps(doc, ensure_ascii=False)
+    triples = parse_nt(core_nt)
+    target = next(
+        (subject for subject, predicate, _ in triples
+         if predicate == iri(AAS + "Identifiable/id")),
+        None)
+    if target is None:
+        raise ValueError("cannot add foreign terms: no root Identifiable")
+    additions = [
+        f"{target} <{FOREIGN}reviewedBy> <https://example.org/people/1> .",
+        f"{target} <{FOREIGN}idShort> "
+        f"{literal('foreign local-name collision')} .",
+    ]
+    return core_nt.rstrip() + "\n" + "\n".join(additions) + "\n"
 
 
-def read_back(doc_text):
+def read_back(doc_text, context_policy=DEFAULT_POLICY):
     """Take the RDF of an authored document, the way any consumer would.
 
     The processor returns the dataset as terms, and the N-Triples text is written
@@ -180,7 +186,10 @@ def read_back(doc_text):
     escaped backslash followed by a raw newline, which is not a legal N-Quads
     literal and breaks any line-based reader.
     """
-    dataset = jsonld.to_rdf(json.loads(doc_text))
+    document = json.loads(doc_text)
+    loader = context_policy.loader(document)
+    dataset = jsonld.to_rdf(
+        document, {"documentLoader": loader})
     core, order = [], []
     for graph_name, quads in dataset.items():
         target = order if graph_name == ORDER_GRAPH else core
@@ -198,12 +207,6 @@ def term(node):
     if node["type"] == "blank node":
         return node["value"]
     return literal(node["value"], node.get("datatype"), node.get("language"))
-
-
-def drop_foreign(nt_text):
-    """Remove the triples clause 1's superset allowance let in."""
-    return "\n".join(line for line in nt_text.splitlines()
-                     if f"<{FOREIGN}" not in line)
 
 
 def normalize_literal(term):
@@ -238,24 +241,43 @@ def lower_graph(core_nt, order_nt, seed):
     return lowerer.lower()
 
 
+def serialize_graph(g: Graph):
+    if not len(g):
+        return []
+    return [line for line in g.serialize(format="nt").splitlines() if line.strip()]
+
+
 def check(name, jpath, tpath, context_doc, superset, dump=None):
     with open(jpath, encoding="utf-8") as f:
         source = json.load(f)
     core_nt, order_nt = load_actual(jpath)
 
-    doc_text = author(core_nt, order_nt, context_doc)
+    expected_core = add_foreign(core_nt) if superset else core_nt
+    doc_text = author(expected_core, order_nt, context_doc)
     if superset:
-        doc_text = add_foreign(doc_text)
+        expected_foreign = {
+            (str(predicate), str(obj))
+            for _, predicate, obj in as_graph(expected_core)
+            if str(predicate).startswith(str(FOREIGN))
+        }
+    else:
+        expected_foreign = set()
     if dump:
         with open(dump, "w", encoding="utf-8", newline="\n") as f:
             f.write(json.dumps(json.loads(doc_text), indent=2, ensure_ascii=False, sort_keys=True))
             f.write("\n")
 
     back_core, back_order = read_back(doc_text)
-    back_core = drop_foreign(back_core)
-    graph_ok = (isomorphic(normalized(as_graph(back_core)), normalized(as_graph(core_nt)))
+    graph_ok = (isomorphic(normalized(as_graph(back_core)), normalized(as_graph(expected_core)))
                 and isomorphic(normalized(as_graph(back_order)),
                                normalized(as_graph(order_nt))))
+    if superset:
+        recovered_foreign = {
+            (str(predicate), str(obj))
+            for _, predicate, obj in as_graph(back_core)
+            if str(predicate).startswith(str(FOREIGN))
+        }
+        graph_ok = graph_ok and recovered_foreign == expected_foreign
 
     try:
         recovered = lower_graph(back_core, back_order, seed=20260809)

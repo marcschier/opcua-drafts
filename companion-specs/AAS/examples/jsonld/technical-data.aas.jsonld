@@ -1,5 +1,5 @@
 {
-  "@context": "https://w3id.org/aas-jsonld/context",
+  "@context": "../../aas.context.jsonld",
   "@graph": [
     {
       "@id": "_:b1",
@@ -6307,7 +6307,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/340fbcef5686be945b2a78efd52dab0a315515097138b76a7efd58a5fd2596db"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg1MiMwMDI"
           }
         },
         {
@@ -6409,7 +6409,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/340fbcef5686be945b2a78efd52dab0a315515097138b76a7efd58a5fd2596db"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg1MiMwMDI"
           }
         },
         {
@@ -6443,7 +6443,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/340fbcef5686be945b2a78efd52dab0a315515097138b76a7efd58a5fd2596db"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg1MiMwMDI"
           }
         },
         {
@@ -6460,7 +6460,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/bc0ba5f49e22a1cc2b1b1ff75a22810643e74f0f507658f8a591d7c9f6ab157c"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg1MyMwMDI"
           }
         },
         {
@@ -6562,7 +6562,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/bc0ba5f49e22a1cc2b1b1ff75a22810643e74f0f507658f8a591d7c9f6ab157c"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg1MyMwMDI"
           }
         },
         {
@@ -6579,7 +6579,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/9477d468a9622a6e1671fef25580aeded5f44b09bede22f2bd1dbc39bf33f540"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0MiMwMDI"
           }
         },
         {
@@ -6664,7 +6664,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/9477d468a9622a6e1671fef25580aeded5f44b09bede22f2bd1dbc39bf33f540"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0MiMwMDI"
           }
         },
         {
@@ -6698,7 +6698,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/9477d468a9622a6e1671fef25580aeded5f44b09bede22f2bd1dbc39bf33f540"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0MiMwMDI"
           }
         },
         {
@@ -6715,7 +6715,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/184fffef690cec4c038ebf93c5632b315014eb974240670aedc7cb6bdda07c9c"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg3MSMwMDI"
           }
         },
         {
@@ -6817,7 +6817,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/184fffef690cec4c038ebf93c5632b315014eb974240670aedc7cb6bdda07c9c"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg3MSMwMDI"
           }
         },
         {
@@ -6851,7 +6851,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/184fffef690cec4c038ebf93c5632b315014eb974240670aedc7cb6bdda07c9c"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg3MSMwMDI"
           }
         },
         {
@@ -6868,7 +6868,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/c2187ae4ef0902ad831df8d5779c3669d26eefb418f540615a5d6f80c801d1c0"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzOCMwMDI"
           }
         },
         {
@@ -6987,7 +6987,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/c2187ae4ef0902ad831df8d5779c3669d26eefb418f540615a5d6f80c801d1c0"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzOCMwMDI"
           }
         },
         {
@@ -7021,7 +7021,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/c2187ae4ef0902ad831df8d5779c3669d26eefb418f540615a5d6f80c801d1c0"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzOCMwMDI"
           }
         },
         {
@@ -8330,7 +8330,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/c1dd648991de4977922e1473ccd4928a09cb1e1bb782f5083b54f0f8695025bf"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSzE2MSMwMDIvMDE3My0xIzAxLUFIWDgzOCMwMDI"
           }
         },
         {
@@ -8415,7 +8415,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/c1dd648991de4977922e1473ccd4928a09cb1e1bb782f5083b54f0f8695025bf"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSzE2MSMwMDIvMDE3My0xIzAxLUFIWDgzOCMwMDI"
           }
         },
         {
@@ -8636,7 +8636,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/0fd44e0a29f686a7b5450c4c8ed16670536d31b1c220e79f0f580c213796ab73"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTzA5OSMwMDQ"
           }
         },
         {
@@ -8789,7 +8789,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/0fd44e0a29f686a7b5450c4c8ed16670536d31b1c220e79f0f580c213796ab73"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTzA5OSMwMDQ"
           }
         },
         {
@@ -9044,7 +9044,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/f5dea4b6d83f5c8afa4dff20a0b009aa7256e24a2a142076b302b6296777d6fc"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSzE2MyMwMDI"
           }
         },
         {
@@ -9146,7 +9146,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/f5dea4b6d83f5c8afa4dff20a0b009aa7256e24a2a142076b302b6296777d6fc"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSzE2MyMwMDI"
           }
         },
         {
@@ -14229,7 +14229,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/89e6de2d81933e485b9869a3b6f364ebe4125ed616e641bd5b4dc88fc9085c48"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDU4OCMwMDE"
           }
         },
         {
@@ -14331,7 +14331,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/89e6de2d81933e485b9869a3b6f364ebe4125ed616e641bd5b4dc88fc9085c48"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDU4OCMwMDE"
           }
         },
         {
@@ -14382,7 +14382,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/89e6de2d81933e485b9869a3b6f364ebe4125ed616e641bd5b4dc88fc9085c48"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDU4OCMwMDE"
           }
         },
         {
@@ -14399,7 +14399,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/782f7fd06dfe51edd3dd220665e3432f3abdf12be72fc8e66c8f5bfae9113708"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDU4OSMwMDE"
           }
         },
         {
@@ -14484,7 +14484,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/782f7fd06dfe51edd3dd220665e3432f3abdf12be72fc8e66c8f5bfae9113708"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDU4OSMwMDE"
           }
         },
         {
@@ -14518,7 +14518,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/782f7fd06dfe51edd3dd220665e3432f3abdf12be72fc8e66c8f5bfae9113708"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDU4OSMwMDE"
           }
         },
         {
@@ -14535,7 +14535,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/2cae0da291a515778e03930cb33b5a6a626ed0892a3bbdd632495bb9f5cbd539"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDU4NyMwMDE"
           }
         },
         {
@@ -14620,7 +14620,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/2cae0da291a515778e03930cb33b5a6a626ed0892a3bbdd632495bb9f5cbd539"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDU4NyMwMDE"
           }
         },
         {
@@ -14654,7 +14654,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/2cae0da291a515778e03930cb33b5a6a626ed0892a3bbdd632495bb9f5cbd539"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDU4NyMwMDE"
           }
         },
         {
@@ -14671,7 +14671,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/62815b9049ce1d3492ac6ca696930dd3960f69b9a53d5d3160e2aaa9f8626606"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg2OSMwMDI"
           }
         },
         {
@@ -14807,7 +14807,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/62815b9049ce1d3492ac6ca696930dd3960f69b9a53d5d3160e2aaa9f8626606"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg2OSMwMDI"
           }
         },
         {
@@ -14841,7 +14841,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/62815b9049ce1d3492ac6ca696930dd3960f69b9a53d5d3160e2aaa9f8626606"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg2OSMwMDI"
           }
         },
         {
@@ -14858,7 +14858,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/818ab15dc12d48400566f7a975f9a572f19216f85c1d71871312e8f9709ad716"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgyOCMwMDI"
           }
         },
         {
@@ -14960,7 +14960,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/818ab15dc12d48400566f7a975f9a572f19216f85c1d71871312e8f9709ad716"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgyOCMwMDI"
           }
         },
         {
@@ -14994,7 +14994,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/818ab15dc12d48400566f7a975f9a572f19216f85c1d71871312e8f9709ad716"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgyOCMwMDI"
           }
         },
         {
@@ -15011,7 +15011,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/7b784bbd27e9521f71ebf1cc1c2a4bdad5de0be635c211424876d4cd5cd4b557"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgyOSMwMDI"
           }
         },
         {
@@ -15096,7 +15096,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/7b784bbd27e9521f71ebf1cc1c2a4bdad5de0be635c211424876d4cd5cd4b557"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgyOSMwMDI"
           }
         },
         {
@@ -15130,7 +15130,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/7b784bbd27e9521f71ebf1cc1c2a4bdad5de0be635c211424876d4cd5cd4b557"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgyOSMwMDI"
           }
         },
         {
@@ -15147,7 +15147,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/447ad8a1de43b8d7e8b50d528de1c2633da78bb2cfc02940f615c9760296ec80"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzMyMwMDI"
           }
         },
         {
@@ -15249,7 +15249,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/447ad8a1de43b8d7e8b50d528de1c2633da78bb2cfc02940f615c9760296ec80"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzMyMwMDI"
           }
         },
         {
@@ -15283,7 +15283,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/447ad8a1de43b8d7e8b50d528de1c2633da78bb2cfc02940f615c9760296ec80"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzMyMwMDI"
           }
         },
         {
@@ -15300,7 +15300,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/665f991c99cf15dec65e044fd9d90ae58acc42b7e86624fafea30cdaaa8326bf"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg2NiMwMDI"
           }
         },
         {
@@ -15368,7 +15368,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/665f991c99cf15dec65e044fd9d90ae58acc42b7e86624fafea30cdaaa8326bf"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg2NiMwMDI"
           }
         },
         {
@@ -15402,7 +15402,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/665f991c99cf15dec65e044fd9d90ae58acc42b7e86624fafea30cdaaa8326bf"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg2NiMwMDI"
           }
         },
         {
@@ -15419,7 +15419,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/0510b7c5902e3aa9f89f1d8a6ebb1f36e88119ac939b79f0fcad1b02fadbe72a"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgyNyMwMDI"
           }
         },
         {
@@ -15504,7 +15504,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/0510b7c5902e3aa9f89f1d8a6ebb1f36e88119ac939b79f0fcad1b02fadbe72a"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgyNyMwMDI"
           }
         },
         {
@@ -15555,7 +15555,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/0510b7c5902e3aa9f89f1d8a6ebb1f36e88119ac939b79f0fcad1b02fadbe72a"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgyNyMwMDI"
           }
         },
         {
@@ -15572,7 +15572,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/a0d2e689430951c10431e6a0cc0981b24def1ac06fa623b306bd6cee575b89eb"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzNCMwMDI"
           }
         },
         {
@@ -15674,7 +15674,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/a0d2e689430951c10431e6a0cc0981b24def1ac06fa623b306bd6cee575b89eb"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzNCMwMDI"
           }
         },
         {
@@ -15725,7 +15725,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/a0d2e689430951c10431e6a0cc0981b24def1ac06fa623b306bd6cee575b89eb"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzNCMwMDI"
           }
         },
         {
@@ -15742,7 +15742,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/977bde4fcc656a595c40ee22ebfee416c601ad3a00a21b5dc62a833035c2feae"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0NCMwMDI"
           }
         },
         {
@@ -15810,7 +15810,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/977bde4fcc656a595c40ee22ebfee416c601ad3a00a21b5dc62a833035c2feae"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0NCMwMDI"
           }
         },
         {
@@ -15844,7 +15844,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/977bde4fcc656a595c40ee22ebfee416c601ad3a00a21b5dc62a833035c2feae"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0NCMwMDI"
           }
         },
         {
@@ -15861,7 +15861,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ee3bd214c3213c2bee8fa09d5dc8325d9b5610896bcc36cb4af1cb170a0462e5"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0NiMwMDI"
           }
         },
         {
@@ -15929,7 +15929,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ee3bd214c3213c2bee8fa09d5dc8325d9b5610896bcc36cb4af1cb170a0462e5"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0NiMwMDI"
           }
         },
         {
@@ -15980,7 +15980,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/ee3bd214c3213c2bee8fa09d5dc8325d9b5610896bcc36cb4af1cb170a0462e5"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0NiMwMDI"
           }
         },
         {
@@ -15997,7 +15997,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/dd9c91e38d0618be6b5aa6d43f4580758f42282b2143ed9c3744b249aeae6923"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzMiMwMDI"
           }
         },
         {
@@ -16065,7 +16065,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/dd9c91e38d0618be6b5aa6d43f4580758f42282b2143ed9c3744b249aeae6923"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzMiMwMDI"
           }
         },
         {
@@ -16099,7 +16099,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/dd9c91e38d0618be6b5aa6d43f4580758f42282b2143ed9c3744b249aeae6923"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzMiMwMDI"
           }
         },
         {
@@ -16218,7 +16218,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:id/31f5e380e65383539ddbb3125886929f2ca2401c6283a1d43bc4b0c710b20431"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0MyMwMDI"
           }
         },
         {
@@ -16303,7 +16303,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:id/31f5e380e65383539ddbb3125886929f2ca2401c6283a1d43bc4b0c710b20431"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0MyMwMDI"
           }
         },
         {
@@ -16337,23 +16337,14 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:id/31f5e380e65383539ddbb3125886929f2ca2401c6283a1d43bc4b0c710b20431"
+            "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0MyMwMDI"
           }
         }
       ],
       "@id": "aasld:graph/order"
     },
     {
-      "@id": "aasld:id/0510b7c5902e3aa9f89f1d8a6ebb1f36e88119ac939b79f0fcad1b02fadbe72a",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b885",
-      "embeddedDataSpecifications": "_:b887",
-      "id": "0173-1#02-ABL827#002",
-      "idShort": "EnergyRoundTripEfficiencyFade",
-      "isCaseOf": "_:b899"
-    },
-    {
-      "@id": "aasld:id/0fd44e0a29f686a7b5450c4c8ed16670536d31b1c220e79f0f580c213796ab73",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFBTzA5OSMwMDQ",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b1292",
       "embeddedDataSpecifications": "_:b1294",
@@ -16361,16 +16352,23 @@
       "idShort": "DocumentIdentifier"
     },
     {
-      "@id": "aasld:id/184fffef690cec4c038ebf93c5632b315014eb974240670aedc7cb6bdda07c9c",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSzE2MSMwMDIvMDE3My0xIzAxLUFIWDgzOCMwMDI",
       "@type": "aas:ConceptDescription",
-      "displayName": "_:b1049",
-      "embeddedDataSpecifications": "_:b1051",
-      "id": "0173-1#02-ABL871#002",
-      "idShort": "TemperatureRangeIdleState_UpperBoundary",
-      "isCaseOf": "_:b1063"
+      "displayName": "_:b1252",
+      "embeddedDataSpecifications": "_:b1254",
+      "id": "0173-1#02-ABK161#002/0173-1#01-AHX838#002",
+      "idShort": "generalInformation"
     },
     {
-      "@id": "aasld:id/2cae0da291a515778e03930cb33b5a6a626ed0892a3bbdd632495bb9f5cbd539",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCSzE2MyMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b1343",
+      "embeddedDataSpecifications": "_:b1345",
+      "id": "0173-1#02-ABK163#002",
+      "idShort": "technicalPropertyAreas"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDU4NyMwMDE",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b779",
       "embeddedDataSpecifications": "_:b781",
@@ -16379,79 +16377,7 @@
       "isCaseOf": "_:b793"
     },
     {
-      "@id": "aasld:id/31f5e380e65383539ddbb3125886929f2ca2401c6283a1d43bc4b0c710b20431",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b981",
-      "embeddedDataSpecifications": "_:b983",
-      "id": "0173-1#02-ABL843#002",
-      "idShort": "MaximumPermittedBatteryPower",
-      "isCaseOf": "_:b995"
-    },
-    {
-      "@id": "aasld:id/340fbcef5686be945b2a78efd52dab0a315515097138b76a7efd58a5fd2596db",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b999",
-      "embeddedDataSpecifications": "_:b1001",
-      "id": "0173-1#02-ABL852#002",
-      "idShort": "PowerCapabilityFade",
-      "isCaseOf": "_:b1013"
-    },
-    {
-      "@id": "aasld:id/447ad8a1de43b8d7e8b50d528de1c2633da78bb2cfc02940f615c9760296ec80",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b851",
-      "embeddedDataSpecifications": "_:b853",
-      "id": "0173-1#02-ABL833#002",
-      "idShort": "InitialRoundTripEnergyEfficiency",
-      "isCaseOf": "_:b865"
-    },
-    {
-      "@id": "aasld:id/62815b9049ce1d3492ac6ca696930dd3960f69b9a53d5d3160e2aaa9f8626606",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b797",
-      "embeddedDataSpecifications": "_:b799",
-      "id": "0173-1#02-ABL869#002",
-      "idShort": "RatedCapacity",
-      "isCaseOf": "_:b811"
-    },
-    {
-      "@id": "aasld:id/665f991c99cf15dec65e044fd9d90ae58acc42b7e86624fafea30cdaaa8326bf",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b869",
-      "embeddedDataSpecifications": "_:b871",
-      "id": "0173-1#02-ABL866#002",
-      "idShort": "RoundTripEnergyEfficiencyAt50PercentOfCycleLife",
-      "isCaseOf": "_:b881"
-    },
-    {
-      "@id": "aasld:id/782f7fd06dfe51edd3dd220665e3432f3abdf12be72fc8e66c8f5bfae9113708",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b761",
-      "embeddedDataSpecifications": "_:b763",
-      "id": "0173-1#02-ABL589#001",
-      "idShort": "Voltage_MAX",
-      "isCaseOf": "_:b775"
-    },
-    {
-      "@id": "aasld:id/7b784bbd27e9521f71ebf1cc1c2a4bdad5de0be635c211424876d4cd5cd4b557",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b833",
-      "embeddedDataSpecifications": "_:b835",
-      "id": "0173-1#02-ABL829#002",
-      "idShort": "CertifiedUsableBatteryEnergy",
-      "isCaseOf": "_:b847"
-    },
-    {
-      "@id": "aasld:id/818ab15dc12d48400566f7a975f9a572f19216f85c1d71871312e8f9709ad716",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b815",
-      "embeddedDataSpecifications": "_:b817",
-      "id": "0173-1#02-ABL828#002",
-      "idShort": "CapacityFade",
-      "isCaseOf": "_:b829"
-    },
-    {
-      "@id": "aasld:id/89e6de2d81933e485b9869a3b6f364ebe4125ed616e641bd5b4dc88fc9085c48",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDU4OCMwMDE",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b743",
       "embeddedDataSpecifications": "_:b745",
@@ -16460,7 +16386,16 @@
       "isCaseOf": "_:b757"
     },
     {
-      "@id": "aasld:id/9477d468a9622a6e1671fef25580aeded5f44b09bede22f2bd1dbc39bf33f540",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDU4OSMwMDE",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b761",
+      "embeddedDataSpecifications": "_:b763",
+      "id": "0173-1#02-ABL589#001",
+      "idShort": "Voltage_MAX",
+      "isCaseOf": "_:b775"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0MiMwMDI",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b1031",
       "embeddedDataSpecifications": "_:b1033",
@@ -16469,7 +16404,16 @@
       "isCaseOf": "_:b1045"
     },
     {
-      "@id": "aasld:id/977bde4fcc656a595c40ee22ebfee416c601ad3a00a21b5dc62a833035c2feae",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0MyMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b981",
+      "embeddedDataSpecifications": "_:b983",
+      "id": "0173-1#02-ABL843#002",
+      "idShort": "MaximumPermittedBatteryPower",
+      "isCaseOf": "_:b995"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0NCMwMDI",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b921",
       "embeddedDataSpecifications": "_:b923",
@@ -16478,50 +16422,7 @@
       "isCaseOf": "_:b933"
     },
     {
-      "@id": "aasld:id/a0d2e689430951c10431e6a0cc0981b24def1ac06fa623b306bd6cee575b89eb",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b903",
-      "embeddedDataSpecifications": "_:b905",
-      "id": "0173-1#02-ABL834#002",
-      "idShort": "InitialSelfDischargingRate",
-      "isCaseOf": "_:b917"
-    },
-    {
-      "@id": "aasld:id/bc0ba5f49e22a1cc2b1b1ff75a22810643e74f0f507658f8a591d7c9f6ab157c",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b1017",
-      "embeddedDataSpecifications": "_:b1019",
-      "id": "0173-1#02-ABL853#002",
-      "idShort": "OriginalPowerCapability"
-    },
-    {
-      "@id": "aasld:id/c1dd648991de4977922e1473ccd4928a09cb1e1bb782f5083b54f0f8695025bf",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b1252",
-      "embeddedDataSpecifications": "_:b1254",
-      "id": "0173-1#02-ABK161#002/0173-1#01-AHX838#002",
-      "idShort": "generalInformation"
-    },
-    {
-      "@id": "aasld:id/c2187ae4ef0902ad831df8d5779c3669d26eefb418f540615a5d6f80c801d1c0",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b1067",
-      "embeddedDataSpecifications": "_:b1069",
-      "id": "0173-1#02-ABL838#002",
-      "idShort": "CapacityThresholdForExhaustion",
-      "isCaseOf": "_:b1081"
-    },
-    {
-      "@id": "aasld:id/dd9c91e38d0618be6b5aa6d43f4580758f42282b2143ed9c3744b249aeae6923",
-      "@type": "aas:ConceptDescription",
-      "displayName": "_:b953",
-      "embeddedDataSpecifications": "_:b955",
-      "id": "0173-1#02-ABL832#002",
-      "idShort": "InitialInternalResistanceAtBatteryModuleLevel",
-      "isCaseOf": "_:b965"
-    },
-    {
-      "@id": "aasld:id/ee3bd214c3213c2bee8fa09d5dc8325d9b5610896bcc36cb4af1cb170a0462e5",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg0NiMwMDI",
       "@type": "aas:ConceptDescription",
       "displayName": "_:b937",
       "embeddedDataSpecifications": "_:b939",
@@ -16530,12 +16431,111 @@
       "isCaseOf": "_:b949"
     },
     {
-      "@id": "aasld:id/f5dea4b6d83f5c8afa4dff20a0b009aa7256e24a2a142076b302b6296777d6fc",
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg1MiMwMDI",
       "@type": "aas:ConceptDescription",
-      "displayName": "_:b1343",
-      "embeddedDataSpecifications": "_:b1345",
-      "id": "0173-1#02-ABK163#002",
-      "idShort": "technicalPropertyAreas"
+      "displayName": "_:b999",
+      "embeddedDataSpecifications": "_:b1001",
+      "id": "0173-1#02-ABL852#002",
+      "idShort": "PowerCapabilityFade",
+      "isCaseOf": "_:b1013"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg1MyMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b1017",
+      "embeddedDataSpecifications": "_:b1019",
+      "id": "0173-1#02-ABL853#002",
+      "idShort": "OriginalPowerCapability"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg2NiMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b869",
+      "embeddedDataSpecifications": "_:b871",
+      "id": "0173-1#02-ABL866#002",
+      "idShort": "RoundTripEnergyEfficiencyAt50PercentOfCycleLife",
+      "isCaseOf": "_:b881"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg2OSMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b797",
+      "embeddedDataSpecifications": "_:b799",
+      "id": "0173-1#02-ABL869#002",
+      "idShort": "RatedCapacity",
+      "isCaseOf": "_:b811"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDg3MSMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b1049",
+      "embeddedDataSpecifications": "_:b1051",
+      "id": "0173-1#02-ABL871#002",
+      "idShort": "TemperatureRangeIdleState_UpperBoundary",
+      "isCaseOf": "_:b1063"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgyNyMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b885",
+      "embeddedDataSpecifications": "_:b887",
+      "id": "0173-1#02-ABL827#002",
+      "idShort": "EnergyRoundTripEfficiencyFade",
+      "isCaseOf": "_:b899"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgyOCMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b815",
+      "embeddedDataSpecifications": "_:b817",
+      "id": "0173-1#02-ABL828#002",
+      "idShort": "CapacityFade",
+      "isCaseOf": "_:b829"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgyOSMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b833",
+      "embeddedDataSpecifications": "_:b835",
+      "id": "0173-1#02-ABL829#002",
+      "idShort": "CertifiedUsableBatteryEnergy",
+      "isCaseOf": "_:b847"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzMiMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b953",
+      "embeddedDataSpecifications": "_:b955",
+      "id": "0173-1#02-ABL832#002",
+      "idShort": "InitialInternalResistanceAtBatteryModuleLevel",
+      "isCaseOf": "_:b965"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzMyMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b851",
+      "embeddedDataSpecifications": "_:b853",
+      "id": "0173-1#02-ABL833#002",
+      "idShort": "InitialRoundTripEnergyEfficiency",
+      "isCaseOf": "_:b865"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzNCMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b903",
+      "embeddedDataSpecifications": "_:b905",
+      "id": "0173-1#02-ABL834#002",
+      "idShort": "InitialSelfDischargingRate",
+      "isCaseOf": "_:b917"
+    },
+    {
+      "@id": "aasld:subject/v1/MDE3My0xIzAyLUFCTDgzOCMwMDI",
+      "@type": "aas:ConceptDescription",
+      "displayName": "_:b1067",
+      "embeddedDataSpecifications": "_:b1069",
+      "id": "0173-1#02-ABL838#002",
+      "idShort": "CapacityThresholdForExhaustion",
+      "isCaseOf": "_:b1081"
     },
     {
       "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#atSoC",

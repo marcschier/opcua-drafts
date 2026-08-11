@@ -1,5 +1,5 @@
 {
-  "@context": "https://w3id.org/aas-jsonld/context",
+  "@context": "../../aas.context.jsonld",
   "@graph": [
     {
       "@id": "_:b1",

@@ -1,2252 +1,266 @@
-[
-  {
-    "@context": [
-      "https://www.w3.org/2022/wot/td/v1.1",
-      {
-        "uav": "http://opcfoundation.org/UA/WoT-Binding/",
-        "aas": "https://admin-shell.io/aas/3/0/",
-        "i4aas": "http://opcfoundation.org/UA/I4AAS/",
-        "ua": "http://opcfoundation.org/UA/"
-      }
-    ],
-    "@type": [
-      "Thing",
-      "uav:object",
-      "aas:Submodel",
-      "i4aas:AASSubmodelType"
-    ],
-    "@id": "https://w3id.org/aas-jsonld/id/5f00dd44ad9a719167fa8355e45ba587306727f8131428199a21a79dc2426b63",
-    "title": "MaterialComposition",
-    "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel",
-    "uav:browseName": "nsu=https://example.com/aas/instances/;MaterialComposition",
-    "properties": {
-      "BatteryChemistry": {
-        "@type": [
-          "uav:object",
-          "aas:SubmodelElementCollection",
-          "i4aas:AASSubmodelElementCollectionType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/30af1351f1abbbff5e12dec28dad55863beb14d17aa4742dff4e8ee45b2c69cc",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;BatteryChemistry",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "BatteryChemistry",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "battery chemistry"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#batteryChemistry"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          }
-        ],
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
-          }
-        ],
-        "aas:SubmodelElementCollection/value": [
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/2bc065381ac0b7902420c2fd17e5b45b02d7432bc9bb5e21fc0d1b234f455fe4"
-          },
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/44efc1a51ef161be85c4637f31a4ad25fd39def1e4a1361150cd309265803f78"
-          }
-        ]
-      },
-      "BatteryChemistry.ShortName": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/2bc065381ac0b7902420c2fd17e5b45b02d7432bc9bb5e21fc0d1b234f455fe4",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry.ShortName",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;ShortName",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry"
-        ],
-        "aas:Referable/idShort": "ShortName",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "short name"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#shortName"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "aas:Property/value": "NMC",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "BatteryChemistry.ClearName": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/44efc1a51ef161be85c4637f31a4ad25fd39def1e4a1361150cd309265803f78",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry.ClearName",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;ClearName",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry"
-        ],
-        "aas:Referable/idShort": "ClearName",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "clear name"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#clearName"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "aas:Property/value": "Lithium nickel manganese cobalt oxides",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "BatteryMaterials": {
-        "@type": [
-          "uav:object",
-          "aas:SubmodelElementList",
-          "i4aas:AASSubmodelElementListType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/b79f31905a0492d1b1acd5273c1b6280b85eea36a3916d2a9a203bae7164c9d4",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;BatteryMaterials",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "BatteryMaterials",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "battery materials"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#batteryMaterials"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          }
-        ],
-        "aas:SubmodelElementList/orderRelevant": false,
-        "aas:SubmodelElementList/typeValueListElement": {
-          "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
-          }
-        ],
-        "aas:SubmodelElementList/value": [
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/3880137ee1d436464999645ee9ed12eaed5abc52a92ca465c8fe2bc6079c994c"
-          }
-        ]
-      },
-      "BatteryMaterials[0]": {
-        "@type": [
-          "uav:object",
-          "aas:SubmodelElementCollection",
-          "i4aas:AASSubmodelElementCollectionType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/3880137ee1d436464999645ee9ed12eaed5abc52a92ca465c8fe2bc6079c994c",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials"
-        ],
-        "aas:Referable/idShort": "BatteryMaterial",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "battery material"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#BatteryMaterial"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "OneToMany"
-          }
-        ],
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
-          }
-        ],
-        "uav:index": 0,
-        "aas:SubmodelElementCollection/value": [
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/42e570d95e4b45e705136d66054396179c0aa452642d8a1cdcb1c197879a4f04"
-          },
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/d2e5a66321ae577a2a51f4027ec8c0f6d60f8916860080920de7ce02f4c0b588"
-          },
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/311c3d248a1d457e6de9b69e97a5d00a07b86c97c5662e12646c8bc49c0b8e5c"
-          },
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/6459183417a2af4a7e0325f16597bfeec14afc84df5bb9c06de689250d17c4d5"
-          },
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/fc3f8fad91b4f3764034cfe6531475e3559888cd2adf7d16f8e0d425fb98234c"
-          }
-        ]
-      },
-      "BatteryMaterials[0].BatteryMaterialLocation": {
-        "@type": [
-          "uav:object",
-          "aas:SubmodelElementCollection",
-          "i4aas:AASSubmodelElementCollectionType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/42e570d95e4b45e705136d66054396179c0aa452642d8a1cdcb1c197879a4f04",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;BatteryMaterialLocation",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]"
-        ],
-        "aas:Referable/idShort": "BatteryMaterialLocation",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "battery material location"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#batteryMaterialLocation"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          }
-        ],
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
-          }
-        ],
-        "aas:SubmodelElementCollection/value": [
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/b2540d5681bd51199da9419f5a8566e2df09858d1965a1ee016bc7a1291547f8"
-          },
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/026734717da98b346a3f72f833105f32fe5cd872fb1f657360eee0dd5e463b41"
-          }
-        ]
-      },
-      "BatteryMaterials[0].BatteryMaterialLocation.ComponentName": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/b2540d5681bd51199da9419f5a8566e2df09858d1965a1ee016bc7a1291547f8",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation.ComponentName",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;ComponentName",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation"
-        ],
-        "aas:Referable/idShort": "ComponentName",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "component name"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#componentName"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToOne"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/EitherOr/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/EitherOr",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "BatteryMaterialLocationComponent"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "aas:Property/value": "Anode",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "BatteryMaterials[0].BatteryMaterialLocation.ComponentId": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/026734717da98b346a3f72f833105f32fe5cd872fb1f657360eee0dd5e463b41",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation.ComponentId",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;ComponentId",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation"
-        ],
-        "aas:Referable/idShort": "ComponentId",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "component ID"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#componentId"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToOne"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/EitherOr/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/EitherOr",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "BatteryMaterialLocationComponent"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "BatteryMaterials[0].BatteryMaterialIdentifier": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/d2e5a66321ae577a2a51f4027ec8c0f6d60f8916860080920de7ce02f4c0b588",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialIdentifier",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;BatteryMaterialIdentifier",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]"
-        ],
-        "aas:Referable/idShort": "BatteryMaterialIdentifier",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "battery material identifier"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#batteryMaterialIdentifier"
-            }
-          ]
-        },
-        "aas:HasSemantics/supplementalSemanticIds": [
-          {
-            "@type": "aas:Reference",
-            "aas:Reference/type": {
-              "@id": "aas:ReferenceTypes/ExternalReference"
-            },
-            "aas:Reference/keys": [
-              {
-                "@type": "aas:Key",
-                "aas:Key/type": {
-                  "@id": "aas:KeyTypes/GlobalReference"
-                },
-                "aas:Key/value": "https://www.cas.org/cas-data/cas-registry"
-              }
-            ]
-          },
-          {
-            "@type": "aas:Reference",
-            "aas:Reference/type": {
-              "@id": "aas:ReferenceTypes/ExternalReference"
-            },
-            "aas:Reference/keys": [
-              {
-                "@type": "aas:Key",
-                "aas:Key/type": {
-                  "@id": "aas:KeyTypes/GlobalReference"
-                },
-                "aas:Key/value": "urn:irdi:0173-1#02-ABH034#003"
-              }
-            ]
-          }
-        ],
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "aas:Property/value": "7439-93-2",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "BatteryMaterials[0].BatteryMaterialName": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/311c3d248a1d457e6de9b69e97a5d00a07b86c97c5662e12646c8bc49c0b8e5c",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialName",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;BatteryMaterialName",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]"
-        ],
-        "aas:Referable/idShort": "BatteryMaterialName",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "battery material name"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#batteryMaterialName"
-            }
-          ]
-        },
-        "aas:HasSemantics/supplementalSemanticIds": [
-          {
-            "@type": "aas:Reference",
-            "aas:Reference/type": {
-              "@id": "aas:ReferenceTypes/ExternalReference"
-            },
-            "aas:Reference/keys": [
-              {
-                "@type": "aas:Key",
-                "aas:Key/type": {
-                  "@id": "aas:KeyTypes/GlobalReference"
-                },
-                "aas:Key/value": "urn:irdi:0173-1#02-AAN920#003"
-              }
-            ]
-          }
-        ],
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "aas:Property/value": "Lithium",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "BatteryMaterials[0].BatteryMaterialMass": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/6459183417a2af4a7e0325f16597bfeec14afc84df5bb9c06de689250d17c4d5",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialMass",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;BatteryMaterialMass",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]"
-        ],
-        "aas:Referable/idShort": "BatteryMaterialMass",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "battery material mass"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#batteryMaterialMass"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToOne"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "2.35"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/Float"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "BatteryMaterials[0].IsCriticalRawMaterial": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/fc3f8fad91b4f3764034cfe6531475e3559888cd2adf7d16f8e0d425fb98234c",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].IsCriticalRawMaterial",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;IsCriticalRawMaterial",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]"
-        ],
-        "aas:Referable/idShort": "IsCriticalRawMaterial",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "is critical raw material"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#isCriticalRawMaterial"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/Boolean"
-        },
-        "aas:Property/value": "true",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "HazardousSubstances": {
-        "@type": [
-          "uav:object",
-          "aas:SubmodelElementList",
-          "i4aas:AASSubmodelElementListType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/5fdf573854325b79dd55034c823be11508b10f07442bef6bd12f083d78e94552",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;HazardousSubstances",
-        "uav:modellingRule": "Optional",
-        "aas:Referable/idShort": "HazardousSubstances",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "hazardous substances"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#hazardousSubstances"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          }
-        ],
-        "aas:SubmodelElementList/orderRelevant": false,
-        "aas:SubmodelElementList/typeValueListElement": {
-          "@id": "aas:AasSubmodelElements/SubmodelElementCollection"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
-          }
-        ],
-        "aas:SubmodelElementList/value": [
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/60c64983ab5cb66c7f2bddc4f21c2b0b4f6fa4de8d387d24f7bb2f4d63aa754f"
-          }
-        ]
-      },
-      "HazardousSubstances[0]": {
-        "@type": [
-          "uav:object",
-          "aas:SubmodelElementCollection",
-          "i4aas:AASSubmodelElementCollectionType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/60c64983ab5cb66c7f2bddc4f21c2b0b4f6fa4de8d387d24f7bb2f4d63aa754f",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances"
-        ],
-        "aas:Referable/idShort": "HazardousSubstance",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "hazardous substance"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#HazardousSubstance"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToMany"
-          }
-        ],
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
-          }
-        ],
-        "uav:index": 0,
-        "aas:SubmodelElementCollection/value": [
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/dca54864048127d9a7594ae76a0434807bc36a6f823f2a542d6d2eb0bbfd064f"
-          },
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/88331b40d2d3ba40b4b769e463548dcc23f85c36c97504c46a97e860b1d2f428"
-          },
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/7f9da293f29b303e4c8f13d06b3d3ade01e094ec1f42043a6dff00e4026d8c47"
-          },
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/eff54f6931a9973d5ab5eb5b694402ac5384b2c9ec65fa7c015b07653444a698"
-          },
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/5feba15e6f056a7aeef296e70a7481e1a0f780db572ceb827ffd38656545308a"
-          },
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/62db49c45134beaa31ba892fb6c25e9fc988ea33fc6d3298e447acaf7f25b061"
-          }
-        ]
-      },
-      "HazardousSubstances[0].HazardousSubstanceClass": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/dca54864048127d9a7594ae76a0434807bc36a6f823f2a542d6d2eb0bbfd064f",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceClass",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;HazardousSubstanceClass",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]"
-        ],
-        "aas:Referable/idShort": "HazardousSubstanceClass",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "hazardous substance class"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#hazardousSubstanceClass"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToOne"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "AcuteToxicity"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "HazardousSubstances[0].HazardousSubstanceName": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/88331b40d2d3ba40b4b769e463548dcc23f85c36c97504c46a97e860b1d2f428",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceName",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;HazardousSubstanceName",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]"
-        ],
-        "aas:Referable/idShort": "HazardousSubstanceName",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "hazardous substance name"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#hazardousSubstanceName"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "HazardousSubstances[0].HazardousSubstanceConcentration": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/7f9da293f29b303e4c8f13d06b3d3ade01e094ec1f42043a6dff00e4026d8c47",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceConcentration",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;HazardousSubstanceConcentration",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]"
-        ],
-        "aas:Referable/idShort": "HazardousSubstanceConcentration",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "hazardous substance concentration"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#hazardousSubstanceConcentration"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToOne"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "0.12"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/Double"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "HazardousSubstances[0].HazardousSubstanceImpact": {
-        "@type": [
-          "uav:object",
-          "aas:SubmodelElementList",
-          "i4aas:AASSubmodelElementListType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/eff54f6931a9973d5ab5eb5b694402ac5384b2c9ec65fa7c015b07653444a698",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceImpact",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;HazardousSubstanceImpact",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]"
-        ],
-        "aas:Referable/idShort": "HazardousSubstanceImpact",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "hazardous substance impact"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#hazardousSubstanceImpact"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToOne"
-          }
-        ],
-        "aas:SubmodelElementList/orderRelevant": false,
-        "aas:SubmodelElementList/typeValueListElement": {
-          "@id": "aas:AasSubmodelElements/Property"
-        },
-        "aas:SubmodelElementList/valueTypeListElement": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1031"
-          }
-        ],
-        "aas:SubmodelElementList/value": [
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/c2b1124a41cc779c965153aeba1e0a1c644ad59bb24ab3da0150dcda40490dee"
-          }
-        ]
-      },
-      "HazardousSubstances[0].HazardousSubstanceImpact[0]": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/c2b1124a41cc779c965153aeba1e0a1c644ad59bb24ab3da0150dcda40490dee",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceImpact[0]",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;0",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceImpact"
-        ],
-        "aas:Referable/idShort": "Impact",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "impact"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#Impact"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToMany"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/ExampleValue/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/ExampleValue",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "H302 Harmful if swallowed"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ],
-        "uav:index": 0
-      },
-      "HazardousSubstances[0].HazardousSubstanceLocation": {
-        "@type": [
-          "uav:object",
-          "aas:SubmodelElementCollection",
-          "i4aas:AASSubmodelElementCollectionType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/5feba15e6f056a7aeef296e70a7481e1a0f780db572ceb827ffd38656545308a",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;HazardousSubstanceLocation",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]"
-        ],
-        "aas:Referable/idShort": "HazardousSubstanceLocation",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "hazardous substance location"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#hazardousSubstanceLocation"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToOne"
-          }
-        ],
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1029"
-          }
-        ],
-        "aas:SubmodelElementCollection/value": [
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/0b137fb35fad6e7ebb9c410b4559acb9a1012538a7aee47a77bdf6c868276e51"
-          },
-          {
-            "@id": "https://w3id.org/aas-jsonld/id/8c8498af923cb2f83bb57fd18e0d5054f45eaf4e937952fd66cfa7a5b4053966"
-          }
-        ]
-      },
-      "HazardousSubstances[0].HazardousSubstanceLocation.ComponentName": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/0b137fb35fad6e7ebb9c410b4559acb9a1012538a7aee47a77bdf6c868276e51",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation.ComponentName",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;ComponentName",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation"
-        ],
-        "aas:Referable/idShort": "ComponentName",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "component name"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#componentName"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToOne"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/EitherOr/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/EitherOr",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "HazardousSubstanceLocationComponent"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "aas:Property/value": "Anode",
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "HazardousSubstances[0].HazardousSubstanceLocation.ComponentId": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/8c8498af923cb2f83bb57fd18e0d5054f45eaf4e937952fd66cfa7a5b4053966",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation.ComponentId",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;ComponentId",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation"
-        ],
-        "aas:Referable/idShort": "ComponentId",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "component ID"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#componentId"
-            }
-          ]
-        },
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "ZeroToOne"
-          },
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/EitherOr/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/EitherOr",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "HazardousSubstanceLocationComponent"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      },
-      "HazardousSubstances[0].HazardousSubstanceIdentifier": {
-        "@type": [
-          "uav:object",
-          "aas:Property",
-          "i4aas:AASPropertyType"
-        ],
-        "@id": "https://w3id.org/aas-jsonld/id/62db49c45134beaa31ba892fb6c25e9fc988ea33fc6d3298e447acaf7f25b061",
-        "uav:id": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceIdentifier",
-        "uav:browseName": "nsu=https://example.com/aas/instances/;HazardousSubstanceIdentifier",
-        "uav:modellingRule": "Optional",
-        "uav:componentOf": [
-          "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]"
-        ],
-        "aas:Referable/idShort": "HazardousSubstanceIdentifier",
-        "aas:Referable/displayName": [
-          {
-            "@type": "aas:LangStringNameType",
-            "aas:AbstractLangString/language": "en",
-            "aas:AbstractLangString/text": "hazardous substance identifier"
-          }
-        ],
-        "aas:HasSemantics/semanticId": {
-          "@type": "aas:Reference",
-          "aas:Reference/type": {
-            "@id": "aas:ReferenceTypes/ExternalReference"
-          },
-          "aas:Reference/keys": [
-            {
-              "@type": "aas:Key",
-              "aas:Key/type": {
-                "@id": "aas:KeyTypes/GlobalReference"
-              },
-              "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.1#hazardousSubstanceIdentifier"
-            }
-          ]
-        },
-        "aas:HasSemantics/supplementalSemanticIds": [
-          {
-            "@type": "aas:Reference",
-            "aas:Reference/type": {
-              "@id": "aas:ReferenceTypes/ExternalReference"
-            },
-            "aas:Reference/keys": [
-              {
-                "@type": "aas:Key",
-                "aas:Key/type": {
-                  "@id": "aas:KeyTypes/GlobalReference"
-                },
-                "aas:Key/value": "https://www.cas.org/cas-data/cas-registry"
-              }
-            ]
-          }
-        ],
-        "aas:Qualifiable/qualifiers": [
-          {
-            "@type": "aas:Qualifier",
-            "aas:HasSemantics/semanticId": {
-              "@type": "aas:Reference",
-              "aas:Reference/type": {
-                "@id": "aas:ReferenceTypes/ExternalReference"
-              },
-              "aas:Reference/keys": [
-                {
-                  "@type": "aas:Key",
-                  "aas:Key/type": {
-                    "@id": "aas:KeyTypes/GlobalReference"
-                  },
-                  "aas:Key/value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
-                }
-              ]
-            },
-            "aas:Qualifier/kind": {
-              "@id": "aas:QualifierKind/TemplateQualifier"
-            },
-            "aas:Qualifier/type": "SMT/Cardinality",
-            "aas:Qualifier/valueType": {
-              "@id": "aas:DataTypeDefXsd/String"
-            },
-            "aas:Qualifier/value": "One"
-          }
-        ],
-        "aas:Property/valueType": {
-          "@id": "aas:DataTypeDefXsd/String"
-        },
-        "links": [
-          {
-            "rel": "ua:HasTypeDefinition",
-            "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1021"
-          }
-        ]
-      }
-    },
-    "links": [
-      {
-        "rel": "ua:HasTypeDefinition",
-        "href": "nsu=http://opcfoundation.org/UA/I4AAS/;i=1013"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry.ShortName",
-        "uav:refId": "i=47",
-        "uav:refName": "ShortName"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryChemistry.ClearName",
-        "uav:refId": "i=47",
-        "uav:refName": "ClearName"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation.ComponentName",
-        "uav:refId": "i=47",
-        "uav:refName": "ComponentName"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation.ComponentId",
-        "uav:refId": "i=47",
-        "uav:refName": "ComponentId"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialLocation",
-        "uav:refId": "i=47",
-        "uav:refName": "BatteryMaterialLocation"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialIdentifier",
-        "uav:refId": "i=47",
-        "uav:refName": "BatteryMaterialIdentifier"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialName",
-        "uav:refId": "i=47",
-        "uav:refName": "BatteryMaterialName"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].BatteryMaterialMass",
-        "uav:refId": "i=47",
-        "uav:refName": "BatteryMaterialMass"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0].IsCriticalRawMaterial",
-        "uav:refId": "i=47",
-        "uav:refName": "IsCriticalRawMaterial"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#BatteryMaterials[0]",
-        "uav:refId": "i=47",
-        "uav:refName": "0"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceClass",
-        "uav:refId": "i=47",
-        "uav:refName": "HazardousSubstanceClass"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceName",
-        "uav:refId": "i=47",
-        "uav:refName": "HazardousSubstanceName"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceConcentration",
-        "uav:refId": "i=47",
-        "uav:refName": "HazardousSubstanceConcentration"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceImpact[0]",
-        "uav:refId": "i=47",
-        "uav:refName": "0"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceImpact",
-        "uav:refId": "i=47",
-        "uav:refName": "HazardousSubstanceImpact"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation.ComponentName",
-        "uav:refId": "i=47",
-        "uav:refName": "ComponentName"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation.ComponentId",
-        "uav:refId": "i=47",
-        "uav:refName": "ComponentId"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceLocation",
-        "uav:refId": "i=47",
-        "uav:refName": "HazardousSubstanceLocation"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0].HazardousSubstanceIdentifier",
-        "uav:refId": "i=47",
-        "uav:refName": "HazardousSubstanceIdentifier"
-      },
-      {
-        "rel": "ua:HasComponent",
-        "href": "nsu=https://example.com/aas/instances/;s=urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel#HazardousSubstances[0]",
-        "uav:refId": "i=47",
-        "uav:refName": "0"
-      }
-    ],
-    "aas:Referable/idShort": "MaterialComposition",
-    "aas:Referable/description": [
-      {
-        "@type": "aas:LangStringTextType",
-        "aas:AbstractLangString/language": "en",
-        "aas:AbstractLangString/text": "Mandatory data: Battery chemistry; critical raw materials; materials used in the cathode, anode, and \nelectrolyte; hazardous substances; impact of substances on the environment and on human health or \nsafety."
-      }
-    ],
-    "aas:Identifiable/administration": {
-      "@type": "aas:AdministrativeInformation",
-      "aas:AdministrativeInformation/version": "1",
-      "aas:AdministrativeInformation/revision": "0",
-      "aas:AdministrativeInformation/templateId": "https://admin-shell.io/idta-02035-6"
-    },
-    "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel",
-    "aas:HasKind/kind": {
-      "@id": "aas:ModellingKind/Template"
-    },
-    "aas:HasSemantics/semanticId": {
-      "@type": "aas:Reference",
-      "aas:Reference/type": {
-        "@id": "aas:ReferenceTypes/ExternalReference"
-      },
-      "aas:Reference/keys": [
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@included": [
+    {
+      "@graph": [
         {
-          "@type": "aas:Key",
-          "aas:Key/type": {
-            "@id": "aas:KeyTypes/GlobalReference"
+          "@id": "_:aas-occurrence-2",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
           },
-          "aas:Key/value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition"
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-1"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Referable/description"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-6",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-5"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-4"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-8",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-7"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Referable/displayName"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-9",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5tYXRlcmlhbF9jb21wb3NpdGlvbjoxLjAuMCNNYXRlcmlhbENvbXBvc2l0aW9uL3N1Ym1vZGVs/QmF0dGVyeUNoZW1pc3RyeQ"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-10",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "1"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5tYXRlcmlhbF9jb21wb3NpdGlvbjoxLjAuMCNNYXRlcmlhbENvbXBvc2l0aW9uL3N1Ym1vZGVs/QmF0dGVyeU1hdGVyaWFscw"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-11",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "2"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5tYXRlcmlhbF9jb21wb3NpdGlvbjoxLjAuMCNNYXRlcmlhbENvbXBvc2l0aW9uL3N1Ym1vZGVs/SGF6YXJkb3VzU3Vic3RhbmNlcw"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel"
+          }
         }
-      ]
-    },
-    "aas:Submodel/submodelElements": [
+      ],
+      "@id": "https://w3id.org/aas-jsonld/graph/order"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:Submodel",
+    "i4aas:AASSubmodelType"
+  ],
+  "aas:HasKind/kind": {
+    "@id": "aas:ModellingKind/Template"
+  },
+  "aas:HasSemantics/semanticId": {
+    "@id": "_:aas-node-4",
+    "@type": "aas:Reference",
+    "aas:Reference/keys": [
       {
-        "@id": "https://w3id.org/aas-jsonld/id/30af1351f1abbbff5e12dec28dad55863beb14d17aa4742dff4e8ee45b2c69cc"
-      },
-      {
-        "@id": "https://w3id.org/aas-jsonld/id/b79f31905a0492d1b1acd5273c1b6280b85eea36a3916d2a9a203bae7164c9d4"
-      },
-      {
-        "@id": "https://w3id.org/aas-jsonld/id/5fdf573854325b79dd55034c823be11508b10f07442bef6bd12f083d78e94552"
+        "@id": "_:aas-node-5",
+        "@type": "aas:Key",
+        "aas:Key/type": {
+          "@id": "aas:KeyTypes/GlobalReference"
+        },
+        "aas:Key/value": {
+          "@type": "http://www.w3.org/2001/XMLSchema#string",
+          "@value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition"
+        }
       }
     ],
-    "aas:Referable/displayName": [
-      {
-        "@type": "aas:LangStringNameType",
-        "aas:AbstractLangString/language": "en",
-        "aas:AbstractLangString/text": "material composition"
-      }
-    ],
-    "securityDefinitions": {
-      "nosec_sc": {
-        "scheme": "nosec"
-      }
+    "aas:Reference/type": {
+      "@id": "aas:ReferenceTypes/ExternalReference"
+    }
+  },
+  "aas:Identifiable/administration": {
+    "@id": "_:aas-node-3",
+    "@type": "aas:AdministrativeInformation",
+    "aas:AdministrativeInformation/revision": {
+      "@type": "http://www.w3.org/2001/XMLSchema#string",
+      "@value": "0"
     },
-    "security": "nosec_sc"
-  }
-]
+    "aas:AdministrativeInformation/templateId": {
+      "@type": "http://www.w3.org/2001/XMLSchema#string",
+      "@value": "https://admin-shell.io/idta-02035-6"
+    },
+    "aas:AdministrativeInformation/version": {
+      "@type": "http://www.w3.org/2001/XMLSchema#string",
+      "@value": "1"
+    }
+  },
+  "aas:Identifiable/id": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel"
+  },
+  "aas:Referable/description": [
+    {
+      "@id": "_:aas-node-1",
+      "@type": "aas:LangStringTextType",
+      "aas:AbstractLangString/language": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "en"
+      },
+      "aas:AbstractLangString/text": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Mandatory data: Battery chemistry; critical raw materials; materials used in the cathode, anode, and \nelectrolyte; hazardous substances; impact of substances on the environment and on human health or \nsafety."
+      }
+    }
+  ],
+  "aas:Referable/displayName": [
+    {
+      "@id": "_:aas-node-7",
+      "@type": "aas:LangStringNameType",
+      "aas:AbstractLangString/language": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "en"
+      },
+      "aas:AbstractLangString/text": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "material composition"
+      }
+    }
+  ],
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "MaterialComposition"
+  },
+  "aas:Submodel/submodelElements": [
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5tYXRlcmlhbF9jb21wb3NpdGlvbjoxLjAuMCNNYXRlcmlhbENvbXBvc2l0aW9uL3N1Ym1vZGVs/QmF0dGVyeUNoZW1pc3RyeQ"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5tYXRlcmlhbF9jb21wb3NpdGlvbjoxLjAuMCNNYXRlcmlhbENvbXBvc2l0aW9uL3N1Ym1vZGVs/QmF0dGVyeU1hdGVyaWFscw"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5tYXRlcmlhbF9jb21wb3NpdGlvbjoxLjAuMCNNYXRlcmlhbENvbXBvc2l0aW9uL3N1Ym1vZGVs/SGF6YXJkb3VzU3Vic3RhbmNlcw"
+    }
+  ],
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:S:96:urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0%23MaterialComposition/submodel",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5tYXRlcmlhbF9jb21wb3NpdGlvbjoxLjAuMCNNYXRlcmlhbENvbXBvc2l0aW9uL3N1Ym1vZGVs",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1013",
+      "rel": "ua:HasTypeDefinition"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5tYXRlcmlhbF9jb21wb3NpdGlvbjoxLjAuMCNNYXRlcmlhbENvbXBvc2l0aW9uL3N1Ym1vZGVs/node/QmF0dGVyeUNoZW1pc3RyeQ",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "BatteryChemistry"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5tYXRlcmlhbF9jb21wb3NpdGlvbjoxLjAuMCNNYXRlcmlhbENvbXBvc2l0aW9uL3N1Ym1vZGVs/node/QmF0dGVyeU1hdGVyaWFscw",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "BatteryMaterials"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5tYXRlcmlhbF9jb21wb3NpdGlvbjoxLjAuMCNNYXRlcmlhbENvbXBvc2l0aW9uL3N1Ym1vZGVs/node/SGF6YXJkb3VzU3Vic3RhbmNlcw",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "HazardousSubstances"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "MaterialComposition",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;MaterialComposition",
+  "uav:hasComponent": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:96:16:urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodelBatteryChemistry",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:96:16:urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodelBatteryMaterials",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:96:19:urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodelHazardousSubstances"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:S:96:urn:samm:io.admin-shell.idta.batterypass.material_composition:1.0.0#MaterialComposition/submodel"
+}

@@ -1,0 +1,429 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../../aas.context.jsonld",
+    "../../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@included": [
+    {
+      "@graph": [
+        {
+          "@id": "_:aas-occurrence-3",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-2"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-1"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-6",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-5"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-4"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-7",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-4"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/HasSemantics/supplementalSemanticIds"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9u"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-11",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-10"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-9"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-12",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-8"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Qualifiable/qualifiers"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9u"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-13",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLk1hbnVmYWN0dXJlck5hbWU"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9u"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-14",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "1"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLkNvbXBhbnlMb2dv"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9u"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-15",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "2"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLk1hbnVmYWN0dXJlcklkZW50aWZpZXI"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9u"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-16",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "3"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLkJhdHRlcnlDYXRlZ29yeQ"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9u"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-17",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "4"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLkJhdHRlcnlNYXNz"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9u"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-18",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "5"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLlByb2R1Y3RJbWFnZXM"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9u"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-19",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "6"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLldhcnJhbnR5SW5mb3JtYXRpb24"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9u"
+          }
+        }
+      ],
+      "@id": "https://w3id.org/aas-jsonld/graph/order"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:SubmodelElementCollection",
+    "i4aas:AASSubmodelElementCollectionType"
+  ],
+  "aas:HasSemantics/semanticId": {
+    "@id": "_:aas-node-1",
+    "@type": "aas:Reference",
+    "aas:Reference/keys": [
+      {
+        "@id": "_:aas-node-2",
+        "@type": "aas:Key",
+        "aas:Key/type": {
+          "@id": "aas:KeyTypes/GlobalReference"
+        },
+        "aas:Key/value": {
+          "@type": "http://www.w3.org/2001/XMLSchema#string",
+          "@value": "0173-1#02-ABK161#002/0173-1#01-AHX838#002"
+        }
+      }
+    ],
+    "aas:Reference/type": {
+      "@id": "aas:ReferenceTypes/ExternalReference"
+    }
+  },
+  "aas:HasSemantics/supplementalSemanticIds": [
+    {
+      "@id": "_:aas-node-4",
+      "@type": "aas:Reference",
+      "aas:Reference/keys": [
+        {
+          "@id": "_:aas-node-5",
+          "@type": "aas:Key",
+          "aas:Key/type": {
+            "@id": "aas:KeyTypes/GlobalReference"
+          },
+          "aas:Key/value": {
+            "@type": "http://www.w3.org/2001/XMLSchema#string",
+            "@value": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#generalInformation"
+          }
+        }
+      ],
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      }
+    }
+  ],
+  "aas:Qualifiable/qualifiers": [
+    {
+      "@id": "_:aas-node-8",
+      "@type": "aas:Qualifier",
+      "aas:HasSemantics/semanticId": {
+        "@id": "_:aas-node-9",
+        "@type": "aas:Reference",
+        "aas:Reference/keys": [
+          {
+            "@id": "_:aas-node-10",
+            "@type": "aas:Key",
+            "aas:Key/type": {
+              "@id": "aas:KeyTypes/GlobalReference"
+            },
+            "aas:Key/value": {
+              "@type": "http://www.w3.org/2001/XMLSchema#string",
+              "@value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+            }
+          }
+        ],
+        "aas:Reference/type": {
+          "@id": "aas:ReferenceTypes/ExternalReference"
+        }
+      },
+      "aas:Qualifier/type": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Cardinality"
+      },
+      "aas:Qualifier/value": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "One"
+      },
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    }
+  ],
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "GeneralInformation"
+  },
+  "aas:SubmodelElementCollection/value": [
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLk1hbnVmYWN0dXJlck5hbWU"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLkNvbXBhbnlMb2dv"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLk1hbnVmYWN0dXJlcklkZW50aWZpZXI"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLkJhdHRlcnlDYXRlZ29yeQ"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLkJhdHRlcnlNYXNz"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLlByb2R1Y3RJbWFnZXM"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9uLldhcnJhbnR5SW5mb3JtYXRpb24"
+    }
+  ],
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:85:18:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0GeneralInformation",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/R2VuZXJhbEluZm9ybWF0aW9u",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/R2VuZXJhbEluZm9ybWF0aW9u",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1029",
+      "rel": "ua:HasTypeDefinition"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/R2VuZXJhbEluZm9ybWF0aW9uLk1hbnVmYWN0dXJlck5hbWU",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "ManufacturerName"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/R2VuZXJhbEluZm9ybWF0aW9uLkNvbXBhbnlMb2dv",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "CompanyLogo"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/R2VuZXJhbEluZm9ybWF0aW9uLk1hbnVmYWN0dXJlcklkZW50aWZpZXI",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "ManufacturerIdentifier"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/R2VuZXJhbEluZm9ybWF0aW9uLkJhdHRlcnlDYXRlZ29yeQ",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "BatteryCategory"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/R2VuZXJhbEluZm9ybWF0aW9uLkJhdHRlcnlNYXNz",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "BatteryMass"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/R2VuZXJhbEluZm9ybWF0aW9uLlByb2R1Y3RJbWFnZXM",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "ProductImages"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/R2VuZXJhbEluZm9ybWF0aW9uLldhcnJhbnR5SW5mb3JtYXRpb24",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "WarrantyInformation"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "GeneralInformation",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;GeneralInformation",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:S:85:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0"
+  ],
+  "uav:hasComponent": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:85:35:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0GeneralInformation.ManufacturerName",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:85:30:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0GeneralInformation.CompanyLogo",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:85:41:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0GeneralInformation.ManufacturerIdentifier",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:85:34:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0GeneralInformation.BatteryCategory",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:85:30:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0GeneralInformation.BatteryMass",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:85:32:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0GeneralInformation.ProductImages",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:85:38:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0GeneralInformation.WarrantyInformation"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:85:18:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0GeneralInformation",
+  "uav:modellingRule": "Optional"
+}

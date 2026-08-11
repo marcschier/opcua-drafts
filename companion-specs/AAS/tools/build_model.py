@@ -7,14 +7,13 @@ Emits, from a single in-code source of truth:
   * Opc.Ua.I4AAS.NodeIds.csv
   * tools/model-reference.md
 
-This is OPC 30270 v3.00: the AAS V3 metamodel mapped losslessly onto OPC UA, together with
-an AAS Registry built as a domain extension of the abstract xRegistry base types. It
-supersedes v1.00 and is not compatible with it, because AAS V3 is not compatible with
-AAS v1.x and because a mapping that was not designed to be reversible cannot be made
-reversible compatibly.
+This is OPC 30270 for the AAS V3 metamodel, mapped losslessly onto OPC UA together with
+an AAS Registry built as a domain extension of the abstract xRegistry base types.
 
-The namespace is http://opcfoundation.org/UA/I4AAS/ at model version 3.00. Draft numeric
-identifiers are provisional; final NodeIds are assigned by the OPC Foundation.
+The model uses the namespace http://opcfoundation.org/UA/I4AAS/v3/. The published
+http://opcfoundation.org/UA/I4AAS/ namespace identifies the incompatible AAS v1.x
+model and therefore cannot be reused. Draft numeric identifiers are provisional;
+final NodeIds are assigned by the OPC Foundation.
 """
 
 from __future__ import annotations
@@ -119,6 +118,14 @@ def _member_var(owner, owner_sym, name, datatype, typedef, rule, reftype, desc, 
 def prop_var(owner, owner_sym, name, datatype, desc, rule=MR_Optional, valuerank="-1"):
     return _member_var(owner, owner_sym, name, datatype, PropertyType, rule, HasProperty, desc, valuerank)
 
+def reserved_var(owner_sym, name, datatype, desc, valuerank="-1"):
+    """Consume a published Variable NodeId without declaring it on an ObjectType."""
+    nid = _mid()
+    add(nid, "UAVariable", name, f"{owner_sym}_{name}", desc=desc,
+        attrs={"DataType": datatype, "ValueRank": valuerank})
+    ref(nid, HasTypeDefinition, PropertyType)
+    return nid
+
 def obj_member(owner, owner_sym, name, typedef, desc, rule=MR_Optional, reftype=HasComponent):
     nid = _mid()
     add(nid, "UAObject", name, f"{owner_sym}_{name.strip('<>')}", desc=desc, parent=T(owner))
@@ -128,7 +135,7 @@ def obj_member(owner, owner_sym, name, typedef, desc, rule=MR_Optional, reftype=
     ref(owner, reftype, T(nid))
     return nid
 
-def placeholder_obj(owner, owner_sym, name, typedef, desc, rule=MR_OptionalPlaceholder, reftype=Organizes):
+def placeholder_obj(owner, owner_sym, name, typedef, desc, rule=MR_OptionalPlaceholder, reftype=HasComponent):
     return obj_member(owner, owner_sym, name, typedef, desc, rule, reftype)
 
 def method(owner, owner_sym, name, desc, rule=MR_Optional, inargs=None, outargs=None,
@@ -145,10 +152,10 @@ def method(owner, owner_sym, name, desc, rule=MR_Optional, inargs=None, outargs=
         _args(nid, f"{owner_sym}_{name}", "OutputArguments", outargs)
     return nid
 
-def _args(method_nid, method_sym, bname, args, instance=False):
+def _args(method_nid, method_sym, bname, args, instance=False, category=None):
     nid = _mid()
     add(nid, "UAVariable", bname, f"{method_sym}_{bname}", parent=T(method_nid), attrs={"DataType": Argument, "ValueRank": "1", "ArrayDimensions": str(len(args)), "_ns0bn": True},
-        category=(CAT_INST if instance else None))
+        category=(category if instance else None))
     if not instance:
         ref(nid, HasModellingRule, MR_Mandatory)
     ref(nid, HasTypeDefinition, PropertyType)
@@ -172,26 +179,35 @@ def _args(method_nid, method_sym, bname, args, instance=False):
 
 DATATYPE_FIELDS = {}
 
-def data_type(nid, name, fields, desc, category=None, base=Structure, encodings=("Binary", "JSON")):
+def data_type(nid, name, fields, desc, category=None, base=Structure,
+              encodings=("Binary", "JSON"), required=()):
     """Emit a Structure DataType with a StructureDefinition and DataTypeEncoding objects.
 
-    fields: list of (FieldName, DataType, Description, valuerank) - valuerank optional (default -1 scalar).
+    fields: list of (FieldName, DataType, Description, valuerank) - valuerank optional
+    (default -1 scalar). ``required`` names the fields whose source cardinality is
+    mandatory; every other field is emitted with IsOptional="true".
     """
     add(nid, "UADataType", name, name, desc=desc, category=category or _cu(name))
     ref(nid, HasSubtype, base, forward=False)
-    DATATYPE_FIELDS[nid] = fields
+    required = set(required)
+    normalized = []
     parts = [f'<Definition Name="{sx.escape(name)}">']
     for f in fields:
         fname, fdt, fdesc = f[0], f[1], f[2]
         frank = f[3] if len(f) > 3 else -1
+        optional = fname not in required
+        normalized.append((fname, fdt, fdesc, frank, optional))
         attrs = f'Name="{sx.escape(fname)}" DataType="{fdt}"'
         if frank is not None and frank >= 0:
             attrs += f' ValueRank="{frank}"'
+        if optional:
+            attrs += ' IsOptional="true"'
         parts.append(f"<Field {attrs}>")
         if fdesc:
             parts.append(f"<Description>{sx.escape(fdesc)}</Description>")
         parts.append("</Field>")
     parts.append("</Definition>")
+    DATATYPE_FIELDS[nid] = normalized
     NODES[nid].definition = "".join(parts)
     for enc in encodings:
         enc_nid = _mid()
@@ -243,25 +259,30 @@ XRegistry_ResourceType = X(63002)
 XRegistry_AttributesType = X(63003)
 
 def ordered_placeholder(owner, owner_sym, name, typedef, desc):
-    """A placeholder whose members form a sequence. HasOrderedComponent (i=49) is the OPC UA
-    statement that the order of these references is meaningful; Index carries the position that
-    makes the order recoverable, because Browse is not required to preserve it."""
-    return obj_member(owner, owner_sym, name, typedef, desc, MR_OptionalPlaceholder, HasOrderedComponent)
+    """Declare a list child through HasComponent.
+
+    HasOrderedComponent is a subtype of HasComponent and is selected on an instance when
+    orderRelevant is true. Declaring the base ReferenceType permits both legal instance forms.
+    """
+    return obj_member(owner, owner_sym, name, typedef, desc, MR_OptionalPlaceholder, HasComponent)
 
 
-def instance_method(owner, owner_sym, name, decl_nid, desc, inargs=None, outargs=None):
+def instance_method(owner, owner_sym, name, decl_nid, desc, inargs=None, outargs=None,
+                    category=None):
     """Materialize a concrete method under a well-known instance object, so that loading the
     NodeSet yields a functional registry rather than a bare instance. Instances carry no
     HasModellingRule; MethodDeclarationId links to the type's method for the signature."""
     nid = _mid()
     add(nid, "UAMethod", name, f"{owner_sym}_{name}", desc=desc, parent=T(owner),
-        category=CAT_INST, attrs={"MethodDeclarationId": T(decl_nid)})
+        category=category, attrs={"MethodDeclarationId": T(decl_nid)})
     ref(nid, HasComponent, T(owner), forward=False)
     ref(owner, HasComponent, T(nid))
     if inargs:
-        _args(nid, f"{owner_sym}_{name}", "InputArguments", inargs, instance=True)
+        _args(nid, f"{owner_sym}_{name}", "InputArguments", inargs,
+              instance=True, category=category)
     if outargs:
-        _args(nid, f"{owner_sym}_{name}", "OutputArguments", outargs, instance=True)
+        _args(nid, f"{owner_sym}_{name}", "OutputArguments", outargs,
+              instance=True, category=category)
     return nid
 
 def enum_type(nid, name, members, desc, category=None):
@@ -300,6 +321,7 @@ CU_DISCOVERY = "AAS-Discovery"
 CU_FEDERATION = "AAS-Federation"
 CU_DISCLOSURE = "AAS-DisclosureTiers"
 CU_PACKAGES = "AAS-Packages"
+CU_PACKAGE_INTEGRITY = "AAS-PackageIntegrity"
 CU_UPDATEABLE = "AAS-UpdateableRegistry"
 CU_ENVEXPORT = "AAS-EnvironmentExport"
 CU_INVOKE = "AAS-OperationInvoke"
@@ -307,7 +329,8 @@ CU_INVOKE = "AAS-OperationInvoke"
 ALL_CONFORMANCE_UNITS = (
     CU_METAMODEL, CU_ELEMENTS, CU_VALUES, CU_ROUNDTRIP, CU_MATERIALIZE,
     CU_REGISTRY, CU_IDENTITY, CU_VERSIONING, CU_DISCOVERY, CU_FEDERATION,
-    CU_DISCLOSURE, CU_PACKAGES, CU_UPDATEABLE, CU_ENVEXPORT, CU_INVOKE,
+    CU_DISCLOSURE, CU_PACKAGES, CU_PACKAGE_INTEGRITY, CU_UPDATEABLE,
+    CU_ENVEXPORT, CU_INVOKE,
 )
 
 CU_BY_NAME = {
@@ -343,7 +366,8 @@ CU_BY_NAME = {
     "AASConceptDictionaryGroupType": (CU_REGISTRY, CU_IDENTITY),
     "AASConceptDescriptionFileType": (CU_REGISTRY, CU_IDENTITY, CU_UPDATEABLE),
     "AASPackageStoreGroupType": (CU_PACKAGES, CU_IDENTITY),
-    "AASPackageFileType": (CU_PACKAGES, CU_IDENTITY),
+    "AASPackageFileType": (
+        CU_PACKAGES, CU_IDENTITY, CU_PACKAGE_INTEGRITY),
     "AASEnvironmentFileType": (CU_ENVEXPORT, CU_IDENTITY),
     "AASRegistry": (CU_REGISTRY,),
 }
@@ -351,15 +375,13 @@ CU_BY_NAME = {
 def _cu(name):
     return CU_BY_NAME.get(name, ())
 
-CAT_INST = "AAS Registry Instances"
-
 # ---------------------------------------------------------------------------
 # DataTypes - enumerations
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
 # DataTypes - the xsd value carriers
 # ---------------------------------------------------------------------------
-# Clause 7.1 assigns each of the 30 DataTypeDefXsd values one OPC UA DataType, and no
+# Clause 6.3.1 assigns each of the 30 DataTypeDefXsd values one OPC UA DataType, and no
 # DataType to two of them. Where a built-in denotes the xsd type on its own it is used;
 # where two xsd types would otherwise share one built-in, a subtype is defined here.
 def xsd_type(nid, name, base, desc):
@@ -396,9 +418,9 @@ add(1199, "UADataType", "AASValueString", "AASValueString",
     desc="The xsd lexical form of a value whose declared type is carried in a sibling field of the "
          "same Structure. A Structure field has one static DataType and cannot vary with a declared "
          "type, so a qualifier, an extension or a data specification carries its value lexically and "
-         "its ValueType field states how to read it. A subtype of String, as OPC UA defines "
+         "its sibling ValueType or DataType field states how to read it. A subtype of String, as OPC UA defines "
          "DecimalString and DurationString. It is never the DataType of a Variable; a value node "
-         "carries the DataType clause 7.1 assigns to its declared xsd type.",
+         "carries the DataType clause 6.3.1 assigns to its declared xsd type.",
     category=(CU_VALUES,))
 ref(1199, HasSubtype, String, forward=False)
 
@@ -464,7 +486,7 @@ enum_type(1208, "AASDataTypeDefXsdDataType", [
     ("NonPositiveInteger", 21, ""), ("PositiveInteger", 22, ""), ("Short", 23, ""),
     ("String", 24, ""), ("Time", 25, ""), ("UnsignedByte", 26, ""), ("UnsignedInt", 27, ""),
     ("UnsignedLong", 28, ""), ("UnsignedShort", 29, ""),
-], "The xsd type a value is expressed in. All thirty of the metamodel's values are listed. Clause 7.1 assigns each one OPC UA DataType, and no DataType to two of them.")
+], "The xsd type a value is expressed in. All thirty of the metamodel's values are listed. Clause 6.3.1 assigns each one OPC UA DataType, and no DataType to two of them.")
 
 enum_type(1209, "AASDataTypeIec61360DataType", [
     ("Blob", 0, ""), ("Boolean", 1, ""), ("Date", 2, ""), ("File", 3, ""), ("Html", 4, ""),
@@ -510,18 +532,21 @@ enum_type(1213, "AASMaterializationOutcomeDataType", [
 data_type(1220, "AASKeyDataType", [
     ("Type", T(1207), "The kind of thing this key addresses."),
     ("Value", String, "The identifier value at this key."),
-], "One step of a reference path. Keys are ordered, and the order is part of the reference's meaning.")
+], "One step of a reference path. Keys are ordered, and the order is part of the reference's meaning.",
+    required=("Type", "Value"))
 
 data_type(1221, "AASReferenceDataType", [
     ("Type", T(1206), "Whether the reference is external or navigates the model."),
     ("ReferredSemanticId", T(1221), "The semantic identifier of the thing referred to, where known."),
     ("Keys", T(1220), "The ordered key path. At least one key is present.", 1),
-], "A reference, external or model-navigating, expressed as an ordered key path.")
+], "A reference, external or model-navigating, expressed as an ordered key path.",
+    required=("Type", "Keys"))
 
 data_type(1222, "AASLangStringDataType", [
     ("Language", String, "BCP 47 language tag."),
     ("Text", String, "The text in that language."),
-], "One language-tagged string. A multi-language value is an array of these, and the array order is preserved.")
+], "One language-tagged string. A multi-language value is an array of these, and the array order is preserved.",
+    required=("Language", "Text"))
 
 data_type(1223, "AASSpecificAssetIdDataType", [
     ("Name", String, "The key name, for example serialNumber or manufacturerPartId."),
@@ -529,7 +554,8 @@ data_type(1223, "AASSpecificAssetIdDataType", [
     ("ExternalSubjectId", T(1221), "The subject this key is disclosed to, where the key is not public."),
     ("SemanticId", T(1221), "The concept this key is an occurrence of."),
     ("SupplementalSemanticIds", T(1221), "Further concepts this key corresponds to.", 1),
-], "A domain-specific key an asset is discoverable by.")
+], "A domain-specific key an asset is discoverable by.",
+    required=("Name", "Value"))
 
 data_type(1224, "AASAdministrativeInformationDataType", [
     ("Version", String, "Version label."),
@@ -547,12 +573,14 @@ data_type(1225, "AASQualifierDataType", [
     ("ValueId", T(1221), "A reference to the value, where it is itself an identified concept."),
     ("SemanticId", T(1221), "The concept this qualifier is an occurrence of."),
     ("SupplementalSemanticIds", T(1221), "Further concepts this qualifier corresponds to.", 1),
-], "A qualifier constraining or annotating an element.")
+], "A qualifier constraining or annotating an element.",
+    required=("Type", "ValueType"))
 
 data_type(1226, "AASEmbeddedDataSpecificationDataType", [
     ("DataSpecification", T(1221), "Reference to the data specification template."),
     ("DataSpecificationContent", T(1227), "The content, in the IEC 61360 data specification."),
-], "A data specification carried by an element, paired with its content.")
+], "A data specification carried by an element, paired with its content.",
+    required=("DataSpecification", "DataSpecificationContent"))
 
 data_type(1227, "AASDataSpecificationIec61360DataType", [
     ("PreferredName", T(1222), "Preferred name per language.", 1),
@@ -564,10 +592,11 @@ data_type(1227, "AASDataSpecificationIec61360DataType", [
     ("DataType", T(1209), "The IEC 61360 data type."),
     ("Definition", T(1222), "Definition per language.", 1),
     ("ValueFormat", String, "Format of the value."),
-    ("ValueList", String, "Permitted values, serialized in the metamodel's own form."),
-    ("Value", T(1199), "The value in the xsd lexical form of the type declared in the sibling ValueType field, because a Structure field has one static DataType and cannot vary with a declared type."),
-    ("LevelType", String, "Which of min, nom, typ and max apply."),
-], "The IEC 61360 data specification content of a concept definition.")
+    ("ValueList", T(1235), "Permitted values and the references identifying their meanings."),
+    ("Value", T(1199), "The value in the xsd lexical form of the type declared in the sibling DataType field, because a Structure field has one static DataType and cannot vary with a declared type."),
+    ("LevelType", T(1236), "Which of min, nom, typ and max apply."),
+], "The IEC 61360 data specification content of a concept definition.",
+    required=("PreferredName",))
 
 data_type(1228, "AASExtensionDataType", [
     ("Name", String, "Extension name."),
@@ -576,29 +605,36 @@ data_type(1228, "AASExtensionDataType", [
     ("RefersTo", T(1221), "What the extension refers to.", 1),
     ("SemanticId", T(1221), "The concept this extension is an occurrence of."),
     ("SupplementalSemanticIds", T(1221), "Further concepts this extension corresponds to.", 1),
-], "A proprietary extension carried on a Referable. Extensions round-trip verbatim; a reader that does not understand one preserves it unchanged.")
+], "A proprietary extension carried on a Referable. Extensions round-trip verbatim; a reader that does not understand one preserves it unchanged.",
+    required=("Name",))
 
 data_type(1229, "AASResourceDataType", [
     ("Path", String, "Path or URL to the resource."),
     ("ContentType", String, "Media type of the resource."),
-], "A pointer to external content, such as a thumbnail.")
+], "A pointer to external content, such as a thumbnail.",
+    required=("Path",))
 
 data_type(1230, "AASOperationVariableDataType", [
-    ("ValueNodeId", NodeId, "The submodel element node carrying this variable."),
-], "One input, output or in-out variable of an operation, carried as a reference to the element node that holds it so that the element's own representation is not duplicated.")
+    ("ValueNodeId", NodeId, "The direct HasComponent child of the Operation that carries this variable's value."),
+], "One input, output or in-out variable of an operation, carried as a reference to the element node that holds it so that the element's own representation is not duplicated.",
+    required=("ValueNodeId",))
 
 data_type(1231, "AASAuthorizationOptionDataType", [
     ("Type", String, "Authorization type, for example OAuth2, Plain, SASL, X509Cert or APIKey."),
     ("Mechanism", String, "SASL mechanism name, used only when Type is SASL."),
     ("ResourceUri", String, "The resource authorization is requested for."),
     ("AuthorityUri", String, "The authority authorization is obtained from."),
-], "One authorization option a Consumer may use. It is authorization configuration only and never carries credentials, which are supplied out of band.")
+], "One authorization option a Consumer may use. It is authorization configuration only and never carries credentials, which are supplied out of band.",
+    required=("Type",))
 
 data_type(1232, "AASAttestationDataType", [
     ("ArtifactType", String, "Media type identifying what kind of attestation this is."),
     ("Digest", String, "Digest of the attestation artifact."),
     ("Signer", String, "The party that produced the attestation."),
-], "A signature or attestation attached to a package. Its presence is not verification: a Consumer retrieves and verifies the artifact itself.")
+], "A non-authoritative discovery hint for a separate attestation or OCI referrer Resource. It never "
+   "represents a package Version, and its presence is not verification: a Consumer retrieves and verifies "
+   "the separate artifact itself.",
+    required=("ArtifactType", "Digest"))
 
 data_type(1233, "AASMaterializationResultDataType", [
     ("Xid", String, "The registry-relative path of the document this result is about."),
@@ -606,7 +642,8 @@ data_type(1233, "AASMaterializationResultDataType", [
     ("VersionId", String, "The version that is now active for this document, where one is."),
     ("MaterializedNode", NodeId, "The root node of the generation now serving this document, where it materialized."),
     ("Diagnostic", String, "Why the document failed, where it did. Empty otherwise."),
-], "The result of materializing one document. A call returns one of these per document it considered, reporting per document whether it was unchanged, materialized, retired or failed.", category=(CU_UPDATEABLE,))
+], "The result of materializing one document. A call returns one of these per document it considered, reporting per document whether it was unchanged, materialized, retired or failed.",
+    category=(CU_UPDATEABLE,), required=("Xid", "Outcome"))
 
 # ---------------------------------------------------------------------------
 # Metamodel ObjectTypes - abstract bases
@@ -654,9 +691,9 @@ object_type(1010, "AASEnvironmentType", FolderType,
             "The container of shells, submodels and concept descriptions - the unit an AAS serialization "
             "carries and the root a source generator materializes into a Server.")
 EN = "AASEnvironmentType"
-placeholder_obj(1010, EN, "<AssetAdministrationShell>", T(1011), "A shell held by this environment.")
-placeholder_obj(1010, EN, "<Submodel>", T(1013), "A submodel held by this environment. Submodels are top-level: one submodel may be referenced by several shells, which is why they are not nested inside them.")
-placeholder_obj(1010, EN, "<ConceptDescription>", T(1030), "A concept description held by this environment.")
+placeholder_obj(1010, EN, "<AssetAdministrationShell>", T(1011), "A shell held by this environment.", reftype=Organizes)
+placeholder_obj(1010, EN, "<Submodel>", T(1013), "A submodel held by this environment. Submodels are top-level: one submodel may be referenced by several shells, which is why they are not nested inside them.", reftype=Organizes)
+placeholder_obj(1010, EN, "<ConceptDescription>", T(1030), "A concept description held by this environment.", reftype=Organizes)
 
 object_type(1011, "AASType", T(1002),
             "An Asset Administration Shell: the digital representation of one asset, carrying the asset's identity "
@@ -703,14 +740,14 @@ prop_var(1020, SE, "SemanticId", T(1221), "The concept this element is an occurr
 prop_var(1020, SE, "SupplementalSemanticIds", T(1221), "Further concepts this element corresponds to.", valuerank="1")
 prop_var(1020, SE, "Qualifiers", T(1225), "Qualifiers on this element.", valuerank="1")
 prop_var(1020, SE, "EmbeddedDataSpecifications", T(1226), "Data specifications carried by this element.", valuerank="1")
-prop_var(1020, SE, "Index", UInt32, "The element's position within its parent SubmodelElementList. Optional, and recommended wherever the list's order is relevant, because Browse is not required to return references in order.")
+prop_var(1020, SE, "Index", UInt32, "The element's zero-based position within an ordered containing construct: its parent SubmodelElementList or one variable role of its parent Operation. For an Operation variable value it is mandatory and the role array position is authoritative. For a list member it is optional and recommended wherever the list's order is relevant, because Browse is not required to return references in order.")
 
 object_type(1021, "AASPropertyType", T(1020),
-            "A single typed value. The value node carries the OPC UA DataType clause 7.1 assigns to the "
+            "A single typed value. The value node carries the OPC UA DataType clause 6.3.1 assigns to the "
             "declared xsd type, from which the declared type is read.")
 PR = "AASPropertyType"
 prop_var(1021, PR, "ValueType", T(1208), "The xsd type the value is expressed in. Mandatory: the metamodel makes it mandatory and the value optional, so a Property with no value has no value node whose DataType could carry it.", rule=MR_Mandatory)
-prop_var(1021, PR, "Value", BaseDataType, "The value. Declared as BaseDataType here because the concrete DataType depends on ValueType; a materialized node carries the specific DataType clause 7.1 assigns.")
+prop_var(1021, PR, "Value", BaseDataType, "The value. Declared as BaseDataType here because the concrete DataType depends on ValueType; a materialized node carries the specific DataType clause 6.3.1 assigns.")
 prop_var(1021, PR, "ValueId", T(1221), "A reference to the value, where the value is itself an identified concept.")
 
 object_type(1022, "AASMultiLanguagePropertyType", T(1020),
@@ -723,7 +760,7 @@ prop_var(1022, ML, "ValueId", T(1221), "A reference to the value, where the valu
 object_type(1023, "AASRangeType", T(1020), "A closed or half-open interval of a single typed value.")
 RA = "AASRangeType"
 prop_var(1023, RA, "ValueType", T(1208), "The xsd type the bounds are expressed in. Mandatory: both bounds are optional and the declared type is not.", rule=MR_Mandatory)
-prop_var(1023, RA, "Min", BaseDataType, "The lower bound, carrying the DataType clause 7.1 assigns to ValueType. Absent means unbounded below, which is different from a bound of zero.")
+prop_var(1023, RA, "Min", BaseDataType, "The lower bound, carrying the DataType clause 6.3.1 assigns to ValueType. Absent means unbounded below, which is different from a bound of zero.")
 prop_var(1023, RA, "Max", BaseDataType, "The upper bound. Absent means unbounded above.")
 
 object_type(1024, "AASBlobType", T(1020), "Binary content carried inline.")
@@ -754,13 +791,14 @@ placeholder_obj(1029, "AASSubmodelElementCollectionType", "<SubmodelElement>", T
 
 object_type(1031, "AASSubmodelElementListType", T(1020),
             "A list of elements. Its members have no IdShort, so they are named by index. Whether the order "
-            "carries meaning is stated by the ReferenceType the members are referenced with, not by a Property: "
-            "HasOrderedComponent where it does, HasComponent where the list is a set or a bag.")
+            "carries meaning is stated by the ReferenceType on each instance, not by a Property: "
+            "HasOrderedComponent where it does, HasComponent where the list is a set or a bag. The declaration "
+            "uses HasComponent, the base of both legal instance forms.")
 SL = "AASSubmodelElementListType"
 prop_var(1031, SL, "TypeValueListElement", T(1210), "The element kind every member is constrained to.", rule=MR_Mandatory)
 prop_var(1031, SL, "SemanticIdListElement", T(1221), "The concept every member is an occurrence of, where they share one.")
 prop_var(1031, SL, "ValueTypeListElement", T(1208), "The xsd type every member's value is expressed in, where they share one. Mandatory in the metamodel when the members are Properties or Ranges.")
-ordered_placeholder(1031, SL, "<Element>", T(1020), "A member of this list, named by its index. Referenced with HasOrderedComponent where the list's order is relevant and with HasComponent where it is not.")
+ordered_placeholder(1031, SL, "<Element>", T(1020), "A member of this list, named by its index. The declaration uses HasComponent; an instance uses HasOrderedComponent where the list's order is relevant and HasComponent where it is not.")
 
 object_type(1032, "AASEntityType", T(1020),
             "A component of a composition. A self-managed entity carries the identifier of its own shell, so a "
@@ -778,16 +816,16 @@ prop_var(1033, BE, "Direction", T(1203), "Whether the event is produced or consu
 prop_var(1033, BE, "State", T(1204), "Whether the event source is active.", rule=MR_Mandatory)
 prop_var(1033, BE, "MessageTopic", String, "The topic events are delivered on. Where the delivery endpoint is itself catalogued, the registry entry points at it.")
 prop_var(1033, BE, "MessageBroker", T(1221), "The broker delivering the events.")
-prop_var(1033, BE, "LastUpdate", DateTime, "When the event last fired. The metamodel types this xs:dateTime, which clause 7.1 assigns DateTime.")
-prop_var(1033, BE, "MinInterval", DurationString, "Minimum interval between events. The metamodel types this xs:duration, which clause 7.1 assigns DurationString.")
-prop_var(1033, BE, "MaxInterval", DurationString, "Maximum interval between events. The metamodel types this xs:duration, which clause 7.1 assigns DurationString.")
+prop_var(1033, BE, "LastUpdate", DateTime, "When the event last fired. The metamodel types this xs:dateTime, which clause 6.3.1 assigns DateTime.")
+prop_var(1033, BE, "MinInterval", DurationString, "Minimum interval between events. The metamodel types this xs:duration, which clause 6.3.1 assigns DurationString.")
+prop_var(1033, BE, "MaxInterval", DurationString, "Maximum interval between events. The metamodel types this xs:duration, which clause 6.3.1 assigns DurationString.")
 
 object_type(1034, "AASOperationType", T(1020), "An invocable operation.")
 OP = "AASOperationType"
-prop_var(1034, OP, "InputVariables", T(1230), "The operation's input variables, in order.", valuerank="1")
-prop_var(1034, OP, "OutputVariables", T(1230), "The operation's output variables, in order.", valuerank="1")
-prop_var(1034, OP, "InoutputVariables", T(1230), "The operation's in-out variables, in order.", valuerank="1")
-placeholder_obj(1034, OP, "<Variable>", T(1020), "An element carrying one of the operation's variables.")
+prop_var(1034, OP, "InputVariables", T(1230), "The operation's input variables, in order. Each entry points to one direct operation-variable child and the array position is authoritative.", valuerank="1")
+prop_var(1034, OP, "OutputVariables", T(1230), "The operation's output variables, in order. Each entry points to one direct operation-variable child and the array position is authoritative.", valuerank="1")
+prop_var(1034, OP, "InoutputVariables", T(1230), "The operation's in-out variables, in order. Each entry points to one direct operation-variable child and the array position is authoritative.", valuerank="1")
+placeholder_obj(1034, OP, "<Variable>", T(1020), "A direct HasComponent child carrying one operation variable value. Its role array entry points to it by ValueNodeId, and its Index equals its position within that role.")
 method(1034, OP, "Invoke",
     "Invoke the operation and return its results. The Call counterpart of InvokeOperation in the AAS API of "
     "IDTA-01002 Part 2: a Client that has browsed to the Operation element calls this rather than reaching for "
@@ -813,19 +851,25 @@ object_type(1100, "AASRegistryType", XRegistry_RegistryType,
             "hold shells, submodel templates, concept dictionaries and packages. Exposed as a well-known object "
             "under the Server object, so any Client that reaches the standard Server object discovers it.")
 RG = "AASRegistryType"
-placeholder_obj(1100, RG, "<ShellGroup>", T(1101), "A shell folder held by the registry.")
-placeholder_obj(1100, RG, "<SubmodelTemplateGroup>", T(1103), "A submodel template family held by the registry.")
-placeholder_obj(1100, RG, "<ConceptDictionaryGroup>", T(1104), "A concept dictionary held by the registry.")
-placeholder_obj(1100, RG, "<PackageStoreGroup>", T(1106), "A package store held by the registry.")
-placeholder_obj(1100, RG, "<Environment>", T(1108), "A serialization of one materialized environment, held by the registry as a retrievable document.")
+placeholder_obj(1100, RG, "<ShellGroup>", T(1101), "A shell folder held by the registry.", reftype=Organizes)
+placeholder_obj(1100, RG, "<SubmodelTemplateGroup>", T(1103), "A submodel template family held by the registry.", reftype=Organizes)
+placeholder_obj(1100, RG, "<ConceptDictionaryGroup>", T(1104), "A concept dictionary held by the registry.", reftype=Organizes)
+placeholder_obj(1100, RG, "<PackageStoreGroup>", T(1106), "A package store held by the registry.", reftype=Organizes)
+placeholder_obj(1100, RG, "<Environment>", T(1108), "A serialization of one materialized environment, held by the registry as a retrievable document.", reftype=Organizes)
+GET_SUBMODEL_DESCRIPTION = (
+    "Resolve the selected AASSubmodelFileType before returning its document and enforce the same "
+    "Session-specific effective RolePermissions, UserRolePermissions, DisclosureTier, Authorization "
+    "and FileType Open/Read decision as direct access to that target. Call permission on this Method "
+    "does not authorize the target. Return Bad_UserAccessDenied, or Bad_NotFound where policy conceals "
+    "existence, without exposing controlled bytes, Format, ContentType, other target metadata or a "
+    "distinguishable timing path.")
 lookup_type = method(1100, RG, "LookupShellsByAssetLink",
     "Return the shells discoverable by an asset key. This is the discovery question - given a serial number or a "
     "part identifier, which shells describe it - answered without the caller browsing the whole collection.",
     inargs=[("Name", String, "The key name, for example serialNumber."), ("Value", String, "The key value.")],
     outargs=[("Shells", NodeId, "The shell group nodes matching the key.", 1)])
 getsm_type = method(1100, RG, "GetSubmodel",
-    "Return a submodel document and enough metadata to parse it, given its identifier. The method form of the "
-    "document fast path, for a Client that has an identifier rather than a node.",
+    GET_SUBMODEL_DESCRIPTION,
     inargs=[("SubmodelIdentifier", String, "The submodel's authored identifier.")],
     outargs=[("Document", ByteString, "The submodel document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Document media type.")])
 prop_var(1100, RG, "AutoMaterialize", Boolean, "Whether a change to a stored document re-materializes the AddressSpace without being asked. Part of the updateable registry profile.")
@@ -855,7 +899,7 @@ prop_var(1101, SG, "DisclosureTier", T(1211), "Whether this entity is readable w
 prop_var(1101, SG, "Authorization", T(1231), "The authorization options a Consumer may use to obtain access.", valuerank="1")
 prop_var(1101, SG, "EventEndpoint", String, "The catalogued endpoint delivering change events for this shell, where one is published.")
 prop_var(1101, SG, "ShellNode", NodeId, "The AASType node modelling this same shell as a live node tree, where the Server also implements the metamodel half. The catalogue entry and the node tree are different nodes for the same shell, and this is the link between them.")
-placeholder_obj(1101, SG, "<Submodel>", T(1102), "A submodel document held by this shell.")
+placeholder_obj(1101, SG, "<Submodel>", T(1102), "A submodel document held by this shell.", reftype=Organizes)
 
 object_type(1102, "AASSubmodelFileType", XRegistry_ResourceType,
             "An xRegistry ResourceType whose file content is one submodel document. Each version is one revision, "
@@ -883,14 +927,14 @@ object_type(1103, "AASSubmodelTemplateGroupType", XRegistry_GroupType,
 STG = "AASSubmodelTemplateGroupType"
 prop_var(1103, STG, "TemplateNamespace", String, "The publisher's template namespace, verbatim. It is the group's source identity.", rule=MR_Mandatory)
 prop_var(1103, STG, "Publisher", String, "The organization publishing this template family.")
-placeholder_obj(1103, STG, "<Submodel>", T(1102), "A submodel template held by this family.")
+placeholder_obj(1103, STG, "<Submodel>", T(1102), "A submodel template held by this family.", reftype=Organizes)
 
 object_type(1104, "AASConceptDictionaryGroupType", XRegistry_GroupType,
             "An xRegistry GroupType holding one dictionary of concept definitions - the definitions a SemanticId "
             "elsewhere in the registry resolves to.")
 CDG = "AASConceptDictionaryGroupType"
 prop_var(1104, CDG, "DictionaryIdentifier", String, "The dictionary's identifier, verbatim. It is the group's source identity.", rule=MR_Mandatory)
-placeholder_obj(1104, CDG, "<ConceptDescription>", T(1105), "A concept definition held by this dictionary.")
+placeholder_obj(1104, CDG, "<ConceptDescription>", T(1105), "A concept definition held by this dictionary.", reftype=Organizes)
 
 object_type(1105, "AASConceptDescriptionFileType", XRegistry_ResourceType,
             "An xRegistry ResourceType whose file content is one concept description document.")
@@ -907,19 +951,34 @@ object_type(1106, "AASPackageStoreGroupType", XRegistry_GroupType,
 PSG = "AASPackageStoreGroupType"
 prop_var(1106, PSG, "StoreIdentifier", String, "The store's identifier, verbatim. It is the group's source identity.", rule=MR_Mandatory)
 prop_var(1106, PSG, "RegistryUrl", String, "Base URL of the backing package store.")
-placeholder_obj(1106, PSG, "<Package>", T(1107), "A package held by this store.")
+placeholder_obj(1106, PSG, "<Package>", T(1107), "A package held by this store.", reftype=Organizes)
 
 object_type(1107, "AASPackageFileType", XRegistry_ResourceType,
-            "An xRegistry ResourceType whose file content is one package: an immutable release addressed by digest "
-            "and optionally attested by signatures.")
+            "An xRegistry ResourceType whose file content is one package. Every package carries mandatory strong "
+            "integrity metadata for the exact returned blob; an OCI-backed version also carries the immutable "
+            "manifest digest that is its version identity. Mutable tags are Resource-level discovery aliases, "
+            "never Version identity, and OCI referrers are separate Resources rather than package Versions and "
+            "cannot affect the package default Version.")
 PF = "AASPackageFileType"
 prop_var(1107, PF, "PackageIdentifier", String, "The package's name as held by the backing store, verbatim. It is the resource's source identity.", rule=MR_Mandatory)
 prop_var(1107, PF, "ArtifactType", String, "The media type identifying what the artifact is, where the backing store carries one.")
-prop_var(1107, PF, "Digest", String, "Digest of the exact package bytes. This is the integrity anchor: a version identifies which release a Consumer wants, a digest identifies what that release contains.")
-prop_var(1107, PF, "DigestAlg", String, "The algorithm used to compute Digest.")
+prop_var(1107, PF, "Digest", String,
+         "Immutable lower-case hexadecimal digest, without an algorithm prefix, of the exact package blob bytes "
+         "returned by FileType Read. It is Mandatory on every Version. The Server verifies it before publication, "
+         "and a Consumer recomputes it before parsing, materializing or otherwise using the package.",
+         rule=MR_Mandatory)
+prop_var(1107, PF, "DigestAlg", String,
+         "Immutable case-sensitive algorithm used to compute Digest. Only the exact spellings Sha256, Sha384 and "
+         "Sha512 are valid. OCI descriptor algorithms sha256, sha384 and sha512 map respectively to those values; "
+         "all other algorithms or casing are rejected.", rule=MR_Mandatory)
 prop_var(1107, PF, "AasIdentifiers", String, "The shell identifiers this package contains, so a Consumer can tell what it holds without retrieving and opening it.", valuerank="1")
-prop_var(1107, PF, "Subject", String, "The digest of the artifact this one attests, where it is an attestation rather than a package.")
-prop_var(1107, PF, "Attestations", T(1232), "The signatures and attestations attached to this package.", valuerank="1")
+reserved_var(PF, "Subject", String,
+             "Reserved Variable NodeId. It is not an InstanceDeclaration of AASPackageFileType; an attestation or "
+             "OCI referrer is a separate immutable Resource and never a package Version.")
+reserved_var(PF, "Attestations", T(1232),
+             "Reserved Variable NodeId. It is not an InstanceDeclaration of AASPackageFileType; attestations and "
+             "OCI referrers are separate immutable Resources and never affect the package default Version.",
+             valuerank="1")
 
 object_type(1108, "AASEnvironmentFileType", XRegistry_ResourceType,
             "An xRegistry ResourceType whose file content is one serialization of a materialized environment: an "
@@ -939,27 +998,60 @@ prop_var(1108, EF, "Authorization", T(1231), "The authorization options a Consum
 # Well-known instance on the Server object.
 add(1150, "UAObject", "AASRegistry", "AASRegistry",
     desc="Server-wide AAS Registry, a well-known component of the Server object.",
-    parent=Server, category=CAT_INST)
+    parent=Server, category=(CU_REGISTRY,))
 ref(1150, HasTypeDefinition, T(1100))
 ref(1150, HasComponent, Server, forward=False)
 instance_method(1150, "AASRegistry", "LookupShellsByAssetLink", lookup_type,
     "Return the shells discoverable by an asset key. The functional method on the well-known AASRegistry object.",
     inargs=[("Name", String, "The key name, for example serialNumber."), ("Value", String, "The key value.")],
-    outargs=[("Shells", NodeId, "The shell group nodes matching the key.", 1)])
+    outargs=[("Shells", NodeId, "The shell group nodes matching the key.", 1)],
+    category=(CU_DISCOVERY,))
 instance_method(1150, "AASRegistry", "GetSubmodel", getsm_type,
-    "Return a submodel document and enough metadata to parse it, given its identifier. The functional method on the well-known AASRegistry object.",
+    GET_SUBMODEL_DESCRIPTION,
     inargs=[("SubmodelIdentifier", String, "The submodel's authored identifier.")],
-    outargs=[("Document", ByteString, "The submodel document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Document media type.")])
+    outargs=[("Document", ByteString, "The submodel document bytes."), ("Format", String, "xRegistry format string."), ("ContentType", String, "Document media type.")],
+    category=(CU_DISCOVERY,))
 instance_method(1150, "AASRegistry", "Materialize", materialize_type,
     "Re-materialize the AddressSpace from the stored documents. The functional method on the well-known AASRegistry object.",
     inargs=[("Targets", String, "The documents to consider, as registry-relative paths. An empty array means every document.", 1),
             ("Force", Boolean, "Re-materialize even a document whose digest is unchanged.")],
     outargs=[("Generation", UInt32, "The generation in force after the call."),
-             ("Results", T(1233), "One result per document considered.", 1)])
+             ("Results", T(1233), "One result per document considered.", 1)],
+    category=(CU_UPDATEABLE,))
 
-NAMESPACE = "http://opcfoundation.org/UA/I4AAS/"
-VERSION = "3.00"
-PUBDATE = "2026-08-07T00:00:00Z"
+# Appended after every published declaration so their encoding nodes take the
+# next free member NodeIds without renumbering any existing node.
+data_type(1234, "AASValueReferencePairDataType", [
+    ("Value", String, "One permitted IEC 61360 value."),
+    ("ValueId", T(1221), "The reference identifying the meaning of Value."),
+], "One permitted value paired with the reference identifying its meaning.",
+    required=("Value", "ValueId"))
+
+data_type(1235, "AASValueListDataType", [
+    ("ValueReferencePairs", T(1234), "The permitted values. At least one pair is present.", 1),
+], "The non-empty list of permitted values for an IEC 61360 data specification.",
+    required=("ValueReferencePairs",))
+
+data_type(1236, "AASLevelTypeDataType", [
+    ("Min", Boolean, "Whether a minimum value applies."),
+    ("Nom", Boolean, "Whether a nominal value applies."),
+    ("Typ", Boolean, "Whether a typical value applies."),
+    ("Max", Boolean, "Whether a maximum value applies."),
+], "The four IEC 61360 level flags. Every flag is explicit.",
+    required=("Min", "Nom", "Typ", "Max"))
+
+# Appended after every existing declaration to preserve all allocated NodeIds.
+prop_var(1107, PF, "ManifestDigest", String,
+         "Immutable exact OCI manifest digest with its lower-case algorithm prefix and lower-case hexadecimal "
+         "value. It is Mandatory for every OCI-backed Version, is the sole authority for that Version's identity, "
+         "and produces its always-hashed symbolic VersionId; a mutable tag is never identity. It verifies only the "
+         "exact manifest bytes, never the returned package blob. The verified manifest has exactly one package-layer "
+         "descriptor whose algorithm and encoded digest map to DigestAlg and Digest; the Server verifies this chain "
+         "before publication and a Consumer repeats it before use.")
+
+NAMESPACE = "http://opcfoundation.org/UA/I4AAS/v3/"
+VERSION = "3.00-draft3"
+PUBDATE = "2026-08-11T06:39:30Z"
 UA_REQUIRED_VERSION = "1.05.04"
 UA_REQUIRED_PUBDATE = "2024-05-01T00:00:00Z"
 XR_NAMESPACE = "http://opcfoundation.org/UA/xRegistry/"
@@ -998,7 +1090,8 @@ def _emit_node(n):
     a = [f'{n.cls} NodeId="{T(n.nid)}"', f'BrowseName="{_fmt_browse_name(n)}"']
     if n.parent is not None:
         a.append(f'ParentNodeId="{n.parent}"')
-    for k in ("DataType", "ValueRank", "ArrayDimensions"):
+    for k in ("DataType", "ValueRank", "ArrayDimensions",
+              "MethodDeclarationId"):
         if k in n.attrs:
             v = _fmt_datatype(n.attrs[k]) if k == "DataType" else n.attrs[k]
             a.append(f'{k}="{v}"')
@@ -1024,7 +1117,7 @@ def _emit_node(n):
 
 def emit():
     out = ['<?xml version="1.0" encoding="utf-8"?>',
-           '<!-- OPC UA xRegistry abstract companion namespace. Draft NodeIds (final IDs assigned by the OPC Foundation). -->',
+           '<!-- OPC UA for Asset Administration Shell V3 companion namespace. Draft NodeIds (final IDs assigned by the OPC Foundation). -->',
            '<UANodeSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd">',
            '  <NamespaceUris>', f'    <Uri>{XR_NAMESPACE}</Uri>', f'    <Uri>{NAMESPACE}</Uri>', '  </NamespaceUris>',
            '  <Models>', f'    <Model ModelUri="{NAMESPACE}" Version="{VERSION}" PublicationDate="{PUBDATE}">',
@@ -1099,7 +1192,7 @@ def _supertype(n):
 def _members_of(nid):
     out = []
     for rt, tgt, fwd in NODES[nid].refs:
-        if rt in (HasComponent, HasProperty, Organizes) and fwd and tgt.startswith(f"ns={OWN_NS};i="):
+        if rt in (HasComponent, HasOrderedComponent, HasProperty, Organizes) and fwd and tgt.startswith(f"ns={OWN_NS};i="):
             num = int(tgt.split("i=")[1])
             if num in NODES:
                 out.append(num)
@@ -1120,20 +1213,20 @@ def emit_md():
             if n.bname == "InputArguments": method_args[pid] = names
             else: method_out[pid] = names
     md = ['<a id="annex-a"></a>', '', '## Annex A — Information model\n',
-          'This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.I4AAS.NodeSet2.xml`. All nodes are defined in the companion namespace `http://opcfoundation.org/UA/xRegistry/` (which requires the base OPC UA namespace); the numeric NodeIds shown are **draft** identifiers within that namespace. The **Declared in** column marks members inherited from a supertype.\n']
+          f'This annex is the normative node reference. It is generated from `tools/build_model.py` and always matches `Opc.Ua.I4AAS.NodeSet2.xml`. All nodes are defined in the companion namespace `{NAMESPACE}` (which requires the base OPC UA and xRegistry namespaces); the numeric NodeIds shown are **draft** identifiers within that namespace. The **Declared in** column marks members inherited from a supertype.\n']
     md.append('### Type overview\n')
     md.append('| NodeId | BrowseName | NodeClass | Subtype of |')
     md.append('|---|---|---|---|')
     for nid in obj_types + dt_types:
         n = NODES[nid]
-        md.append(f"| ns=1;i={nid} | {_link(n.bname)} | {n.cls[2:]} | {_link(_friendly(_supertype(n)))} |")
+        md.append(f"| ns={OWN_NS};i={nid} | {_link(n.bname)} | {n.cls[2:]} | {_link(_friendly(_supertype(n)))} |")
     md.append('')
     md.append('### Object types\n')
     for nid in obj_types:
         n = NODES[nid]
         md.append(f'<a id="{_anchor(n.bname)}"></a>')
         md.append('')
-        md.append(f"#### {n.bname}  (ns=1;i={nid})\n")
+        md.append(f"#### {n.bname}  (ns={OWN_NS};i={nid})\n")
         md.append(f"*Inherits from:* {_link(_friendly(_supertype(n)))}\n")
         if n.desc: md.append(n.desc + "\n")
         rows = []
@@ -1142,7 +1235,8 @@ def emit_md():
             dt = _link(_friendly(mn.attrs.get("DataType", ""))) if mn.attrs.get("DataType") else ""
             if mn.attrs.get("ValueRank", "") == "1" and dt:
                 dt += r"\[\]"
-            rows.append((mn.bname, mn.cls[2:], dt, _member_rule(mn), n.bname, (mn.desc or "").replace("|", "/")))
+            rows.append((mn.bname, mn.cls[2:], dt, _member_rule(mn), n.bname,
+                         (mn.desc or "").replace("|", "/")))
         if rows:
             md.append("| BrowseName | NodeClass | DataType | ModellingRule | Declared in | Description |")
             md.append("|---|---|---|---|---|---|")
@@ -1155,20 +1249,29 @@ def emit_md():
             n = NODES[nid]
             md.append(f'<a id="{_anchor(n.bname)}"></a>')
             md.append('')
-            md.append(f"#### {n.bname}  (ns=1;i={nid})\n")
+            md.append(f"#### {n.bname}  (ns={OWN_NS};i={nid})\n")
             md.append(f"*Subtype of:* {_link(_friendly(_supertype(n)))}\n")
             if n.desc: md.append(n.desc + "\n")
             flds = DATATYPE_FIELDS.get(nid, [])
             if flds:
-                md.append("| Field | DataType | Description |")
-                md.append("|---|---|---|")
+                is_structure = _supertype(n) == Structure
+                if is_structure:
+                    md.append("| Field | DataType | Cardinality | Description |")
+                    md.append("|---|---|---|---|")
+                else:
+                    md.append("| Field | DataType | Description |")
+                    md.append("|---|---|---|")
                 for f in flds:
                     fname, fdt, fdesc = f[0], f[1], f[2]
                     frank = f[3] if len(f) > 3 else -1
                     dt = _link(_friendly(fdt))
                     if frank is not None and frank >= 0:
                         dt += r"\[\]"
-                    md.append(f"| {fname} | {dt} | {(fdesc or '').replace('|', '/')} |")
+                    if is_structure:
+                        optional = f[4] if len(f) > 4 else False
+                        md.append(f"| {fname} | {dt} | {'Optional' if optional else 'Mandatory'} | {(fdesc or '').replace('|', '/')} |")
+                    else:
+                        md.append(f"| {fname} | {dt} | {(fdesc or '').replace('|', '/')} |")
                 md.append('')
     md.append('### Methods\n')
     md.append('| Method | Owning type | Input arguments | Output arguments |')
@@ -1188,15 +1291,32 @@ def emit_md():
 def inject(path, rendered):
     """Replace the embedded Annex A in a specification document.
 
-    The annex runs from the ``annex-a`` anchor to the next ``## Annex`` heading, so the
-    document cannot drift from the model: it is the same text ``model-reference.md``
-    holds, and `validate_local.py` checks the two are equal.
+    Before Word onboarding the annex starts at the explicit ``annex-a`` anchor and the
+    generated text owns its heading. After restructuring, the OPC 20020 clause map owns
+    the heading (``Annex A (normative)``) and the generator owns only its body. Both
+    forms end at the next Annex heading. In either form the tables cannot drift from the
+    model: the body comes from the same text ``model-reference.md`` holds.
     """
     with open(path, encoding="utf-8") as f:
         text = f.read()
-    start = text.index('<a id="annex-a"></a>')
-    finish = text.index("\n## Annex ", text.index("## Annex A")) + 1
-    new_text = text[:start] + rendered.rstrip("\n") + "\n\n" + text[finish:]
+    old_anchor = '<a id="annex-a"></a>'
+    restructured_heading = re.search(
+        r'^## Annex A \(normative\) — .+$', text, re.MULTILINE)
+    if old_anchor in text and restructured_heading is None:
+        start = text.index(old_anchor)
+        finish = text.index("\n## Annex ", text.index("## Annex A")) + 1
+        replacement = rendered.rstrip("\n")
+    else:
+        annex = restructured_heading
+        if annex is None:
+            raise ValueError("Annex A heading not found")
+        start = annex.end()
+        finish = text.index("\n## Annex ", start) + 1
+        rendered_heading = re.search(r'^## Annex A .+$', rendered, re.MULTILINE)
+        if rendered_heading is None:
+            raise ValueError("generated Annex A heading not found")
+        replacement = rendered[rendered_heading.end():].strip("\n")
+    new_text = text[:start] + "\n\n" + replacement + "\n\n" + text[finish:]
     if new_text != text:
         with open(path, "w", encoding="utf-8", newline="\n") as f:
             f.write(new_text)

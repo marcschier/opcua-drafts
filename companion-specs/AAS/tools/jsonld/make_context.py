@@ -20,7 +20,8 @@ What the context can do, using JSON-LD 1.1:
 What it cannot do, and why the lifting exists:
 
   * emit an `Identifiable`'s `id` as both the subject IRI and a literal;
-  * construct a subject term for an `id` that is not a legal IRI;
+  * choose between a readable absolute IRI and a reserved encoded subject for an
+    `Identifiable`;
   * turn `"xs:int"` into `aas:DataTypeDefXsd/Int` (attempted here with an
     explicit term definition, and measured rather than assumed);
   * record the order of an array.
@@ -42,6 +43,7 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "jsonld"))
 sys.path.insert(0, HERE)
 
 from lift import AAS, Lifter, Ontology, Schema, serialize  # noqa: E402
+from context_security import DEFAULT_POLICY  # noqa: E402
 
 OUT = os.path.normpath(os.path.join(HERE, "..", "..", "aas.context.jsonld"))
 XSD = "http://www.w3.org/2001/XMLSchema#"
@@ -265,11 +267,19 @@ def measure(context_doc, limit=0):
                 doc = json.load(f)
             framed = dict(doc)
             framed["@context"] = context_doc["@context"]
-            nq = jsonld.to_rdf(framed, {"format": "application/n-quads", "base": base})
+            nq = jsonld.to_rdf(
+                framed,
+                {
+                    "format": "application/n-quads",
+                    "base": base,
+                    "documentLoader": DEFAULT_POLICY.loader(
+                        framed, base=base),
+                },
+            )
             via_context = Graph()
             via_context.parse(data=nq, format="nt")
 
-            lifter = Lifter(onto, base, "core", schema=schema)
+            lifter = Lifter(onto, "core", schema=schema)
             via_lift = Graph()
             via_lift.parse(data=serialize(lifter.lift(doc), with_graphs=False), format="nt")
         except Exception:  # noqa: BLE001

@@ -1,13 +1,14 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    "https://w3id.org/aas-jsonld/context",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
     {
-      "i4aas": "http://opcfoundation.org/UA/I4AAS/",
-      "uav": "http://opcfoundation.org/UA/WoT-Binding/"
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
     }
   ],
-  "@graph": [
+  "@included": [
     {
       "@id": "_:b1",
       "@type": "aas:LangStringTextType",
@@ -2465,47 +2466,24 @@
       "text": "Status of the DPP instance as digital resource."
     },
     {
-      "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
-      "@type": "aas:Submodel",
-      "aas:HasKind/kind": {
-        "@id": "aas:ModellingKind/Template"
-      },
-      "administration": "_:b11",
-      "description": "_:b9",
-      "id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
-      "idShort": "DppMetadata",
-      "semanticId": "_:b12",
-      "submodelElements": [
-        "_:b114",
-        "_:b137",
-        "_:b15",
-        "_:b156",
-        "_:b175",
-        "_:b34",
-        "_:b53",
-        "_:b76",
-        "_:b95"
-      ]
-    },
-    {
       "@id": "https://admin-shell.io/idta/aas/DppMetadata/1/0",
       "@type": "aas:AssetAdministrationShell",
       "aas:AssetAdministrationShell/submodels": {
         "@id": "_:b5"
       },
+      "aas:Identifiable/id": "https://admin-shell.io/idta/aas/DppMetadata/1/0",
       "assetInformation": "_:b3",
       "description": "_:b1",
-      "id": "https://admin-shell.io/idta/aas/DppMetadata/1/0",
       "idShort": "DppMetadataAAS"
     },
     {
       "@id": "https://admin-shell.io/idta/cds/batch/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/batch/1",
       "administration": "_:b330",
       "description": "_:b328",
       "displayName": "_:b326",
       "embeddedDataSpecifications": "_:b331",
-      "id": "https://admin-shell.io/idta/cds/batch/1",
       "idShort": "Batch",
       "isCaseOf": [
         "_:b343",
@@ -2515,38 +2493,39 @@
     {
       "@id": "https://admin-shell.io/idta/cds/contentSpecificationId/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/contentSpecificationId/1",
       "description": "_:b512",
       "displayName": "_:b510",
       "embeddedDataSpecifications": "_:b514",
-      "id": "https://admin-shell.io/idta/cds/contentSpecificationId/1",
       "idShort": "contentSpecificationId",
       "isCaseOf": "_:b526"
     },
     {
       "@id": "https://admin-shell.io/idta/cds/contentSpecificationIds/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/contentSpecificationIds/1",
       "administration": "_:b493",
       "description": "_:b491",
       "displayName": "_:b489",
       "embeddedDataSpecifications": "_:b494",
-      "id": "https://admin-shell.io/idta/cds/contentSpecificationIds/1",
       "idShort": "contentSpecificationIds",
       "isCaseOf": "_:b506"
     },
     {
       "@id": "https://admin-shell.io/idta/cds/digitalProductPassportId/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/digitalProductPassportId/1",
       "administration": "_:b210",
       "description": "_:b208",
       "displayName": "_:b206",
       "embeddedDataSpecifications": "_:b211",
-      "id": "https://admin-shell.io/idta/cds/digitalProductPassportId/1",
       "idShort": "digitalProductPassportId",
       "isCaseOf": "_:b223"
     },
     {
       "@id": "https://admin-shell.io/idta/cds/dppMetadata/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/dppMetadata/1",
       "administration": "_:b536",
       "description": "_:b534",
       "displayName": [
@@ -2554,51 +2533,50 @@
         "_:b532"
       ],
       "embeddedDataSpecifications": "_:b537",
-      "id": "https://admin-shell.io/idta/cds/dppMetadata/1",
       "idShort": "DppMetadata",
       "isCaseOf": "_:b551"
     },
     {
       "@id": "https://admin-shell.io/idta/cds/dppSchemaVersion/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/dppSchemaVersion/1",
       "administration": "_:b380",
       "description": "_:b378",
       "displayName": "_:b376",
       "embeddedDataSpecifications": "_:b381",
-      "id": "https://admin-shell.io/idta/cds/dppSchemaVersion/1",
       "idShort": "dppSchemaVersion",
       "isCaseOf": "_:b393"
     },
     {
       "@id": "https://admin-shell.io/idta/cds/dppStatus/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/dppStatus/1",
       "administration": "_:b401",
       "description": "_:b399",
       "displayName": "_:b397",
       "embeddedDataSpecifications": "_:b402",
-      "id": "https://admin-shell.io/idta/cds/dppStatus/1",
       "idShort": "dppStatus",
       "isCaseOf": "_:b414"
     },
     {
       "@id": "https://admin-shell.io/idta/cds/economicOperatorId/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/economicOperatorId/1",
       "administration": "_:b443",
       "description": "_:b441",
       "displayName": "_:b439",
       "embeddedDataSpecifications": "_:b444",
-      "id": "https://admin-shell.io/idta/cds/economicOperatorId/1",
       "idShort": "economicOperatorId",
       "isCaseOf": "_:b456"
     },
     {
       "@id": "https://admin-shell.io/idta/cds/facilityId/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/facilityId/1",
       "administration": "_:b464",
       "description": "_:b462",
       "displayName": "_:b460",
       "embeddedDataSpecifications": "_:b465",
-      "id": "https://admin-shell.io/idta/cds/facilityId/1",
       "idShort": "facilityId",
       "isCaseOf": [
         "_:b477",
@@ -2609,22 +2587,22 @@
     {
       "@id": "https://admin-shell.io/idta/cds/granularity/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/granularity/1",
       "administration": "_:b268",
       "description": "_:b266",
       "displayName": "_:b264",
       "embeddedDataSpecifications": "_:b269",
-      "id": "https://admin-shell.io/idta/cds/granularity/1",
       "idShort": "granularity",
       "isCaseOf": "_:b297"
     },
     {
       "@id": "https://admin-shell.io/idta/cds/item/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/item/1",
       "administration": "_:b355",
       "description": "_:b353",
       "displayName": "_:b351",
       "embeddedDataSpecifications": "_:b356",
-      "id": "https://admin-shell.io/idta/cds/item/1",
       "idShort": "Item",
       "isCaseOf": [
         "_:b368",
@@ -2634,22 +2612,22 @@
     {
       "@id": "https://admin-shell.io/idta/cds/lastUpdate/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/lastUpdate/1",
       "administration": "_:b422",
       "description": "_:b420",
       "displayName": "_:b418",
       "embeddedDataSpecifications": "_:b423",
-      "id": "https://admin-shell.io/idta/cds/lastUpdate/1",
       "idShort": "lastUpdate",
       "isCaseOf": "_:b435"
     },
     {
       "@id": "https://admin-shell.io/idta/cds/model/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/model/1",
       "administration": "_:b305",
       "description": "_:b303",
       "displayName": "_:b301",
       "embeddedDataSpecifications": "_:b306",
-      "id": "https://admin-shell.io/idta/cds/model/1",
       "idShort": "Model",
       "isCaseOf": [
         "_:b318",
@@ -2659,11 +2637,11 @@
     {
       "@id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1",
       "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1",
       "administration": "_:b231",
       "description": "_:b229",
       "displayName": "_:b227",
       "embeddedDataSpecifications": "_:b232",
-      "id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1",
       "idShort": "uniqueProductIdentifier",
       "isCaseOf": [
         "_:b244",
@@ -6728,7 +6706,22 @@
   "@type": [
     "Thing",
     "uav:object",
-    "i4aas:AASSubmodelType"
+    "i4aas:AASSubmodelType",
+    "aas:Submodel"
+  ],
+  "aas:HasKind/kind": {
+    "@id": "aas:ModellingKind/Template"
+  },
+  "aas:Identifiable/id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
+  "administration": "_:b11",
+  "description": "_:b9",
+  "id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
+  "idShort": "DppMetadata",
+  "links": [
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1013",
+      "rel": "ua:HasTypeDefinition"
+    }
   ],
   "security": "nosec_sc",
   "securityDefinitions": {
@@ -6736,5 +6729,17 @@
       "scheme": "nosec"
     }
   },
+  "semanticId": "_:b12",
+  "submodelElements": [
+    "_:b114",
+    "_:b137",
+    "_:b15",
+    "_:b156",
+    "_:b175",
+    "_:b34",
+    "_:b53",
+    "_:b76",
+    "_:b95"
+  ],
   "title": "DppMetadata"
 }

@@ -105,12 +105,13 @@ slides:
 
   - layout: bullets
     title: Status and where it lives
-    kicker: Working draft, addenda included, no demo yet
+    kicker: Working draft under OPC Foundation review, addenda included, no demo yet
     bullets:
       - text: "**Draft version:** 0.1.0, dated 2026-07-15"
       - text: "**Target body:** OPC Foundation Working Group"
       - text: "**Proposed Part:** OPC 10000-2xx, number to be assigned"
-      - text: "**Source:** `cloud-specs/observability-export/OPC-UA-Observability-Export.md`"
+      - text: "**Source:** `cloud-specs/observability-export/OPC-UA-Observability-Export.md` in the review repository"
+      - text: "**Under OPC Foundation review** \u2014 in `OPCF-Members/spec-drafts`, not the public repository"
       - text: "**Open questions:** assigned Part number and final NodeIds"
       - text: "**Demo:** none yet; the deck leaves that gap visible"
     takeaway: The model and addenda are draft content; the generic bridge demo is still absent.

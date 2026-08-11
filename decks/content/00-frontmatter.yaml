@@ -35,7 +35,7 @@ slides:
           - "Six run on the stack's `master` today; two need a feature branch; two are walkthroughs while the code catches up"
       - text: "**Every effort gets the same four beats** — why it exists, what it adds, how it works, where it stands"
     takeaway: >-
-      Nothing here is normative. Namespace URIs and NodeIds are provisional, and six drafts are
+      Nothing here is normative. Namespace URIs and NodeIds are provisional, and seven drafts are
       under OPC Foundation review.
     notes: |
       Set expectations up front. This deck is a status report on eighteen working drafts: what each
@@ -43,9 +43,9 @@ slides:
       against real gaps found while building the .NET Standard stack, which is why most of them
       have running code behind them.
 
-      The six under OPC Foundation review — Avro, xRegistry, OpenUSD Parts 1 and 2, WoT Binding and
-      WoT Connectivity — moved to the members' repository while the review runs. They are covered
-      here at the same depth as the rest.
+      The seven under OPC Foundation review — Avro, xRegistry, Observability Export, OpenUSD Parts 1
+      and 2, WoT Binding and WoT Connectivity — moved to the members' repository while the review
+      runs. They are covered here at the same depth as the rest.
 
   - layout: diagram
     title: How it all fits
@@ -97,12 +97,12 @@ slides:
         - ["Apache Arrow Encoding", "core", "Draft 0.1.0", "—"]
         - ["Data Channels", "core", "Draft 0.1.1", "8 — media"]
         - ["Asynchronous Service Execution", "core", "Draft 0.1.0", "—"]
-        - ["Asset Administration Shell 3.0", "companion", "Draft 3.0.0 — open PR", "7 — walkthrough"]
+        - ["Asset Administration Shell 3.0", "companion", "Draft 3.00-draft3 — open PR", "7 — walkthrough"]
         - ["Generators (GenSets)", "companion", "Draft 1.0.0", "—"]
         - ["WoT Binding", "wot", "Under OPCF review", "4, 7"]
         - ["WoT Connectivity", "wot", "Under OPCF review", "4, 7"]
         - ["Schema Registry", "cloud", "Draft 0.5.0", "—"]
-        - ["Observability Export", "cloud", "Draft 0.1.0", "—"]
+        - ["Observability Export", "cloud", "Under OPCF review", "—"]
         - ["OpenUSD Part 1 — Binding", "metaverse", "Under OPCF review", "2, 3"]
         - ["OpenUSD Part 2 — Scene Materialization", "metaverse", "Under OPCF review", "2, 3"]
         - ["AI Model Management and Inference", "metaverse", "Draft 0.4.0", "10 — branch"]

@@ -1,0 +1,521 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../../aas.context.jsonld",
+    "../../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@included": [
+    {
+      "@graph": [
+        {
+          "@id": "_:aas-occurrence-2",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-1"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Referable/description"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-5",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-4"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-3"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-8",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-7"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-6"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-9",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-6"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/HasSemantics/supplementalSemanticIds"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-12",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-11"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-10"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-13",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "1"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-10"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/HasSemantics/supplementalSemanticIds"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-17",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-16"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-15"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-18",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-14"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Qualifiable/qualifiers"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-20",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-19"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Referable/displayName"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-21",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0uTWFya2luZ05hbWU"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-22",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "1"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0uRGVzaWduYXRpb25PZkNlcnRpZmljYXRlT3JBcHByb3ZhbA"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-23",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "2"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0uSXNzdWVEYXRl"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-24",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "3"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0uRXhwaXJ5RGF0ZQ"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-25",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "4"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0uTWFya2luZ0ZpbGU"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-26",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "5"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0uTWFya2luZ0FkZGl0aW9uYWxUZXh0"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0"
+          }
+        }
+      ],
+      "@id": "https://w3id.org/aas-jsonld/graph/order"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:SubmodelElementCollection",
+    "i4aas:AASSubmodelElementCollectionType"
+  ],
+  "aas:HasSemantics/semanticId": {
+    "@id": "_:aas-node-3",
+    "@type": "aas:Reference",
+    "aas:Reference/keys": [
+      {
+        "@id": "_:aas-node-4",
+        "@type": "aas:Key",
+        "aas:Key/type": {
+          "@id": "aas:KeyTypes/GlobalReference"
+        },
+        "aas:Key/value": {
+          "@type": "http://www.w3.org/2001/XMLSchema#string",
+          "@value": "0112/2///61360_7#AAS009#001"
+        }
+      }
+    ],
+    "aas:Reference/type": {
+      "@id": "aas:ReferenceTypes/ExternalReference"
+    }
+  },
+  "aas:HasSemantics/supplementalSemanticIds": [
+    {
+      "@id": "_:aas-node-6",
+      "@type": "aas:Reference",
+      "aas:Reference/keys": [
+        {
+          "@id": "_:aas-node-7",
+          "@type": "aas:Key",
+          "aas:Key/type": {
+            "@id": "aas:KeyTypes/GlobalReference"
+          },
+          "aas:Key/value": {
+            "@type": "http://www.w3.org/2001/XMLSchema#string",
+            "@value": "0173-1#02-ABI564#003/0173-1#01-AHF850#003"
+          }
+        }
+      ],
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      }
+    },
+    {
+      "@id": "_:aas-node-10",
+      "@type": "aas:Reference",
+      "aas:Reference/keys": [
+        {
+          "@id": "_:aas-node-11",
+          "@type": "aas:Key",
+          "aas:Key/type": {
+            "@id": "aas:KeyTypes/GlobalReference"
+          },
+          "aas:Key/value": {
+            "@type": "http://www.w3.org/2001/XMLSchema#string",
+            "@value": "urn:samm:io.admin-shell.idta.shared:3.1.0#Marking"
+          }
+        }
+      ],
+      "aas:Reference/type": {
+        "@id": "aas:ReferenceTypes/ExternalReference"
+      }
+    }
+  ],
+  "aas:Qualifiable/qualifiers": [
+    {
+      "@id": "_:aas-node-14",
+      "@type": "aas:Qualifier",
+      "aas:HasSemantics/semanticId": {
+        "@id": "_:aas-node-15",
+        "@type": "aas:Reference",
+        "aas:Reference/keys": [
+          {
+            "@id": "_:aas-node-16",
+            "@type": "aas:Key",
+            "aas:Key/type": {
+              "@id": "aas:KeyTypes/GlobalReference"
+            },
+            "aas:Key/value": {
+              "@type": "http://www.w3.org/2001/XMLSchema#string",
+              "@value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+            }
+          }
+        ],
+        "aas:Reference/type": {
+          "@id": "aas:ReferenceTypes/ExternalReference"
+        }
+      },
+      "aas:Qualifier/kind": {
+        "@id": "aas:QualifierKind/TemplateQualifier"
+      },
+      "aas:Qualifier/type": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "SMT/Cardinality"
+      },
+      "aas:Qualifier/value": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "OneToMany"
+      },
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    }
+  ],
+  "aas:Referable/description": [
+    {
+      "@id": "_:aas-node-1",
+      "@type": "aas:LangStringTextType",
+      "aas:AbstractLangString/language": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "en"
+      },
+      "aas:AbstractLangString/text": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Used to provide all relevant marking information of the battery passport based on DIN SPEC 99100."
+      }
+    }
+  ],
+  "aas:Referable/displayName": [
+    {
+      "@id": "_:aas-node-19",
+      "@type": "aas:LangStringNameType",
+      "aas:AbstractLangString/language": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "en"
+      },
+      "aas:AbstractLangString/text": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "markings 00"
+      }
+    }
+  ],
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "Markings__00__"
+  },
+  "aas:SubmodelElementCollection/value": [
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0uTWFya2luZ05hbWU"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0uRGVzaWduYXRpb25PZkNlcnRpZmljYXRlT3JBcHByb3ZhbA"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0uSXNzdWVEYXRl"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0uRXhwaXJ5RGF0ZQ"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0uTWFya2luZ0ZpbGU"
+    },
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0uTWFya2luZ0FkZGl0aW9uYWxUZXh0"
+    }
+  ],
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:88:11:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0Markings%5B0%5D",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/TWFya2luZ3NbMF0",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/node/TWFya2luZ3NbMF0",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/node/TWFya2luZ3M",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1029",
+      "rel": "ua:HasTypeDefinition"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/node/TWFya2luZ3NbMF0uTWFya2luZ05hbWU",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "MarkingName"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/node/TWFya2luZ3NbMF0uRGVzaWduYXRpb25PZkNlcnRpZmljYXRlT3JBcHByb3ZhbA",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "DesignationOfCertificateOrApproval"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/node/TWFya2luZ3NbMF0uSXNzdWVEYXRl",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "IssueDate"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/node/TWFya2luZ3NbMF0uRXhwaXJ5RGF0ZQ",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "ExpiryDate"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/node/TWFya2luZ3NbMF0uTWFya2luZ0ZpbGU",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "MarkingFile"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA/node/TWFya2luZ3NbMF0uTWFya2luZ0FkZGl0aW9uYWxUZXh0",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "MarkingAdditionalText"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "0",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;0",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:88:8:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0Markings"
+  ],
+  "uav:hasComponent": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:88:23:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0Markings[0].MarkingName",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:88:46:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0Markings[0].DesignationOfCertificateOrApproval",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:88:21:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0Markings[0].IssueDate",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:88:22:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0Markings[0].ExpiryDate",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:88:23:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0Markings[0].MarkingFile",
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:88:33:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0Markings[0].MarkingAdditionalText"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:88:11:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0Markings[0]",
+  "uav:index": 0,
+  "uav:modellingRule": "Optional"
+}

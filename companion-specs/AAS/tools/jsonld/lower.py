@@ -19,6 +19,10 @@ the class hierarchy and property ranges, the JSON Schema supplies which classes
 carry a `modelType` discriminator, which members are arrays, and the JSON
 spelling of each enumeration value.
 
+Only complete property IRIs in the AAS namespace become JSON members. Foreign
+triples are retained in `Lowerer.foreign_triples` as linked-data residue and do
+not affect the AAS conversion, even when their local names match AAS members.
+
 Usage:
     python lower.py <graph.nt> [--order <order.nt>]
 """
@@ -34,7 +38,7 @@ from collections import defaultdict
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-from lift import AAS, LD, Ontology, Schema, ROOT_COLLECTIONS  # noqa: E402
+from lift import AAS, LD, Ontology, Schema, ROOT_COLLECTIONS, iri, subject_iri  # noqa: E402
 
 RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 
@@ -143,8 +147,12 @@ class Lowerer:
 
     def load(self, triples, order_triples=()):
         self.by_subject = defaultdict(lambda: defaultdict(list))
+        self.foreign_triples = []
         for s, p, o in triples:
-            self.by_subject[s][unquote_iri(p)].append(o)
+            predicate = unquote_iri(p)
+            self.by_subject[s][predicate].append(o)
+            if predicate != RDF_TYPE and not predicate.startswith(AAS):
+                self.foreign_triples.append((s, p, o))
         # index -> position, keyed by (subject, property, member)
         self.order = {}
         occurrences = defaultdict(dict)
@@ -188,10 +196,12 @@ class Lowerer:
         for prop_iri, objects in self.by_subject[subject].items():
             if prop_iri == RDF_TYPE:
                 continue
+            if not prop_iri.startswith(AAS):
+                continue
             member = self.member_name(prop_iri)
             prop = self.onto.resolve(cls, member)
-            if prop is None:
-                raise ValueError(f"no property {member!r} on {cls}")
+            if prop is None or prop["iri"] != prop_iri:
+                raise ValueError(f"{prop_iri!r} is not a property of {cls}")
             values = self.values_for(cls, member, prop, subject, prop_iri, objects)
             node[member] = values
         if cls in self.schema.model_type:
@@ -205,6 +215,9 @@ class Lowerer:
         out = [self.one(cls, member, prop, o) for o in ordered]
         if self.schema.is_array(self.onto, cls, member):
             return out
+        if len(out) != 1:
+            raise ValueError(
+                f"{prop_iri} on {subject} has {len(out)} values but the JSON member is scalar")
         return out[0]
 
     def one(self, cls, member, prop, term):
@@ -224,8 +237,16 @@ class Lowerer:
             collection = next((c for c, k in ROOT_COLLECTIONS.items() if k == cls), None)
             if collection is None:
                 continue
-            if AAS + "Identifiable/id" not in self.by_subject[subject]:
+            identifier_terms = self.by_subject[subject].get(AAS + "Identifiable/id", [])
+            if not identifier_terms:
                 continue
+            if len(identifier_terms) != 1:
+                raise ValueError(f"{subject} has {len(identifier_terms)} AAS identifiers")
+            identifier = literal_value(identifier_terms[0])
+            expected_subject = iri(subject_iri(identifier))
+            if subject != expected_subject:
+                raise ValueError(
+                    f"{subject} is not the clause 2.2 subject for identifier {identifier!r}")
             doc.setdefault(collection, []).append(self.build(subject, cls))
         for collection in doc:
             doc[collection].sort(key=lambda n: n.get("id", ""))

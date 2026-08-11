@@ -1,0 +1,94 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@included": [
+    {
+      "@graph": [
+        {
+          "@id": "_:aas-occurrence-1",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXS5OYW1lZA"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXQ"
+          }
+        }
+      ],
+      "@id": "https://w3id.org/aas-jsonld/graph/order"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:SubmodelElementCollection",
+    "i4aas:AASSubmodelElementCollectionType"
+  ],
+  "aas:SubmodelElementCollection/value": [
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXS5OYW1lZA"
+    }
+  ],
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:36:25:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList%5B0%5D",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXQ",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXQ",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1029",
+      "rel": "ua:HasTypeDefinition"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXS5OYW1lZA",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "Named"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "0",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;0",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:22:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList"
+  ],
+  "uav:hasComponent": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:31:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList[0].Named"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:25:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList[0]",
+  "uav:index": 0,
+  "uav:modellingRule": "Optional"
+}

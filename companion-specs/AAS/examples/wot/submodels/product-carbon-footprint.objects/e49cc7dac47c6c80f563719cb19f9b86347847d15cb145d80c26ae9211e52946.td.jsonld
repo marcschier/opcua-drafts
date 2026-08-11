@@ -1,0 +1,242 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../../aas.context.jsonld",
+    "../../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@included": [
+    {
+      "@graph": [
+        {
+          "@id": "_:aas-occurrence-3",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-2"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-1"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-7",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-6"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Reference/keys"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "_:aas-node-5"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-8",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-4"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Qualifiable/qualifiers"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w/UHJvZHVjdENhcmJvbkZvb3RwcmludHNbMF0uV2ViTGlua1RvUHVibGljQ2FyYm9uRm9vdHByaW50U3R1ZHk"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-10",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "_:aas-node-9"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Referable/displayName"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w/UHJvZHVjdENhcmJvbkZvb3RwcmludHNbMF0uV2ViTGlua1RvUHVibGljQ2FyYm9uRm9vdHByaW50U3R1ZHk"
+          }
+        },
+        {
+          "@id": "_:aas-occurrence-11",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w/UHJvZHVjdENhcmJvbkZvb3RwcmludHNbMF0uV2ViTGlua1RvUHVibGljQ2FyYm9uRm9vdHByaW50U3R1ZHlbMF0"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/SubmodelElementList/value"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w/UHJvZHVjdENhcmJvbkZvb3RwcmludHNbMF0uV2ViTGlua1RvUHVibGljQ2FyYm9uRm9vdHByaW50U3R1ZHk"
+          }
+        }
+      ],
+      "@id": "https://w3id.org/aas-jsonld/graph/order"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:SubmodelElementList",
+    "i4aas:AASSubmodelElementListType"
+  ],
+  "aas:HasSemantics/semanticId": {
+    "@id": "_:aas-node-1",
+    "@type": "aas:Reference",
+    "aas:Reference/keys": [
+      {
+        "@id": "_:aas-node-2",
+        "@type": "aas:Key",
+        "aas:Key/type": {
+          "@id": "aas:KeyTypes/GlobalReference"
+        },
+        "aas:Key/value": {
+          "@type": "http://www.w3.org/2001/XMLSchema#string",
+          "@value": "urn:samm:io.admin-shell.idta.batterypass.carbon_footprint:1.0.0#webLinkToPublicCarbonFootprintStudy"
+        }
+      }
+    ],
+    "aas:Reference/type": {
+      "@id": "aas:ReferenceTypes/ExternalReference"
+    }
+  },
+  "aas:Qualifiable/qualifiers": [
+    {
+      "@id": "_:aas-node-4",
+      "@type": "aas:Qualifier",
+      "aas:HasSemantics/semanticId": {
+        "@id": "_:aas-node-5",
+        "@type": "aas:Reference",
+        "aas:Reference/keys": [
+          {
+            "@id": "_:aas-node-6",
+            "@type": "aas:Key",
+            "aas:Key/type": {
+              "@id": "aas:KeyTypes/GlobalReference"
+            },
+            "aas:Key/value": {
+              "@type": "http://www.w3.org/2001/XMLSchema#string",
+              "@value": "https://admin-shell.io/SubmodelTemplates/Cardinality/1/0"
+            }
+          }
+        ],
+        "aas:Reference/type": {
+          "@id": "aas:ReferenceTypes/ExternalReference"
+        }
+      },
+      "aas:Qualifier/type": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "SMT/Cardinality"
+      },
+      "aas:Qualifier/value": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "One"
+      },
+      "aas:Qualifier/valueType": {
+        "@id": "aas:DataTypeDefXsd/String"
+      }
+    }
+  ],
+  "aas:Referable/displayName": [
+    {
+      "@id": "_:aas-node-9",
+      "@type": "aas:LangStringNameType",
+      "aas:AbstractLangString/language": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "en"
+      },
+      "aas:AbstractLangString/text": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "web link to public carbon footprint study"
+      }
+    }
+  ],
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "WebLinkToPublicCarbonFootprintStudy"
+  },
+  "aas:SubmodelElementList/typeValueListElement": {
+    "@id": "aas:AasSubmodelElements/Property"
+  },
+  "aas:SubmodelElementList/value": [
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w/UHJvZHVjdENhcmJvbkZvb3RwcmludHNbMF0uV2ViTGlua1RvUHVibGljQ2FyYm9uRm9vdHByaW50U3R1ZHlbMF0"
+    }
+  ],
+  "aas:SubmodelElementList/valueTypeListElement": {
+    "@id": "aas:DataTypeDefXsd/String"
+  },
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:87:62:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0ProductCarbonFootprints%5B0%5D.WebLinkToPublicCarbonFootprintStudy",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w/UHJvZHVjdENhcmJvbkZvb3RwcmludHNbMF0uV2ViTGlua1RvUHVibGljQ2FyYm9uRm9vdHByaW50U3R1ZHk",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w/node/UHJvZHVjdENhcmJvbkZvb3RwcmludHNbMF0uV2ViTGlua1RvUHVibGljQ2FyYm9uRm9vdHByaW50U3R1ZHk",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w/node/UHJvZHVjdENhcmJvbkZvb3RwcmludHNbMF0",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1031",
+      "rel": "ua:HasTypeDefinition"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9DYXJib25Gb290cHJpbnQvMS8w/node/UHJvZHVjdENhcmJvbkZvb3RwcmludHNbMF0uV2ViTGlua1RvUHVibGljQ2FyYm9uRm9vdHByaW50U3R1ZHlbMF0",
+      "rel": "ua:HasOrderedComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=49",
+      "uav:refName": "0"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "WebLinkToPublicCarbonFootprintStudy",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;WebLinkToPublicCarbonFootprintStudy",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:87:26:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0ProductCarbonFootprints[0]"
+  ],
+  "uav:hasComponent": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:87:65:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy[0]"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:87:62:https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/CarbonFootprint/1/0ProductCarbonFootprints[0].WebLinkToPublicCarbonFootprintStudy",
+  "uav:modellingRule": "Optional"
+}

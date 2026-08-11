@@ -1,0 +1,65 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:Property",
+    "i4aas:AASPropertyType"
+  ],
+  "aas:Property/value": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "2"
+  },
+  "aas:Property/valueType": {
+    "@id": "aas:DataTypeDefXsd/Int"
+  },
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "Quantity"
+  },
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:41:32:https://fabrikam.com/ids/sm/every-elementAnAnnotatedRelationship.Quantity",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5Bbm5vdGF0ZWRSZWxhdGlvbnNoaXAuUXVhbnRpdHk",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5Bbm5vdGF0ZWRSZWxhdGlvbnNoaXAuUXVhbnRpdHk",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5Bbm5vdGF0ZWRSZWxhdGlvbnNoaXA",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1021",
+      "rel": "ua:HasTypeDefinition"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "Quantity",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;Quantity",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:23:https://fabrikam.com/ids/sm/every-elementAnAnnotatedRelationship"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:32:https://fabrikam.com/ids/sm/every-elementAnAnnotatedRelationship.Quantity",
+  "uav:modellingRule": "Optional"
+}

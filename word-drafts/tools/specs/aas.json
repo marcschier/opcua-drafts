@@ -1,0 +1,889 @@
+{
+  "id": "aas",
+  "source": {
+    "markdown": "companion-specs/AAS/OPC-UA-AAS.md",
+    "nodeset": "companion-specs/AAS/Opc.Ua.I4AAS.NodeSet2.xml"
+  },
+  "output": {
+    "docx": "word-drafts/OPC-UA-AAS.docx",
+    "docmodel": "word-drafts/OPC-UA-AAS.docmodel.json",
+    "figures": "word-drafts/figures"
+  },
+  "identity": {
+    "docNumber": "OPC 30270",
+    "partNumber": "Part 1",
+    "partName": "Asset Administration Shell",
+    "title": "Asset Administration Shell",
+    "subjectTerm": "Asset Administration Shell",
+    "mainTitle": "OPC UA FOR ASSET ADMINISTRATION SHELL",
+    "subTitle": "Part 1: Mapping the Asset Administration Shell V3 metamodel and registry to OPC UA",
+    "shortName": "I4AAS",
+    "capabilityIdentifier": "I4AAS",
+    "namespaceUri": "http://opcfoundation.org/UA/I4AAS/v3/",
+    "namespaceIndexInDocument": 2,
+    "namespaceTableCaption": "Namespaces used by an Asset Administration Shell Server",
+    "keywords": "OPC UA, Asset Administration Shell, AAS, companion specification, draft",
+    "version": "3.00-draft3",
+    "publicationDate": "2026-08-11",
+    "releaseType": "Draft",
+    "mantisProjectId": "<nnn>",
+    "otherOrganization": "Industrial Digital Twin Association (IDTA)",
+    "introduction": [
+      "An Asset Administration Shell is the standardized digital representation of an asset. It carries the asset's identity and references the submodels that describe it, such as a nameplate, technical data, a carbon footprint or a bill of material. Submodels are identified in their own right and may be referenced by more than one shell.",
+      "Shells, submodels and concept descriptions carry globally unique identifiers. Other elements are named within their parent by a short name and are addressed by the path of short names that leads to them."
+    ],
+    "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation. The namespace URI and NodeIds in this document are provisional until assigned by the OPC Foundation."
+  },
+  "_comment_requiredModelNodes": "BrowseNames for inherited OPC UA and xRegistry nodes referenced by NodeId from RequiredModels.",
+  "requiredModelNodes": {
+    "i=27": "Integer",
+    "i=28": "UInteger",
+    "i=12879": "DurationString",
+    "ns=1;i=63000": "RegistryType",
+    "ns=1;i=63001": "GroupType",
+    "ns=1;i=63002": "ResourceType"
+  },
+  "abbreviations": [
+    [
+      "AAS",
+      "Asset Administration Shell"
+    ],
+    [
+      "AASX",
+      "Asset Administration Shell Package File Format"
+    ],
+    [
+      "API",
+      "Application Programming Interface"
+    ],
+    [
+      "DNS",
+      "Domain Name System"
+    ],
+    [
+      "DPP",
+      "Digital Product Passport"
+    ],
+    [
+      "HTTP",
+      "Hypertext Transfer Protocol"
+    ],
+    [
+      "IDTA",
+      "Industrial Digital Twin Association"
+    ],
+    [
+      "IRI",
+      "Internationalized Resource Identifier"
+    ],
+    [
+      "JSON",
+      "JavaScript Object Notation"
+    ],
+    [
+      "JSON-LD",
+      "JavaScript Object Notation for Linked Data"
+    ],
+    [
+      "OCI",
+      "Open Container Initiative"
+    ],
+    [
+      "OPC UA",
+      "OPC Unified Architecture"
+    ],
+    [
+      "RDF",
+      "Resource Description Framework"
+    ],
+    [
+      "TD",
+      "Thing Description"
+    ],
+    [
+      "URI",
+      "Uniform Resource Identifier"
+    ],
+    [
+      "URL",
+      "Uniform Resource Locator"
+    ],
+    [
+      "UTF-8",
+      "Unicode Transformation Format, 8-bit"
+    ],
+    [
+      "W3C",
+      "World Wide Web Consortium"
+    ],
+    [
+      "WoT",
+      "Web of Things"
+    ],
+    [
+      "XML",
+      "Extensible Markup Language"
+    ],
+    [
+      "xRegistry",
+      "xRegistry"
+    ]
+  ],
+  "normativeReferences": [
+    {
+      "id": "UAPart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "https://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "UAPart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "https://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "UAPart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "https://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "UAPart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "https://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "UAPart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "https://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "UAPart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings",
+      "url": "https://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "UAPart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "https://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "UAPart10",
+      "label": "OPC 10000-10",
+      "title": "OPC Unified Architecture - Part 10: Programs",
+      "url": "https://www.opcfoundation.org/documents/10000-10/"
+    },
+    {
+      "id": "UAPart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "https://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "UAPart20",
+      "label": "OPC 10000-20",
+      "title": "OPC Unified Architecture - Part 20: File Transfer",
+      "url": "https://www.opcfoundation.org/documents/10000-20/"
+    },
+    {
+      "id": "OPC20020",
+      "label": "OPC 20020",
+      "title": "OPC UA Companion Specification Template and Rules",
+      "url": "https://opcfoundation.org/Guidelines-And-Templates/"
+    },
+    {
+      "id": "OPC30270V1",
+      "label": "OPC 30270, Part 1, version 1.00",
+      "title": "OPC UA for Asset Administration Shell - Part 1: Asset Administration Shell",
+      "url": ""
+    },
+    {
+      "id": "OPC30450",
+      "label": "OPC 30450-1",
+      "title": "OPC UA for Digital Product Passport - Part 1: Information Model",
+      "url": ""
+    },
+    {
+      "id": "OPCUAXREG",
+      "label": "OPC UA for xRegistry",
+      "title": "Abstract registry information model defining RegistryType, GroupType and ResourceType",
+      "url": ""
+    },
+    {
+      "id": "XREG",
+      "label": "xRegistry specification",
+      "title": "Cloud-native registry core, model and HTTP binding",
+      "url": "https://github.com/xregistry/spec"
+    },
+    {
+      "id": "IDTA01001",
+      "label": "IDTA-01001",
+      "title": "Specification of the Asset Administration Shell - Part 1: Metamodel, version 3",
+      "url": "https://industrialdigitaltwin.org/en/content-hub/aasspecifications/specification-of-the-asset-administration-shell-part-1-metamodel-idta-number-01001"
+    },
+    {
+      "id": "IDTA01002",
+      "label": "IDTA-01002",
+      "title": "Specification of the Asset Administration Shell - Part 2: Application Programming Interfaces, version 3",
+      "url": "https://industrialdigitaltwin.org/en/content-hub/aasspecifications/specification-of-the-asset-administration-shell-part-2-application-programming-interfaces-idta-number-01002"
+    },
+    {
+      "id": "IDTA01005",
+      "label": "IDTA-01005",
+      "title": "Specification of the Asset Administration Shell - Part 5: Package File Format (AASX), version 3",
+      "url": "https://industrialdigitaltwin.org/en/content-hub/aasspecifications/specification-of-the-asset-administration-shell-part-5-package-file-format-aasx-idta-number-01005"
+    },
+    {
+      "id": "IEC63278",
+      "label": "IEC 63278-1",
+      "title": "Asset Administration Shell for industrial applications - Part 1: Asset Administration Shell structure",
+      "url": "https://webstore.iec.ch/en/publication/79086"
+    },
+    {
+      "id": "XSD2",
+      "label": "W3C XML Schema Part 2",
+      "title": "XML Schema Part 2: Datatypes Second Edition",
+      "url": "https://www.w3.org/TR/xmlschema-2/"
+    },
+    {
+      "id": "WOTTD11",
+      "label": "W3C Web of Things Thing Description 1.1",
+      "title": "Web of Things (WoT) Thing Description 1.1",
+      "url": "https://www.w3.org/TR/wot-thing-description11/"
+    },
+    {
+      "id": "WOTBINDING",
+      "label": "OPC UA - Web of Things Binding",
+      "title": "OPC UA binding for W3C Thing Descriptions and Thing Models",
+      "url": ""
+    },
+    {
+      "id": "WOTCONNECTIVITY",
+      "label": "OPC UA - WoT Connectivity",
+      "title": "Thing Description registry and derived AddressSpace projection",
+      "url": ""
+    },
+    {
+      "id": "AASJSONLD",
+      "label": "AAS JSON-LD mapping",
+      "title": "JSON-LD mapping for the Asset Administration Shell",
+      "url": ""
+    }
+  ],
+  "useCases": [
+    "An AAS toolchain compiles an environment into a deterministic AASEnvironmentType subtree and serializes that subtree back without losing fields, identity, order, absence or xsd value semantics. This supports generated Servers and lossless interchange between document and AddressSpace forms.",
+    "An OPC UA Client browses live shells and submodels, reads or writes submodel element values with the standard Services, and invokes an AAS operation through AASOperationType.Invoke.",
+    "A registry Client discovers shells and submodels, retrieves versioned documents and AASX packages, and follows federated references while preserving entity identity and applying the target resource's disclosure and authorization policy.",
+    "A product-passport implementation exposes public and controlled AAS content through one registry, retrieves historical revisions, and serves an environment document filtered to the calling Session's permissions."
+  ],
+  "clauseMap": [
+    {
+      "from": "1 Scope",
+      "number": "1",
+      "title": "Scope",
+      "region": "scope"
+    },
+    {
+      "from": "2 Normative references",
+      "number": "2",
+      "title": "Normative references",
+      "region": "normative-references",
+      "generated": "normative-references"
+    },
+    {
+      "from": "3 Terms, definitions and conventions",
+      "number": "3",
+      "title": "Terms, abbreviated terms and conventions",
+      "region": "terms"
+    },
+    {
+      "from": null,
+      "number": "3.1",
+      "title": "Overview",
+      "generated": "terms-overview"
+    },
+    {
+      "from": "3.1 Terms",
+      "number": "3.2",
+      "title": "Asset Administration Shell terms",
+      "generated": "terms"
+    },
+    {
+      "from": null,
+      "number": "3.3",
+      "title": "Abbreviated terms",
+      "generated": "abbreviations"
+    },
+    {
+      "from": null,
+      "number": "3.4",
+      "title": "Conventions used in this document",
+      "slice": "conventions"
+    },
+    {
+      "from": "3.3 Conventions",
+      "number": "3.5",
+      "title": "Normative language"
+    },
+    {
+      "from": "3.4 AddressSpace figures",
+      "number": "3.6",
+      "title": "AddressSpace figures"
+    },
+    {
+      "from": "4 General information",
+      "number": "4",
+      "title": "General information to Asset Administration Shell and OPC UA",
+      "region": "general"
+    },
+    {
+      "from": "4.1 The Asset Administration Shell",
+      "number": "4.1",
+      "title": "Introduction to Asset Administration Shell",
+      "generated": "subject-introduction"
+    },
+    {
+      "from": null,
+      "number": "4.2",
+      "title": "Introduction to OPC Unified Architecture",
+      "slice": "opcua-intro"
+    },
+    {
+      "from": "4.3 Relationship to OPC 30270 v1.00",
+      "number": "4.3",
+      "title": "Relationship to OPC 30270 v1.00"
+    },
+    {
+      "from": null,
+      "number": "5",
+      "title": "Use cases",
+      "region": "use-cases",
+      "generated": "use-cases"
+    },
+    {
+      "from": null,
+      "number": "6",
+      "title": "Asset Administration Shell information model overview",
+      "region": "model-overview"
+    },
+    {
+      "from": "5 Mapping rules",
+      "number": "6.1",
+      "title": "Mapping rules"
+    },
+    {
+      "from": "5.1 General",
+      "number": "6.1.1",
+      "title": "General"
+    },
+    {
+      "from": "5.2 Canonical value representation",
+      "number": "6.1.2",
+      "title": "Canonical value representation"
+    },
+    {
+      "from": "5.3 NodeId and BrowseName assignment",
+      "number": "6.1.3",
+      "title": "NodeId and BrowseName assignment"
+    },
+    {
+      "from": "5.4 Ordering",
+      "number": "6.1.4",
+      "title": "Ordering"
+    },
+    {
+      "from": "5.5 Absent versus empty",
+      "number": "6.1.5",
+      "title": "Absent versus empty"
+    },
+    {
+      "from": "5.6 Instance materialization",
+      "number": "6.1.6",
+      "title": "Instance materialization"
+    },
+    {
+      "from": "6 AAS metamodel ObjectTypes",
+      "number": "6.2",
+      "title": "AAS metamodel ObjectTypes"
+    },
+    {
+      "from": "6.1 Abstract bases",
+      "number": "6.2.1",
+      "title": "Abstract bases"
+    },
+    {
+      "from": "6.2 Environment, shell and asset information",
+      "number": "6.2.2",
+      "title": "Environment, shell and asset information"
+    },
+    {
+      "from": "6.3 Submodel and concept description",
+      "number": "6.2.3",
+      "title": "Submodel and concept description"
+    },
+    {
+      "from": "6.4 Submodel elements",
+      "number": "6.2.4",
+      "title": "Submodel elements"
+    },
+    {
+      "from": "6.5 Invoking an operation",
+      "number": "6.2.5",
+      "title": "Invoking an operation"
+    },
+    {
+      "from": "7 AAS DataTypes",
+      "number": "6.3",
+      "title": "AAS DataTypes"
+    },
+    {
+      "from": "7.1 The xsd type mapping",
+      "number": "6.3.1",
+      "title": "The xsd type mapping"
+    },
+    {
+      "from": "7.2 `AASValueString`",
+      "number": "6.3.2",
+      "title": "AASValueString"
+    },
+    {
+      "from": "7.3 Enumerations",
+      "number": "6.3.3",
+      "title": "Enumerations"
+    },
+    {
+      "from": "7.4 Structures",
+      "number": "6.3.4",
+      "title": "Structures"
+    },
+    {
+      "from": "8 Round-trip conformance",
+      "number": "6.4",
+      "title": "Round-trip conformance"
+    },
+    {
+      "from": "9 The AAS Registry",
+      "number": "6.5",
+      "title": "The AAS Registry"
+    },
+    {
+      "from": "9.1 The registry is folders of files",
+      "number": "6.5.1",
+      "title": "The registry is folders of files"
+    },
+    {
+      "from": "9.2 Registry types",
+      "number": "6.5.2",
+      "title": "Registry types"
+    },
+    {
+      "from": "9.3 Identifiers",
+      "number": "6.5.3",
+      "title": "Identifiers"
+    },
+    {
+      "from": "9.4 Versioning and the lifecycle record",
+      "number": "6.5.4",
+      "title": "Versioning and the lifecycle record"
+    },
+    {
+      "from": "9.5 Discovery and resolution",
+      "number": "6.5.5",
+      "title": "Discovery and resolution"
+    },
+    {
+      "from": "9.6 Federation",
+      "number": "6.5.6",
+      "title": "Federation"
+    },
+    {
+      "from": "9.7 Information disclosure tiers",
+      "number": "6.5.7",
+      "title": "Information disclosure tiers"
+    },
+    {
+      "from": "9.8 The xRegistry API over OPC UA",
+      "number": "6.5.8",
+      "title": "The xRegistry API over OPC UA"
+    },
+    {
+      "from": "9.9 Updateable registry (optional profile)",
+      "number": "6.5.9",
+      "title": "Updateable registry"
+    },
+    {
+      "from": "9.10 Environment documents",
+      "number": "6.5.10",
+      "title": "Environment documents"
+    },
+    {
+      "from": null,
+      "number": "7",
+      "title": "OPC UA ObjectTypes",
+      "region": "objecttypes",
+      "generated": "types",
+      "nodeClass": "UAObjectType"
+    },
+    {
+      "from": null,
+      "number": "8",
+      "title": "OPC UA DataTypes",
+      "region": "datatypes",
+      "generated": "datatypes"
+    },
+    {
+      "from": null,
+      "number": "9",
+      "title": "Instances",
+      "region": "instances",
+      "generated": "types",
+      "nodeClass": "UAObject",
+      "select": {
+        "parentOutsideModel": true
+      }
+    },
+    {
+      "from": "10 Profiles and conformance",
+      "number": "10",
+      "title": "Profiles and conformance units",
+      "region": "profiles"
+    },
+    {
+      "from": null,
+      "number": "11",
+      "title": "Namespaces",
+      "region": "namespaces"
+    },
+    {
+      "from": null,
+      "number": "11.1",
+      "title": "Namespace metadata",
+      "generated": "namespace-metadata"
+    },
+    {
+      "from": null,
+      "number": "11.2",
+      "title": "Handling of OPC UA namespaces",
+      "generated": "namespace-handling"
+    },
+    {
+      "from": "Annex A — Information model",
+      "number": "A",
+      "title": "Asset Administration Shell namespace and mappings",
+      "annex": true,
+      "normative": true,
+      "region": "annex-a",
+      "slice": "annex-a"
+    },
+    {
+      "from": "Annex B — Field coverage",
+      "number": "B",
+      "title": "Field coverage",
+      "annex": true,
+      "normative": true,
+      "region": "annex-b"
+    },
+    {
+      "from": "B.1 Referable and Identifiable",
+      "number": "B.1",
+      "title": "Referable and Identifiable"
+    },
+    {
+      "from": "B.2 Shell and asset information",
+      "number": "B.2",
+      "title": "Shell and asset information"
+    },
+    {
+      "from": "B.3 Submodel and concept description",
+      "number": "B.3",
+      "title": "Submodel and concept description"
+    },
+    {
+      "from": "B.4 Submodel elements",
+      "number": "B.4",
+      "title": "Submodel elements"
+    },
+    {
+      "from": "B.5 Value classes",
+      "number": "B.5",
+      "title": "Value classes"
+    },
+    {
+      "from": "Annex C — OPC 30270 v1.00 correspondence",
+      "number": "C",
+      "title": "OPC 30270 v1.00 correspondence",
+      "annex": true,
+      "region": "annex-c"
+    },
+    {
+      "from": "Annex D — Correspondence to the xRegistry HTTP binding",
+      "number": "D",
+      "title": "Correspondence to the xRegistry HTTP binding",
+      "annex": true,
+      "region": "annex-d"
+    },
+    {
+      "from": "Annex E — Federation resolution",
+      "number": "E",
+      "title": "Federation resolution",
+      "annex": true,
+      "region": "annex-e"
+    },
+    {
+      "from": "Annex F — Correspondence to a Thing Description projection",
+      "number": "F",
+      "title": "Correspondence to a Thing Description projection",
+      "annex": true,
+      "region": "annex-f"
+    },
+    {
+      "from": "F.1 Scope of the claim",
+      "number": "F.1",
+      "title": "Scope of the claim"
+    },
+    {
+      "from": "F.2 Granularity",
+      "number": "F.2",
+      "title": "Granularity"
+    },
+    {
+      "from": "F.3 Terms",
+      "number": "F.3",
+      "title": "Terms"
+    },
+    {
+      "from": "F.4 A worked Thing Description",
+      "number": "F.4",
+      "title": "A worked Thing Description"
+    },
+    {
+      "from": "F.5 Implementer notes",
+      "number": "F.5",
+      "title": "Implementer notes"
+    },
+    {
+      "from": "F.6 Type-binding conformance",
+      "number": "F.6",
+      "title": "Type-binding conformance"
+    },
+    {
+      "from": "Annex G — Correspondence to the AAS API of IDTA-01002 Part 2",
+      "number": "G",
+      "title": "Correspondence to the AAS API of IDTA-01002 Part 2",
+      "annex": true,
+      "region": "annex-g"
+    }
+  ],
+  "_comment_dropped": "The template owns the legal front matter, contents, abbreviations, OPC UA introduction and generated Annex A tables. Clause 11 describes repository validation rather than submission content.",
+  "dropped": [
+    "Agreement of Use",
+    "Contents",
+    "3.2 Abbreviations",
+    "4.2 OPC UA",
+    "11 NodeSet validation",
+    "Type overview",
+    "Object types",
+    "DataTypes",
+    "Methods",
+    "AAS"
+  ],
+  "_comment_dropParagraphsContaining": "Repository paths, generated fixture references and review-status prose are omitted from the Word submission without changing the markdown source.",
+  "dropParagraphsContaining": [
+    "tools/build_model.py",
+    "tools/validate_local.py",
+    "tools/roundtrip_check.py",
+    "tools/jsonld/wot_bridge.py",
+    "examples/wot/",
+    "Opc.Ua.I4AAS.NodeIds.csv",
+    "negative control",
+    "currently under OPC Foundation review",
+    "under review by another body"
+  ],
+  "_comment_citedAs": "Names used by sibling documents when referring to this specification.",
+  "citedAs": [
+    "OPC UA for Asset Administration Shell",
+    "OPC-UA-AAS",
+    "OPC 30270",
+    "I4AAS",
+    "AAS companion specification"
+  ],
+  "unanchoredSiblings": [
+    "companion-specs/AAS/README.md"
+  ],
+  "_comment_foreignAnchors": "Document and Part nicknames that qualify references belonging to another specification.",
+  "foreignAnchors": [
+    "AAS API",
+    "AAS JSON-LD mapping",
+    "JSON-LD mapping",
+    "IDTA-01001",
+    "IDTA-01002",
+    "IDTA-01005",
+    "OPC UA — xRegistry",
+    "OPC UA - xRegistry",
+    "xRegistry HTTP binding",
+    "AAS xRegistry binding",
+    "OPC UA — Web of Things Binding",
+    "OPC UA - Web of Things Binding",
+    "WoT Binding",
+    "OPC UA — WoT Connectivity",
+    "OPC UA - WoT Connectivity",
+    "WoT Connectivity",
+    "The type binding is",
+    "The examples carry both forms of",
+    "Thing Description 1.1",
+    "OPC 30270 v1.00"
+  ],
+  "annexMap": {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "D": "D",
+    "E": "E",
+    "F": "F",
+    "G": "G"
+  },
+  "xrefMap": {
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "3.1": "3.2",
+    "3.2": "3.3",
+    "3.3": "3.5",
+    "3.4": "3.6",
+    "4": "4",
+    "4.1": "4.1",
+    "4.2": "4.2",
+    "4.3": "4.3",
+    "5": "6.1",
+    "5.1": "6.1.1",
+    "5.2": "6.1.2",
+    "5.3": "6.1.3",
+    "5.4": "6.1.4",
+    "5.5": "6.1.5",
+    "5.6": "6.1.6",
+    "6": "6.2",
+    "6.1": "6.2.1",
+    "6.2": "6.2.2",
+    "6.3": "6.2.3",
+    "6.4": "6.2.4",
+    "6.5": "6.2.5",
+    "7": "6.3",
+    "7.1": "6.3.1",
+    "7.2": "6.3.2",
+    "7.3": "6.3.3",
+    "7.4": "6.3.4",
+    "8": "6.4",
+    "9": "6.5",
+    "9.1": "6.5.1",
+    "9.2": "6.5.2",
+    "9.3": "6.5.3",
+    "9.4": "6.5.4",
+    "9.5": "6.5.5",
+    "9.6": "6.5.6",
+    "9.7": "6.5.7",
+    "9.8": "6.5.8",
+    "9.9": "6.5.9",
+    "9.10": "6.5.10",
+    "10": "10",
+    "A": "A",
+    "B": "B",
+    "B.1": "B.1",
+    "B.2": "B.2",
+    "B.3": "B.3",
+    "B.4": "B.4",
+    "B.5": "B.5",
+    "C": "C",
+    "D": "D",
+    "E": "E",
+    "F": "F",
+    "F.1": "F.1",
+    "F.2": "F.2",
+    "F.3": "F.3",
+    "F.4": "F.4",
+    "F.5": "F.5",
+    "F.6": "F.6",
+    "G": "G"
+  },
+  "figures": [
+    {
+      "id": "fig-aas-notation",
+      "caption": "Graphical notation used by the AddressSpace figures",
+      "pptx": "AAS-Fig1-Notation.pptx"
+    },
+    {
+      "id": "fig-aas-referable",
+      "caption": "AASReferableType and the identity it gives every element",
+      "pptx": "AAS-Fig2-ReferableType.pptx"
+    },
+    {
+      "id": "fig-aas-aspect-bases",
+      "caption": "The orthogonal aspect bases",
+      "pptx": "AAS-Fig3-AspectBases.pptx"
+    },
+    {
+      "id": "fig-aas-environment",
+      "caption": "AASEnvironmentType, the container a generator materializes",
+      "pptx": "AAS-Fig4-Environment.pptx"
+    },
+    {
+      "id": "fig-aas-shell",
+      "caption": "AASType and the asset identity it carries",
+      "pptx": "AAS-Fig5-Shell.pptx"
+    },
+    {
+      "id": "fig-aas-submodel-concept",
+      "caption": "AASSubmodelType and AASConceptDescriptionType",
+      "pptx": "AAS-Fig6-SubmodelConcept.pptx"
+    },
+    {
+      "id": "fig-aas-elements",
+      "caption": "The submodel element hierarchy",
+      "pptx": "AAS-Fig7-ElementHierarchy.pptx"
+    },
+    {
+      "id": "fig-aas-value-type",
+      "caption": "A value and the type it is declared as",
+      "pptx": "AAS-Fig8-ValueType.pptx"
+    },
+    {
+      "id": "fig-aas-collections",
+      "caption": "Ordered and unordered collections",
+      "pptx": "AAS-Fig9-Collections.pptx"
+    },
+    {
+      "id": "fig-aas-composition",
+      "caption": "Composition, operations and events",
+      "pptx": "AAS-Fig10-Composition.pptx"
+    },
+    {
+      "id": "fig-aas-registry",
+      "caption": "The registry root, shells and their submodel documents",
+      "pptx": "AAS-Fig11-Registry.pptx"
+    },
+    {
+      "id": "fig-aas-registry-stores",
+      "caption": "Templates, concept dictionaries and package stores, each with its source identity",
+      "pptx": "AAS-Fig12-RegistryStores.pptx"
+    },
+    {
+      "id": "fig-aas-updateable-registry",
+      "caption": "The updateable registry profile",
+      "pptx": "AAS-Fig13-UpdateableRegistry.pptx"
+    },
+    {
+      "id": "fig-aas-materialization-lifecycle",
+      "caption": "Materialization lifecycle of one stored document",
+      "pptx": "AAS-Fig14-MaterializationLifecycle.pptx"
+    },
+    {
+      "id": "fig-aas-environment-document",
+      "caption": "The materialized environment served as a retrievable document",
+      "pptx": "AAS-Fig15-EnvironmentDocument.pptx"
+    }
+  ]
+}
