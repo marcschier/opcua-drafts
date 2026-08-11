@@ -429,6 +429,20 @@ A Server **shall not** materialize a node for an absent field, and **shall not**
 present-but-empty field. A serializer distinguishes the two by the presence of the node, never by
 its value.
 
+The rule presupposes that the field has a node of its own, and five do not. `submodelElements`,
+`SubmodelElementCollection.value`, `SubmodelElementList.value`, `Entity.statements` and
+`AnnotatedRelationshipElement.annotations` materialize as components of the parent node rather than
+as a node holding a collection (Annex B), so an absent one and a present-but-empty one both leave
+the parent with no children of that kind and no marker distinguishes them. For these five fields
+only, the distinction is therefore **not** preserved: a serializer **shall** emit the field as
+absent where the parent has no corresponding children, and clause 6.4 compares them accordingly.
+
+Collapsing the distinction is deliberate rather than an oversight. Preserving it would require a
+marker node on every collection-bearing element, which would appear in every AddressSpace to record
+a difference the metamodel draws but nothing observable depends on, and clause 6.4 would still have
+to special-case it. Every other optional field keeps the distinction, because every other optional
+field has a node.
+
 #### 6.1.6 Instance materialization
 
 Materializing an `Environment` is mechanical:
@@ -989,7 +1003,12 @@ Two environments are equivalent when, after canonical ordering of JSON object me
   multi-language value, an operation's variables, and a `SubmodelElementList` whose `orderRelevant`
   is true;
 - a `SubmodelElementList` whose `orderRelevant` is false is compared as a bag: same members, same
-  multiplicities, order disregarded.
+  multiplicities, order disregarded;
+- the five container fields of clause 6.1.5 that materialize as parent components rather than as a
+  node of their own — `submodelElements`, `SubmodelElementCollection.value`,
+  `SubmodelElementList.value`, `Entity.statements` and
+  `AnnotatedRelationshipElement.annotations` — are compared with absent and present-but-empty
+  treated alike, since the mapping does not distinguish them.
 
 No further tolerance applies. A field that cannot be represented is a defect in this specification;
 Annex B is the list against which that is checked.
