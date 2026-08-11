@@ -56,6 +56,7 @@ relationship to this specification.
 - *Specification of the Asset Administration Shell — Part 5: Package File Format (AASX)*,
   IDTA-01005, version 3.
 - IEC 63278-1 — Asset Administration Shell for industrial applications.
+- W3C XML Schema Definition Language (XSD) 1.1 Part 2: Datatypes.
 
 Informative:
 
@@ -203,6 +204,40 @@ informative concept correspondence for migration tooling.
 
 ## 5 Use cases
 
+### 5.1 Registry discovery
+
+Given an asset key such as a serial number or manufacturer part identifier, a Client needs to find
+which shells describe that asset without browsing the whole collection. `LookupShellsByAssetLink`
+(clause 6.5.5) answers that question directly, using the registry's indexed asset links rather than
+a traversal of every shell group.
+
+### 5.2 Digital Product Passport
+
+A Digital Product Passport is public in part and restricted in part. The registry serves that shape
+with the disclosure tiers and authorization advertisement of clause 6.5.7, and with the version
+history of clause 6.5.4. That history lets a record be retrieved as it stood on a date, which
+regulation requires and the AAS metamodel alone cannot supply.
+
+### 5.3 Lossless Server generation from an AAS
+
+The mapping leaves no choice to the implementer (clause 6.1.6). An AAS can therefore be compiled by
+a source generator into a loadable NodeSet, and a Server that loads that NodeSet serves the AAS. This
+is a consequence of losslessness: a mapping with implementation-defined choices could not be
+compiled deterministically.
+
+### 5.4 Federation
+
+A shell may be described by one registry and hosted by another. It is reached through an
+`ExternalReference` or `ResourceUrl`, while identity remains the AAS identifier attributes and the
+identifier derived from them, never an endpoint (clause 6.5.6). A Client can therefore follow the
+serving location without changing the entity it has resolved.
+
+### 5.5 Authoring an AAS as a Thing Description
+
+A WoT Thing Description carrying the AAS vocabulary materializes the same AddressSpace (Annex F).
+An AAS authored as linked data and an AAS materialized from an AASX package are therefore the same
+nodes, not parallel representations that a Consumer must reconcile.
+
 ---
 
 ## 6 Asset Administration Shell information model overview
@@ -260,6 +295,11 @@ A Server therefore:
 
 - **shall** materialize a value into the DataType of clause 6.3.1, and
 - **shall** serialize it back as the XSD canonical lexical representation of that type.
+
+The canonical lexical representation is the one defined by XSD 1.1 Part 2: Datatypes. For
+`xs:decimal`, the `decimalCanonicalMap` omits the fractional part where the value is integral:
+`"1"` therefore serializes as `"1"`, not as the XSD 1.0 form `"1.0"`. The same XSD 1.1
+canonical mapping governs the exponent form serialized for `xs:float` and `xs:double`.
 
 A Property authored as `"1.500000"` with `ValueType` `xs:decimal` therefore serializes as `"1.5"`,
 and one authored `"+42"` with `xs:int` serializes as `"42"`. The documents are equivalent under
@@ -943,8 +983,8 @@ Two environments are equivalent when, after canonical ordering of JSON object me
 
 - every field present in one is present in the other, and absent in one is absent in the other;
 - every value is the same element of the xsd value space of its declared `valueType`, compared per
-  XML Schema Part 2. `"1.500000"` and `"1.5"` are equivalent as `xs:decimal`; `"1"` and `"true"` are
-  equivalent as `xs:boolean`; `"1.5"` and `"2.5"` are not;
+  XSD 1.1 Part 2: Datatypes. `"1.500000"` and `"1.5"` are equivalent as `xs:decimal`; `"1"` and
+  `"true"` are equivalent as `xs:boolean`; `"1.5"` and `"2.5"` are not;
 - every array to which the metamodel gives an order is compared in order: the keys of a reference, a
   multi-language value, an operation's variables, and a `SubmodelElementList` whose `orderRelevant`
   is true;
@@ -1031,8 +1071,10 @@ flowchart TD
   REG[[AASRegistryType]]:::objecttype
   SGT[[AASShellGroupType]]:::objecttype
   SFT[[AASSubmodelFileType]]:::objecttype
+  EFT[[AASEnvironmentFileType]]:::objecttype
   SG[&lt;ShellGroup&gt;]:::object
   SM[&lt;Submodel&gt;]:::object
+  ENV[&lt;Environment&gt;]:::object
   LOOK(LookupShellsByAssetLink):::method
   GET(GetSubmodel):::method
   AID[AasIdentifier]:::variable
@@ -1042,12 +1084,15 @@ flowchart TD
   BREG -->|HasSubtype| REG
   BGRP -->|HasSubtype| SGT
   BRES -->|HasSubtype| SFT
+  BRES -->|HasSubtype| EFT
   REG -->|Organizes| SG
+  REG -->|Organizes| ENV
   REG -->|HasComponent| LOOK
   REG -->|HasComponent| GET
   SG ==> SGT
   SGT -->|Organizes| SM
   SM ==> SFT
+  ENV ==> EFT
   SGT -->|HasProperty| AID
   SGT -->|HasProperty| AK
   SFT -->|HasProperty| SID
@@ -1173,11 +1218,13 @@ a current manifest only as a mutable Resource-level alias and **shall never** be
 The tag **shall** match `[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}` and **shall** be preserved byte-for-byte,
 including case and a leading underscore. Moving a tag to a previously unseen manifest **shall**
 create and retain a distinct immutable Version and **shall not** mutate or replace the old Version.
-An `AASPackageFileType` Version **shall not** instantiate `Subject` or `Attestations`. An
-attestation or other OCI referrer **shall** be represented as a separate immutable Resource and
-**shall not** become a Version of the package Resource it refers to. Adding, removing or discovering
-a referrer **shall not** change that package Resource's Version collection, default Version,
-document, attributes, `Epoch` or `ModifiedAt`.
+The xRegistry base `ResourceType` declares the `Attestations` attribute, and
+`AASAttestationDataType` is the AAS payload type for that attribute. An `AASPackageFileType` Version
+**shall not** instantiate `Subject` or `Attestations`: the prohibition is on the package Version,
+not on use of the DataType. An attestation or other OCI referrer **shall** be represented as a
+separate immutable Resource and **shall not** become a Version of the package Resource it refers to.
+Adding, removing or discovering a referrer **shall not** change that package Resource's Version
+collection, default Version, document, attributes, `Epoch` or `ModifiedAt`.
 
 #### 6.5.5 Discovery and resolution
 
@@ -1812,6 +1859,9 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | ns=2;i=1234 | [AASValueReferencePairDataType](#type-AASValueReferencePairDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 | ns=2;i=1235 | [AASValueListDataType](#type-AASValueListDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 | ns=2;i=1236 | [AASLevelTypeDataType](#type-AASLevelTypeDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+
+`AASAttestationDataType` is carried by the `Attestations` attribute inherited from the xRegistry
+`ResourceType`. It therefore has no Variable declared by this namespace as its carrier.
 
 ### Object types
 
