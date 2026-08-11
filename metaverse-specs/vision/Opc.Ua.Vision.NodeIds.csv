@@ -24,6 +24,10 @@ VisionDistortionModelEnum,3014,DataType
 VisionDistortionModelEnum_EnumStrings,3914,Variable
 VisionSensorModalityEnum,3015,DataType
 VisionSensorModalityEnum_EnumStrings,3915,Variable
+VisionLampTypeEnum,3016,DataType
+VisionLampTypeEnum_EnumStrings,3916,Variable
+VisionLightingModeEnum,3017,DataType
+VisionLightingModeEnum_EnumStrings,3917,Variable
 VisionPose3DDataType,3050,DataType
 VisionPose3DDataType_Encoding_DefaultBinary,5001,Object
 VisionBoundingBox2DDataType,3051,DataType
@@ -65,7 +69,7 @@ MediaEndpointType_EndpointUri,6015,Variable
 MediaEndpointType_State,6016,Variable
 MediaEndpointType_Authentication,6017,Variable
 MediaEndpointType_SecureTransport,6018,Variable
-MediaEndpointType_ProfileName,6019,Variable
+MediaEndpointType_DefaultProfileName,6019,Variable
 StreamEndpointType,1008,ObjectType
 StreamEndpointType_StreamProtocol,6020,Variable
 StreamEndpointType_ProtocolVersion,6021,Variable
@@ -218,3 +222,5 @@ Vision,7001,Object
 MediaEndpointType_DataChannelSource,6196,Variable
 MediaEndpointType_DataChannelContentType,6197,Variable
 InferencePipelineType_LearningJob,6198,Variable
+Depth3DSensorType_DepthWidth,6199,Variable
+Depth3DSensorType_DepthHeight,6200,Variable

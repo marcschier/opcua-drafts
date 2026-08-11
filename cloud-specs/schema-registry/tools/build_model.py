@@ -157,7 +157,8 @@ def instance_method(owner, owner_sym, name, decl_nid, desc, inargs=None, outargs
 def _args(method_nid, method_sym, bname, args, instance=False):
     nid = _mid()
     add(nid, "UAVariable", bname, f"{method_sym}_{bname}", parent=T(method_nid),
-        attrs={"DataType": Argument, "ValueRank": "1", "ArrayDimensions": str(len(args))},
+        attrs={"DataType": Argument, "ValueRank": "1", "ArrayDimensions": str(len(args)),
+               "BrowseNameNamespace": 0},
         category=(CAT_INST if instance else None))
     if not instance:
         ref(nid, HasModellingRule, MR_Mandatory)
@@ -311,6 +312,13 @@ def _fmt_datatype(t):
     return DATATYPE_ALIAS.get(t, t)
 
 def _fmt_browse_name(n):
+    # A standard BrowseName defined by the core specifications lives in namespace 0 and
+    # must not be qualified into this model's namespace. InputArguments in particular:
+    # a stack resolves a Method's signature by looking for that Property in namespace 0,
+    # and a prefixed one is not found, so the Method is treated as taking no arguments
+    # and every call is rejected with Bad_TooManyArguments.
+    if n.attrs.get("BrowseNameNamespace") == 0:
+        return sx.escape(n.bname)
     return f"{OWN_NS}:{sx.escape(n.bname)}"
 
 def _emit_node(n):

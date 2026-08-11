@@ -368,7 +368,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Neither list is a statement that the omitted capability is unimportant — only that Release 0.1.0 does not define it, and that a Server is conformant without it."
+            "text": "Neither list is a statement that the omitted capability is unimportant — only that Release 0.2.0 does not define it, and that a Server is conformant without it."
           }
         ],
         "src": {
@@ -389,7 +389,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Release 0.1.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by "
+            "text": "Release 0.2.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by "
           },
           {
             "r": "t",
@@ -1135,7 +1135,21 @@
           },
           {
             "r": "t",
-            "text": " so a client can discover what a Server supports. Defined in clause 11; "
+            "text": " so a client can discover what a Server supports. Defined in "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c11",
+            "kind": "clause",
+            "prefix": "11"
+          },
+          {
+            "r": "t",
+            "text": "; "
           },
           {
             "r": "t",
@@ -1565,14 +1579,24 @@
             "text": " need not implement any of them — see "
           },
           {
-            "r": "xref",
-            "target": "c6-20-1",
-            "kind": "clause",
-            "prefix": "6.20.1"
+            "r": "t",
+            "text": "§8.1"
           },
           {
             "r": "t",
-            "text": " and clause 11."
+            "text": " and "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "t",
+            "text": "11"
+          },
+          {
+            "r": "t",
+            "text": "."
           }
         ],
         "src": {
@@ -2104,7 +2128,21 @@
           },
           {
             "r": "t",
-            "text": ", which names the simulator and the scene prim being rendered; clause 11 accordingly makes "
+            "text": ", which names the simulator and the scene prim being rendered; "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c11",
+            "kind": "clause",
+            "prefix": "11"
+          },
+          {
+            "r": "t",
+            "text": " accordingly makes "
           },
           {
             "r": "t",
@@ -2638,7 +2676,21 @@
           },
           {
             "r": "t",
-            "text": " is the mandatory core; everything else is claimed through the facets of clause 11. The subclauses below describe, for each type, why it exists, when a Server instantiates it and what a client does with it. Field-level declarations are in Annex A; units and orderings are fixed in "
+            "text": " is the mandatory core; everything else is claimed through the facets of "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c11",
+            "kind": "clause",
+            "prefix": "11"
+          },
+          {
+            "r": "t",
+            "text": ". The subclauses below describe, for each type, why it exists, when a Server instantiates it and what a client does with it. Field-level declarations are in Annex A; units and orderings are fixed in "
           },
           {
             "r": "xref",
@@ -2787,6 +2839,112 @@
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.1 Type hierarchy",
           "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Every other ObjectType in this specification is "
+          },
+          {
+            "r": "t",
+            "text": "concrete and directly instantiated",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ", and has no subtypes here: "
+          },
+          {
+            "r": "code",
+            "text": "VisionRootType"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "OpticsType"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "IlluminationType"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "CoordinateFrameType"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "InferencePipelineType"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "VisionFeedbackType"
+          },
+          {
+            "r": "t",
+            "text": ". They are absent from the figure above because it shows the subtype lattice and they take no part in one, not because their concreteness is undecided. "
+          },
+          {
+            "r": "code",
+            "text": "VisionFeedbackType"
+          },
+          {
+            "r": "t",
+            "text": " in particular is instantiated directly as the "
+          },
+          {
+            "r": "code",
+            "text": "Feedback"
+          },
+          {
+            "r": "t",
+            "text": " object of an "
+          },
+          {
+            "r": "code",
+            "text": "InferencePipelineType"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-21-1",
+            "kind": "clause",
+            "prefix": "6.21.1"
+          },
+          {
+            "r": "t",
+            "text": "); a Server does not subtype it to obtain a feedback surface."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "5.1 Type hierarchy",
+          "b": 5
         }
       },
       {
@@ -3180,7 +3338,62 @@
           },
           {
             "r": "t",
-            "text": " folder is not doing AI, and a client can determine that in one Browse rather than by inference."
+            "text": " folder is not doing AI, and a client can determine that in one Browse rather than by inference. A Server claiming "
+          },
+          {
+            "r": "t",
+            "text": "VIS-Calibration",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " is the exception: "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c11",
+            "kind": "clause",
+            "prefix": "11"
+          },
+          {
+            "r": "t",
+            "text": " makes "
+          },
+          {
+            "r": "code",
+            "text": "Frames"
+          },
+          {
+            "r": "t",
+            "text": " mandatory under that facet and requires it to hold every frame reachable through "
+          },
+          {
+            "r": "code",
+            "text": "MountedOn"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "SourceFrame"
+          },
+          {
+            "r": "t",
+            "text": " or "
+          },
+          {
+            "r": "code",
+            "text": "TargetFrame"
+          },
+          {
+            "r": "t",
+            "text": ", so that a client publishing or consuming poses has one deterministic entry point rather than having to walk the sensors to find frames."
           }
         ],
         "src": {
@@ -3999,6 +4212,22 @@
           },
           {
             "r": "t",
+            "text": ", and — where the device has one — the shape of its native depth image in "
+          },
+          {
+            "r": "code",
+            "text": "DepthWidth"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "DepthHeight"
+          },
+          {
+            "r": "t",
             "text": "."
           }
         ],
@@ -4071,8 +4300,43 @@
         "style": "PARAGRAPH",
         "runs": [
           {
+            "r": "code",
+            "text": "DepthWidth"
+          },
+          {
             "r": "t",
-            "text": "A Server instantiates it for stereo, time-of-flight, structured-light or laser-triangulation devices. A device that produces both a depth map and a registered 2-D image is modelled as two sensors sharing a "
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "DepthHeight"
+          },
+          {
+            "r": "t",
+            "text": " are Optional and are present or absent together. A structured-light, time-of-flight or stereo device produces an ordered depth image with a native shape, and a client needs that shape for two things a count cannot give it: reprojecting a depth pixel back to a ray, and sizing a decoder for a depth stream that is not delivered as an unordered cloud. "
+          },
+          {
+            "r": "code",
+            "text": "PointsPerFrame"
+          },
+          {
+            "r": "t",
+            "text": " is a nominal count and is not a substitute. A sensor whose output genuinely has no image shape — a profile or line-triangulation device, or one that emits only an unordered cloud — omits both."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "5.6 `Depth3DSensorType : VisionSensorType`",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A device that produces both a depth map and a registered 2-D image is modelled as two sensors sharing a "
           },
           {
             "r": "code",
@@ -4080,13 +4344,60 @@
           },
           {
             "r": "t",
-            "text": ", not as one sensor carrying both member sets."
+            "text": ", not as one sensor carrying both member sets. "
+          },
+          {
+            "r": "code",
+            "text": "DepthWidth"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "DepthHeight"
+          },
+          {
+            "r": "t",
+            "text": " therefore do not duplicate "
+          },
+          {
+            "r": "code",
+            "text": "ImageSensorType.Width"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "Height"
+          },
+          {
+            "r": "t",
+            "text": ": they describe the depth image of a device that need not have a 2-D sensor at all, which is the common case for the structured-light sensors this type is instantiated for."
           }
         ],
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.6 `Depth3DSensorType : VisionSensorType`",
-          "b": 2
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A Server instantiates it for stereo, time-of-flight, structured-light or laser-triangulation devices."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "5.6 `Depth3DSensorType : VisionSensorType`",
+          "b": 4
         }
       },
       {
@@ -4125,7 +4436,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.6 `Depth3DSensorType : VisionSensorType`",
-          "b": 3
+          "b": 5
         }
       },
       {
@@ -4150,7 +4461,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.6 `Depth3DSensorType : VisionSensorType`",
-          "b": 4
+          "b": 6
         }
       },
       {
@@ -4276,6 +4587,389 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "OpticsType"
+          },
+          {
+            "r": "t",
+            "text": " carries "
+          },
+          {
+            "r": "code",
+            "text": "FocalLength"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Aperture"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "WorkingDistance"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "MinimumWorkingDistance"
+          },
+          {
+            "r": "t",
+            "text": ", all Optional and all in the units "
+          },
+          {
+            "r": "xref",
+            "target": "c6-17",
+            "kind": "clause",
+            "prefix": "6.17"
+          },
+          {
+            "r": "t",
+            "text": " fixes, together with four further Optional members describing the lens as a part rather than as a setting: "
+          },
+          {
+            "r": "code",
+            "text": "Magnification"
+          },
+          {
+            "r": "t",
+            "text": ", the image size divided by the object size; "
+          },
+          {
+            "r": "code",
+            "text": "OpticalFormat"
+          },
+          {
+            "r": "t",
+            "text": ", the largest sensor diagonal the lens covers, conventionally written as a fraction of an inch such as "
+          },
+          {
+            "r": "code",
+            "text": "2/3\""
+          },
+          {
+            "r": "t",
+            "text": "; "
+          },
+          {
+            "r": "code",
+            "text": "MountType"
+          },
+          {
+            "r": "t",
+            "text": ", the mechanical mount — "
+          },
+          {
+            "r": "code",
+            "text": "C"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "CS"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "F"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "M12"
+          },
+          {
+            "r": "t",
+            "text": "; and "
+          },
+          {
+            "r": "code",
+            "text": "LensType"
+          },
+          {
+            "r": "t",
+            "text": ", the optical class — "
+          },
+          {
+            "r": "code",
+            "text": "Entocentric"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Telecentric"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Fisheye"
+          },
+          {
+            "r": "t",
+            "text": ". The last three are free-form "
+          },
+          {
+            "r": "code",
+            "text": "String"
+          },
+          {
+            "r": "t",
+            "text": "s: unlike the illumination vocabulary they describe mechanical and optical conventions that predate this model and are not standardised anywhere it could point to, and "
+          },
+          {
+            "r": "code",
+            "text": "OpticalFormat"
+          },
+          {
+            "r": "t",
+            "text": " in particular is a notation rather than a value space. A client matching a lens to a sensor uses "
+          },
+          {
+            "r": "code",
+            "text": "OpticalFormat"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "MountType"
+          },
+          {
+            "r": "t",
+            "text": "; one deciding whether a measurement is geometrically possible uses "
+          },
+          {
+            "r": "code",
+            "text": "Magnification"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "LensType"
+          },
+          {
+            "r": "t",
+            "text": ", since a telecentric lens and an entocentric one of the same focal length do not measure the same way."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "5.7 `OpticsType` and `IlluminationType`",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "IlluminationType.LampType"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "LightingMode"
+          },
+          {
+            "r": "t",
+            "text": " are Optional and enumerated. "
+          },
+          {
+            "r": "code",
+            "text": "LampType"
+          },
+          {
+            "r": "t",
+            "text": " is a "
+          },
+          {
+            "r": "code",
+            "text": "VisionLampTypeEnum"
+          },
+          {
+            "r": "t",
+            "text": " — "
+          },
+          {
+            "r": "code",
+            "text": "Led"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Fluorescent"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Laser"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Xenon"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Halogen"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Other"
+          },
+          {
+            "r": "t",
+            "text": " — and states the emitter technology. "
+          },
+          {
+            "r": "code",
+            "text": "LightingMode"
+          },
+          {
+            "r": "t",
+            "text": " is a "
+          },
+          {
+            "r": "code",
+            "text": "VisionLightingModeEnum"
+          },
+          {
+            "r": "t",
+            "text": " — "
+          },
+          {
+            "r": "code",
+            "text": "Continuous"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Strobe"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Modulated"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Other"
+          },
+          {
+            "r": "t",
+            "text": " — and states how the emitter is currently being driven, which is what tells a client whether a short exposure on a moving part is viable."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "5.7 `OpticsType` and `IlluminationType`",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Both are enumerated rather than free text. OPC 40100-2 types the corresponding members as an open "
+          },
+          {
+            "r": "code",
+            "text": "String"
+          },
+          {
+            "r": "t",
+            "text": " and an unconstrained "
+          },
+          {
+            "r": "code",
+            "text": "UInt32"
+          },
+          {
+            "r": "t",
+            "text": " and gives its permitted values only as prose examples, which leaves every integration to hard-code its own vocabulary — the failure this clause exists to prevent. The enumerations are seeded with exactly the values 40100-2 names, so the alignment holds at the level of values and not merely of member names, and "
+          },
+          {
+            "r": "code",
+            "text": "Other"
+          },
+          {
+            "r": "t",
+            "text": " keeps the value space open for an emitter neither standard anticipated. Annex D gives the conversion in both directions for a Server that implements both models."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "5.7 `OpticsType` and `IlluminationType`",
+          "b": 6
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-13",
         "title": "Frames and calibration",
@@ -4299,11 +4993,19 @@
           },
           {
             "r": "t",
-            "text": " from the ISO 9787 vocabulary, and links it to its "
+            "text": " from the ISO 9787 vocabulary, links it to its "
           },
           {
             "r": "code",
             "text": "ParentFrame"
+          },
+          {
+            "r": "t",
+            "text": ", and carries its "
+          },
+          {
+            "r": "code",
+            "text": "Transform"
           },
           {
             "r": "t",
@@ -4314,6 +5016,143 @@
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.8 Frames and calibration",
           "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "Transform"
+          },
+          {
+            "r": "t",
+            "text": " is Optional and is the pose of "
+          },
+          {
+            "r": "t",
+            "text": "this",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " frame expressed in its "
+          },
+          {
+            "r": "code",
+            "text": "ParentFrame"
+          },
+          {
+            "r": "t",
+            "text": " — parent-to-child, the same direction as "
+          },
+          {
+            "r": "code",
+            "text": "ExtrinsicCalibrationType.Transform"
+          },
+          {
+            "r": "t",
+            "text": " in its "
+          },
+          {
+            "r": "code",
+            "text": "TargetFrame"
+          },
+          {
+            "r": "t",
+            "text": ", so a client composing a chain applies every transform it meets the same way and never has to invert one. "
+          },
+          {
+            "r": "code",
+            "text": "Transform.FrameId"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " equal the "
+          },
+          {
+            "r": "code",
+            "text": "FrameId"
+          },
+          {
+            "r": "t",
+            "text": " of the frame named by "
+          },
+          {
+            "r": "code",
+            "text": "ParentFrame"
+          },
+          {
+            "r": "t",
+            "text": "; a Server that cannot satisfy that has not established what its own numbers are relative to. A root frame has no "
+          },
+          {
+            "r": "code",
+            "text": "ParentFrame"
+          },
+          {
+            "r": "t",
+            "text": " and therefore no "
+          },
+          {
+            "r": "code",
+            "text": "Transform"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "5.8 Frames and calibration",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "Transform"
+          },
+          {
+            "r": "t",
+            "text": " is a snapshot, not a guarantee of constancy. A static frame — a camera bolted to a gantry — holds a value that does not change, and a moving one, such as a tool frame on a robot, holds the pose at the moment it was read. A client that needs a pose synchronised with a specific image "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " read it from here; it takes the frame data accompanying the result, because a separately read "
+          },
+          {
+            "r": "code",
+            "text": "Transform"
+          },
+          {
+            "r": "t",
+            "text": " and a separately delivered image have no common timestamp."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "5.8 Frames and calibration",
+          "b": 2
         }
       },
       {
@@ -4372,7 +5211,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.8 Frames and calibration",
-          "b": 1
+          "b": 3
         }
       },
       {
@@ -4468,7 +5307,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.8 Frames and calibration",
-          "b": 2
+          "b": 4
         }
       },
       {
@@ -4499,7 +5338,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.8 Frames and calibration",
-          "b": 3
+          "b": 5
         }
       },
       {
@@ -4516,7 +5355,21 @@
           },
           {
             "r": "t",
-            "text": " whenever it publishes poses — clause 11 ties this to "
+            "text": " whenever it publishes poses — "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c11",
+            "kind": "clause",
+            "prefix": "11"
+          },
+          {
+            "r": "t",
+            "text": " ties this to "
           },
           {
             "r": "t",
@@ -4557,7 +5410,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.8 Frames and calibration",
-          "b": 4
+          "b": 6
         }
       },
       {
@@ -4621,7 +5474,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.8 Frames and calibration",
-          "b": 5
+          "b": 7
         }
       },
       {
@@ -4654,7 +5507,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.8 Frames and calibration",
-          "b": 6
+          "b": 8
         }
       },
       {
@@ -4813,7 +5666,21 @@
           },
           {
             "r": "t",
-            "text": "; clause 11 makes "
+            "text": "; "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c11",
+            "kind": "clause",
+            "prefix": "11"
+          },
+          {
+            "r": "t",
+            "text": " makes "
           },
           {
             "r": "t",
@@ -6917,6 +7784,28 @@
             [
               {
                 "r": "code",
+                "text": "Depth3DSensorType.DepthWidth"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "DepthHeight"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "pixels"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
                 "text": "StreamEndpointType.Bitrate"
               }
             ],
@@ -7998,7 +8887,40 @@
           },
           {
             "r": "t",
-            "text": ", and a Server "
+            "text": ", and "
+          },
+          {
+            "r": "code",
+            "text": "CoordinateFrameType.Transform.FrameId"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " equal the "
+          },
+          {
+            "r": "code",
+            "text": "FrameId"
+          },
+          {
+            "r": "t",
+            "text": " of the instance referenced by "
+          },
+          {
+            "r": "code",
+            "text": "ParentFrame"
+          },
+          {
+            "r": "t",
+            "text": "; a Server "
           },
           {
             "r": "t",
@@ -8007,7 +8929,7 @@
           },
           {
             "r": "t",
-            "text": " publish the two in disagreement. A client that finds them inconsistent "
+            "text": " publish either pair in disagreement. A client that finds them inconsistent "
           },
           {
             "r": "t",
@@ -8541,10 +9463,8 @@
             "text": " ("
           },
           {
-            "r": "xref",
-            "target": "c11",
-            "kind": "clause",
-            "prefix": "11"
+            "r": "t",
+            "text": "§11"
           },
           {
             "r": "t",
@@ -9056,6 +9976,387 @@
         "runs": [
           {
             "r": "t",
+            "text": "Profiles (normative).",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A "
+          },
+          {
+            "r": "t",
+            "text": "profile",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " is a Server-local named configuration of an endpoint — an encoder preset, an ONVIF Media 2 profile, a vendor recipe — and has no node of its own. "
+          },
+          {
+            "r": "code",
+            "text": "MediaEndpointType.DefaultProfileName"
+          },
+          {
+            "r": "t",
+            "text": " names the one the endpoint uses when "
+          },
+          {
+            "r": "code",
+            "text": "GetStreamEndpoint"
+          },
+          {
+            "r": "t",
+            "text": " is called with an empty "
+          },
+          {
+            "r": "code",
+            "text": "ProfileName"
+          },
+          {
+            "r": "t",
+            "text": ", and is empty where the endpoint has a single configuration and takes no profile name at all."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "6.3 Selecting and configuring endpoints",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This specification defines no way to enumerate the others, deliberately: their number, names and meaning are Server-local, and a folder of them would be a second source of truth for a configuration this model does not otherwise describe. The consequence is stated plainly rather than left to be discovered — a client with no out-of-band knowledge of a Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " pass an empty "
+          },
+          {
+            "r": "code",
+            "text": "ProfileName"
+          },
+          {
+            "r": "t",
+            "text": ", and a Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " honour that by selecting "
+          },
+          {
+            "r": "code",
+            "text": "DefaultProfileName"
+          },
+          {
+            "r": "t",
+            "text": ". Guess-and-retry against "
+          },
+          {
+            "r": "code",
+            "text": "Bad_InvalidArgument"
+          },
+          {
+            "r": "t",
+            "text": " is not a discovery mechanism and a client "
+          },
+          {
+            "r": "t",
+            "text": "should not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " use it. A client that does know a Server's profile names, because it was configured with them, passes one."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "6.3 Selecting and configuring endpoints",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Intrinsics are the sensor's, and are rescaled by the consumer (normative).",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "ImageSensorType.Intrinsics"
+          },
+          {
+            "r": "t",
+            "text": " are expressed at the sensor's native "
+          },
+          {
+            "r": "code",
+            "text": "Width"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "Height"
+          },
+          {
+            "r": "t",
+            "text": " and are authoritative for the sensor's native frame. A "
+          },
+          {
+            "r": "code",
+            "text": "StreamEndpointType"
+          },
+          {
+            "r": "t",
+            "text": " routinely serves a smaller frame — a 4K sensor commonly streams 1080p to keep the bitrate manageable, and "
+          },
+          {
+            "r": "code",
+            "text": "ConfigureStreamEndpoint"
+          },
+          {
+            "r": "t",
+            "text": " lets a client change it — so the two will disagree."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "6.3 Selecting and configuring endpoints",
+          "b": 6
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A client interpreting a frame served on such an endpoint "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " rescale "
+          },
+          {
+            "r": "code",
+            "text": "Fx"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Fy"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Cx"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "Cy"
+          },
+          {
+            "r": "t",
+            "text": " from "
+          },
+          {
+            "r": "code",
+            "text": "(sensor.Width, sensor.Height)"
+          },
+          {
+            "r": "t",
+            "text": " to "
+          },
+          {
+            "r": "code",
+            "text": "(endpoint.Width, endpoint.Height)"
+          },
+          {
+            "r": "t",
+            "text": " before applying them, scaling "
+          },
+          {
+            "r": "code",
+            "text": "Fx"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "Cx"
+          },
+          {
+            "r": "t",
+            "text": " by "
+          },
+          {
+            "r": "code",
+            "text": "endpoint.Width / sensor.Width"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "Fy"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "Cy"
+          },
+          {
+            "r": "t",
+            "text": " by "
+          },
+          {
+            "r": "code",
+            "text": "endpoint.Height / sensor.Height"
+          },
+          {
+            "r": "t",
+            "text": ". Where "
+          },
+          {
+            "r": "code",
+            "text": "ImageSensorType.OffsetX"
+          },
+          {
+            "r": "t",
+            "text": " or "
+          },
+          {
+            "r": "code",
+            "text": "OffsetY"
+          },
+          {
+            "r": "t",
+            "text": " is non-zero the sensor is delivering a crop, and the principal point is not at the centre of the delivered image: the client "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " subtract the offset from "
+          },
+          {
+            "r": "code",
+            "text": "Cx"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "Cy"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "before",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " scaling, because the offset is in native sensor pixels. A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " republish rescaled intrinsics as the sensor's "
+          },
+          {
+            "r": "code",
+            "text": "Intrinsics"
+          },
+          {
+            "r": "t",
+            "text": ", which would misreport the calibration it actually holds."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "6.3 Selecting and configuring endpoints",
+          "b": 7
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A client that skips this converts pixel coordinates to rays that are wrong by the ratio of encoder to sensor resolution. The error is proportional, so it survives every sanity check that looks at units or magnitude, and it is one of the most common integration faults in this domain."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "6.3 Selecting and configuring endpoints",
+          "b": 8
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
             "text": "Data-channel endpoints are never selected implicitly (normative).",
             "b": true
           },
@@ -9202,7 +10503,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "6.3 Selecting and configuring endpoints",
-          "b": 4
+          "b": 9
         }
       },
       {
@@ -9990,7 +11291,25 @@
           },
           {
             "r": "t",
-            "text": " empty selects the endpoint's default profile. "
+            "text": " empty selects the endpoint's "
+          },
+          {
+            "r": "code",
+            "text": "DefaultProfileName"
+          },
+          {
+            "r": "t",
+            "text": " per "
+          },
+          {
+            "r": "xref",
+            "target": "c6-18-3",
+            "kind": "clause",
+            "prefix": "6.18.3"
+          },
+          {
+            "r": "t",
+            "text": ", and is what a client without prior knowledge of the Server passes. "
           },
           {
             "r": "code",
@@ -13027,6 +14346,166 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Optional "
+          },
+          {
+            "r": "code",
+            "text": "LabelClasses"
+          },
+          {
+            "r": "t",
+            "text": ", a "
+          },
+          {
+            "r": "code",
+            "text": "String"
+          },
+          {
+            "r": "t",
+            "text": " array naming what the mask's pixel values mean. Array position "
+          },
+          {
+            "r": "t",
+            "text": "is",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " the mapping: the name at index "
+          },
+          {
+            "r": "t",
+            "text": "i",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " names the class encoded by pixel value "
+          },
+          {
+            "r": "t",
+            "text": "i",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ". Index "
+          },
+          {
+            "r": "code",
+            "text": "0"
+          },
+          {
+            "r": "t",
+            "text": " is reserved for background — the pixels the segmentation assigns to no class — so a mask distinguishing two classes carries three entries. A Server that publishes a mask "
+          },
+          {
+            "r": "t",
+            "text": "should",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " publish "
+          },
+          {
+            "r": "code",
+            "text": "LabelClasses"
+          },
+          {
+            "r": "t",
+            "text": " with it; without it the mask is an image of numbers whose meaning is agreed out of band, which is the situation this clause exists to end."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.4 `SegmentationResultType`",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The mapping is by pixel value, so a mask is single-label: one pixel belongs to one class. This is "
+          },
+          {
+            "r": "t",
+            "text": "semantic",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " segmentation. An "
+          },
+          {
+            "r": "t",
+            "text": "instance",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " segmentation, where two pixels may carry the same class but belong to different objects, is expressed by giving each instance its own value and naming them accordingly — "
+          },
+          {
+            "r": "code",
+            "text": "[\"background\", \"bolt_1\", \"bolt_2\"]"
+          },
+          {
+            "r": "t",
+            "text": " — because a client that must tell two bolts apart needs them to differ in the mask itself, not in a channel convention it has to be told about. Multi-label masks, where one pixel carries several classes at once, are not expressible here."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.4 `SegmentationResultType`",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "LabelClasses"
+          },
+          {
+            "r": "t",
+            "text": " on a result names the classes of "
+          },
+          {
+            "r": "t",
+            "text": "that",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " mask. "
+          },
+          {
+            "r": "code",
+            "text": "ModelType.LabelClasses"
+          },
+          {
+            "r": "t",
+            "text": " (Annex B.3) names the classes the model was trained to produce. They are usually equal and are not required to be: a pipeline may publish a mask covering only the classes present in the frame."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.4 `SegmentationResultType`",
+          "b": 3
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-20",
         "title": "AI integration",
@@ -13889,7 +15368,15 @@
           },
           {
             "r": "t",
-            "text": " object, and offers "
+            "text": " object, carries an optional "
+          },
+          {
+            "r": "code",
+            "text": "LearningJob"
+          },
+          {
+            "r": "t",
+            "text": ", and offers "
           },
           {
             "r": "code",
@@ -13913,13 +15400,124 @@
           },
           {
             "r": "t",
-            "text": "."
+            "text": ". "
+          },
+          {
+            "r": "code",
+            "text": "PipelineId"
+          },
+          {
+            "r": "t",
+            "text": " is Mandatory and identifies the pipeline uniquely within the Server, in the same way "
+          },
+          {
+            "r": "code",
+            "text": "SensorId"
+          },
+          {
+            "r": "t",
+            "text": " identifies a sensor; it is what a "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType"
+          },
+          {
+            "r": "t",
+            "text": " names in its "
+          },
+          {
+            "r": "code",
+            "text": "Pipeline"
+          },
+          {
+            "r": "t",
+            "text": " Property ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-16",
+            "kind": "clause",
+            "prefix": "6.16"
+          },
+          {
+            "r": "t",
+            "text": ")."
           }
         ],
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "8.3 `InferencePipelineType`",
           "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "LearningJob"
+          },
+          {
+            "r": "t",
+            "text": " is an Optional "
+          },
+          {
+            "r": "code",
+            "text": "NodeId"
+          },
+          {
+            "r": "t",
+            "text": " naming the job that consumes the "
+          },
+          {
+            "r": "code",
+            "text": "GroundTruthLabel"
+          },
+          {
+            "r": "t",
+            "text": " corrections submitted through this pipeline's "
+          },
+          {
+            "r": "code",
+            "text": "Feedback"
+          },
+          {
+            "r": "t",
+            "text": " object, or null where the Server retains none. It is a "
+          },
+          {
+            "r": "code",
+            "text": "NodeId"
+          },
+          {
+            "r": "t",
+            "text": " and not a reference for the same reason "
+          },
+          {
+            "r": "code",
+            "text": "Deployment"
+          },
+          {
+            "r": "t",
+            "text": " is: this specification takes no dependency on the model that defines the job. "
+          },
+          {
+            "r": "xref",
+            "target": "c6-21-5-1",
+            "kind": "clause",
+            "prefix": "6.21.5.1"
+          },
+          {
+            "r": "t",
+            "text": " requires it to be non-null wherever such a correction is retained — it is how a client establishes that its label reached a learning loop at all, rather than being accepted and discarded."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "8.3 `InferencePipelineType`",
+          "b": 1
         }
       },
       {
@@ -13934,7 +15532,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "8.3 `InferencePipelineType`",
-          "b": 1
+          "b": 2
         }
       },
       {
@@ -14617,6 +16215,50 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "VisionFeedbackType"
+          },
+          {
+            "r": "t",
+            "text": " is a "
+          },
+          {
+            "r": "t",
+            "text": "concrete",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " ObjectType. A Server instantiates it directly as the "
+          },
+          {
+            "r": "code",
+            "text": "Feedback"
+          },
+          {
+            "r": "t",
+            "text": " object of an "
+          },
+          {
+            "r": "code",
+            "text": "InferencePipelineType"
+          },
+          {
+            "r": "t",
+            "text": "; it is not abstract and is not subtyped to obtain a feedback surface."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "9.1 Why this clause exists",
+          "b": 4
+        }
+      },
+      {
         "t": "figure",
         "id": "fig-vis-returnpath",
         "caption": "The return path",
@@ -14625,7 +16267,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "9.1 Why this clause exists",
-          "b": 4
+          "b": 5
         }
       },
       {
@@ -15076,6 +16718,105 @@
         "style": "PARAGRAPH",
         "runs": [
           {
+            "r": "t",
+            "text": "A "
+          },
+          {
+            "r": "t",
+            "text": "negative example",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " — a frame labelled as containing no instances of any class, submitted as "
+          },
+          {
+            "r": "code",
+            "text": "SubmitDetections"
+          },
+          {
+            "r": "t",
+            "text": " with "
+          },
+          {
+            "r": "code",
+            "text": "SceneIsEmpty"
+          },
+          {
+            "r": "t",
+            "text": " true or "
+          },
+          {
+            "r": "code",
+            "text": "SubmitCorrection"
+          },
+          {
+            "r": "t",
+            "text": " with "
+          },
+          {
+            "r": "code",
+            "text": "RetractAll"
+          },
+          {
+            "r": "t",
+            "text": " true and "
+          },
+          {
+            "r": "code",
+            "text": "Purpose = GroundTruthLabel"
+          },
+          {
+            "r": "t",
+            "text": " — "
+          },
+          {
+            "r": "t",
+            "text": "is",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " a valid dataset sample. A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " account for it in "
+          },
+          {
+            "r": "code",
+            "text": "SamplesCollected"
+          },
+          {
+            "r": "t",
+            "text": " exactly as it accounts for a sample carrying geometry, and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " discard it as an empty submission. Negative examples are what teach a detector that a frame may legitimately contain nothing, and a dataset that admits only positive ones is biased by construction."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "9.4 Closing the loop",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
             "r": "code",
             "text": "PromoteModel"
           },
@@ -15147,7 +16888,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "9.4 Closing the loop",
-          "b": 3
+          "b": 4
         }
       },
       {
@@ -15205,7 +16946,7 @@
         "runs": [
           {
             "r": "code",
-            "text": "SubmitDetections(Purpose, Detections, FrameReference, InlineImage)"
+            "text": "SubmitDetections(Purpose, Detections, FrameReference, InlineImage, SceneIsEmpty)"
           },
           {
             "r": "t",
@@ -15213,7 +16954,7 @@
           },
           {
             "r": "code",
-            "text": "SubmitCorrection(ResultId, Purpose, CorrectedDetections, CorrectedCharacteristics, Reason, InlineImage)"
+            "text": "SubmitCorrection(ResultId, Purpose, CorrectedDetections, CorrectedCharacteristics, Reason, InlineImage, RetractAll)"
           },
           {
             "r": "t",
@@ -15252,19 +16993,22 @@
           },
           {
             "r": "t",
-            "text": " rule 2. For "
-          },
+            "text": " rule 2."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "9.5 Feedback and learning Method definitions (normative)",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
           {
             "r": "code",
-            "text": "SubmitCorrection"
-          },
-          {
-            "r": "t",
-            "text": ", exactly one of "
-          },
-          {
-            "r": "code",
-            "text": "CorrectedDetections"
+            "text": "SceneIsEmpty"
           },
           {
             "r": "t",
@@ -15272,26 +17016,245 @@
           },
           {
             "r": "code",
-            "text": "CorrectedCharacteristics"
+            "text": "RetractAll"
           },
           {
             "r": "t",
-            "text": " "
+            "text": " exist because an empty observation is a real one. \"I examined this frame and there is nothing in it\" is the terminating condition of a bin-picking task and a legitimate — indeed necessary — training label, since a detector trained only on frames that contain objects learns that every frame contains objects. A false positive, likewise, is corrected by asserting that nothing replaces it, and it is the error class an operator is most able to label with confidence. Neither statement can be made by submitting an array, because both "
           },
           {
             "r": "t",
-            "text": "shall",
-            "b": true
+            "text": "are",
+            "i": true
           },
           {
             "r": "t",
-            "text": " be non-empty, matching the kind of the referenced result."
+            "text": " the empty array."
           }
         ],
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "9.5 Feedback and learning Method definitions (normative)",
-          "b": 1
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The rules are therefore:"
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "9.5 Feedback and learning Method definitions (normative)",
+          "b": 3
+        }
+      },
+      {
+        "t": "list",
+        "ordered": false,
+        "level": 0,
+        "items": [
+          [
+            {
+              "r": "code",
+              "text": "SubmitDetections"
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "t",
+              "text": "shall",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " accept an empty "
+            },
+            {
+              "r": "code",
+              "text": "Detections"
+            },
+            {
+              "r": "t",
+              "text": " when "
+            },
+            {
+              "r": "code",
+              "text": "SceneIsEmpty"
+            },
+            {
+              "r": "t",
+              "text": " is true, and "
+            },
+            {
+              "r": "t",
+              "text": "shall",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " reject an empty "
+            },
+            {
+              "r": "code",
+              "text": "Detections"
+            },
+            {
+              "r": "t",
+              "text": " when it is false. A Server "
+            },
+            {
+              "r": "t",
+              "text": "shall",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " treat the pair as the assertion that the frame was examined and found to contain nothing, and "
+            },
+            {
+              "r": "t",
+              "text": "shall not",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " treat it as a failed acquisition. Where "
+            },
+            {
+              "r": "code",
+              "text": "SceneIsEmpty"
+            },
+            {
+              "r": "t",
+              "text": " is true and "
+            },
+            {
+              "r": "code",
+              "text": "Detections"
+            },
+            {
+              "r": "t",
+              "text": " is non-empty the call is inconsistent and "
+            },
+            {
+              "r": "t",
+              "text": "shall",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " be rejected."
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "For "
+            },
+            {
+              "r": "code",
+              "text": "SubmitCorrection"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "t",
+              "text": "at most one",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " of "
+            },
+            {
+              "r": "code",
+              "text": "CorrectedDetections"
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "code",
+              "text": "CorrectedCharacteristics"
+            },
+            {
+              "r": "t",
+              "text": " "
+            },
+            {
+              "r": "t",
+              "text": "shall",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " be non-empty, and it "
+            },
+            {
+              "r": "t",
+              "text": "shall",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " match the kind of the referenced result. Both may be empty only when "
+            },
+            {
+              "r": "code",
+              "text": "RetractAll"
+            },
+            {
+              "r": "t",
+              "text": " is true, which asserts that the referenced result should contain nothing at all. Where "
+            },
+            {
+              "r": "code",
+              "text": "RetractAll"
+            },
+            {
+              "r": "t",
+              "text": " is true and either array is non-empty the call is inconsistent and "
+            },
+            {
+              "r": "t",
+              "text": "shall",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " be rejected."
+            }
+          ]
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "9.5 Feedback and learning Method definitions (normative)",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "An accidentally empty call is still refused, because the flag is what distinguishes a deliberate empty observation from a lost payload. A correction from three detections to one has always been expressible by submitting the one; these rules make the correction from one to zero expressible too, which it was not."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "9.5 Feedback and learning Method definitions (normative)",
+          "b": 5
         }
       },
       {
@@ -15310,7 +17273,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "9.5 Feedback and learning Method definitions (normative)",
-          "b": 2
+          "b": 6
         }
       },
       {
@@ -15337,7 +17300,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "9.5 Feedback and learning Method definitions (normative)",
-          "b": 3
+          "b": 7
         }
       },
       {
@@ -15409,7 +17372,31 @@
               },
               {
                 "r": "t",
-                "text": " empty; or "
+                "text": " empty and "
+              },
+              {
+                "r": "code",
+                "text": "SceneIsEmpty"
+              },
+              {
+                "r": "t",
+                "text": " false; or "
+              },
+              {
+                "r": "code",
+                "text": "Detections"
+              },
+              {
+                "r": "t",
+                "text": " non-empty and "
+              },
+              {
+                "r": "code",
+                "text": "SceneIsEmpty"
+              },
+              {
+                "r": "t",
+                "text": " true; or "
               },
               {
                 "r": "code",
@@ -15417,7 +17404,23 @@
               },
               {
                 "r": "t",
-                "text": " supplies both or neither corrected array"
+                "text": " supplies both corrected arrays; or supplies neither with "
+              },
+              {
+                "r": "code",
+                "text": "RetractAll"
+              },
+              {
+                "r": "t",
+                "text": " false; or supplies either with "
+              },
+              {
+                "r": "code",
+                "text": "RetractAll"
+              },
+              {
+                "r": "t",
+                "text": " true"
               }
             ],
             [
@@ -15565,7 +17568,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "9.5 Feedback and learning Method definitions (normative)",
-          "b": 4
+          "b": 8
         }
       },
       {
@@ -15632,7 +17635,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "9.5 Feedback and learning Method definitions (normative)",
-          "b": 5
+          "b": 9
         }
       },
       {
@@ -15682,7 +17685,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "9.5 Feedback and learning Method definitions (normative)",
-          "b": 6
+          "b": 10
         }
       },
       {
@@ -15775,7 +17778,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "9.5 Feedback and learning Method definitions (normative)",
-          "b": 7
+          "b": 11
         }
       },
       {
@@ -17500,7 +19503,21 @@
           },
           {
             "r": "t",
-            "text": " consequence 2 refers to, and clause 11 makes it a condition of "
+            "text": " consequence 2 refers to, and "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c11",
+            "kind": "clause",
+            "prefix": "11"
+          },
+          {
+            "r": "t",
+            "text": " makes it a condition of "
           },
           {
             "r": "t",
@@ -17704,7 +19721,21 @@
           },
           {
             "r": "t",
-            "text": " (clause 11): a Server claiming "
+            "text": " ("
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c11",
+            "kind": "clause",
+            "prefix": "11"
+          },
+          {
+            "r": "t",
+            "text": "): a Server claiming "
           },
           {
             "r": "t",
@@ -17967,6 +19998,61 @@
         "runs": [
           {
             "r": "t",
+            "text": "An empty label is a label.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "SceneIsEmpty"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "RetractAll"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-21-5",
+            "kind": "clause",
+            "prefix": "6.21.5"
+          },
+          {
+            "r": "t",
+            "text": ") let a client assert that a frame contains nothing and that a published detection was a false positive, and both are retained as training data. Neither is a lower-risk submission than one carrying geometry: a stream of \"nothing here\" labels against frames that do contain parts teaches a detector to miss them, and a stream of retractions teaches it to suppress true positives — a class of attack that degrades recall while every individual call looks well-formed and stays within any rate limit on payload size. The rules above apply to these samples unchanged, and a Server "
+          },
+          {
+            "r": "t",
+            "text": "should",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " treat an anomalous rate of empty or retracting submissions from one principal as it treats any other dataset-poisoning signal."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "12.7 Feedback is untrusted training data",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
             "text": "Overlays are also untrusted.",
             "b": true
           },
@@ -18038,7 +20124,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "12.7 Feedback is untrusted training data",
-          "b": 4
+          "b": 5
         }
       },
       {
@@ -19303,6 +21389,62 @@
       {
         "t": "clause",
         "id": "c8-14",
+        "title": "VisionLampTypeEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Emitter technology of a light source. The named values are those OPC 40100-2 gives as examples for ILampType.LampType, which is a free String there."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c8-14-items",
+        "browseName": "VisionLampTypeEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c8-14-def",
+        "caption": "VisionLampTypeEnum definition",
+        "browseName": "VisionLampTypeEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c8-15",
+        "title": "VisionLightingModeEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "How a light source is being driven. The named values are those OPC 40100-2 gives as examples for ILightingControllerType.LightingMode, which is an unconstrained UInt32 there."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c8-15-items",
+        "browseName": "VisionLightingModeEnum"
+      },
+      {
+        "t": "nodetable",
+        "id": "c8-15-def",
+        "caption": "VisionLightingModeEnum definition",
+        "browseName": "VisionLightingModeEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c8-16",
         "title": "VisionPose3DDataType",
         "level": 2
       },
@@ -19318,19 +21460,19 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-14-items",
+        "id": "c8-16-items",
         "browseName": "VisionPose3DDataType"
       },
       {
         "t": "nodetable",
-        "id": "c8-14-def",
+        "id": "c8-16-def",
         "caption": "VisionPose3DDataType definition",
         "browseName": "VisionPose3DDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-15",
+        "id": "c8-17",
         "title": "VisionBoundingBox2DDataType",
         "level": 2
       },
@@ -19346,19 +21488,19 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-15-items",
+        "id": "c8-17-items",
         "browseName": "VisionBoundingBox2DDataType"
       },
       {
         "t": "nodetable",
-        "id": "c8-15-def",
+        "id": "c8-17-def",
         "caption": "VisionBoundingBox2DDataType definition",
         "browseName": "VisionBoundingBox2DDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-16",
+        "id": "c8-18",
         "title": "VisionBoundingBox3DDataType",
         "level": 2
       },
@@ -19374,19 +21516,19 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-16-items",
+        "id": "c8-18-items",
         "browseName": "VisionBoundingBox3DDataType"
       },
       {
         "t": "nodetable",
-        "id": "c8-16-def",
+        "id": "c8-18-def",
         "caption": "VisionBoundingBox3DDataType definition",
         "browseName": "VisionBoundingBox3DDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-17",
+        "id": "c8-19",
         "title": "VisionImageReferenceDataType",
         "level": 2
       },
@@ -19402,19 +21544,19 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-17-items",
+        "id": "c8-19-items",
         "browseName": "VisionImageReferenceDataType"
       },
       {
         "t": "nodetable",
-        "id": "c8-17-def",
+        "id": "c8-19-def",
         "caption": "VisionImageReferenceDataType definition",
         "browseName": "VisionImageReferenceDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-18",
+        "id": "c8-20",
         "title": "VisionIntrinsicsDataType",
         "level": 2
       },
@@ -19430,19 +21572,19 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-18-items",
+        "id": "c8-20-items",
         "browseName": "VisionIntrinsicsDataType"
       },
       {
         "t": "nodetable",
-        "id": "c8-18-def",
+        "id": "c8-20-def",
         "caption": "VisionIntrinsicsDataType definition",
         "browseName": "VisionIntrinsicsDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-19",
+        "id": "c8-21",
         "title": "VisionDetectionDataType",
         "level": 2
       },
@@ -19458,19 +21600,19 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-19-items",
+        "id": "c8-21-items",
         "browseName": "VisionDetectionDataType"
       },
       {
         "t": "nodetable",
-        "id": "c8-19-def",
+        "id": "c8-21-def",
         "caption": "VisionDetectionDataType definition",
         "browseName": "VisionDetectionDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-20",
+        "id": "c8-22",
         "title": "VisionCharacteristicDataType",
         "level": 2
       },
@@ -19486,19 +21628,19 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-20-items",
+        "id": "c8-22-items",
         "browseName": "VisionCharacteristicDataType"
       },
       {
         "t": "nodetable",
-        "id": "c8-20-def",
+        "id": "c8-22-def",
         "caption": "VisionCharacteristicDataType definition",
         "browseName": "VisionCharacteristicDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-21",
+        "id": "c8-23",
         "title": "VisionStreamSessionDataType",
         "level": 2
       },
@@ -19514,12 +21656,12 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-21-items",
+        "id": "c8-23-items",
         "browseName": "VisionStreamSessionDataType"
       },
       {
         "t": "nodetable",
-        "id": "c8-21-def",
+        "id": "c8-23-def",
         "caption": "VisionStreamSessionDataType definition",
         "browseName": "VisionStreamSessionDataType",
         "kind": "type"
@@ -20569,7 +22711,82 @@
               },
               {
                 "r": "t",
-                "text": " frame-precedence rule"
+                "text": " frame-precedence rule. A Server claiming this facet "
+              },
+              {
+                "r": "t",
+                "text": "shall",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " instantiate "
+              },
+              {
+                "r": "code",
+                "text": "Vision/Frames"
+              },
+              {
+                "r": "t",
+                "text": ", and it "
+              },
+              {
+                "r": "t",
+                "text": "shall",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " contain every "
+              },
+              {
+                "r": "code",
+                "text": "CoordinateFrameType"
+              },
+              {
+                "r": "t",
+                "text": " instance reachable through "
+              },
+              {
+                "r": "code",
+                "text": "MountedOn"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "SourceFrame"
+              },
+              {
+                "r": "t",
+                "text": " or "
+              },
+              {
+                "r": "code",
+                "text": "TargetFrame"
+              },
+              {
+                "r": "t",
+                "text": ". Frames "
+              },
+              {
+                "r": "t",
+                "text": "may",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " additionally appear elsewhere; "
+              },
+              {
+                "r": "code",
+                "text": "Frames"
+              },
+              {
+                "r": "t",
+                "text": " is the one place a client is entitled to find all of them."
               }
             ]
           ],
@@ -20736,7 +22953,81 @@
               },
               {
                 "r": "t",
-                "text": " feedback-integrity rules"
+                "text": " feedback-integrity rules. A Server claiming this facet "
+              },
+              {
+                "r": "t",
+                "text": "shall",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " accept at least "
+              },
+              {
+                "r": "code",
+                "text": "Trigger"
+              },
+              {
+                "r": "t",
+                "text": " and "
+              },
+              {
+                "r": "code",
+                "text": "Overlay"
+              },
+              {
+                "r": "t",
+                "text": " on "
+              },
+              {
+                "r": "code",
+                "text": "SubmitImageReference"
+              },
+              {
+                "r": "t",
+                "text": ", and on "
+              },
+              {
+                "r": "code",
+                "text": "SubmitDetections"
+              },
+              {
+                "r": "t",
+                "text": " where that Method is instantiated. Accepting "
+              },
+              {
+                "r": "code",
+                "text": "Reconciliation"
+              },
+              {
+                "r": "t",
+                "text": " needs no further facet. Accepting "
+              },
+              {
+                "r": "code",
+                "text": "GroundTruthLabel"
+              },
+              {
+                "r": "t",
+                "text": " on "
+              },
+              {
+                "r": "code",
+                "text": "SubmitCorrection"
+              },
+              {
+                "r": "t",
+                "text": " requires "
+              },
+              {
+                "r": "t",
+                "text": "VIS-Learning",
+                "i": true
+              },
+              {
+                "r": "t",
+                "text": " in addition."
               }
             ]
           ],
@@ -21089,7 +23380,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Facets are independent and additive except where a row states a dependency. Two dependencies exist: "
+            "text": "Facets are independent and additive except where a row states a dependency. Three dependencies exist: "
           },
           {
             "r": "t",
@@ -21116,7 +23407,7 @@
           },
           {
             "r": "t",
-            "text": ", and "
+            "text": "; "
           },
           {
             "r": "t",
@@ -21149,13 +23440,138 @@
           },
           {
             "r": "t",
-            "text": ". A facet is claimed only when every member and rule it lists is satisfied."
+            "text": "; and a Server accepting "
+          },
+          {
+            "r": "code",
+            "text": "GroundTruthLabel"
+          },
+          {
+            "r": "t",
+            "text": " under "
+          },
+          {
+            "r": "t",
+            "text": "VIS-Feedback",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " requires "
+          },
+          {
+            "r": "t",
+            "text": "VIS-Learning",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", which is where "
+          },
+          {
+            "r": "xref",
+            "target": "c6-21-4",
+            "kind": "clause",
+            "prefix": "6.21.4"
+          },
+          {
+            "r": "t",
+            "text": " says such a correction goes. A facet is claimed only when every member and rule it lists is satisfied."
           }
         ],
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "11.2 Facets",
           "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Two rows constrain what a facet claim is worth rather than which members exist. "
+          },
+          {
+            "r": "t",
+            "text": "VIS-Calibration",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " names "
+          },
+          {
+            "r": "code",
+            "text": "Vision/Frames"
+          },
+          {
+            "r": "t",
+            "text": " because a client needs one deterministic entry point: "
+          },
+          {
+            "r": "code",
+            "text": "Frames"
+          },
+          {
+            "r": "t",
+            "text": " carries an Optional ModellingRule on "
+          },
+          {
+            "r": "code",
+            "text": "VisionRootType"
+          },
+          {
+            "r": "t",
+            "text": ", so without this row a Server could satisfy the facet with frames reachable only by walking "
+          },
+          {
+            "r": "code",
+            "text": "MountedOn"
+          },
+          {
+            "r": "t",
+            "text": " from every sensor, and a client browsing "
+          },
+          {
+            "r": "code",
+            "text": "Frames"
+          },
+          {
+            "r": "t",
+            "text": " would conclude the Server had none while every result named a frame it never found. "
+          },
+          {
+            "r": "t",
+            "text": "VIS-Feedback",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " names a minimum accepted "
+          },
+          {
+            "r": "code",
+            "text": "Purpose"
+          },
+          {
+            "r": "t",
+            "text": " set for the same reason: without one, a Server accepting only "
+          },
+          {
+            "r": "code",
+            "text": "Trigger"
+          },
+          {
+            "r": "t",
+            "text": " would conform, and the claim would say almost nothing about what a client can send."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "11.2 Facets",
+          "b": 2
         }
       },
       {
@@ -21288,7 +23704,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "11.2 Facets",
-          "b": 2
+          "b": 3
         }
       },
       {
@@ -21318,7 +23734,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "11.2 Facets",
-          "b": 3
+          "b": 4
         }
       }
     ],
@@ -21417,7 +23833,7 @@
             [
               {
                 "r": "t",
-                "text": "0.1.0"
+                "text": "0.2.0"
               }
             ]
           ],
@@ -21437,7 +23853,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-08-02"
+                "text": "2026-08-11"
               }
             ]
           ],
@@ -23401,7 +25817,105 @@
             },
             {
               "r": "t",
-              "text": " for the same emitter, the same consistency requirement applies."
+              "text": " for the same emitter, the same consistency requirement applies. OPC 40100-2 types "
+            },
+            {
+              "r": "code",
+              "text": "LampType"
+            },
+            {
+              "r": "t",
+              "text": " as an open "
+            },
+            {
+              "r": "code",
+              "text": "String"
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "code",
+              "text": "LightingMode"
+            },
+            {
+              "r": "t",
+              "text": " as an unconstrained "
+            },
+            {
+              "r": "code",
+              "text": "UInt32"
+            },
+            {
+              "r": "t",
+              "text": "; this model enumerates both ("
+            },
+            {
+              "r": "t",
+              "text": "§5.7"
+            },
+            {
+              "r": "t",
+              "text": "). A Server exposing both "
+            },
+            {
+              "r": "t",
+              "text": "shall",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " convert as follows: "
+            },
+            {
+              "r": "code",
+              "text": "VisionLampTypeEnum"
+            },
+            {
+              "r": "t",
+              "text": " maps to and from the OPC 40100-2 String by the enumeration symbol name, compared case-insensitively, with "
+            },
+            {
+              "r": "code",
+              "text": "Other"
+            },
+            {
+              "r": "t",
+              "text": " used for any String no symbol matches; "
+            },
+            {
+              "r": "code",
+              "text": "VisionLightingModeEnum"
+            },
+            {
+              "r": "t",
+              "text": " maps to and from the OPC 40100-2 UInt32 by its numeric value, with any value the enumeration does not define read as "
+            },
+            {
+              "r": "code",
+              "text": "Other"
+            },
+            {
+              "r": "t",
+              "text": ". A Server "
+            },
+            {
+              "r": "t",
+              "text": "shall not",
+              "b": true
+            },
+            {
+              "r": "t",
+              "text": " report an emitter as "
+            },
+            {
+              "r": "code",
+              "text": "Other"
+            },
+            {
+              "r": "t",
+              "text": " in this model while OPC 40100-2 reports a value one of the named symbols covers."
             }
           ],
           [
@@ -23610,7 +26124,23 @@
               },
               {
                 "r": "t",
-                "text": ", member names already aligned"
+                "text": ", member names already aligned; "
+              },
+              {
+                "r": "code",
+                "text": "LampType"
+              },
+              {
+                "r": "t",
+                "text": " and "
+              },
+              {
+                "r": "code",
+                "text": "LightingMode"
+              },
+              {
+                "r": "t",
+                "text": " enumerated here, converted per requirement 4"
               }
             ]
           ],
@@ -24188,7 +26718,21 @@
         "runs": [
           {
             "r": "t",
-            "text": "Profile M is the closest external analogue to clause 7 and the strongest evidence that result content "
+            "text": "Profile M is the closest external analogue to "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-19",
+            "kind": "clause",
+            "prefix": "6.19"
+          },
+          {
+            "r": "t",
+            "text": " and the strongest evidence that result content "
           },
           {
             "r": "t",
@@ -29673,7 +32217,21 @@
         "runs": [
           {
             "r": "t",
-            "text": "This annex is the binding that clause 5.5 refers to. It exists because a Server implementing this model almost always talks to its cameras through GenICam, and the question "
+            "text": "This annex is the binding that "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-10",
+            "kind": "clause",
+            "prefix": "6.10"
+          },
+          {
+            "r": "t",
+            "text": " refers to. It exists because a Server implementing this model almost always talks to its cameras through GenICam, and the question "
           },
           {
             "r": "t",

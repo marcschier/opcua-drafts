@@ -46,6 +46,8 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=3013 | VisionFrameRoleEnum | DataType | Enumeration |
 | ns=1;i=3014 | VisionDistortionModelEnum | DataType | Enumeration |
 | ns=1;i=3015 | VisionSensorModalityEnum | DataType | Enumeration |
+| ns=1;i=3016 | VisionLampTypeEnum | DataType | Enumeration |
+| ns=1;i=3017 | VisionLightingModeEnum | DataType | Enumeration |
 | ns=1;i=3050 | VisionPose3DDataType | DataType | Structure |
 | ns=1;i=3051 | VisionBoundingBox2DDataType | DataType | Structure |
 | ns=1;i=3052 | VisionBoundingBox3DDataType | DataType | Structure |
@@ -91,10 +93,10 @@ A controlled light source associated with a sensor. Member names align with the 
 
 | BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
 |---|---|---|---|---|---|
-| LampType | Variable | String | Scalar | Optional | Emitter technology, for example LED, Laser, Xenon or Fluorescent. |
+| LampType | Variable | VisionLampTypeEnum | Scalar | Optional | Emitter technology of this light source. |
 | Wavelength | Variable | Double | Scalar | Optional | Dominant emission wavelength in nanometres. |
 | RelativeIntensity | Variable | Double | Scalar | Optional | Current output as a percentage of full capability. |
-| LightingMode | Variable | String | Scalar | Optional | Operating mode, for example Continuous, Strobe or Modulated. |
+| LightingMode | Variable | VisionLightingModeEnum | Scalar | Optional | How this light source is currently being driven. |
 | Quality | Variable | Double | Scalar | Optional | Remaining emitter quality as a percentage; 100 is new. |
 
 ### MediaEndpointType (abstract) — `ns=1;i=1007`
@@ -110,7 +112,7 @@ Abstract base for a media access point. The endpoint DESCRIBES where media can b
 | State | Variable | VisionEndpointStateEnum | Scalar | Mandatory | Runtime state of this endpoint. |
 | Authentication | Variable | VisionEndpointAuthenticationEnum | Scalar | Mandatory | Credential the media plane requires. Independent of the OPC UA session. |
 | SecureTransport | Variable | Boolean | Scalar | Mandatory | True when the media transport itself provides confidentiality, for example RTSPS, SRT with encryption, or HTTPS. Mandatory because clause 12.2 evaluates credential issuance on it: a Server SHALL NOT return a URI embedding a credential unless this is true and the OPC UA SecureChannel is SignAndEncrypt. A client SHALL treat false as meaning the media transport offers no confidentiality, whatever Authentication states. |
-| ProfileName | Variable | String | Scalar | Optional | Vendor profile label, for example main or sub. |
+| DefaultProfileName | Variable | String | Scalar | Optional | Name of the profile this endpoint uses when GetStreamEndpoint is called with an empty ProfileName. A profile is a Server-local named configuration and has no node of its own, so this is the one profile name a client can rely on without prior knowledge of the Server. Empty means the endpoint has a single configuration and takes no profile name at all. See clause 6.3. |
 | DataChannelSource | Variable | NodeId | Scalar | Optional | NodeId of the Object through which this endpoint's bytes can also be obtained on an OPC UA data channel, per the OPC UA - Data Channels errata proposal. Non-null means the data channel path is offered IN ADDITION to the endpoint's out-of-band path; null or absent means out-of-band only. The target is created by the Server - typically a DataChannelSourceType instance, or any Object implementing IDataChannelSourceType - and is NOT defined by this specification. That proposal is a DRAFT: a conformant Server may leave this null forever. See clause 6.7. |
 | DataChannelContentType | Variable | String | Scalar | Optional | IANA media type the data channel carries, for example video/H264 or image/jpeg. Mirrors IDataChannelSourceType.ContentType so a client can learn the payload type from this model alone, without the Data Channels model being present. Meaningful only where DataChannelSource is non-null. |
 
@@ -324,6 +326,8 @@ A sensor producing depth or point-cloud data. Point clouds are large and are obt
 | DepthScale | Variable | Double | Scalar | Optional | Metres represented by one unit of the raw depth map. |
 | Baseline | Variable | Double | Scalar | Optional | Stereo baseline in metres, where applicable. |
 | PointsPerFrame | Variable | UInt32 | Scalar | Optional | Nominal point count per frame. |
+| DepthWidth | Variable | UInt32 | Scalar | Optional | Width in pixels of the sensor's native depth image. Present on a device whose depth output is an ordered image - structured-light, time-of-flight and stereo sensors - and absent on one whose output is an unordered point cloud, where there is no image to have a shape. PointsPerFrame is a nominal count and is not a substitute: it cannot be used to reproject a depth pixel, nor to size a decoder. See clause 5.6. |
+| DepthHeight | Variable | UInt32 | Scalar | Optional | Height in pixels of the sensor's native depth image, under the same condition as DepthWidth. The two are present or absent together. |
 
 ### IVisionSimulatedType (abstract) — `ns=1;i=1030`
 
@@ -412,6 +416,7 @@ The return path into the vision system. It serves three purposes at once: drawin
 | Detections | VisionDetectionDataType | Array | The detections. |
 | FrameReference | VisionImageReferenceDataType | Scalar | Frame the detections belong to. |
 | InlineImage | ByteString | Scalar | Optional annotated image, accepted only within MaxInlineFeedbackImageSize; otherwise use SubmitImageReference. |
+| SceneIsEmpty | Boolean | Scalar | True asserts that the frame was examined and contains nothing to report, which is a deliberate observation and not a failed one. It is the only way Detections may be empty: an empty array with this false is rejected, so a call that lost its payload is still caught. False with a non-empty Detections is the ordinary case. Last in the list because argument order is part of the wire contract. See clause 9.5. |
 
 **Method `SubmitInspectionResult`** (Optional) — Record a downstream inspection verdict against a result, for reconciliation with what the vision system originally reported.
 
@@ -431,6 +436,7 @@ The return path into the vision system. It serves three purposes at once: drawin
 | CorrectedCharacteristics | VisionCharacteristicDataType | Array | Corrected characteristics, where the result was an inspection. |
 | Reason | LocalizedText | Scalar | Why the correction was made. |
 | InlineImage | ByteString | Scalar | Optional corrected or annotated image, accepted only within MaxInlineFeedbackImageSize; otherwise use SubmitImageReference. |
+| RetractAll | Boolean | Scalar | True asserts that the corrected result should contain nothing at all - every detection or characteristic it reported was a false positive and nothing replaces it. It is the only way both corrected arrays may be empty. This is the most valuable correction shape for a learning loop, because a false positive is the error an operator is most able to label with confidence. Last in the list because argument order is part of the wire contract. See clause 9.5. |
 
 **Method `SubmitImageReference`** (Optional) — The default way to hand an image back: by reference. Used whenever the image exceeds MaxInlineFeedbackImageSize, and preferred in all cases.
 
@@ -674,6 +680,34 @@ What the sensor measures.
 | Multispectral | 4 |  |
 | Event | 5 | Event / neuromorphic camera. |
 | Other | 6 |  |
+
+### VisionLampTypeEnum — `ns=1;i=3016`
+
+*Subtype of:* `Enumeration`
+
+Emitter technology of a light source. The named values are those OPC 40100-2 gives as examples for ILampType.LampType, which is a free String there.
+
+| Name | Value | Description |
+|---|---|---|
+| Led | 0 | Light-emitting diode. The default because it is what the overwhelming majority of machine-vision illuminators use. |
+| Fluorescent | 1 |  |
+| Laser | 2 | Includes the line and pattern projectors of laser-triangulation and structured-light sensors. |
+| Xenon | 3 |  |
+| Halogen | 4 |  |
+| Other | 5 | An emitter technology none of the above names. |
+
+### VisionLightingModeEnum — `ns=1;i=3017`
+
+*Subtype of:* `Enumeration`
+
+How a light source is being driven. The named values are those OPC 40100-2 gives as examples for ILightingControllerType.LightingMode, which is an unconstrained UInt32 there.
+
+| Name | Value | Description |
+|---|---|---|
+| Continuous | 0 | Constant output, not synchronised to acquisition. |
+| Strobe | 1 | Pulsed in synchronisation with acquisition, which is what makes a short exposure viable on a moving part. |
+| Modulated | 2 | Driven at a carrier frequency, so the contribution of the illuminator can be separated from ambient light. |
+| Other | 3 | A drive mode none of the above names. |
 
 ### VisionPose3DDataType — `ns=1;i=3050`
 

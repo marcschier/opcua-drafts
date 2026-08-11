@@ -52,6 +52,17 @@ jobs:
           python-version: "3.12"
       - run: python .github/scripts/check_section_refs.py
 
+  browsename-namespace:
+    name: Standard BrowseName namespaces (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python .github/scripts/check_browsename_namespace.py
+
   word-draft:
     name: Word rendering (advisory)
     runs-on: ubuntu-latest
