@@ -6,7 +6,7 @@
     <Uri>http://opcfoundation.org/UA/I4AAS/v3/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/I4AAS/v3/" Version="3.03" PublicationDate="2026-08-10T16:54:40Z">
+    <Model ModelUri="http://opcfoundation.org/UA/I4AAS/v3/" Version="3.00-draft2" PublicationDate="2026-08-10T16:54:40Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2024-05-01T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z" />
     </Model>

@@ -45,7 +45,7 @@ VENDORED_TEMPLATES = os.path.join(
 NS = 2  # the server namespace instances live in
 UANODESET_NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 MODEL_NAMESPACE = "http://opcfoundation.org/UA/I4AAS/v3/"
-MODEL_VERSION = "3.03"
+MODEL_VERSION = "3.00-draft2"
 MODEL_PUBLICATION_DATE = "2026-08-10T16:54:40Z"
 PUBLISHED_NAMESPACE = "http://opcfoundation.org/UA/I4AAS/"
 MAX_STRING_NODEID_LENGTH = 4096
@@ -2017,7 +2017,7 @@ def _decode_nodeid_component(value):
 
 
 def node_identifier(kind, owner_id, path=None):
-    """Return the injective, control-free clause 5.3 String identifier.
+    """Return the collision-free, control-free clause 5.3 String identifier.
 
     Each raw component is escaped independently. Lengths count Unicode code
     points in the escaped components, so the decoder can split the payload

@@ -8,7 +8,7 @@ registry over HTTP, a DPP and battery passport identifier mapping, and the study
 
 | File | What it is | Target |
 |---|---|---|
-| `OPC-UA-AAS.md` | **OPC 30270 draft 3.03** — the AAS V3 metamodel mapped losslessly onto OPC UA in the provisional `http://opcfoundation.org/UA/I4AAS/v3/` namespace, together with an AAS Registry built on the abstract xRegistry base | OPC Foundation |
+| `OPC-UA-AAS.md` | **OPC 30270 draft 3.00-draft2** — the AAS V3 metamodel mapped losslessly onto OPC UA in the provisional `http://opcfoundation.org/UA/I4AAS/v3/` namespace, together with an AAS Registry built on the abstract xRegistry base | OPC Foundation |
 | `Opc.Ua.I4AAS.NodeSet2.xml` | Generated NodeSet | — |
 | `Opc.Ua.I4AAS.NodeIds.csv` | Generated NodeIds | — |
 | `xRegistry-AAS.md` | The AAS registry model as proposed to the xRegistry project | xRegistry |

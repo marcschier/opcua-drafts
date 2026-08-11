@@ -13,7 +13,7 @@ does not state and a JSON-LD context cannot perform:
   * inferring the class of a nested object that carries no `modelType`, from the
     range of the property that reaches it;
   * turning an enumeration value into a named individual;
-  * constructing an injective subject term for every root `Identifiable`,
+  * constructing a collision-free subject term for every root `Identifiable`,
     including an `id` that is not a legal IRI (defect D4);
   * emitting the ordering that the upstream serialization discards (defect D2),
     into a separate enrichment graph.
@@ -186,7 +186,7 @@ class Schema:
 # Terms
 # ---------------------------------------------------------------------------
 def subject_iri(identifier: str) -> str:
-    """The injective subject IRI for a root Identifiable.
+    """The collision-free subject IRI for a root Identifiable.
 
     Every identifier uses the same construction.  Encoding the complete UTF-8
     byte sequence, rather than hashing only identifiers that are not legal IRIs,

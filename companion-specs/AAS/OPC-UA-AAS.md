@@ -1,6 +1,6 @@
 # OPC UA for Asset Administration Shell
 
-**Draft 3.03**
+**Draft 3.00-draft2**
 
 > **Status — working draft.** This document specifies an OPC UA mapping for the AAS V3 metamodel.
 > It is not normative, official or endorsed by the OPC Foundation. Namespace URIs and NodeIds are
@@ -402,8 +402,8 @@ decoded, without relying on a delimiter that a source string may contain. `A`, `
 distinguish the four node kinds.
 
 The `idShortPath` is the metamodel's own path convention: short names joined by `.`, with `[n]` for
-a member of a list. The encoding is injective: for example, a shell whose identifier is `a#b`
-encodes as `i4aas3:A:3:a#b`, while element path `b` beneath owner `a` encodes as
+a member of a list. The encoding is reversible and collision-free: for example, a shell whose
+identifier is `a#b` encodes as `i4aas3:A:3:a#b`, while element path `b` beneath owner `a` encodes as
 `i4aas3:E:1:1:ab`. An identifier containing LF between `a` and `b` encodes as
 `i4aas3:S:5:a%0Ab`; NUL in the same position encodes as `i4aas3:S:5:a%00b`; U+0085 by itself
 encodes as `i4aas3:S:6:%C2%85`; and the three source characters `%0A` encode as
@@ -513,9 +513,9 @@ into a loadable NodeSet, and a Server that loads the NodeSet serves the AAS.
 
 ## 6 AAS metamodel ObjectTypes
 
-The companion namespace is `http://opcfoundation.org/UA/I4AAS/v3/`, model version 3.03. Draft numeric
-NodeIds use the `1001+` block; final NodeIds are assigned by the OPC Foundation. The normative node
-reference is [Annex A](#annex-a); this clause describes intent.
+The companion namespace is `http://opcfoundation.org/UA/I4AAS/v3/`, model version 3.00-draft2.
+Draft numeric NodeIds use the `1001+` block; final NodeIds are assigned by the OPC Foundation. The
+normative node reference is [Annex A](#annex-a); this clause describes intent.
 
 ### 6.1 Abstract bases
 
@@ -3115,7 +3115,7 @@ combined.
 | Fact of this specification | Term | Value |
 |---|---|---|
 | The AAS itself | the AAS vocabulary | `aas:Referable/idShort`, `aas:Property/value`, `aas:Submodel/submodelElements` and the rest, on the node they belong to |
-| AAS subject | TD `id` | the injectively encoded subject IRI that the JSON-LD mapping gives the node; `@id` is not also written |
+| AAS subject | TD `id` | the subject IRI that uniquely represents the node's AAS identity in the JSON-LD mapping; `@id` is not also written |
 | TD document identity | a `self` link | a sibling TD document IRI distinct from the AAS subject |
 | NodeId, clause 5.3 | `uav:id` | an ExpandedNodeId naming its namespace by URI |
 | BrowseName, clause 5.3 | `uav:browseName` | the portable QualifiedName form |
@@ -3307,10 +3307,11 @@ and the WoT drafts define no placeholder syntax for a namespace. `https://exampl
 above is the Server's instance namespace, written out. A document that cannot know the target
 namespace omits `uav:id` instead; see F.5.
 
-**Subject, TD document and protocol address are separate.** The TD `id` is the injectively encoded
-AAS subject, the `self` link identifies the sibling TD document, and the `opc.tcp` form identifies
-the OPC UA Node. A converter does not derive one from another. It parses the ExpandedNodeId from the
-form, resolves containment through sibling TD links and uses the AAS subject only for RDF edges.
+**Subject, TD document and protocol address are separate.** The TD `id` is the encoded AAS subject,
+constructed so different AAS identifiers cannot collide; the `self` link identifies the sibling TD
+document, and the `opc.tcp` form identifies the OPC UA Node. A converter does not derive one from
+another. It parses the ExpandedNodeId from the form, resolves containment through sibling TD links
+and uses the AAS subject only for RDF edges.
 
 A list member has no short name, so its BrowseName is its index — the rule clause 5.3 states.
 

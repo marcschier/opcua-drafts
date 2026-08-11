@@ -1046,7 +1046,7 @@ prop_var(1107, PF, "ManifestDigest", String,
          "before publication and a Consumer repeats it before use.")
 
 NAMESPACE = "http://opcfoundation.org/UA/I4AAS/v3/"
-VERSION = "3.03"
+VERSION = "3.00-draft2"
 PUBDATE = "2026-08-10T16:54:40Z"
 UA_REQUIRED_VERSION = "1.05.04"
 UA_REQUIRED_PUBDATE = "2024-05-01T00:00:00Z"

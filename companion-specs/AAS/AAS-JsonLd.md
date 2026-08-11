@@ -249,10 +249,10 @@ where `<encoded>` is the RFC 4648 base64url encoding, without `=` padding, of th
 encoding of `id`.
 
 The construction applies uniformly to every `id`, including an absolute IRI, a relative IRI
-reference and an identifier that is not a legal IRI. It is injective over UTF-8 strings. Every
-identifier is encoded, including one whose lexical form is itself in the subject namespace; no raw
-identifier is used directly as a subject. A legal absolute `id` can therefore never denote the
-subject generated for another `id`.
+reference and an identifier that is not a legal IRI. Different UTF-8 identifiers cannot produce the
+same encoded value. Every identifier is encoded, including one whose lexical form is itself in the
+subject namespace; no raw identifier is used directly as a subject. A legal absolute `id` can
+therefore never denote the subject generated for another `id`.
 
 An implementation **MUST** recover the AAS identifier from `aas:Identifiable/id`, not by decoding
 the subject term. A lowering **MUST** reject a root whose subject term is not the construction above
@@ -580,7 +580,7 @@ identifier into a QualifiedName.
 The subject IRI of a projected element **MUST** be the root subject of clause 2.2 followed by
 `/node/` and the unpadded base64url encoding of the complete UTF-8 `idShortPath`. The base64url
 alphabet contains no `/`, so this child namespace is disjoint from every encoded root subject and
-the construction is injective for each root.
+distinct paths beneath one root cannot produce the same subject.
 
 Each `value` in an `Operation`'s `inputVariables`, `outputVariables` and `inoutputVariables` array
 **MUST** be projected as an element child of the `Operation`. Its path **MUST** be the operation path
@@ -660,7 +660,7 @@ deliberate.
 That leaves relative references dependent on a parser base, makes an IRDI such as
 `0173-1#02-AAO677#002` syntactically unusable as an IRI, and lets a legal identifier equal a minted
 fallback IRI for another identifier. Clause 2.2 instead encodes every root identifier into one
-injective, uniformly tagged subject namespace and never uses a raw identifier directly. For the
+collision-free, uniformly tagged subject namespace and never uses a raw identifier directly. For the
 compatibility measurement, the independently parsed upstream graph is relabelled from its
 `aas:Identifiable/id` triples before comparison.
 
