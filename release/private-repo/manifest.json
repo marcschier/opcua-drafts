@@ -149,7 +149,7 @@
     {
       "stored": "payload/word-drafts/tools/ingest_docx.py.bundle",
       "destination": "word-drafts/tools/ingest_docx.py",
-      "sha256": "13e069e7c11d387e410c118d293531320327383a48e696939737a06d4863b815"
+      "sha256": "f0e58abd01333f1f26c47e1db5ba4d804e12f12a60f60ee0da81a091cfa4f275"
     },
     {
       "stored": "payload/word-drafts/tools/make_review_fixture.ps1.bundle",
@@ -249,7 +249,7 @@
     {
       "stored": "payload/word-drafts/tools/test_ingest.py.bundle",
       "destination": "word-drafts/tools/test_ingest.py",
-      "sha256": "5585292d91e57be39221ca8eb4d72bff0bcb0c9ed1162c67092f911bc841691a"
+      "sha256": "4f526600a82ddf05c797370bb571609cb2518190509a1f4e4a5a5971f4c399c4"
     },
     {
       "stored": "payload/word-drafts/tools/test_validate_docx.py.bundle",

@@ -69,13 +69,14 @@ def git_show(commit, path):
     return out.stdout.decode('utf-8')
 
 
-def select_provenance(expected_digest, candidates):
+def select_provenance(expected_digest, candidates, document_ids=None):
     """Choose the sidecar that describes the reviewed document's exact sources."""
     if not DIGEST_RE.fullmatch(expected_digest or ''):
         raise IngestError(
             'the document records no valid SourceDigest, so no provenance sidecar can '
             'be selected safely. Rebuild and re-review the document.')
     found = []
+    matches = []
     for label, raw in candidates:
         if raw is None:
             continue
@@ -86,31 +87,48 @@ def select_provenance(expected_digest, candidates):
         digest = provenance.get('sourceDigest')
         found.append('%s=%s' % (label, digest or 'missing'))
         if digest == expected_digest:
-            return provenance
+            matches.append((label, provenance))
+    if document_ids is not None and matches:
+        viable = []
+        for label, provenance in matches:
+            sidecar_ids = set(provenance.get('paragraphs') or {})
+            missing = sidecar_ids - document_ids
+            found.append('%s-missing-paragraphs=%d' % (label, len(missing)))
+            if not missing:
+                viable.append((len(sidecar_ids), provenance))
+        if viable:
+            return max(viable, key=lambda item: item[0])[1]
+    elif matches:
+        return matches[0][1]
     raise IngestError(
         'no provenance sidecar matches the document SourceDigest %s (%s). '
         'Without an exact match, paragraph ids may be routed to stale sources.'
         % (expected_digest or 'missing', ', '.join(found) or 'no sidecars found'))
 
 
-def provenance_from_history(path, expected_digest):
-    """The newest committed sidecar whose digest matches an outstanding review."""
+def provenance_history(path, expected_digest):
+    """Committed sidecars whose digest matches an outstanding review, newest first."""
     try:
         commits = subprocess.run(
             ['git', '-C', REPO, 'log', '--format=%H', '--', path],
             capture_output=True, text=True, check=True).stdout.splitlines()
     except (OSError, subprocess.CalledProcessError):
-        return None
+        return []
+    found = []
+    seen = set()
     for commit in commits:
         raw = git_show(commit, path)
         if raw is None:
             continue
         try:
             if json.loads(raw).get('sourceDigest') == expected_digest:
-                return raw
+                key = raw
+                if key not in seen:
+                    found.append(('artifact history at ' + commit[:12], raw))
+                    seen.add(key)
         except json.JSONDecodeError:
             continue
-    return None
+    return found
 
 
 class Sources:
@@ -478,12 +496,14 @@ class Ingest:
                 current = f.read()
         historical = git_show(
             self.commit, rel) if self.commit != 'unknown' else None
-        artifact_history = provenance_from_history(rel, self.source_digest)
+        artifact_history = provenance_history(rel, self.source_digest)
+        document_ids = set(self.doc.by_id)
         return select_provenance(
             self.source_digest,
-            (('current', current),
-             ('historical at source commit ' + self.commit[:12], historical),
-             ('artifact history', artifact_history)))
+            [('current', current),
+             ('historical at source commit ' + self.commit[:12], historical)]
+            + artifact_history,
+            document_ids=document_ids)
 
     # ------------------------------------------------------------------ the work
 

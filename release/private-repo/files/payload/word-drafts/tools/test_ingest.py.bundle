@@ -187,6 +187,40 @@ def test_artifact_history_can_supply_an_outstanding_review_sidecar():
     assert selected == historical, selected
 
 
+def test_same_source_digest_uses_the_matching_paragraph_map():
+    current = {
+        'sourceDigest': '0123456789abcdef',
+        'paragraphs': {'SHARED': {}, 'NEW-WORD-ID': {}},
+    }
+    historical = {
+        'sourceDigest': '0123456789abcdef',
+        'paragraphs': {'SHARED': {}, 'OLD-WORD-ID': {}},
+    }
+    selected = ingest.select_provenance(
+        '0123456789abcdef',
+        [('current', json.dumps(current)),
+         ('artifact history', json.dumps(historical))],
+        document_ids={'SHARED', 'OLD-WORD-ID', 'REVIEWER-INSERTED'})
+    assert selected == historical, selected
+
+
+def test_most_complete_matching_paragraph_map_wins():
+    prefinalized = {
+        'sourceDigest': '0123456789abcdef',
+        'paragraphs': {'SHARED': {}},
+    }
+    finalized = {
+        'sourceDigest': '0123456789abcdef',
+        'paragraphs': {'SHARED': {}, 'WORD-ADDED': {}},
+    }
+    selected = ingest.select_provenance(
+        '0123456789abcdef',
+        [('prefinalized', json.dumps(prefinalized)),
+         ('finalized', json.dumps(finalized))],
+        document_ids={'SHARED', 'WORD-ADDED', 'REVIEWER-INSERTED'})
+    assert selected == finalized, selected
+
+
 def test_ownership_routes_away_from_the_markdown():
     config = {'_specId': 'demo', 'source': {'nodeset': 'Some.NodeSet2.xml'}}
     cases = {
