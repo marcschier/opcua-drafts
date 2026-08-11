@@ -3102,8 +3102,8 @@ list — `Index`. Element-specific fields:
 | `BasicEventElement.state` | `AASBasicEventElementType.State`, Mandatory |
 | `BasicEventElement.messageTopic` | `AASBasicEventElementType.MessageTopic` |
 | `BasicEventElement.messageBroker` | `AASBasicEventElementType.MessageBroker` |
-| `BasicEventElement.lastUpdate` | `AASBasicEventElementType.LastUpdate` (`AASValueString`) |
-| `BasicEventElement.minInterval`, `.maxInterval` | `AASBasicEventElementType.MinInterval`, `MaxInterval` (`AASValueString`) |
+| `BasicEventElement.lastUpdate` | `AASBasicEventElementType.LastUpdate`, typed per clause 6.3.1 |
+| `BasicEventElement.minInterval`, `.maxInterval` | `AASBasicEventElementType.MinInterval`, `MaxInterval`, typed per clause 6.3.1 |
 | `Operation.inputVariables` | `AASOperationType.InputVariables`; each ordered `AASOperationVariableDataType.ValueNodeId` references one direct `<Variable>` child |
 | `Operation.outputVariables` | `AASOperationType.OutputVariables`, with the same child contract |
 | `Operation.inoutputVariables` | `AASOperationType.InoutputVariables`, with the same child contract |
