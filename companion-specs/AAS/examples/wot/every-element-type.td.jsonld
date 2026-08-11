@@ -42,7 +42,7 @@
             "@id": "https://admin-shell.io/aas/3/0/Qualifiable/qualifiers"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -53,13 +53,13 @@
             "@value": "0"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVByb3BlcnR5"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVByb3BlcnR5"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -70,13 +70,13 @@
             "@value": "1"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QU11bHRpTGFuZ3VhZ2VQcm9wZXJ0eQ"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QU11bHRpTGFuZ3VhZ2VQcm9wZXJ0eQ"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -87,13 +87,13 @@
             "@value": "2"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVJhbmdl"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVJhbmdl"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -104,13 +104,13 @@
             "@value": "3"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUJsb2I"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUJsb2I"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -121,13 +121,13 @@
             "@value": "4"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUZpbGU"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUZpbGU"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -138,13 +138,13 @@
             "@value": "5"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVJlZmVyZW5jZUVsZW1lbnQ"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVJlZmVyZW5jZUVsZW1lbnQ"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -155,13 +155,13 @@
             "@value": "6"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVJlbGF0aW9uc2hpcA"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVJlbGF0aW9uc2hpcA"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -172,13 +172,13 @@
             "@value": "7"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5Bbm5vdGF0ZWRSZWxhdGlvbnNoaXA"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5Bbm5vdGF0ZWRSZWxhdGlvbnNoaXA"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -189,13 +189,13 @@
             "@value": "8"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUNvbGxlY3Rpb24"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUNvbGxlY3Rpb24"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -206,13 +206,13 @@
             "@value": "9"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUxpc3Q"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUxpc3Q"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -223,13 +223,13 @@
             "@value": "10"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVNlbGZNYW5hZ2VkRW50aXR5"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVNlbGZNYW5hZ2VkRW50aXR5"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -240,13 +240,13 @@
             "@value": "11"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5FdmVudA"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5FdmVudA"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -257,13 +257,13 @@
             "@value": "12"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         },
         {
@@ -274,13 +274,13 @@
             "@value": "13"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUNhcGFiaWxpdHk"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUNhcGFiaWxpdHk"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ"
+            "@id": "https://fabrikam.com/ids/sm/every-element"
           }
         }
       ],
@@ -346,46 +346,46 @@
   },
   "aas:Submodel/submodelElements": [
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVByb3BlcnR5"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVByb3BlcnR5"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QU11bHRpTGFuZ3VhZ2VQcm9wZXJ0eQ"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QU11bHRpTGFuZ3VhZ2VQcm9wZXJ0eQ"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVJhbmdl"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVJhbmdl"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUJsb2I"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUJsb2I"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUZpbGU"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUZpbGU"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVJlZmVyZW5jZUVsZW1lbnQ"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVJlZmVyZW5jZUVsZW1lbnQ"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVJlbGF0aW9uc2hpcA"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVJlbGF0aW9uc2hpcA"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5Bbm5vdGF0ZWRSZWxhdGlvbnNoaXA"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5Bbm5vdGF0ZWRSZWxhdGlvbnNoaXA"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUNvbGxlY3Rpb24"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUNvbGxlY3Rpb24"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUxpc3Q"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUxpc3Q"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVNlbGZNYW5hZ2VkRW50aXR5"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVNlbGZNYW5hZ2VkRW50aXR5"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5FdmVudA"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5FdmVudA"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QUNhcGFiaWxpdHk"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QUNhcGFiaWxpdHk"
     }
   ],
   "forms": [
@@ -395,7 +395,7 @@
       "op": "readallproperties"
     }
   ],
-  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ",
+  "id": "https://fabrikam.com/ids/sm/every-element",
   "links": [
     {
       "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ",

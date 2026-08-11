@@ -6251,6 +6251,17 @@
       "text": "power capability fade"
     },
     {
+      "@id": "https://admin-shell.io/idta/aas/digitalbatterypassport/TechnicalData/1/0",
+      "@type": "aas:AssetAdministrationShell",
+      "aas:AssetAdministrationShell/submodels": {
+        "@id": "_:b5"
+      },
+      "aas:Identifiable/id": "https://admin-shell.io/idta/aas/digitalbatterypassport/TechnicalData/1/0",
+      "assetInformation": "_:b3",
+      "displayName": "_:b1",
+      "idShort": "TechnicalDataForBatteryDataAAS"
+    },
+    {
       "@graph": [
         {
           "@id": "_:b10",
@@ -6266,7 +6277,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0"
           }
         },
         {
@@ -7014,7 +7025,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNiYXR0ZXJ5Q2F0ZWdvcnk"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#batteryCategory"
           }
         },
         {
@@ -7235,7 +7246,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNiYXR0ZXJ5Q2F0ZWdvcnk"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#batteryCategory"
           }
         },
         {
@@ -7269,7 +7280,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNiYXR0ZXJ5TWFzcw"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#batteryMass"
           }
         },
         {
@@ -7371,7 +7382,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNiYXR0ZXJ5TWFzcw"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#batteryMass"
           }
         },
         {
@@ -7405,7 +7416,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNiYXR0ZXJ5TWFzcw"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#batteryMass"
           }
         },
         {
@@ -7422,7 +7433,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNpbml0aWFsSW50ZXJuYWxSZXNpc3RhbmNlQXRCYXR0ZXJ5TW9kdWxlTGV2ZWw"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#initialInternalResistanceAtBatteryModuleLevel"
           }
         },
         {
@@ -7524,7 +7535,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNpbml0aWFsSW50ZXJuYWxSZXNpc3RhbmNlQXRCYXR0ZXJ5TW9kdWxlTGV2ZWw"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#initialInternalResistanceAtBatteryModuleLevel"
           }
         },
         {
@@ -7541,7 +7552,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNpbnRlcm5hbFJlc2lzdGFuY2VJbmNyZWFzZUF0QmF0dGVyeUNlbGxMZXZlbA"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#internalResistanceIncreaseAtBatteryCellLevel"
           }
         },
         {
@@ -7643,7 +7654,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNpbnRlcm5hbFJlc2lzdGFuY2VJbmNyZWFzZUF0QmF0dGVyeUNlbGxMZXZlbA"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#internalResistanceIncreaseAtBatteryCellLevel"
           }
         },
         {
@@ -7660,7 +7671,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNwb3dlckNhcGFiaWxpdHlBdA"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#powerCapabilityAt"
           }
         },
         {
@@ -7762,7 +7773,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNwb3dlckNhcGFiaWxpdHlBdA"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#powerCapabilityAt"
           }
         },
         {
@@ -7779,7 +7790,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNhdFNvQw"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#atSoC"
           }
         },
         {
@@ -7847,7 +7858,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0"
           }
         },
         {
@@ -7915,7 +7926,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNhdFNvQw"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#atSoC"
           }
         },
         {
@@ -7932,7 +7943,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNleHBlY3RlZExpZmV0aW1l"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#expectedLifetime"
           }
         },
         {
@@ -8068,7 +8079,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNleHBlY3RlZExpZmV0aW1l"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#expectedLifetime"
           }
         },
         {
@@ -8085,7 +8096,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNleHBlY3RlZE51bWJlck9mQ3ljbGVz"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#expectedNumberOfCycles"
           }
         },
         {
@@ -8170,7 +8181,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNleHBlY3RlZE51bWJlck9mQ3ljbGVz"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#expectedNumberOfCycles"
           }
         },
         {
@@ -8187,7 +8198,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNwb3dlckNhcGFiaWxpdHlSYXRpbw"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#powerCapabilityRatio"
           }
         },
         {
@@ -8289,7 +8300,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNwb3dlckNhcGFiaWxpdHlSYXRpbw"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#powerCapabilityRatio"
           }
         },
         {
@@ -8408,7 +8419,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNjUmF0ZUxpZmVDeWNsZVRlc3Q"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#cRateLifeCycleTest"
           }
         },
         {
@@ -8493,7 +8504,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNjUmF0ZUxpZmVDeWNsZVRlc3Q"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#cRateLifeCycleTest"
           }
         },
         {
@@ -8527,7 +8538,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNjeWNsZUxpZmVSZWZlcmVuY2VUZXN0"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#cycleLifeReferenceTest"
           }
         },
         {
@@ -8595,7 +8606,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNjeWNsZUxpZmVSZWZlcmVuY2VUZXN0"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#cycleLifeReferenceTest"
           }
         },
         {
@@ -8782,7 +8793,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMSN3YXJyYW50eVBlcmlvZA"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1#warrantyPeriod"
           }
         },
         {
@@ -8901,7 +8912,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMSN3YXJyYW50eVBlcmlvZA"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1#warrantyPeriod"
           }
         },
         {
@@ -8918,7 +8929,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNtYW51ZmFjdHVyZXJJZGVudGlmaWVy"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#manufacturerIdentifier"
           }
         },
         {
@@ -9003,7 +9014,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNtYW51ZmFjdHVyZXJJZGVudGlmaWVy"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#manufacturerIdentifier"
           }
         },
         {
@@ -9139,7 +9150,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMSN3YXJyYW50eUluZm9ybWF0aW9u"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1#warrantyInformation"
           }
         },
         {
@@ -9241,7 +9252,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMSN3YXJyYW50eUluZm9ybWF0aW9u"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1#warrantyInformation"
           }
         },
         {
@@ -9666,7 +9677,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0"
           }
         },
         {
@@ -9751,7 +9762,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9kaWdpdGFsYmF0dGVyeXBhc3Nwb3J0L1RlY2huaWNhbERhdGEvMS8w"
+            "@id": "https://admin-shell.io/idta/aas/digitalbatterypassport/TechnicalData/1/0"
           }
         },
         {
@@ -9768,7 +9779,7 @@
             "@id": "aas:HasSemantics/supplementalSemanticIds"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0"
           }
         },
         {
@@ -10091,7 +10102,7 @@
             "@id": "aas:HasSemantics/supplementalSemanticIds"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0"
           }
         },
         {
@@ -14188,7 +14199,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0"
           }
         },
         {
@@ -14664,7 +14675,7 @@
             "@id": "aas:AssetAdministrationShell/submodels"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9kaWdpdGFsYmF0dGVyeXBhc3Nwb3J0L1RlY2huaWNhbERhdGEvMS8w"
+            "@id": "https://admin-shell.io/idta/aas/digitalbatterypassport/TechnicalData/1/0"
           }
         },
         {
@@ -16092,7 +16103,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNpbnRlcm5hbFJlc2lzdGFuY2VJbmNyZWFzZUF0QmF0dGVyeVBhY2tMZXZlbA"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#internalResistanceIncreaseAtBatteryPackLevel"
           }
         },
         {
@@ -16177,7 +16188,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNpbnRlcm5hbFJlc2lzdGFuY2VJbmNyZWFzZUF0QmF0dGVyeVBhY2tMZXZlbA"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#internalResistanceIncreaseAtBatteryPackLevel"
           }
         },
         {
@@ -16514,18 +16525,7 @@
       "isCaseOf": "_:b1081"
     },
     {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9kaWdpdGFsYmF0dGVyeXBhc3Nwb3J0L1RlY2huaWNhbERhdGEvMS8w",
-      "@type": "aas:AssetAdministrationShell",
-      "aas:AssetAdministrationShell/submodels": {
-        "@id": "_:b5"
-      },
-      "aas:Identifiable/id": "https://admin-shell.io/idta/aas/digitalbatterypassport/TechnicalData/1/0",
-      "assetInformation": "_:b3",
-      "displayName": "_:b1",
-      "idShort": "TechnicalDataForBatteryDataAAS"
-    },
-    {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNhdFNvQw",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#atSoC",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#atSoC",
       "displayName": "_:b1188",
@@ -16533,7 +16533,7 @@
       "idShort": "atSoC"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNiYXR0ZXJ5Q2F0ZWdvcnk",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#batteryCategory",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#batteryCategory",
       "displayName": "_:b1085",
@@ -16541,7 +16541,7 @@
       "idShort": "batteryCategory"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNiYXR0ZXJ5TWFzcw",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#batteryMass",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#batteryMass",
       "displayName": "_:b1120",
@@ -16550,7 +16550,7 @@
       "isCaseOf": "_:b1137"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNjUmF0ZUxpZmVDeWNsZVRlc3Q",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#cRateLifeCycleTest",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#cRateLifeCycleTest",
       "displayName": "_:b1266",
@@ -16558,7 +16558,7 @@
       "idShort": "cRateLifeCycleTest"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNjeWNsZUxpZmVSZWZlcmVuY2VUZXN0",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#cycleLifeReferenceTest",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#cycleLifeReferenceTest",
       "displayName": "_:b1280",
@@ -16566,15 +16566,7 @@
       "idShort": "cycleLifeReferenceTest"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNleHBlY3RlZE51bWJlck9mQ3ljbGVz",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#expectedNumberOfCycles",
-      "displayName": "_:b1222",
-      "embeddedDataSpecifications": "_:b1224",
-      "idShort": "expectedNumberOfCycles"
-    },
-    {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNleHBlY3RlZExpZmV0aW1l",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#expectedLifetime",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#expectedLifetime",
       "displayName": "_:b1205",
@@ -16582,7 +16574,15 @@
       "idShort": "expectedLifetime"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNpbml0aWFsSW50ZXJuYWxSZXNpc3RhbmNlQXRCYXR0ZXJ5TW9kdWxlTGV2ZWw",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#expectedNumberOfCycles",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#expectedNumberOfCycles",
+      "displayName": "_:b1222",
+      "embeddedDataSpecifications": "_:b1224",
+      "idShort": "expectedNumberOfCycles"
+    },
+    {
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#initialInternalResistanceAtBatteryModuleLevel",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#initialInternalResistanceAtBatteryModuleLevel",
       "displayName": "_:b1141",
@@ -16590,7 +16590,7 @@
       "idShort": "internalResistanceIncreaseAtBatteryModuleLevel"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNpbnRlcm5hbFJlc2lzdGFuY2VJbmNyZWFzZUF0QmF0dGVyeUNlbGxMZXZlbA",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#internalResistanceIncreaseAtBatteryCellLevel",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#internalResistanceIncreaseAtBatteryCellLevel",
       "displayName": "_:b1156",
@@ -16598,7 +16598,7 @@
       "idShort": "internalResistanceIncreaseAtBatteryCellLevel"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNpbnRlcm5hbFJlc2lzdGFuY2VJbmNyZWFzZUF0QmF0dGVyeVBhY2tMZXZlbA",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#internalResistanceIncreaseAtBatteryPackLevel",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#internalResistanceIncreaseAtBatteryPackLevel",
       "displayName": "_:b969",
@@ -16606,7 +16606,7 @@
       "idShort": "internalResistanceIncreaseAtBatteryPackLevel"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNtYW51ZmFjdHVyZXJJZGVudGlmaWVy",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#manufacturerIdentifier",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#manufacturerIdentifier",
       "displayName": "_:b1329",
@@ -16614,7 +16614,7 @@
       "idShort": "manufacturerIdentifier"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNwb3dlckNhcGFiaWxpdHlBdA",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#powerCapabilityAt",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#powerCapabilityAt",
       "displayName": "_:b1171",
@@ -16622,7 +16622,7 @@
       "idShort": "powerCapabilityAt"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNwb3dlckNhcGFiaWxpdHlSYXRpbw",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#powerCapabilityRatio",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#powerCapabilityRatio",
       "displayName": "_:b1237",
@@ -16630,7 +16630,7 @@
       "idShort": "powerCapabilityRatio"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMSN3YXJyYW50eUluZm9ybWF0aW9u",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1#warrantyInformation",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1#warrantyInformation",
       "displayName": "_:b1357",
@@ -16638,7 +16638,7 @@
       "idShort": "warrantyInformation"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMSN3YXJyYW50eVBlcmlvZA",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1#warrantyPeriod",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.1#warrantyPeriod",
       "displayName": "_:b1312",
@@ -16659,7 +16659,7 @@
   "administration": "_:b13",
   "description": "_:b11",
   "displayName": "_:b9",
-  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA",
+  "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/TechnicalData/1/0",
   "idShort": "TechnicalData",
   "links": [
     {

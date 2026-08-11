@@ -25,7 +25,7 @@
             "@id": "https://admin-shell.io/aas/3/0/Referable/description"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0"
           }
         },
         {
@@ -76,7 +76,7 @@
             "@id": "https://admin-shell.io/aas/3/0/Qualifiable/qualifiers"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0"
           }
         },
         {
@@ -87,13 +87,13 @@
             "@value": "0"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0uYXRTb2M"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0uYXRTb2M"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0"
           }
         },
         {
@@ -104,13 +104,13 @@
             "@value": "1"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0ucG93ZXJDYXBhYmlsaXR5QXQ"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0ucG93ZXJDYXBhYmlsaXR5QXQ"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0"
           }
         }
       ],
@@ -203,10 +203,10 @@
   },
   "aas:SubmodelElementCollection/value": [
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0uYXRTb2M"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0uYXRTb2M"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0ucG93ZXJDYXBhYmlsaXR5QXQ"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0ucG93ZXJDYXBhYmlsaXR5QXQ"
     }
   ],
   "forms": [
@@ -216,7 +216,7 @@
       "op": "readallproperties"
     }
   ],
-  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0",
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0",
   "links": [
     {
       "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5Qb3dlckNhcGFiaWxpdHkuT3JpZ2luYWxQb3dlckNhcGFiaWxpdHlbMF0",

@@ -25,7 +25,7 @@
             "@id": "https://admin-shell.io/aas/3/0/Referable/description"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
           }
         },
         {
@@ -76,7 +76,7 @@
             "@id": "https://admin-shell.io/aas/3/0/HasSemantics/supplementalSemanticIds"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
           }
         },
         {
@@ -110,7 +110,7 @@
             "@id": "https://admin-shell.io/aas/3/0/Qualifiable/qualifiers"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
           }
         },
         {
@@ -121,13 +121,13 @@
             "@value": "0"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkluaXRpYWxJbnRlcm5hbFJlc2lzdGFuY2VPbkJhdHRlcnlDZWxsTGV2ZWw"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkluaXRpYWxJbnRlcm5hbFJlc2lzdGFuY2VPbkJhdHRlcnlDZWxsTGV2ZWw"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
           }
         },
         {
@@ -138,13 +138,13 @@
             "@value": "1"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkluaXRpYWxJbnRlcm5hbFJlc2lzdGFuY2VPbkJhdHRlcnlQYWNrTGV2ZWw"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkluaXRpYWxJbnRlcm5hbFJlc2lzdGFuY2VPbkJhdHRlcnlQYWNrTGV2ZWw"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
           }
         },
         {
@@ -155,13 +155,13 @@
             "@value": "2"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkluaXRpYWxJbnRlcm5hbFJlc2lzdGFuY2VPbkJhdHRlcnlNb2R1bGVMZXZlbA"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkluaXRpYWxJbnRlcm5hbFJlc2lzdGFuY2VPbkJhdHRlcnlNb2R1bGVMZXZlbA"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
           }
         },
         {
@@ -172,13 +172,13 @@
             "@value": "3"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkludGVybmFsUmVzaXN0YW5jZUluY3JlYXNlT2ZCYXR0ZXJ5Q2VsbExldmVs"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkludGVybmFsUmVzaXN0YW5jZUluY3JlYXNlT2ZCYXR0ZXJ5Q2VsbExldmVs"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
           }
         },
         {
@@ -189,13 +189,13 @@
             "@value": "4"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkludGVybmFsUmVzaXN0YW5jZUluY3JlYXNlT2ZCYXR0ZXJ5UGFja0xldmVs"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkludGVybmFsUmVzaXN0YW5jZUluY3JlYXNlT2ZCYXR0ZXJ5UGFja0xldmVs"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
           }
         },
         {
@@ -206,13 +206,13 @@
             "@value": "5"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkludGVybmFsUmVzaXN0YW5jZUluY3JlYXNlT2ZCYXR0ZXJ5TW9kdWxlTGV2ZWw"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkludGVybmFsUmVzaXN0YW5jZUluY3JlYXNlT2ZCYXR0ZXJ5TW9kdWxlTGV2ZWw"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/SubmodelElementCollection/value"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl"
           }
         }
       ],
@@ -324,22 +324,22 @@
   },
   "aas:SubmodelElementCollection/value": [
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkluaXRpYWxJbnRlcm5hbFJlc2lzdGFuY2VPbkJhdHRlcnlDZWxsTGV2ZWw"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkluaXRpYWxJbnRlcm5hbFJlc2lzdGFuY2VPbkJhdHRlcnlDZWxsTGV2ZWw"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkluaXRpYWxJbnRlcm5hbFJlc2lzdGFuY2VPbkJhdHRlcnlQYWNrTGV2ZWw"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkluaXRpYWxJbnRlcm5hbFJlc2lzdGFuY2VPbkJhdHRlcnlQYWNrTGV2ZWw"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkluaXRpYWxJbnRlcm5hbFJlc2lzdGFuY2VPbkJhdHRlcnlNb2R1bGVMZXZlbA"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkluaXRpYWxJbnRlcm5hbFJlc2lzdGFuY2VPbkJhdHRlcnlNb2R1bGVMZXZlbA"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkludGVybmFsUmVzaXN0YW5jZUluY3JlYXNlT2ZCYXR0ZXJ5Q2VsbExldmVs"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkludGVybmFsUmVzaXN0YW5jZUluY3JlYXNlT2ZCYXR0ZXJ5Q2VsbExldmVs"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkludGVybmFsUmVzaXN0YW5jZUluY3JlYXNlT2ZCYXR0ZXJ5UGFja0xldmVs"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkludGVybmFsUmVzaXN0YW5jZUluY3JlYXNlT2ZCYXR0ZXJ5UGFja0xldmVs"
     },
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkludGVybmFsUmVzaXN0YW5jZUluY3JlYXNlT2ZCYXR0ZXJ5TW9kdWxlTGV2ZWw"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNlLkludGVybmFsUmVzaXN0YW5jZUluY3JlYXNlT2ZCYXR0ZXJ5TW9kdWxlTGV2ZWw"
     }
   ],
   "forms": [
@@ -349,7 +349,7 @@
       "op": "readallproperties"
     }
   ],
-  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl",
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl",
   "links": [
     {
       "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5SZXNpc3RhbmNl",

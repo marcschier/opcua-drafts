@@ -59,7 +59,7 @@
             "@id": "https://admin-shell.io/aas/3/0/HasSemantics/supplementalSemanticIds"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5MaWZldGltZS5FeHBlY3RlZE51bWJlck9mQ3ljbGVz"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5MaWZldGltZS5FeHBlY3RlZE51bWJlck9mQ3ljbGVz"
           }
         },
         {
@@ -93,7 +93,7 @@
             "@id": "https://admin-shell.io/aas/3/0/Qualifiable/qualifiers"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5MaWZldGltZS5FeHBlY3RlZE51bWJlck9mQ3ljbGVz"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5MaWZldGltZS5FeHBlY3RlZE51bWJlck9mQ3ljbGVz"
           }
         }
       ],
@@ -199,7 +199,7 @@
       "op": "readallproperties"
     }
   ],
-  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5MaWZldGltZS5FeHBlY3RlZE51bWJlck9mQ3ljbGVz",
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5MaWZldGltZS5FeHBlY3RlZE51bWJlck9mQ3ljbGVz",
   "links": [
     {
       "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9UZWNobmljYWxEYXRhLzEvMA/node/VGVjaG5pY2FsUHJvcGVydHlBcmVhcy5MaWZldGltZS5FeHBlY3RlZE51bWJlck9mQ3ljbGVz",

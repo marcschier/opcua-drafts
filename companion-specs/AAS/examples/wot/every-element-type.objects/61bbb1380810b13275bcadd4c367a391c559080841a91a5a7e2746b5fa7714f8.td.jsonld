@@ -25,7 +25,7 @@
             "@id": "https://admin-shell.io/aas/3/0/Operation/inputVariables"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24"
           }
         },
         {
@@ -42,7 +42,7 @@
             "@id": "https://admin-shell.io/aas/3/0/Operation/inputVariables"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24"
           }
         },
         {
@@ -59,7 +59,7 @@
             "@id": "https://admin-shell.io/aas/3/0/Operation/outputVariables"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24"
           }
         },
         {
@@ -76,7 +76,7 @@
             "@id": "https://admin-shell.io/aas/3/0/Operation/inoutputVariables"
           },
           "https://w3id.org/aas-jsonld/subject": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24"
           }
         }
       ],
@@ -94,7 +94,7 @@
       "@id": "_:aas-node-7",
       "@type": "aas:OperationVariable",
       "aas:OperationVariable/value": {
-        "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24uaW5vdXRwdXRWYXJpYWJsZXNbMF0"
+        "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24uaW5vdXRwdXRWYXJpYWJsZXNbMF0"
       }
     }
   ],
@@ -103,14 +103,14 @@
       "@id": "_:aas-node-1",
       "@type": "aas:OperationVariable",
       "aas:OperationVariable/value": {
-        "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24uaW5wdXRWYXJpYWJsZXNbMF0"
+        "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24uaW5wdXRWYXJpYWJsZXNbMF0"
       }
     },
     {
       "@id": "_:aas-node-2",
       "@type": "aas:OperationVariable",
       "aas:OperationVariable/value": {
-        "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24uaW5wdXRWYXJpYWJsZXNbMV0"
+        "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24uaW5wdXRWYXJpYWJsZXNbMV0"
       }
     }
   ],
@@ -119,7 +119,7 @@
       "@id": "_:aas-node-5",
       "@type": "aas:OperationVariable",
       "aas:OperationVariable/value": {
-        "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24ub3V0cHV0VmFyaWFibGVzWzBd"
+        "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24ub3V0cHV0VmFyaWFibGVzWzBd"
       }
     }
   ],
@@ -134,7 +134,7 @@
       "op": "readallproperties"
     }
   ],
-  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24",
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QW5PcGVyYXRpb24",
   "links": [
     {
       "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QW5PcGVyYXRpb24",

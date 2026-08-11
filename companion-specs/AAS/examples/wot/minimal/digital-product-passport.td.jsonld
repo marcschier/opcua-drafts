@@ -2466,6 +2466,192 @@
       "text": "Status of the DPP instance as digital resource."
     },
     {
+      "@id": "https://admin-shell.io/idta/aas/DppMetadata/1/0",
+      "@type": "aas:AssetAdministrationShell",
+      "aas:AssetAdministrationShell/submodels": {
+        "@id": "_:b5"
+      },
+      "aas:Identifiable/id": "https://admin-shell.io/idta/aas/DppMetadata/1/0",
+      "assetInformation": "_:b3",
+      "description": "_:b1",
+      "idShort": "DppMetadataAAS"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/batch/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/batch/1",
+      "administration": "_:b330",
+      "description": "_:b328",
+      "displayName": "_:b326",
+      "embeddedDataSpecifications": "_:b331",
+      "idShort": "Batch",
+      "isCaseOf": [
+        "_:b343",
+        "_:b347"
+      ]
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/contentSpecificationId/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/contentSpecificationId/1",
+      "description": "_:b512",
+      "displayName": "_:b510",
+      "embeddedDataSpecifications": "_:b514",
+      "idShort": "contentSpecificationId",
+      "isCaseOf": "_:b526"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/contentSpecificationIds/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/contentSpecificationIds/1",
+      "administration": "_:b493",
+      "description": "_:b491",
+      "displayName": "_:b489",
+      "embeddedDataSpecifications": "_:b494",
+      "idShort": "contentSpecificationIds",
+      "isCaseOf": "_:b506"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/digitalProductPassportId/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/digitalProductPassportId/1",
+      "administration": "_:b210",
+      "description": "_:b208",
+      "displayName": "_:b206",
+      "embeddedDataSpecifications": "_:b211",
+      "idShort": "digitalProductPassportId",
+      "isCaseOf": "_:b223"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/dppMetadata/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/dppMetadata/1",
+      "administration": "_:b536",
+      "description": "_:b534",
+      "displayName": [
+        "_:b530",
+        "_:b532"
+      ],
+      "embeddedDataSpecifications": "_:b537",
+      "idShort": "DppMetadata",
+      "isCaseOf": "_:b551"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/dppSchemaVersion/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/dppSchemaVersion/1",
+      "administration": "_:b380",
+      "description": "_:b378",
+      "displayName": "_:b376",
+      "embeddedDataSpecifications": "_:b381",
+      "idShort": "dppSchemaVersion",
+      "isCaseOf": "_:b393"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/dppStatus/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/dppStatus/1",
+      "administration": "_:b401",
+      "description": "_:b399",
+      "displayName": "_:b397",
+      "embeddedDataSpecifications": "_:b402",
+      "idShort": "dppStatus",
+      "isCaseOf": "_:b414"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/economicOperatorId/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/economicOperatorId/1",
+      "administration": "_:b443",
+      "description": "_:b441",
+      "displayName": "_:b439",
+      "embeddedDataSpecifications": "_:b444",
+      "idShort": "economicOperatorId",
+      "isCaseOf": "_:b456"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/facilityId/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/facilityId/1",
+      "administration": "_:b464",
+      "description": "_:b462",
+      "displayName": "_:b460",
+      "embeddedDataSpecifications": "_:b465",
+      "idShort": "facilityId",
+      "isCaseOf": [
+        "_:b477",
+        "_:b481",
+        "_:b485"
+      ]
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/granularity/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/granularity/1",
+      "administration": "_:b268",
+      "description": "_:b266",
+      "displayName": "_:b264",
+      "embeddedDataSpecifications": "_:b269",
+      "idShort": "granularity",
+      "isCaseOf": "_:b297"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/item/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/item/1",
+      "administration": "_:b355",
+      "description": "_:b353",
+      "displayName": "_:b351",
+      "embeddedDataSpecifications": "_:b356",
+      "idShort": "Item",
+      "isCaseOf": [
+        "_:b368",
+        "_:b372"
+      ]
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/lastUpdate/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/lastUpdate/1",
+      "administration": "_:b422",
+      "description": "_:b420",
+      "displayName": "_:b418",
+      "embeddedDataSpecifications": "_:b423",
+      "idShort": "lastUpdate",
+      "isCaseOf": "_:b435"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/model/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/model/1",
+      "administration": "_:b305",
+      "description": "_:b303",
+      "displayName": "_:b301",
+      "embeddedDataSpecifications": "_:b306",
+      "idShort": "Model",
+      "isCaseOf": [
+        "_:b318",
+        "_:b322"
+      ]
+    },
+    {
+      "@id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1",
+      "administration": "_:b231",
+      "description": "_:b229",
+      "displayName": "_:b227",
+      "embeddedDataSpecifications": "_:b232",
+      "idShort": "uniqueProductIdentifier",
+      "isCaseOf": [
+        "_:b244",
+        "_:b248",
+        "_:b252",
+        "_:b256",
+        "_:b260"
+      ]
+    },
+    {
       "@graph": [
         {
           "@id": "_:b10",
@@ -2481,7 +2667,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
           }
         },
         {
@@ -2583,7 +2769,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
           }
         },
         {
@@ -2753,7 +2939,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
           }
         },
         {
@@ -2906,7 +3092,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
           }
         },
         {
@@ -3059,7 +3245,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
           }
         },
         {
@@ -3246,7 +3432,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9EcHBNZXRhZGF0YS8xLzA"
+            "@id": "https://admin-shell.io/idta/aas/DppMetadata/1/0"
           }
         },
         {
@@ -3314,7 +3500,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
           }
         },
         {
@@ -3331,7 +3517,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kaWdpdGFsUHJvZHVjdFBhc3Nwb3J0SWQvMQ"
+            "@id": "https://admin-shell.io/idta/cds/digitalProductPassportId/1"
           }
         },
         {
@@ -3348,7 +3534,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kaWdpdGFsUHJvZHVjdFBhc3Nwb3J0SWQvMQ"
+            "@id": "https://admin-shell.io/idta/cds/digitalProductPassportId/1"
           }
         },
         {
@@ -3450,7 +3636,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kaWdpdGFsUHJvZHVjdFBhc3Nwb3J0SWQvMQ"
+            "@id": "https://admin-shell.io/idta/cds/digitalProductPassportId/1"
           }
         },
         {
@@ -3484,7 +3670,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kaWdpdGFsUHJvZHVjdFBhc3Nwb3J0SWQvMQ"
+            "@id": "https://admin-shell.io/idta/cds/digitalProductPassportId/1"
           }
         },
         {
@@ -3501,7 +3687,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy91bmlxdWVQcm9kdWN0SWRlbnRpZmllci8x"
+            "@id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1"
           }
         },
         {
@@ -3518,7 +3704,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy91bmlxdWVQcm9kdWN0SWRlbnRpZmllci8x"
+            "@id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1"
           }
         },
         {
@@ -3603,7 +3789,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy91bmlxdWVQcm9kdWN0SWRlbnRpZmllci8x"
+            "@id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1"
           }
         },
         {
@@ -3637,7 +3823,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy91bmlxdWVQcm9kdWN0SWRlbnRpZmllci8x"
+            "@id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1"
           }
         },
         {
@@ -3671,7 +3857,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy91bmlxdWVQcm9kdWN0SWRlbnRpZmllci8x"
+            "@id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1"
           }
         },
         {
@@ -3705,7 +3891,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy91bmlxdWVQcm9kdWN0SWRlbnRpZmllci8x"
+            "@id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1"
           }
         },
         {
@@ -3739,7 +3925,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy91bmlxdWVQcm9kdWN0SWRlbnRpZmllci8x"
+            "@id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1"
           }
         },
         {
@@ -3790,7 +3976,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy91bmlxdWVQcm9kdWN0SWRlbnRpZmllci8x"
+            "@id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1"
           }
         },
         {
@@ -3807,7 +3993,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9ncmFudWxhcml0eS8x"
+            "@id": "https://admin-shell.io/idta/cds/granularity/1"
           }
         },
         {
@@ -3824,7 +4010,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9ncmFudWxhcml0eS8x"
+            "@id": "https://admin-shell.io/idta/cds/granularity/1"
           }
         },
         {
@@ -4028,7 +4214,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9ncmFudWxhcml0eS8x"
+            "@id": "https://admin-shell.io/idta/cds/granularity/1"
           }
         },
         {
@@ -4062,7 +4248,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9ncmFudWxhcml0eS8x"
+            "@id": "https://admin-shell.io/idta/cds/granularity/1"
           }
         },
         {
@@ -4079,7 +4265,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9tb2RlbC8x"
+            "@id": "https://admin-shell.io/idta/cds/model/1"
           }
         },
         {
@@ -4096,7 +4282,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9tb2RlbC8x"
+            "@id": "https://admin-shell.io/idta/cds/model/1"
           }
         },
         {
@@ -4198,7 +4384,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9tb2RlbC8x"
+            "@id": "https://admin-shell.io/idta/cds/model/1"
           }
         },
         {
@@ -4249,7 +4435,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9tb2RlbC8x"
+            "@id": "https://admin-shell.io/idta/cds/model/1"
           }
         },
         {
@@ -4283,7 +4469,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9tb2RlbC8x"
+            "@id": "https://admin-shell.io/idta/cds/model/1"
           }
         },
         {
@@ -4300,7 +4486,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9iYXRjaC8x"
+            "@id": "https://admin-shell.io/idta/cds/batch/1"
           }
         },
         {
@@ -4317,7 +4503,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9iYXRjaC8x"
+            "@id": "https://admin-shell.io/idta/cds/batch/1"
           }
         },
         {
@@ -4334,7 +4520,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
           }
         },
         {
@@ -4419,7 +4605,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9iYXRjaC8x"
+            "@id": "https://admin-shell.io/idta/cds/batch/1"
           }
         },
         {
@@ -4453,7 +4639,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9iYXRjaC8x"
+            "@id": "https://admin-shell.io/idta/cds/batch/1"
           }
         },
         {
@@ -4487,7 +4673,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9iYXRjaC8x"
+            "@id": "https://admin-shell.io/idta/cds/batch/1"
           }
         },
         {
@@ -4504,7 +4690,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9pdGVtLzE"
+            "@id": "https://admin-shell.io/idta/cds/item/1"
           }
         },
         {
@@ -4521,7 +4707,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9pdGVtLzE"
+            "@id": "https://admin-shell.io/idta/cds/item/1"
           }
         },
         {
@@ -4623,7 +4809,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9pdGVtLzE"
+            "@id": "https://admin-shell.io/idta/cds/item/1"
           }
         },
         {
@@ -4657,7 +4843,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9pdGVtLzE"
+            "@id": "https://admin-shell.io/idta/cds/item/1"
           }
         },
         {
@@ -4691,7 +4877,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9pdGVtLzE"
+            "@id": "https://admin-shell.io/idta/cds/item/1"
           }
         },
         {
@@ -4708,7 +4894,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBTY2hlbWFWZXJzaW9uLzE"
+            "@id": "https://admin-shell.io/idta/cds/dppSchemaVersion/1"
           }
         },
         {
@@ -4725,7 +4911,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBTY2hlbWFWZXJzaW9uLzE"
+            "@id": "https://admin-shell.io/idta/cds/dppSchemaVersion/1"
           }
         },
         {
@@ -4827,7 +5013,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBTY2hlbWFWZXJzaW9uLzE"
+            "@id": "https://admin-shell.io/idta/cds/dppSchemaVersion/1"
           }
         },
         {
@@ -4861,7 +5047,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBTY2hlbWFWZXJzaW9uLzE"
+            "@id": "https://admin-shell.io/idta/cds/dppSchemaVersion/1"
           }
         },
         {
@@ -4878,7 +5064,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBTdGF0dXMvMQ"
+            "@id": "https://admin-shell.io/idta/cds/dppStatus/1"
           }
         },
         {
@@ -4895,7 +5081,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBTdGF0dXMvMQ"
+            "@id": "https://admin-shell.io/idta/cds/dppStatus/1"
           }
         },
         {
@@ -4997,7 +5183,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBTdGF0dXMvMQ"
+            "@id": "https://admin-shell.io/idta/cds/dppStatus/1"
           }
         },
         {
@@ -5031,7 +5217,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBTdGF0dXMvMQ"
+            "@id": "https://admin-shell.io/idta/cds/dppStatus/1"
           }
         },
         {
@@ -5048,7 +5234,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9sYXN0VXBkYXRlLzE"
+            "@id": "https://admin-shell.io/idta/cds/lastUpdate/1"
           }
         },
         {
@@ -5065,7 +5251,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9sYXN0VXBkYXRlLzE"
+            "@id": "https://admin-shell.io/idta/cds/lastUpdate/1"
           }
         },
         {
@@ -5150,7 +5336,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9sYXN0VXBkYXRlLzE"
+            "@id": "https://admin-shell.io/idta/cds/lastUpdate/1"
           }
         },
         {
@@ -5184,7 +5370,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9sYXN0VXBkYXRlLzE"
+            "@id": "https://admin-shell.io/idta/cds/lastUpdate/1"
           }
         },
         {
@@ -5201,7 +5387,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9lY29ub21pY09wZXJhdG9ySWQvMQ"
+            "@id": "https://admin-shell.io/idta/cds/economicOperatorId/1"
           }
         },
         {
@@ -5218,7 +5404,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9lY29ub21pY09wZXJhdG9ySWQvMQ"
+            "@id": "https://admin-shell.io/idta/cds/economicOperatorId/1"
           }
         },
         {
@@ -5320,7 +5506,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9lY29ub21pY09wZXJhdG9ySWQvMQ"
+            "@id": "https://admin-shell.io/idta/cds/economicOperatorId/1"
           }
         },
         {
@@ -5354,7 +5540,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9lY29ub21pY09wZXJhdG9ySWQvMQ"
+            "@id": "https://admin-shell.io/idta/cds/economicOperatorId/1"
           }
         },
         {
@@ -5388,7 +5574,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9mYWNpbGl0eUlkLzE"
+            "@id": "https://admin-shell.io/idta/cds/facilityId/1"
           }
         },
         {
@@ -5405,7 +5591,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9mYWNpbGl0eUlkLzE"
+            "@id": "https://admin-shell.io/idta/cds/facilityId/1"
           }
         },
         {
@@ -5490,7 +5676,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9mYWNpbGl0eUlkLzE"
+            "@id": "https://admin-shell.io/idta/cds/facilityId/1"
           }
         },
         {
@@ -5524,7 +5710,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9mYWNpbGl0eUlkLzE"
+            "@id": "https://admin-shell.io/idta/cds/facilityId/1"
           }
         },
         {
@@ -5558,7 +5744,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9mYWNpbGl0eUlkLzE"
+            "@id": "https://admin-shell.io/idta/cds/facilityId/1"
           }
         },
         {
@@ -5592,7 +5778,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9mYWNpbGl0eUlkLzE"
+            "@id": "https://admin-shell.io/idta/cds/facilityId/1"
           }
         },
         {
@@ -5609,7 +5795,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9jb250ZW50U3BlY2lmaWNhdGlvbklkcy8x"
+            "@id": "https://admin-shell.io/idta/cds/contentSpecificationIds/1"
           }
         },
         {
@@ -5626,7 +5812,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9jb250ZW50U3BlY2lmaWNhdGlvbklkcy8x"
+            "@id": "https://admin-shell.io/idta/cds/contentSpecificationIds/1"
           }
         },
         {
@@ -5728,7 +5914,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9jb250ZW50U3BlY2lmaWNhdGlvbklkcy8x"
+            "@id": "https://admin-shell.io/idta/cds/contentSpecificationIds/1"
           }
         },
         {
@@ -5762,7 +5948,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9jb250ZW50U3BlY2lmaWNhdGlvbklkcy8x"
+            "@id": "https://admin-shell.io/idta/cds/contentSpecificationIds/1"
           }
         },
         {
@@ -5796,7 +5982,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9jb250ZW50U3BlY2lmaWNhdGlvbklkLzE"
+            "@id": "https://admin-shell.io/idta/cds/contentSpecificationId/1"
           }
         },
         {
@@ -5813,7 +5999,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9jb250ZW50U3BlY2lmaWNhdGlvbklkLzE"
+            "@id": "https://admin-shell.io/idta/cds/contentSpecificationId/1"
           }
         },
         {
@@ -5847,7 +6033,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
           }
         },
         {
@@ -5915,7 +6101,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9jb250ZW50U3BlY2lmaWNhdGlvbklkLzE"
+            "@id": "https://admin-shell.io/idta/cds/contentSpecificationId/1"
           }
         },
         {
@@ -5949,7 +6135,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9jb250ZW50U3BlY2lmaWNhdGlvbklkLzE"
+            "@id": "https://admin-shell.io/idta/cds/contentSpecificationId/1"
           }
         },
         {
@@ -5966,7 +6152,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBNZXRhZGF0YS8x"
+            "@id": "https://admin-shell.io/idta/cds/dppMetadata/1"
           }
         },
         {
@@ -5983,7 +6169,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBNZXRhZGF0YS8x"
+            "@id": "https://admin-shell.io/idta/cds/dppMetadata/1"
           }
         },
         {
@@ -6000,7 +6186,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBNZXRhZGF0YS8x"
+            "@id": "https://admin-shell.io/idta/cds/dppMetadata/1"
           }
         },
         {
@@ -6119,7 +6305,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBNZXRhZGF0YS8x"
+            "@id": "https://admin-shell.io/idta/cds/dppMetadata/1"
           }
         },
         {
@@ -6153,7 +6339,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBNZXRhZGF0YS8x"
+            "@id": "https://admin-shell.io/idta/cds/dppMetadata/1"
           }
         },
         {
@@ -6323,7 +6509,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
           }
         },
         {
@@ -6357,7 +6543,7 @@
             "@id": "aas:AssetAdministrationShell/submodels"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9EcHBNZXRhZGF0YS8xLzA"
+            "@id": "https://admin-shell.io/idta/aas/DppMetadata/1/0"
           }
         },
         {
@@ -6476,7 +6662,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0"
           }
         },
         {
@@ -6515,192 +6701,6 @@
         }
       ],
       "@id": "aasld:graph/order"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9EcHBNZXRhZGF0YS8xLzA",
-      "@type": "aas:AssetAdministrationShell",
-      "aas:AssetAdministrationShell/submodels": {
-        "@id": "_:b5"
-      },
-      "aas:Identifiable/id": "https://admin-shell.io/idta/aas/DppMetadata/1/0",
-      "assetInformation": "_:b3",
-      "description": "_:b1",
-      "idShort": "DppMetadataAAS"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy91bmlxdWVQcm9kdWN0SWRlbnRpZmllci8x",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/uniqueProductIdentifier/1",
-      "administration": "_:b231",
-      "description": "_:b229",
-      "displayName": "_:b227",
-      "embeddedDataSpecifications": "_:b232",
-      "idShort": "uniqueProductIdentifier",
-      "isCaseOf": [
-        "_:b244",
-        "_:b248",
-        "_:b252",
-        "_:b256",
-        "_:b260"
-      ]
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9iYXRjaC8x",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/batch/1",
-      "administration": "_:b330",
-      "description": "_:b328",
-      "displayName": "_:b326",
-      "embeddedDataSpecifications": "_:b331",
-      "idShort": "Batch",
-      "isCaseOf": [
-        "_:b343",
-        "_:b347"
-      ]
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9jb250ZW50U3BlY2lmaWNhdGlvbklkLzE",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/contentSpecificationId/1",
-      "description": "_:b512",
-      "displayName": "_:b510",
-      "embeddedDataSpecifications": "_:b514",
-      "idShort": "contentSpecificationId",
-      "isCaseOf": "_:b526"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9jb250ZW50U3BlY2lmaWNhdGlvbklkcy8x",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/contentSpecificationIds/1",
-      "administration": "_:b493",
-      "description": "_:b491",
-      "displayName": "_:b489",
-      "embeddedDataSpecifications": "_:b494",
-      "idShort": "contentSpecificationIds",
-      "isCaseOf": "_:b506"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kaWdpdGFsUHJvZHVjdFBhc3Nwb3J0SWQvMQ",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/digitalProductPassportId/1",
-      "administration": "_:b210",
-      "description": "_:b208",
-      "displayName": "_:b206",
-      "embeddedDataSpecifications": "_:b211",
-      "idShort": "digitalProductPassportId",
-      "isCaseOf": "_:b223"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBNZXRhZGF0YS8x",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/dppMetadata/1",
-      "administration": "_:b536",
-      "description": "_:b534",
-      "displayName": [
-        "_:b530",
-        "_:b532"
-      ],
-      "embeddedDataSpecifications": "_:b537",
-      "idShort": "DppMetadata",
-      "isCaseOf": "_:b551"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBTY2hlbWFWZXJzaW9uLzE",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/dppSchemaVersion/1",
-      "administration": "_:b380",
-      "description": "_:b378",
-      "displayName": "_:b376",
-      "embeddedDataSpecifications": "_:b381",
-      "idShort": "dppSchemaVersion",
-      "isCaseOf": "_:b393"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9kcHBTdGF0dXMvMQ",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/dppStatus/1",
-      "administration": "_:b401",
-      "description": "_:b399",
-      "displayName": "_:b397",
-      "embeddedDataSpecifications": "_:b402",
-      "idShort": "dppStatus",
-      "isCaseOf": "_:b414"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9lY29ub21pY09wZXJhdG9ySWQvMQ",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/economicOperatorId/1",
-      "administration": "_:b443",
-      "description": "_:b441",
-      "displayName": "_:b439",
-      "embeddedDataSpecifications": "_:b444",
-      "idShort": "economicOperatorId",
-      "isCaseOf": "_:b456"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9mYWNpbGl0eUlkLzE",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/facilityId/1",
-      "administration": "_:b464",
-      "description": "_:b462",
-      "displayName": "_:b460",
-      "embeddedDataSpecifications": "_:b465",
-      "idShort": "facilityId",
-      "isCaseOf": [
-        "_:b477",
-        "_:b481",
-        "_:b485"
-      ]
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9ncmFudWxhcml0eS8x",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/granularity/1",
-      "administration": "_:b268",
-      "description": "_:b266",
-      "displayName": "_:b264",
-      "embeddedDataSpecifications": "_:b269",
-      "idShort": "granularity",
-      "isCaseOf": "_:b297"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9pdGVtLzE",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/item/1",
-      "administration": "_:b355",
-      "description": "_:b353",
-      "displayName": "_:b351",
-      "embeddedDataSpecifications": "_:b356",
-      "idShort": "Item",
-      "isCaseOf": [
-        "_:b368",
-        "_:b372"
-      ]
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9sYXN0VXBkYXRlLzE",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/lastUpdate/1",
-      "administration": "_:b422",
-      "description": "_:b420",
-      "displayName": "_:b418",
-      "embeddedDataSpecifications": "_:b423",
-      "idShort": "lastUpdate",
-      "isCaseOf": "_:b435"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Nkcy9tb2RlbC8x",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/cds/model/1",
-      "administration": "_:b305",
-      "description": "_:b303",
-      "displayName": "_:b301",
-      "embeddedDataSpecifications": "_:b306",
-      "idShort": "Model",
-      "isCaseOf": [
-        "_:b318",
-        "_:b322"
-      ]
     }
   ],
   "@type": [
@@ -6715,7 +6715,7 @@
   "aas:Identifiable/id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
   "administration": "_:b11",
   "description": "_:b9",
-  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvZHBwTWV0YWRhdGEvMS8w",
+  "id": "https://admin-shell.io/idta/SubmodelTemplate/dppMetadata/1/0",
   "idShort": "DppMetadata",
   "links": [
     {

@@ -46,6 +46,8 @@ RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 LD = "https://w3id.org/aas-jsonld/"
 ORDER_GRAPH = LD + "graph/order"
 SUBJECT_PREFIX = LD + "subject/v1/"
+NODE_SUBJECT_PREFIX = LD + "node/v1/"
+RESERVED_SUBJECT_PREFIXES = (SUBJECT_PREFIX, NODE_SUBJECT_PREFIX)
 
 # The three collections of an Environment, and the class each holds.
 ROOT_COLLECTIONS = {
@@ -185,16 +187,50 @@ class Schema:
 # ---------------------------------------------------------------------------
 # Terms
 # ---------------------------------------------------------------------------
-def subject_iri(identifier: str) -> str:
-    """The collision-free subject IRI for a root Identifiable.
+_ABSOLUTE_IRI = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
+_ILLEGAL_IRI_ASCII = re.compile(r'[\x00-\x20\x7F-\x9F<>"{}|\\^`]')
+_MALFORMED_PERCENT = re.compile(r"%(?![0-9A-Fa-f]{2})")
 
-    Every identifier uses the same construction.  Encoding the complete UTF-8
-    byte sequence, rather than hashing only identifiers that are not legal IRIs,
-    means a raw identifier is never used as a subject and prevents a legal
-    identifier from colliding with a generated subject.
+
+def is_absolute_iri(identifier: str) -> bool:
+    """Whether `identifier` is an absolute IRI safe to write as a JSON-LD `@id`.
+
+    The scheme and ASCII exclusions are the RFC 3987 surface rules needed here.
+    Unicode scalar values remain legal; spaces, controls, URI delimiters that
+    require escaping, and malformed percent escapes do not.
     """
+    return bool(_ABSOLUTE_IRI.match(identifier)
+                and not _ILLEGAL_IRI_ASCII.search(identifier)
+                and not _MALFORMED_PERCENT.search(identifier))
+
+
+def encoded_subject(identifier: str) -> str:
     encoded = base64.urlsafe_b64encode(identifier.encode("utf-8")).decode("ascii").rstrip("=")
     return SUBJECT_PREFIX + encoded
+
+
+def subject_iri(identifier: str) -> str:
+    """The readable, collision-free subject IRI for a root Identifiable.
+
+    An ordinary absolute IRI is already the best subject an author can write, so
+    it is used unchanged. Identifiers that are not absolute IRIs are encoded
+    under `SUBJECT_PREFIX`. The generated root and child namespaces are reserved:
+    an authored identifier inside either is encoded too, so it cannot occupy a
+    subject that this mapping may generate for another identifier or element.
+    """
+    if (is_absolute_iri(identifier)
+            and not identifier.startswith(RESERVED_SUBJECT_PREFIXES)):
+        return identifier
+    return encoded_subject(identifier)
+
+
+def node_subject_iri(owner_identifier: str, id_short_path: str) -> str:
+    """The globally collision-free subject IRI of a projected contained node."""
+    owner = base64.urlsafe_b64encode(
+        owner_identifier.encode("utf-8")).decode("ascii").rstrip("=")
+    path = base64.urlsafe_b64encode(
+        id_short_path.encode("utf-8")).decode("ascii").rstrip("=")
+    return f"{NODE_SUBJECT_PREFIX}{owner}/{path}"
 
 
 class Sink:
@@ -241,7 +277,7 @@ class Lifter:
 
     # -- subject terms ------------------------------------------------------
     def subject_for(self, identifier: str) -> str:
-        """Clause 2.2: uniformly encode the complete identifier."""
+        """Clause 2.2: preserve safe absolute IRIs, encode every other id."""
         return iri(subject_iri(identifier))
 
     # -- values -------------------------------------------------------------

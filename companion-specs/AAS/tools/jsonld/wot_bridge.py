@@ -45,7 +45,7 @@ NODESET = os.path.normpath(
 sys.path.insert(0, AAS_TOOLS)
 
 import roundtrip_check as rt  # noqa: E402
-from jsonld.lift import Ontology, subject_iri  # noqa: E402
+from jsonld.lift import Ontology, node_subject_iri, subject_iri  # noqa: E402
 
 UA = "http://opcfoundation.org/UA/"
 AAS_NS = "https://admin-shell.io/aas/3/0/"
@@ -186,8 +186,7 @@ def node_iri(owner_id, path=None):
     root = subject_iri(owner_id)
     if path is None:
         return root
-    encoded = base64.urlsafe_b64encode(path.encode("utf-8")).decode("ascii").rstrip("=")
-    return f"{root}/node/{encoded}"
+    return node_subject_iri(owner_id, path)
 
 
 def td_document_iri(owner_id, path=None):

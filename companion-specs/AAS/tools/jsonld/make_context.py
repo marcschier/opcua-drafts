@@ -20,7 +20,8 @@ What the context can do, using JSON-LD 1.1:
 What it cannot do, and why the lifting exists:
 
   * emit an `Identifiable`'s `id` as both the subject IRI and a literal;
-  * construct the uniformly encoded subject term for an `Identifiable`;
+  * choose between a readable absolute IRI and a reserved encoded subject for an
+    `Identifiable`;
   * turn `"xs:int"` into `aas:DataTypeDefXsd/Int` (attempted here with an
     explicit term definition, and measured rather than assumed);
   * record the order of an array.

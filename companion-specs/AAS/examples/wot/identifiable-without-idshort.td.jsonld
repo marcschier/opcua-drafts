@@ -19,7 +19,7 @@
             "@value": "0"
           },
           "https://w3id.org/aas-jsonld/member": {
-            "@id": "https://w3id.org/aas-jsonld/subject/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l/node/VmFsdWU"
+            "@id": "https://w3id.org/aas-jsonld/node/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l/VmFsdWU"
           },
           "https://w3id.org/aas-jsonld/property": {
             "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
@@ -44,7 +44,7 @@
   },
   "aas:Submodel/submodelElements": [
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l/node/VmFsdWU"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l/VmFsdWU"
     }
   ],
   "forms": [

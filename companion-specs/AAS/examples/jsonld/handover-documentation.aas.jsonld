@@ -4756,6 +4756,35 @@
       "text": "Untertitel"
     },
     {
+      "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
+      "@type": "aas:Submodel",
+      "aas:HasKind/kind": {
+        "@id": "aas:ModellingKind/Template"
+      },
+      "administration": "_:b10",
+      "description": "_:b8",
+      "displayName": "_:b590",
+      "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
+      "idShort": "HandoverDocumentation",
+      "semanticId": "_:b11",
+      "submodelElements": "_:b22",
+      "supplementalSemanticIds": [
+        "_:b14",
+        "_:b18"
+      ]
+    },
+    {
+      "@id": "https://admin-shell.io/idta/aas/HandoverDocumentation/2/0",
+      "@type": "aas:AssetAdministrationShell",
+      "aas:AssetAdministrationShell/submodels": {
+        "@id": "_:b2"
+      },
+      "assetInformation": "_:b1",
+      "displayName": "_:b6",
+      "id": "https://admin-shell.io/idta/aas/HandoverDocumentation/2/0",
+      "idShort": "HandoverDocumentationAAS"
+    },
+    {
       "@graph": [
         {
           "@id": "_:b100",
@@ -5825,7 +5854,7 @@
             "@id": "aas:HasSemantics/supplementalSemanticIds"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0"
           }
         },
         {
@@ -6165,7 +6194,7 @@
             "@id": "aas:HasSemantics/supplementalSemanticIds"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0"
           }
         },
         {
@@ -8562,7 +8591,7 @@
             "@id": "aas:AssetAdministrationShell/submodels"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9IYW5kb3ZlckRvY3VtZW50YXRpb24vMi8w"
+            "@id": "https://admin-shell.io/idta/aas/HandoverDocumentation/2/0"
           }
         },
         {
@@ -9361,7 +9390,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0"
           }
         },
         {
@@ -9378,7 +9407,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0"
           }
         },
         {
@@ -10313,7 +10342,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9IYW5kb3ZlckRvY3VtZW50YXRpb24vMi8w"
+            "@id": "https://admin-shell.io/idta/aas/HandoverDocumentation/2/0"
           }
         },
         {
@@ -11996,7 +12025,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0"
           }
         },
         {
@@ -13044,35 +13073,6 @@
       "embeddedDataSpecifications": "_:b1036",
       "id": "0173-1#02-ABK126#002",
       "idShort": "DigitalFile"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9IYW5kb3ZlckRvY3VtZW50YXRpb24vMS8w",
-      "@type": "aas:Submodel",
-      "aas:HasKind/kind": {
-        "@id": "aas:ModellingKind/Template"
-      },
-      "administration": "_:b10",
-      "description": "_:b8",
-      "displayName": "_:b590",
-      "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/HandoverDocumentation/1/0",
-      "idShort": "HandoverDocumentation",
-      "semanticId": "_:b11",
-      "submodelElements": "_:b22",
-      "supplementalSemanticIds": [
-        "_:b14",
-        "_:b18"
-      ]
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9IYW5kb3ZlckRvY3VtZW50YXRpb24vMi8w",
-      "@type": "aas:AssetAdministrationShell",
-      "aas:AssetAdministrationShell/submodels": {
-        "@id": "_:b2"
-      },
-      "assetInformation": "_:b1",
-      "displayName": "_:b6",
-      "id": "https://admin-shell.io/idta/aas/HandoverDocumentation/2/0",
-      "idShort": "HandoverDocumentationAAS"
     }
   ]
 }

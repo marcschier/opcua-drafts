@@ -3115,7 +3115,7 @@ combined.
 | Fact of this specification | Term | Value |
 |---|---|---|
 | The AAS itself | the AAS vocabulary | `aas:Referable/idShort`, `aas:Property/value`, `aas:Submodel/submodelElements` and the rest, on the node they belong to |
-| AAS subject | TD `id` | the subject IRI that uniquely represents the node's AAS identity in the JSON-LD mapping; `@id` is not also written |
+| AAS subject | TD `id` | the AAS identifier itself where it is an ordinary absolute IRI; otherwise the reserved encoded subject of the JSON-LD mapping; `@id` is not also written |
 | TD document identity | a `self` link | a sibling TD document IRI distinct from the AAS subject |
 | NodeId, clause 5.3 | `uav:id` | an ExpandedNodeId naming its namespace by URI |
 | BrowseName, clause 5.3 | `uav:browseName` | the portable QualifiedName form |
@@ -3180,7 +3180,7 @@ affordance:
     { "id": "@id", "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/" }
   ],
   "@type": ["Thing", "uav:object", "aas:Submodel", "i4aas:AASSubmodelType"],
-  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n",
+  "id": "https://fabrikam.com/ids/sm/ordering",
   "title": "Ordering",
   "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:S:36:https://fabrikam.com/ids/sm/ordering",
   "uav:browseName": "nsu=https://example.com/aas/instances/;Ordering",
@@ -3189,7 +3189,7 @@ affordance:
   ],
   "aas:Submodel/submodelElements": [
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA"
     }
   ],
   "forms": [{
@@ -3224,7 +3224,7 @@ connectivity and names its ordered child from the parent side:
 ```jsonc
 {
   "@type": ["Thing", "uav:object", "aas:SubmodelElementList", "i4aas:AASSubmodelElementListType"],
-  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA",
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdA",
   "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:22:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList",
   "uav:componentOf": [
     "nsu=https://example.com/aas/instances/;s=i4aas3:S:36:https://fabrikam.com/ids/sm/ordering"
@@ -3234,7 +3234,7 @@ connectivity and names its ordered child from the parent side:
   ],
   "aas:SubmodelElementList/value": [
     {
-      "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXQ"
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXQ"
     }
   ],
   "links": [
@@ -3264,7 +3264,7 @@ points to the list TD, not to either node's AAS RDF subject:
 ```jsonc
 {
   "@type": ["Thing", "uav:object", "aas:SubmodelElementCollection", "i4aas:AASSubmodelElementCollectionType"],
-  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/node/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXQ",
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL29yZGVyaW5n/Q29sbGVjdGlvbnNJbnNpZGVBTGlzdFswXQ",
   "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:36:25:https://fabrikam.com/ids/sm/orderingCollectionsInsideAList[0]",
   "uav:browseName": "nsu=https://example.com/aas/instances/;0",
   "uav:componentOf": [
@@ -3307,11 +3307,12 @@ and the WoT drafts define no placeholder syntax for a namespace. `https://exampl
 above is the Server's instance namespace, written out. A document that cannot know the target
 namespace omits `uav:id` instead; see F.5.
 
-**Subject, TD document and protocol address are separate.** The TD `id` is the encoded AAS subject,
-constructed so different AAS identifiers cannot collide; the `self` link identifies the sibling TD
-document, and the `opc.tcp` form identifies the OPC UA Node. A converter does not derive one from
-another. It parses the ExpandedNodeId from the form, resolves containment through sibling TD links
-and uses the AAS subject only for RDF edges.
+**Subject, TD document and protocol address are separate.** For an ordinary absolute AAS identifier,
+the TD `id` is that identifier unchanged. An identifier that cannot be used directly, or one inside
+a namespace reserved for generated subjects, uses the collision-free encoded form of the JSON-LD
+mapping. The `self` link identifies the sibling TD document, and the `opc.tcp` form identifies the
+OPC UA Node. A converter does not derive one from another. It parses the ExpandedNodeId from the
+form, resolves containment through sibling TD links and uses the AAS subject only for RDF edges.
 
 A list member has no short name, so its BrowseName is its index — the rule clause 5.3 states.
 

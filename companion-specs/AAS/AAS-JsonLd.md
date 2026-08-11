@@ -187,7 +187,7 @@ for class, and nesting that follows the graph.
 ```jsonc
 {
   "@context": "aas.context.jsonld",
-  "@id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL25hbWVwbGF0ZQ",
+  "@id": "https://fabrikam.com/ids/sm/nameplate",
   "@type": "aas:Submodel",
   "id": "https://fabrikam.com/ids/sm/nameplate",
   "idShort": "Nameplate",
@@ -204,9 +204,10 @@ for class, and nesting that follows the graph.
 
 Two things in it are worth naming. `id` and `idShort` are written bare because the context aliases
 every local name that belongs to exactly one property in the vocabulary; `aas:Property/value` is
-written out because `value` belongs to several classes and a bare `value` would be ambiguous. And
-`@id` is the encoded subject term of clause 2.2, while `id` is the
-`aas:Identifiable/id` literal the metamodel requires. They deliberately carry different strings.
+written out because `value` belongs to several classes and a bare `value` would be ambiguous. For an ordinary absolute IRI such as this one, `@id` and the
+`aas:Identifiable/id` literal carry the same string. Clause 2.2 encodes only an identifier that
+cannot be written directly as an absolute IRI, or one inside a namespace reserved for generated
+subjects.
 
 An author is free to write neither — to expand every term, or to compact against a context of their
 own. Clause 6 is checked on the graph, so it does not notice.
@@ -239,7 +240,23 @@ The lifting does not take a base IRI. Root identity is independent of the docume
 
 ### 2.2 Subject terms
 
-The subject term of every **root Identifiable** **MUST** be
+The subject term of a **root Identifiable** whose `id` is an absolute IRI and does not begin with
+either reserved prefix below **MUST** be that `id` verbatim. This is the ordinary authoring case:
+an author who already has a stable IRI writes it once as both `@id` and `aas:Identifiable/id`.
+
+The reserved prefixes are:
+
+```text
+https://w3id.org/aas-jsonld/subject/v1/<encoded>
+https://w3id.org/aas-jsonld/node/v1/
+```
+
+The first is for encoded root subjects and the second for projected contained-node subjects. An
+authored `id` beginning with either prefix **MUST NOT** be used verbatim: those namespaces belong to
+this mapping.
+
+For every other `id` — a relative IRI reference, an identifier that is not a legal IRI, or an
+identifier inside a reserved prefix — the subject term **MUST** be
 
 ```text
 https://w3id.org/aas-jsonld/subject/v1/<encoded>
@@ -248,11 +265,10 @@ https://w3id.org/aas-jsonld/subject/v1/<encoded>
 where `<encoded>` is the RFC 4648 base64url encoding, without `=` padding, of the complete UTF-8
 encoding of `id`.
 
-The construction applies uniformly to every `id`, including an absolute IRI, a relative IRI
-reference and an identifier that is not a legal IRI. Different UTF-8 identifiers cannot produce the
-same encoded value. Every identifier is encoded, including one whose lexical form is itself in the
-subject namespace; no raw identifier is used directly as a subject. A legal absolute `id` can
-therefore never denote the subject generated for another `id`.
+This division is collision-free. A generated root or child subject is always inside a reserved
+prefix, and an authored identifier inside either prefix is encoded rather than admitted into that
+generated namespace. Outside the reserved prefixes an absolute IRI is used unchanged. Within the
+encoded root namespace, different UTF-8 identifiers cannot produce the same encoded value.
 
 An implementation **MUST** recover the AAS identifier from `aas:Identifiable/id`, not by decoding
 the subject term. A lowering **MUST** reject a root whose subject term is not the construction above
@@ -577,10 +593,17 @@ within one Identifiable kind **MUST** be rejected. The raw `id` **MUST NOT** be 
 BrowseName. This construction is deterministic and does not copy control characters from an
 identifier into a QualifiedName.
 
-The subject IRI of a projected element **MUST** be the root subject of clause 2.2 followed by
-`/node/` and the unpadded base64url encoding of the complete UTF-8 `idShortPath`. The base64url
-alphabet contains no `/`, so this child namespace is disjoint from every encoded root subject and
-distinct paths beneath one root cannot produce the same subject.
+The subject IRI of a projected element **MUST** be
+
+```text
+https://w3id.org/aas-jsonld/node/v1/<owner>/<path>
+```
+
+where `<owner>` and `<path>` are the unpadded base64url encodings of the complete UTF-8 root
+identifier and `idShortPath`, respectively. The base64url alphabet contains no `/`, so the two
+components are unambiguous. The child prefix is disjoint from every encoded root subject, different
+owners or paths cannot produce the same subject, and a root identifier inside this prefix is encoded
+by clause 2.2 instead of being used verbatim.
 
 Each `value` in an `Operation`'s `inputVariables`, `outputVariables` and `inoutputVariables` array
 **MUST** be projected as an element child of the `Operation`. Its path **MUST** be the operation path
@@ -623,7 +646,7 @@ clause 5.1 for that operation.
 
 | Unit | Requires |
 |---|---|
-| `AASLD-Authored` | For every authored JSON-LD document, the RDF interpretation simple-entails the graph the RDF mapping of IDTA-01001 Part 1 defines, with root subjects encoded per clause 2.2, and lowering per clause 4 produces an AAS JSON document. Triples in a foreign vocabulary remain in the authored graph, do not appear in that JSON document and do not affect it, including where a foreign predicate has the same local name as an AAS property. |
+| `AASLD-Authored` | For every authored JSON-LD document, the RDF interpretation simple-entails the graph the RDF mapping of IDTA-01001 Part 1 defines, with root subjects selected per clause 2.2, and lowering per clause 4 produces an AAS JSON document. Triples in a foreign vocabulary remain in the authored graph, do not appear in that JSON document and do not affect it, including where a foreign predicate has the same local name as an AAS property. |
 | `AASLD-RdfCompatible` | For every AAS JSON document, the core graph of clause 2 is isomorphic to the graph the RDF mapping of IDTA-01001 Part 1 produces from the same document after each root subject is replaced by the construction of clause 2.2, **or** differs from it only by the `aas:Referable/idShort` triple of a root Identifiable. The allowance is necessary because the published examples do not agree with each other on that member; Annex B states it and Annex C reports the two cases separately. |
 | `AASLD-JsonRoundTrip` | For every AAS JSON document, lifting per clause 2 with the ordering graph of clause 3 and lowering per clause 4 produces the source document. Members of the three top-level collections may be reordered; no other difference is permitted. |
 | `AASLD-Linked` | The ordering graph of clause 3 is produced. |
@@ -642,7 +665,7 @@ sufficient; it is not all of them.
 | `AASLD-001` | A member of a JSON object, other than `modelType`, shall resolve to a property of the object's class or of one of its superclasses. |
 | `AASLD-002` | A JSON object that carries no `modelType` shall be reached by a property whose declared range is a concrete class. |
 | `AASLD-003` | The value of a member whose property range is an enumeration shall correspond to an individual of that enumeration. |
-| `AASLD-004` | A root subject term shall be the base64url construction of clause 2.2 for its `aas:Identifiable/id`. |
+| `AASLD-004` | A root subject term shall be the verbatim absolute IRI or reserved base64url construction that clause 2.2 requires for its `aas:Identifiable/id`. |
 | `AASLD-005` | A lowering shall resolve an AAS member only from its complete AAS property IRI, never from a foreign predicate's local name. |
 | `AASLD-006` | Network context loading shall be disabled by default; an enabled request and every redirect shall be restricted to an explicitly allowlisted HTTPS origin and shall pass DNS/IP and egress checks. |
 | `AASLD-007` | A context affecting an integrity-protected document shall be bundled in the protected package or verified against a cryptographic content hash. |
@@ -656,13 +679,14 @@ This annex is informative.
 The lifting of clause 2 differs from the RDF mapping of IDTA-01001 Part 1 in two respects, both
 deliberate.
 
-**Every root subject is uniformly encoded.** The RDF mapping uses `id` verbatim as the subject term.
-That leaves relative references dependent on a parser base, makes an IRDI such as
-`0173-1#02-AAO677#002` syntactically unusable as an IRI, and lets a legal identifier equal a minted
-fallback IRI for another identifier. Clause 2.2 instead encodes every root identifier into one
-collision-free, uniformly tagged subject namespace and never uses a raw identifier directly. For the
-compatibility measurement, the independently parsed upstream graph is relabelled from its
-`aas:Identifiable/id` triples before comparison.
+**A root subject is encoded only where it cannot safely be authored directly.** The RDF mapping uses
+`id` verbatim as the subject term. That is the right authoring form for an ordinary absolute IRI and
+clause 2.2 preserves it. A relative reference would depend on a parser base, an IRDI such as
+`0173-1#02-AAO677#002` is not syntactically usable as an IRI, and an identifier inside a generated
+subject namespace could collide with a subject minted for another node. Clause 2.2 encodes those
+cases into a reserved, collision-free namespace. For the compatibility measurement, the
+independently parsed upstream graph is relabelled from its `aas:Identifiable/id` triples before
+comparison.
 
 **The root `idShort` allowance of clause 6.** For 2 361 of the 2 424 readable example pairs the
 published JSON carries an `idShort` on the root `Identifiable` for which the published Turtle has no

@@ -32,7 +32,7 @@
       "op": "readallproperties"
     }
   ],
-  "id": "https://w3id.org/aas-jsonld/subject/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l/node/VmFsdWU",
+  "id": "https://w3id.org/aas-jsonld/node/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l/VmFsdWU",
   "links": [
     {
       "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l/node/VmFsdWU",

@@ -3335,6 +3335,26 @@
       "text": "address information"
     },
     {
+      "@id": "https://admin-shell.io/idta/aas/DigitalNameplate/3/0",
+      "@type": "aas:AssetAdministrationShell",
+      "aas:AssetAdministrationShell/submodels": {
+        "@id": "_:b2"
+      },
+      "aas:Identifiable/id": "https://admin-shell.io/idta/aas/DigitalNameplate/3/0",
+      "assetInformation": "_:b1",
+      "displayName": "_:b6",
+      "idShort": "DigitalNameplateAAS"
+    },
+    {
+      "@id": "https://admin-shell.io/idta/nameplate/3/0/UniqueFacilityIdentifier",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "https://admin-shell.io/idta/nameplate/3/0/UniqueFacilityIdentifier",
+      "description": "_:b595",
+      "displayName": "_:b607",
+      "embeddedDataSpecifications": "_:b597",
+      "idShort": "UniqueFacilityIdentifier"
+    },
+    {
       "@graph": [
         {
           "@id": "_:b100",
@@ -3367,7 +3387,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -3537,7 +3557,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -3724,7 +3744,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -3792,7 +3812,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -3928,7 +3948,7 @@
             "@id": "aas:HasSemantics/supplementalSemanticIds"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -3996,7 +4016,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -4132,7 +4152,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -4234,7 +4254,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -4251,7 +4271,7 @@
             "@id": "aas:HasSemantics/supplementalSemanticIds"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -4336,7 +4356,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -4574,7 +4594,7 @@
             "@id": "aas:HasSemantics/supplementalSemanticIds"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -5815,7 +5835,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -6070,7 +6090,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -6342,7 +6362,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -6359,7 +6379,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -6461,7 +6481,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -6699,7 +6719,7 @@
             "@id": "aas:AssetAdministrationShell/submodels"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9EaWdpdGFsTmFtZXBsYXRlLzMvMA"
+            "@id": "https://admin-shell.io/idta/aas/DigitalNameplate/3/0"
           }
         },
         {
@@ -7481,7 +7501,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL25hbWVwbGF0ZS8zLzAvVW5pcXVlRmFjaWxpdHlJZGVudGlmaWVy"
+            "@id": "https://admin-shell.io/idta/nameplate/3/0/UniqueFacilityIdentifier"
           }
         },
         {
@@ -7566,7 +7586,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL25hbWVwbGF0ZS8zLzAvVW5pcXVlRmFjaWxpdHlJZGVudGlmaWVy"
+            "@id": "https://admin-shell.io/idta/nameplate/3/0/UniqueFacilityIdentifier"
           }
         },
         {
@@ -7583,7 +7603,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL25hbWVwbGF0ZS8zLzAvVW5pcXVlRmFjaWxpdHlJZGVudGlmaWVy"
+            "@id": "https://admin-shell.io/idta/nameplate/3/0/UniqueFacilityIdentifier"
           }
         },
         {
@@ -7702,7 +7722,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNldURlY2xhcmF0aW9uT2ZDb25mb3JtaXR5"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#euDeclarationOfConformity"
           }
         },
         {
@@ -7770,7 +7790,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNldURlY2xhcmF0aW9uT2ZDb25mb3JtaXR5"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#euDeclarationOfConformity"
           }
         },
         {
@@ -7787,7 +7807,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNyZXN1bHRzT2ZUZXN0UmVwb3J0c1Byb3ZpbmdDb21wbGlhbmNl"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#resultsOfTestReportsProvingCompliance"
           }
         },
         {
@@ -7855,7 +7875,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNyZXN1bHRzT2ZUZXN0UmVwb3J0c1Byb3ZpbmdDb21wbGlhbmNl"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#resultsOfTestReportsProvingCompliance"
           }
         },
         {
@@ -7872,7 +7892,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNiYXR0ZXJ5U3RhdHVz"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#batteryStatus"
           }
         },
         {
@@ -8178,7 +8198,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNiYXR0ZXJ5U3RhdHVz"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#batteryStatus"
           }
         },
         {
@@ -8212,7 +8232,7 @@
             "@id": "aas:ConceptDescription/isCaseOf"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNiYXR0ZXJ5U3RhdHVz"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#batteryStatus"
           }
         },
         {
@@ -8229,7 +8249,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNvcGVyYXRvcklkZW50aWZpZXI"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#operatorIdentifier"
           }
         },
         {
@@ -8297,7 +8317,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9EaWdpdGFsTmFtZXBsYXRlLzMvMA"
+            "@id": "https://admin-shell.io/idta/aas/DigitalNameplate/3/0"
           }
         },
         {
@@ -8348,7 +8368,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNvcGVyYXRvcklkZW50aWZpZXI"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#operatorIdentifier"
           }
         },
         {
@@ -8365,7 +8385,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNtYW51ZmFjdHVyZXJJZGVudGlmaWVy"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#manufacturerIdentifier"
           }
         },
         {
@@ -8399,7 +8419,7 @@
             "@id": "aas:Submodel/submodelElements"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -8450,7 +8470,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNtYW51ZmFjdHVyZXJJZGVudGlmaWVy"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#manufacturerIdentifier"
           }
         },
         {
@@ -8671,7 +8691,7 @@
             "@id": "aas:HasDataSpecification/embeddedDataSpecifications"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNkYXRlT2ZQdXR0aW5nSW50b1NlcnZpY2U"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#dateOfPuttingIntoService"
           }
         },
         {
@@ -8688,7 +8708,7 @@
             "@id": "aas:Referable/displayName"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNkYXRlT2ZQdXR0aW5nSW50b1NlcnZpY2U"
+            "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#dateOfPuttingIntoService"
           }
         },
         {
@@ -8824,7 +8844,7 @@
             "@id": "aas:Referable/description"
           },
           "aasld:subject": {
-            "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA"
+            "@id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0"
           }
         },
         {
@@ -9006,35 +9026,7 @@
       "idShort": "Marking"
     },
     {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL25hbWVwbGF0ZS8zLzAvVW5pcXVlRmFjaWxpdHlJZGVudGlmaWVy",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "https://admin-shell.io/idta/nameplate/3/0/UniqueFacilityIdentifier",
-      "description": "_:b595",
-      "displayName": "_:b607",
-      "embeddedDataSpecifications": "_:b597",
-      "idShort": "UniqueFacilityIdentifier"
-    },
-    {
-      "@id": "aasld:subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL2Fhcy9EaWdpdGFsTmFtZXBsYXRlLzMvMA",
-      "@type": "aas:AssetAdministrationShell",
-      "aas:AssetAdministrationShell/submodels": {
-        "@id": "_:b2"
-      },
-      "aas:Identifiable/id": "https://admin-shell.io/idta/aas/DigitalNameplate/3/0",
-      "assetInformation": "_:b1",
-      "displayName": "_:b6",
-      "idShort": "DigitalNameplateAAS"
-    },
-    {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy50ZWNobmljYWxfZGF0YToxLjAuMCNtYW51ZmFjdHVyZXJJZGVudGlmaWVy",
-      "@type": "aas:ConceptDescription",
-      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#manufacturerIdentifier",
-      "displayName": "_:b703",
-      "embeddedDataSpecifications": "_:b705",
-      "idShort": "manufacturerIdentifier"
-    },
-    {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNiYXR0ZXJ5U3RhdHVz",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#batteryStatus",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#batteryStatus",
       "displayName": "_:b645",
@@ -9043,7 +9035,7 @@
       "isCaseOf": "_:b685"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNkYXRlT2ZQdXR0aW5nSW50b1NlcnZpY2U",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#dateOfPuttingIntoService",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#dateOfPuttingIntoService",
       "displayName": "_:b744",
@@ -9051,7 +9043,7 @@
       "idShort": "dateOfPuttingIntoService"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNldURlY2xhcmF0aW9uT2ZDb25mb3JtaXR5",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#euDeclarationOfConformity",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#euDeclarationOfConformity",
       "displayName": "_:b621",
@@ -9059,7 +9051,7 @@
       "idShort": "euDeclarationOfConformity"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNvcGVyYXRvcklkZW50aWZpZXI",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#operatorIdentifier",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#operatorIdentifier",
       "displayName": "_:b689",
@@ -9067,12 +9059,20 @@
       "idShort": "operatorIdentifier"
     },
     {
-      "@id": "aasld:subject/v1/dXJuOnNhbW06aW8uYWRtaW4tc2hlbGwuaWR0YS5iYXR0ZXJ5cGFzcy5kaWdpdGFsX25hbWVwbGF0ZToxLjAuMCNyZXN1bHRzT2ZUZXN0UmVwb3J0c1Byb3ZpbmdDb21wbGlhbmNl",
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#resultsOfTestReportsProvingCompliance",
       "@type": "aas:ConceptDescription",
       "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.digital_nameplate:1.0.0#resultsOfTestReportsProvingCompliance",
       "displayName": "_:b633",
       "embeddedDataSpecifications": "_:b635",
       "idShort": "resultsOfTestReportsProvingCompliance"
+    },
+    {
+      "@id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#manufacturerIdentifier",
+      "@type": "aas:ConceptDescription",
+      "aas:Identifiable/id": "urn:samm:io.admin-shell.idta.batterypass.technical_data:1.0.0#manufacturerIdentifier",
+      "displayName": "_:b703",
+      "embeddedDataSpecifications": "_:b705",
+      "idShort": "manufacturerIdentifier"
     }
   ],
   "@type": [
@@ -9088,7 +9088,7 @@
   "administration": "_:b10",
   "description": "_:b8",
   "displayName": "_:b457",
-  "id": "https://w3id.org/aas-jsonld/subject/v1/aHR0cHM6Ly9hZG1pbi1zaGVsbC5pby9pZHRhL1N1Ym1vZGVsVGVtcGxhdGUvRGlnaXRhbEJhdHRlcnlQYXNzcG9ydC9EaWdpdGFsTmFtZXBsYXRlLzEvMA",
+  "id": "https://admin-shell.io/idta/SubmodelTemplate/DigitalBatteryPassport/DigitalNameplate/1/0",
   "idShort": "BatteryNameplate",
   "links": [
     {

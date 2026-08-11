@@ -18,7 +18,17 @@ from context_security import (  # noqa: E402
     ContextSecurityError,
     NetworkResponse,
 )
-from lift import AAS, Lifter, Ontology, Schema, serialize  # noqa: E402
+from lift import (  # noqa: E402
+    AAS,
+    NODE_SUBJECT_PREFIX,
+    SUBJECT_PREFIX,
+    Lifter,
+    Ontology,
+    Schema,
+    node_subject_iri,
+    serialize,
+    subject_iri,
+)
 from lower import Lowerer, parse_nt  # noqa: E402
 import validate_examples  # noqa: E402
 import wot_bridge  # noqa: E402
@@ -36,32 +46,52 @@ def graph_of(source):
 
 def subject_collision():
     irdi = "0173-1#02-AAO677#002"
-    old_hash_style = (
-        "https://w3id.org/aas-jsonld/id/"
-        "4a508ebd70e19917cd187073e2ff250e75d464260868f755e40ccb04d95948ca")
+    readable = "https://example.org/submodels/readable"
+    generated_for_irdi = subject_iri(irdi)
+    generated_child = node_subject_iri(readable, "AProperty")
     source = {
         "submodels": [
             {"modelType": "Submodel", "id": irdi, "idShort": "IRDI"},
-            {"modelType": "Submodel", "id": old_hash_style, "idShort": "HashStyleIRI"},
+            {"modelType": "Submodel", "id": readable, "idShort": "ReadableIRI"},
+            {
+                "modelType": "Submodel",
+                "id": generated_for_irdi,
+                "idShort": "ReservedRootIRI",
+            },
+            {
+                "modelType": "Submodel",
+                "id": generated_child,
+                "idShort": "ReservedChildIRI",
+            },
         ]
     }
     core, order = graph_of(source)
-    def encoded(value):
-        payload = base64.urlsafe_b64encode(value.encode("utf-8")).decode("ascii").rstrip("=")
-        return "https://w3id.org/aas-jsonld/subject/v1/" + payload
     subjects = {
         subject for subject, predicate, _ in parse_nt(core)
         if predicate == f"<{AAS}Identifiable/id>"
     }
-    if subjects != {f"<{encoded(irdi)}>", f"<{encoded(old_hash_style)}>"}:
-        raise AssertionError(f"root subjects merged or were not uniformly encoded: {subjects}")
+    expected = {
+        f"<{generated_for_irdi}>",
+        f"<{readable}>",
+        f"<{subject_iri(generated_for_irdi)}>",
+        f"<{subject_iri(generated_child)}>",
+    }
+    if subjects != expected:
+        raise AssertionError(f"root subjects are not readable and collision-free: {subjects}")
+    if subject_iri(readable) != readable:
+        raise AssertionError("an ordinary absolute IRI was needlessly encoded")
+    if subject_iri(generated_for_irdi) == generated_for_irdi:
+        raise AssertionError("a root occupied the reserved generated-root namespace")
+    if subject_iri(generated_child) == generated_child:
+        raise AssertionError("a root occupied the reserved generated-child namespace")
     authored = author(core, order, load_context())
     recovered_core, recovered_order = read_back(authored)
     recovered = lower_graph(recovered_core, recovered_order, seed=11)
     ids = sorted(node["id"] for node in recovered["submodels"])
-    if ids != sorted((irdi, old_hash_style)):
+    wanted_ids = sorted((irdi, readable, generated_for_irdi, generated_child))
+    if ids != wanted_ids:
         raise AssertionError(f"subject collision lost a submodel: {ids}")
-    print("  passed: IRDI and old hash-style absolute IRI remain two submodels")
+    print("  passed: ordinary absolute IDs stay readable; reserved and non-IRI IDs cannot collide")
 
 
 def foreign_vocabulary():

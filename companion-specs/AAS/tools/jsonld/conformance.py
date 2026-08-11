@@ -51,7 +51,7 @@ ROOT_TYPES = {
 }
 
 # The upstream Turtle carries relative subjects (D3), so a parser needs a base
-# merely to load it. `encoded_root_subjects` then replaces every root subject
+# merely to load it. `canonical_root_subjects` then replaces every root subject
 # independently from its `aas:Identifiable/id`; the chosen parser base has no
 # bearing on the graph compared with the lifting.
 BASE = "https://example.org/aas/"
@@ -62,8 +62,8 @@ BASE = "https://example.org/aas/"
 SEEDS = (20260809, 1, 2, 3, 5, 8, 13, 21, 12345, 99991)
 
 
-def encoded_root_subjects(graph):
-    """Relabel upstream root subjects with the uniform clause 2.2 encoding."""
+def canonical_root_subjects(graph):
+    """Relabel upstream root subjects with the clause 2.2 authoring rule."""
     replacements = {}
     for subject, cls in graph.subject_objects(RDF.type):
         if cls not in ROOT_TYPES:
@@ -80,7 +80,7 @@ def encoded_root_subjects(graph):
 def load_expected(path):
     g = Graph()
     g.parse(path, format="turtle", publicID=BASE)
-    return encoded_root_subjects(g)
+    return canonical_root_subjects(g)
 
 
 def load_actual(json_path, profile="core", emit_root_idshort=True):

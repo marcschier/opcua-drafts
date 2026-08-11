@@ -13,6 +13,7 @@ import argparse
 import base64
 import hashlib
 import json
+import re
 import sys
 import urllib.parse
 import urllib.request
@@ -756,8 +757,8 @@ def canonical_aas_content(text: str) -> tuple:
     Clause 2 emits blank nodes below each root. A projection-complete TD names
     those nodes so links can address them. Replacing a blank node with an IRI is
     an RDF skolemization, so the comparison recursively renders every AAS child
-    subject but retains the encoded root IRI and every literal or vocabulary
-    IRI.
+    subject but retains the root IRI selected by clause 2.2 and every literal or
+    vocabulary IRI.
     """
     roots, render, _ = aas_signature_context(text)
     return tuple(sorted((root, render(root)) for root in roots))
@@ -935,12 +936,25 @@ def expected_node_id(owner: str, path: str | None, namespace: str) -> str:
 
 
 def expected_subject(owner: str, path: str | None) -> str:
-    encoded_owner = base64.urlsafe_b64encode(owner.encode("utf-8")).decode("ascii").rstrip("=")
-    root = "https://w3id.org/aas-jsonld/subject/v1/" + encoded_owner
     if path is None:
-        return root
+        reserved = (
+            "https://w3id.org/aas-jsonld/subject/v1/",
+            "https://w3id.org/aas-jsonld/node/v1/",
+        )
+        absolute = bool(
+            re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", owner)
+            and not re.search(r'[\x00-\x20\x7F-\x9F<>"{}|\\^`]', owner)
+            and not re.search(r"%(?![0-9A-Fa-f]{2})", owner)
+        )
+        if absolute and not owner.startswith(reserved):
+            return owner
+        encoded_owner = base64.urlsafe_b64encode(
+            owner.encode("utf-8")).decode("ascii").rstrip("=")
+        return "https://w3id.org/aas-jsonld/subject/v1/" + encoded_owner
+    encoded_owner = base64.urlsafe_b64encode(
+        owner.encode("utf-8")).decode("ascii").rstrip("=")
     encoded_path = base64.urlsafe_b64encode(path.encode("utf-8")).decode("ascii").rstrip("=")
-    return f"{root}/node/{encoded_path}"
+    return f"https://w3id.org/aas-jsonld/node/v1/{encoded_owner}/{encoded_path}"
 
 
 def child_path(parent: str, element: dict, index: int | None) -> str:
