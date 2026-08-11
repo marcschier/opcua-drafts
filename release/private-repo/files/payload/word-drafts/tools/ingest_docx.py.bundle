@@ -49,6 +49,7 @@ class IngestError(Exception):
 
 
 COMMIT_RE = re.compile(r'[0-9a-f]{7,40}')
+DIGEST_RE = re.compile(r'[0-9a-f]{16}')
 
 
 def git_show(commit, path):
@@ -70,6 +71,10 @@ def git_show(commit, path):
 
 def select_provenance(expected_digest, candidates):
     """Choose the sidecar that describes the reviewed document's exact sources."""
+    if not DIGEST_RE.fullmatch(expected_digest or ''):
+        raise IngestError(
+            'the document records no valid SourceDigest, so no provenance sidecar can '
+            'be selected safely. Rebuild and re-review the document.')
     found = []
     for label, raw in candidates:
         if raw is None:
@@ -80,12 +85,32 @@ def select_provenance(expected_digest, candidates):
             raise IngestError('invalid %s provenance sidecar: %s' % (label, exc))
         digest = provenance.get('sourceDigest')
         found.append('%s=%s' % (label, digest or 'missing'))
-        if expected_digest is None or digest == expected_digest:
+        if digest == expected_digest:
             return provenance
     raise IngestError(
         'no provenance sidecar matches the document SourceDigest %s (%s). '
         'Without an exact match, paragraph ids may be routed to stale sources.'
         % (expected_digest or 'missing', ', '.join(found) or 'no sidecars found'))
+
+
+def provenance_from_history(path, expected_digest):
+    """The newest committed sidecar whose digest matches an outstanding review."""
+    try:
+        commits = subprocess.run(
+            ['git', '-C', REPO, 'log', '--format=%H', '--', path],
+            capture_output=True, text=True, check=True).stdout.splitlines()
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    for commit in commits:
+        raw = git_show(commit, path)
+        if raw is None:
+            continue
+        try:
+            if json.loads(raw).get('sourceDigest') == expected_digest:
+                return raw
+        except json.JSONDecodeError:
+            continue
+    return None
 
 
 class Sources:
@@ -428,6 +453,10 @@ class Ingest:
 
         self.commit = props.get('SourceCommit') or 'unknown'
         self.source_digest = props.get('SourceDigest')
+        if not DIGEST_RE.fullmatch(self.source_digest or ''):
+            raise IngestError(
+                'the document records no valid SourceDigest. It was probably built before '
+                'digest-stamped provenance; rebuild and re-review.')
         self.provenance = self._load_provenance()
         self.sources = Sources(self.commit, self.provenance.get('sources') or [])
         self.addresses = {pid: Address(pid, raw)
@@ -449,9 +478,12 @@ class Ingest:
                 current = f.read()
         historical = git_show(
             self.commit, rel) if self.commit != 'unknown' else None
+        artifact_history = provenance_from_history(rel, self.source_digest)
         return select_provenance(
             self.source_digest,
-            (('current', current), ('historical at ' + self.commit[:12], historical)))
+            (('current', current),
+             ('historical at source commit ' + self.commit[:12], historical),
+             ('artifact history', artifact_history)))
 
     # ------------------------------------------------------------------ the work
 

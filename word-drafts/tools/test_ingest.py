@@ -161,10 +161,10 @@ def test_an_edit_that_no_longer_applies_is_an_error():
 
 
 def test_current_provenance_wins_when_historical_mapping_is_stale():
-    current = {'sourceDigest': 'current', 'paragraphs': {'NEW': {}}}
-    historical = {'sourceDigest': 'old', 'paragraphs': {'OLD': {}}}
+    current = {'sourceDigest': '0123456789abcdef', 'paragraphs': {'NEW': {}}}
+    historical = {'sourceDigest': 'fedcba9876543210', 'paragraphs': {'OLD': {}}}
     selected = ingest.select_provenance(
-        'current',
+        '0123456789abcdef',
         [('current', json.dumps(current)), ('historical', json.dumps(historical))])
     assert selected == current, selected
 
@@ -172,10 +172,19 @@ def test_current_provenance_wins_when_historical_mapping_is_stale():
 def test_provenance_without_the_document_digest_is_rejected():
     try:
         ingest.select_provenance(
-            'wanted', [('historical', json.dumps({'sourceDigest': 'old'}))])
+            None, [('current', json.dumps({'sourceDigest': '0123456789abcdef'}))])
     except ingest.IngestError:
         return
-    raise AssertionError('a stale provenance sidecar was accepted')
+    raise AssertionError('provenance without a document digest was accepted')
+
+
+def test_artifact_history_can_supply_an_outstanding_review_sidecar():
+    historical = {'sourceDigest': '0123456789abcdef', 'paragraphs': {'OLD': {}}}
+    selected = ingest.select_provenance(
+        '0123456789abcdef',
+        [('current', json.dumps({'sourceDigest': 'fedcba9876543210'})),
+         ('artifact history', json.dumps(historical))])
+    assert selected == historical, selected
 
 
 def test_ownership_routes_away_from_the_markdown():
