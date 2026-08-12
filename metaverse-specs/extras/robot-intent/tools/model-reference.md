@@ -24,6 +24,9 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=1012 | SafetyStateType | ObjectType | BaseObjectType |
 | ns=1;i=1013 | RealTimeChannelType | ObjectType | BaseObjectType |
 | ns=1;i=1014 | RobotDescriptionType | ObjectType | BaseObjectType |
+| ns=1;i=1015 | IntentEventType | ObjectType | i=2041 |
+| ns=1;i=1016 | IntentCompletedEventType | ObjectType | IntentEventType |
+| ns=1;i=1017 | MissionCompletedEventType | ObjectType | IntentEventType |
 | ns=1;i=3001 | ExecutionStateEnum | DataType | Enumeration |
 | ns=1;i=3002 | BufferModeEnum | DataType | Enumeration |
 | ns=1;i=3003 | BlockingModeEnum | DataType | Enumeration |
@@ -451,6 +454,43 @@ Enough of the robot's construction for a client to plan against it without a sec
 | PayloadLimit | Variable | Double | Scalar | Mandatory | Largest payload at the mechanical interface, in kilograms. |
 | MaxCartesianSpeed | Variable | Double | Scalar | Mandatory | Largest tool centre point speed the robot will produce, in metres per second. |
 | MaxCartesianAcceleration | Variable | Double | Scalar | Optional | Largest tool centre point acceleration, in metres per second squared. |
+
+### IntentEventType (abstract) — `ns=1;i=1015`
+
+*Subtype of:* `i=2041`
+
+Abstract base of every event this model raises. It identifies the work the event is about, and its subtypes say what became of it. Time is inherited from BaseEventType and is when the reported transition occurred.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| IntentId | Variable | String | Scalar | Mandatory | IntentId of the intent this event concerns. |
+| Operation | Variable | NodeId | Scalar | Mandatory | The IntentOperationType instance tracking it. A consumer that wants the full history reads this node; a consumer that only needs the outcome does not, because the outcome is on the event. |
+| IntentTypeId | Variable | NodeId | Scalar | Mandatory | NodeId of the IntentDataType subtype that was submitted - PickIntentDataType, LinearMoveIntentDataType and so on. This is what makes an event filterable by KIND of work: a client subscribing to picks selects on this field rather than reading every completion and discarding most of them. |
+| MissionId | Variable | String | Scalar | Optional | Mission the intent belongs to, or empty where it was submitted on its own. |
+
+### IntentCompletedEventType — `ns=1;i=1016`
+
+*Subtype of:* `IntentEventType`
+
+An intent reached a terminal state. Raised exactly once per intent, on the transition into Succeeded, Failed, Cancelled or Retriable, and never for an intermediate state - Cancelling is not terminal (clause 6.5) and an event raised there would tell a consumer the work had stopped while the robot was still moving.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| State | Variable | ExecutionStateEnum | Scalar | Mandatory | The terminal ExecutionState. One of Succeeded, Failed, Cancelled or Retriable. |
+| Failure | Variable | IntentFailureEnum | Scalar | Mandatory | Why it did not succeed, or None. Mandatory rather than optional because a consumer deciding whether to retry, re-plan or escalate decides on this value alone (clause 5.8), and an absent field would make that decision unavailable exactly when it is needed. |
+| Result | Variable | IntentResultDataType | Scalar | Mandatory | The full result, identical to the Operation's Result. It is the one piece of state this event does repeat, because the operation node it would otherwise be read from need not still exist. |
+
+### MissionCompletedEventType — `ns=1;i=1017`
+
+*Subtype of:* `IntentEventType`
+
+A mission reached a terminal state. IntentId carries the last intent the mission ran, so a consumer that missed the per-intent events still learns where the mission stopped.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| State | Variable | ExecutionStateEnum | Scalar | Mandatory | The terminal ExecutionState of the mission. |
+| CompletedSteps | Variable | UInt32 | Scalar | Mandatory | How many steps reached a terminal state, whether they succeeded or not. With the mission's step count this says how far it got. |
+| FailedStepId | Variable | String | Scalar | Optional | StepId of the step that ended the mission, or empty where it completed. A step that failed under an ErrorPolicy of Skip does not end a mission and is not named here. |
 
 ## A.4 DataTypes
 

@@ -4,6 +4,26 @@ All notable changes to this specification and its information model.
 
 NodeId assignment is **append-only**: a new member takes the next free id, so every previously published NodeId is stable across the releases below.
 
+## 0.3.0 — 2026-08-12
+
+### Results say what is; events say what happened
+
+A result is a record and an event is an occurrence, and until now this model had only the first. Every consumer had to poll a `Results` folder and re-derive, from a changed array, what had actually taken place — and two consumers polling the same Server could disagree about when. §7.5 adds `VisionEventType` (abstract), `ObjectDetectedEventType` and `InspectionCompletedEventType`, appended at `i=1031`–`i=1033` with members from `i=6201`; no existing NodeId moves.
+
+An event names the result that substantiates it and does not copy it, so there is no second copy of a fact to disagree with the first. Two fields are deliberate exceptions, because they are what a consumer filters on and requiring a read to obtain them would defeat the purpose: the detection itself, and the inspection verdict.
+
+`Time` is the acquisition timestamp of the frame, not the moment inference finished — a distinction the model previously had no way to express at all. `InferenceEndTime` carries the latter, so the difference is the inference latency of that one observation, which is the first per-result latency this model exposes.
+
+One event is raised per detection rather than per result. That is what makes `ClassLabel` and `Confidence` reachable by an `EventFilter`, so a client asks for the classes it cares about above a confidence it chooses and the Server sends nothing else; a per-result event would move that filtering to the client and give up most of the reason to raise events.
+
+The well-known `Vision` object now declares `EventNotifier` and is the target of a `HasNotifier` reference from the Server object, so events raised anywhere in the model reach a client that subscribes at either. Nothing in this repository set `EventNotifier` before, which meant an EventType could have been declared and still been unreachable.
+
+`GroundTruth` is Mandatory on every event: a consumer never has to infer from a confidence value whether it was told a measurement or a prediction. `Vision Events` joins the conformance units, and **VIS-Events** the facets.
+
+### A manufacturing event is composed, not invented
+
+Annex I.7 states how a cell learns that a part was picked: from the commanding model's completion event, corroborated by this model's detection event. This specification deliberately defines no `PickEventType`, because a camera cannot know that a pick happened — it can only report what it saw. The intent vocabulary is therefore already the manufacturing-event vocabulary, and a second one naming the same acts could only disagree with it.
+
 ## 0.2.0 — 2026-08-11
 
 The implementation-driven changes in this release come from an in-progress implementation of Release 0.1.0 against the OPC UA .NET Standard stack, working through the bin-picking scenario of the Robotics-Vision Addendum. They are reported in issues #66 to #71. The identity-authority rule below comes from the repository-wide OPC 11030 model audit.

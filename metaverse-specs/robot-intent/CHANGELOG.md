@@ -2,7 +2,33 @@
 
 All notable changes to this specification and its information model.
 
-## Unreleased
+## 0.2.0 — 2026-08-12
+
+### Completion is observable without a read
+
+An `IntentOperationType` is a Part 10 program, so a transition event was already raised whenever its state changed — but that event names the state machine and the transition and nothing else. A consumer supervising a cell had to read the operation back to learn which intent had finished and how, and §6.7 requires the result to outlive only a reconnect, so by the time it read the operation might be gone.
+
+§6.10 adds `IntentEventType` (abstract), `IntentCompletedEventType` and `MissionCompletedEventType` at `i=1015`–`i=1017`, with members from `i=6140`; no existing NodeId moves. They do not replace the Part 10 transition events and a Server still raises those, so a Part 10 client that knows nothing of this model is unaffected.
+
+`IntentTypeId` names the `IntentDataType` subtype that was submitted, which is what makes a completion filterable by kind of work: a client subscribes to picks, or to arc welds, or to everything that failed, and the Server sends nothing else. `Result` is carried on the event rather than referenced, because the operation node it would otherwise be read from need not still exist.
+
+A completion is raised once, only on a terminal transition. `Cancelling` is not terminal, and an event raised there would report that the work had stopped while the robot was still moving.
+
+The well-known `RobotIntent` object now declares `EventNotifier` and is the target of a `HasNotifier` reference from the Server object, so events reach a client subscribing at either. `RobotIntent Events` joins the conformance units and **RI-Events** the facets.
+
+Annex E.7 states the consequence for a cell that wants to know a part was picked: this model is authoritative for what the robot did, and a vision model corroborates it. The intent vocabulary is therefore already the manufacturing-event vocabulary.
+
+### Standard BrowseNames are written in namespace 0
+
+`InputArguments` and `OutputArguments` are standard Properties of OPC 10000-3 and OPC 10000-5 and live in namespace 0. All 21 of this model's argument Properties were qualified into the model's own namespace, and a stack resolves a Method's signature by looking for the child Property named `InputArguments` **in namespace 0** — not finding it, it treats the Method as taking no arguments and rejects every call with `Bad_TooManyArguments`. **Every Method in this model was uncallable.** The same defect qualified the `EnumStrings` Property of every enumeration DataType, so a client reading an enumeration's permitted values generically saw an enumeration with no names.
+
+Both are fixed at the generator, which now declares a standard BrowseName as standard rather than inheriting the model namespace by default, so a Method added later cannot reintroduce it. `.github/scripts/check_browsename_namespace.py` guards the whole class across every NodeSet in the repository.
+
+No NodeId moved: the change is the BrowseName attribute alone. The model identity moves with it because a client that cached this model under the previous `(Version, PublicationDate)` holds BrowseNames that no longer describe it, and two models published under one identity are indistinguishable to such a client.
+
+### Seam tracking is a switch, not a channel
+
+§5.4.2 now states what `ArcWeldIntentDataType.SeamTrackingEnabled` asks for: the equipment's own seam-tracking facility, which is the second branch §4.3 already permits. Nothing is sampled or carried over OPC UA. The two clauses were consistent and separated far enough that they read as contradicting.
 
 ### Conformance is machine-readable
 

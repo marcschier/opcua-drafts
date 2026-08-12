@@ -2,7 +2,29 @@
 
 All notable changes to this specification and its information model.
 
-## Unreleased
+## 0.5.0 — 2026-08-12
+
+### Promotion is observable, and auditable
+
+`ModelPromotedEventType` (`i=1018`, members from `i=6180`; no existing NodeId moves) is raised when a deployment begins serving a different model version. A client could already subscribe to a deployment's `UsesModel` reference and see *that* it changed; it could not see who changed it, which evaluation justified it, or what was being served before — and those are the questions asked after a batch has been rejected and someone wants to know what decided it.
+
+It is raised on every substitution, not only on `PromoteModel`: a rollback and a Server-initiated failover raise it too, because a consumer auditing a verdict cannot afford to depend on what the operator called the change. `PreviousModel` and `NewModel` together are what distinguish the two.
+
+`PromotedBy` exists because `BaseEventType` carries no user field. §12.3 requires promotion to be separately authorized, and that requirement is unobservable if the identity that exercised it is not recorded where the act is. A null `EvaluationRun` is likewise information rather than an omission: §7.2 says promotion should be gated on one, so null is the observable consequence of a Server that promoted without it.
+
+The well-known `AiModelManagement` object now declares `EventNotifier` and is the target of a `HasNotifier` reference from the Server object, so the event reaches a client subscribing at either. `AiModelManagement Events` joins the conformance units and **AI-Events** the facets.
+
+### Degradation stays a state
+
+§7.4 states explicitly that this model defines no Condition or Alarm type. A deployment that has become unreachable or slow is a persistent state, and `Reachability`, `State` and `ObservedLatency` already carry it as Variables — which is what OPC UA models a state with. A Server that needs an operator to acknowledge one uses the base OPC 10000-9 alarm types with `AlarmConditionType.InputNode` pointing at `Reachability`. Defining a Condition subtype here would have obliged every Server to implement the enable, acknowledge, confirm and shelving machinery in order to report that a network link went away.
+
+### Standard BrowseNames are written in namespace 0
+
+`InputArguments` and `OutputArguments` are standard Properties of OPC 10000-3 and OPC 10000-5 and live in namespace 0. All 14 of this model's argument Properties were qualified into the model's own namespace, and a stack resolves a Method's signature by looking for the child Property named `InputArguments` **in namespace 0** — not finding it, it treats the Method as taking no arguments and rejects every call with `Bad_TooManyArguments`. **Every Method in this model was uncallable.** The same defect qualified the `EnumStrings` Property of every enumeration DataType, so a client reading an enumeration's permitted values generically saw an enumeration with no names.
+
+Both are fixed at the generator, which now declares a standard BrowseName as standard rather than inheriting the model namespace by default, so a Method added later cannot reintroduce it. `.github/scripts/check_browsename_namespace.py` guards the whole class across every NodeSet in the repository.
+
+No NodeId moved: the change is the BrowseName attribute alone. The model identity moves with it because a client that cached this model under the previous `(Version, PublicationDate)` holds BrowseNames that no longer describe it, and two models published under one identity are indistinguishable to such a client.
 
 ### Conformance units named in the specification
 

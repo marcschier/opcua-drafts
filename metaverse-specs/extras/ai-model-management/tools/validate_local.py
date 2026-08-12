@@ -250,6 +250,40 @@ def check_references(m: Model) -> None:
                 err(f"{m.bname(nid)} ({nid}) uses unresolvable ReferenceType {rt}")
 
 
+def check_events(m: Model) -> None:
+    """An EventType that nothing can subscribe to is a type nobody receives.
+
+    OPC UA delivers events from a node whose EventNotifier says it emits them, so a
+    model that declares EventTypes and sets EventNotifier nowhere has published a
+    vocabulary with no way to hear it. Both halves are checked because either alone
+    passes trivially: EventTypes with no notifier are unreachable, and a notifier with
+    no EventTypes is an attribute doing nothing.
+    """
+    event_types = [nid for nid in m.order
+                   if m.cls(nid) == "UAObjectType"
+                   and m.bname(nid).endswith("EventType")]
+    notifiers = [nid for nid in m.order
+                 if (m.nodes[nid].get("EventNotifier") or "0") != "0"]
+
+    for nid in event_types:
+        sup = m.supertype(nid)
+        if not sup:
+            err(f"{m.bname(nid)} is named as an EventType but subtypes nothing")
+        elif sup != "i=2041" and sup not in m.nodes:
+            err(f"{m.bname(nid)} subtypes {sup}, which is neither BaseEventType nor a "
+                "type this model declares")
+
+    if event_types and not notifiers:
+        err(f"the model declares {len(event_types)} EventType(s) and sets EventNotifier "
+            "on no node - nothing can subscribe to them")
+
+    for nid in notifiers:
+        if not any(rt in ("HasNotifier", "i=48") for rt, _t, _f in m.refs(nid)):
+            err(f"{m.bname(nid)} declares EventNotifier but carries no HasNotifier "
+                "reference, so its events do not reach a client subscribing at the "
+                "Server object")
+
+
 def check_types(m: Model) -> None:
     for nid in m.order:
         c = m.cls(nid)
@@ -719,6 +753,7 @@ def main() -> int:
     check_model_header(m)
     check_references(m)
     check_types(m)
+    check_events(m)
     check_instance_declarations(m)
     check_datatypes(m)
     check_method_arguments(m)

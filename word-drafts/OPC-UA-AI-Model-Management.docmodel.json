@@ -68,7 +68,21 @@
             },
             {
               "r": "t",
-              "text": " — one invocation surface that does not change with any of the above (clause 8);"
+              "text": " — one invocation surface that does not change with any of the above ("
+            },
+            {
+              "r": "t",
+              "text": "clause "
+            },
+            {
+              "r": "xref",
+              "target": "c6-12",
+              "kind": "clause",
+              "prefix": "6.12"
+            },
+            {
+              "r": "t",
+              "text": ");"
             }
           ],
           [
@@ -79,7 +93,21 @@
             },
             {
               "r": "t",
-              "text": " — the wire contract, the credential, the capabilities, and what happens when the link fails (clause 9);"
+              "text": " — the wire contract, the credential, the capabilities, and what happens when the link fails ("
+            },
+            {
+              "r": "t",
+              "text": "clause "
+            },
+            {
+              "r": "xref",
+              "target": "c6-13",
+              "kind": "clause",
+              "prefix": "6.13"
+            },
+            {
+              "r": "t",
+              "text": ");"
             }
           ],
           [
@@ -90,7 +118,21 @@
             },
             {
               "r": "t",
-              "text": " — pulling one from a catalogue and either describing it where it stands or bringing its bytes across, with the digest checked at the moment that matters (clause 10);"
+              "text": " — pulling one from a catalogue and either describing it where it stands or bringing its bytes across, with the digest checked at the moment that matters ("
+            },
+            {
+              "r": "t",
+              "text": "clause "
+            },
+            {
+              "r": "xref",
+              "target": "c6-14",
+              "kind": "clause",
+              "prefix": "6.14"
+            },
+            {
+              "r": "t",
+              "text": ");"
             }
           ],
           [
@@ -101,7 +143,21 @@
             },
             {
               "r": "t",
-              "text": " — what it is for, where it stops working, how it measured, and whether calling it sends plant data off site (clause 11);"
+              "text": " — what it is for, where it stops working, how it measured, and whether calling it sends plant data off site ("
+            },
+            {
+              "r": "t",
+              "text": "clause "
+            },
+            {
+              "r": "xref",
+              "target": "c6-15",
+              "kind": "clause",
+              "prefix": "6.15"
+            },
+            {
+              "r": "t",
+              "text": ");"
             }
           ],
           [
@@ -332,7 +388,21 @@
             },
             {
               "r": "t",
-              "text": " observes it; where the training runs is out of scope, and clause 7 is explicit that a Server may implement only the capture stages."
+              "text": " observes it; where the training runs is out of scope, and "
+            },
+            {
+              "r": "t",
+              "text": "clause "
+            },
+            {
+              "r": "xref",
+              "target": "c6-11",
+              "kind": "clause",
+              "prefix": "6.11"
+            },
+            {
+              "r": "t",
+              "text": " is explicit that a Server may implement only the capture stages."
             }
           ],
           [
@@ -410,7 +480,19 @@
           },
           {
             "r": "t",
-            "text": ", because the catalogue of clause 10 is a domain extension of that abstract registry rather than a private invention. That is a real cost and it is taken deliberately — a model catalogue "
+            "text": ", because the catalogue of "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "t",
+            "text": "10"
+          },
+          {
+            "r": "t",
+            "text": " is a domain extension of that abstract registry rather than a private invention. That is a real cost and it is taken deliberately — a model catalogue "
           },
           {
             "r": "t",
@@ -1366,7 +1448,21 @@
           },
           {
             "r": "t",
-            "text": ". What changes is the trust boundary, and clause 9 is what makes the arrangement describable: the wire contract, the credential reference, and whether calling it sends plant data off site."
+            "text": ". What changes is the trust boundary, and "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-13",
+            "kind": "clause",
+            "prefix": "6.13"
+          },
+          {
+            "r": "t",
+            "text": " is what makes the arrangement describable: the wire contract, the credential reference, and whether calling it sends plant data off site."
           }
         ],
         "src": {
@@ -2993,7 +3089,35 @@
         "runs": [
           {
             "r": "t",
-            "text": "An instance is created when a model becomes known to the Server — whether it was imported from a catalogue (clause 10), trained by a learning job (clause 7), or configured by hand — and it outlives any single deployment of it, because the same artefact may be executed in several places at once."
+            "text": "An instance is created when a model becomes known to the Server — whether it was imported from a catalogue ("
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-14",
+            "kind": "clause",
+            "prefix": "6.14"
+          },
+          {
+            "r": "t",
+            "text": "), trained by a learning job ("
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-11",
+            "kind": "clause",
+            "prefix": "6.11"
+          },
+          {
+            "r": "t",
+            "text": "), or configured by hand — and it outlives any single deployment of it, because the same artefact may be executed in several places at once."
           }
         ],
         "src": {
@@ -3053,7 +3177,21 @@
           },
           {
             "r": "t",
-            "text": ". The first three because a model that cannot be named cannot be discussed; the last two because clause 12 depends on them, and a rule that depends on an Optional member is a rule a conformant Server can silently not satisfy."
+            "text": ". The first three because a model that cannot be named cannot be discussed; the last two because "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-16",
+            "kind": "clause",
+            "prefix": "6.16"
+          },
+          {
+            "r": "t",
+            "text": " depends on them, and a rule that depends on an Optional member is a rule a conformant Server can silently not satisfy."
           }
         ],
         "src": {
@@ -4189,7 +4327,35 @@
         "runs": [
           {
             "r": "t",
-            "text": "It is the node a client actually interacts with: every Method in clause 8 hangs here, and every member clause 9 adds is about this arrangement rather than about the artefact. Its member set is aligned with the IDTA 02059 AI Deployment submodel template."
+            "text": "It is the node a client actually interacts with: every Method in "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-12",
+            "kind": "clause",
+            "prefix": "6.12"
+          },
+          {
+            "r": "t",
+            "text": " hangs here, and every member "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-13",
+            "kind": "clause",
+            "prefix": "6.13"
+          },
+          {
+            "r": "t",
+            "text": " adds is about this arrangement rather than about the artefact. Its member set is aligned with the IDTA 02059 AI Deployment submodel template."
           }
         ],
         "src": {
@@ -4498,7 +4664,21 @@
           },
           {
             "r": "t",
-            "text": " list beside them, are what a client calls and what it reads before calling. They are added by clause 8. A client that intends to use a typed profile consults "
+            "text": " list beside them, are what a client calls and what it reads before calling. They are added by "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-12",
+            "kind": "clause",
+            "prefix": "6.12"
+          },
+          {
+            "r": "t",
+            "text": ". A client that intends to use a typed profile consults "
           },
           {
             "r": "code",
@@ -5135,7 +5315,21 @@
           },
           {
             "r": "t",
-            "text": " and nothing else, and the learning loop of clause 7 uses it to establish whether a promoted model is actually in service. A member that carried those decisions while being omissible would leave a conformant Server unable to answer the question its clients most often ask."
+            "text": " and nothing else, and the learning loop of "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-11",
+            "kind": "clause",
+            "prefix": "6.11"
+          },
+          {
+            "r": "t",
+            "text": " uses it to establish whether a promoted model is actually in service. A member that carried those decisions while being omissible would leave a conformant Server unable to answer the question its clients most often ask."
           }
         ],
         "src": {
@@ -6851,7 +7045,31 @@
           },
           {
             "r": "t",
-            "text": " half of this specification; clauses 8 to 9 are the consuming half, and three joins connect them."
+            "text": " half of this specification; "
+          },
+          {
+            "r": "t",
+            "text": "clauses "
+          },
+          {
+            "r": "xref",
+            "target": "c6-12",
+            "kind": "clause",
+            "prefix": "6.12"
+          },
+          {
+            "r": "t",
+            "text": " to "
+          },
+          {
+            "r": "xref",
+            "target": "c6-13",
+            "kind": "clause",
+            "prefix": "6.13"
+          },
+          {
+            "r": "t",
+            "text": " are the consuming half, and three joins connect them."
           }
         ],
         "src": {
@@ -7192,6 +7410,626 @@
       },
       {
         "t": "clause",
+        "id": "c6-11-4",
+        "title": "Events",
+        "level": 3
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "ModelPromotedEventType"
+          },
+          {
+            "r": "t",
+            "text": " is raised when a deployment begins serving a different model version."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "7.4 Events (normative)",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A client can already subscribe to a deployment's "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " reference and see that it changed. What it cannot see that way is "
+          },
+          {
+            "r": "t",
+            "text": "who",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " changed it, "
+          },
+          {
+            "r": "t",
+            "text": "which",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " evaluation justified it, or "
+          },
+          {
+            "r": "t",
+            "text": "what it was before",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " — and those are precisely the questions asked after a batch has been rejected and someone wants to know what decided it. This event carries them at the moment they are known, rather than leaving them to be reconstructed from whatever logging the Server happens to keep."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "7.4 Events (normative)",
+          "b": 1
+        }
+      },
+      {
+        "t": "table",
+        "id": "events-tab1",
+        "caption": "Events",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Member"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Type"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Rule"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Meaning"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "Deployment"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "NodeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The deployment whose model changed"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "NewModel"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "NodeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The "
+              },
+              {
+                "r": "code",
+                "text": "ModelType"
+              },
+              {
+                "r": "t",
+                "text": " now being served"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "PreviousModel"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "NodeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "What it was serving, or null where it served none"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "EvaluationRun"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "NodeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The "
+              },
+              {
+                "r": "code",
+                "text": "EvaluationRunType"
+              },
+              {
+                "r": "t",
+                "text": " that gated the promotion, or null"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "PromotedBy"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The authenticated principal that promoted; empty where the Server initiated it"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "7.4 Events (normative)",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "It is raised on every substitution, not only on ",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "PromoteModel"
+          },
+          {
+            "r": "t",
+            "text": ".",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A rollback, a failover that changes which model answers, and any other Server-initiated substitution raise it too. A consumer auditing what decided a verdict cares that the model changed; whether the operator called it a promotion is not a distinction the audit can afford to depend on. "
+          },
+          {
+            "r": "code",
+            "text": "PreviousModel"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "NewModel"
+          },
+          {
+            "r": "t",
+            "text": " together are what distinguish a rollback from a promotion."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "7.4 Events (normative)",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "PromotedBy"
+          },
+          {
+            "r": "t",
+            "text": " exists because ",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "BaseEventType"
+          },
+          {
+            "r": "t",
+            "text": " has no user field.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "xref",
+            "target": "c6-16-3",
+            "kind": "clause",
+            "prefix": "6.16.3"
+          },
+          {
+            "r": "t",
+            "text": " requires promotion to carry an authorization distinct from every other Method on the job, and that requirement is unobservable if the identity that exercised it is not recorded where the act is. A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " populate it with the principal as it authenticated them, and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " populate it with a service account standing in for a human operator where the human is known."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "7.4 Events (normative)",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A null ",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "EvaluationRun"
+          },
+          {
+            "r": "t",
+            "text": " is information, not an omission.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "xref",
+            "target": "c6-11-2",
+            "kind": "clause",
+            "prefix": "6.11.2"
+          },
+          {
+            "r": "t",
+            "text": " says promotion "
+          },
+          {
+            "r": "t",
+            "text": "should",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be gated on an "
+          },
+          {
+            "r": "code",
+            "text": "EvaluationRunType"
+          },
+          {
+            "r": "t",
+            "text": " whose "
+          },
+          {
+            "r": "code",
+            "text": "Passed"
+          },
+          {
+            "r": "t",
+            "text": " is true. Where it was not, null here is the observable consequence — which is the fact an audit is looking for, and the reason the field is not simply left off when unused."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "7.4 Events (normative)",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Where it is raised.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " The well-known "
+          },
+          {
+            "r": "code",
+            "text": "AiModelManagement"
+          },
+          {
+            "r": "t",
+            "text": " object declares "
+          },
+          {
+            "r": "code",
+            "text": "EventNotifier"
+          },
+          {
+            "r": "t",
+            "text": " with the "
+          },
+          {
+            "r": "code",
+            "text": "SubscribeToEvents"
+          },
+          {
+            "r": "t",
+            "text": " bit set and is the target of a "
+          },
+          {
+            "r": "code",
+            "text": "HasNotifier"
+          },
+          {
+            "r": "t",
+            "text": " reference from the Server object, so a client subscribes at either. "
+          },
+          {
+            "r": "code",
+            "text": "SourceNode"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be the "
+          },
+          {
+            "r": "code",
+            "text": "DeploymentType"
+          },
+          {
+            "r": "t",
+            "text": " instance named by "
+          },
+          {
+            "r": "code",
+            "text": "Deployment"
+          },
+          {
+            "r": "t",
+            "text": ". "
+          },
+          {
+            "r": "code",
+            "text": "Severity"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "should",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be 500 or above: a promotion changes what every downstream verdict means, and a client filtering for things that matter should not have to know this event's name to find it."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "7.4 Events (normative)",
+          "b": 6
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Degradation is a state, and is already modelled as one.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " This clause defines no Condition or Alarm type. A deployment that has become unreachable or slow is in a "
+          },
+          {
+            "r": "t",
+            "text": "state",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " that persists, and "
+          },
+          {
+            "r": "code",
+            "text": "DeploymentType.Reachability"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "State"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "ObservedLatency"
+          },
+          {
+            "r": "t",
+            "text": " already carry it as Variables a client subscribes to — which is what OPC UA models a persistent state with. A Server that additionally needs an operator to "
+          },
+          {
+            "r": "t",
+            "text": "acknowledge",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " such a state uses the base OPC UA alarm types of OPC 10000-9 with "
+          },
+          {
+            "r": "code",
+            "text": "AlarmConditionType.InputNode"
+          },
+          {
+            "r": "t",
+            "text": " pointing at the "
+          },
+          {
+            "r": "code",
+            "text": "Reachability"
+          },
+          {
+            "r": "t",
+            "text": " Variable; that is what "
+          },
+          {
+            "r": "code",
+            "text": "InputNode"
+          },
+          {
+            "r": "t",
+            "text": " is for, and defining a Condition subtype here would oblige every Server to implement the enable, acknowledge, confirm and shelving machinery in order to report that a network link went away."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "7.4 Events (normative)",
+          "b": 7
+        }
+      },
+      {
+        "t": "clause",
         "id": "c6-12",
         "title": "Inference",
         "level": 2
@@ -7274,7 +8112,21 @@
           },
           {
             "r": "t",
-            "text": " change is the trust boundary, the latency and what fails when the network does. Those are clause 9's subject."
+            "text": " change is the trust boundary, the latency and what fails when the network does. Those are "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-13",
+            "kind": "clause",
+            "prefix": "6.13"
+          },
+          {
+            "r": "t",
+            "text": "'s subject."
           }
         ],
         "src": {
@@ -14663,7 +15515,21 @@
           },
           {
             "r": "t",
-            "text": ": clause 12 depends on it, and a rule that depends on an Optional member is one a conformant Server can silently not satisfy. A client deciding whether to run a model on a line needs to distinguish "
+            "text": ": "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-16",
+            "kind": "clause",
+            "prefix": "6.16"
+          },
+          {
+            "r": "t",
+            "text": " depends on it, and a rule that depends on an Optional member is one a conformant Server can silently not satisfy. A client deciding whether to run a model on a line needs to distinguish "
           },
           {
             "r": "t",
@@ -15253,7 +16119,31 @@
         "runs": [
           {
             "r": "t",
-            "text": "The set of resolvable URIs grew with clauses 9 to 10, and every addition is a value some client may have written: "
+            "text": "The set of resolvable URIs grew with "
+          },
+          {
+            "r": "t",
+            "text": "clauses "
+          },
+          {
+            "r": "xref",
+            "target": "c6-13",
+            "kind": "clause",
+            "prefix": "6.13"
+          },
+          {
+            "r": "t",
+            "text": " to "
+          },
+          {
+            "r": "xref",
+            "target": "c6-14",
+            "kind": "clause",
+            "prefix": "6.14"
+          },
+          {
+            "r": "t",
+            "text": ", and every addition is a value some client may have written: "
           },
           {
             "r": "code",
@@ -16545,6 +17435,29 @@
         "id": "c7-17-2-m",
         "browseName": "Abort",
         "owner": "InferenceTransferType"
+      },
+      {
+        "t": "clause",
+        "id": "c7-18",
+        "title": "ModelPromotedEventType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A deployment began serving a different model version. Raised on promotion, and also on a rollback or any other Server-initiated substitution, because a consumer auditing what decided a verdict cares that the model changed and not why the operator called it a promotion."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-18-def",
+        "caption": "ModelPromotedEventType definition",
+        "browseName": "ModelPromotedEventType",
+        "kind": "type"
       }
     ],
     "datatypes": [
@@ -17359,7 +18272,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Entry point for the AI models this Server runs. A client browses Server/AiModelManagement/Models to find what this Server describes."
+            "text": "Entry point for the AI models this Server runs. A client browses Server/AiModelManagement/Models to find what this Server describes. It carries EventNotifier because it is the notifier for the events of clause 7.4: a client subscribes here, or at the Server object above it."
           }
         ]
       },
@@ -17421,7 +18334,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "The NodeSet assigns every Node to one of three conformance units: "
+            "text": "The NodeSet assigns every Node to one of four conformance units: "
           },
           {
             "r": "code",
@@ -17437,7 +18350,7 @@
           },
           {
             "r": "t",
-            "text": " for the structures and enumerations, and "
+            "text": " for the structures and enumerations, "
           },
           {
             "r": "code",
@@ -17445,7 +18358,25 @@
           },
           {
             "r": "t",
-            "text": " for the references. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to."
+            "text": " for the references, and "
+          },
+          {
+            "r": "code",
+            "text": "AiModelManagement Events"
+          },
+          {
+            "r": "t",
+            "text": " for the EventType of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-11-4",
+            "kind": "clause",
+            "prefix": "6.11.4"
+          },
+          {
+            "r": "t",
+            "text": ". The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to."
           }
         ],
         "src": {
@@ -17886,6 +18817,70 @@
                 "target": "c6-16-3",
                 "kind": "clause",
                 "prefix": "6.16.3"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "AI-Events",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "ModelPromotedEventType"
+              },
+              {
+                "r": "t",
+                "text": " and every rule of "
+              },
+              {
+                "r": "xref",
+                "target": "c6-11-4",
+                "kind": "clause",
+                "prefix": "6.11.4"
+              },
+              {
+                "r": "t",
+                "text": ". A Server claiming it "
+              },
+              {
+                "r": "t",
+                "text": "shall",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " raise the event on "
+              },
+              {
+                "r": "t",
+                "text": "every",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " change to which model a deployment serves, including a rollback and a Server-initiated failover — a facet under which some substitutions are reported and others are not cannot support the audit it exists for, because a consumer could no longer read silence as \"the model did not change\". "
+              },
+              {
+                "r": "code",
+                "text": "PromotedBy"
+              },
+              {
+                "r": "t",
+                "text": " "
+              },
+              {
+                "r": "t",
+                "text": "shall",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " be populated wherever the change was made by an authenticated principal."
               }
             ]
           ],
@@ -18686,7 +19681,21 @@
             [
               {
                 "r": "t",
-                "text": "Closes the loop of clause 7: accumulates a dataset from the line, trains a candidate, evaluates it, promotes it, and keeps the lineage that explains why."
+                "text": "Closes the loop of "
+              },
+              {
+                "r": "t",
+                "text": "clause "
+              },
+              {
+                "r": "xref",
+                "target": "c6-11",
+                "kind": "clause",
+                "prefix": "6.11"
+              },
+              {
+                "r": "t",
+                "text": ": accumulates a dataset from the line, trains a candidate, evaluates it, promotes it, and keeps the lineage that explains why."
               }
             ]
           ]
@@ -19058,10 +20067,8 @@
             "text": ", and so on for every row of "
           },
           {
-            "r": "xref",
-            "target": "c11-2",
-            "kind": "clause",
-            "prefix": "11.2"
+            "r": "t",
+            "text": "§13.2"
           },
           {
             "r": "t",
@@ -19278,7 +20285,21 @@
           },
           {
             "r": "t",
-            "text": " are informative and introduce nothing. They map this model onto the systems an implementer is likely to be integrating — Azure AI Foundry, OpenAI, Amazon Bedrock and SageMaker, NVIDIA NIM and Triton, Google Vertex AI, Hugging Face, KServe, embedded runtimes, and another Server implementing this specification. Naming products there rather than here is what lets clause 9.2 name dialects for what they do: the normative document stays neutral and the informative folder beside it does not have to. Every literal of "
+            "text": " are informative and introduce nothing. They map this model onto the systems an implementer is likely to be integrating — Azure AI Foundry, OpenAI, Amazon Bedrock and SageMaker, NVIDIA NIM and Triton, Google Vertex AI, Hugging Face, KServe, embedded runtimes, and another Server implementing this specification. Naming products there rather than here is what lets "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-13-2",
+            "kind": "clause",
+            "prefix": "6.13.2"
+          },
+          {
+            "r": "t",
+            "text": " name dialects for what they do: the normative document stays neutral and the informative folder beside it does not have to. Every literal of "
           },
           {
             "r": "code",
@@ -19421,7 +20442,7 @@
             [
               {
                 "r": "t",
-                "text": "0.4.0"
+                "text": "0.5.0"
               }
             ]
           ],
@@ -19441,7 +20462,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-08-06"
+                "text": "2026-08-12"
               }
             ]
           ],
@@ -19912,7 +20933,21 @@
             },
             {
               "r": "t",
-              "text": " structure is what clause 10 extends, and public proxies over model hubs already present exactly the arrangement adopted here: publisher as group, models and datasets as sibling resource types, versions immutable and identified by content, mutable branch and tag names as pointers rather than versions."
+              "text": " structure is what "
+            },
+            {
+              "r": "t",
+              "text": "clause "
+            },
+            {
+              "r": "xref",
+              "target": "c6-14",
+              "kind": "clause",
+              "prefix": "6.14"
+            },
+            {
+              "r": "t",
+              "text": " extends, and public proxies over model hubs already present exactly the arrangement adopted here: publisher as group, models and datasets as sibling resource types, versions immutable and identified by content, mutable branch and tag names as pointers rather than versions."
             }
           ],
           [
@@ -19990,7 +21025,31 @@
           },
           {
             "r": "t",
-            "text": ". It shows one arrangement that satisfies clauses 8 to 10, to make the interaction between them concrete. No member here is introduced by this annex; every one is defined in Annex A."
+            "text": ". It shows one arrangement that satisfies "
+          },
+          {
+            "r": "t",
+            "text": "clauses "
+          },
+          {
+            "r": "xref",
+            "target": "c6-12",
+            "kind": "clause",
+            "prefix": "6.12"
+          },
+          {
+            "r": "t",
+            "text": " to "
+          },
+          {
+            "r": "xref",
+            "target": "c6-14",
+            "kind": "clause",
+            "prefix": "6.14"
+          },
+          {
+            "r": "t",
+            "text": ", to make the interaction between them concrete. No member here is introduced by this annex; every one is defined in Annex A."
           }
         ],
         "src": {
