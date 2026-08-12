@@ -1004,9 +1004,15 @@ prop_var(VS, "VisionSensorType", "RealityKind", VisionRealityKindEnum,
          "Whether this sensor is physical, simulated or hybrid.", MR_Mandatory)
 prop_var(VS, "VisionSensorType", "Modality", VisionSensorModalityEnum,
          "What the sensor measures.", MR_Mandatory)
-prop_var(VS, "VisionSensorType", "Manufacturer", LocalizedText, "Device manufacturer.")
-prop_var(VS, "VisionSensorType", "Model", LocalizedText, "Device model designation.")
-prop_var(VS, "VisionSensorType", "SerialNumber", String, "Device serial number.")
+prop_var(VS, "VisionSensorType", "Manufacturer", LocalizedText,
+         "Portable manufacturer projection. Where DI or OPC 40100 exposes an "
+         "authoritative nameplate for the same physical sensor, this value shall match it.")
+prop_var(VS, "VisionSensorType", "Model", LocalizedText,
+         "Portable model-designation projection. Where DI or OPC 40100 exposes an "
+         "authoritative nameplate for the same physical sensor, this value shall match it.")
+prop_var(VS, "VisionSensorType", "SerialNumber", String,
+         "Portable serial-number projection. Where DI or OPC 40100 exposes an "
+         "authoritative nameplate for the same physical sensor, this value shall match it.")
 prop_var(VS, "VisionSensorType", "DeviceUri", String,
          "Transport-level device identifier, for example a GigE Vision or USB3 Vision "
          "device id. Lets a client correlate this sensor with the GenICam layer that "

@@ -344,6 +344,10 @@ A Server never instantiates it directly. It instantiates `ImageSensorType`, `Dep
 
 `Media` is mandatory because a sensor a client cannot obtain imagery from is not usefully described. `RealityKind` is mandatory because a client that cannot tell a rendered frame from a real one cannot safely act on it (§4.3).
 
+`SensorId` is the domain identifier for a sensor within this model; the Object's NodeId is its OPC UA address. Pipeline and result references resolve to that `VisionSensorType` Object and do not restate its nameplate as another identifier. `Manufacturer`, `Model` and `SerialNumber` are optional portable nameplate projections, not a second asset identity. They remain on the common base so a simulated sensor and a physical sensor expose the same readable shape without making DI or OPC 40100 a RequiredModel.
+
+For a simulated sensor, or for a physical sensor described only by this specification, the populated projection is authoritative. Where DI or OPC 40100 also exposes an authoritative device/nameplate Object for the same physical sensor, that standard Object decides and each populated projection field **shall** equal its corresponding standard value. `DeviceUri` is not a nameplate field: it identifies the transport-level device endpoint and **shall not** be substituted for a DI `ProductInstanceUri` or another asset identifier.
+
 ### 5.5 `ImageSensorType : VisionSensorType`
 
 The 2-D imaging sensor, and the layer OPC 40100-2 leaves empty. Acquisition parameters use GenICam SFNC 2.8 names and semantics, and `PixelFormat` uses PFNC naming; Annex H gives the member-by-member binding.
@@ -1352,7 +1356,7 @@ This annex is informative for a Server that does not claim *VIS-Interop-40100*, 
 2. For every inspection the Server reports through both models, the OPC 40100-1 `ResultDataType.ResultContent` **shall** be populated from the corresponding `InspectionResultType.Characteristics`, and `ResultDataType.ResultId` **shall** be equal to `VisionResultType.ResultId`. This equality is what lets a client join the two views; without it the mapping is unverifiable.
 3. Where the Server exposes an OPC 40100-2 `ILensType` and an `OpticsType` for the same lens, the two **shall** describe it consistently, converted into the units fixed by §5.12.
 4. Where the Server exposes an OPC 40100-2 `ILampType` or `ILightingControllerType` and an `IlluminationType` for the same emitter, the same consistency requirement applies. OPC 40100-2 types `LampType` as an open `String` and `LightingMode` as an unconstrained `UInt32`; this model enumerates both (§5.7). A Server exposing both **shall** convert as follows: `VisionLampTypeEnum` maps to and from the OPC 40100-2 String by the enumeration symbol name, compared case-insensitively, with `Other` used for any String no symbol matches; `VisionLightingModeEnum` maps to and from the OPC 40100-2 UInt32 by its numeric value, with any value the enumeration does not define read as `Other`. A Server **shall not** report an emitter as `Other` in this model while OPC 40100-2 reports a value one of the named symbols covers.
-5. Where the Server exposes an OPC 40100-2 `VisionImageSensorType`, the corresponding `ImageSensorType` **shall** describe the same physical sensor. OPC 40100-2 `VisionImageSensorType` adds no members of its own, so this model supplies the imaging parameters; the two **shall not** identify different devices.
+5. Where the Server exposes an OPC 40100-2 `VisionImageSensorType`, or a DI device/nameplate Object, for the same physical sensor as an `ImageSensorType`, the standard asset/device Object is authoritative for `Manufacturer`, `Model` and `SerialNumber`. Each corresponding `VisionSensorType` field that is populated **shall** equal the standard value. OPC 40100-2 `VisionImageSensorType` adds no members of its own, so this model supplies the imaging parameters; the two **shall not** identify different devices. References within this model target the `VisionSensorType` Object's NodeId. `SensorId` is its Vision-domain identifier and need not equal the standard Object's NodeId or asset identifier.
 
 The alignment table below records the correspondence the requirements above rest on:
 
@@ -1364,7 +1368,7 @@ The alignment table below records the correspondence the requirements above rest
 | Recipe identity | `InspectionResultType.RecipeId` |
 | OPC 40100-2 `ILensType` | `OpticsType`, member names already aligned |
 | OPC 40100-2 `ILampType`, `ILightingControllerType` | `IlluminationType`, member names already aligned; `LampType` and `LightingMode` enumerated here, converted per requirement 4 |
-| OPC 40100-2 `VisionImageSensorType` (no members) | `ImageSensorType` supplies the imaging parameters it lacks |
+| OPC 40100-2 `VisionImageSensorType` (no members), and its DI/nameplate context | `ImageSensorType` supplies the imaging parameters it lacks; populated nameplate projections match the authoritative standard Object |
 | OPC 40100-2 `SoftwareComponents` | `ModelType` for the model specifically |
 
 The intended division is that OPC 40100 answers *"what job is the system running"* and this specification answers *"what did it see, how, and with what model"*. Neither requires the other, and a Server is fully conformant to this specification without this facet.

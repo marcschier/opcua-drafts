@@ -282,9 +282,9 @@ Abstract base for anything that produces imagery or range data. The RealityKind 
 | SensorId | Variable | String | Scalar | Mandatory | Identifier of the sensor, unique within the Server. |
 | RealityKind | Variable | VisionRealityKindEnum | Scalar | Mandatory | Whether this sensor is physical, simulated or hybrid. |
 | Modality | Variable | VisionSensorModalityEnum | Scalar | Mandatory | What the sensor measures. |
-| Manufacturer | Variable | LocalizedText | Scalar | Optional | Device manufacturer. |
-| Model | Variable | LocalizedText | Scalar | Optional | Device model designation. |
-| SerialNumber | Variable | String | Scalar | Optional | Device serial number. |
+| Manufacturer | Variable | LocalizedText | Scalar | Optional | Portable manufacturer projection. Where DI or OPC 40100 exposes an authoritative nameplate for the same physical sensor, this value shall match it. |
+| Model | Variable | LocalizedText | Scalar | Optional | Portable model-designation projection. Where DI or OPC 40100 exposes an authoritative nameplate for the same physical sensor, this value shall match it. |
+| SerialNumber | Variable | String | Scalar | Optional | Portable serial-number projection. Where DI or OPC 40100 exposes an authoritative nameplate for the same physical sensor, this value shall match it. |
 | DeviceUri | Variable | String | Scalar | Optional | Transport-level device identifier, for example a GigE Vision or USB3 Vision device id. Lets a client correlate this sensor with the GenICam layer that actually moves the pixels. |
 | FrameId | Variable | String | Scalar | Optional | FrameId of this sensor's own camera frame. |
 | Media | Object |  |  | Mandatory | Media endpoints and their control surface. |

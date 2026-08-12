@@ -321,12 +321,16 @@ def enum_type(nid, name, desc, category, fields):
 
 
 def struct_type(nid, name, desc, category, fields):
-    """fields: list of (fieldname, datatype_id, valuerank, description)."""
+    """fields: (fieldname, datatype_id, valuerank, description[, is_optional])."""
     add(nid, "UADataType", name, name, desc=desc, category=category)
     ref(nid, HasSubtype, Structure, forward=False)
     dparts = [f'<Definition Name="{GEN}:{name}">']
-    for (fname, dtype, vrank, fdesc) in fields:
+    for field in fields:
+        fname, dtype, vrank, fdesc = field[:4]
+        optional = len(field) > 4 and field[4]
         extra = f' ValueRank="{vrank}"' if vrank is not None else ""
+        if optional:
+            extra += ' IsOptional="true"'
         if fdesc:
             dparts.append(f'<Field Name="{sx.escape(fname)}" DataType="{dtype}"{extra}>')
             dparts.append(f'<Description>{sx.escape(fdesc)}</Description></Field>')
@@ -854,13 +858,17 @@ analog(1012, R, "Altitude", "m", "Reference altitude for the rating.")
 CAT_AL = "Generators Alarms"
 object_type(1017, "GeneratorProtectionAlarmType", OffNormalAlarmType,
             "Alarm raised by a generator protection/shutdown function. Extends "
-            "OffNormalAlarmType with the protection function, severity and J1939 origin.",
+            "OffNormalAlarmType with the protection function, automatic protection action "
+            "and J1939 origin. The inherited Severity field is the sole event urgency.",
             CAT_AL)
 AL = "GeneratorProtectionAlarmType"
 prop_var(1017, AL, "ProtectionFunction", T(3014),
          "The protection function that raised the alarm.", rule=MR_Mandatory)
-prop_var(1017, AL, "GeneratorAlarmSeverity", T(3013), "Severity class of the alarm.")
-prop_var(1017, AL, "IsShutdown", Boolean, "TRUE if the condition caused an engine shutdown.")
+prop_var(1017, AL, "GeneratorAlarmSeverity", T(3013),
+         "Severity class of the alarm.")
+prop_var(1017, AL, "IsShutdown", Boolean,
+         "TRUE if the engine is actually shut down. This reports the outcome and is not "
+         "inferred from ProtectionAction.")
 prop_var(1017, AL, "Spn", UInt32, "SAE J1939 SPN when the alarm originates from the engine ECU.")
 prop_var(1017, AL, "Fmi", Byte, "SAE J1939 FMI when the alarm originates from the engine ECU.")
 prop_var(1017, AL, "SubsystemName", String, "Name of the originating subsystem.")
@@ -893,7 +901,9 @@ ref(bb, HasAddIn, T(mis))
 mom = _mid()
 add(mom, "UAObject", "MachineryOperationMode",
     f"{GS}_MachineryBuildingBlocks_MachineryOperationMode",
-    desc="Generic Machinery operation-mode state machine (interoperability).",
+    desc="Derived Machinery operation-mode state machine for interoperability. OperatingMode "
+         "is authoritative and the specification defines the deterministic mapping to this "
+         "state machine.",
     parent=T(bb), bns=MC)
 ref(mom, HasModellingRule, MR_Optional)
 ref(mom, HasTypeDefinition, MC_MachineryOperationMode_SMT)
@@ -903,7 +913,8 @@ ref(bb, HasAddIn, T(mom))
 obj_member(1001, GS, "OperatingState", T(1011),
            "Detailed generator-set operating state machine.", rule=MR_Mandatory)
 comp_var(1001, GS, "OperatingMode", T(3001),
-         "Selector mode of the control panel (Off/Manual/Auto/Test/...).",
+         "Authoritative selector mode of the control panel (Off/Manual/Auto/Test/...). "
+         "Where MachineryOperationMode is present, its CurrentState is derived from this value.",
          rule=MR_Mandatory)
 comp_var(1001, GS, "EmissionsStandard", T(3008),
          "Emissions certification standard of the set.")
@@ -1055,6 +1066,47 @@ analog(1015, SY, "TotalSystemLoad", "kW", "Total load currently served by the sy
 prop_var(1015, SY, "RedundancyScheme", String,
          "Redundancy scheme, e.g. N, N+1, N+2, 2N, DistributedRedundant.")
 
+# --- Backward-compatible replacements appended after every published member --------
+# These declarations intentionally live at the end. The enum and DataType use new NodeIds,
+# while their encodings and the replacement members take the next free member ids. Moving
+# them earlier would renumber published members.
+enum_type(3018, "GeneratorProtectionActionEnum",
+          "Automatic response requested by a generator protection function. This is "
+          "independent of the standard Part 9 event Severity.", CAT_EN, [
+    ("NoAutomaticAction", 0, "No automatic response is requested."),
+    ("Warning", 1, "Notify an operator without changing generator operation."),
+    ("Derate", 2, "Continue to run at reduced output."),
+    ("Shutdown", 3, "Shut down the prime mover."),
+    ("ElectricalTrip", 4, "Trip the generator breaker."),
+    ("Lockout", 5, "Prevent restart until a manual reset."),
+    ("EmergencyStop", 6, "Perform an immediate emergency stop."),
+])
+
+struct_type(3051, "DiagnosticTroubleCodeDataType",
+            "A SAE J1939 diagnostic trouble code (DTC) reported by an engine ECU.",
+            CAT_EN, [
+    ("Spn", UInt32, None, "Suspect Parameter Number identifying the faulty subsystem."),
+    ("Fmi", Byte, None, "Failure Mode Identifier describing the type of failure."),
+    ("OccurrenceCount", Byte, None, "Number of times the fault has become active."),
+    ("ConversionMethod", Boolean, None, "J1939 SPN conversion method flag."),
+    ("Active", Boolean, None, "TRUE while the fault is currently active (DM1)."),
+    ("SourceAddress", Byte, None, "J1939 source address of the ECU that reported the code."),
+    ("SourceName", String, None, "Name of the ECU/controller that reported the code."),
+    ("ProtectionAction", T(3018), None,
+     "Automatic generator response associated with the fault, when known. Event urgency "
+     "is carried by the standard Part 9 Severity field when the DTC raises an alarm.", True),
+    ("Description", String, None, "Human-readable description of the fault."),
+])
+
+comp_var(1010, "J1939DiagnosticInterfaceType", "ActiveDiagnosticTroubleCodeDetails", T(3051),
+         "Currently active DTCs (J1939 DM1) using the current DataType.", valuerank="1")
+comp_var(1010, "J1939DiagnosticInterfaceType",
+         "PreviouslyActiveDiagnosticTroubleCodeDetails", T(3051),
+         "Previously active DTCs (J1939 DM2) using the current DataType.", valuerank="1")
+prop_var(1017, "GeneratorProtectionAlarmType", "ProtectionAction", T(3018),
+         "Automatic response requested by the protection function. This classification "
+         "does not replace or determine the inherited Part 9 Severity.")
+
 # ===========================================================================
 # =========================  CONFORMANCE UNITS  =============================
 # ===========================================================================
@@ -1109,8 +1161,8 @@ def units_of(n):
 # ==============================  EMISSION  =================================
 # ===========================================================================
 NAMESPACE = "http://opcfoundation.org/UA/Generators/"
-VERSION = "1.1.0"
-PUBDATE = "2026-07-01T00:00:00Z"
+VERSION = "1.2.0"
+PUBDATE = "2026-08-11T00:00:00Z"
 
 ALIASES = [
     ("Boolean", "i=1"), ("Byte", "i=3"), ("UInt16", "i=5"), ("UInt32", "i=7"),
@@ -2351,10 +2403,15 @@ def emit_md():
                 md.append(f"| {mm.group(1)} | {mm.group(2)} | {mm.group(3) or ''} |")
             md.append("")
         elif n.definition:
-            md.append("| Field | DataType | Description |")
-            md.append("|---|---|---|")
-            for mm in re.finditer(r'<Field Name="([^"]+)" DataType="([^"]+)"[^>]*?(?:/>|>(?:<Description>([^<]*)</Description>)?</Field>)', n.definition):
-                md.append(f"| {mm.group(1)} | {_link(_friendly(mm.group(2)))} | {mm.group(3) or ''} |")
+            md.append("| Field | DataType | Cardinality | Description |")
+            md.append("|---|---|---|---|")
+            for mm in re.finditer(
+                    r'<Field Name="([^"]+)" DataType="([^"]+)"([^>]*?)'
+                    r'(?:/>|>(?:<Description>([^<]*)</Description>)?</Field>)',
+                    n.definition):
+                cardinality = "0..1" if 'IsOptional="true"' in mm.group(3) else "1"
+                md.append(f"| {mm.group(1)} | {_link(_friendly(mm.group(2)))} | "
+                          f"{cardinality} | {mm.group(4) or ''} |")
             md.append("")
 
     md.append("### Objects\n")
@@ -2367,7 +2424,8 @@ def emit_md():
         "`MachineryBuildingBlocks`, `MachineryItemState`, `MachineryOperationMode`); the "
         f"finite-state-machine **States and Transitions** of {_clink('GeneratorStateMachineType')}; "
         "and the **DataType encodings** (`Default Binary`, `Default XML`) of "
-        f"{_clink('DiagnosticTroubleCodeType')}. This specification defines no free-standing "
+        f"{_clink('DiagnosticTroubleCodeType')} and "
+        f"{_clink('DiagnosticTroubleCodeDataType')}. This specification defines no free-standing "
         "Object instances; live instances are created by the server in its address space.\n")
 
     md.append("### Variables\n")
@@ -2405,6 +2463,8 @@ def emit_md():
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
     outdir = os.path.dirname(here)  # companion-specs/Generators/
+    annex_marker = '<a id="annex-a"></a>'
+    model_reference = emit_md()
     with open(os.path.join(outdir, "Opc.Ua.Generators.NodeSet2.xml"), "w",
               encoding="utf-8") as f:
         f.write(emit())
@@ -2413,8 +2473,16 @@ if __name__ == "__main__":
         f.write(emit_csv())
     with open(os.path.join(here, "model-reference.md"), "w",
               encoding="utf-8") as f:
-        f.write(emit_md())
+        f.write(model_reference)
+    spec_path = os.path.join(outdir, "OPC-UA-Companion-Specification-for-Generators.md")
+    with open(spec_path, encoding="utf-8") as f:
+        specification = f.read()
+    if annex_marker not in specification or annex_marker not in model_reference:
+        raise ValueError("Annex A marker missing from specification or generated reference")
+    generated_annex = model_reference[model_reference.index(annex_marker):]
+    authored = specification[:specification.index(annex_marker)]
+    with open(spec_path, "w", encoding="utf-8") as f:
+        f.write(authored + generated_annex)
     n_types = sum(1 for k in NODES if NODES[k].cls in ("UAObjectType", "UADataType"))
     print(f"Nodes: {len(NODES)}  (ObjectTypes+DataTypes: {n_types})")
     print(f"Member id range: 6001..{_next_member[0] - 1}")
-

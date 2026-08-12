@@ -141,7 +141,7 @@ public, content available to persons with a legitimate interest and the Commissi
 available to notified bodies and market surveillance authorities. EN 18239 specifies requirements
 for implementing tiered access for product passports generally.
 
-Clause 9.7 of the OPC UA AAS companion specification defines two information disclosure tiers,
+Clause 6.5.7 of the OPC UA AAS companion specification defines two information disclosure tiers,
 `Public` and `Controlled`, and states that a tier classifies the information rather than the caller.
 The regulatory classes map onto them by deciding, per class, whether the content is readable without
 authentication:

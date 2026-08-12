@@ -269,7 +269,9 @@ class Writer:
 
     def _b_enumtable(self, b, *, annex=False):
         from . import nodeset_tables as nt
-        spec = nt.enum_table(self.model, b['browseName'])
+        spec = nt.enum_table(
+            self.model, b['browseName'], doc_ns_index=self.doc_ns_index,
+            structure_fields=b.get('structureFields', False))
         return self.enum_tables(b['id'], spec)
 
     def _b_methodtable(self, b, *, annex=False):
@@ -400,18 +402,28 @@ class Writer:
         return out
 
     def enum_tables(self, ident, spec):
-        """The two tables an enumeration DataType needs: its Items and its definition."""
-        g = contract.ENUM_GRID
+        """The Items table for an Enumeration or Structure DataType."""
+        structure = spec['kind'] == 'structure'
+        g = contract.STRUCTURE_GRID if structure else contract.ENUM_GRID
+        headers = contract.STRUCTURE_HEADERS if structure else contract.ENUM_HEADERS
         out = [self.caption(ident + '-items', '%s Items' % spec['browseName'])]
         tbl = table(g)
         tbl.append(row([cell(g[i], [cell_paragraph(h, bold=True)], bottom='double')
-                        for i, h in enumerate(contract.ENUM_HEADERS)], header=True))
+                        for i, h in enumerate(headers)], header=True))
         for f in spec['fields']:
-            tbl.append(row([
-                cell(g[0], [cell_paragraph(f['name'])]),
-                cell(g[1], [cell_paragraph(f['value'])]),
-                cell(g[2], [cell_paragraph(f['description'])]),
-            ]))
+            if structure:
+                tbl.append(row([
+                    cell(g[0], [cell_paragraph(f['name'])]),
+                    cell(g[1], [cell_paragraph(f['type'])]),
+                    cell(g[2], [cell_paragraph(f['cardinality'])]),
+                    cell(g[3], [cell_paragraph(f['description'])]),
+                ]))
+            else:
+                tbl.append(row([
+                    cell(g[0], [cell_paragraph(f['name'])]),
+                    cell(g[1], [cell_paragraph(f['value'])]),
+                    cell(g[2], [cell_paragraph(f['description'])]),
+                ]))
         out.append(tbl)
         out.append(paragraph('spacer', []))
         return out

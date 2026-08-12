@@ -1322,7 +1322,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6073" BrowseName="1:Manufacturer" ParentNodeId="ns=1;i=1002" DataType="LocalizedText" ValueRank="-1">
     <DisplayName>Manufacturer</DisplayName>
-    <Description>Device manufacturer.</Description>
+    <Description>Portable manufacturer projection. Where DI or OPC 40100 exposes an authoritative nameplate for the same physical sensor, this value shall match it.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1331,7 +1331,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6074" BrowseName="1:Model" ParentNodeId="ns=1;i=1002" DataType="LocalizedText" ValueRank="-1">
     <DisplayName>Model</DisplayName>
-    <Description>Device model designation.</Description>
+    <Description>Portable model-designation projection. Where DI or OPC 40100 exposes an authoritative nameplate for the same physical sensor, this value shall match it.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -1340,7 +1340,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6075" BrowseName="1:SerialNumber" ParentNodeId="ns=1;i=1002" DataType="String" ValueRank="-1">
     <DisplayName>SerialNumber</DisplayName>
-    <Description>Device serial number.</Description>
+    <Description>Portable serial-number projection. Where DI or OPC 40100 exposes an authoritative nameplate for the same physical sensor, this value shall match it.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>

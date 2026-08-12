@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 PYTHON = sys.executable
+TEXT_SUFFIXES = {".csv", ".json", ".jsonld", ".md", ".xml"}
 
 COMMANDS = (
     ("Generators", (PYTHON, "companion-specs/Generators/tools/validate_local.py")),
@@ -32,7 +33,10 @@ COMMANDS = (
 
 
 def digest(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    data = path.read_bytes()
+    if path.suffix.lower() in TEXT_SUFFIXES:
+        data = data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(data).hexdigest()
 
 
 def run_deterministic(name: str, command: tuple[str, ...], paths: list[Path]) -> int:
