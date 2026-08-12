@@ -1221,6 +1221,9 @@ def emit_md():
         n = NODES[nid]
         md.append(f"| ns={OWN_NS};i={nid} | {_link(n.bname)} | {n.cls[2:]} | {_link(_friendly(_supertype(n)))} |")
     md.append('')
+    md.append('`AASAttestationDataType` is carried by the `Attestations` attribute inherited from the xRegistry')
+    md.append('`ResourceType`. It therefore has no Variable declared by this namespace as its carrier.')
+    md.append('')
     md.append('### Object types\n')
     for nid in obj_types:
         n = NODES[nid]
