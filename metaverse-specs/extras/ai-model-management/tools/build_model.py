@@ -39,8 +39,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/AI/"
-VERSION = "0.4.0"
-PUBDATE = "2026-08-06T00:00:00Z"
+VERSION = "0.5.0"
+PUBDATE = "2026-08-12T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -48,7 +48,7 @@ BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 # registry is the same shape as every other registry in this repository rather than a
 # private invention. See clause 10.
 XREG_NS = "http://opcfoundation.org/UA/xRegistry/"
-XREG_VERSION = "0.4.0"
+XREG_VERSION = "0.5.0"
 XREG_PUBDATE = "2026-07-31T00:00:00Z"
 
 # NamespaceUris order fixes the namespace indices for the whole file. Required-model

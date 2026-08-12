@@ -1,6 +1,6 @@
 # OPC UA — Robot Intent
 
-**Release 0.1.0 — Draft.** An OPC UA information model for commanding a robot at the level of task intent, with a lifecycle that survives the minutes such work actually takes.
+**Release 0.2.0 — Draft.** An OPC UA information model for commanding a robot at the level of task intent, with a lifecycle that survives the minutes such work actually takes.
 
 Nothing here is normative, official, or endorsed by the OPC Foundation, VDMA or any robot manufacturer. Namespace URIs and NodeIds are **provisional** and for prototyping only.
 

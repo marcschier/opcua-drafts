@@ -1,6 +1,6 @@
 # OPC UA — Robot Intent
 
-> Status: Working-group draft (Release 0.1.0). This document, together with `Opc.Ua.RobotIntent.NodeSet2.xml` and `Opc.Ua.RobotIntent.NodeIds.csv`, defines an OPC UA information model for **commanding a robot at the level of task intent** — move there, grasp that, pick from here, place at that — with a lifecycle that survives the minutes such work actually takes.
+> Status: Working-group draft (Release 0.2.0). This document, together with `Opc.Ua.RobotIntent.NodeSet2.xml` and `Opc.Ua.RobotIntent.NodeIds.csv`, defines an OPC UA information model for **commanding a robot at the level of task intent** — move there, grasp that, pick from here, place at that — with a lifecycle that survives the minutes such work actually takes.
 >
 > Nothing here is normative, official, or endorsed by the OPC Foundation, VDMA or any robot manufacturer; namespace URIs and NodeIds are **provisional** and for prototyping only. The prior art, the gaps this model fills, and the decisions those gaps forced are recorded in the companion research report, [`OPC-UA-Robot-Intent-Research.md`](OPC-UA-Robot-Intent-Research.md).
 
@@ -45,7 +45,7 @@ Neither statement is about the importance of the omitted capability. The first i
 
 ### 1.4 Capabilities and versioning
 
-Release 0.1.0 covers the intent vocabulary — joint, linear and circular moves, trajectories, Cartesian paths, force-controlled moves, grasping, picking and placing, tool change, output, program call, waiting, and six application processes — together with the execution lifecycle, queueing and blending, cancellation, missions with a committed base, a revisable horizon and a step graph, command authority, safety awareness, the robot's kinematic description, real-time channel brokerage, and capability declaration.
+Release 0.2.0 covers the intent vocabulary — joint, linear and circular moves, trajectories, Cartesian paths, force-controlled moves, grasping, picking and placing, tool change, output, program call, waiting, and six application processes — together with the execution lifecycle, queueing and blending, cancellation, missions with a committed base, a revisable horizon and a step graph, command authority, safety awareness, the robot's kinematic description, real-time channel brokerage, and capability declaration.
 
 The NodeSet declares exactly one `RequiredModel` — the base OPC UA namespace — so a Server can adopt it without pulling in any companion model. A Server implements the facets it can honour and declares the rest false; only **RI-Base** is mandatory (§12.2).
 
@@ -364,7 +364,9 @@ A Server **shall** report `ForceControlSupported` false unless the robot genuine
 
 Each parameter set is the subset the vendor languages agree on — ABB `seamdata`/`welddata`/`weavedata`, FANUC weld schedules and KUKA ArcTech for arc welding, and their equivalents elsewhere. Where an installation works to a welding procedure specification, `WeldProcedureRef` names it and this specification does not restate its content.
 
-Two of these deserve their reasoning stated.
+Three of these deserve their reasoning stated.
+
+**Seam tracking is a switch, not a channel.** `ArcWeldIntentDataType.SeamTrackingEnabled` asks the equipment to run *its own* seam-tracking facility for the duration of this weld. It does not make this interface a real-time one: §4.3 permits seam tracking through a brokered channel **or the robot's own facility**, and this is the second of those. The sensing, the correction and the control period stay inside the controller, where the arc voltage or laser seam finder already is; nothing is sampled, carried or closed over OPC UA. A Server whose equipment provides no such facility **shall** refuse an intent carrying `SeamTrackingEnabled` true with `CapabilityNotSupported`, rather than accepting it and welding an uncorrected path.
 
 **Fastening is deliberately thin.** OPC 40450 and OPC 40451 already define industrial joining and tightening in full, including step-wise results and traces. Where a controller exposes such a model, `FastenIntentDataType.Joint` references the joint in that model and the result belongs there. Where no such model is exposed under the controller, `Joint` is null, the remaining fastening parameters stand alone, and a Server **shall** refuse a non-null `Joint` with `CapabilityNotSupported`. Restating torque strategies here would create a second definition of a fact that specification already owns — the same reason `PickIntentDataType.Source` references a `Location` node instead of naming a station in a string.
 

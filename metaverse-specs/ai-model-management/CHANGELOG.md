@@ -2,7 +2,15 @@
 
 All notable changes to this specification and its information model.
 
-## Unreleased
+## 0.5.0 — 2026-08-12
+
+### Standard BrowseNames are written in namespace 0
+
+`InputArguments` and `OutputArguments` are standard Properties of OPC 10000-3 and OPC 10000-5 and live in namespace 0. All 14 of this model's argument Properties were qualified into the model's own namespace, and a stack resolves a Method's signature by looking for the child Property named `InputArguments` **in namespace 0** — not finding it, it treats the Method as taking no arguments and rejects every call with `Bad_TooManyArguments`. **Every Method in this model was uncallable.** The same defect qualified the `EnumStrings` Property of every enumeration DataType, so a client reading an enumeration's permitted values generically saw an enumeration with no names.
+
+Both are fixed at the generator, which now declares a standard BrowseName as standard rather than inheriting the model namespace by default, so a Method added later cannot reintroduce it. `.github/scripts/check_browsename_namespace.py` guards the whole class across every NodeSet in the repository.
+
+No NodeId moved: the change is the BrowseName attribute alone. The model identity moves with it because a client that cached this model under the previous `(Version, PublicationDate)` holds BrowseNames that no longer describe it, and two models published under one identity are indistinguishable to such a client.
 
 ### Conformance units named in the specification
 

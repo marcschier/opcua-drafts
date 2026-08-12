@@ -40,8 +40,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/Vision/"
-VERSION = "0.2.0"
-PUBDATE = "2026-08-11T00:00:00Z"
+VERSION = "0.3.0"
+PUBDATE = "2026-08-12T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 

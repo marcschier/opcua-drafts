@@ -1,6 +1,6 @@
 # OPC UA — Vision
 
-> Status: Working-group draft (Release 0.2.0). This document, together with `Opc.Ua.Vision.NodeSet2.xml` and `Opc.Ua.Vision.NodeIds.csv`, defines an OPC UA information model for **machine vision and robotics vision systems**: the sensors, the media they emit, the AI that interprets them, the results they produce, and the path by which corrected results flow back in. It is deliberately **sim/real symmetric** — one model describes a physical camera and a simulated sensor in a renderer such as NVIDIA Isaac Sim identically.
+> Status: Working-group draft (Release 0.3.0). This document, together with `Opc.Ua.Vision.NodeSet2.xml` and `Opc.Ua.Vision.NodeIds.csv`, defines an OPC UA information model for **machine vision and robotics vision systems**: the sensors, the media they emit, the AI that interprets them, the results they produce, and the path by which corrected results flow back in. It is deliberately **sim/real symmetric** — one model describes a physical camera and a simulated sensor in a renderer such as NVIDIA Isaac Sim identically.
 >
 > Nothing here is normative, official, or endorsed by the OPC Foundation, the Alliance for OpenUSD, EMVA, DMSC, IDTA or NVIDIA; namespace URIs and NodeIds are **provisional** and for prototyping only. The prior art, the gaps this model fills, and the decisions those gaps forced are recorded in the companion research report, [`OPC-UA-Vision-Research.md`](OPC-UA-Vision-Research.md).
 
@@ -45,11 +45,11 @@ Two of these are permanent boundaries, and two are deferrals this working group 
 - It does **not yet** define an inspection *program* or *recipe* format. A `RecipeId` identifies one; its content is out of scope here, as it is in OPC 40100-1. Should a portable recipe format emerge, binding to it is additive.
 - It does **not yet** take a dependency on OPC 40100, OPC 40010, DI, Machinery or the OpenUSD models. Interop with each is an optional profile (Annexes C and D). These are candidates for normative dependencies once the interop profiles have been exercised against real implementations.
 
-Neither list is a statement that the omitted capability is unimportant — only that Release 0.2.0 does not define it, and that a Server is conformant without it.
+Neither list is a statement that the omitted capability is unimportant — only that Release 0.3.0 does not define it, and that a Server is conformant without it.
 
 ### 1.4 Capabilities and versioning
 
-Release 0.2.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by *OPC UA — AI Model Management and Inference* (§8.1). The NodeSet declares exactly one `RequiredModel` — the base OPC UA namespace — so a Server can adopt it without pulling in any companion model.
+Release 0.3.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by *OPC UA — AI Model Management and Inference* (§8.1). The NodeSet declares exactly one `RequiredModel` — the base OPC UA namespace — so a Server can adopt it without pulling in any companion model.
 
 ---
 

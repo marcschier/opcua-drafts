@@ -1,6 +1,6 @@
 # OPC UA — AI Model Management and Inference
 
-> Status: Working-group draft (Release 0.4.0). This document, together with `Opc.Ua.AiModelManagement.NodeSet2.xml` and `Opc.Ua.AiModelManagement.NodeIds.csv`, defines an OPC UA information model for **the AI models an installation runs**: what a model is, what it was trained on, where it executes, and how a better one replaces it.
+> Status: Working-group draft (Release 0.5.0). This document, together with `Opc.Ua.AiModelManagement.NodeSet2.xml` and `Opc.Ua.AiModelManagement.NodeIds.csv`, defines an OPC UA information model for **the AI models an installation runs**: what a model is, what it was trained on, where it executes, and how a better one replaces it.
 >
 > It is deliberately **domain-neutral**. Nothing here names a camera, a sensor, an image or a robot: a model is trained on a dataset, deployed somewhere, and superseded — and that story is the same whether the input is a photograph, a vibration spectrum or a process trace.
 >

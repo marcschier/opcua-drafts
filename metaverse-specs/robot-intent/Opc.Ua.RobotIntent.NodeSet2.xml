@@ -5,7 +5,7 @@
     <Uri>http://opcfoundation.org/UA/RobotIntent/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/RobotIntent/" Version="0.1.0" PublicationDate="2026-08-02T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/RobotIntent/" Version="0.2.0" PublicationDate="2026-08-12T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
     </Model>
   </Models>
