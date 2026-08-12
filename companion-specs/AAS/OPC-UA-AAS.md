@@ -56,6 +56,7 @@ relationship to this specification.
 - *Specification of the Asset Administration Shell — Part 5: Package File Format (AASX)*,
   IDTA-01005, version 3.
 - IEC 63278-1 — Asset Administration Shell for industrial applications.
+- W3C XML Schema Definition Language (XSD) 1.1 Part 2: Datatypes.
 
 Informative:
 
@@ -203,6 +204,40 @@ informative concept correspondence for migration tooling.
 
 ## 5 Use cases
 
+### 5.1 Registry discovery
+
+Given an asset key such as a serial number or manufacturer part identifier, a Client needs to find
+which shells describe that asset without browsing the whole collection. `LookupShellsByAssetLink`
+(clause 6.5.5) answers that question directly, using the registry's indexed asset links rather than
+a traversal of every shell group.
+
+### 5.2 Digital Product Passport
+
+A Digital Product Passport is public in part and restricted in part. The registry serves that shape
+with the disclosure tiers and authorization advertisement of clause 6.5.7, and with the version
+history of clause 6.5.4. That history lets a record be retrieved as it stood on a date, which
+regulation requires and the AAS metamodel alone cannot supply.
+
+### 5.3 Lossless Server generation from an AAS
+
+The mapping leaves no choice to the implementer (clause 6.1.6). An AAS can therefore be compiled by
+a source generator into a loadable NodeSet, and a Server that loads that NodeSet serves the AAS. This
+is a consequence of losslessness: a mapping with implementation-defined choices could not be
+compiled deterministically.
+
+### 5.4 Federation
+
+A shell may be described by one registry and hosted by another. It is reached through an
+`ExternalReference` or `ResourceUrl`, while identity remains the AAS identifier attributes and the
+identifier derived from them, never an endpoint (clause 6.5.6). A Client can therefore follow the
+serving location without changing the entity it has resolved.
+
+### 5.5 Authoring an AAS as a Thing Description
+
+A WoT Thing Description carrying the AAS vocabulary materializes the same AddressSpace (Annex F).
+An AAS authored as linked data and an AAS materialized from an AASX package are therefore the same
+nodes, not parallel representations that a Consumer must reconcile.
+
 ---
 
 ## 6 Asset Administration Shell information model overview
@@ -260,6 +295,11 @@ A Server therefore:
 
 - **shall** materialize a value into the DataType of clause 6.3.1, and
 - **shall** serialize it back as the XSD canonical lexical representation of that type.
+
+The canonical lexical representation is the one defined by XSD 1.1 Part 2: Datatypes. For
+`xs:decimal`, the `decimalCanonicalMap` omits the fractional part where the value is integral:
+`"1"` therefore serializes as `"1"`, not as the XSD 1.0 form `"1.0"`. The same XSD 1.1
+canonical mapping governs the exponent form serialized for `xs:float` and `xs:double`.
 
 A Property authored as `"1.500000"` with `ValueType` `xs:decimal` therefore serializes as `"1.5"`,
 and one authored `"+42"` with `xs:int` serializes as `"42"`. The documents are equivalent under
@@ -388,6 +428,20 @@ An optional field that is absent and one present but empty are distinct in the m
 A Server **shall not** materialize a node for an absent field, and **shall not** omit one for a
 present-but-empty field. A serializer distinguishes the two by the presence of the node, never by
 its value.
+
+The rule presupposes that the field has a node of its own, and five do not. `submodelElements`,
+`SubmodelElementCollection.value`, `SubmodelElementList.value`, `Entity.statements` and
+`AnnotatedRelationshipElement.annotations` materialize as components of the parent node rather than
+as a node holding a collection (Annex B), so an absent one and a present-but-empty one both leave
+the parent with no children of that kind and no marker distinguishes them. For these five fields
+only, the distinction is therefore **not** preserved: a serializer **shall** emit the field as
+absent where the parent has no corresponding children, and clause 6.4 compares them accordingly.
+
+Collapsing the distinction is deliberate rather than an oversight. Preserving it would require a
+marker node on every collection-bearing element, which would appear in every AddressSpace to record
+a difference the metamodel draws but nothing observable depends on, and clause 6.4 would still have
+to special-case it. Every other optional field keeps the distinction, because every other optional
+field has a node.
 
 #### 6.1.6 Instance materialization
 
@@ -943,13 +997,18 @@ Two environments are equivalent when, after canonical ordering of JSON object me
 
 - every field present in one is present in the other, and absent in one is absent in the other;
 - every value is the same element of the xsd value space of its declared `valueType`, compared per
-  XML Schema Part 2. `"1.500000"` and `"1.5"` are equivalent as `xs:decimal`; `"1"` and `"true"` are
-  equivalent as `xs:boolean`; `"1.5"` and `"2.5"` are not;
+  XSD 1.1 Part 2: Datatypes. `"1.500000"` and `"1.5"` are equivalent as `xs:decimal`; `"1"` and
+  `"true"` are equivalent as `xs:boolean`; `"1.5"` and `"2.5"` are not;
 - every array to which the metamodel gives an order is compared in order: the keys of a reference, a
   multi-language value, an operation's variables, and a `SubmodelElementList` whose `orderRelevant`
   is true;
 - a `SubmodelElementList` whose `orderRelevant` is false is compared as a bag: same members, same
-  multiplicities, order disregarded.
+  multiplicities, order disregarded;
+- the five container fields of clause 6.1.5 that materialize as parent components rather than as a
+  node of their own — `submodelElements`, `SubmodelElementCollection.value`,
+  `SubmodelElementList.value`, `Entity.statements` and
+  `AnnotatedRelationshipElement.annotations` — are compared with absent and present-but-empty
+  treated alike, since the mapping does not distinguish them.
 
 No further tolerance applies. A field that cannot be represented is a defect in this specification;
 Annex B is the list against which that is checked.
@@ -1031,8 +1090,10 @@ flowchart TD
   REG[[AASRegistryType]]:::objecttype
   SGT[[AASShellGroupType]]:::objecttype
   SFT[[AASSubmodelFileType]]:::objecttype
+  EFT[[AASEnvironmentFileType]]:::objecttype
   SG[&lt;ShellGroup&gt;]:::object
   SM[&lt;Submodel&gt;]:::object
+  ENV[&lt;Environment&gt;]:::object
   LOOK(LookupShellsByAssetLink):::method
   GET(GetSubmodel):::method
   AID[AasIdentifier]:::variable
@@ -1042,12 +1103,15 @@ flowchart TD
   BREG -->|HasSubtype| REG
   BGRP -->|HasSubtype| SGT
   BRES -->|HasSubtype| SFT
+  BRES -->|HasSubtype| EFT
   REG -->|Organizes| SG
+  REG -->|Organizes| ENV
   REG -->|HasComponent| LOOK
   REG -->|HasComponent| GET
   SG ==> SGT
   SGT -->|Organizes| SM
   SM ==> SFT
+  ENV ==> EFT
   SGT -->|HasProperty| AID
   SGT -->|HasProperty| AK
   SFT -->|HasProperty| SID
@@ -1173,11 +1237,13 @@ a current manifest only as a mutable Resource-level alias and **shall never** be
 The tag **shall** match `[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}` and **shall** be preserved byte-for-byte,
 including case and a leading underscore. Moving a tag to a previously unseen manifest **shall**
 create and retain a distinct immutable Version and **shall not** mutate or replace the old Version.
-An `AASPackageFileType` Version **shall not** instantiate `Subject` or `Attestations`. An
-attestation or other OCI referrer **shall** be represented as a separate immutable Resource and
-**shall not** become a Version of the package Resource it refers to. Adding, removing or discovering
-a referrer **shall not** change that package Resource's Version collection, default Version,
-document, attributes, `Epoch` or `ModifiedAt`.
+The xRegistry base `ResourceType` declares the `Attestations` attribute, and
+`AASAttestationDataType` is the AAS payload type for that attribute. An `AASPackageFileType` Version
+**shall not** instantiate `Subject` or `Attestations`: the prohibition is on the package Version,
+not on use of the DataType. An attestation or other OCI referrer **shall** be represented as a
+separate immutable Resource and **shall not** become a Version of the package Resource it refers to.
+Adding, removing or discovering a referrer **shall not** change that package Resource's Version
+collection, default Version, document, attributes, `Epoch` or `ModifiedAt`.
 
 #### 6.5.5 Discovery and resolution
 
@@ -1812,6 +1878,9 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | ns=2;i=1234 | [AASValueReferencePairDataType](#type-AASValueReferencePairDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 | ns=2;i=1235 | [AASValueListDataType](#type-AASValueListDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 | ns=2;i=1236 | [AASLevelTypeDataType](#type-AASLevelTypeDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
+
+`AASAttestationDataType` is carried by the `Attestations` attribute inherited from the xRegistry
+`ResourceType`. It therefore has no Variable declared by this namespace as its carrier.
 
 ### Object types
 
@@ -3052,8 +3121,8 @@ list — `Index`. Element-specific fields:
 | `BasicEventElement.state` | `AASBasicEventElementType.State`, Mandatory |
 | `BasicEventElement.messageTopic` | `AASBasicEventElementType.MessageTopic` |
 | `BasicEventElement.messageBroker` | `AASBasicEventElementType.MessageBroker` |
-| `BasicEventElement.lastUpdate` | `AASBasicEventElementType.LastUpdate` (`AASValueString`) |
-| `BasicEventElement.minInterval`, `.maxInterval` | `AASBasicEventElementType.MinInterval`, `MaxInterval` (`AASValueString`) |
+| `BasicEventElement.lastUpdate` | `AASBasicEventElementType.LastUpdate`, typed per clause 6.3.1 |
+| `BasicEventElement.minInterval`, `.maxInterval` | `AASBasicEventElementType.MinInterval`, `MaxInterval`, typed per clause 6.3.1 |
 | `Operation.inputVariables` | `AASOperationType.InputVariables`; each ordered `AASOperationVariableDataType.ValueNodeId` references one direct `<Variable>` child |
 | `Operation.outputVariables` | `AASOperationType.OutputVariables`, with the same child contract |
 | `Operation.inoutputVariables` | `AASOperationType.InoutputVariables`, with the same child contract |
@@ -3207,7 +3276,7 @@ combined.
 | NodeId, clause 6.1.3 | `uav:id` | an ExpandedNodeId naming its namespace by URI |
 | BrowseName, clause 6.1.3 | `uav:browseName` | the portable QualifiedName form |
 | TypeDefinition, clause 6.2, readably | a member of `@type` | the prefix-qualified BrowseName of the ObjectType, for example `i4aas:AASPropertyType` |
-| TypeDefinition, clause 6.2, definitively | a link with `rel` `ua:HasTypeDefinition` | the ObjectType's portable ExpandedNodeId, for example `nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1050` |
+| TypeDefinition, clause 6.2, definitively | a link with `rel` `ua:HasTypeDefinition` | the ObjectType's portable ExpandedNodeId, for example `nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1021` |
 | Protocol address | Thing-level `forms[].href` | an `opc.tcp` URL whose `id` query value decodes to `uav:id` |
 | Child-to-parent containment | `uav:componentOf` and a `uav:componentOf` link | the parent ExpandedNodeId and parent sibling TD IRI |
 | Parent-to-child containment | `uav:hasComponent` and a typed link | the child ExpandedNodeId and child sibling TD IRI |
