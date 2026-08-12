@@ -3863,6 +3863,106 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "SensorId"
+          },
+          {
+            "r": "t",
+            "text": " is the domain identifier for a sensor within this model; the Object's NodeId is its OPC UA address. Pipeline and result references resolve to that "
+          },
+          {
+            "r": "code",
+            "text": "VisionSensorType"
+          },
+          {
+            "r": "t",
+            "text": " Object and do not restate its nameplate as another identifier. "
+          },
+          {
+            "r": "code",
+            "text": "Manufacturer"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Model"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "SerialNumber"
+          },
+          {
+            "r": "t",
+            "text": " are optional portable nameplate projections, not a second asset identity. They remain on the common base so a simulated sensor and a physical sensor expose the same readable shape without making DI or OPC 40100 a RequiredModel."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "5.4 `VisionSensorType : BaseObjectType` (abstract)",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "For a simulated sensor, or for a physical sensor described only by this specification, the populated projection is authoritative. Where DI or OPC 40100 also exposes an authoritative device/nameplate Object for the same physical sensor, that standard Object decides and each populated projection field "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " equal its corresponding standard value. "
+          },
+          {
+            "r": "code",
+            "text": "DeviceUri"
+          },
+          {
+            "r": "t",
+            "text": " is not a nameplate field: it identifies the transport-level device endpoint and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be substituted for a DI "
+          },
+          {
+            "r": "code",
+            "text": "ProductInstanceUri"
+          },
+          {
+            "r": "t",
+            "text": " or another asset identifier."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "5.4 `VisionSensorType : BaseObjectType` (abstract)",
+          "b": 6
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-10",
         "title": "Image sensors",
@@ -25929,7 +26029,7 @@
             },
             {
               "r": "t",
-              "text": ", the corresponding "
+              "text": ", or a DI device/nameplate Object, for the same physical sensor as an "
             },
             {
               "r": "code",
@@ -25937,7 +26037,39 @@
             },
             {
               "r": "t",
-              "text": " "
+              "text": ", the standard asset/device Object is authoritative for "
+            },
+            {
+              "r": "code",
+              "text": "Manufacturer"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "Model"
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "code",
+              "text": "SerialNumber"
+            },
+            {
+              "r": "t",
+              "text": ". Each corresponding "
+            },
+            {
+              "r": "code",
+              "text": "VisionSensorType"
+            },
+            {
+              "r": "t",
+              "text": " field that is populated "
             },
             {
               "r": "t",
@@ -25946,7 +26078,7 @@
             },
             {
               "r": "t",
-              "text": " describe the same physical sensor. OPC 40100-2 "
+              "text": " equal the standard value. OPC 40100-2 "
             },
             {
               "r": "code",
@@ -25963,7 +26095,23 @@
             },
             {
               "r": "t",
-              "text": " identify different devices."
+              "text": " identify different devices. References within this model target the "
+            },
+            {
+              "r": "code",
+              "text": "VisionSensorType"
+            },
+            {
+              "r": "t",
+              "text": " Object's NodeId. "
+            },
+            {
+              "r": "code",
+              "text": "SensorId"
+            },
+            {
+              "r": "t",
+              "text": " is its Vision-domain identifier and need not equal the standard Object's NodeId or asset identifier."
             }
           ]
         ],
@@ -26156,7 +26304,7 @@
               },
               {
                 "r": "t",
-                "text": " (no members)"
+                "text": " (no members), and its DI/nameplate context"
               }
             ],
             [
@@ -26166,7 +26314,7 @@
               },
               {
                 "r": "t",
-                "text": " supplies the imaging parameters it lacks"
+                "text": " supplies the imaging parameters it lacks; populated nameplate projections match the authoritative standard Object"
               }
             ]
           ],
