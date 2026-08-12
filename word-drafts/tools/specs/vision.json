@@ -398,6 +398,11 @@
       "title": "Segmentation results"
     },
     {
+      "from": "7.5 Events (normative)",
+      "number": "6.19.5",
+      "title": "Events"
+    },
+    {
       "from": "8 AI integration (normative)",
       "number": "6.20",
       "title": "AI integration"
@@ -958,6 +963,7 @@
     "7.2": "6.19.2",
     "7.3": "6.19.3",
     "7.4": "6.19.4",
+    "7.5": "6.19.5",
     "8": "6.20",
     "8.1": "6.20.1",
     "8.1.1": "6.20.1.1",

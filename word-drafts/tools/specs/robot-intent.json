@@ -408,6 +408,11 @@
       "title": "Brokering a real-time channel"
     },
     {
+      "from": "6.10 Events (normative)",
+      "number": "6.14.10",
+      "title": "Events"
+    },
+    {
       "from": "7 Missions (normative)",
       "number": "6.15",
       "title": "Missions"
@@ -706,6 +711,7 @@
     "6.7": "6.14.7",
     "6.8": "6.14.8",
     "6.9": "6.14.9",
+    "6.10": "6.14.10",
     "7": "6.15",
     "7.1": "6.15.1",
     "7.2": "6.15.2",

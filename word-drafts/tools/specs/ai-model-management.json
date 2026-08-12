@@ -368,6 +368,11 @@
       "title": "Partial implementation"
     },
     {
+      "from": "7.4 Events (normative)",
+      "number": "6.11.4",
+      "title": "Events"
+    },
+    {
       "from": "8 Inference (normative)",
       "number": "6.12",
       "title": "Inference"
@@ -821,6 +826,7 @@
     "7.1": "6.11.1",
     "7.2": "6.11.2",
     "7.3": "6.11.3",
+    "7.4": "6.11.4",
     "8": "6.12",
     "8.1": "6.12.1",
     "8.2": "6.12.2",
