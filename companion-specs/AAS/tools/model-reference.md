@@ -86,6 +86,9 @@ This annex is the normative node reference. It is generated from `tools/build_mo
 | ns=2;i=1235 | [AASValueListDataType](#type-AASValueListDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 | ns=2;i=1236 | [AASLevelTypeDataType](#type-AASLevelTypeDataType) | DataType | [Structure](https://reference.opcfoundation.org/specs/OPC-10000-5/8.24) |
 
+`AASAttestationDataType` is carried by the `Attestations` attribute inherited from the xRegistry
+`ResourceType`. It therefore has no Variable declared by this namespace as its carrier.
+
 ### Object types
 
 <a id="type-AASReferableType"></a>

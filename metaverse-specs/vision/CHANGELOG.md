@@ -6,9 +6,15 @@ NodeId assignment is **append-only**: a new member takes the next free id, so ev
 
 ## 0.2.0 — 2026-08-11
 
-Every change in this release comes from an in-progress implementation of Release 0.1.0 against the OPC UA .NET Standard stack, working through the bin-picking scenario of the Robotics-Vision Addendum. They are reported in issues #66 to #71.
+The implementation-driven changes in this release come from an in-progress implementation of Release 0.1.0 against the OPC UA .NET Standard stack, working through the bin-picking scenario of the Robotics-Vision Addendum. They are reported in issues #66 to #71. The identity-authority rule below comes from the repository-wide OPC 11030 model audit.
 
 One NodeId changed name and none moved: `MediaEndpointType.ProfileName` became `DefaultProfileName` and kept `i=6019`. Two members were appended at `i=6199` and `i=6200`, and two enumeration DataTypes at `i=3016` and `i=3017`.
+
+### The nameplate projection has one authority
+
+`VisionSensorType` keeps optional `Manufacturer`, `Model` and `SerialNumber` fields so physical and simulated sensors have one portable readable shape without making DI or OPC 40100 a RequiredModel. The specification now distinguishes the sensor Object's NodeId, which references target, from its Vision-domain `SensorId`, and states that the three nameplate fields are projections rather than a second asset identity.
+
+For a simulated sensor or a Vision-only physical sensor, populated projection values are authoritative. Where DI or OPC 40100 also describes the same physical sensor, the standard device/nameplate Object decides and the populated Vision fields must match it. `DeviceUri` remains a transport endpoint identifier and is not interchangeable with an asset identifier such as `ProductInstanceUri`.
 
 ### Every Method with arguments was uncallable
 

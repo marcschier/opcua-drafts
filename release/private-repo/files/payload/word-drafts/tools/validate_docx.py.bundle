@@ -15,6 +15,7 @@ import os
 import re
 import sys
 import zipfile
+import xml.etree.ElementTree as ET
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -183,11 +184,31 @@ def check_provenance(doc, cfg, docx_path, res):
         res.error('provenance', 'no paragraph is attributed to markdown, so nothing '
                                 'could ever be written back')
 
-    props = doc.parts.get('docProps/custom.xml', b'').decode('utf-8', 'replace')
+    props_raw = doc.parts.get('docProps/custom.xml', b'')
+    props = props_raw.decode('utf-8', 'replace')
     for name in ('SpecId', 'SourceCommit', 'SourceDigest', 'PipelineVersion'):
         if 'name="%s"' % name not in props:
             res.error('provenance', 'the package does not record %s, so a reviewed copy '
                                     'could not be matched to its source' % name)
+    package_values = {}
+    if props_raw:
+        try:
+            for prop in ET.fromstring(props_raw):
+                package_values[prop.get('name')] = ''.join(prop.itertext())
+        except ET.ParseError:
+            res.error('provenance', 'docProps/custom.xml is not well-formed XML')
+    expected_values = {
+        'SpecId': prov.get('specId'),
+        'SourceCommit': prov.get('sourceCommit'),
+        'SourceDigest': prov.get('sourceDigest'),
+        'PipelineVersion': prov.get('pipelineVersion'),
+    }
+    for name, expected in expected_values.items():
+        actual = package_values.get(name)
+        if actual is not None and actual != expected:
+            res.error('provenance',
+                      'document %s is %r but the current sidecar says %r'
+                      % (name, actual, expected))
     if prov.get('sourceDigest') != _digest_of(prov.get('sources') or []):
         res.error('provenance',
                   'the sources have changed since the document was built; rebuild before '
@@ -451,6 +472,51 @@ def check_node_tables(doc, model, res, doc_ns_index):
             res.error('node-tables', '%s has no definition table in the document' % name)
 
 
+def check_data_type_item_tables(
+        doc, model, res, doc_ns_index, structure_fields=False):
+    """Compare every generated Enumeration/Structure Items table with the NodeSet."""
+    kids = doc.blocks()
+    seen = set()
+    for i, el in enumerate(kids):
+        if el.tag != q('w:tbl'):
+            continue
+        caption = None
+        for j in range(i - 1, max(-1, i - 4), -1):
+            if kids[j].tag == q('w:p') and para_style(kids[j]) == 'TABLE-title':
+                caption = iter_text(kids[j])
+                break
+        if not caption or not caption.rstrip().endswith(' Items'):
+            continue
+        name = caption.split('\u2013')[-1].strip()[:-len(' Items')].strip()
+        node = model.by_name.get(name)
+        if node is None or node.tag != 'UADataType' or not node.definition:
+            continue
+        seen.add(name)
+        expected = nodeset_tables.enum_table(
+            model, name, doc_ns_index=doc_ns_index,
+            structure_fields=structure_fields)
+        rows = el.findall(q('w:tr'))
+        cells = [[' '.join(iter_text(tc).split()) for tc in r.findall(q('w:tc'))]
+                 for r in rows]
+        headers = (contract.STRUCTURE_HEADERS if expected['kind'] == 'structure'
+                   else contract.ENUM_HEADERS)
+        wanted = [headers]
+        for field in expected['fields']:
+            if expected['kind'] == 'structure':
+                wanted.append([field['name'], field['type'], field['cardinality'],
+                               field['description']])
+            else:
+                wanted.append([field['name'], field['value'], field['description']])
+        if cells != wanted:
+            res.error('data-type-items',
+                      '%s Items rows differ from the ordered NodeSet definition; '
+                      'document=%r NodeSet=%r' % (name, cells, wanted))
+    for name, node in model.by_name.items():
+        if node.tag == 'UADataType' and node.definition and name not in seen:
+            res.error('data-type-items',
+                      '%s has no Items table in the document' % name)
+
+
 def _compare_type_table(name, expected, tbl, res):
     rows = tbl.findall(q('w:tr'))
     cells = [[' '.join(iter_text(tc).split()) for tc in r.findall(q('w:tc'))] for r in rows]
@@ -711,6 +777,9 @@ def main(argv=None):
                       'supplies a NodeSet')
     else:
         check_node_tables(doc, model, res, doc_ns_index)
+        check_data_type_item_tables(
+            doc, model, res, doc_ns_index,
+            structure_fields=cfg.get('structureFieldTables', False))
         check_browse_names_resolved(doc, model, res, doc_ns_index)
         check_conformance_units(doc, model, res)
     check_template_slices(doc, TEMPLATE, res, deviation_ids)

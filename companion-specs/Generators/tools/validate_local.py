@@ -14,8 +14,11 @@ Exit code is non-zero and the errors are listed if a figure disagrees with the m
 """
 from __future__ import annotations
 
+import json
 import os
+import re
 import sys
+import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # tools -> Generators -> companion-specs -> repository root
@@ -23,16 +26,61 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 GEN = os.path.dirname(HERE)
 SPEC = os.path.join(GEN, "OPC-UA-Companion-Specification-for-Generators.md")
 XML = os.path.join(GEN, "Opc.Ua.Generators.NodeSet2.xml")
+ANNEX = os.path.join(HERE, "model-reference.md")
+WORD_CONFIG = os.path.join(ROOT, "word-drafts", "tools", "specs", "generators.json")
 TOOLS = os.path.join(ROOT, "word-drafts", "tools")
+NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
+ANNEX_MARKER = '<a id="annex-a"></a>'
 
 errors: list[str] = []
 warnings: list[str] = []
 
-for path in (SPEC, XML):
+for path in (SPEC, XML, ANNEX, WORD_CONFIG):
     if not os.path.exists(path):
         errors.append(f"missing {os.path.relpath(path, ROOT)}")
 
 if not errors:
+    with open(SPEC, encoding="utf-8") as f:
+        specification = f.read()
+    with open(ANNEX, encoding="utf-8") as f:
+        generated_reference = f.read()
+    with open(WORD_CONFIG, encoding="utf-8") as f:
+        word_config = json.load(f)
+
+    model = ET.parse(XML).getroot().find(f"{NS}Models/{NS}Model")
+    if model is None:
+        errors.append("NodeSet has no Model declaration")
+    else:
+        release_match = re.search(r"\*\*Release ([^ ]+) — Draft\*\*", specification)
+        date_match = re.search(r"\*\*Publication date:\*\* (\d{4}-\d{2}-\d{2})", specification)
+        if release_match is None:
+            errors.append("specification has no Release banner")
+        elif release_match.group(1) != model.get("Version"):
+            errors.append(
+                f"specification Release {release_match.group(1)} != NodeSet Version "
+                f"{model.get('Version')}")
+        if date_match is None:
+            errors.append("specification has no Publication date")
+        elif date_match.group(1) != (model.get("PublicationDate") or "")[:10]:
+            errors.append(
+                f"specification Publication date {date_match.group(1)} != NodeSet "
+                f"PublicationDate {model.get('PublicationDate')}")
+        identity = word_config.get("identity", {})
+        if identity.get("version") != model.get("Version"):
+            errors.append(
+                f"Word config version {identity.get('version')} != NodeSet Version "
+                f"{model.get('Version')}")
+        if identity.get("publicationDate") != (model.get("PublicationDate") or "")[:10]:
+            errors.append(
+                f"Word config publicationDate {identity.get('publicationDate')} != NodeSet "
+                f"PublicationDate {model.get('PublicationDate')}")
+
+    if ANNEX_MARKER not in specification or ANNEX_MARKER not in generated_reference:
+        errors.append("Annex A marker missing from specification or generated reference")
+    elif (specification[specification.index(ANNEX_MARKER):] !=
+          generated_reference[generated_reference.index(ANNEX_MARKER):]):
+        errors.append("specification Annex A differs from generated model-reference.md")
+
     if os.path.isdir(TOOLS):
         if TOOLS not in sys.path:
             sys.path.insert(0, TOOLS)
