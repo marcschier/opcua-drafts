@@ -40,8 +40,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/Vision/"
-VERSION = "0.3.0"
-PUBDATE = "2026-08-12T00:00:00Z"
+VERSION = "0.4.0"
+PUBDATE = "2026-08-13T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -1439,6 +1439,27 @@ data_var(IC, "InspectionCompletedEventType", "FailedCharacteristics",
          "duplicate the result for the common case where none failed; repeating the "
          "failing ones lets a consumer act on why it failed without a read.",
          MR_Optional, valuerank="1")
+
+# ---------------------------------------------------------------------------
+# The time base events are correlated on
+# ---------------------------------------------------------------------------
+# Annex I.7 tells a consumer to correlate an event raised here with one raised by a
+# commanding model using the Time of each. Those are two Servers, and nothing said
+# their clocks agreed - so the rule rested on an assumption a consumer could neither
+# see nor check. This makes it checkable without requiring anything most cells cannot
+# provide: a Server states whether it is synchronised and to what, and a consumer that
+# needs tighter correlation than free-running clocks allow can tell before relying on
+# it rather than after a misattributed frame.
+prop_var(VRT, "VisionRootType", "ClockSynchronised", Boolean,
+         "True where this Server's clock is disciplined to an external time reference "
+         "shared with the systems its events are correlated against. False, or absent, "
+         "means the clock is free-running and a consumer shall not assume sub-second "
+         "agreement with another Server. See clause 7.5.")
+prop_var(VRT, "VisionRootType", "TimeSyncSource", String,
+         "What the clock is disciplined to when ClockSynchronised is true - for example "
+         "IEEE1588, NTP or GPS - as free text, because the set of answers is open and a "
+         "consumer uses it to judge the order of accuracy rather than to parse. Empty "
+         "or absent where the Server does not state one.")
 
 
 # ===========================================================================

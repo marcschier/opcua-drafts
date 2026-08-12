@@ -368,7 +368,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Neither list is a statement that the omitted capability is unimportant — only that Release 0.3.0 does not define it, and that a Server is conformant without it."
+            "text": "Neither list is a statement that the omitted capability is unimportant — only that Release 0.4.0 does not define it, and that a Server is conformant without it."
           }
         ],
         "src": {
@@ -389,7 +389,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Release 0.3.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by "
+            "text": "Release 0.4.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by "
           },
           {
             "r": "t",
@@ -15541,6 +15541,165 @@
         "runs": [
           {
             "r": "t",
+            "text": "The time base is stated, not assumed.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Every timestamp in this model is "
+          },
+          {
+            "r": "code",
+            "text": "UtcTime"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "t",
+            "text": "§5.12"
+          },
+          {
+            "r": "t",
+            "text": "), which fixes the "
+          },
+          {
+            "r": "t",
+            "text": "representation",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " and says nothing about whether two Servers agree. Annex I.7 has a consumer correlating an event raised here with one raised by a commanding model, so the agreement matters and is made discoverable rather than assumed: "
+          },
+          {
+            "r": "code",
+            "text": "VisionRootType.ClockSynchronised"
+          },
+          {
+            "r": "t",
+            "text": " is "
+          },
+          {
+            "r": "code",
+            "text": "true"
+          },
+          {
+            "r": "t",
+            "text": " only where this Server's clock is disciplined to an external reference shared with the systems its events are correlated against, and "
+          },
+          {
+            "r": "code",
+            "text": "TimeSyncSource"
+          },
+          {
+            "r": "t",
+            "text": " names what that reference is."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 8
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " report "
+          },
+          {
+            "r": "code",
+            "text": "ClockSynchronised"
+          },
+          {
+            "r": "t",
+            "text": " true on the strength of having set its clock once; the member asserts an ongoing discipline. Where it is "
+          },
+          {
+            "r": "code",
+            "text": "false"
+          },
+          {
+            "r": "t",
+            "text": " or absent a consumer "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " treat cross-Server ordering as unreliable below the accuracy its own observation supports, and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " attribute a detection to a motion on timing alone."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 9
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Neither member is Mandatory and no synchronisation is required. Most cells do not have a disciplined time base, and a "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " that most conformant Servers would fail is not a requirement — it is a statement that the specification is not implementable. What this model requires instead is that a Server which cannot support the correlation Annex I.7 describes says so, so a consumer learns it by reading rather than by misattributing a frame. Where sub-frame correlation is genuinely needed, IEEE 1588 is the usual answer and "
+          },
+          {
+            "r": "code",
+            "text": "TimeSyncSource"
+          },
+          {
+            "r": "t",
+            "text": " is where a Server says it uses it."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 10
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
             "text": "Where events are raised.",
             "b": true
           },
@@ -15651,7 +15810,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "7.5 Events (normative)",
-          "b": 8
+          "b": 11
         }
       },
       {
@@ -15737,7 +15896,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "7.5 Events (normative)",
-          "b": 9
+          "b": 12
         }
       },
       {
@@ -15774,7 +15933,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "7.5 Events (normative)",
-          "b": 10
+          "b": 13
         }
       },
       {
@@ -15811,7 +15970,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "7.5 Events (normative)",
-          "b": 11
+          "b": 14
         }
       },
       {
@@ -25320,7 +25479,7 @@
             [
               {
                 "r": "t",
-                "text": "0.3.0"
+                "text": "0.4.0"
               }
             ]
           ],
@@ -25340,7 +25499,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-08-12"
+                "text": "2026-08-13"
               }
             ]
           ],
@@ -35913,6 +36072,130 @@
         "runs": [
           {
             "r": "t",
+            "text": "Correlation on time is only as good as the clocks.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Both models publish "
+          },
+          {
+            "r": "code",
+            "text": "ClockSynchronised"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "TimeSyncSource"
+          },
+          {
+            "r": "t",
+            "text": " on their roots ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-5",
+            "kind": "clause",
+            "prefix": "6.19.5"
+          },
+          {
+            "r": "t",
+            "text": "). A consumer "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " read both before correlating on timing, and where either Server reports "
+          },
+          {
+            "r": "code",
+            "text": "false"
+          },
+          {
+            "r": "t",
+            "text": " or omits the member "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " attribute a detection to a motion on timing alone — it uses "
+          },
+          {
+            "r": "code",
+            "text": "DecidedBy"
+          },
+          {
+            "r": "t",
+            "text": " instead, which states the link rather than inferring it."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
+          "b": 16
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The link can be stated rather than inferred.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Where the commanding model populates "
+          },
+          {
+            "r": "code",
+            "text": "IntentOperationType.DecidedBy"
+          },
+          {
+            "r": "t",
+            "text": " with the "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType"
+          },
+          {
+            "r": "t",
+            "text": " instance a pose came from, the correlation stops being a timing argument: a consumer follows the reference from the completion to the result, and from the result through "
+          },
+          {
+            "r": "code",
+            "text": "ProducedBy"
+          },
+          {
+            "r": "t",
+            "text": " to the pipeline, deployment, model and digest. That is the whole provenance chain in one walk, and it is what the commanding model's Annex E.8 asks a Server implementing both to do."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
+          "b": 17
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
             "text": "The consequence is that the intent vocabulary "
           },
           {
@@ -35944,7 +36227,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
-          "b": 16
+          "b": 18
         }
       }
     ]

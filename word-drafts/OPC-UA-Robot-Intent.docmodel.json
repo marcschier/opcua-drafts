@@ -389,7 +389,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Release 0.2.0 covers the intent vocabulary — joint, linear and circular moves, trajectories, Cartesian paths, force-controlled moves, grasping, picking and placing, tool change, output, program call, waiting, and six application processes — together with the execution lifecycle, queueing and blending, cancellation, missions with a committed base, a revisable horizon and a step graph, command authority, safety awareness, the robot's kinematic description, real-time channel brokerage, and capability declaration."
+            "text": "Release 0.3.0 covers the intent vocabulary — joint, linear and circular moves, trajectories, Cartesian paths, force-controlled moves, grasping, picking and placing, tool change, output, program call, waiting, and six application processes — together with the execution lifecycle, queueing and blending, cancellation, missions with a committed base, a revisable horizon and a step graph, command authority, safety awareness, the robot's kinematic description, real-time channel brokerage, and capability declaration."
           }
         ],
         "src": {
@@ -10090,6 +10090,177 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "What decided this intent.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "IntentOperationType.DecidedBy"
+          },
+          {
+            "r": "t",
+            "text": " is an Optional "
+          },
+          {
+            "r": "code",
+            "text": "NodeId"
+          },
+          {
+            "r": "t",
+            "text": " naming the artefact that produced the intent's parameters — typically a result published by a perception model, or the model itself — and is null where a human taught the pose or a program held it."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.7 Results",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "It exists because a pick pose is increasingly computed rather than taught, and an investigation into why a cell did something starts at the motion. Without this member the trail ends exactly there: a Server can say "
+          },
+          {
+            "r": "t",
+            "text": "what",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " it was asked to do and "
+          },
+          {
+            "r": "t",
+            "text": "what happened",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", and nothing about "
+          },
+          {
+            "r": "t",
+            "text": "what decided it",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ". A specification that publishes a model's digest, the deployment that served it and the result it produced, and then loses the thread at the point the robot actually moved, has documented everything except the step that mattered."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.7 Results",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " populate it with an identifier it cannot resolve at the moment of submission, and a client "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " assume the target is still resolvable later — the deciding artefact may be retained under a different lifetime than the operation, and "
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-3",
+            "kind": "clause",
+            "prefix": "6.19.3"
+          },
+          {
+            "r": "t",
+            "text": " governs what a NodeId-valued member may point at. This model defines no type for the target and takes "
+          },
+          {
+            "r": "t",
+            "text": "no dependency",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " on any model that might: the base OPC UA namespace remains its only "
+          },
+          {
+            "r": "code",
+            "text": "RequiredModel"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "t",
+            "text": "§2"
+          },
+          {
+            "r": "t",
+            "text": "), which is why this is a NodeId Property rather than a reference. Where the "
+          },
+          {
+            "r": "t",
+            "text": "OPC UA — Vision",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " model is also implemented, the natural value is the "
+          },
+          {
+            "r": "code",
+            "text": "ResultId"
+          },
+          {
+            "r": "t",
+            "text": "-bearing "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType"
+          },
+          {
+            "r": "t",
+            "text": " instance the pose came from, and Annex E.7 says what a consumer can then reconstruct."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.7 Results",
+          "b": 6
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-14-8",
         "title": "Trajectory execution",
@@ -11036,6 +11207,43 @@
             ]
           ],
           [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "DecidedBy"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "NodeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "What produced the intent's parameters ("
+              },
+              {
+                "r": "xref",
+                "target": "c6-14-7",
+                "kind": "clause",
+                "prefix": "6.14.7"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ]
+          ],
+          [
             [
               {
                 "r": "code",
@@ -11535,6 +11743,103 @@
         "runs": [
           {
             "r": "t",
+            "text": "The time base is stated, not assumed.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Annex E.7 has a consumer correlating a completion raised here with a perception event raised by another Server, so whether the two clocks agree matters. "
+          },
+          {
+            "r": "code",
+            "text": "RobotIntentRootType.ClockSynchronised"
+          },
+          {
+            "r": "t",
+            "text": " is "
+          },
+          {
+            "r": "code",
+            "text": "true"
+          },
+          {
+            "r": "t",
+            "text": " only where this Server's clock is disciplined to an external reference shared with those systems, and "
+          },
+          {
+            "r": "code",
+            "text": "TimeSyncSource"
+          },
+          {
+            "r": "t",
+            "text": " names it. A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " report it true on the strength of having set its clock once — the member asserts an ongoing discipline — and where it is "
+          },
+          {
+            "r": "code",
+            "text": "false"
+          },
+          {
+            "r": "t",
+            "text": " or absent a consumer "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " attribute a completion to an observation on timing alone."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 8
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Neither member is Mandatory and no synchronisation is required: most cells do not have a disciplined time base, and "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "t",
+            "text": "4.3"
+          },
+          {
+            "r": "t",
+            "text": " already places anything needing tighter timing than this interface offers on a brokered channel. What is required is that a Server unable to support the correlation says so."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 9
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
             "text": "These are events, not conditions.",
             "b": true
           },
@@ -11579,7 +11884,7 @@
         "src": {
           "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
           "s": "6.10 Events (normative)",
-          "b": 8
+          "b": 10
         }
       },
       {
@@ -11617,7 +11922,7 @@
         "src": {
           "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
           "s": "6.10 Events (normative)",
-          "b": 9
+          "b": 11
         }
       },
       {
@@ -15045,6 +15350,35 @@
                 "text": "a joint in an OPC 40450 / OPC 40451 model under the controller where one is implemented; otherwise the intent's own parameters stand alone and the member is null"
               }
             ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "IntentOperationType.DecidedBy"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "any Node the Server can resolve at submission, or null. "
+              },
+              {
+                "r": "t",
+                "text": "The exception to the rule above",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": ": it is written by the Server rather than supplied by a client, so it is not untrusted input, and it deliberately names an artefact this specification does not define — see "
+              },
+              {
+                "r": "xref",
+                "target": "c6-14-7",
+                "kind": "clause",
+                "prefix": "6.14.7"
+              }
+            ]
           ]
         ],
         "widths": null,
@@ -15954,7 +16288,8 @@
       {
         "t": "enumtable",
         "id": "c8-1-items",
-        "browseName": "ExecutionStateEnum"
+        "browseName": "ExecutionStateEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15982,7 +16317,8 @@
       {
         "t": "enumtable",
         "id": "c8-2-items",
-        "browseName": "BufferModeEnum"
+        "browseName": "BufferModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16010,7 +16346,8 @@
       {
         "t": "enumtable",
         "id": "c8-3-items",
-        "browseName": "BlockingModeEnum"
+        "browseName": "BlockingModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16038,7 +16375,8 @@
       {
         "t": "enumtable",
         "id": "c8-4-items",
-        "browseName": "TerminationModeEnum"
+        "browseName": "TerminationModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16066,7 +16404,8 @@
       {
         "t": "enumtable",
         "id": "c8-5-items",
-        "browseName": "ReleaseModeEnum"
+        "browseName": "ReleaseModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16094,7 +16433,8 @@
       {
         "t": "enumtable",
         "id": "c8-6-items",
-        "browseName": "ApproachModeEnum"
+        "browseName": "ApproachModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16122,7 +16462,8 @@
       {
         "t": "enumtable",
         "id": "c8-7-items",
-        "browseName": "FrameRoleEnum"
+        "browseName": "FrameRoleEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16150,7 +16491,8 @@
       {
         "t": "enumtable",
         "id": "c8-8-items",
-        "browseName": "OperationalModeEnum"
+        "browseName": "OperationalModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16178,7 +16520,8 @@
       {
         "t": "enumtable",
         "id": "c8-9-items",
-        "browseName": "IntentFailureEnum"
+        "browseName": "IntentFailureEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16206,7 +16549,8 @@
       {
         "t": "enumtable",
         "id": "c8-10-items",
-        "browseName": "StopModeEnum"
+        "browseName": "StopModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16234,7 +16578,8 @@
       {
         "t": "enumtable",
         "id": "c8-11-items",
-        "browseName": "AxisKindEnum"
+        "browseName": "AxisKindEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16262,7 +16607,8 @@
       {
         "t": "enumtable",
         "id": "c8-12-items",
-        "browseName": "MissionUpdateResultEnum"
+        "browseName": "MissionUpdateResultEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16290,7 +16636,8 @@
       {
         "t": "enumtable",
         "id": "c8-13-items",
-        "browseName": "Pose3DDataType"
+        "browseName": "Pose3DDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16318,7 +16665,8 @@
       {
         "t": "enumtable",
         "id": "c8-14-items",
-        "browseName": "MotionConstraintsDataType"
+        "browseName": "MotionConstraintsDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16346,7 +16694,8 @@
       {
         "t": "enumtable",
         "id": "c8-15-items",
-        "browseName": "BlendDataType"
+        "browseName": "BlendDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16374,7 +16723,8 @@
       {
         "t": "enumtable",
         "id": "c8-16-items",
-        "browseName": "IntentDataType"
+        "browseName": "IntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16402,7 +16752,8 @@
       {
         "t": "enumtable",
         "id": "c8-17-items",
-        "browseName": "MotionIntentDataType"
+        "browseName": "MotionIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16430,7 +16781,8 @@
       {
         "t": "enumtable",
         "id": "c8-18-items",
-        "browseName": "JointMoveIntentDataType"
+        "browseName": "JointMoveIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16458,7 +16810,8 @@
       {
         "t": "enumtable",
         "id": "c8-19-items",
-        "browseName": "LinearMoveIntentDataType"
+        "browseName": "LinearMoveIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16486,7 +16839,8 @@
       {
         "t": "enumtable",
         "id": "c8-20-items",
-        "browseName": "CircularMoveIntentDataType"
+        "browseName": "CircularMoveIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16514,7 +16868,8 @@
       {
         "t": "enumtable",
         "id": "c8-21-items",
-        "browseName": "GraspIntentDataType"
+        "browseName": "GraspIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16542,7 +16897,8 @@
       {
         "t": "enumtable",
         "id": "c8-22-items",
-        "browseName": "ReleaseIntentDataType"
+        "browseName": "ReleaseIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16570,7 +16926,8 @@
       {
         "t": "enumtable",
         "id": "c8-23-items",
-        "browseName": "PickIntentDataType"
+        "browseName": "PickIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16598,7 +16955,8 @@
       {
         "t": "enumtable",
         "id": "c8-24-items",
-        "browseName": "PlaceIntentDataType"
+        "browseName": "PlaceIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16626,7 +16984,8 @@
       {
         "t": "enumtable",
         "id": "c8-25-items",
-        "browseName": "ToolChangeIntentDataType"
+        "browseName": "ToolChangeIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16654,7 +17013,8 @@
       {
         "t": "enumtable",
         "id": "c8-26-items",
-        "browseName": "SetOutputIntentDataType"
+        "browseName": "SetOutputIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16682,7 +17042,8 @@
       {
         "t": "enumtable",
         "id": "c8-27-items",
-        "browseName": "CallProgramIntentDataType"
+        "browseName": "CallProgramIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16710,7 +17071,8 @@
       {
         "t": "enumtable",
         "id": "c8-28-items",
-        "browseName": "WaitIntentDataType"
+        "browseName": "WaitIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16738,7 +17100,8 @@
       {
         "t": "enumtable",
         "id": "c8-29-items",
-        "browseName": "IntentResultDataType"
+        "browseName": "IntentResultDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16766,7 +17129,8 @@
       {
         "t": "enumtable",
         "id": "c8-30-items",
-        "browseName": "MissionStepDataType"
+        "browseName": "MissionStepDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16794,7 +17158,8 @@
       {
         "t": "enumtable",
         "id": "c8-31-items",
-        "browseName": "MissionDataType"
+        "browseName": "MissionDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16822,7 +17187,8 @@
       {
         "t": "enumtable",
         "id": "c8-32-items",
-        "browseName": "IntentCapabilityDataType"
+        "browseName": "IntentCapabilityDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16850,7 +17216,8 @@
       {
         "t": "enumtable",
         "id": "c8-33-items",
-        "browseName": "SafeMotionFunctionEnum"
+        "browseName": "SafeMotionFunctionEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16878,7 +17245,8 @@
       {
         "t": "enumtable",
         "id": "c8-34-items",
-        "browseName": "RealTimeTransportEnum"
+        "browseName": "RealTimeTransportEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16906,7 +17274,8 @@
       {
         "t": "enumtable",
         "id": "c8-35-items",
-        "browseName": "ChannelInitiatorEnum"
+        "browseName": "ChannelInitiatorEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16934,7 +17303,8 @@
       {
         "t": "enumtable",
         "id": "c8-36-items",
-        "browseName": "ErrorPolicyEnum"
+        "browseName": "ErrorPolicyEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16962,7 +17332,8 @@
       {
         "t": "enumtable",
         "id": "c8-37-items",
-        "browseName": "DivergenceKindEnum"
+        "browseName": "DivergenceKindEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16990,7 +17361,8 @@
       {
         "t": "enumtable",
         "id": "c8-38-items",
-        "browseName": "WeaveShapeEnum"
+        "browseName": "WeaveShapeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17018,7 +17390,8 @@
       {
         "t": "enumtable",
         "id": "c8-39-items",
-        "browseName": "TrajectoryPointDataType"
+        "browseName": "TrajectoryPointDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17046,7 +17419,8 @@
       {
         "t": "enumtable",
         "id": "c8-40-items",
-        "browseName": "MotionToleranceDataType"
+        "browseName": "MotionToleranceDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17074,7 +17448,8 @@
       {
         "t": "enumtable",
         "id": "c8-41-items",
-        "browseName": "TrajectoryIntentDataType"
+        "browseName": "TrajectoryIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17102,7 +17477,8 @@
       {
         "t": "enumtable",
         "id": "c8-42-items",
-        "browseName": "PathWaypointDataType"
+        "browseName": "PathWaypointDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17130,7 +17506,8 @@
       {
         "t": "enumtable",
         "id": "c8-43-items",
-        "browseName": "CartesianPathIntentDataType"
+        "browseName": "CartesianPathIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17158,7 +17535,8 @@
       {
         "t": "enumtable",
         "id": "c8-44-items",
-        "browseName": "ForceIntentDataType"
+        "browseName": "ForceIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17186,7 +17564,8 @@
       {
         "t": "enumtable",
         "id": "c8-45-items",
-        "browseName": "ProcessIntentDataType"
+        "browseName": "ProcessIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17214,7 +17593,8 @@
       {
         "t": "enumtable",
         "id": "c8-46-items",
-        "browseName": "ArcWeldIntentDataType"
+        "browseName": "ArcWeldIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17242,7 +17622,8 @@
       {
         "t": "enumtable",
         "id": "c8-47-items",
-        "browseName": "SpotWeldIntentDataType"
+        "browseName": "SpotWeldIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17270,7 +17651,8 @@
       {
         "t": "enumtable",
         "id": "c8-48-items",
-        "browseName": "DispenseIntentDataType"
+        "browseName": "DispenseIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17298,7 +17680,8 @@
       {
         "t": "enumtable",
         "id": "c8-49-items",
-        "browseName": "FastenIntentDataType"
+        "browseName": "FastenIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17326,7 +17709,8 @@
       {
         "t": "enumtable",
         "id": "c8-50-items",
-        "browseName": "PalletiseIntentDataType"
+        "browseName": "PalletiseIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17354,7 +17738,8 @@
       {
         "t": "enumtable",
         "id": "c8-51-items",
-        "browseName": "SurfaceFinishIntentDataType"
+        "browseName": "SurfaceFinishIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17382,7 +17767,8 @@
       {
         "t": "enumtable",
         "id": "c8-52-items",
-        "browseName": "MissionTransitionDataType"
+        "browseName": "MissionTransitionDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17410,7 +17796,8 @@
       {
         "t": "enumtable",
         "id": "c8-53-items",
-        "browseName": "KinematicJointDataType"
+        "browseName": "KinematicJointDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -20005,7 +20392,7 @@
             [
               {
                 "r": "t",
-                "text": "0.2.0"
+                "text": "0.3.0"
               }
             ]
           ],
@@ -20025,7 +20412,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-08-12"
+                "text": "2026-08-13"
               }
             ]
           ],
@@ -22155,6 +22542,109 @@
           "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
           "s": "Annex E — Vision interop profile (normative for RI-Interop-Vision)",
           "b": 9
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "E.8 The chain reaches the decision.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Where both models are implemented, "
+          },
+          {
+            "r": "code",
+            "text": "IntentOperationType.DecidedBy"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-14-7",
+            "kind": "clause",
+            "prefix": "6.14.7"
+          },
+          {
+            "r": "t",
+            "text": ") "
+          },
+          {
+            "r": "t",
+            "text": "should",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " name the "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType"
+          },
+          {
+            "r": "t",
+            "text": " instance the intent's parameters came from. A consumer holding an "
+          },
+          {
+            "r": "code",
+            "text": "IntentCompletedEventType"
+          },
+          {
+            "r": "t",
+            "text": " can then follow "
+          },
+          {
+            "r": "code",
+            "text": "DecidedBy"
+          },
+          {
+            "r": "t",
+            "text": " to the result, the result to its pipeline and deployment, and the deployment to the model and its digest — so the question "
+          },
+          {
+            "r": "t",
+            "text": "which model caused this motion",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " is answerable from one notification and a walk, rather than by correlating two event streams on timing and hoping."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "Annex E — Vision interop profile (normative for RI-Interop-Vision)",
+          "b": 10
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This is the one place the two models compose into something neither provides alone. The vision model can say which model produced a pose and cannot say whether a robot acted on it; this model can say what the robot did and, without "
+          },
+          {
+            "r": "code",
+            "text": "DecidedBy"
+          },
+          {
+            "r": "t",
+            "text": ", cannot say why. Populating it costs a Server that implements both nothing it does not already know at submission."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "Annex E — Vision interop profile (normative for RI-Interop-Vision)",
+          "b": 11
         }
       }
     ]
