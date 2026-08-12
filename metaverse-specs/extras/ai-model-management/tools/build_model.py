@@ -68,6 +68,13 @@ HasTypeDefinition = "i=40"
 HasModellingRule = "i=37"
 HasInterface = "i=17603"
 HasEncoding = "i=38"
+# Event plumbing. HasNotifier builds the notifier hierarchy a client walks to find what
+# it can subscribe to; without it an EventType is declared but unreachable, because a
+# Subscription is created against a node whose EventNotifier says it emits events.
+HasNotifier = "i=48"
+HasEventSource = "i=36"
+EVENTNOTIFIER_SUBSCRIBE = "1"
+BaseEventType = "i=2041"
 
 MR_Mandatory = "i=78"
 MR_Optional = "i=80"
@@ -129,6 +136,7 @@ ALIASES = [
     ("HasSubtype", HasSubtype), ("Organizes", Organizes),
     ("HasTypeDefinition", HasTypeDefinition), ("HasModellingRule", HasModellingRule),
     ("HasInterface", HasInterface), ("HasEncoding", HasEncoding),
+    ("HasNotifier", HasNotifier), ("HasEventSource", HasEventSource),
     ("Mandatory", MR_Mandatory), ("Optional", MR_Optional),
     ("OptionalPlaceholder", MR_OptionalPlaceholder),
     ("MandatoryPlaceholder", MR_MandatoryPlaceholder),
@@ -205,6 +213,15 @@ def object_type(nid, name, base, desc, abstract=False):
 
 def interface_type(nid, name, base, desc):
     add(nid, "UAObjectType", name, name, desc=desc, category=CAT, abstract=True)
+    ref(nid, HasSubtype, base, forward=False)
+    return nid
+
+
+def event_type(nid, name, base, desc, abstract=False):
+    """An EventType. Its members are Properties, exactly as OPC 10000-5 declares the
+    fields of BaseEventType, so a client selects them with a SimpleAttributeOperand and
+    the Server can filter on them before it sends anything."""
+    add(nid, "UAObjectType", name, name, desc=desc, category=CAT_EV, abstract=abstract)
     ref(nid, HasSubtype, base, forward=False)
     return nid
 
@@ -410,10 +427,16 @@ def struct_type(nid, name, desc, fields, base=Structure, abstract=False):
     return nid
 
 
-def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent):
-    add(nid, "UAObject", name, name, desc=desc, parent=parent_nodeid)
+def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent,
+               event_notifier=None):
+    attrs = {"EventNotifier": event_notifier} if event_notifier else None
+    add(nid, "UAObject", name, name, desc=desc, parent=parent_nodeid, attrs=attrs)
     ref(nid, HasTypeDefinition, typedef)
     ref(nid, reftype, parent_nodeid, forward=False)
+    if event_notifier:
+        # Server HasNotifier this object, so a client subscribing at the Server object
+        # receives what is raised here without knowing this node exists.
+        ref(nid, HasNotifier, parent_nodeid, forward=False)
     return nid
 
 
@@ -424,6 +447,7 @@ def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent):
 CAT = "AiModelManagement"
 CAT_DT = "AiModelManagement DataTypes"
 CAT_RT = "AiModelManagement ReferenceTypes"
+CAT_EV = "AiModelManagement Events"
 
 # ---------------------------------------------------------------------------
 # Enumerations (3001+)
@@ -1390,7 +1414,10 @@ method(AY, "DeploymentType", "BeginTransfer",
 # ---------------------------------------------------------------------------
 well_known(7001, "AiModelManagement", T(1001), Server,
            "Entry point for the AI models this Server runs. A client browses "
-           "Server/AiModelManagement/Models to find what this Server describes.")
+           "Server/AiModelManagement/Models to find what this Server describes. It "
+           "carries EventNotifier because it is the notifier for the events of clause "
+           "7.4: a client subscribes here, or at the Server object above it.",
+           event_notifier=EVENTNOTIFIER_SUBSCRIBE)
 
 object_type(1017, "InferenceTransferType", BaseObjectType,
             "One chunked inference exchange. It exists because Invoke carries its "
@@ -1584,6 +1611,44 @@ prop_var(1008, "InferenceJobType", "Transfer", NodeId_,
          "analysis over recorded data - bounded by exactly the three limits clause "
          "8.2.4 says this model does not get to choose.")
 
+# ---------------------------------------------------------------------------
+# Event types (1018+)
+# ---------------------------------------------------------------------------
+# Promotion is the one act in this model that changes what the equipment decides, and
+# it is the one a later audit has to reconstruct. A client can already subscribe to a
+# deployment's model reference and see that it changed, but not who changed it, nor
+# which evaluation justified it, nor what it was before - and those are exactly the
+# questions asked after a batch is rejected. This event carries them at the moment they
+# are known, rather than leaving them to be recovered from whatever logging the Server
+# happens to keep.
+MPE = 1018
+event_type(MPE, "ModelPromotedEventType", BaseEventType,
+           "A deployment began serving a different model version. Raised on promotion, "
+           "and also on a rollback or any other Server-initiated substitution, because "
+           "a consumer auditing what decided a verdict cares that the model changed and "
+           "not why the operator called it a promotion.")
+prop_var(MPE, "ModelPromotedEventType", "Deployment", NodeId_,
+         "The DeploymentType instance whose model changed.", MR_Mandatory)
+prop_var(MPE, "ModelPromotedEventType", "NewModel", NodeId_,
+         "The ModelType now being served. Its Digest is what ties a later verdict to a "
+         "verifiable artefact, so a consumer that records only one field records this.",
+         MR_Mandatory)
+prop_var(MPE, "ModelPromotedEventType", "PreviousModel", NodeId_,
+         "The ModelType that was being served, or null where the deployment was serving "
+         "none. A rollback is distinguishable from a promotion only by comparing the "
+         "two, which is why both are carried.")
+prop_var(MPE, "ModelPromotedEventType", "EvaluationRun", NodeId_,
+         "The EvaluationRunType whose Passed result gated this promotion, or null where "
+         "none did. Clause 7.2 says promotion SHOULD be gated on one; null here is the "
+         "observable consequence of a Server that promoted without it, which is the "
+         "fact an audit is looking for.")
+prop_var(MPE, "ModelPromotedEventType", "PromotedBy", String,
+         "Identity of the authenticated principal that promoted, as the Server "
+         "authenticated it. BaseEventType carries no user field, and clause 12.3 "
+         "requires promotion to be separately authorized - a requirement whose "
+         "satisfaction is unobservable if the identity is not recorded where the act "
+         "is. Empty where the Server initiated the change itself.")
+
 # ===========================================================================
 # ==================================  EMIT  =================================
 # ===========================================================================
@@ -1610,7 +1675,7 @@ def _emit_node(n):
         a.append(f'SymbolicName="{sx.escape(n.attrs["SymbolicName"])}"')
     if n.parent is not None:
         a.append(f'ParentNodeId="{n.parent}"')
-    for k in ("DataType", "ValueRank", "ArrayDimensions"):
+    for k in ("DataType", "ValueRank", "ArrayDimensions", "EventNotifier"):
         if k in n.attrs:
             v = n.attrs[k]
             if k == "DataType":

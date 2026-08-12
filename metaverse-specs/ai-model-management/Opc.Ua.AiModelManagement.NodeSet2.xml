@@ -40,6 +40,8 @@
     <Alias Alias="HasModellingRule">i=37</Alias>
     <Alias Alias="HasInterface">i=17603</Alias>
     <Alias Alias="HasEncoding">i=38</Alias>
+    <Alias Alias="HasNotifier">i=48</Alias>
+    <Alias Alias="HasEventSource">i=36</Alias>
     <Alias Alias="Mandatory">i=78</Alias>
     <Alias Alias="Optional">i=80</Alias>
     <Alias Alias="OptionalPlaceholder">i=11508</Alias>
@@ -2136,12 +2138,13 @@ A client reads this BEFORE calling rather than discovering the bound from a reje
     </References>
     <Value><uax:ListOfExtensionObject xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Transfer</uax:Name><uax:DataType><uax:Identifier>i=17</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>InferenceTransferType instance to write the request into.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject><uax:ExtensionObject><uax:TypeId><uax:Identifier>i=297</uax:Identifier></uax:TypeId><uax:Body><uax:Argument><uax:Name>Accepted</uax:Name><uax:DataType><uax:Identifier>i=1</uax:Identifier></uax:DataType><uax:ValueRank>-1</uax:ValueRank><uax:ArrayDimensions/><uax:Description><uax:Text>False when the Server declined to open the exchange.</uax:Text></uax:Description></uax:Argument></uax:Body></uax:ExtensionObject></uax:ListOfExtensionObject></Value>
   </UAVariable>
-  <UAObject NodeId="ns=2;i=7001" BrowseName="2:AiModelManagement" ParentNodeId="i=2253">
+  <UAObject NodeId="ns=2;i=7001" BrowseName="2:AiModelManagement" ParentNodeId="i=2253" EventNotifier="1">
     <DisplayName>AiModelManagement</DisplayName>
-    <Description>Entry point for the AI models this Server runs. A client browses Server/AiModelManagement/Models to find what this Server describes.</Description>
+    <Description>Entry point for the AI models this Server runs. A client browses Server/AiModelManagement/Models to find what this Server describes. It carries EventNotifier because it is the notifier for the events of clause 7.4: a client subscribes here, or at the Server object above it.</Description>
     <References>
       <Reference ReferenceType="HasTypeDefinition">ns=2;i=1001</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">i=2253</Reference>
+      <Reference ReferenceType="HasNotifier" IsForward="false">i=2253</Reference>
     </References>
   </UAObject>
   <UAObjectType NodeId="ns=2;i=1017" BrowseName="2:InferenceTransferType">
@@ -2453,6 +2456,64 @@ Invoke carries the same pair, and the asymmetry would otherwise leave the jobs m
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1008</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=2;i=1018" BrowseName="2:ModelPromotedEventType">
+    <DisplayName>ModelPromotedEventType</DisplayName>
+    <Description>A deployment began serving a different model version. Raised on promotion, and also on a rollback or any other Server-initiated substitution, because a consumer auditing what decided a verdict cares that the model changed and not why the operator called it a promotion.</Description>
+    <Category>AiModelManagement Events</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=2041</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6180</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6181</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6182</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6183</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6184</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=2;i=6180" BrowseName="2:Deployment" ParentNodeId="ns=2;i=1018" DataType="NodeId" ValueRank="-1">
+    <DisplayName>Deployment</DisplayName>
+    <Description>The DeploymentType instance whose model changed.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1018</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6181" BrowseName="2:NewModel" ParentNodeId="ns=2;i=1018" DataType="NodeId" ValueRank="-1">
+    <DisplayName>NewModel</DisplayName>
+    <Description>The ModelType now being served. Its Digest is what ties a later verdict to a verifiable artefact, so a consumer that records only one field records this.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1018</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6182" BrowseName="2:PreviousModel" ParentNodeId="ns=2;i=1018" DataType="NodeId" ValueRank="-1">
+    <DisplayName>PreviousModel</DisplayName>
+    <Description>The ModelType that was being served, or null where the deployment was serving none. A rollback is distinguishable from a promotion only by comparing the two, which is why both are carried.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1018</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6183" BrowseName="2:EvaluationRun" ParentNodeId="ns=2;i=1018" DataType="NodeId" ValueRank="-1">
+    <DisplayName>EvaluationRun</DisplayName>
+    <Description>The EvaluationRunType whose Passed result gated this promotion, or null where none did. Clause 7.2 says promotion SHOULD be gated on one; null here is the observable consequence of a Server that promoted without it, which is the fact an audit is looking for.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1018</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6184" BrowseName="2:PromotedBy" ParentNodeId="ns=2;i=1018" DataType="String" ValueRank="-1">
+    <DisplayName>PromotedBy</DisplayName>
+    <Description>Identity of the authenticated principal that promoted, as the Server authenticated it. BaseEventType carries no user field, and clause 12.3 requires promotion to be separately authorized - a requirement whose satisfaction is unobservable if the identity is not recorded where the act is. Empty where the Server initiated the change itself.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1018</Reference>
     </References>
   </UAVariable>
 </UANodeSet>

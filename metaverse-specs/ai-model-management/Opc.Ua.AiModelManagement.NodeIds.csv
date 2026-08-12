@@ -245,3 +245,9 @@ InferenceJobType_RequestUri,6176,Variable
 InferenceJobType_ResponseUri,6177,Variable
 InferenceJobType_TransferRequired,6178,Variable
 InferenceJobType_Transfer,6179,Variable
+ModelPromotedEventType,1018,ObjectType
+ModelPromotedEventType_Deployment,6180,Variable
+ModelPromotedEventType_NewModel,6181,Variable
+ModelPromotedEventType_PreviousModel,6182,Variable
+ModelPromotedEventType_EvaluationRun,6183,Variable
+ModelPromotedEventType_PromotedBy,6184,Variable

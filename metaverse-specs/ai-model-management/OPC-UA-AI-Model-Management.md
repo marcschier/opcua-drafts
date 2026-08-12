@@ -680,6 +680,30 @@ A Server that only captures corrections implements `StartCollection` and `StopCo
 
 This is why `State` is read rather than inferred from which Methods exist. A client that probed for Methods would learn what a Server can be asked to do; reading `State` tells it how far this job actually got, which is the question it has.
 
+### 7.4 Events (normative)
+
+`ModelPromotedEventType` is raised when a deployment begins serving a different model version.
+
+A client can already subscribe to a deployment's `UsesModel` reference and see that it changed. What it cannot see that way is *who* changed it, *which* evaluation justified it, or *what it was before* — and those are precisely the questions asked after a batch has been rejected and someone wants to know what decided it. This event carries them at the moment they are known, rather than leaving them to be reconstructed from whatever logging the Server happens to keep.
+
+| Member | Type | Rule | Meaning |
+|---|---|---|---|
+| `Deployment` | NodeId | M | The deployment whose model changed |
+| `NewModel` | NodeId | M | The `ModelType` now being served |
+| `PreviousModel` | NodeId | O | What it was serving, or null where it served none |
+| `EvaluationRun` | NodeId | O | The `EvaluationRunType` that gated the promotion, or null |
+| `PromotedBy` | String | O | The authenticated principal that promoted; empty where the Server initiated it |
+
+**It is raised on every substitution, not only on `PromoteModel`.** A rollback, a failover that changes which model answers, and any other Server-initiated substitution raise it too. A consumer auditing what decided a verdict cares that the model changed; whether the operator called it a promotion is not a distinction the audit can afford to depend on. `PreviousModel` and `NewModel` together are what distinguish a rollback from a promotion.
+
+**`PromotedBy` exists because `BaseEventType` has no user field.** §12.3 requires promotion to carry an authorization distinct from every other Method on the job, and that requirement is unobservable if the identity that exercised it is not recorded where the act is. A Server **shall** populate it with the principal as it authenticated them, and **shall not** populate it with a service account standing in for a human operator where the human is known.
+
+**A null `EvaluationRun` is information, not an omission.** §7.2 says promotion **should** be gated on an `EvaluationRunType` whose `Passed` is true. Where it was not, null here is the observable consequence — which is the fact an audit is looking for, and the reason the field is not simply left off when unused.
+
+**Where it is raised.** The well-known `AiModelManagement` object declares `EventNotifier` with the `SubscribeToEvents` bit set and is the target of a `HasNotifier` reference from the Server object, so a client subscribes at either. `SourceNode` **shall** be the `DeploymentType` instance named by `Deployment`. `Severity` **should** be 500 or above: a promotion changes what every downstream verdict means, and a client filtering for things that matter should not have to know this event's name to find it.
+
+**Degradation is a state, and is already modelled as one.** This clause defines no Condition or Alarm type. A deployment that has become unreachable or slow is in a *state* that persists, and `DeploymentType.Reachability`, `State` and `ObservedLatency` already carry it as Variables a client subscribes to — which is what OPC UA models a persistent state with. A Server that additionally needs an operator to *acknowledge* such a state uses the base OPC UA alarm types of OPC 10000-9 with `AlarmConditionType.InputNode` pointing at the `Reachability` Variable; that is what `InputNode` is for, and defining a Condition subtype here would oblige every Server to implement the enable, acknowledge, confirm and shelving machinery in order to report that a network link went away.
+
 ---
 
 ## 8 Inference (normative)
@@ -1266,7 +1290,7 @@ Two practical consequences:
 
 A Server declares conformance by exposing `AiRootType` under the Server object with `SpecificationVersion` set to the release it implements.
 
-The NodeSet assigns every Node to one of three conformance units: `AiModelManagement` for the ObjectTypes and their members, `AiModelManagement DataTypes` for the structures and enumerations, and `AiModelManagement ReferenceTypes` for the references. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to.
+The NodeSet assigns every Node to one of four conformance units: `AiModelManagement` for the ObjectTypes and their members, `AiModelManagement DataTypes` for the structures and enumerations, `AiModelManagement ReferenceTypes` for the references, and `AiModelManagement Events` for the EventType of §7.4. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to.
 
 Facets are **additive and independent** except where a row states otherwise, and only one dependency exists: **AI-Import** requires **AI-Catalogue**, because an import job with nothing to import from is not implementable.
 
@@ -1283,6 +1307,7 @@ The split matters more here than in a smaller model, because the plausible Serve
 | **AI-OffServer** | A deployment whose `InferenceLocation` is not `OnServer`, and §12.2's requirement that its `EndpointUri` name an authenticated, confidential scheme |
 | **AI-Signatures** | `Inputs` and `Outputs` populated on every model |
 | **AI-Learning** | `LearningJobType`, the §7 state model, every Method that drives a transition in it, and the distinct `PromoteModel` authorization of §12.3 |
+| **AI-Events** | `ModelPromotedEventType` and every rule of §7.4. A Server claiming it **shall** raise the event on **every** change to which model a deployment serves, including a rollback and a Server-initiated failover — a facet under which some substitutions are reported and others are not cannot support the audit it exists for, because a consumer could no longer read silence as "the model did not change". `PromotedBy` **shall** be populated wherever the change was made by an authenticated principal. |
 | **AI-Invoke** | `DeploymentType.Invoke` with `ModelUsed` and `FinishReason` populated on every response, and `Usage` returned on every response — its `UnitKind` empty where the execution site does not meter, per §8.2.3; the §6.4.2 requirement to publish `ApiDialect` where `Inputs`/`Outputs` do not describe the payload contract; the exactly-one `Payload`/`PayloadUri` rule of §8.6.1; and the §8.3 rule that an unsupported parameter is rejected rather than ignored |
 | **AI-InvokeAsync** | `InvokeAsync` and `InferenceJobType`, answering the same questions as `Invoke` including size (§8.6.1): the exactly-one `Payload`/`PayloadUri` rule, and `TransferRequired` with `Transfer` where a result outgrew the inline bound |
 | **AI-Transfer** | `BeginTransfer` and `InferenceTransferType`, `MaxInlinePayloadSize` on every deployment, and the §8.2.4 rule that `Invoke` reports `TransferRequired` rather than failing a call whose response outgrew the inline bound |
