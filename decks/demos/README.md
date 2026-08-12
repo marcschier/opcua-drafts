@@ -25,9 +25,10 @@ Each demo also has one slide in [the deck](../README.md), placed next to the dra
 | 9 | [Vision](09-vision/) | Camera, inference, published result | Walkthrough only |
 | 10 | [AI model loading](10-ai-model-loading/) | Model lifecycle, provenance, rollout | Feature branch |
 
-**Walkthrough only** means there is no implementation to run yet; the folder holds the narrative and
-a list of what building it would take. **Feature branch** means the code exists but is not on the
-stack's `master` — the script says which branch and refuses to run without it.
+**Walkthrough only** means there is no runnable implementation yet; the folder holds the narrative
+and, where an implementation is in flight, says where it is and what is still missing. **Feature
+branch** means the code exists but is not on the stack's `master` — the script says which branch and
+refuses to run without it.
 
 ## Prerequisites, once
 
@@ -107,4 +108,6 @@ is about its demo rather than about process management:
 - **Say what it proves.** Each walkthrough has a one-line *What it proves* near the top; it is the
   sentence that connects the terminal output to the specification slide before it.
 - **Be straight about the gaps.** Four of the ten do not fully run yet, and the walkthroughs say so.
-  An audience trusts a demo set that admits what is not built.
+  An audience trusts a demo set that admits what is not built. Demo 9 is the sharpest case: the
+  implementation exists on a feature branch, it is what moved the Vision draft to 0.2.0, and it
+  still does not run the loop end to end — say all three.

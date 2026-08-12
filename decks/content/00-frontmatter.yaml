@@ -97,8 +97,8 @@ slides:
         - ["Apache Arrow Encoding", "core", "Draft 0.1.0", "—"]
         - ["Data Channels", "core", "Draft 0.1.1", "8 — media"]
         - ["Asynchronous Service Execution", "core", "Draft 0.1.0", "—"]
-        - ["Asset Administration Shell 3.0", "companion", "Draft 3.00-draft3 — open PR", "7 — walkthrough"]
-        - ["Generators (GenSets)", "companion", "Draft 1.0.0", "—"]
+        - ["Asset Administration Shell 3.0", "companion", "Draft 3.00-draft3", "7 — walkthrough"]
+        - ["Generators (GenSets)", "companion", "Draft 1.2.0", "—"]
         - ["WoT Binding", "wot", "Under OPCF review", "4, 7"]
         - ["WoT Connectivity", "wot", "Under OPCF review", "4, 7"]
         - ["Schema Registry", "cloud", "Draft 0.5.0", "—"]
@@ -106,7 +106,7 @@ slides:
         - ["OpenUSD Part 1 — Binding", "metaverse", "Under OPCF review", "2, 3"]
         - ["OpenUSD Part 2 — Scene Materialization", "metaverse", "Under OPCF review", "2, 3"]
         - ["AI Model Management and Inference", "metaverse", "Draft 0.4.0", "10 — branch"]
-        - ["Vision", "metaverse", "Draft 0.1.0", "9 — walkthrough"]
+        - ["Vision", "metaverse", "Draft 0.2.0", "9 — walkthrough"]
         - ["Robot Intent", "metaverse", "Draft 0.1.0", "2, 5"]
         - ["OpenUSD Artifact Registry", "metaverse", "Draft → xregistry.org", "—"]
     notes: |
@@ -116,7 +116,7 @@ slides:
       being read under member confidentiality — the drafts moved to OPCF-Members/spec-drafts, and
       members can request access. Second, two drafts are aimed at xregistry.org rather than at the
       OPC Foundation, which is why they stay public while the OPC UA parts are under review. Third,
-      the demo column is deliberately sparse: nine of the eighteen have no demo yet, and the deck
+      the demo column is deliberately sparse: eight of the eighteen have no demo yet, and the deck
       shows that rather than hiding it.
 
   - layout: table

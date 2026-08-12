@@ -21,11 +21,20 @@ slides:
       - "decks\\demos\\09-vision\\README.md"
     proves: Vision needs a standard result model, not only a camera job coordinator.
     notes: |
-      Present this as paper. There is a draft and generated NodeSet in the drafts repository, but no
-      stack project or sample Server. The walkthrough fills the gap left by existing OPC UA vision
-      work: media location, calibration, inference pipeline and result content are described with a
-      standard shape. Tie it to Data Channels carefully. Vision brokers media by reference by
-      default; a Data Channel is only an optional in-band path. Tie it to AI Model Management because
-      the result is not auditable unless it can point at the deployment and model that produced it.
+      Present this as paper, but say where the code is. A bin-picking cell and its client exist on the
+      stack branch `marcschier/vision-guided-picking`, together with `Opc.Ua.Vision`, `.Client`,
+      `.Server` and `.OpenUsd`. That branch is still moving and does not yet run the loop end to end,
+      so this stays a walkthrough rather than a live demo — do not promise a terminal.
+
+      That implementation is the reason the draft is at 0.2.0 rather than 0.1.0. Building it found
+      that all 13 Methods carrying arguments were uncallable, that a depth sensor had nowhere to state
+      its depth image shape, and that an agent could not report an empty bin. Those are issues #66 to
+      #71 and they are the argument for demos in one line.
+
+      The walkthrough fills the gap left by existing OPC UA vision work: media location, calibration,
+      inference pipeline and result content are described with a standard shape. Tie it to Data
+      Channels carefully. Vision brokers media by reference by default; a Data Channel is only an
+      optional in-band path. Tie it to AI Model Management because the result is not auditable unless
+      it can point at the deployment and model that produced it.
 
 

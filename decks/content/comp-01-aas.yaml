@@ -22,7 +22,7 @@ slides:
       - text: "Live nodes, documents, WoT and DPP identifiers must stay aligned"
     takeaway: The gap is a V3, reversible, version-aware AAS projection rather than another view.
     notes: |
-      The specification identifies itself as Draft 3.00 and says it supersedes OPC 30270 v1.00,
+      The specification identifies itself as Release 3.00-draft3 and says it supersedes OPC 30270 v1.00,
       which mapped the AAS v1.x metamodel. Clause 4.3 explains why this is a breaking revision:
       AAS V3 is not backward compatible with v1.x, `Asset` and `View` no longer exist,
       `AssetInformation` and `SpecificAssetId` are new, the identifier discriminator is gone, and
@@ -116,22 +116,27 @@ slides:
 
   - layout: bullets
     title: Status and where it lives
-    kicker: Draft 3.00, open PR, demo 7 walkthrough
+    kicker: Draft 3.00-draft3, merged into main, demo 7 walkthrough
     bullets:
-      - text: "**Draft version:** Draft 3.00 — supersedes OPC 30270 v1.00"
+      - text: "**Draft version:** Draft 3.00-draft3 — supersedes OPC 30270 v1.00"
       - text: "**Target body:** OPC Foundation companion specification"
       - text: "**Source:** `companion-specs/AAS/OPC-UA-AAS.md`"
       - text: "**Related:** `xRegistry-AAS.md`, study, JSON-LD and DPP docs"
-      - text: "**Open PR:** #61 on branch `aas-opcua-v3`"
+      - text: "**Implementation:** `Opc.Ua.Aas` on the stack branch `marcschier/aas`, in progress"
       - text: "**Demo:** 7 — AAS + WoT + xRegistry walkthrough"
     takeaway: The model is the current AAS V3 draft; the walkthrough centers on the registry bridge.
     notes: |
-      The version banner says `Draft 3.00` and the status box says this is a revision of OPC 30270
-      to version 3.00, not compatible with v1.00 and not normative, official or endorsed. The
-      repository folder README identifies `OPC-UA-AAS.md` as OPC 30270 v3.00, the AAS V3 metamodel
+      The version banner says `Release 3.00-draft3 — Draft` and the status box says this is a revision
+      of OPC 30270 to version 3.00, not compatible with v1.00 and not normative, official or endorsed.
+      The repository folder README identifies `OPC-UA-AAS.md` as OPC 30270 v3.00, the AAS V3 metamodel
       mapped losslessly onto OPC UA together with an AAS Registry built on the abstract xRegistry
       base. It also names the mirrored xRegistry proposal, the AAS JSON-LD mapping, the DPP and
-      battery-passport identifier mapping, and the study behind them. GitHub reports PR #61 open
-      from `aas-opcua-v3`. Annex F says the Thing Description correspondence depends on the WoT
-      Binding and WoT Connectivity drafts as they stood at the document date, so review changes
-      there can invalidate that annex. The deck's front matter lists demo 7 as a walkthrough.
+      battery-passport identifier mapping, and the study behind them. The V3 work landed on `main` in
+      #61, and #75 followed with nine defects found while implementing the specification — the same
+      pattern as Vision, where building the thing is what finds the model's problems. Annex F says the
+      Thing Description correspondence depends on the WoT Binding and WoT Connectivity drafts as they
+      stood at the document date, so review changes there can invalidate that annex.
+
+      On the implementation: `Opc.Ua.Aas` exists on the stack branch `marcschier/aas`, but it is a
+      model library with no sample behind it yet, which is why demo 7 remains a walkthrough. The
+      deck's front matter lists demo 7 as a walkthrough for the same reason.

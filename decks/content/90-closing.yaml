@@ -5,7 +5,7 @@ footer: Where this goes next
 slides:
   - layout: statement
     statement: >-
-      Eighteen drafts, nine with running code, seven under OPC Foundation review — and every one of
+      Eighteen drafts, ten with running code, seven under OPC Foundation review — and every one of
       them is a patch a person reads before it lands.
     attribution: Nothing here is normative. That is the point of a scratch pad.
 
@@ -18,26 +18,27 @@ slides:
       rows:
         - ["xRegistry (base model)", "0.3.0", "OPCF — under review", "`Opc.Ua.XRegistry`"]
         - ["xRegistry — OPC UA API", "0.1.0", "xregistry.org", "—"]
-        - ["Apache Avro DataEncoding", "—", "OPCF — under review", "None"]
+        - ["Apache Avro DataEncoding", "0.1.0", "OPCF — under review", "None"]
         - ["Apache Arrow Encoding", "0.1.0", "OPCF — Part 6 / Part 14", "None"]
         - ["Data Channels", "0.1.1", "OPCF — Parts 3, 4, 6 errata", "Feature branch"]
         - ["Async Service Execution", "0.1.0", "OPCF — Parts 4, 5 errata", "None"]
-        - ["Asset Administration Shell", "3.00-draft3", "OPCF — OPC 30270 revision", "Open pull request"]
-        - ["Generators (GenSets)", "1.0.0", "OPCF — companion", "None"]
-        - ["WoT Binding", "—", "OPCF — under review", "`Opc.Ua.WotCon`"]
-        - ["WoT Connectivity", "—", "OPCF — under review", "`Opc.Ua.WotCon`"]
+        - ["Asset Administration Shell", "3.00-draft3", "OPCF — OPC 30270 revision", "Feature branch"]
+        - ["Generators (GenSets)", "1.2.0", "OPCF — companion", "None"]
+        - ["WoT Binding", "1.1-draft3", "OPCF — under review", "`Opc.Ua.WotCon`"]
+        - ["WoT Connectivity", "1.1-draft3", "OPCF — under review", "`Opc.Ua.WotCon`"]
         - ["Schema Registry", "0.5.0", "OPCF — cloud surface", "None"]
         - ["Observability Export", "0.1.0", "OPCF — under review", "None"]
-        - ["OpenUSD Part 1 — Binding", "—", "OPCF — under review", "`Opc.Ua.OpenUsd`"]
-        - ["OpenUSD Part 2 — Scene", "—", "OPCF — under review", "`Opc.Ua.OpenUsdScene`"]
+        - ["OpenUSD Part 1 — Binding", "0.6.0", "OPCF — under review", "`Opc.Ua.OpenUsd`"]
+        - ["OpenUSD Part 2 — Scene", "0.4.0", "OPCF — under review", "`Opc.Ua.OpenUsdScene`"]
         - ["AI Model Management", "0.4.0", "OPCF — companion", "Feature branch"]
-        - ["Vision", "0.1.0", "OPCF — companion", "None"]
+        - ["Vision", "0.2.0", "OPCF — companion", "Feature branch"]
         - ["Robot Intent", "0.1.0", "OPCF — companion", "`Opc.Ua.Robotics`"]
-        - ["OpenUSD Artifact Registry", "—", "xregistry.org", "—"]
+        - ["OpenUSD Artifact Registry", "1.0-rc1", "xregistry.org", "—"]
     notes: |
       The honest scoreboard. Use it to close, and do not soften it.
 
-      Nine of the eighteen have no implementation at all. That is not an oversight — a specification
+      Eight of the eighteen have no implementation at all, and four of the ten that do are on a
+      feature branch rather than on the stack's `master`. That is not an oversight — a specification
       written to be implemented later is a different and riskier thing than one extracted from
       working code, and the deck says which is which so a reviewer can weight their reading
       accordingly.

@@ -108,7 +108,7 @@ slides:
       - text: "Path: `metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md`"
       - text: "Dependency: xRegistry, for model and dataset catalogues"
       - text: "Guides: Azure AI Foundry, Bedrock, Triton, KServe, embedded runtimes"
-      - text: "Demo: **10 — AI model loading**, on branch `fork/marcschier/ai-model-management`"
+      - text: "Demo: **10 — AI model loading**, on the stack branch `marcschier/ai-model-management`"
     takeaway: >-
       This is the large metaverse draft: lifecycle, inference, catalogue and audit in one model.
     notes: |

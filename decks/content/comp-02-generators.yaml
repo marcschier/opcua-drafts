@@ -82,7 +82,7 @@ slides:
     title: Status and where it lives
     kicker: Draft companion model, generated NodeSet, no demo yet
     bullets:
-      - text: "**Draft version:** Release 1.0.0 — Draft"
+      - text: "**Draft version:** Release 1.2.0 — Draft"
       - text: "**Target body:** OPC Foundation companion specification"
       - text: "**Source:** `companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md`"
       - text: "**Generated:** `Opc.Ua.Generators.NodeSet2.xml` and NodeIds CSV"
@@ -90,8 +90,8 @@ slides:
       - text: "**Demo:** none yet; say so plainly"
     takeaway: The model is concrete and validated; the overview deck has no generator demo to point at.
     notes: |
-      The version banner identifies the document as `Release 1.0.0 — Draft`, with namespace
-      `http://opcfoundation.org/UA/Generators/` and publication date 2026-07-01. Its status box
+      The version banner identifies the document as `Release 1.2.0 — Draft`, with namespace
+      `http://opcfoundation.org/UA/Generators/` and publication date 2026-08-11. Its status box
       calls it a working-group draft and names the companion markdown, NodeSet and NodeIds CSV as
       the information model deliverables. The deliverables clause says the NodeSet is generated from
       `tools/build_model.py`, and the reproducibility clause says the generated model has passed
