@@ -758,6 +758,45 @@ The mapping is by pixel value, so a mask is single-label: one pixel belongs to o
 
 `LabelClasses` on a result names the classes of *that* mask. `ModelType.LabelClasses` (Annex B.3) names the classes the model was trained to produce. They are usually equal and are not required to be: a pipeline may publish a mask covering only the classes present in the frame.
 
+### 7.5 Events (normative)
+
+A result is a **record**; an event is an **occurrence**. The types above are records: they persist, they are re-readable, and a consumer that arrives late still finds them. That is what a result must be, and it is why they are Objects rather than notifications. But it obliges every consumer to poll and to re-derive, from a changed array, what actually happened — and two consumers polling the same Server can reach different conclusions about when a thing occurred.
+
+This clause adds the occurrence. `VisionEventType` is the abstract base; `ObjectDetectedEventType` and `InspectionCompletedEventType` are what a Server raises. They are ordinary OPC UA EventTypes, so a client subscribes with an `EventFilter` and the existing machinery of OPC 10000-4 applies unchanged.
+
+| Type | Member | Type | Rule | Meaning |
+|---|---|---|---|---|
+| `VisionEventType` *(abstract)* | `ResultId` | String | M | The result that substantiates this event |
+| | `Sensor` | NodeId | M | The sensor the observation was made with |
+| | `GroundTruth` | Boolean | M | True where this is simulator ground truth, not a prediction |
+| | `Pipeline` | NodeId | O | The pipeline that produced the result, where one did |
+| | `ModelVersionUsed` | String | O | Version of the model that decided |
+| | `Confidence` | Double | O | 0.0 to 1.0; absent is not zero |
+| | `InferenceEndTime` | UtcTime | O | When inference finished; `Time` is when the frame was acquired |
+| `ObjectDetectedEventType` | `Detection` | `VisionDetectionDataType` | M | The detection this event reports |
+| `InspectionCompletedEventType` | `Evaluation` | `VisionResultEvaluationEnum` | M | The verdict |
+| | `PartId` | String | O | The inspected part, where the result names one |
+| | `RecipeId` | String | O | The recipe that ran, where the result names one |
+| | `FailedCharacteristics` | `VisionCharacteristicDataType[]` | O | Only the characteristics whose `Status` is not `InTolerance` |
+
+**An event names its result and does not repeat it.** Every event carries `ResultId`, and a consumer that needs the detail reads the `VisionResultType` it names. Copying result content into the event would create a second copy of a fact that can disagree with the first. Two fields are deliberate exceptions, because they are what a consumer filters on and requiring a read to obtain them would defeat the purpose: the `Detection` on `ObjectDetectedEventType`, and `Evaluation` on `InspectionCompletedEventType`.
+
+`FailedCharacteristics` carries the failing characteristics and only those; a passing inspection carries an empty array. Repeating every characteristic would duplicate the result for the common case where none failed, while repeating the failing ones lets a consumer act on *why* a part was rejected without a read. A Server **shall not** include a characteristic whose `Status` is `InTolerance`, and a consumer **shall not** treat the array as the complete characteristic set — that is in the result.
+
+**`Time` is when the frame was acquired.** `BaseEventType.Time` is the time of the occurrence, and for an inferred observation the occurrence is the *frame*, not the inference. A Server **shall** set `Time` to the acquisition timestamp of the frame the result was derived from — the `Timestamp` of the result's `Frame`, where it carries one — and **shall not** set it to the moment inference completed. `InferenceEndTime` carries that moment separately, so the difference between the two is the inference latency of this observation. A Server that cannot establish an acquisition timestamp **shall** omit `InferenceEndTime` rather than set both to the same value, because equal values assert a latency of zero.
+
+**One event per detection.** A `DetectionResultType` carrying *n* detections raises *n* `ObjectDetectedEventType`s, all naming the same `ResultId`. This is what makes `ClassLabel` and `Confidence` available to an `EventFilter`, so a client asks for the classes it cares about above a confidence it chooses and the Server sends nothing else. A single event per result would move that filtering to the client and give up most of the reason to raise events at all. A Server **may** omit events for detections a configured threshold excludes, and **shall not** vary the `ResultId` between events derived from one result.
+
+**Inferred is not measured.** `GroundTruth` is Mandatory on every event. It is `true` only where the value is simulator ground truth rather than a prediction, mirroring `IVisionSimulatedType.GroundTruthAvailable` on the sensor, and §10 already requires the two to be distinguishable. A consumer **shall not** have to infer from `Confidence`, or from the sensor's `RealityKind`, whether it is being told a measurement or a guess.
+
+**Where events are raised.** The well-known `Vision` object declares `EventNotifier` with the `SubscribeToEvents` bit set and is the target of a `HasNotifier` reference from the Server object, so a client subscribes at either and receives every Vision event in the Server. A Server **shall** additionally set `EventNotifier` on each `InferencePipelineType` instance that raises events and **shall** add a `HasNotifier` reference from the `Vision` object to it, so a client that wants one pipeline can subscribe to that pipeline alone. `SourceNode` **shall** be the pipeline that produced the result, or the sensor where no pipeline did.
+
+**Severity.** `BaseEventType.Severity` is 1 to 1000. A Server **shall** raise `ObjectDetectedEventType` and a passing `InspectionCompletedEventType` at a severity of 1 to 199, because neither demands attention, and **shall** raise an `InspectionCompletedEventType` whose `Evaluation` is `NotOk` at 500 or above. Anything else would make a routine detection indistinguishable, in a generic alarm client, from a rejected part.
+
+**These are events, not conditions.** A detection and a verdict are transient: they occur, they are reported, and nothing about them persists in a state a client would acknowledge. OPC 10000-9 `ConditionType` models the opposite — something that stays true until it stops being true — and neither of these is that. A Server that needs to raise an *alarm* about its vision system, such as a sensor that has stopped responding, uses the base OPC UA alarm types; this model defines none, because nothing about such an alarm is specific to vision.
+
+**Semantic identifiers.** A Server **may** add a `HasDictionaryEntry` reference (OPC 10000-19) from any EventType defined here to a dictionary entry naming the same concept in ECLASS, IEC CDD or another vocabulary. This specification prescribes no dictionary and defines no identifiers of its own: no agreed identifier exists for these concepts, and minting one here would create a vocabulary with a single member and no authority behind it.
+
 ---
 
 ## 8 AI integration (normative)
@@ -1043,7 +1082,7 @@ A claim **shall** be discoverable. A Server **shall** add the URI of each facet 
 
 Where a facet's row names members, a Server claiming it **shall** instantiate every named member on every instance of the stated type — an Optional ModellingRule in the model becomes mandatory under the facet that names it. Where a row names a clause, every **shall** in that clause applies.
 
-The NodeSet assigns every Node to one of three conformance units: `Vision` for the ObjectTypes and their members, `Vision DataTypes` for the structures and enumerations, and `Vision ReferenceTypes` for the references. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to.
+The NodeSet assigns every Node to one of four conformance units: `Vision` for the ObjectTypes and their members, `Vision DataTypes` for the structures and enumerations, `Vision ReferenceTypes` for the references, and `Vision Events` for the EventTypes of §7.5. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to.
 
 ### 11.2 Facets
 
@@ -1060,6 +1099,7 @@ The NodeSet assigns every Node to one of three conformance units: `Vision` for t
 | **VIS-Calibration** | `CoordinateFrameType` plus `IntrinsicCalibrationType` and/or `ExtrinsicCalibrationType`, with the §5.11 reference constraints and the §5.12 frame-precedence rule. A Server claiming this facet **shall** instantiate `Vision/Frames`, and it **shall** contain every `CoordinateFrameType` instance reachable through `MountedOn`, `SourceFrame` or `TargetFrame`. Frames **may** additionally appear elsewhere; `Frames` is the one place a client is entitled to find all of them. |
 | **VIS-Result-Inspection** | `InspectionResultType` with `Evaluation` and `Characteristics`, and the §7.2 uncertainty rule including its uniform-reporting requirement |
 | **VIS-Result-Detection** | `DetectionResultType` with `Detections`, the §5.12 pose conventions, and the §7.3 `FrameId` rule |
+| **VIS-Events** | The EventTypes of §7.5 and every rule in that clause. A Server claiming it **shall** raise `ObjectDetectedEventType` for every detection it publishes and `InspectionCompletedEventType` for every inspection it concludes — a facet that permits a Server to raise events for some results and not others tells a client nothing, because silence would then be ambiguous between "nothing happened" and "this one was not reported". Requires *VIS-Result-Detection* for the first and *VIS-Result-Inspection* for the second, whichever the Server publishes; a Server that publishes only one kind of result claims this facet on the strength of that kind alone. |
 | **VIS-Feedback** | `VisionFeedbackType` with at least `SubmitImageReference`, the §9.3 and §9.5 rules, the §12.3 inbound-URI validation, and the §12.7 feedback-integrity rules. A Server claiming this facet **shall** accept at least `Trigger` and `Overlay` on `SubmitImageReference`, and on `SubmitDetections` where that Method is instantiated. Accepting `Reconciliation` needs no further facet. Accepting `GroundTruthLabel` on `SubmitCorrection` requires *VIS-Learning* in addition. |
 | **VIS-Inference-OnServer** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer`, and the `UsesModel` constraint. Where `RunInference` is implemented, `Results` (§8.4). `ModelType.Digest` and `DigestAlgorithm` per §12.6 |
 | **VIS-Inference-OffServer** | As above with any other `InferenceLocation`, plus `EndpointUri` naming an authenticated, confidential scheme (§12.6) |
@@ -1813,3 +1853,18 @@ Both use metres and a unit quaternion ordered (x, y, z, w) in a right-handed fra
 **I.5 An empty `FrameId` is never passed through.** §5.12 rule 3 requires a named frame here, while a commanding model may read an empty `FrameId` as its default working frame. A boundary **shall** substitute the named frame explicitly in that direction, and **shall** reject a pose it cannot name rather than guessing.
 
 **I.6 A grasp pose reaches the tool centre point.** A pose published for a robot to act on **shall** be resolvable, through the frame tree, to a frame of role `Tool`. Resolving only to `MechanicalInterface` is not sufficient: the offset between the flange and the tool centre point is exactly what a hand-eye calibration does not measure, and Annex F carries it as a distinct frame for this reason.
+
+**I.7 A manufacturing event is composed, not invented.** A cell wants to know that a part was picked, placed, aligned or rejected. This model deliberately defines no `PickEventType`, and a Server **shall not** publish one under this specification, because **a camera cannot know that a pick happened**. It can report what it saw; the robot is what knows what it did.
+
+So the two halves come from the two models, and a consumer joins them:
+
+| Half | Source | Carries |
+|---|---|---|
+| The **action** — authoritative | `IntentCompletedEventType` on the commanding model, where the submitted intent was a pick and the terminal state is success | that the robot picked, and what its own result says about the outcome |
+| The **observation** — corroborating | `ObjectDetectedEventType` (§7.5) on this model | that an object of a class was seen, where, and with what confidence |
+
+The action alone is sufficient: a robot that reports a successful pick has picked, whatever a camera thinks. The observation adds what the robot cannot supply — which object, at what pose, identified by which model version — and is what makes the event traceable back to a decision under §12.6.
+
+A consumer correlating the two **shall** use the event `Time` of each, which §7.5 fixes as the frame acquisition time on this side, and **shall not** assume the two arrive in that order or in the same notification: they are raised by different objects and, in a Server that implements only one of the two models, one of them does not exist at all. Where the intent named a `Location` and the detection carries a pose, the two **shall** be related through the frame tree of I.1 rather than by comparing coordinates in different frames.
+
+The consequence is that the intent vocabulary *is* the manufacturing-event vocabulary. `pick`, `place` and the rest are already named — as intent types the commanding model defines — and a completion event carrying the intent type is what turns each of them into an occurrence a line controller can subscribe to. Nothing further needs to be invented here, and inventing it would produce a second vocabulary that could disagree with the first about what happened.
