@@ -270,3 +270,7 @@ MissionCompletedEventType,1017,ObjectType
 MissionCompletedEventType_State,6147,Variable
 MissionCompletedEventType_CompletedSteps,6148,Variable
 MissionCompletedEventType_FailedStepId,6149,Variable
+IntentOperationType_DecidedBy,6150,Variable
+IntentCompletedEventType_DecidedBy,6151,Variable
+RobotIntentRootType_ClockSynchronised,6152,Variable
+RobotIntentRootType_TimeSyncSource,6153,Variable

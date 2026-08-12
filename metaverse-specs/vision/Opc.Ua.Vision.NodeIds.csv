@@ -239,3 +239,5 @@ InspectionCompletedEventType_Evaluation,6209,Variable
 InspectionCompletedEventType_PartId,6210,Variable
 InspectionCompletedEventType_RecipeId,6211,Variable
 InspectionCompletedEventType_FailedCharacteristics,6212,Variable
+VisionRootType_ClockSynchronised,6213,Variable
+VisionRootType_TimeSyncSource,6214,Variable

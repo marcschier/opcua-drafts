@@ -495,6 +495,8 @@ The single well-known entry point for everything in this model. A client starts 
 | Sensors | Object |  |  | Mandatory | VisionSensorType instances known to this Server. |
 | Pipelines | Object |  |  | Optional | InferencePipelineType instances. |
 | Frames | Object |  |  | Optional | CoordinateFrameType instances. |
+| ClockSynchronised | Variable | Boolean | Scalar | Optional | True where this Server's clock is disciplined to an external time reference shared with the systems its events are correlated against. False, or absent, means the clock is free-running and a consumer shall not assume sub-second agreement with another Server. See clause 7.5. |
+| TimeSyncSource | Variable | String | Scalar | Optional | What the clock is disciplined to when ClockSynchronised is true - for example IEEE1588, NTP or GPS - as free text, because the set of answers is open and a consumer uses it to judge the order of accuracy rather than to parse. Empty or absent where the Server does not state one. |
 
 ### VisionEventType (abstract) — `ns=1;i=1031`
 

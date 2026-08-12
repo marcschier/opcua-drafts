@@ -5,7 +5,7 @@
     <Uri>http://opcfoundation.org/UA/RobotIntent/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/RobotIntent/" Version="0.2.0" PublicationDate="2026-08-12T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/RobotIntent/" Version="0.3.0" PublicationDate="2026-08-13T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
     </Model>
   </Models>
@@ -638,6 +638,8 @@
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6001</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6002</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6152</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6153</Reference>
     </References>
   </UAObjectType>
   <UAObject NodeId="ns=1;i=6001" BrowseName="1:Controllers" ParentNodeId="ns=1;i=1001">
@@ -1106,6 +1108,7 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6053</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6137</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6138</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6150</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6046" BrowseName="1:IntentId" ParentNodeId="ns=1;i=1003" DataType="String" ValueRank="-1">
@@ -2560,6 +2563,7 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6144</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6145</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6146</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6151</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6144" BrowseName="1:State" ParentNodeId="ns=1;i=1016" DataType="ns=1;i=3001" ValueRank="-1">
@@ -2625,6 +2629,42 @@
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1017</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6150" BrowseName="1:DecidedBy" ParentNodeId="ns=1;i=1003" DataType="NodeId" ValueRank="-1">
+    <DisplayName>DecidedBy</DisplayName>
+    <Description>NodeId of the artefact that produced this intent's parameters - typically a result published by a perception model, or the model itself - or null where a human taught the pose or a program held it. It is what lets an investigation that starts at a motion reach the decision behind it; without it the provenance chain ends at the boundary where the robot moved, which is exactly where such an investigation begins. This model does not define what the NodeId points at and takes no dependency on any model that might: see clause 11.3.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6151" BrowseName="1:DecidedBy" ParentNodeId="ns=1;i=1016" DataType="NodeId" ValueRank="-1">
+    <DisplayName>DecidedBy</DisplayName>
+    <Description>The Operation's DecidedBy, repeated so a consumer auditing from the event stream alone does not have to read a node that need not still exist. Null where the Operation's is null.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1016</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6152" BrowseName="1:ClockSynchronised" ParentNodeId="ns=1;i=1001" DataType="Boolean" ValueRank="-1">
+    <DisplayName>ClockSynchronised</DisplayName>
+    <Description>True where this Server's clock is disciplined to an external time reference shared with the systems its events are correlated against. False, or absent, means the clock is free-running and a consumer shall not assume sub-second agreement with another Server. See clause 6.10.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6153" BrowseName="1:TimeSyncSource" ParentNodeId="ns=1;i=1001" DataType="String" ValueRank="-1">
+    <DisplayName>TimeSyncSource</DisplayName>
+    <Description>What the clock is disciplined to when ClockSynchronised is true - for example IEEE1588, NTP or GPS - as free text, because the set of answers is open and a consumer uses it to judge the order of accuracy rather than to parse. Empty or absent where the Server does not state one.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1001</Reference>
     </References>
   </UAVariable>
 </UANodeSet>

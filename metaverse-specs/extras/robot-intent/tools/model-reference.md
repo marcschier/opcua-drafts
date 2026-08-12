@@ -100,6 +100,8 @@ Server-level entry point. A client that has just connected browses here to find 
 |---|---|---|---|---|---|
 | Controllers | Object |  |  | Mandatory | The intent surfaces this Server offers, one per commandable robot. |
 | SpecificationVersion | Variable | String | Scalar | Mandatory | Release of this specification the Server implements, for example '0.1.0'. |
+| ClockSynchronised | Variable | Boolean | Scalar | Optional | True where this Server's clock is disciplined to an external time reference shared with the systems its events are correlated against. False, or absent, means the clock is free-running and a consumer shall not assume sub-second agreement with another Server. See clause 6.10. |
+| TimeSyncSource | Variable | String | Scalar | Optional | What the clock is disciplined to when ClockSynchronised is true - for example IEEE1588, NTP or GPS - as free text, because the set of answers is open and a consumer uses it to judge the order of accuracy rather than to parse. Empty or absent where the Server does not state one. |
 
 ### IntentControllerType — `ns=1;i=1002`
 
@@ -280,6 +282,7 @@ One submitted intent, tracked to completion. It is a Part 10 program instance, s
 | QueuePosition | Variable | UInt32 | Scalar | Optional | Place in the queue while ExecutionState is Queued, 1 being next. Zero once it is no longer queued. |
 | FinalResultData | Object |  |  | Mandatory | Part 10 result container. Carries the same IntentResultDataType value as Result, so a Part 10 client finds the outcome where Part 10 says it will be. Mandatory here because clause 6.7 requires it and an Optional member cannot carry a SHALL. |
 | ProgramDiagnostic | Variable | i=24033 | Scalar | Mandatory | Part 10 invocation diagnostics: which Session invoked the program, when, with what arguments and to what outcome. Mandatory here because the auditable-commanding property of clause 1.2 is exactly this member, and a capability the specification advertises cannot rest on one a Server may omit. Declared exactly as OPC 10000-10 declares it - a Variable of ProgramDiagnostic2Type reached by HasComponent, with the inherited namespace-0 BrowseName - because a promotion that altered the inherited member's TypeDefinition, reference type or BrowseName namespace would declare a second member rather than promote the inherited one. |
+| DecidedBy | Variable | NodeId | Scalar | Optional | NodeId of the artefact that produced this intent's parameters - typically a result published by a perception model, or the model itself - or null where a human taught the pose or a program held it. It is what lets an investigation that starts at a motion reach the decision behind it; without it the provenance chain ends at the boundary where the robot moved, which is exactly where such an investigation begins. This model does not define what the NodeId points at and takes no dependency on any model that might: see clause 11.3. |
 
 ### MissionType — `ns=1;i=1004`
 
@@ -479,6 +482,7 @@ An intent reached a terminal state. Raised exactly once per intent, on the trans
 | State | Variable | ExecutionStateEnum | Scalar | Mandatory | The terminal ExecutionState. One of Succeeded, Failed, Cancelled or Retriable. |
 | Failure | Variable | IntentFailureEnum | Scalar | Mandatory | Why it did not succeed, or None. Mandatory rather than optional because a consumer deciding whether to retry, re-plan or escalate decides on this value alone (clause 5.8), and an absent field would make that decision unavailable exactly when it is needed. |
 | Result | Variable | IntentResultDataType | Scalar | Mandatory | The full result, identical to the Operation's Result. It is the one piece of state this event does repeat, because the operation node it would otherwise be read from need not still exist. |
+| DecidedBy | Variable | NodeId | Scalar | Optional | The Operation's DecidedBy, repeated so a consumer auditing from the event stream alone does not have to read a node that need not still exist. Null where the Operation's is null. |
 
 ### MissionCompletedEventType — `ns=1;i=1017`
 

@@ -1,6 +1,6 @@
 # OPC UA — Vision
 
-> Status: Working-group draft (Release 0.3.0). This document, together with `Opc.Ua.Vision.NodeSet2.xml` and `Opc.Ua.Vision.NodeIds.csv`, defines an OPC UA information model for **machine vision and robotics vision systems**: the sensors, the media they emit, the AI that interprets them, the results they produce, and the path by which corrected results flow back in. It is deliberately **sim/real symmetric** — one model describes a physical camera and a simulated sensor in a renderer such as NVIDIA Isaac Sim identically.
+> Status: Working-group draft (Release 0.4.0). This document, together with `Opc.Ua.Vision.NodeSet2.xml` and `Opc.Ua.Vision.NodeIds.csv`, defines an OPC UA information model for **machine vision and robotics vision systems**: the sensors, the media they emit, the AI that interprets them, the results they produce, and the path by which corrected results flow back in. It is deliberately **sim/real symmetric** — one model describes a physical camera and a simulated sensor in a renderer such as NVIDIA Isaac Sim identically.
 >
 > Nothing here is normative, official, or endorsed by the OPC Foundation, the Alliance for OpenUSD, EMVA, DMSC, IDTA or NVIDIA; namespace URIs and NodeIds are **provisional** and for prototyping only. The prior art, the gaps this model fills, and the decisions those gaps forced are recorded in the companion research report, [`OPC-UA-Vision-Research.md`](OPC-UA-Vision-Research.md).
 
@@ -45,11 +45,11 @@ Two of these are permanent boundaries, and two are deferrals this working group 
 - It does **not yet** define an inspection *program* or *recipe* format. A `RecipeId` identifies one; its content is out of scope here, as it is in OPC 40100-1. Should a portable recipe format emerge, binding to it is additive.
 - It does **not yet** take a dependency on OPC 40100, OPC 40010, DI, Machinery or the OpenUSD models. Interop with each is an optional profile (Annexes C and D). These are candidates for normative dependencies once the interop profiles have been exercised against real implementations.
 
-Neither list is a statement that the omitted capability is unimportant — only that Release 0.3.0 does not define it, and that a Server is conformant without it.
+Neither list is a statement that the omitted capability is unimportant — only that Release 0.4.0 does not define it, and that a Server is conformant without it.
 
 ### 1.4 Capabilities and versioning
 
-Release 0.3.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by *OPC UA — AI Model Management and Inference* (§8.1). The NodeSet declares exactly one `RequiredModel` — the base OPC UA namespace — so a Server can adopt it without pulling in any companion model.
+Release 0.4.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by *OPC UA — AI Model Management and Inference* (§8.1). The NodeSet declares exactly one `RequiredModel` — the base OPC UA namespace — so a Server can adopt it without pulling in any companion model.
 
 ---
 
@@ -792,6 +792,12 @@ This clause adds the occurrence. `VisionEventType` is the abstract base; `Object
 **One event per detection.** A `DetectionResultType` carrying *n* detections raises *n* `ObjectDetectedEventType`s, all naming the same `ResultId`. This is what makes `ClassLabel` and `Confidence` available to an `EventFilter`, so a client asks for the classes it cares about above a confidence it chooses and the Server sends nothing else. A single event per result would move that filtering to the client and give up most of the reason to raise events at all. A Server **may** omit events for detections a configured threshold excludes, and **shall not** vary the `ResultId` between events derived from one result.
 
 **Inferred is not measured.** `GroundTruth` is Mandatory on every event. It is `true` only where the value is simulator ground truth rather than a prediction, mirroring `IVisionSimulatedType.GroundTruthAvailable` on the sensor, and §10 already requires the two to be distinguishable. A consumer **shall not** have to infer from `Confidence`, or from the sensor's `RealityKind`, whether it is being told a measurement or a guess.
+
+**The time base is stated, not assumed.** Every timestamp in this model is `UtcTime` (§5.12), which fixes the *representation* and says nothing about whether two Servers agree. Annex I.7 has a consumer correlating an event raised here with one raised by a commanding model, so the agreement matters and is made discoverable rather than assumed: `VisionRootType.ClockSynchronised` is `true` only where this Server's clock is disciplined to an external reference shared with the systems its events are correlated against, and `TimeSyncSource` names what that reference is.
+
+A Server **shall not** report `ClockSynchronised` true on the strength of having set its clock once; the member asserts an ongoing discipline. Where it is `false` or absent a consumer **shall** treat cross-Server ordering as unreliable below the accuracy its own observation supports, and **shall not** attribute a detection to a motion on timing alone.
+
+Neither member is Mandatory and no synchronisation is required. Most cells do not have a disciplined time base, and a **shall** that most conformant Servers would fail is not a requirement — it is a statement that the specification is not implementable. What this model requires instead is that a Server which cannot support the correlation Annex I.7 describes says so, so a consumer learns it by reading rather than by misattributing a frame. Where sub-frame correlation is genuinely needed, IEEE 1588 is the usual answer and `TimeSyncSource` is where a Server says it uses it.
 
 **Where events are raised.** The well-known `Vision` object declares `EventNotifier` with the `SubscribeToEvents` bit set and is the target of a `HasNotifier` reference from the Server object, so a client subscribes at either and receives every Vision event in the Server. A Server **shall** additionally set `EventNotifier` on each `InferencePipelineType` instance that raises events and **shall** add a `HasNotifier` reference from the `Vision` object to it, so a client that wants one pipeline can subscribe to that pipeline alone. `SourceNode` **shall** be the pipeline that produced the result, or the sensor where no pipeline did.
 
@@ -1870,5 +1876,9 @@ So the two halves come from the two models, and a consumer joins them:
 The action alone is sufficient: a robot that reports a successful pick has picked, whatever a camera thinks. The observation adds what the robot cannot supply — which object, at what pose, identified by which model version — and is what makes the event traceable back to a decision under §12.6.
 
 A consumer correlating the two **shall** use the event `Time` of each, which §7.5 fixes as the frame acquisition time on this side, and **shall not** assume the two arrive in that order or in the same notification: they are raised by different objects and, in a Server that implements only one of the two models, one of them does not exist at all. Where the intent named a `Location` and the detection carries a pose, the two **shall** be related through the frame tree of I.1 rather than by comparing coordinates in different frames.
+
+**Correlation on time is only as good as the clocks.** Both models publish `ClockSynchronised` and `TimeSyncSource` on their roots (§7.5). A consumer **shall** read both before correlating on timing, and where either Server reports `false` or omits the member **shall not** attribute a detection to a motion on timing alone — it uses `DecidedBy` instead, which states the link rather than inferring it.
+
+**The link can be stated rather than inferred.** Where the commanding model populates `IntentOperationType.DecidedBy` with the `VisionResultType` instance a pose came from, the correlation stops being a timing argument: a consumer follows the reference from the completion to the result, and from the result through `ProducedBy` to the pipeline, deployment, model and digest. That is the whole provenance chain in one walk, and it is what the commanding model's Annex E.8 asks a Server implementing both to do.
 
 The consequence is that the intent vocabulary *is* the manufacturing-event vocabulary. `pick`, `place` and the rest are already named — as intent types the commanding model defines — and a completion event carrying the intent type is what turns each of them into an occurrence a line controller can subscribe to. Nothing further needs to be invented here, and inventing it would produce a second vocabulary that could disagree with the first about what happened.

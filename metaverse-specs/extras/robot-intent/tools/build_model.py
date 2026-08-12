@@ -43,8 +43,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/RobotIntent/"
-VERSION = "0.2.0"
-PUBDATE = "2026-08-12T00:00:00Z"
+VERSION = "0.3.0"
+PUBDATE = "2026-08-13T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -1820,6 +1820,51 @@ prop_var(MCE, "MissionCompletedEventType", "FailedStepId", String,
          "StepId of the step that ended the mission, or empty where it completed. A "
          "step that failed under an ErrorPolicy of Skip does not end a mission and is "
          "not named here.")
+
+# ---------------------------------------------------------------------------
+# Provenance of a commanded intent
+# ---------------------------------------------------------------------------
+# A pick pose is increasingly computed by a model rather than taught, and nothing in
+# this model recorded which one. The perception side already carries a full chain -
+# result to pipeline to deployment to model to digest - and it stopped at the boundary
+# where the robot actually moved, which is the one place an investigation into why a
+# cell did something starts. This closes it from this end.
+#
+# A NodeId Property and not a reference, for the same reason Deployment is one in the
+# vision model: clause 2 declares the base OPC UA namespace as this model's only
+# RequiredModel, and a reference to a type another specification declares would make
+# that false. A Server that implements neither model leaves it null and loses nothing.
+prop_var(IO, "IntentOperationType", "DecidedBy", NodeId_,
+         "NodeId of the artefact that produced this intent's parameters - typically a "
+         "result published by a perception model, or the model itself - or null where "
+         "a human taught the pose or a program held it. It is what lets an "
+         "investigation that starts at a motion reach the decision behind it; without "
+         "it the provenance chain ends at the boundary where the robot moved, which is "
+         "exactly where such an investigation begins. This model does not define what "
+         "the NodeId points at and takes no dependency on any model that might: see "
+         "clause 11.3.")
+prop_var(ICE, "IntentCompletedEventType", "DecidedBy", NodeId_,
+         "The Operation's DecidedBy, repeated so a consumer auditing from the event "
+         "stream alone does not have to read a node that need not still exist. Null "
+         "where the Operation's is null.")
+
+# ---------------------------------------------------------------------------
+# The time base events are correlated on
+# ---------------------------------------------------------------------------
+# Annex E.7 has a consumer correlating a completion raised here with a perception event
+# raised by another Server, using the Time of each. Nothing said their clocks agreed.
+# The pair below makes the assumption visible and checkable rather than requiring a
+# synchronisation most cells do not have.
+prop_var(1001, "RobotIntentRootType", "ClockSynchronised", Boolean,
+         "True where this Server's clock is disciplined to an external time reference "
+         "shared with the systems its events are correlated against. False, or absent, "
+         "means the clock is free-running and a consumer shall not assume sub-second "
+         "agreement with another Server. See clause 6.10.")
+prop_var(1001, "RobotIntentRootType", "TimeSyncSource", String,
+         "What the clock is disciplined to when ClockSynchronised is true - for example "
+         "IEEE1588, NTP or GPS - as free text, because the set of answers is open and a "
+         "consumer uses it to judge the order of accuracy rather than to parse. Empty "
+         "or absent where the Server does not state one.")
 
 # ===========================================================================
 # ==================================  EMIT  =================================

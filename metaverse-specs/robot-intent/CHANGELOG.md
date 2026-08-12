@@ -2,6 +2,22 @@
 
 All notable changes to this specification and its information model.
 
+## 0.3.0 — 2026-08-13
+
+### What decided this intent
+
+`IntentCompletedEventType` announces that a pick succeeded, and nothing said where the pose it picked at came from. §6.7 adds `IntentOperationType.DecidedBy` (`NodeId`, Optional), mirrored as a field on `IntentCompletedEventType`, appended at `i=6150`–`i=6151`; no existing NodeId moves. It names the result, model or deployment whose output produced this intent's parameters.
+
+**It is a `NodeId`, not a reference to an AI or Vision type, and that is the whole point.** This model declares base OPC UA as its only `RequiredModel` and Annex E.1 explains why: a robot vendor adopting the intent vocabulary must not be made to implement two other companion models to do so. A `NodeId` carries the link without carrying the dependency, which is the pattern *OPC UA — Vision* already uses for `InferencePipelineType.Deployment`. New Annex E.8 states what a Server implementing both ends is expected to populate, and what a consumer may follow.
+
+The value is what makes the traceability chain reach the actuation boundary. A plant asking *which model decided to grasp there* previously had an answer that stopped at the vision result and a gap after it.
+
+### The clocks that events are correlated by
+
+*OPC UA — Vision* Annex I.7 tells a consumer to correlate a completion raised here with a perception event raised there by their `Time`, across two Servers, and nothing said whether the two clocks agree. §6.10 states the time base and adds `RobotIntentRootType.ClockSynchronised` (`Boolean`) and `TimeSyncSource` (`String`), appended at `i=6152`–`i=6153`.
+
+`ClockSynchronised` asserts an ongoing discipline against an external reference, not that the clock was set once. Neither member is Mandatory and no synchronisation is required — most cells do not have a disciplined time base, and §4.3 already routes anything needing tighter timing onto a brokered channel. `DecidedBy` is the stronger answer where it can be populated, because it states the link rather than inferring it from timing.
+
 ## 0.2.0 — 2026-08-12
 
 ### Completion is observable without a read

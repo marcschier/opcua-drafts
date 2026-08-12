@@ -557,6 +557,7 @@ def main():
             "UsdApiSchemaType",      # OPC UA - OpenUSD Scene Materialization
             "DataChannelSourceType",  # OPC UA - Data Channels (draft)
             "BaseEventType",         # OPC 10000-5, base of every EventType in 7.5
+            "IntentOperationType",   # OPC UA - Robot Intent, named by Annex I.7
         }
         known_elsewhere = set(AI_TYPE_ID) | EXTERNAL_TYPES
         for owner, member in set(re.findall(

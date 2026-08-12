@@ -4,6 +4,24 @@ All notable changes to this specification and its information model.
 
 NodeId assignment is **append-only**: a new member takes the next free id, so every previously published NodeId is stable across the releases below.
 
+## 0.4.0 — 2026-08-13
+
+### The clocks that events are correlated by
+
+Annex I.7 tells a consumer to correlate a Vision event with a Robot Intent event by their `Time`, and until now nothing said whether the two Servers' clocks agree. `UtcTime` fixes the representation of an instant, not agreement about which instant it names, so the rule rested on an assumption a consumer had no way to test.
+
+§7.5 states the time base and adds `VisionRootType.ClockSynchronised` (`Boolean`) and `TimeSyncSource` (`String`), appended at `i=6213`–`i=6214`; no existing NodeId moves. `ClockSynchronised` asserts an ongoing discipline against an external reference, not that the clock was set correctly once — a Server that set its clock at boot and drifted since **shall not** report it true. Where it is false or absent, a consumer must not attribute a detection to a motion on timing alone.
+
+Neither member is Mandatory and synchronisation is not required. Most cells do not have a disciplined time base, and a **shall** that most conformant Servers would fail is not a requirement but a fiction — §4.3 already routes anything needing tighter timing than this interface offers onto a brokered channel. What is required is that a Server unable to support the correlation says so, which is exactly what an Optional member reporting `false` does.
+
+*OPC UA — Robot Intent* 0.3.0 adds the identical pair on its own root, so the two ends of the correlation are discoverable from either side.
+
+### Provenance across the perception/actuation boundary
+
+Annex I.7 gains the other half of the correlation story: where a Server implements both models, *OPC UA — Robot Intent* 0.3.0 can now populate `IntentOperationType.DecidedBy` with the `VisionResultType` instance a pose came from. The consumer then follows a reference instead of arguing from timestamps, and reaches this model's existing `ProducedBy` chain — result → pipeline → deployment → model → digest — in one walk.
+
+Nothing changes in this model to enable that: `DecidedBy` is a plain `NodeId`, so Robot Intent keeps base OPC UA as its only `RequiredModel` and a Vision Server needs no awareness of it.
+
 ## 0.3.0 — 2026-08-12
 
 ### Results say what is; events say what happened
