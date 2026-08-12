@@ -136,6 +136,33 @@ else:
     if XR_NAMESPACE not in required_models:
         errors.append(f"NodeSet does not declare RequiredModel {XR_NAMESPACE}")
 
+elements_by_id = {}
+for tag, el in elems:
+    parsed = parse_numeric_nodeid(el.get("NodeId"))
+    if parsed is not None:
+        elements_by_id[parsed] = (tag, el)
+
+CONCRETE_EXTERNAL_PARENTS = {(0, 2253)}  # Server
+TYPE_NODE_CLASSES = {"UAObjectType", "UAVariableType"}
+
+
+def is_concrete_instance(el):
+    """Return True when the ParentNodeId chain terminates at a concrete base instance."""
+    parent = parse_numeric_nodeid(el.get("ParentNodeId"))
+    seen = set()
+    while parent is not None and parent not in seen:
+        seen.add(parent)
+        if parent in CONCRETE_EXTERNAL_PARENTS:
+            return True
+        entry = elements_by_id.get(parent)
+        if entry is None:
+            return False
+        tag, parent_el = entry
+        if tag in TYPE_NODE_CLASSES:
+            return False
+        parent = parse_numeric_nodeid(parent_el.get("ParentNodeId"))
+    return False
+
 def check(t, ctx):
     parsed = parse_numeric_nodeid(t)
     if parsed is None:
@@ -181,15 +208,9 @@ for tag, el in elems:
         if not any(rt == "HasSubtype" and not fwd for rt, _, fwd in rl):
             errors.append(f"{ctx}: type without HasSubtype(inverse)")
     if tag in ("UAVariable", "UAObject", "UAMethod") and el.get("ParentNodeId"):
-        p = parse_numeric_nodeid(el.get("ParentNodeId"))
-        wellknown_parent = p is not None and p[0] == 0
-        cat_el = el.find(NS + "Category")
-        is_instance = cat_el is not None and (cat_el.text or "").strip() == "AAS Instances"
-        if "HasModellingRule" not in reftypes and not is_enc and not wellknown_parent:
-            # Runtime instances under the well-known registry (and the materialized members of
-            # the well-known SchemaRegistry object) are concrete, not type declarations.
-            if not (parsed and parsed[1] in (1150,)) and not is_instance:
-                warnings.append(f"{ctx}: instance/member without HasModellingRule")
+        if ("HasModellingRule" not in reftypes and not is_enc
+                and not is_concrete_instance(el)):
+            warnings.append(f"{ctx}: instance/member without HasModellingRule")
         if tag in ("UAVariable", "UAObject") and not typedef and not is_enc:
             errors.append(f"{ctx}: missing HasTypeDefinition")
 

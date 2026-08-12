@@ -111,6 +111,33 @@ for el in root:
         defined[num] = (tag, el.get("BrowseName"))
     elems.append((tag, el))
 
+elements_by_id: dict[tuple[int, int], tuple[str, ET.Element]] = {}
+for tag, el in elems:
+    parsed = parse_nid(el.get("NodeId"))
+    if parsed is not None:
+        elements_by_id[parsed] = (tag, el)
+
+CONCRETE_EXTERNAL_PARENTS = {(0, 2268)}  # ServerCapabilities
+TYPE_NODE_CLASSES = {"UAObjectType", "UAVariableType"}
+
+
+def is_concrete_instance(el: ET.Element) -> bool:
+    """Return True when the ParentNodeId chain terminates at a concrete base instance."""
+    parent = parse_nid(el.get("ParentNodeId"))
+    seen: set[tuple[int, int]] = set()
+    while parent is not None and parent not in seen:
+        seen.add(parent)
+        if parent in CONCRETE_EXTERNAL_PARENTS:
+            return True
+        entry = elements_by_id.get(parent)
+        if entry is None:
+            return False
+        tag, parent_el = entry
+        if tag in TYPE_NODE_CLASSES:
+            return False
+        parent = parse_nid(parent_el.get("ParentNodeId"))
+    return False
+
 
 def check_target(text, ctx):
     parsed = parse_nid(text)
@@ -161,8 +188,7 @@ for tag, el in elems:
     reftypes = [rt for rt, _, _ in rl]
     typedefs = [t for rt, t, _f in rl if rt == "HasTypeDefinition"]
     is_encoding = any(parse_nid(t) == (0, 76) for t in typedefs)
-    category = el.find(NS + "Category")
-    is_instance = category is not None and (category.text or "").strip() == build_model.CAT_INST
+    is_instance = is_concrete_instance(el)
 
     if tag in ("UAObjectType", "UADataType", "UAVariableType", "UAReferenceType"):
         if not any(rt == "HasSubtype" and not fwd for rt, _, fwd in rl):
