@@ -37,4 +37,31 @@ slides:
       optional in-band path. Tie it to AI Model Management because the result is not auditable unless
       it can point at the deployment and model that produced it.
 
+  - layout: diagram
+    title: What the cell would show
+    kicker: Perception and actuation in one address space, so a pose can be acted on rather than exported
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: cell, x: 0.3, y: 1.6, w: 3.4, h: 1.5, text: "BinPickingCell", style: primary, font_size: 12, lines: ["opc.tcp :62855", "Vision · Robot Intent · OpenUSD"]}
+      - {id: sensor, x: 4.6, y: 0.3, w: 3.2, h: 1.1, text: "Sensor twin", style: green, font_size: 11, lines: ["eye-in-hand · calibration"]}
+      - {id: pipe, x: 4.6, y: 1.8, w: 3.2, h: 1.1, text: "Inference pipeline", style: purple, font_size: 11, lines: ["detections · poses"]}
+      - {id: intent, x: 4.6, y: 3.3, w: 3.2, h: 1.1, text: "Robot Intent", style: deep, font_size: 11, lines: ["Pick · Place"]}
+      - {id: cliv, x: 8.8, y: 1.8, w: 3.0, h: 1.1, text: "BinPickingClient", style: muted, font_size: 11, lines: ["--demo or --mcp"]}
+    arrows:
+      - {from: cell, to: sensor}
+      - {from: cell, to: pipe}
+      - {from: cell, to: intent}
+      - {from: pipe, to: cliv}
+    captions:
+      - {x: 0, y: 5.0, w: 12, text: "The samples do not build yet — present the shape, not a terminal", center: true}
+    notes: |
+      Draw the loop with a finger: the sensor twin publishes frames and calibration, the pipeline
+      publishes detections whose poses are expressed in named frames, and the client composes a
+      detection from the camera frame into the world frame and hands it straight to a `Pick` intent.
+      That composition is only possible because the vision-side and robot-side frame ids are the same
+      ids — which is the point the diagram is making.
 
+      Then be straight about the state. `Opc.Ua.Vision.*` and this cell exist on
+      `marcschier/vision-guided-picking`, but the Vision samples do not currently compile, and
+      upstream PR #4235 is a draft with its build red. This is a walkthrough of the shape, not a demo.

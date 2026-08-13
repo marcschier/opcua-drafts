@@ -28,3 +28,28 @@ slides:
       still speaks OPC UA; MCP is a bounded client-side tool surface over the same Part 4 services.
       That is why the same tool can later drive Robot Intent in demo 5.
 
+  - layout: diagram
+    title: What the demo starts
+    kicker: Two processes on one machine, and the agent speaks neither OPC UA nor the address space
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: agent, x: 0.2, y: 2.1, w: 2.9, h: 1.2, text: "Language model", style: deep, font_size: 12, lines: ["MCP client"]}
+      - {id: mcp, x: 4.3, y: 2.1, w: 3.4, h: 1.2, text: "`Opc.Ua.Mcp`", style: primary, font_size: 12, lines: ["http :5100 /mcp · profile services"]}
+      - {id: srv, x: 8.9, y: 2.1, w: 2.9, h: 1.2, text: "ConsoleReferenceServer", style: accent, font_size: 12, lines: ["opc.tcp :62541"]}
+      - {id: tools, x: 4.3, y: 4.2, w: 3.4, h: 1.0, text: "Tool surface", style: pale, font_size: 11, lines: ["Browse · Read · Write · Call · Subscribe"]}
+    arrows:
+      - {from: agent, to: mcp, label: "tool call"}
+      - {from: mcp, to: srv, label: "Part 4 services"}
+      - {from: mcp, to: tools}
+    captions:
+      - {x: 0, y: 5.5, w: 12, text: "Nothing AI-shaped is added to the Server — the tool surface is a client", center: true}
+    notes: |
+      Use this to answer the question the demo always attracts: what did we add to the Server? Nothing.
+      The Reference Server is the stock sample on its normal endpoint, and everything model-facing is
+      the middle box. The agent talks MCP over Streamable HTTP and never learns an address space; the
+      MCP server turns each tool call into ordinary Part 4 Browse, Read, Write, Call and Subscribe.
+
+      The consequence is the reason this demo opens the deck: any conforming Server is already
+      agent-operable, and the same tool surface reappears in demo 5 driving Robot Intent.
+

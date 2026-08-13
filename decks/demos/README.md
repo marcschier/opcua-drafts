@@ -3,10 +3,10 @@
 Ten demos showing the drafts in this repository running on the
 [OPC UA .NET Standard stack](https://github.com/OPCFoundation/UA-.NETStandard).
 
-Each folder holds a **presenter walkthrough** (`README.md`) — what the demo shows, what to say at
-each step, and what to do when it misbehaves — and, where the code exists, a **runnable script**
-(`run-demo.ps1`) that checks prerequisites, builds only what it needs, starts the servers, runs the
-client, and tears everything down again.
+Each folder holds a **presenter walkthrough** (`README.md`) — what the demo shows, a topology
+diagram of the processes it starts, what to say at each step, and what to do when it misbehaves —
+and, where the code exists, a **runnable script** (`run-demo.ps1`) that checks prerequisites, builds
+only what it needs, starts the servers, runs the client, and tears everything down again.
 
 Each demo also has one slide in [the deck](../README.md), placed next to the draft it demonstrates.
 

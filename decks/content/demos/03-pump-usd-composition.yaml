@@ -31,3 +31,28 @@ slides:
       about composition as a contract: the site assembles the scene while each machine remains owned by
       the server that actually models and simulates it.
 
+  - layout: diagram
+    title: What the demo starts
+    kicker: Two Servers, one stage — the site assembles the scene without owning the machines
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: pump, x: 0.2, y: 1.0, w: 3.4, h: 1.4, text: "PumpDeviceIntegrationServer", style: primary, font_size: 11, lines: ["opc.tcp :62542 · 3 pumps", "models and simulates"]}
+      - {id: site, x: 4.6, y: 1.0, w: 3.4, h: 1.4, text: "SiteCompositionServer", style: deep, font_size: 12, lines: ["opc.tcp :62544", "site stage · component binding"]}
+      - {id: view, x: 9.0, y: 1.0, w: 2.8, h: 1.4, text: "Federated viewer", style: accent, font_size: 12, lines: ["one composed stage"]}
+      - {id: fed, x: 4.6, y: 3.6, w: 3.4, h: 1.0, text: "Cross-server binding", style: purple, font_size: 11, lines: ["names the pump endpoint"]}
+    arrows:
+      - {from: pump, to: site, label: "subordinate endpoint"}
+      - {from: site, to: view, label: "discover"}
+      - {from: site, to: fed}
+    captions:
+      - {x: 0, y: 5.1, w: 12, text: "Composition is a contract: the site references, the pump server still owns", center: true}
+    notes: |
+      The point of the picture is the ownership boundary. The pump server models and simulates the
+      pumps; the site server does not copy those values. It publishes a site stage and a cross-server
+      component binding that names the pump server's endpoint.
+
+      With federation enabled the connector opens that subordinate endpoint itself, discovers the pump
+      server's own representations and writes them into the same stage. So the scene is assembled at
+      the site while each machine stays owned by the Server that actually models it — which is what
+      makes this composition rather than aggregation.

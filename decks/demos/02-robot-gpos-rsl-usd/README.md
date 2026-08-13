@@ -8,6 +8,30 @@ A two-robot cell runs from `MinimalRobotServer`. The same OPC UA node manager pu
 
 It proves OpenUSD Part 1 and Part 2 can render a companion-model robot cell directly, while the Robot Intent draft sits beside Robotics as the command model for the same robot domain.
 
+**Topology**
+
+```mermaid
+flowchart LR
+  SRV["MinimalRobotServer<br/>opc.tcp :62830<br/>two mobile six-axis robots"]:::server
+  RSL["RSL frame chain<br/>Part 210"]:::model
+  GPOS["GPOS global location<br/>Part 211"]:::model
+  USD["OpenUSD representations"]:::model
+  VIEW["Generic connector viewer<br/>draws the stage"]:::client
+  SRV --> RSL
+  SRV --> GPOS
+  SRV --> USD
+  RSL -->|"discover mappings"| VIEW
+  GPOS -->|"subscribe"| VIEW
+  USD -->|"fetch served stage"| VIEW
+
+  classDef server fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef model fill:#eef3fa,stroke:#444
+  classDef client fill:#eef3fa,stroke:#444
+```
+
+The viewer holds no robot-specific code. It discovers the mappings, subscribes to the values they
+name, and animates the stage from them.
+
 **Prerequisites**
 
 - PowerShell 7.4 or later.

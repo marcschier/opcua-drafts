@@ -31,3 +31,29 @@ slides:
       the upstream OPC UA forms. The client reads through the Pump nodes, not directly from the
       sources, which is why the documents are the source of truth and the address space is a projection.
 
+  - layout: diagram
+    title: What the demo starts
+    kicker: Four processes, and the documents are the source of truth the address space is built from
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: a, x: 0.2, y: 0.6, w: 3.0, h: 1.0, text: "FlatTagServer SourceA", style: pale, font_size: 11, lines: ["opc.tcp :62551 · flat tags"]}
+      - {id: b, x: 0.2, y: 2.2, w: 3.0, h: 1.0, text: "FlatTagServer SourceB", style: pale, font_size: 11, lines: ["opc.tcp :62552 · flat tags"]}
+      - {id: agg, x: 4.4, y: 1.4, w: 3.4, h: 1.4, text: "AggregationServer", style: primary, font_size: 12, lines: ["opc.tcp :62550", "materializes a Pump namespace"]}
+      - {id: docs, x: 4.4, y: 3.8, w: 3.4, h: 1.0, text: "TM / TD documents", style: purple, font_size: 11, lines: ["the source of truth"]}
+      - {id: cli, x: 8.8, y: 1.4, w: 3.0, h: 1.4, text: "AggregationClient", style: accent, font_size: 12, lines: ["reads Pump nodes"]}
+    arrows:
+      - {from: a, to: agg}
+      - {from: b, to: agg}
+      - {from: docs, to: agg, label: "projects"}
+      - {from: agg, to: cli, label: "Pump nodes"}
+    captions:
+      - {x: 0, y: 5.2, w: 12, text: "The client never reads a source directly — the projection is what it browses", center: true}
+    notes: |
+      Read the picture right to left to get the argument. The client reads Pump nodes, not tags. Those
+      Pump nodes do not exist on either source Server: the aggregation Server materializes them from
+      the Thing Model and Thing Description documents and binds each variable to the upstream form.
+
+      That is why the documents box points at the aggregation Server rather than sitting beside it.
+      Change a document and the projected address space changes; the sources are unaware. The two flat
+      tag Servers are deliberately dull — they are what most brownfield equipment actually looks like.

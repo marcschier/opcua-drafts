@@ -8,6 +8,30 @@ Two flat OPC UA tag servers publish simple values with no Pump companion-model h
 
 It proves the WoT Binding and WoT Connectivity drafts can materialize a companion-spec-shaped machine from documents without changing the device.
 
+**Topology**
+
+```mermaid
+flowchart LR
+  A["FlatTagServer SourceA<br/>opc.tcp :62551<br/>flat tags"]:::source
+  B["FlatTagServer SourceB<br/>opc.tcp :62552<br/>flat tags"]:::source
+  DOCS["Thing Model and Thing Descriptions<br/>the source of truth"]:::docs
+  AGG["AggregationServer<br/>opc.tcp :62550<br/>materialized Pump namespace"]:::server
+  CLI["AggregationClient<br/>reads Pump nodes"]:::client
+  A -->|"upstream forms"| AGG
+  B -->|"upstream forms"| AGG
+  DOCS -->|"projects"| AGG
+  AGG -->|"projected variables"| CLI
+
+  classDef source fill:#eef3fa,stroke:#444
+  classDef docs fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef server fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef client fill:#eef3fa,stroke:#444
+```
+
+Read it right to left. The client reads Pump nodes that exist on neither source: the aggregation
+server materializes them from the documents and binds each variable to the upstream form. Change a
+document and the projection changes; the sources are unaware.
+
 **Prerequisites**
 
 - PowerShell 7.4 or later.

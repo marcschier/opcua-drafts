@@ -10,6 +10,43 @@ available" in a distributed system.
 It proves the stack reference implementation supports OPC UA server redundancy, managed client failover
 and subscription recovery patterns that drafts can rely on when they assume a highly available Server.
 
+## Topology
+
+```mermaid
+flowchart TD
+  A["replica-a<br/>opc.tcp :62543"]:::active
+  B["replica-b<br/>opc.tcp :62544"]:::standby
+  C["replica-c<br/>opc.tcp :62545"]:::standby
+  CLI["RedundantClient<br/>one Session, one Subscription"]:::client
+  A ---|"peer set"| B
+  B ---|"peer set"| C
+  A ---|"peer set"| C
+  CLI -->|"connects here first"| A
+
+  classDef active fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef standby fill:#eef3fa,stroke:#444
+  classDef client fill:#eef3fa,stroke:#444
+```
+
+Each replica is told about the other two through `HA_REDUNDANT_PEERS`, so the redundant set is
+configuration rather than discovery. Every replica publishes the same redundancy information and a
+ServiceLevel the client can compare.
+
+## Failover
+
+```mermaid
+stateDiagram-v2
+  [*] --> Connected: Session on replica-a
+  Connected --> Monitoring: Subscription created, items reporting
+  Monitoring --> PeerLost: replica-a stopped
+  PeerLost --> Reconnecting: managed client picks the best ServiceLevel
+  Reconnecting --> Monitoring: subscription transferred, not rebuilt
+  Monitoring --> [*]: demo ends
+```
+
+Nothing in the client code handles the transition. That is the claim: the stack honours Part 4
+redundancy, so the monitored items keep reporting across the kill.
+
 ## Prerequisites
 
 - PowerShell 7.4 or later.

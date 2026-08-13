@@ -11,6 +11,47 @@
 
 It proves the missing layer between existing OPC UA machine vision specifications and real integrations. OPC 40100-1 orchestrates jobs but leaves result content application-specific, and OPC 40010-1 has no camera, perception or calibration model. This draft defines the shape that lets two Servers publish comparable results.
 
+## Topology
+
+```mermaid
+flowchart LR
+  CELL["BinPickingCell<br/>opc.tcp :62855<br/>Vision, Robot Intent, OpenUSD"]:::server
+  SENSOR["Sensor twin<br/>eye-in-hand, calibration"]:::model
+  PIPE["Inference pipeline<br/>detections and poses"]:::model
+  INTENT["Robot Intent controller<br/>Pick and Place"]:::model
+  CLI["BinPickingClient<br/>--demo or --mcp"]:::client
+  CELL --> SENSOR
+  CELL --> PIPE
+  CELL --> INTENT
+  SENSOR -->|"frames"| PIPE
+  PIPE -->|"detection poses"| CLI
+  CLI -->|"Pick in world frame"| INTENT
+
+  classDef server fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef model fill:#eef3fa,stroke:#444
+  classDef client fill:#eef3fa,stroke:#444
+```
+
+## The perception-to-action loop
+
+```mermaid
+sequenceDiagram
+    participant A as Client or agent
+    participant V as Vision pipeline
+    participant R as Robot Intent controller
+    A->>V: RunInference or read the latest result
+    V-->>A: DetectionResultType, pose in the camera frame
+    A->>A: compose camera to flange to robot_base to world
+    A->>R: SubmitIntent Pick at the composed pose
+    R-->>A: operation NodeId, then the terminal state
+```
+
+The composition step is only possible because the vision-side and robot-side frame ids are the same
+ids. That is the point of putting perception and actuation in one address space.
+
+**This does not run yet.** The Vision samples on `marcschier/vision-guided-picking` do not compile,
+so the diagrams above describe the shape rather than a terminal you can show.
+
 ## Prerequisites
 
 - This repository.

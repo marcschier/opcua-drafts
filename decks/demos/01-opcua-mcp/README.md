@@ -9,6 +9,26 @@ browse, read, write, subscribe, publish and call methods without a hand-written 
 It proves the stack can expose a standard OPC UA Server as an MCP tool surface used directly by agents
 and by the later Robot Intent demo.
 
+## Topology
+
+```mermaid
+flowchart LR
+  AGENT["Language model<br/>MCP client"]:::client
+  MCP["Opc.Ua.Mcp<br/>http :5100 /mcp"]:::bridge
+  SRV["ConsoleReferenceServer<br/>opc.tcp :62541"]:::server
+  AGENT -->|"tool call"| MCP
+  MCP -->|"Browse, Read, Write, Call, Subscribe"| SRV
+  SRV -->|"values and results"| MCP
+  MCP -->|"tool result"| AGENT
+
+  classDef client fill:#eef3fa,stroke:#444
+  classDef bridge fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef server fill:#eef3fa,stroke:#444
+```
+
+Nothing AI-shaped is added to the Server. The Reference Server is the stock sample on its normal
+endpoint; everything model-facing is the middle box, and it is an ordinary OPC UA client.
+
 ## Prerequisites
 
 - PowerShell 7.4 or later.

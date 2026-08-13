@@ -185,3 +185,8 @@ iterating, so the committed deck only changes when you mean it to.
 - **Speaker notes carry the detail.** Slides stay readable; the depth lives in the notes.
 - **Say what is a draft.** Version and target body belong on the status slide of every effort.
 - **A demo slide sits next to the effort it demonstrates**, not in a demo appendix.
+- **Every demo carries a topology diagram** on the slide after it, showing the processes the script
+  starts, the ports they listen on and what flows between them. The matching walkthrough under
+  [`demos/`](demos/) repeats it as Mermaid, and adds a state or sequence diagram where the demo turns
+  on a lifecycle rather than a wiring — the intent operation, redundancy failover, the Data Channel
+  exchange, the perception-to-action loop and the inference call flow all have one.

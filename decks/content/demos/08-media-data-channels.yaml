@@ -28,4 +28,30 @@ slides:
       trust anchor. If QUIC is unavailable, the TCP leg still proves the service and framing path,
       while the branch documentation explains the QUIC stream binding and its platform limits.
 
+  - layout: diagram
+    title: What the demo starts
+    kicker: One SecureChannel carrying a stream beside the Publish traffic, not a second endpoint
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: cli, x: 0.3, y: 1.8, w: 3.0, h: 1.4, text: "Client", style: deep, font_size: 12, lines: ["one Session"]}
+      - {id: chan, x: 4.3, y: 1.8, w: 3.6, h: 1.4, text: "SecureChannel", style: primary, font_size: 12, lines: ["already open, already trusted"]}
+      - {id: srv, x: 8.9, y: 1.8, w: 2.8, h: 1.4, text: "Server", style: accent, font_size: 12, lines: ["ConsoleDataChannelStreaming"]}
+      - {id: pub, x: 4.3, y: 0.2, w: 3.6, h: 1.0, text: "Publish", style: pale, font_size: 11, lines: ["50 monitored items"]}
+      - {id: str, x: 4.3, y: 3.8, w: 3.6, h: 1.0, text: "STR frames", style: green, font_size: 11, lines: ["tcp and quic · 1200 bytes"]}
+    arrows:
+      - {from: cli, to: chan, label: "OpenDataChannel"}
+      - {from: chan, to: srv}
+      - {from: pub, to: chan}
+      - {from: chan, to: str}
+    captions:
+      - {x: 0, y: 5.1, w: 12, text: "No second port, no second trust anchor, no second thing to get wrong", center: true}
+    notes: |
+      The picture is the argument. Media runs beside the Publish traffic on the SecureChannel the
+      Session already opened — there is no separate RTSP or WebRTC endpoint with its own port,
+      handshake and trust anchor.
 
+      The script runs three passes: a TCP stream, the same stream over QUIC, and a benchmark that puts
+      12000 frames through while 50 monitored items compete for the same channel. That last one is the
+      honest part of the demo — the counters show what the competing Publish load costs, which is the
+      question anyone who has tried this actually has.

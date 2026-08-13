@@ -11,6 +11,47 @@
 
 It proves the control plane for model execution can be OPC UA. A client calls one deployment shape whether inference is local, hosted or a fallback, and the result carries enough provenance to answer which model produced this answer six months later.
 
+## Topology
+
+```mermaid
+flowchart LR
+  CLI["ModelManagementClient<br/>Invoke, BeginTransfer, InvokeAsync"]:::client
+  SRV["ModelManagementServer<br/>opc.tcp :62640"]:::server
+  BACK["verify_backend.py<br/>http :5273, OpenAI-compatible test double"]:::backend
+  PROV["Provenance<br/>UsesModel, ModelUsed, FinishReason"]:::model
+  CLI -->|"OPC UA Method call"| SRV
+  SRV -->|"chat completions"| BACK
+  BACK -->|"answer and usage"| SRV
+  SRV -->|"answer plus provenance"| CLI
+  SRV --> PROV
+
+  classDef client fill:#eef3fa,stroke:#444
+  classDef server fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef backend fill:#eef3fa,stroke:#444
+  classDef model fill:#eef3fa,stroke:#444
+```
+
+## The call flow
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as ModelManagementServer
+    participant B as Inference backend
+    C->>S: browse the catalogue and deployments
+    C->>S: GetCapabilities
+    C->>S: Invoke(prompt)
+    S->>B: OpenAI-compatible request
+    B-->>S: completion, usage, finish reason
+    S-->>C: answer, ModelUsed, FinishReason
+    C->>S: InvokeAsync(prompt)
+    S-->>C: job NodeId
+    S-->>C: ResponsePayload when the job completes
+```
+
+Where inference runs is an implementation detail; what answered is not. The backend is a test double
+so the OPC UA path is runnable without a cloud account, and no cloud-vendor SDK is referenced.
+
 ## Prerequisites
 
 - PowerShell 7.4 or later.

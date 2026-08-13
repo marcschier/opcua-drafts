@@ -34,4 +34,28 @@ slides:
       the paths before presenting; the Vision samples on it do not currently build, though the AI
       sample this demo uses does.
 
+  - layout: diagram
+    title: What the demo starts
+    kicker: Three processes, and the answer arrives with the model that produced it attached
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: cli, x: 0.3, y: 1.9, w: 3.0, h: 1.3, text: "ModelManagementClient", style: accent, font_size: 11, lines: ["Invoke · BeginTransfer · InvokeAsync"]}
+      - {id: srv, x: 4.4, y: 1.9, w: 3.4, h: 1.3, text: "ModelManagementServer", style: primary, font_size: 12, lines: ["opc.tcp :62640"]}
+      - {id: back, x: 8.9, y: 1.9, w: 2.8, h: 1.3, text: "verify_backend.py", style: muted, font_size: 11, lines: ["http :5273 · test double"]}
+      - {id: prov, x: 4.4, y: 4.0, w: 3.4, h: 1.1, text: "Provenance", style: green, font_size: 11, lines: ["UsesModel · ModelUsed · FinishReason"]}
+    arrows:
+      - {from: cli, to: srv, label: "Method call"}
+      - {from: srv, to: back, label: "OpenAI-compatible"}
+      - {from: srv, to: prov}
+    captions:
+      - {x: 0, y: 5.4, w: 12, text: "Where inference runs is an implementation detail; what answered is not", center: true}
+    notes: |
+      Three processes and one claim. The client makes an ordinary OPC UA Method call; the Server
+      reaches an inference backend over an OpenAI-compatible REST API; the answer comes back with
+      `ModelUsed` and the references an auditor needs to trace it later.
 
+      Be precise about what is real. The address space, the Methods, the transfer path, the async job
+      path and the provenance chain are implemented. The backend is a test double so the OPC UA path
+      is runnable without a cloud account, and the learning loop is simulated — it does not retrain or
+      promote a model. No cloud-vendor SDK is referenced anywhere in the sample.

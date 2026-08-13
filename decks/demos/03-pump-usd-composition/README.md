@@ -8,6 +8,25 @@ A pump server publishes several simulated OPC 40223 PumpType machines through th
 
 It proves OpenUSD Part 1 and Part 2 can describe both the machine-to-prim binding and the composed scene, so a site is assembled through USD composition rather than a bespoke aggregator.
 
+**Topology**
+
+```mermaid
+flowchart LR
+  PUMP["PumpDeviceIntegrationServer<br/>opc.tcp :62542<br/>models and simulates 3 pumps"]:::server
+  SITE["SiteCompositionServer<br/>opc.tcp :62544<br/>site stage and component binding"]:::server
+  VIEW["Federated viewer<br/>one composed stage"]:::client
+  PUMP -->|"subordinate endpoint"| SITE
+  SITE -->|"discover representations"| VIEW
+  PUMP -->|"federated open"| VIEW
+
+  classDef server fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef client fill:#eef3fa,stroke:#444
+```
+
+The site server does not copy pump values. It publishes a cross-server component binding that names
+the pump endpoint, and with federation enabled the connector opens that endpoint itself, so each
+machine stays owned by the Server that models it.
+
 **Prerequisites**
 
 - PowerShell 7.4 or later.

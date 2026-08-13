@@ -11,6 +11,47 @@
 
 It proves the Data Channels draft is concrete enough to move media-like bytes on the SecureChannel that is already open: no second port, no second handshake and no second trust anchor. This is the transport assumption the Vision draft uses when it says media is brokered, not carried.
 
+## Topology
+
+```mermaid
+flowchart LR
+  CLI["Client<br/>one Session"]:::client
+  CH["SecureChannel<br/>already open, already trusted"]:::channel
+  SRV["Server<br/>ConsoleDataChannelStreaming"]:::server
+  PUB["Publish<br/>50 monitored items"]:::traffic
+  STR["STR frames<br/>tcp and quic, 1200 bytes"]:::traffic
+  CLI --- CH
+  CH --- SRV
+  PUB -.->|"competes for the same channel"| CH
+  CH -.->|"streams beside Publish"| STR
+
+  classDef client fill:#eef3fa,stroke:#444
+  classDef channel fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef server fill:#eef3fa,stroke:#444
+  classDef traffic fill:#eef3fa,stroke:#444
+```
+
+No second port, no second handshake, no second trust anchor. That is the whole argument for putting
+media here rather than beside the Server.
+
+## The exchange
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    C->>S: CreateSession and activate
+    Note over S: a stream becomes available
+    S-->>C: DataChannelOfferedEventType on an ordinary Subscription
+    C->>S: OpenDataChannel(sourceNodeId, offerId, requestedParameters)
+    S-->>C: channelId, revisedParameters
+    S-->>C: STR frames
+    S-->>C: Publish responses continue throughout
+```
+
+The offer arrives on an ordinary Subscription, so no new notification mechanism is introduced. A
+Client that never subscribed never learns of the offer, which is the correct outcome.
+
 ## Prerequisites
 
 - PowerShell 7.4 or later.

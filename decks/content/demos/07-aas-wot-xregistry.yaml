@@ -29,4 +29,29 @@ slides:
       registry resource, and a Thing Description that lets a WoT client find the same asset without
       inventing a second identifier.
 
+  - layout: diagram
+    title: One asset, three projections
+    kicker: The same shell reached over OPC UA, catalogued as documents, and described as a Thing
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: shell, x: 4.2, y: 0.4, w: 3.6, h: 1.2, text: "AAS V3 shell", style: deep, font_size: 12, lines: ["submodels · elements"]}
+      - {id: ua, x: 0.2, y: 2.6, w: 3.4, h: 1.3, text: "OPC UA AddressSpace", style: primary, font_size: 11, lines: ["live, browseable Nodes"]}
+      - {id: reg, x: 4.2, y: 2.6, w: 3.6, h: 1.3, text: "xRegistry", style: purple, font_size: 11, lines: ["groups · resources · versions"]}
+      - {id: td, x: 8.4, y: 2.6, w: 3.4, h: 1.3, text: "Thing Description", style: green, font_size: 11, lines: ["AAS vocabulary + UA binding"]}
+    arrows:
+      - {from: shell, to: ua}
+      - {from: shell, to: reg}
+      - {from: shell, to: td}
+    captions:
+      - {x: 0, y: 4.6, w: 12, text: "One identifier construction, so all three recognise the same asset", center: true}
+    notes: |
+      This is the whole demo, and it is a walkthrough rather than a run. Three projections of one
+      shell, not three catalogues that happen to overlap. The shared identifier construction is what
+      makes them the same asset: the shell is recognisable over OPC UA and over HTTP without a
+      translation table.
 
+      Say which halves exist. The registry half is implemented in the stack today. The AAS half lives
+      in the draft and its generated artefacts, with `Opc.Ua.Aas` in progress on a feature branch.
+      xRegistry also supplies the version history the AAS metamodel does not carry, which is the
+      argument for the middle box rather than a second AAS-shaped store.

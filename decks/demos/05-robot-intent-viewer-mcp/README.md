@@ -10,6 +10,49 @@ a target, without embedding a robot program.
 It proves the Robot Intent draft can command a robot through declared capabilities, observable Part 10
 operations and the RI-Interop-40010 link, while an agent uses the standard OPC UA MCP tool surface.
 
+## Topology
+
+```mermaid
+flowchart TD
+  ROBOT["IntentEnabledRobot<br/>opc.tcp :62840<br/>controller, operations, safety"]:::server
+  VIEW["IntentViewerClient<br/>observes the lifecycle"]:::client
+  MCP["Opc.Ua.Mcp<br/>http :5100, profile services"]:::bridge
+  AGENT["Language model"]:::client
+  ROBOT -->|"subscribe to operation state"| VIEW
+  VIEW -->|"RequestControl, SubmitIntent"| ROBOT
+  ROBOT --> MCP
+  MCP --> AGENT
+  AGENT -->|"tool call"| MCP
+  MCP -->|"Call SubmitIntent"| ROBOT
+
+  classDef server fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef client fill:#eef3fa,stroke:#444
+  classDef bridge fill:#eef3fa,stroke:#444,stroke-width:2px
+```
+
+Two clients, one Server, the same Part 4 services under both. MCP is the demo 1 tool surface pointed
+at a different Server.
+
+## The operation lifecycle
+
+```mermaid
+stateDiagram-v2
+  [*] --> Accepted: SubmitIntent returns an operation NodeId
+  Accepted --> Queued: work admitted behind other work
+  Accepted --> Executing: the arm starts moving
+  Queued --> Executing
+  Executing --> Succeeded
+  Executing --> Failed: safety or execution refusal
+  Executing --> Cancelling: CancelIntent
+  Cancelling --> Cancelled
+  Succeeded --> [*]
+  Failed --> [*]
+  Cancelled --> [*]
+```
+
+The client subscribes to the operation node rather than waiting on the Method call. A refusal is an
+ordinary output with `Accepted` false and an `IntentFailureEnum`, not a bad Service StatusCode.
+
 ## Prerequisites
 
 - PowerShell 7.4 or later.

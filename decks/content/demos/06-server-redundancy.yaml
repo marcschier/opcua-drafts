@@ -29,3 +29,30 @@ slides:
       both are useful because the application sees what happened instead of silently assuming
       continuity.
 
+  - layout: diagram
+    title: What the demo starts
+    kicker: Three replicas that know about each other, and a client that survives losing the one it is on
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: a, x: 0.3, y: 0.5, w: 3.2, h: 1.1, text: "replica-a", style: primary, font_size: 12, lines: ["opc.tcp :62543"]}
+      - {id: b, x: 4.4, y: 0.5, w: 3.2, h: 1.1, text: "replica-b", style: pale, font_size: 12, lines: ["opc.tcp :62544"]}
+      - {id: c, x: 8.5, y: 0.5, w: 3.2, h: 1.1, text: "replica-c", style: pale, font_size: 12, lines: ["opc.tcp :62545"]}
+      - {id: set, x: 4.4, y: 2.4, w: 3.2, h: 1.1, text: "ServerRedundancy", style: green, font_size: 11, lines: ["peers · ServiceLevel"]}
+      - {id: cli, x: 4.4, y: 4.2, w: 3.2, h: 1.1, text: "RedundantClient", style: accent, font_size: 12, lines: ["one Session, one Subscription"]}
+    arrows:
+      - {from: a, to: set}
+      - {from: b, to: set}
+      - {from: c, to: set}
+      - {from: set, to: cli, label: "failover"}
+    captions:
+      - {x: 0, y: 5.5, w: 12, text: "Kill replica-a and the subscription continues — the client did not reconnect by hand", center: true}
+    notes: |
+      Each replica is told about the other two through `HA_REDUNDANT_PEERS`, so the redundant set is
+      configuration rather than discovery. Every replica publishes the same redundancy information and
+      a ServiceLevel the client can compare.
+
+      The moment to point at is the kill. Stop replica-a while the subscription is running: the managed
+      client moves to a surviving replica and the monitored items keep reporting, with the subscription
+      transferred rather than rebuilt. Nothing in the client code handles that — it is the stack
+      honouring Part 4 redundancy, which is the whole claim.

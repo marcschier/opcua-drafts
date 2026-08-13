@@ -11,6 +11,26 @@
 
 It proves the design is one asset with three projections rather than three unrelated catalogues. The shared identifier construction lets the same shell be recognized over OPC UA and over HTTP, while xRegistry adds version history that the AAS metamodel does not carry.
 
+## Topology
+
+```mermaid
+flowchart TD
+  SHELL["AAS V3 shell<br/>submodels and elements"]:::source
+  UA["OPC UA AddressSpace<br/>live browseable Nodes"]:::proj
+  REG["xRegistry<br/>groups, resources, versions"]:::proj
+  TD["Thing Description<br/>AAS vocabulary and UA binding"]:::proj
+  SHELL -->|"lossless mapping"| UA
+  SHELL -->|"catalogued as documents"| REG
+  SHELL -->|"described as a Thing"| TD
+  REG -->|"version history the metamodel lacks"| UA
+
+  classDef source fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef proj fill:#eef3fa,stroke:#444
+```
+
+Three projections of one shell, not three catalogues that happen to overlap. The shared identifier
+construction is what makes them the same asset over OPC UA and over HTTP.
+
 ## Prerequisites
 
 - This repository.

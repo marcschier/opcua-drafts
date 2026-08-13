@@ -28,3 +28,28 @@ slides:
       client path over the same services. Emphasize that safety is not commanded here; the server
       observes safety state and refuses work with structured outcomes.
 
+  - layout: diagram
+    title: What the demo starts
+    kicker: One Server, two clients, and the same Part 4 services under both
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: robot, x: 4.3, y: 0.5, w: 3.6, h: 1.3, text: "IntentEnabledRobot", style: primary, font_size: 12, lines: ["opc.tcp :62840", "controller · operations · safety"]}
+      - {id: viewer, x: 0.2, y: 2.7, w: 3.2, h: 1.3, text: "IntentViewerClient", style: accent, font_size: 12, lines: ["observes the lifecycle"]}
+      - {id: mcp, x: 4.3, y: 2.7, w: 3.6, h: 1.3, text: "`Opc.Ua.Mcp`", style: deep, font_size: 12, lines: ["http :5100 · profile services"]}
+      - {id: agent, x: 8.8, y: 2.7, w: 3.0, h: 1.3, text: "Language model", style: muted, font_size: 12, lines: ["SubmitIntent by tool call"]}
+    arrows:
+      - {from: robot, to: viewer, label: "subscribe"}
+      - {from: robot, to: mcp}
+      - {from: mcp, to: agent}
+    captions:
+      - {x: 0, y: 4.6, w: 12, text: "Safety is observed and refuses work — it is never commanded from either client", center: true}
+    notes: |
+      Two clients, one Server, and nothing special on either client path. The viewer discovers the
+      controller, reads capabilities and target mappings, requests command authority and subscribes to
+      operation state. The MCP server is the demo 1 tool surface pointed at a different Server.
+
+      Say the safety line out loud while this is up. Neither client commands safety. The Server
+      observes safety state and refuses work with a structured outcome — `Accepted` false and an
+      `IntentFailureEnum` — rather than a bad Service StatusCode, so a refusal is data the agent can
+      reason about instead of a transport error it has to guess at.

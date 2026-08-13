@@ -32,3 +32,29 @@ slides:
       visual binding are all browseable OPC UA content, so another client can discover the same
       contract without a private robot-viewer bridge.
 
+  - layout: diagram
+    title: What the demo starts
+    kicker: One Server, one viewer, and every value the picture moves by is a browseable Node
+    cols: 12
+    rows: 6
+    nodes:
+      - {id: srv, x: 0.2, y: 1.1, w: 3.6, h: 1.4, text: "MinimalRobotServer", style: primary, font_size: 12, lines: ["opc.tcp :62830", "two mobile six-axis robots"]}
+      - {id: rsl, x: 4.8, y: 0.5, w: 3.0, h: 1.0, text: "RSL frame chain", style: green, font_size: 11, lines: ["Part 211 spatial"]}
+      - {id: gpos, x: 4.8, y: 1.9, w: 3.0, h: 1.0, text: "GPOS", style: green, font_size: 11, lines: ["Part 210 global position"]}
+      - {id: usd, x: 4.8, y: 3.3, w: 3.0, h: 1.0, text: "OpenUSD binding", style: purple, font_size: 11, lines: ["representations"]}
+      - {id: view, x: 8.8, y: 1.9, w: 3.0, h: 1.4, text: "Connector viewer", style: accent, font_size: 12, lines: ["subscribes, draws the stage"]}
+    arrows:
+      - {from: srv, to: rsl}
+      - {from: srv, to: gpos}
+      - {from: srv, to: usd}
+      - {from: gpos, to: view, label: "subscription"}
+    captions:
+      - {x: 0, y: 5.0, w: 12, text: "The viewer is generic — it discovers the bindings rather than knowing this robot", center: true}
+    notes: |
+      Show this before the picture moves, so the audience knows what to watch. Three things sit under
+      the Server object and all three are ordinary browseable content: the RSL frame chain, the GPOS
+      global position, and the OpenUSD representations that bind them to geometry.
+
+      The viewer holds no knowledge of this robot. It discovers the representations, subscribes to the
+      values they name, and streams them into the stage. That is the claim worth making — not that a
+      robot can be drawn, but that another client could reach the same contract with no private bridge.
