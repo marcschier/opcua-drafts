@@ -33,6 +33,9 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=1024 | VisionFeedbackType | ObjectType | BaseObjectType |
 | ns=1;i=1018 | InferencePipelineType | ObjectType | BaseObjectType |
 | ns=1;i=1001 | VisionRootType | ObjectType | BaseObjectType |
+| ns=1;i=1031 | VisionEventType | ObjectType | i=2041 |
+| ns=1;i=1032 | ObjectDetectedEventType | ObjectType | VisionEventType |
+| ns=1;i=1033 | InspectionCompletedEventType | ObjectType | VisionEventType |
 | ns=1;i=3001 | VisionRealityKindEnum | DataType | Enumeration |
 | ns=1;i=3002 | VisionStreamProtocolEnum | DataType | Enumeration |
 | ns=1;i=3003 | VisionClipFormatEnum | DataType | Enumeration |
@@ -492,6 +495,47 @@ The single well-known entry point for everything in this model. A client starts 
 | Sensors | Object |  |  | Mandatory | VisionSensorType instances known to this Server. |
 | Pipelines | Object |  |  | Optional | InferencePipelineType instances. |
 | Frames | Object |  |  | Optional | CoordinateFrameType instances. |
+| ClockSynchronised | Variable | Boolean | Scalar | Optional | True where this Server's clock is disciplined to an external time reference shared with the systems its events are correlated against. False, or absent, means the clock is free-running and a consumer shall not assume sub-second agreement with another Server. See clause 7.5. |
+| TimeSyncSource | Variable | String | Scalar | Optional | What the clock is disciplined to when ClockSynchronised is true - for example IEEE1588, NTP or GPS - as free text, because the set of answers is open and a consumer uses it to judge the order of accuracy rather than to parse. Empty or absent where the Server does not state one. |
+
+### VisionEventType (abstract) — `ns=1;i=1031`
+
+*Subtype of:* `i=2041`
+
+Abstract base of every event this model raises. It adds to BaseEventType the provenance a vision event needs to be actionable: which result substantiates it, which sensor and pipeline produced it, which model version decided, and how far the answer can be trusted. Time is inherited from BaseEventType and clause 7.5 fixes what it means here.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| ResultId | Variable | String | Scalar | Mandatory | ResultId of the VisionResultType instance that substantiates this event. The event carries no result content: a consumer that needs the detail reads the result, and one that only needs to react does not. |
+| Sensor | Variable | NodeId | Scalar | Mandatory | The VisionSensorType instance the observation was made with. |
+| GroundTruth | Variable | Boolean | Scalar | Mandatory | True where this is simulator ground truth rather than a prediction, mirroring IVisionSimulatedType.GroundTruthAvailable on the sensor. Mandatory because a consumer shall never have to infer whether a value was measured or guessed; clause 10 already forbids the two being indistinguishable. |
+| Pipeline | Variable | NodeId | Scalar | Optional | The InferencePipelineType instance that produced the result, where one did. |
+| ModelVersionUsed | Variable | String | Scalar | Optional | Version of the model that decided, copied from the result. It is repeated on the event so a notification alone answers which model caused an action, which is what an audit of an automated decision has to establish. |
+| Confidence | Variable | Double | Scalar | Optional | Confidence of the underlying result, 0.0 to 1.0. Absent where the producing step does not report one; absent is not zero. |
+| InferenceEndTime | Variable | UtcTime | Scalar | Optional | When inference finished. Time is when the frame was acquired (clause 7.5), so the difference between the two is the inference latency of this observation - the only place this model exposes it per result rather than per deployment. |
+
+### ObjectDetectedEventType — `ns=1;i=1032`
+
+*Subtype of:* `VisionEventType`
+
+One detected instance, raised once per entry in a DetectionResultType's Detections. One event per detection rather than one per result is what makes the class and the confidence available to an EventFilter, so a client asks for the two classes it cares about above a confidence it chooses and the Server sends nothing else. A per-result event would move that filtering to the client and give up most of the reason to use events at all.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| Detection | Variable | VisionDetectionDataType | Scalar | Mandatory | The detection this event reports, as it appears in the result's Detections. Where several detections share a result they share its ResultId and differ here. |
+
+### InspectionCompletedEventType — `ns=1;i=1033`
+
+*Subtype of:* `VisionEventType`
+
+An inspection reached a verdict. Raised once per InspectionResultType, because an inspection concludes once - unlike detection, where a single frame yields many independent findings.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| Evaluation | Variable | VisionResultEvaluationEnum | Scalar | Mandatory | The verdict, copied from the result. It is the field a line controller filters on, so it is Mandatory and is the one piece of result content this model does repeat. |
+| PartId | Variable | String | Scalar | Optional | Identifier of the inspected part, where the result names one. |
+| RecipeId | Variable | String | Scalar | Optional | Identifier of the recipe the inspection ran, where the result names one. |
+| FailedCharacteristics | Variable | VisionCharacteristicDataType | Array | Optional | The characteristics whose Status is not InTolerance, and only those. A passing inspection carries an empty array. Repeating every characteristic here would duplicate the result for the common case where none failed; repeating the failing ones lets a consumer act on why it failed without a read. |
 
 ## A.4 DataTypes
 

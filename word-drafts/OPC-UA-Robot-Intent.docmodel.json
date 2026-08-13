@@ -389,7 +389,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Release 0.1.0 covers the intent vocabulary — joint, linear and circular moves, trajectories, Cartesian paths, force-controlled moves, grasping, picking and placing, tool change, output, program call, waiting, and six application processes — together with the execution lifecycle, queueing and blending, cancellation, missions with a committed base, a revisable horizon and a step graph, command authority, safety awareness, the robot's kinematic description, real-time channel brokerage, and capability declaration."
+            "text": "Release 0.3.0 covers the intent vocabulary — joint, linear and circular moves, trajectories, Cartesian paths, force-controlled moves, grasping, picking and placing, tool change, output, program call, waiting, and six application processes — together with the execution lifecycle, queueing and blending, cancellation, missions with a committed base, a revisable horizon and a step graph, command authority, safety awareness, the robot's kinematic description, real-time channel brokerage, and capability declaration."
           }
         ],
         "src": {
@@ -424,10 +424,8 @@
             "text": " is mandatory ("
           },
           {
-            "r": "xref",
-            "target": "c11-2",
-            "kind": "clause",
-            "prefix": "11.2"
+            "r": "t",
+            "text": "§12.2"
           },
           {
             "r": "t",
@@ -1116,7 +1114,21 @@
         "definition": [
           {
             "r": "t",
-            "text": "The exclusive right, held by at most one Session, to submit intents to one controller (clause 8). It is an arbitration mechanism between clients and "
+            "text": "The exclusive right, held by at most one Session, to submit intents to one controller ("
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-16",
+            "kind": "clause",
+            "prefix": "6.16"
+          },
+          {
+            "r": "t",
+            "text": "). It is an arbitration mechanism between clients and "
           },
           {
             "r": "t",
@@ -1618,7 +1630,21 @@
         "runs": [
           {
             "r": "t",
-            "text": "The safety layer is beside and beneath this interface and is never mediated by it. That relationship is normative and is stated in clause 10."
+            "text": "The safety layer is beside and beneath this interface and is never mediated by it. That relationship is normative and is stated in "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-18",
+            "kind": "clause",
+            "prefix": "6.18"
+          },
+          {
+            "r": "t",
+            "text": "."
           }
         ],
         "src": {
@@ -1698,7 +1724,21 @@
           },
           {
             "r": "t",
-            "text": " clamp a request to what the robot is configured to permit rather than refuse it — except where clause 10 requires refusal."
+            "text": " clamp a request to what the robot is configured to permit rather than refuse it — except where "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-18",
+            "kind": "clause",
+            "prefix": "6.18"
+          },
+          {
+            "r": "t",
+            "text": " requires refusal."
           }
         ],
         "src": {
@@ -4237,13 +4277,94 @@
         "runs": [
           {
             "r": "t",
-            "text": "Two of these deserve their reasoning stated."
+            "text": "Three of these deserve their reasoning stated."
           }
         ],
         "src": {
           "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
           "s": "5.4.2 Process intents",
           "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Seam tracking is a switch, not a channel.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "ArcWeldIntentDataType.SeamTrackingEnabled"
+          },
+          {
+            "r": "t",
+            "text": " asks the equipment to run "
+          },
+          {
+            "r": "t",
+            "text": "its own",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " seam-tracking facility for the duration of this weld. It does not make this interface a real-time one: "
+          },
+          {
+            "r": "xref",
+            "target": "c6-3",
+            "kind": "clause",
+            "prefix": "6.3"
+          },
+          {
+            "r": "t",
+            "text": " permits seam tracking through a brokered channel "
+          },
+          {
+            "r": "t",
+            "text": "or the robot's own facility",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ", and this is the second of those. The sensing, the correction and the control period stay inside the controller, where the arc voltage or laser seam finder already is; nothing is sampled, carried or closed over OPC UA. A Server whose equipment provides no such facility "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " refuse an intent carrying "
+          },
+          {
+            "r": "code",
+            "text": "SeamTrackingEnabled"
+          },
+          {
+            "r": "t",
+            "text": " true with "
+          },
+          {
+            "r": "code",
+            "text": "CapabilityNotSupported"
+          },
+          {
+            "r": "t",
+            "text": ", rather than accepting it and welding an uncorrected path."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "5.4.2 Process intents",
+          "b": 4
         }
       },
       {
@@ -4320,7 +4441,7 @@
         "src": {
           "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
           "s": "5.4.2 Process intents",
-          "b": 4
+          "b": 5
         }
       },
       {
@@ -4356,7 +4477,7 @@
         "src": {
           "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
           "s": "5.4.2 Process intents",
-          "b": 5
+          "b": 6
         }
       },
       {
@@ -4415,7 +4536,7 @@
         "src": {
           "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
           "s": "5.4.2 Process intents",
-          "b": 6
+          "b": 7
         }
       },
       {
@@ -7167,7 +7288,21 @@
             [
               {
                 "r": "t",
-                "text": "Refused; the caller does not hold command authority (clause 8)."
+                "text": "Refused; the caller does not hold command authority ("
+              },
+              {
+                "r": "t",
+                "text": "clause "
+              },
+              {
+                "r": "xref",
+                "target": "c6-16",
+                "kind": "clause",
+                "prefix": "6.16"
+              },
+              {
+                "r": "t",
+                "text": ")."
               }
             ]
           ],
@@ -7187,7 +7322,21 @@
             [
               {
                 "r": "t",
-                "text": "Not implemented, or not in this combination (clause 9)."
+                "text": "Not implemented, or not in this combination ("
+              },
+              {
+                "r": "t",
+                "text": "clause "
+              },
+              {
+                "r": "xref",
+                "target": "c6-17",
+                "kind": "clause",
+                "prefix": "6.17"
+              },
+              {
+                "r": "t",
+                "text": ")."
               }
             ]
           ],
@@ -7908,7 +8057,21 @@
             },
             {
               "r": "t",
-              "text": " if the calling Session does not hold command authority (clause 8)."
+              "text": " if the calling Session does not hold command authority ("
+            },
+            {
+              "r": "t",
+              "text": "clause "
+            },
+            {
+              "r": "xref",
+              "target": "c6-16",
+              "kind": "clause",
+              "prefix": "6.16"
+            },
+            {
+              "r": "t",
+              "text": ")."
             }
           ],
           [
@@ -7946,7 +8109,21 @@
             },
             {
               "r": "t",
-              "text": " (clause 10)."
+              "text": " ("
+            },
+            {
+              "r": "t",
+              "text": "clause "
+            },
+            {
+              "r": "xref",
+              "target": "c6-18",
+              "kind": "clause",
+              "prefix": "6.18"
+            },
+            {
+              "r": "t",
+              "text": ")."
             }
           ],
           [
@@ -9284,7 +9461,19 @@
           },
           {
             "r": "t",
-            "text": " IEC 60204-1 stop category; clause 10 explains why it cannot."
+            "text": " IEC 60204-1 stop category; "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "t",
+            "text": "10"
+          },
+          {
+            "r": "t",
+            "text": " explains why it cannot."
           }
         ],
         "src": {
@@ -9514,7 +9703,21 @@
           },
           {
             "r": "t",
-            "text": " reflect that no new work will be admitted. This is the same rule clause 9 applies to "
+            "text": " reflect that no new work will be admitted. This is the same rule "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-17",
+            "kind": "clause",
+            "prefix": "6.17"
+          },
+          {
+            "r": "t",
+            "text": " applies to "
           },
           {
             "r": "code",
@@ -9884,6 +10087,177 @@
           "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
           "s": "6.7 Results",
           "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "What decided this intent.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "IntentOperationType.DecidedBy"
+          },
+          {
+            "r": "t",
+            "text": " is an Optional "
+          },
+          {
+            "r": "code",
+            "text": "NodeId"
+          },
+          {
+            "r": "t",
+            "text": " naming the artefact that produced the intent's parameters — typically a result published by a perception model, or the model itself — and is null where a human taught the pose or a program held it."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.7 Results",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "It exists because a pick pose is increasingly computed rather than taught, and an investigation into why a cell did something starts at the motion. Without this member the trail ends exactly there: a Server can say "
+          },
+          {
+            "r": "t",
+            "text": "what",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " it was asked to do and "
+          },
+          {
+            "r": "t",
+            "text": "what happened",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", and nothing about "
+          },
+          {
+            "r": "t",
+            "text": "what decided it",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ". A specification that publishes a model's digest, the deployment that served it and the result it produced, and then loses the thread at the point the robot actually moved, has documented everything except the step that mattered."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.7 Results",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " populate it with an identifier it cannot resolve at the moment of submission, and a client "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " assume the target is still resolvable later — the deciding artefact may be retained under a different lifetime than the operation, and "
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-3",
+            "kind": "clause",
+            "prefix": "6.19.3"
+          },
+          {
+            "r": "t",
+            "text": " governs what a NodeId-valued member may point at. This model defines no type for the target and takes "
+          },
+          {
+            "r": "t",
+            "text": "no dependency",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " on any model that might: the base OPC UA namespace remains its only "
+          },
+          {
+            "r": "code",
+            "text": "RequiredModel"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "t",
+            "text": "§2"
+          },
+          {
+            "r": "t",
+            "text": "), which is why this is a NodeId Property rather than a reference. Where the "
+          },
+          {
+            "r": "t",
+            "text": "OPC UA — Vision",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " model is also implemented, the natural value is the "
+          },
+          {
+            "r": "code",
+            "text": "ResultId"
+          },
+          {
+            "r": "t",
+            "text": "-bearing "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType"
+          },
+          {
+            "r": "t",
+            "text": " instance the pose came from, and Annex E.7 says what a consumer can then reconstruct."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.7 Results",
+          "b": 6
         }
       },
       {
@@ -10327,7 +10701,21 @@
           },
           {
             "r": "t",
-            "text": " be released when that Session closes. This is the same reasoning as command authority in clause 8: a client that dies must not hold a resource for good."
+            "text": " be released when that Session closes. This is the same reasoning as command authority in "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-16",
+            "kind": "clause",
+            "prefix": "6.16"
+          },
+          {
+            "r": "t",
+            "text": ": a client that dies must not hold a resource for good."
           }
         ],
         "src": {
@@ -10441,6 +10829,1100 @@
           "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
           "s": "6.9 Brokering a real-time channel (normative)",
           "b": 7
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-14-10",
+        "title": "Events",
+        "level": 3
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "An "
+          },
+          {
+            "r": "code",
+            "text": "IntentOperationType"
+          },
+          {
+            "r": "t",
+            "text": " is a "
+          },
+          {
+            "r": "code",
+            "text": "ProgramStateMachineType"
+          },
+          {
+            "r": "t",
+            "text": ", so OPC 10000-10 already raises a transition event whenever its state changes. What that event cannot carry is "
+          },
+          {
+            "r": "t",
+            "text": "which",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " intent changed and to "
+          },
+          {
+            "r": "t",
+            "text": "what outcome",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ": it names the state machine and the transition, and a consumer supervising a cell of robots must read the operation back to learn anything useful — by which time the Server may have recycled it, since "
+          },
+          {
+            "r": "xref",
+            "target": "c6-14-7",
+            "kind": "clause",
+            "prefix": "6.14.7"
+          },
+          {
+            "r": "t",
+            "text": " requires the result to outlive only a reconnect."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "IntentEventType"
+          },
+          {
+            "r": "t",
+            "text": " is the abstract base; "
+          },
+          {
+            "r": "code",
+            "text": "IntentCompletedEventType"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "MissionCompletedEventType"
+          },
+          {
+            "r": "t",
+            "text": " are what a Server raises. They do not replace the Part 10 transition events and a Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " continue to raise those: a Part 10 client that knows nothing of this model still works."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 1
+        }
+      },
+      {
+        "t": "table",
+        "id": "events-tab1",
+        "caption": "Events",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Type"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Member"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Type"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Rule"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Meaning"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "IntentEventType"
+              },
+              {
+                "r": "t",
+                "text": " "
+              },
+              {
+                "r": "t",
+                "text": "(abstract)",
+                "i": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "IntentId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The intent this event concerns"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "Operation"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "NodeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The "
+              },
+              {
+                "r": "code",
+                "text": "IntentOperationType"
+              },
+              {
+                "r": "t",
+                "text": " tracking it"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "IntentTypeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "NodeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The "
+              },
+              {
+                "r": "code",
+                "text": "IntentDataType"
+              },
+              {
+                "r": "t",
+                "text": " subtype that was submitted"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "MissionId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Mission it belongs to, or empty"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "IntentCompletedEventType"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "State"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "ExecutionStateEnum"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Terminal state"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "Failure"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "IntentFailureEnum"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Why it did not succeed, or "
+              },
+              {
+                "r": "code",
+                "text": "None"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "Result"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "IntentResultDataType"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The full result"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "DecidedBy"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "NodeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "What produced the intent's parameters ("
+              },
+              {
+                "r": "xref",
+                "target": "c6-14-7",
+                "kind": "clause",
+                "prefix": "6.14.7"
+              },
+              {
+                "r": "t",
+                "text": ")"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "MissionCompletedEventType"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "State"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "ExecutionStateEnum"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Terminal state of the mission"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "CompletedSteps"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "UInt32"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "How many steps reached a terminal state"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "FailedStepId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The step that ended the mission, or empty"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Raised once, and only on a terminal transition.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " raise "
+          },
+          {
+            "r": "code",
+            "text": "IntentCompletedEventType"
+          },
+          {
+            "r": "t",
+            "text": " exactly once per intent, on the transition into "
+          },
+          {
+            "r": "code",
+            "text": "Succeeded"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Failed"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Cancelled"
+          },
+          {
+            "r": "t",
+            "text": " or "
+          },
+          {
+            "r": "code",
+            "text": "Retriable"
+          },
+          {
+            "r": "t",
+            "text": ", and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " raise it for an intermediate state. "
+          },
+          {
+            "r": "code",
+            "text": "Cancelling"
+          },
+          {
+            "r": "t",
+            "text": " is not terminal ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-14-5",
+            "kind": "clause",
+            "prefix": "6.14.5"
+          },
+          {
+            "r": "t",
+            "text": "), and an event raised there would tell a consumer the work had stopped while the robot was still moving. Where "
+          },
+          {
+            "r": "code",
+            "text": "Retry"
+          },
+          {
+            "r": "t",
+            "text": " creates a new operation ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-14-6",
+            "kind": "clause",
+            "prefix": "6.14.6"
+          },
+          {
+            "r": "t",
+            "text": "), that operation raises its own event on its own terminal transition; the original's event stands and is not retracted."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "IntentTypeId"
+          },
+          {
+            "r": "t",
+            "text": " is what makes the event filterable.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " It names the "
+          },
+          {
+            "r": "code",
+            "text": "IntentDataType"
+          },
+          {
+            "r": "t",
+            "text": " subtype submitted, so a client subscribes to picks — or to arc welds, or to everything that failed — with an "
+          },
+          {
+            "r": "code",
+            "text": "EventFilter"
+          },
+          {
+            "r": "t",
+            "text": " and the Server sends nothing else. Without it a consumer receives every completion in the cell and discards most of them, which is the cost events exist to avoid."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "Result"
+          },
+          {
+            "r": "t",
+            "text": " is repeated deliberately.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " It is the one piece of state these events duplicate, because the "
+          },
+          {
+            "r": "code",
+            "text": "Operation"
+          },
+          {
+            "r": "t",
+            "text": " node it would otherwise be read from need not still exist by the time a consumer reacts. Everything else is a reference to be followed."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Where events are raised.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " The well-known "
+          },
+          {
+            "r": "code",
+            "text": "RobotIntent"
+          },
+          {
+            "r": "t",
+            "text": " object declares "
+          },
+          {
+            "r": "code",
+            "text": "EventNotifier"
+          },
+          {
+            "r": "t",
+            "text": " with the "
+          },
+          {
+            "r": "code",
+            "text": "SubscribeToEvents"
+          },
+          {
+            "r": "t",
+            "text": " bit set and is the target of a "
+          },
+          {
+            "r": "code",
+            "text": "HasNotifier"
+          },
+          {
+            "r": "t",
+            "text": " reference from the Server object, so a client subscribes at either and receives every intent event in the Server. A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " additionally set "
+          },
+          {
+            "r": "code",
+            "text": "EventNotifier"
+          },
+          {
+            "r": "t",
+            "text": " on each "
+          },
+          {
+            "r": "code",
+            "text": "IntentControllerType"
+          },
+          {
+            "r": "t",
+            "text": " instance and "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " add a "
+          },
+          {
+            "r": "code",
+            "text": "HasNotifier"
+          },
+          {
+            "r": "t",
+            "text": " reference from the "
+          },
+          {
+            "r": "code",
+            "text": "RobotIntent"
+          },
+          {
+            "r": "t",
+            "text": " object to it, so a client that supervises one robot subscribes to that robot alone. "
+          },
+          {
+            "r": "code",
+            "text": "SourceNode"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be the "
+          },
+          {
+            "r": "code",
+            "text": "IntentControllerType"
+          },
+          {
+            "r": "t",
+            "text": " instance that executed the work."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 6
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Severity.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " raise a completion whose "
+          },
+          {
+            "r": "code",
+            "text": "State"
+          },
+          {
+            "r": "t",
+            "text": " is "
+          },
+          {
+            "r": "code",
+            "text": "Succeeded"
+          },
+          {
+            "r": "t",
+            "text": " at a severity of 1 to 199, and one whose "
+          },
+          {
+            "r": "code",
+            "text": "State"
+          },
+          {
+            "r": "t",
+            "text": " is "
+          },
+          {
+            "r": "code",
+            "text": "Failed"
+          },
+          {
+            "r": "t",
+            "text": " at 500 or above. "
+          },
+          {
+            "r": "code",
+            "text": "Cancelled"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "Retriable"
+          },
+          {
+            "r": "t",
+            "text": " are the operator's or the client's own doing rather than a fault, and "
+          },
+          {
+            "r": "t",
+            "text": "should",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be raised below 500."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 7
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The time base is stated, not assumed.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Annex E.7 has a consumer correlating a completion raised here with a perception event raised by another Server, so whether the two clocks agree matters. "
+          },
+          {
+            "r": "code",
+            "text": "RobotIntentRootType.ClockSynchronised"
+          },
+          {
+            "r": "t",
+            "text": " is "
+          },
+          {
+            "r": "code",
+            "text": "true"
+          },
+          {
+            "r": "t",
+            "text": " only where this Server's clock is disciplined to an external reference shared with those systems, and "
+          },
+          {
+            "r": "code",
+            "text": "TimeSyncSource"
+          },
+          {
+            "r": "t",
+            "text": " names it. A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " report it true on the strength of having set its clock once — the member asserts an ongoing discipline — and where it is "
+          },
+          {
+            "r": "code",
+            "text": "false"
+          },
+          {
+            "r": "t",
+            "text": " or absent a consumer "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " attribute a completion to an observation on timing alone."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 8
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Neither member is Mandatory and no synchronisation is required: most cells do not have a disciplined time base, and "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "t",
+            "text": "4.3"
+          },
+          {
+            "r": "t",
+            "text": " already places anything needing tighter timing than this interface offers on a brokered channel. What is required is that a Server unable to support the correlation says so."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 9
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "These are events, not conditions.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A completion occurs and is over. A robot that is unable to accept work — "
+          },
+          {
+            "r": "code",
+            "text": "Ready"
+          },
+          {
+            "r": "t",
+            "text": " false, a protective stop active — is a "
+          },
+          {
+            "r": "t",
+            "text": "state",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " that persists, and OPC 10000-9 "
+          },
+          {
+            "r": "code",
+            "text": "ConditionType"
+          },
+          {
+            "r": "t",
+            "text": " is what models that; this specification defines no alarm types, because a Server that needs to alarm on a stop already has "
+          },
+          {
+            "r": "code",
+            "text": "SafetyStateType"
+          },
+          {
+            "r": "t",
+            "text": " to alarm from and nothing about such an alarm is specific to intent."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 10
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Safety is unaffected.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " These events report. Clause 10 governs what may be commanded and by what, and nothing in this clause changes it: a consumer "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " treat an event as authorisation for anything, and a Server "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " make any safety function contingent on one being delivered."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "6.10 Events (normative)",
+          "b": 11
         }
       },
       {
@@ -13283,7 +14765,21 @@
             },
             {
               "r": "t",
-              "text": " offer any Method that commands a safe motion function, changes an operational mode, or clears a stop. Those are safety functions, and clause 10.1 says why no Method here can be one."
+              "text": " offer any Method that commands a safe motion function, changes an operational mode, or clears a stop. Those are safety functions, and "
+            },
+            {
+              "r": "t",
+              "text": "clause "
+            },
+            {
+              "r": "xref",
+              "target": "c6-18-1",
+              "kind": "clause",
+              "prefix": "6.18.1"
+            },
+            {
+              "r": "t",
+              "text": " says why no Method here can be one."
             }
           ]
         ],
@@ -13471,7 +14967,21 @@
         "runs": [
           {
             "r": "t",
-            "text": "Command authority (clause 8) prevents two authorised clients from interleaving motion. It grants nothing. A Server "
+            "text": "Command authority ("
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-16",
+            "kind": "clause",
+            "prefix": "6.16"
+          },
+          {
+            "r": "t",
+            "text": ") prevents two authorised clients from interleaving motion. It grants nothing. A Server "
           },
           {
             "r": "t",
@@ -13838,6 +15348,35 @@
               {
                 "r": "t",
                 "text": "a joint in an OPC 40450 / OPC 40451 model under the controller where one is implemented; otherwise the intent's own parameters stand alone and the member is null"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "IntentOperationType.DecidedBy"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "any Node the Server can resolve at submission, or null. "
+              },
+              {
+                "r": "t",
+                "text": "The exception to the rule above",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": ": it is written by the Server rather than supplied by a client, so it is not untrusted input, and it deliberately names an artefact this specification does not define — see "
+              },
+              {
+                "r": "xref",
+                "target": "c6-14-7",
+                "kind": "clause",
+                "prefix": "6.14.7"
               }
             ]
           ]
@@ -14652,6 +16191,75 @@
         "caption": "RobotDescriptionType definition",
         "browseName": "RobotDescriptionType",
         "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-15",
+        "title": "IntentEventType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Abstract base of every event this model raises. It identifies the work the event is about, and its subtypes say what became of it. Time is inherited from BaseEventType and is when the reported transition occurred."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-15-def",
+        "caption": "IntentEventType definition",
+        "browseName": "IntentEventType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-16",
+        "title": "IntentCompletedEventType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "An intent reached a terminal state. Raised exactly once per intent, on the transition into Succeeded, Failed, Cancelled or Retriable, and never for an intermediate state - Cancelling is not terminal (clause 6.5) and an event raised there would tell a consumer the work had stopped while the robot was still moving."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-16-def",
+        "caption": "IntentCompletedEventType definition",
+        "browseName": "IntentCompletedEventType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-17",
+        "title": "MissionCompletedEventType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A mission reached a terminal state. IntentId carries the last intent the mission ran, so a consumer that missed the per-intent events still learns where the mission stopped."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-17-def",
+        "caption": "MissionCompletedEventType definition",
+        "browseName": "MissionCompletedEventType",
+        "kind": "type"
       }
     ],
     "datatypes": [
@@ -14680,7 +16288,8 @@
       {
         "t": "enumtable",
         "id": "c8-1-items",
-        "browseName": "ExecutionStateEnum"
+        "browseName": "ExecutionStateEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -14708,7 +16317,8 @@
       {
         "t": "enumtable",
         "id": "c8-2-items",
-        "browseName": "BufferModeEnum"
+        "browseName": "BufferModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -14736,7 +16346,8 @@
       {
         "t": "enumtable",
         "id": "c8-3-items",
-        "browseName": "BlockingModeEnum"
+        "browseName": "BlockingModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -14764,7 +16375,8 @@
       {
         "t": "enumtable",
         "id": "c8-4-items",
-        "browseName": "TerminationModeEnum"
+        "browseName": "TerminationModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -14792,7 +16404,8 @@
       {
         "t": "enumtable",
         "id": "c8-5-items",
-        "browseName": "ReleaseModeEnum"
+        "browseName": "ReleaseModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -14820,7 +16433,8 @@
       {
         "t": "enumtable",
         "id": "c8-6-items",
-        "browseName": "ApproachModeEnum"
+        "browseName": "ApproachModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -14848,7 +16462,8 @@
       {
         "t": "enumtable",
         "id": "c8-7-items",
-        "browseName": "FrameRoleEnum"
+        "browseName": "FrameRoleEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -14876,7 +16491,8 @@
       {
         "t": "enumtable",
         "id": "c8-8-items",
-        "browseName": "OperationalModeEnum"
+        "browseName": "OperationalModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -14904,7 +16520,8 @@
       {
         "t": "enumtable",
         "id": "c8-9-items",
-        "browseName": "IntentFailureEnum"
+        "browseName": "IntentFailureEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -14932,7 +16549,8 @@
       {
         "t": "enumtable",
         "id": "c8-10-items",
-        "browseName": "StopModeEnum"
+        "browseName": "StopModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -14960,7 +16578,8 @@
       {
         "t": "enumtable",
         "id": "c8-11-items",
-        "browseName": "AxisKindEnum"
+        "browseName": "AxisKindEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -14988,7 +16607,8 @@
       {
         "t": "enumtable",
         "id": "c8-12-items",
-        "browseName": "MissionUpdateResultEnum"
+        "browseName": "MissionUpdateResultEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15016,7 +16636,8 @@
       {
         "t": "enumtable",
         "id": "c8-13-items",
-        "browseName": "Pose3DDataType"
+        "browseName": "Pose3DDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15044,7 +16665,8 @@
       {
         "t": "enumtable",
         "id": "c8-14-items",
-        "browseName": "MotionConstraintsDataType"
+        "browseName": "MotionConstraintsDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15072,7 +16694,8 @@
       {
         "t": "enumtable",
         "id": "c8-15-items",
-        "browseName": "BlendDataType"
+        "browseName": "BlendDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15100,7 +16723,8 @@
       {
         "t": "enumtable",
         "id": "c8-16-items",
-        "browseName": "IntentDataType"
+        "browseName": "IntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15128,7 +16752,8 @@
       {
         "t": "enumtable",
         "id": "c8-17-items",
-        "browseName": "MotionIntentDataType"
+        "browseName": "MotionIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15156,7 +16781,8 @@
       {
         "t": "enumtable",
         "id": "c8-18-items",
-        "browseName": "JointMoveIntentDataType"
+        "browseName": "JointMoveIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15184,7 +16810,8 @@
       {
         "t": "enumtable",
         "id": "c8-19-items",
-        "browseName": "LinearMoveIntentDataType"
+        "browseName": "LinearMoveIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15212,7 +16839,8 @@
       {
         "t": "enumtable",
         "id": "c8-20-items",
-        "browseName": "CircularMoveIntentDataType"
+        "browseName": "CircularMoveIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15240,7 +16868,8 @@
       {
         "t": "enumtable",
         "id": "c8-21-items",
-        "browseName": "GraspIntentDataType"
+        "browseName": "GraspIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15268,7 +16897,8 @@
       {
         "t": "enumtable",
         "id": "c8-22-items",
-        "browseName": "ReleaseIntentDataType"
+        "browseName": "ReleaseIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15296,7 +16926,8 @@
       {
         "t": "enumtable",
         "id": "c8-23-items",
-        "browseName": "PickIntentDataType"
+        "browseName": "PickIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15324,7 +16955,8 @@
       {
         "t": "enumtable",
         "id": "c8-24-items",
-        "browseName": "PlaceIntentDataType"
+        "browseName": "PlaceIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15352,7 +16984,8 @@
       {
         "t": "enumtable",
         "id": "c8-25-items",
-        "browseName": "ToolChangeIntentDataType"
+        "browseName": "ToolChangeIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15380,7 +17013,8 @@
       {
         "t": "enumtable",
         "id": "c8-26-items",
-        "browseName": "SetOutputIntentDataType"
+        "browseName": "SetOutputIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15408,7 +17042,8 @@
       {
         "t": "enumtable",
         "id": "c8-27-items",
-        "browseName": "CallProgramIntentDataType"
+        "browseName": "CallProgramIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15436,7 +17071,8 @@
       {
         "t": "enumtable",
         "id": "c8-28-items",
-        "browseName": "WaitIntentDataType"
+        "browseName": "WaitIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15464,7 +17100,8 @@
       {
         "t": "enumtable",
         "id": "c8-29-items",
-        "browseName": "IntentResultDataType"
+        "browseName": "IntentResultDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15492,7 +17129,8 @@
       {
         "t": "enumtable",
         "id": "c8-30-items",
-        "browseName": "MissionStepDataType"
+        "browseName": "MissionStepDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15520,7 +17158,8 @@
       {
         "t": "enumtable",
         "id": "c8-31-items",
-        "browseName": "MissionDataType"
+        "browseName": "MissionDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15548,7 +17187,8 @@
       {
         "t": "enumtable",
         "id": "c8-32-items",
-        "browseName": "IntentCapabilityDataType"
+        "browseName": "IntentCapabilityDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15576,7 +17216,8 @@
       {
         "t": "enumtable",
         "id": "c8-33-items",
-        "browseName": "SafeMotionFunctionEnum"
+        "browseName": "SafeMotionFunctionEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15604,7 +17245,8 @@
       {
         "t": "enumtable",
         "id": "c8-34-items",
-        "browseName": "RealTimeTransportEnum"
+        "browseName": "RealTimeTransportEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15632,7 +17274,8 @@
       {
         "t": "enumtable",
         "id": "c8-35-items",
-        "browseName": "ChannelInitiatorEnum"
+        "browseName": "ChannelInitiatorEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15660,7 +17303,8 @@
       {
         "t": "enumtable",
         "id": "c8-36-items",
-        "browseName": "ErrorPolicyEnum"
+        "browseName": "ErrorPolicyEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15688,7 +17332,8 @@
       {
         "t": "enumtable",
         "id": "c8-37-items",
-        "browseName": "DivergenceKindEnum"
+        "browseName": "DivergenceKindEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15716,7 +17361,8 @@
       {
         "t": "enumtable",
         "id": "c8-38-items",
-        "browseName": "WeaveShapeEnum"
+        "browseName": "WeaveShapeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15744,7 +17390,8 @@
       {
         "t": "enumtable",
         "id": "c8-39-items",
-        "browseName": "TrajectoryPointDataType"
+        "browseName": "TrajectoryPointDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15772,7 +17419,8 @@
       {
         "t": "enumtable",
         "id": "c8-40-items",
-        "browseName": "MotionToleranceDataType"
+        "browseName": "MotionToleranceDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15800,7 +17448,8 @@
       {
         "t": "enumtable",
         "id": "c8-41-items",
-        "browseName": "TrajectoryIntentDataType"
+        "browseName": "TrajectoryIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15828,7 +17477,8 @@
       {
         "t": "enumtable",
         "id": "c8-42-items",
-        "browseName": "PathWaypointDataType"
+        "browseName": "PathWaypointDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15856,7 +17506,8 @@
       {
         "t": "enumtable",
         "id": "c8-43-items",
-        "browseName": "CartesianPathIntentDataType"
+        "browseName": "CartesianPathIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15884,7 +17535,8 @@
       {
         "t": "enumtable",
         "id": "c8-44-items",
-        "browseName": "ForceIntentDataType"
+        "browseName": "ForceIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15912,7 +17564,8 @@
       {
         "t": "enumtable",
         "id": "c8-45-items",
-        "browseName": "ProcessIntentDataType"
+        "browseName": "ProcessIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15940,7 +17593,8 @@
       {
         "t": "enumtable",
         "id": "c8-46-items",
-        "browseName": "ArcWeldIntentDataType"
+        "browseName": "ArcWeldIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15968,7 +17622,8 @@
       {
         "t": "enumtable",
         "id": "c8-47-items",
-        "browseName": "SpotWeldIntentDataType"
+        "browseName": "SpotWeldIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -15996,7 +17651,8 @@
       {
         "t": "enumtable",
         "id": "c8-48-items",
-        "browseName": "DispenseIntentDataType"
+        "browseName": "DispenseIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16024,7 +17680,8 @@
       {
         "t": "enumtable",
         "id": "c8-49-items",
-        "browseName": "FastenIntentDataType"
+        "browseName": "FastenIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16052,7 +17709,8 @@
       {
         "t": "enumtable",
         "id": "c8-50-items",
-        "browseName": "PalletiseIntentDataType"
+        "browseName": "PalletiseIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16080,7 +17738,8 @@
       {
         "t": "enumtable",
         "id": "c8-51-items",
-        "browseName": "SurfaceFinishIntentDataType"
+        "browseName": "SurfaceFinishIntentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16108,7 +17767,8 @@
       {
         "t": "enumtable",
         "id": "c8-52-items",
-        "browseName": "MissionTransitionDataType"
+        "browseName": "MissionTransitionDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16136,7 +17796,8 @@
       {
         "t": "enumtable",
         "id": "c8-53-items",
-        "browseName": "KinematicJointDataType"
+        "browseName": "KinematicJointDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -16242,7 +17903,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Entry point for robot intent on this Server. A client browses Server/RobotIntent/Controllers to find every robot it can command."
+            "text": "Entry point for robot intent on this Server. A client browses Server/RobotIntent/Controllers to find every robot it can command. It carries EventNotifier because it is the notifier for every intent event in the Server (clause 6.10): a client subscribes here, or at the Server object above it, and does not have to find each controller first."
           }
         ]
       },
@@ -16347,7 +18008,21 @@
         "runs": [
           {
             "r": "t",
-            "text": "A Server shall not list a facet whose structural requirements are unmet. The behavioural requirements are the Server's own attestation and are subject to the honesty rules of clause 9 — a Server that lists "
+            "text": "A Server shall not list a facet whose structural requirements are unmet. The behavioural requirements are the Server's own attestation and are subject to the honesty rules of "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-17",
+            "kind": "clause",
+            "prefix": "6.17"
+          },
+          {
+            "r": "t",
+            "text": " — a Server that lists "
           },
           {
             "r": "t",
@@ -16364,7 +18039,21 @@
           },
           {
             "r": "t",
-            "text": " is making a false statement in exactly the sense clause 9 forbids, and is no more conformant than one that reports "
+            "text": " is making a false statement in exactly the sense "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-17",
+            "kind": "clause",
+            "prefix": "6.17"
+          },
+          {
+            "r": "t",
+            "text": " forbids, and is no more conformant than one that reports "
           },
           {
             "r": "code",
@@ -16387,7 +18076,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "The NodeSet assigns every Node to one of three conformance units: "
+            "text": "The NodeSet assigns every Node to one of four conformance units: "
           },
           {
             "r": "code",
@@ -16403,7 +18092,7 @@
           },
           {
             "r": "t",
-            "text": " for the intent hierarchy and the enumerations, and "
+            "text": " for the intent hierarchy and the enumerations, "
           },
           {
             "r": "code",
@@ -16411,7 +18100,25 @@
           },
           {
             "r": "t",
-            "text": " for the references. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to."
+            "text": " for the references, and "
+          },
+          {
+            "r": "code",
+            "text": "RobotIntent Events"
+          },
+          {
+            "r": "t",
+            "text": " for the EventTypes of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-14-10",
+            "kind": "clause",
+            "prefix": "6.14.10"
+          },
+          {
+            "r": "t",
+            "text": ". The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to."
           }
         ],
         "src": {
@@ -16450,7 +18157,21 @@
           },
           {
             "r": "t",
-            "text": " requirements — written below as accepting, honouring, maintaining or observing a rule — cannot be settled by reading, only by exercising the Server, and are the Server's attestation under clause 9."
+            "text": " requirements — written below as accepting, honouring, maintaining or observing a rule — cannot be settled by reading, only by exercising the Server, and are the Server's attestation under "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-17",
+            "kind": "clause",
+            "prefix": "6.17"
+          },
+          {
+            "r": "t",
+            "text": "."
           }
         ],
         "src": {
@@ -16622,7 +18343,21 @@
               },
               {
                 "r": "t",
-                "text": " and clause 10."
+                "text": " and "
+              },
+              {
+                "r": "t",
+                "text": "clause "
+              },
+              {
+                "r": "xref",
+                "target": "c6-18",
+                "kind": "clause",
+                "prefix": "6.18"
+              },
+              {
+                "r": "t",
+                "text": "."
               }
             ]
           ],
@@ -16885,6 +18620,74 @@
               {
                 "r": "t",
                 "text": "."
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "RI-Events",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The EventTypes of "
+              },
+              {
+                "r": "xref",
+                "target": "c6-14-10",
+                "kind": "clause",
+                "prefix": "6.14.10"
+              },
+              {
+                "r": "t",
+                "text": " and every rule in that clause. A Server claiming it "
+              },
+              {
+                "r": "t",
+                "text": "shall",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " raise "
+              },
+              {
+                "r": "code",
+                "text": "IntentCompletedEventType"
+              },
+              {
+                "r": "t",
+                "text": " for "
+              },
+              {
+                "r": "t",
+                "text": "every",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " intent that reaches a terminal state, including those it refused after admission and those cancelled by another client — a facet under which a Server may report some completions and not others is worth nothing, because silence would then be ambiguous between \"still running\" and \"finished, unreported\". "
+              },
+              {
+                "r": "code",
+                "text": "MissionCompletedEventType"
+              },
+              {
+                "r": "t",
+                "text": " is additionally required where "
+              },
+              {
+                "r": "t",
+                "text": "RI-Mission",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " is claimed. Raising these does not relieve a Server of the Part 10 transition events."
               }
             ]
           ],
@@ -17976,7 +19779,21 @@
           },
           {
             "r": "t",
-            "text": " sets out — structural requirements a client can check by reading, behavioural ones the Server attests to under clause 9. A profile is a shorter way to say the same thing, not a weaker one."
+            "text": " sets out — structural requirements a client can check by reading, behavioural ones the Server attests to under "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-17",
+            "kind": "clause",
+            "prefix": "6.17"
+          },
+          {
+            "r": "t",
+            "text": ". A profile is a shorter way to say the same thing, not a weaker one."
           }
         ],
         "src": {
@@ -18425,10 +20242,8 @@
             "text": ", and so on for every row of "
           },
           {
-            "r": "xref",
-            "target": "c11-2",
-            "kind": "clause",
-            "prefix": "11.2"
+            "r": "t",
+            "text": "§12.2"
           },
           {
             "r": "t",
@@ -18577,7 +20392,7 @@
             [
               {
                 "r": "t",
-                "text": "0.1.0"
+                "text": "0.3.0"
               }
             ]
           ],
@@ -18597,7 +20412,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-08-02"
+                "text": "2026-08-13"
               }
             ]
           ],
@@ -20591,6 +22406,245 @@
           "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
           "s": "Annex E — Vision interop profile (normative for RI-Interop-Vision)",
           "b": 7
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "E.7 This model is the authority on what the robot did.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A cell that wants to know a part was picked takes that from "
+          },
+          {
+            "r": "code",
+            "text": "IntentCompletedEventType"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-14-10",
+            "kind": "clause",
+            "prefix": "6.14.10"
+          },
+          {
+            "r": "t",
+            "text": "), where "
+          },
+          {
+            "r": "code",
+            "text": "IntentTypeId"
+          },
+          {
+            "r": "t",
+            "text": " names "
+          },
+          {
+            "r": "code",
+            "text": "PickIntentDataType"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "State"
+          },
+          {
+            "r": "t",
+            "text": " is "
+          },
+          {
+            "r": "code",
+            "text": "Succeeded"
+          },
+          {
+            "r": "t",
+            "text": ". A vision model can report what a camera saw and cannot report what a robot did; this model can, and a consumer joining the two "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " treat the completion as authoritative for the action and the observation as corroborating it."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "Annex E — Vision interop profile (normative for RI-Interop-Vision)",
+          "b": 8
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This is why "
+          },
+          {
+            "r": "xref",
+            "target": "c6-14-10",
+            "kind": "clause",
+            "prefix": "6.14.10"
+          },
+          {
+            "r": "t",
+            "text": " carries "
+          },
+          {
+            "r": "code",
+            "text": "IntentTypeId"
+          },
+          {
+            "r": "t",
+            "text": ". It makes the kind of work the event is about selectable by an "
+          },
+          {
+            "r": "code",
+            "text": "EventFilter"
+          },
+          {
+            "r": "t",
+            "text": ", so a line controller subscribes to the completions it cares about — the picks, or everything that failed — without receiving and discarding the rest. The intent vocabulary is therefore also the manufacturing-event vocabulary: "
+          },
+          {
+            "r": "code",
+            "text": "pick"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "place"
+          },
+          {
+            "r": "t",
+            "text": " and the others are already named as intent types, and a completion event is what turns each of them into an occurrence something downstream can react to. A separate event vocabulary naming the same acts would be a second definition able to disagree with the first about what happened."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "Annex E — Vision interop profile (normative for RI-Interop-Vision)",
+          "b": 9
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "E.8 The chain reaches the decision.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Where both models are implemented, "
+          },
+          {
+            "r": "code",
+            "text": "IntentOperationType.DecidedBy"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-14-7",
+            "kind": "clause",
+            "prefix": "6.14.7"
+          },
+          {
+            "r": "t",
+            "text": ") "
+          },
+          {
+            "r": "t",
+            "text": "should",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " name the "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType"
+          },
+          {
+            "r": "t",
+            "text": " instance the intent's parameters came from. A consumer holding an "
+          },
+          {
+            "r": "code",
+            "text": "IntentCompletedEventType"
+          },
+          {
+            "r": "t",
+            "text": " can then follow "
+          },
+          {
+            "r": "code",
+            "text": "DecidedBy"
+          },
+          {
+            "r": "t",
+            "text": " to the result, the result to its pipeline and deployment, and the deployment to the model and its digest — so the question "
+          },
+          {
+            "r": "t",
+            "text": "which model caused this motion",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " is answerable from one notification and a walk, rather than by correlating two event streams on timing and hoping."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "Annex E — Vision interop profile (normative for RI-Interop-Vision)",
+          "b": 10
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This is the one place the two models compose into something neither provides alone. The vision model can say which model produced a pose and cannot say whether a robot acted on it; this model can say what the robot did and, without "
+          },
+          {
+            "r": "code",
+            "text": "DecidedBy"
+          },
+          {
+            "r": "t",
+            "text": ", cannot say why. Populating it costs a Server that implements both nothing it does not already know at submission."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md",
+          "s": "Annex E — Vision interop profile (normative for RI-Interop-Vision)",
+          "b": 11
         }
       }
     ]

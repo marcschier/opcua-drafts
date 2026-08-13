@@ -40,8 +40,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/Vision/"
-VERSION = "0.2.0"
-PUBDATE = "2026-08-11T00:00:00Z"
+VERSION = "0.4.0"
+PUBDATE = "2026-08-13T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -54,6 +54,15 @@ HasTypeDefinition = "i=40"
 HasModellingRule = "i=37"
 HasInterface = "i=17603"
 HasEncoding = "i=38"
+# Event plumbing. HasNotifier and HasEventSource build the notifier hierarchy a client
+# walks to find what it can subscribe to; without them an EventType is declared but
+# unreachable, because a Subscription is created against a node whose EventNotifier
+# says it emits events (OPC 10000-3 clause 5.4, OPC 10000-4 clause 5.12).
+HasNotifier = "i=48"
+HasEventSource = "i=36"
+# EventNotifier bit 0 (SubscribeToEvents). Bits 2 and 3 add history read and write,
+# which this model does not require of an event source.
+EVENTNOTIFIER_SUBSCRIBE = "1"
 
 MR_Mandatory = "i=78"
 MR_Optional = "i=80"
@@ -61,6 +70,7 @@ MR_OptionalPlaceholder = "i=11508"
 MR_MandatoryPlaceholder = "i=11510"
 
 BaseObjectType = "i=58"
+BaseEventType = "i=2041"
 FolderType = "i=61"
 PropertyType = "i=68"
 BaseDataVariableType = "i=63"
@@ -99,6 +109,7 @@ ALIASES = [
     ("HasSubtype", HasSubtype), ("Organizes", Organizes),
     ("HasTypeDefinition", HasTypeDefinition), ("HasModellingRule", HasModellingRule),
     ("HasInterface", HasInterface), ("HasEncoding", HasEncoding),
+    ("HasNotifier", HasNotifier), ("HasEventSource", HasEventSource),
     ("Mandatory", MR_Mandatory), ("Optional", MR_Optional),
     ("OptionalPlaceholder", MR_OptionalPlaceholder),
     ("MandatoryPlaceholder", MR_MandatoryPlaceholder),
@@ -195,6 +206,15 @@ def object_type(nid, name, base, desc, abstract=False):
 
 def interface_type(nid, name, base, desc):
     add(nid, "UAObjectType", name, name, desc=desc, category=CAT, abstract=True)
+    ref(nid, HasSubtype, base, forward=False)
+    return nid
+
+
+def event_type(nid, name, base, desc, abstract=False):
+    """An EventType. Its members are Properties, exactly as OPC 10000-5 declares the
+    fields of BaseEventType, so a client selects them with a SimpleAttributeOperand and
+    the Server can filter on them before it sends anything."""
+    add(nid, "UAObjectType", name, name, desc=desc, category=CAT_EV, abstract=abstract)
     ref(nid, HasSubtype, base, forward=False)
     return nid
 
@@ -380,10 +400,17 @@ def struct_type(nid, name, desc, fields):
     return nid
 
 
-def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent):
-    add(nid, "UAObject", name, name, desc=desc, parent=parent_nodeid)
+def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent,
+               event_notifier=None):
+    attrs = {"EventNotifier": event_notifier} if event_notifier else None
+    add(nid, "UAObject", name, name, desc=desc, parent=parent_nodeid, attrs=attrs)
     ref(nid, HasTypeDefinition, typedef)
     ref(nid, reftype, parent_nodeid, forward=False)
+    if event_notifier:
+        # Server HasNotifier this object. The Server object is where a client subscribes
+        # for everything, so without this edge the events raised here reach nobody who
+        # did not already know to subscribe to this node specifically.
+        ref(nid, HasNotifier, parent_nodeid, forward=False)
     return nid
 
 
@@ -393,6 +420,7 @@ def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent):
 CAT = "Vision"
 CAT_DT = "Vision DataTypes"
 CAT_RT = "Vision ReferenceTypes"
+CAT_EV = "Vision Events"
 
 # ---------------------------------------------------------------------------
 # Enumerations (3001+)
@@ -1276,7 +1304,11 @@ folder_member(VRT, "VisionRootType", "Frames",
 # ---- Well-known instance ----------------------------------------------------
 well_known(7001, "Vision", T(VRT), Server,
            "The well-known Vision entry point, a component of the Server object. A "
-           "conformant Server exposes exactly one.")
+           "conformant Server exposes exactly one. It carries EventNotifier because it "
+           "is the notifier for every Vision event in the Server (clause 7.5): a client "
+           "subscribes here, or at the Server object above it, and does not have to find "
+           "each pipeline first.",
+           event_notifier=EVENTNOTIFIER_SUBSCRIBE)
 
 # ---------------------------------------------------------------------------
 # Appended members
@@ -1333,6 +1365,102 @@ prop_var(D3, "Depth3DSensorType", "DepthHeight", UInt32,
          "Height in pixels of the sensor's native depth image, under the same condition "
          "as DepthWidth. The two are present or absent together.")
 
+# ---------------------------------------------------------------------------
+# Event types (1031+)
+# ---------------------------------------------------------------------------
+# A result is a record and an event is an occurrence. The result types above stay
+# exactly as they are - re-readable, subscribable, retained - and these say that
+# something happened, naming the result that substantiates it rather than copying its
+# content. A consumer that needs the detail reads the result; one that only needs to
+# react does not have to poll for it.
+VE = 1031
+event_type(VE, "VisionEventType", BaseEventType,
+           "Abstract base of every event this model raises. It adds to BaseEventType "
+           "the provenance a vision event needs to be actionable: which result "
+           "substantiates it, which sensor and pipeline produced it, which model "
+           "version decided, and how far the answer can be trusted. Time is inherited "
+           "from BaseEventType and clause 7.5 fixes what it means here.",
+           abstract=True)
+prop_var(VE, "VisionEventType", "ResultId", String,
+         "ResultId of the VisionResultType instance that substantiates this event. The "
+         "event carries no result content: a consumer that needs the detail reads the "
+         "result, and one that only needs to react does not.", MR_Mandatory)
+prop_var(VE, "VisionEventType", "Sensor", NodeId_,
+         "The VisionSensorType instance the observation was made with.", MR_Mandatory)
+prop_var(VE, "VisionEventType", "GroundTruth", Boolean,
+         "True where this is simulator ground truth rather than a prediction, mirroring "
+         "IVisionSimulatedType.GroundTruthAvailable on the sensor. Mandatory because a "
+         "consumer shall never have to infer whether a value was measured or guessed; "
+         "clause 10 already forbids the two being indistinguishable.", MR_Mandatory)
+prop_var(VE, "VisionEventType", "Pipeline", NodeId_,
+         "The InferencePipelineType instance that produced the result, where one did.")
+prop_var(VE, "VisionEventType", "ModelVersionUsed", String,
+         "Version of the model that decided, copied from the result. It is repeated on "
+         "the event so a notification alone answers which model caused an action, which "
+         "is what an audit of an automated decision has to establish.")
+prop_var(VE, "VisionEventType", "Confidence", Double,
+         "Confidence of the underlying result, 0.0 to 1.0. Absent where the producing "
+         "step does not report one; absent is not zero.")
+prop_var(VE, "VisionEventType", "InferenceEndTime", UtcTime,
+         "When inference finished. Time is when the frame was acquired (clause 7.5), so "
+         "the difference between the two is the inference latency of this observation - "
+         "the only place this model exposes it per result rather than per deployment.")
+
+OD = 1032
+event_type(OD, "ObjectDetectedEventType", T(VE),
+           "One detected instance, raised once per entry in a DetectionResultType's "
+           "Detections. One event per detection rather than one per result is what makes "
+           "the class and the confidence available to an EventFilter, so a client asks "
+           "for the two classes it cares about above a confidence it chooses and the "
+           "Server sends nothing else. A per-result event would move that filtering to "
+           "the client and give up most of the reason to use events at all.")
+data_var(OD, "ObjectDetectedEventType", "Detection", VisionDetectionDataType,
+         "The detection this event reports, as it appears in the result's Detections. "
+         "Where several detections share a result they share its ResultId and differ "
+         "here.", MR_Mandatory)
+
+IC = 1033
+event_type(IC, "InspectionCompletedEventType", T(VE),
+           "An inspection reached a verdict. Raised once per InspectionResultType, "
+           "because an inspection concludes once - unlike detection, where a single "
+           "frame yields many independent findings.")
+prop_var(IC, "InspectionCompletedEventType", "Evaluation", VisionResultEvaluationEnum,
+         "The verdict, copied from the result. It is the field a line controller "
+         "filters on, so it is Mandatory and is the one piece of result content this "
+         "model does repeat.", MR_Mandatory)
+prop_var(IC, "InspectionCompletedEventType", "PartId", String,
+         "Identifier of the inspected part, where the result names one.")
+prop_var(IC, "InspectionCompletedEventType", "RecipeId", String,
+         "Identifier of the recipe the inspection ran, where the result names one.")
+data_var(IC, "InspectionCompletedEventType", "FailedCharacteristics",
+         VisionCharacteristicDataType,
+         "The characteristics whose Status is not InTolerance, and only those. A passing "
+         "inspection carries an empty array. Repeating every characteristic here would "
+         "duplicate the result for the common case where none failed; repeating the "
+         "failing ones lets a consumer act on why it failed without a read.",
+         MR_Optional, valuerank="1")
+
+# ---------------------------------------------------------------------------
+# The time base events are correlated on
+# ---------------------------------------------------------------------------
+# Annex I.7 tells a consumer to correlate an event raised here with one raised by a
+# commanding model using the Time of each. Those are two Servers, and nothing said
+# their clocks agreed - so the rule rested on an assumption a consumer could neither
+# see nor check. This makes it checkable without requiring anything most cells cannot
+# provide: a Server states whether it is synchronised and to what, and a consumer that
+# needs tighter correlation than free-running clocks allow can tell before relying on
+# it rather than after a misattributed frame.
+prop_var(VRT, "VisionRootType", "ClockSynchronised", Boolean,
+         "True where this Server's clock is disciplined to an external time reference "
+         "shared with the systems its events are correlated against. False, or absent, "
+         "means the clock is free-running and a consumer shall not assume sub-second "
+         "agreement with another Server. See clause 7.5.")
+prop_var(VRT, "VisionRootType", "TimeSyncSource", String,
+         "What the clock is disciplined to when ClockSynchronised is true - for example "
+         "IEEE1588, NTP or GPS - as free text, because the set of answers is open and a "
+         "consumer uses it to judge the order of accuracy rather than to parse. Empty "
+         "or absent where the Server does not state one.")
+
 
 # ===========================================================================
 # ==================================  EMIT  =================================
@@ -1360,7 +1488,7 @@ def _emit_node(n):
         a.append(f'SymbolicName="{sx.escape(n.attrs["SymbolicName"])}"')
     if n.parent is not None:
         a.append(f'ParentNodeId="{n.parent}"')
-    for k in ("DataType", "ValueRank", "ArrayDimensions"):
+    for k in ("DataType", "ValueRank", "ArrayDimensions", "EventNotifier"):
         if k in n.attrs:
             v = n.attrs[k]
             if k == "DataType":

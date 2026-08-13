@@ -114,6 +114,9 @@ KNOWN_BASE = {
     "i=22", "i=29", "i=32",
     # reference types
     "i=35", "i=37", "i=38", "i=40", "i=45", "i=46", "i=47", "i=17603",
+    # event plumbing: HasEventSource, HasNotifier, and the BaseEventType every
+    # EventType in clause 7.5 subtypes
+    "i=36", "i=48", "i=2041",
     # type definitions
     "i=58", "i=61", "i=63", "i=68", "i=76", "i=17602",
     # modelling rules
@@ -553,6 +556,8 @@ def main():
             "UsdGeomCameraType",     # OPC UA - OpenUSD Scene Materialization
             "UsdApiSchemaType",      # OPC UA - OpenUSD Scene Materialization
             "DataChannelSourceType",  # OPC UA - Data Channels (draft)
+            "BaseEventType",         # OPC 10000-5, base of every EventType in 7.5
+            "IntentOperationType",   # OPC UA - Robot Intent, named by Annex I.7
         }
         known_elsewhere = set(AI_TYPE_ID) | EXTERNAL_TYPES
         for owner, member in set(re.findall(
@@ -592,6 +597,39 @@ def main():
                 err(f"model declares {owner}.{member} but OPC-UA-Vision.md never "
                     "names it - an undocumented member is one every implementer "
                     "guesses differently")
+
+    # ---- events are wired, not merely declared -----------------------------
+    # An EventType that nothing can subscribe to is a type nobody receives. OPC UA
+    # delivers events from a node whose EventNotifier says it emits them, so a model
+    # that declares EventTypes and sets EventNotifier nowhere has published a
+    # vocabulary with no way to hear it. Both halves are checked because either alone
+    # passes trivially: EventTypes with no notifier is unreachable, and a notifier with
+    # no EventTypes is an attribute doing nothing.
+    all_event_types = [n for n in nodes
+                       if n.tag == f"{NS}UAObjectType"
+                       and simple_name(n).endswith("EventType")]
+    notifiers = [n for n in nodes if (n.get("EventNotifier") or "0") != "0"]
+
+    for n in all_event_types:
+        subtypes = [(r.text or "").strip()
+                    for r in n.findall(f"{NS}References/{NS}Reference")
+                    if r.get("ReferenceType") in ("HasSubtype", "i=45")
+                    and r.get("IsForward") == "false"]
+        if not subtypes:
+            err(f"{simple_name(n)} is named as an EventType but subtypes nothing")
+        elif not any(s == "i=2041" or s in by_id for s in subtypes):
+            err(f"{simple_name(n)} subtypes {subtypes[0]}, which is neither "
+                "BaseEventType nor a type this model declares")
+
+    if all_event_types and not notifiers:
+        err(f"the model declares {len(all_event_types)} EventType(s) and sets "
+            "EventNotifier on no node - nothing can subscribe to them")
+    for n in notifiers:
+        if not any(r.get("ReferenceType") in ("HasNotifier", "i=48")
+                   for r in n.findall(f"{NS}References/{NS}Reference")):
+            err(f"{simple_name(n)} declares EventNotifier but carries no HasNotifier "
+                "reference, so its events do not reach a client subscribing at the "
+                "Server object")
 
     # ---- standard BrowseNames stay in namespace 0 --------------------------
     # The repo-wide guard in .github/scripts/check_browsename_namespace.py covers this

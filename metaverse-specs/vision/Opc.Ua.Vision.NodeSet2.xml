@@ -5,7 +5,7 @@
     <Uri>http://opcfoundation.org/UA/Vision/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.2.0" PublicationDate="2026-08-11T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.4.0" PublicationDate="2026-08-13T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
     </Model>
   </Models>
@@ -34,6 +34,8 @@
     <Alias Alias="HasModellingRule">i=37</Alias>
     <Alias Alias="HasInterface">i=17603</Alias>
     <Alias Alias="HasEncoding">i=38</Alias>
+    <Alias Alias="HasNotifier">i=48</Alias>
+    <Alias Alias="HasEventSource">i=36</Alias>
     <Alias Alias="Mandatory">i=78</Alias>
     <Alias Alias="Optional">i=80</Alias>
     <Alias Alias="OptionalPlaceholder">i=11508</Alias>
@@ -2126,6 +2128,8 @@
       <Reference ReferenceType="HasComponent">ns=1;i=6191</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6192</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6194</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6213</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6214</Reference>
     </References>
   </UAObjectType>
   <UAObject NodeId="ns=1;i=6191" BrowseName="1:Sensors" ParentNodeId="ns=1;i=1001">
@@ -2155,12 +2159,13 @@
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1001</Reference>
     </References>
   </UAObject>
-  <UAObject NodeId="ns=1;i=7001" BrowseName="1:Vision" ParentNodeId="i=2253">
+  <UAObject NodeId="ns=1;i=7001" BrowseName="1:Vision" ParentNodeId="i=2253" EventNotifier="1">
     <DisplayName>Vision</DisplayName>
-    <Description>The well-known Vision entry point, a component of the Server object. A conformant Server exposes exactly one.</Description>
+    <Description>The well-known Vision entry point, a component of the Server object. A conformant Server exposes exactly one. It carries EventNotifier because it is the notifier for every Vision event in the Server (clause 7.5): a client subscribes here, or at the Server object above it, and does not have to find each pipeline first.</Description>
     <References>
       <Reference ReferenceType="HasTypeDefinition">ns=1;i=1001</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">i=2253</Reference>
+      <Reference ReferenceType="HasNotifier" IsForward="false">i=2253</Reference>
     </References>
   </UAObject>
   <UAVariable NodeId="ns=1;i=6196" BrowseName="1:DataChannelSource" ParentNodeId="ns=1;i=1007" DataType="NodeId" ValueRank="-1">
@@ -2206,6 +2211,168 @@
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1004</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1031" BrowseName="1:VisionEventType" IsAbstract="true">
+    <DisplayName>VisionEventType</DisplayName>
+    <Description>Abstract base of every event this model raises. It adds to BaseEventType the provenance a vision event needs to be actionable: which result substantiates it, which sensor and pipeline produced it, which model version decided, and how far the answer can be trusted. Time is inherited from BaseEventType and clause 7.5 fixes what it means here.</Description>
+    <Category>Vision Events</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=2041</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6201</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6202</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6203</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6204</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6205</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6206</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6207</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6201" BrowseName="1:ResultId" ParentNodeId="ns=1;i=1031" DataType="String" ValueRank="-1">
+    <DisplayName>ResultId</DisplayName>
+    <Description>ResultId of the VisionResultType instance that substantiates this event. The event carries no result content: a consumer that needs the detail reads the result, and one that only needs to react does not.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1031</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6202" BrowseName="1:Sensor" ParentNodeId="ns=1;i=1031" DataType="NodeId" ValueRank="-1">
+    <DisplayName>Sensor</DisplayName>
+    <Description>The VisionSensorType instance the observation was made with.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1031</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6203" BrowseName="1:GroundTruth" ParentNodeId="ns=1;i=1031" DataType="Boolean" ValueRank="-1">
+    <DisplayName>GroundTruth</DisplayName>
+    <Description>True where this is simulator ground truth rather than a prediction, mirroring IVisionSimulatedType.GroundTruthAvailable on the sensor. Mandatory because a consumer shall never have to infer whether a value was measured or guessed; clause 10 already forbids the two being indistinguishable.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1031</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6204" BrowseName="1:Pipeline" ParentNodeId="ns=1;i=1031" DataType="NodeId" ValueRank="-1">
+    <DisplayName>Pipeline</DisplayName>
+    <Description>The InferencePipelineType instance that produced the result, where one did.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1031</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6205" BrowseName="1:ModelVersionUsed" ParentNodeId="ns=1;i=1031" DataType="String" ValueRank="-1">
+    <DisplayName>ModelVersionUsed</DisplayName>
+    <Description>Version of the model that decided, copied from the result. It is repeated on the event so a notification alone answers which model caused an action, which is what an audit of an automated decision has to establish.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1031</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6206" BrowseName="1:Confidence" ParentNodeId="ns=1;i=1031" DataType="Double" ValueRank="-1">
+    <DisplayName>Confidence</DisplayName>
+    <Description>Confidence of the underlying result, 0.0 to 1.0. Absent where the producing step does not report one; absent is not zero.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1031</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6207" BrowseName="1:InferenceEndTime" ParentNodeId="ns=1;i=1031" DataType="UtcTime" ValueRank="-1">
+    <DisplayName>InferenceEndTime</DisplayName>
+    <Description>When inference finished. Time is when the frame was acquired (clause 7.5), so the difference between the two is the inference latency of this observation - the only place this model exposes it per result rather than per deployment.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1031</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1032" BrowseName="1:ObjectDetectedEventType">
+    <DisplayName>ObjectDetectedEventType</DisplayName>
+    <Description>One detected instance, raised once per entry in a DetectionResultType's Detections. One event per detection rather than one per result is what makes the class and the confidence available to an EventFilter, so a client asks for the two classes it cares about above a confidence it chooses and the Server sends nothing else. A per-result event would move that filtering to the client and give up most of the reason to use events at all.</Description>
+    <Category>Vision Events</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1031</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6208</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6208" BrowseName="1:Detection" ParentNodeId="ns=1;i=1032" DataType="ns=1;i=3055" ValueRank="-1">
+    <DisplayName>Detection</DisplayName>
+    <Description>The detection this event reports, as it appears in the result's Detections. Where several detections share a result they share its ResultId and differ here.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1032</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1033" BrowseName="1:InspectionCompletedEventType">
+    <DisplayName>InspectionCompletedEventType</DisplayName>
+    <Description>An inspection reached a verdict. Raised once per InspectionResultType, because an inspection concludes once - unlike detection, where a single frame yields many independent findings.</Description>
+    <Category>Vision Events</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1031</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6209</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6210</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6211</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6212</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6209" BrowseName="1:Evaluation" ParentNodeId="ns=1;i=1033" DataType="ns=1;i=3009" ValueRank="-1">
+    <DisplayName>Evaluation</DisplayName>
+    <Description>The verdict, copied from the result. It is the field a line controller filters on, so it is Mandatory and is the one piece of result content this model does repeat.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1033</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6210" BrowseName="1:PartId" ParentNodeId="ns=1;i=1033" DataType="String" ValueRank="-1">
+    <DisplayName>PartId</DisplayName>
+    <Description>Identifier of the inspected part, where the result names one.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1033</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6211" BrowseName="1:RecipeId" ParentNodeId="ns=1;i=1033" DataType="String" ValueRank="-1">
+    <DisplayName>RecipeId</DisplayName>
+    <Description>Identifier of the recipe the inspection ran, where the result names one.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1033</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6212" BrowseName="1:FailedCharacteristics" ParentNodeId="ns=1;i=1033" DataType="ns=1;i=3056" ValueRank="1">
+    <DisplayName>FailedCharacteristics</DisplayName>
+    <Description>The characteristics whose Status is not InTolerance, and only those. A passing inspection carries an empty array. Repeating every characteristic here would duplicate the result for the common case where none failed; repeating the failing ones lets a consumer act on why it failed without a read.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1033</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6213" BrowseName="1:ClockSynchronised" ParentNodeId="ns=1;i=1001" DataType="Boolean" ValueRank="-1">
+    <DisplayName>ClockSynchronised</DisplayName>
+    <Description>True where this Server's clock is disciplined to an external time reference shared with the systems its events are correlated against. False, or absent, means the clock is free-running and a consumer shall not assume sub-second agreement with another Server. See clause 7.5.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6214" BrowseName="1:TimeSyncSource" ParentNodeId="ns=1;i=1001" DataType="String" ValueRank="-1">
+    <DisplayName>TimeSyncSource</DisplayName>
+    <Description>What the clock is disciplined to when ClockSynchronised is true - for example IEEE1588, NTP or GPS - as free text, because the set of answers is open and a consumer uses it to judge the order of accuracy rather than to parse. Empty or absent where the Server does not state one.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1001</Reference>
     </References>
   </UAVariable>
 </UANodeSet>

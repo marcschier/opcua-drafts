@@ -5,7 +5,7 @@
     <Uri>http://opcfoundation.org/UA/RobotIntent/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/RobotIntent/" Version="0.1.0" PublicationDate="2026-08-02T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/RobotIntent/" Version="0.3.0" PublicationDate="2026-08-13T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
     </Model>
   </Models>
@@ -35,6 +35,8 @@
     <Alias Alias="HasModellingRule">i=37</Alias>
     <Alias Alias="HasInterface">i=17603</Alias>
     <Alias Alias="HasEncoding">i=38</Alias>
+    <Alias Alias="HasNotifier">i=48</Alias>
+    <Alias Alias="HasEventSource">i=36</Alias>
     <Alias Alias="Mandatory">i=78</Alias>
     <Alias Alias="Optional">i=80</Alias>
     <Alias Alias="OptionalPlaceholder">i=11508</Alias>
@@ -636,6 +638,8 @@
       <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6001</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6002</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6152</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6153</Reference>
     </References>
   </UAObjectType>
   <UAObject NodeId="ns=1;i=6001" BrowseName="1:Controllers" ParentNodeId="ns=1;i=1001">
@@ -1104,6 +1108,7 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6053</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6137</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6138</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6150</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6046" BrowseName="1:IntentId" ParentNodeId="ns=1;i=1003" DataType="String" ValueRank="-1">
@@ -1688,12 +1693,13 @@
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1011</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=1;i=7001" BrowseName="1:RobotIntent" ParentNodeId="i=2253">
+  <UAObject NodeId="ns=1;i=7001" BrowseName="1:RobotIntent" ParentNodeId="i=2253" EventNotifier="1">
     <DisplayName>RobotIntent</DisplayName>
-    <Description>Entry point for robot intent on this Server. A client browses Server/RobotIntent/Controllers to find every robot it can command.</Description>
+    <Description>Entry point for robot intent on this Server. A client browses Server/RobotIntent/Controllers to find every robot it can command. It carries EventNotifier because it is the notifier for every intent event in the Server (clause 6.10): a client subscribes here, or at the Server object above it, and does not have to find each controller first.</Description>
     <References>
       <Reference ReferenceType="HasTypeDefinition">ns=1;i=1001</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">i=2253</Reference>
+      <Reference ReferenceType="HasNotifier" IsForward="false">i=2253</Reference>
     </References>
   </UAObject>
   <UADataType NodeId="ns=1;i=3013" BrowseName="1:SafeMotionFunctionEnum">
@@ -2498,6 +2504,167 @@
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1005</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1015" BrowseName="1:IntentEventType" IsAbstract="true">
+    <DisplayName>IntentEventType</DisplayName>
+    <Description>Abstract base of every event this model raises. It identifies the work the event is about, and its subtypes say what became of it. Time is inherited from BaseEventType and is when the reported transition occurred.</Description>
+    <Category>RobotIntent Events</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=2041</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6140</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6141</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6142</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6143</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6140" BrowseName="1:IntentId" ParentNodeId="ns=1;i=1015" DataType="String" ValueRank="-1">
+    <DisplayName>IntentId</DisplayName>
+    <Description>IntentId of the intent this event concerns.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1015</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6141" BrowseName="1:Operation" ParentNodeId="ns=1;i=1015" DataType="NodeId" ValueRank="-1">
+    <DisplayName>Operation</DisplayName>
+    <Description>The IntentOperationType instance tracking it. A consumer that wants the full history reads this node; a consumer that only needs the outcome does not, because the outcome is on the event.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1015</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6142" BrowseName="1:IntentTypeId" ParentNodeId="ns=1;i=1015" DataType="NodeId" ValueRank="-1">
+    <DisplayName>IntentTypeId</DisplayName>
+    <Description>NodeId of the IntentDataType subtype that was submitted - PickIntentDataType, LinearMoveIntentDataType and so on. This is what makes an event filterable by KIND of work: a client subscribing to picks selects on this field rather than reading every completion and discarding most of them.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1015</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6143" BrowseName="1:MissionId" ParentNodeId="ns=1;i=1015" DataType="String" ValueRank="-1">
+    <DisplayName>MissionId</DisplayName>
+    <Description>Mission the intent belongs to, or empty where it was submitted on its own.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1015</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1016" BrowseName="1:IntentCompletedEventType">
+    <DisplayName>IntentCompletedEventType</DisplayName>
+    <Description>An intent reached a terminal state. Raised exactly once per intent, on the transition into Succeeded, Failed, Cancelled or Retriable, and never for an intermediate state - Cancelling is not terminal (clause 6.5) and an event raised there would tell a consumer the work had stopped while the robot was still moving.</Description>
+    <Category>RobotIntent Events</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1015</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6144</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6145</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6146</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6151</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6144" BrowseName="1:State" ParentNodeId="ns=1;i=1016" DataType="ns=1;i=3001" ValueRank="-1">
+    <DisplayName>State</DisplayName>
+    <Description>The terminal ExecutionState. One of Succeeded, Failed, Cancelled or Retriable.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1016</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6145" BrowseName="1:Failure" ParentNodeId="ns=1;i=1016" DataType="ns=1;i=3009" ValueRank="-1">
+    <DisplayName>Failure</DisplayName>
+    <Description>Why it did not succeed, or None. Mandatory rather than optional because a consumer deciding whether to retry, re-plan or escalate decides on this value alone (clause 5.8), and an absent field would make that decision unavailable exactly when it is needed.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1016</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6146" BrowseName="1:Result" ParentNodeId="ns=1;i=1016" DataType="ns=1;i=3066" ValueRank="-1">
+    <DisplayName>Result</DisplayName>
+    <Description>The full result, identical to the Operation's Result. It is the one piece of state this event does repeat, because the operation node it would otherwise be read from need not still exist.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1016</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=1;i=1017" BrowseName="1:MissionCompletedEventType">
+    <DisplayName>MissionCompletedEventType</DisplayName>
+    <Description>A mission reached a terminal state. IntentId carries the last intent the mission ran, so a consumer that missed the per-intent events still learns where the mission stopped.</Description>
+    <Category>RobotIntent Events</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=1015</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6147</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6148</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6149</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=1;i=6147" BrowseName="1:State" ParentNodeId="ns=1;i=1017" DataType="ns=1;i=3001" ValueRank="-1">
+    <DisplayName>State</DisplayName>
+    <Description>The terminal ExecutionState of the mission.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1017</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6148" BrowseName="1:CompletedSteps" ParentNodeId="ns=1;i=1017" DataType="UInt32" ValueRank="-1">
+    <DisplayName>CompletedSteps</DisplayName>
+    <Description>How many steps reached a terminal state, whether they succeeded or not. With the mission's step count this says how far it got.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1017</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6149" BrowseName="1:FailedStepId" ParentNodeId="ns=1;i=1017" DataType="String" ValueRank="-1">
+    <DisplayName>FailedStepId</DisplayName>
+    <Description>StepId of the step that ended the mission, or empty where it completed. A step that failed under an ErrorPolicy of Skip does not end a mission and is not named here.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1017</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6150" BrowseName="1:DecidedBy" ParentNodeId="ns=1;i=1003" DataType="NodeId" ValueRank="-1">
+    <DisplayName>DecidedBy</DisplayName>
+    <Description>NodeId of the artefact that produced this intent's parameters - typically a result published by a perception model, or the model itself - or null where a human taught the pose or a program held it. It is what lets an investigation that starts at a motion reach the decision behind it; without it the provenance chain ends at the boundary where the robot moved, which is exactly where such an investigation begins. This model does not define what the NodeId points at and takes no dependency on any model that might: see clause 11.3.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1003</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6151" BrowseName="1:DecidedBy" ParentNodeId="ns=1;i=1016" DataType="NodeId" ValueRank="-1">
+    <DisplayName>DecidedBy</DisplayName>
+    <Description>The Operation's DecidedBy, repeated so a consumer auditing from the event stream alone does not have to read a node that need not still exist. Null where the Operation's is null.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1016</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6152" BrowseName="1:ClockSynchronised" ParentNodeId="ns=1;i=1001" DataType="Boolean" ValueRank="-1">
+    <DisplayName>ClockSynchronised</DisplayName>
+    <Description>True where this Server's clock is disciplined to an external time reference shared with the systems its events are correlated against. False, or absent, means the clock is free-running and a consumer shall not assume sub-second agreement with another Server. See clause 6.10.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1001</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6153" BrowseName="1:TimeSyncSource" ParentNodeId="ns=1;i=1001" DataType="String" ValueRank="-1">
+    <DisplayName>TimeSyncSource</DisplayName>
+    <Description>What the clock is disciplined to when ClockSynchronised is true - for example IEEE1588, NTP or GPS - as free text, because the set of answers is open and a consumer uses it to judge the order of accuracy rather than to parse. Empty or absent where the Server does not state one.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1001</Reference>
     </References>
   </UAVariable>
 </UANodeSet>

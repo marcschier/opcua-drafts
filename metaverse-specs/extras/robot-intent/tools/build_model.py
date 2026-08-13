@@ -43,8 +43,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/RobotIntent/"
-VERSION = "0.1.0"
-PUBDATE = "2026-08-02T00:00:00Z"
+VERSION = "0.3.0"
+PUBDATE = "2026-08-13T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -57,6 +57,14 @@ HasTypeDefinition = "i=40"
 HasModellingRule = "i=37"
 HasInterface = "i=17603"
 HasEncoding = "i=38"
+# Event plumbing. HasNotifier and HasEventSource build the notifier hierarchy a client
+# walks to find what it can subscribe to; without them an EventType is declared but
+# unreachable, because a Subscription is created against a node whose EventNotifier
+# says it emits events (OPC 10000-3 clause 5.4, OPC 10000-4 clause 5.12).
+HasNotifier = "i=48"
+HasEventSource = "i=36"
+# EventNotifier bit 0 (SubscribeToEvents).
+EVENTNOTIFIER_SUBSCRIBE = "1"
 
 MR_Mandatory = "i=78"
 MR_Optional = "i=80"
@@ -64,6 +72,7 @@ MR_OptionalPlaceholder = "i=11508"
 MR_MandatoryPlaceholder = "i=11510"
 
 BaseObjectType = "i=58"
+BaseEventType = "i=2041"
 # Part 10 types used by the promotions at the end of the model.
 ProgramDiagnostic2DataType = "i=24033"
 ProgramDiagnostic2Type = "i=15383"
@@ -107,6 +116,7 @@ ALIASES = [
     ("HasSubtype", HasSubtype), ("Organizes", Organizes),
     ("HasTypeDefinition", HasTypeDefinition), ("HasModellingRule", HasModellingRule),
     ("HasInterface", HasInterface), ("HasEncoding", HasEncoding),
+    ("HasNotifier", HasNotifier), ("HasEventSource", HasEventSource),
     ("Mandatory", MR_Mandatory), ("Optional", MR_Optional),
     ("OptionalPlaceholder", MR_OptionalPlaceholder),
     ("MandatoryPlaceholder", MR_MandatoryPlaceholder),
@@ -178,6 +188,15 @@ def object_type(nid, name, base, desc, abstract=False):
 
 def interface_type(nid, name, base, desc):
     add(nid, "UAObjectType", name, name, desc=desc, category=CAT, abstract=True)
+    ref(nid, HasSubtype, base, forward=False)
+    return nid
+
+
+def event_type(nid, name, base, desc, abstract=False):
+    """An EventType. Its members are Properties, exactly as OPC 10000-5 declares the
+    fields of BaseEventType, so a client selects them with a SimpleAttributeOperand and
+    the Server can filter on them before it sends anything."""
+    add(nid, "UAObjectType", name, name, desc=desc, category=CAT_EV, abstract=abstract)
     ref(nid, HasSubtype, base, forward=False)
     return nid
 
@@ -383,10 +402,17 @@ def struct_type(nid, name, desc, fields, base=Structure, abstract=False):
     return nid
 
 
-def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent):
-    add(nid, "UAObject", name, name, desc=desc, parent=parent_nodeid)
+def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent,
+               event_notifier=None):
+    attrs = {"EventNotifier": event_notifier} if event_notifier else None
+    add(nid, "UAObject", name, name, desc=desc, parent=parent_nodeid, attrs=attrs)
     ref(nid, HasTypeDefinition, typedef)
     ref(nid, reftype, parent_nodeid, forward=False)
+    if event_notifier:
+        # Server HasNotifier this object. The Server object is where a client subscribes
+        # for everything, so without this edge the events raised here reach nobody who
+        # did not already know to subscribe to this node specifically.
+        ref(nid, HasNotifier, parent_nodeid, forward=False)
     return nid
 
 
@@ -396,6 +422,7 @@ def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent):
 CAT = "RobotIntent"
 CAT_DT = "RobotIntent DataTypes"
 CAT_RT = "RobotIntent ReferenceTypes"
+CAT_EV = "RobotIntent Events"
 
 # Part 10 program model - the lifecycle this specification builds on.
 ProgramStateMachineType = "i=2391"
@@ -1223,7 +1250,11 @@ data_var(PG, "ProgramType", "Parameters", KeyValuePair,
 # ---------------------------------------------------------------------------
 well_known(7001, "RobotIntent", T(1001), Server,
            "Entry point for robot intent on this Server. A client browses "
-           "Server/RobotIntent/Controllers to find every robot it can command.")
+           "Server/RobotIntent/Controllers to find every robot it can command. It "
+           "carries EventNotifier because it is the notifier for every intent event in "
+           "the Server (clause 6.10): a client subscribes here, or at the Server object "
+           "above it, and does not have to find each controller first.",
+           event_notifier=EVENTNOTIFIER_SUBSCRIBE)
 
 
 
@@ -1723,6 +1754,118 @@ prop_var(CP, "IntentCapabilitiesType", "SupportedFacets", String,
          "are unmet shall not appear, and the behavioural requirements are subject to "
          "the honesty rules of clause 9.", MR_Mandatory, valuerank="1")
 
+# ---------------------------------------------------------------------------
+# Event types (1015+)
+# ---------------------------------------------------------------------------
+# An IntentOperation is a ProgramStateMachineType, so Part 10 already raises a
+# transition event whenever its state changes. What Part 10 cannot carry is WHICH
+# intent changed and to what outcome: its transition event names the state machine and
+# the transition, and a consumer supervising a cell of robots has to read the operation
+# back to learn anything useful - by which time the Server may have recycled it, since
+# clause 6.7 only requires the result to outlive a reconnect. These events carry the
+# outcome so no read is needed, and they are what makes an intent's completion
+# filterable: a client asks for the failures, or for one mission, and gets nothing else.
+IE = 1015
+event_type(IE, "IntentEventType", BaseEventType,
+           "Abstract base of every event this model raises. It identifies the work the "
+           "event is about, and its subtypes say what became of it. Time is inherited "
+           "from BaseEventType and is when the reported transition occurred.",
+           abstract=True)
+prop_var(IE, "IntentEventType", "IntentId", String,
+         "IntentId of the intent this event concerns.", MR_Mandatory)
+prop_var(IE, "IntentEventType", "Operation", NodeId_,
+         "The IntentOperationType instance tracking it. A consumer that wants the full "
+         "history reads this node; a consumer that only needs the outcome does not, "
+         "because the outcome is on the event.", MR_Mandatory)
+prop_var(IE, "IntentEventType", "IntentTypeId", NodeId_,
+         "NodeId of the IntentDataType subtype that was submitted - "
+         "PickIntentDataType, LinearMoveIntentDataType and so on. This is what makes an "
+         "event filterable by KIND of work: a client subscribing to picks selects on "
+         "this field rather than reading every completion and discarding most of them.",
+         MR_Mandatory)
+prop_var(IE, "IntentEventType", "MissionId", String,
+         "Mission the intent belongs to, or empty where it was submitted on its own.")
+
+ICE = 1016
+event_type(ICE, "IntentCompletedEventType", T(IE),
+           "An intent reached a terminal state. Raised exactly once per intent, on the "
+           "transition into Succeeded, Failed, Cancelled or Retriable, and never for an "
+           "intermediate state - Cancelling is not terminal (clause 6.5) and an event "
+           "raised there would tell a consumer the work had stopped while the robot was "
+           "still moving.")
+prop_var(ICE, "IntentCompletedEventType", "State", ExecutionStateEnum,
+         "The terminal ExecutionState. One of Succeeded, Failed, Cancelled or "
+         "Retriable.", MR_Mandatory)
+prop_var(ICE, "IntentCompletedEventType", "Failure", IntentFailureEnum,
+         "Why it did not succeed, or None. Mandatory rather than optional because a "
+         "consumer deciding whether to retry, re-plan or escalate decides on this value "
+         "alone (clause 5.8), and an absent field would make that decision unavailable "
+         "exactly when it is needed.", MR_Mandatory)
+data_var(ICE, "IntentCompletedEventType", "Result", IntentResultDataType,
+         "The full result, identical to the Operation's Result. It is the one piece of "
+         "state this event does repeat, because the operation node it would otherwise "
+         "be read from need not still exist.", MR_Mandatory)
+
+MCE = 1017
+event_type(MCE, "MissionCompletedEventType", T(IE),
+           "A mission reached a terminal state. IntentId carries the last intent the "
+           "mission ran, so a consumer that missed the per-intent events still learns "
+           "where the mission stopped.")
+prop_var(MCE, "MissionCompletedEventType", "State", ExecutionStateEnum,
+         "The terminal ExecutionState of the mission.", MR_Mandatory)
+prop_var(MCE, "MissionCompletedEventType", "CompletedSteps", UInt32,
+         "How many steps reached a terminal state, whether they succeeded or not. With "
+         "the mission's step count this says how far it got.", MR_Mandatory)
+prop_var(MCE, "MissionCompletedEventType", "FailedStepId", String,
+         "StepId of the step that ended the mission, or empty where it completed. A "
+         "step that failed under an ErrorPolicy of Skip does not end a mission and is "
+         "not named here.")
+
+# ---------------------------------------------------------------------------
+# Provenance of a commanded intent
+# ---------------------------------------------------------------------------
+# A pick pose is increasingly computed by a model rather than taught, and nothing in
+# this model recorded which one. The perception side already carries a full chain -
+# result to pipeline to deployment to model to digest - and it stopped at the boundary
+# where the robot actually moved, which is the one place an investigation into why a
+# cell did something starts. This closes it from this end.
+#
+# A NodeId Property and not a reference, for the same reason Deployment is one in the
+# vision model: clause 2 declares the base OPC UA namespace as this model's only
+# RequiredModel, and a reference to a type another specification declares would make
+# that false. A Server that implements neither model leaves it null and loses nothing.
+prop_var(IO, "IntentOperationType", "DecidedBy", NodeId_,
+         "NodeId of the artefact that produced this intent's parameters - typically a "
+         "result published by a perception model, or the model itself - or null where "
+         "a human taught the pose or a program held it. It is what lets an "
+         "investigation that starts at a motion reach the decision behind it; without "
+         "it the provenance chain ends at the boundary where the robot moved, which is "
+         "exactly where such an investigation begins. This model does not define what "
+         "the NodeId points at and takes no dependency on any model that might: see "
+         "clause 11.3.")
+prop_var(ICE, "IntentCompletedEventType", "DecidedBy", NodeId_,
+         "The Operation's DecidedBy, repeated so a consumer auditing from the event "
+         "stream alone does not have to read a node that need not still exist. Null "
+         "where the Operation's is null.")
+
+# ---------------------------------------------------------------------------
+# The time base events are correlated on
+# ---------------------------------------------------------------------------
+# Annex E.7 has a consumer correlating a completion raised here with a perception event
+# raised by another Server, using the Time of each. Nothing said their clocks agreed.
+# The pair below makes the assumption visible and checkable rather than requiring a
+# synchronisation most cells do not have.
+prop_var(1001, "RobotIntentRootType", "ClockSynchronised", Boolean,
+         "True where this Server's clock is disciplined to an external time reference "
+         "shared with the systems its events are correlated against. False, or absent, "
+         "means the clock is free-running and a consumer shall not assume sub-second "
+         "agreement with another Server. See clause 6.10.")
+prop_var(1001, "RobotIntentRootType", "TimeSyncSource", String,
+         "What the clock is disciplined to when ClockSynchronised is true - for example "
+         "IEEE1588, NTP or GPS - as free text, because the set of answers is open and a "
+         "consumer uses it to judge the order of accuracy rather than to parse. Empty "
+         "or absent where the Server does not state one.")
+
 # ===========================================================================
 # ==================================  EMIT  =================================
 # ===========================================================================
@@ -1749,7 +1892,7 @@ def _emit_node(n):
         a.append(f'SymbolicName="{sx.escape(n.attrs["SymbolicName"])}"')
     if n.parent is not None:
         a.append(f'ParentNodeId="{n.parent}"')
-    for k in ("DataType", "ValueRank", "ArrayDimensions"):
+    for k in ("DataType", "ValueRank", "ArrayDimensions", "EventNotifier"):
         if k in n.attrs:
             v = n.attrs[k]
             if k == "DataType":
