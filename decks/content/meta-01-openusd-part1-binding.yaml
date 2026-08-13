@@ -84,7 +84,7 @@ slides:
     title: Status and where it lives
     kicker: Working-group draft under OPC Foundation review
     bullets:
-      - text: "Specification banner: **Release 0.6.0 — Draft**"
+      - text: "Specification banner: **Release 0.7.0 — Draft**"
       - text: "Target body: OPC Foundation companion-model review"
       - text: "Review repository: `OPCF-Members/spec-drafts`"
       - text: "Source path: `metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md`"
@@ -92,4 +92,4 @@ slides:
       - text: "Demos: **2** robot cell and **3** pump/site composition"
     takeaway: "Open questions are the reserved profiles: Actions, PubSub and domain USD schemas."
     notes: |
-      The source specification identifies itself as `Release 0.6.0 — Draft` with namespace `http://opcfoundation.org/UA/OpenUSD/` and publication date 2026-07-31. It is one of the OpenUSD parts under OPC Foundation review and is maintained in `OPCF-Members/spec-drafts` while that review runs. The .NET stack guide says the implemented libraries include the generated model, client connector, server authoring helpers, connector tool and optional viewer under the `Opc.Ua.OpenUsd` package family. The demos that exercise it are the robot cell, where RSL and GPOS values drive a live USD view, and the pump/site composition flow. The spec explicitly reserves Part 14 Actions, PubSub realization and normative geometry/material/skeleton/physics profiles for later work.
+      The source specification identifies itself as `Release 0.7.0 — Draft` with namespace `http://opcfoundation.org/UA/OpenUSD/` and publication date 2026-08-11. It is one of the OpenUSD parts under OPC Foundation review and is maintained in `OPCF-Members/spec-drafts` while that review runs. The .NET stack guide says the implemented libraries include the generated model, client connector, server authoring helpers, connector tool and optional viewer under the `Opc.Ua.OpenUsd` package family. The demos that exercise it are the robot cell, where RSL and GPOS values drive a live USD view, and the pump/site composition flow. The spec explicitly reserves Part 14 Actions, PubSub realization and normative geometry/material/skeleton/physics profiles for later work.

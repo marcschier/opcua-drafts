@@ -105,9 +105,9 @@ slides:
         - ["Observability Export", "cloud", "Under OPCF review", "—"]
         - ["OpenUSD Part 1 — Binding", "metaverse", "Under OPCF review", "2, 3"]
         - ["OpenUSD Part 2 — Scene Materialization", "metaverse", "Under OPCF review", "2, 3"]
-        - ["AI Model Management and Inference", "metaverse", "Draft 0.4.0", "10 — branch"]
-        - ["Vision", "metaverse", "Draft 0.2.0", "9 — walkthrough"]
-        - ["Robot Intent", "metaverse", "Draft 0.1.0", "2, 5"]
+        - ["AI Model Management and Inference", "metaverse", "Draft 0.5.0", "10 — branch"]
+        - ["Vision", "metaverse", "Draft 0.4.0", "9 — walkthrough"]
+        - ["Robot Intent", "metaverse", "Draft 0.3.0", "2, 5"]
         - ["OpenUSD Artifact Registry", "metaverse", "Draft → xregistry.org", "—"]
     notes: |
       Use this as the map. Come back to it between trees if the audience loses the thread.

@@ -3,11 +3,11 @@
 .SYNOPSIS
     Runs the AI model loading demo.
 .DESCRIPTION
-    Starts the AI Model Management sample from the marcschier/ai-model-management branch together
+    Starts the AI Model Management sample from the marcschier/vision-guided-picking branch together
     with its local OpenAI-compatible verification backend, then runs the sample client to browse
     deployments, invoke a model and print the model provenance returned with the answer.
 .PARAMETER StackRoot
-    Path to a UA-.NETStandard checkout on marcschier/ai-model-management. If omitted, the shared
+    Path to a UA-.NETStandard checkout on marcschier/vision-guided-picking. If omitted, the shared
     demo module locates a checkout that contains the required marker paths.
 .PARAMETER NoBuild
     Skip building the referenced projects before running.
@@ -45,27 +45,27 @@ try {
         -Shows 'Model registration, invocation and provenance through OPC UA'
 
     $requiredPaths = @(
-        'samples\AiModelManagement\README.md',
-        'samples\AiModelManagement\AiModelManagementServer\AiModelManagementServer.csproj',
-        'samples\AiModelManagement\AiModelManagementClient\AiModelManagementClient.csproj',
-        'samples\AiModelManagement\verify_backend.py',
-        'samples\AiModelManagement\Model\Opc.Ua.AiModelManagement.NodeSet2.xml'
+        'samples\AI\README.md',
+        'samples\AI\ModelManagementServer\ModelManagementServer.csproj',
+        'samples\AI\ModelManagementClient\ModelManagementClient.csproj',
+        'samples\AI\verify_backend.py',
+        'src\Opc.Ua.AI\Opc.Ua.AI.csproj'
     )
     $root = Resolve-StackRoot -StackRoot $StackRoot -RequiredPaths @($requiredPaths[0])
-    Assert-StackBranch -StackRoot $root -Branch 'marcschier/ai-model-management' -RequiredPaths $requiredPaths
+    Assert-StackBranch -StackRoot $root -Branch 'marcschier/vision-guided-picking' -RequiredPaths $requiredPaths
     Assert-DotNetSdk
 
     $python = Get-Command python -ErrorAction SilentlyContinue
     if (-not $python) {
-        throw 'Python is not on PATH. It is needed for samples\AiModelManagement\verify_backend.py.'
+        throw 'Python is not on PATH. It is needed for samples\AI\verify_backend.py.'
     }
 
-    $server = Join-Path $root 'samples\AiModelManagement\AiModelManagementServer\AiModelManagementServer.csproj'
-    $client = Join-Path $root 'samples\AiModelManagement\AiModelManagementClient\AiModelManagementClient.csproj'
-    $backend = Join-Path $root 'samples\AiModelManagement\verify_backend.py'
+    $server = Join-Path $root 'samples\AI\ModelManagementServer\ModelManagementServer.csproj'
+    $client = Join-Path $root 'samples\AI\ModelManagementClient\ModelManagementClient.csproj'
+    $backend = Join-Path $root 'samples\AI\verify_backend.py'
 
     Write-DemoStep -Message 'Build the server and client' `
-        -Detail 'The companion model is source-generated from samples\AiModelManagement\Model.'
+        -Detail 'The companion model comes from the Opc.Ua.AI libraries under src.'
     Invoke-DemoBuild -Projects @($server, $client) -NoBuild:$NoBuild
     Wait-DemoKeypress
 
@@ -86,16 +86,16 @@ try {
     Wait-DemoKeypress
 
     Write-DemoStep -Message 'Run the sample client' `
-        -Detail 'It browses deployments and calls GetCapabilities, Invoke, BeginTransfer and InvokeAsync.'
+        -Detail 'It browses the catalogue and deployments, then calls GetCapabilities, Invoke, BeginTransfer and InvokeAsync.'
     & dotnet run --project $client -c Release -f net10.0 --no-build --nologo -- `
-        'opc.tcp://localhost:62640/AiModelManagementServer'
+        'opc.tcp://localhost:62640/ModelManagementServer'
     if ($LASTEXITCODE -ne 0) {
         throw "AI Model Management client failed with exit code $LASTEXITCODE."
     }
     Wait-DemoKeypress
 
     Write-DemoStep -Message 'Read the provenance' `
-        -Detail 'Focus on UsesModel, digest, ModelUsed, Usage, FinishReason and source reachability.'
+        -Detail 'Focus on UsesModel, ModelUsed and FinishReason returned beside each answer.'
     Write-DemoNote 'The learning loop is simulated in this sample; it does not retrain a model.'
     Write-DemoNote 'The backend is a test double so the OPC UA path is runnable without a cloud account.'
     Wait-DemoKeypress

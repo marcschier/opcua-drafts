@@ -23,14 +23,14 @@ Use a separate worktree if you keep `master` untouched:
 
 ```powershell
 git -C $env:OPCUA_STACK_ROOT fetch --all
-git -C $env:OPCUA_STACK_ROOT worktree add -b marcschier/ai-model-management ..\ua-ai-models fork/marcschier/ai-model-management
+git -C $env:OPCUA_STACK_ROOT worktree add -b marcschier/vision-guided-picking ..\ua-ai-models fork/marcschier/vision-guided-picking
 ```
 
 Or switch a disposable checkout:
 
 ```powershell
 git -C $env:OPCUA_STACK_ROOT\..\ua-ai-models fetch --all
-git -C $env:OPCUA_STACK_ROOT\..\ua-ai-models switch --track -c marcschier/ai-model-management fork/marcschier/ai-model-management
+git -C $env:OPCUA_STACK_ROOT\..\ua-ai-models switch --track -c marcschier/vision-guided-picking fork/marcschier/vision-guided-picking
 ```
 
 ## Run it
@@ -45,7 +45,7 @@ Use `-NoBuild` after a successful build. Use `-KeepRunning` if you want to leave
 
 1. **Build the server and client.** On screen: only the AI Model Management sample projects build. Say: "The NodeSet is source-generated from the draft model."
 2. **Start the OpenAI-compatible test backend.** On screen: port `5273` accepts connections. Say: "This is a test double, not a model provider; it exists so the OPC UA path can run without a cloud account."
-3. **Start the OPC UA AI Model Management server.** On screen: the server listens at `opc.tcp://localhost:62640/AiModelManagementServer`. Say: "The Server publishes deployments, model sources, catalogue and learning-loop nodes."
+3. **Start the OPC UA AI Model Management server.** On screen: the server listens at `opc.tcp://localhost:62640/ModelManagementServer`. Say: "The Server publishes deployments, model sources, catalogue and learning-loop nodes."
 4. **Run the sample client.** On screen: the client prints the AI root, deployments, model id, digest, capabilities and invocation output. Say: "The payload is opaque; the envelope and provenance are standard."
 5. **Read the provenance.** On screen: focus on `UsesModel`, `ModelUsed`, `Usage`, `FinishReason`, transfer state and source reachability. Say: "This is the audit trail, not a console flourish."
 
@@ -66,9 +66,10 @@ Use `-NoBuild` after a successful build. Use `-KeepRunning` if you want to leave
 
 ## Links
 
-- Branch sample README: `samples\AiModelManagement\README.md` on `fork/marcschier/ai-model-management`
-- Server sample: `samples\AiModelManagement\AiModelManagementServer`
-- Client sample: `samples\AiModelManagement\AiModelManagementClient`
-- Test backend: `samples\AiModelManagement\verify_backend.py`
+- Branch sample README: `samples\AI\README.md` on `fork/marcschier/vision-guided-picking`
+- Server sample: `samples\AI\ModelManagementServer`
+- Client sample: `samples\AI\ModelManagementClient`
+- Test backend: `samples\AI\verify_backend.py`
+- Libraries: `src\Opc.Ua.AI`, `.Client`, `.Inference`, `.Server`
 - [Draft](../../../metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md)
 - [Implementation examples](../../../metaverse-specs/extras/ai-model-management/examples)

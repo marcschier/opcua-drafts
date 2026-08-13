@@ -102,7 +102,7 @@ slides:
     title: Status and where it lives
     kicker: Working-group draft 0.1.0; implemented in the OPC UA .NET Standard stack
     bullets:
-      - text: "Version: **Release 0.1.0 — working-group draft**"
+      - text: "Version: **Release 0.3.0 — working-group draft**"
       - text: "Target: OPC Foundation companion model, provisional and not endorsed"
       - text: "Path: `metaverse-specs/robot-intent/OPC-UA-Robot-Intent.md`"
       - text: "Stack: `docs/Robotics.md`, `src/Opc.Ua.Robotics*`, `samples/Robotics/`"
@@ -111,10 +111,15 @@ slides:
     takeaway: >-
       This one is not only prose: the stack has server, client and sample support.
     notes: |
-      The specification banner states Release 0.1.0 and identifies the NodeSet and NodeIds for the Robot
+      The specification banner states Release 0.3.0 and identifies the NodeSet and NodeIds for the Robot
       Intent model. Clause 1.4 says the release covers the intent vocabulary, lifecycle, queueing,
       blending, cancellation, missions, command authority, safety awareness, kinematics, real-time channel
-      brokerage and capability declaration. The implementation is reflected in the stack documentation:
+      brokerage and capability declaration. 0.3.0 adds the other half of the Vision correlation: the same
+      `ClockSynchronised` and `TimeSyncSource` pair on its own root, so the two ends are discoverable from
+      either side, and `IntentOperationType.DecidedBy`, which points at the `VisionResultType` instance a
+      pose came from. `DecidedBy` is a plain `NodeId`, so base OPC UA stays the only `RequiredModel` and a
+      Vision Server needs no awareness of Robot Intent. The implementation is reflected in the stack
+      documentation:
       `Opc.Ua.Robotics` carries the generated models and common contracts, `Opc.Ua.Robotics.Server` carries
       the node managers and hosting extensions, and `Opc.Ua.Robotics.Client` carries discovery and the
       awaitable operation handle. In this deck, demos 2 and 5 exercise it.

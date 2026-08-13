@@ -72,7 +72,7 @@ slides:
     title: Status and where it lives
     kicker: Working-group draft under OPC Foundation review
     bullets:
-      - text: "Specification banner: **Release 0.4.0 — Draft**"
+      - text: "Specification banner: **Release 0.5.0 — Draft**"
       - text: "Target body: OPC Foundation companion-model review"
       - text: "Review repository: `OPCF-Members/spec-drafts`"
       - text: "Source path: `metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md`"
@@ -80,4 +80,4 @@ slides:
       - text: "Demos: **2** robot cell and **3** pump/site composition"
     takeaway: Open questions are value clips, layer editing and full domain-schema surfaces.
     notes: |
-      The source banner identifies Part 2 as `Release 0.4.0 — Draft`, namespace `http://opcfoundation.org/UA/OpenUSD/Scene/`, publication date 2026-07-29. Like Part 1, it is under OPC Foundation review in `OPCF-Members/spec-drafts`. The .NET stack guide documents `OPCFoundation.NetStandard.Opc.Ua.OpenUsdScene` and `.OpenUsdScene.Server`, including the scene document model, `.usda` reader/writer, materializer, exporter, discovery and Part 1 interop. The same robot and pump/site demos exercise the OpenUSD flow. The draft reserves value clips, per-layer opinion editing, full UsdShade/UsdLux/UsdSkel/UsdPhysics surfaces and renderer-specific semantics.
+      The source banner identifies Part 2 as `Release 0.5.0 — Draft`, namespace `http://opcfoundation.org/UA/OpenUSD/Scene/`, publication date 2026-08-11. Like Part 1, it is under OPC Foundation review in `OPCF-Members/spec-drafts`. The .NET stack guide documents `OPCFoundation.NetStandard.Opc.Ua.OpenUsdScene` and `.OpenUsdScene.Server`, including the scene document model, `.usda` reader/writer, materializer, exporter, discovery and Part 1 interop. The same robot and pump/site demos exercise the OpenUSD flow. The draft reserves value clips, per-layer opinion editing, full UsdShade/UsdLux/UsdSkel/UsdPhysics surfaces and renderer-specific semantics.

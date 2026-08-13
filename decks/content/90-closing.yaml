@@ -28,11 +28,11 @@ slides:
         - ["WoT Connectivity", "1.1-draft3", "OPCF — under review", "`Opc.Ua.WotCon`"]
         - ["Schema Registry", "0.5.0", "OPCF — cloud surface", "None"]
         - ["Observability Export", "0.1.0", "OPCF — under review", "None"]
-        - ["OpenUSD Part 1 — Binding", "0.6.0", "OPCF — under review", "`Opc.Ua.OpenUsd`"]
-        - ["OpenUSD Part 2 — Scene", "0.4.0", "OPCF — under review", "`Opc.Ua.OpenUsdScene`"]
-        - ["AI Model Management", "0.4.0", "OPCF — companion", "Feature branch"]
-        - ["Vision", "0.2.0", "OPCF — companion", "Feature branch"]
-        - ["Robot Intent", "0.1.0", "OPCF — companion", "`Opc.Ua.Robotics`"]
+        - ["OpenUSD Part 1 — Binding", "0.7.0", "OPCF — under review", "`Opc.Ua.OpenUsd`"]
+        - ["OpenUSD Part 2 — Scene", "0.5.0", "OPCF — under review", "`Opc.Ua.OpenUsdScene`"]
+        - ["AI Model Management", "0.5.0", "OPCF — companion", "Feature branch"]
+        - ["Vision", "0.4.0", "OPCF — companion", "Feature branch"]
+        - ["Robot Intent", "0.3.0", "OPCF — companion", "`Opc.Ua.Robotics`"]
         - ["OpenUSD Artifact Registry", "1.0-rc1", "xregistry.org", "—"]
     notes: |
       The honest scoreboard. Use it to close, and do not soften it.

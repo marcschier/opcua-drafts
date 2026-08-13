@@ -13,19 +13,25 @@ slides:
       - Client invokes inline, transfer and async paths
       - Output reports which model answered
     parts:
-      - "`samples\\AiModelManagement\\AiModelManagementServer`"
-      - "`samples\\AiModelManagement\\AiModelManagementClient`"
-      - "`samples\\AiModelManagement\\AiModelManagement.Bridge`"
-      - "`samples\\AiModelManagement\\Model`"
+      - "`samples\\AI\\ModelManagementServer`"
+      - "`samples\\AI\\ModelManagementClient`"
+      - "`samples\\AI\\verify_backend.py`"
+      - "`src\\Opc.Ua.AI`, `.Client`, `.Inference`, `.Server`"
     run:
       - "pwsh decks\\demos\\10-ai-model-loading\\run-demo.ps1 -StackRoot <ai-models worktree>"
     proves: A model call can be OPC UA while the execution location stays an implementation detail.
     notes: |
-      This demo needs the `fork/marcschier/ai-model-management` branch and does contain a runnable
+      This demo needs the `fork/marcschier/vision-guided-picking` branch and does contain a runnable
       sample. The script starts the branch's HTTP verification backend, starts the OPC UA Server and
       runs the sample client. Be clear about what is real: the address space, Methods, provenance,
       transfer path, async job path and OpenAI-compatible bridge are implemented. The backend is a
       test double and the learning loop is simulated; it does not train or promote a real model.
       The proof point is `ModelUsed` and the references that let an auditor trace an answer later.
+
+      The branch name is about vision because the AI work now sits on the same line of development —
+      the visual inspection agent is what needs inference. The AI libraries live under
+      `src/Opc.Ua.AI*` and the sample under `samples/AI`. That branch is moving quickly, so re-check
+      the paths before presenting; the Vision samples on it do not currently build, though the AI
+      sample this demo uses does.
 
 

@@ -26,13 +26,15 @@ An implementation exists on the stack branch `marcschier/vision-guided-picking`:
 `samples\Robotics\BinPickingClient`.
 
 **It is not runnable end to end yet, so this demo has no script.** The branch is under active
-development: at the time of writing its committed head does not compile, and with the author's
-local fixes applied the scripted client loop still fails — `RunInference` returns a `ResultId` the
-pipeline never publishes. Present this one as paper and say the implementation is in flight. Do not
-promise a terminal.
+development and its Vision samples do not currently compile — `BinPickingCell` fails on two
+nullable-analysis errors in `BinPickingInferenceProof.cs` and `BinPickingOffServerProof.cs`, in
+both Debug and Release, and the newer `samples\Vision\VisualInspectionCell` fails on several more.
+The branch's own upstream pull request, OPCFoundation/UA-.NETStandard#4235, is a draft with the
+main build red for the same reason. Present this one as paper and say the implementation is in
+flight. Do not promise a terminal.
 
-That implementation is worth talking about even though it does not run, because it is what moved
-the draft from 0.1.0 to 0.2.0 — see `metaverse-specs\vision\CHANGELOG.md`.
+That implementation is worth talking about even though it does not run, because it is what has been
+moving the draft — 0.1.0 to 0.4.0 so far. See `metaverse-specs\vision\CHANGELOG.md`.
 
 ## How to present it without running it
 
@@ -70,8 +72,8 @@ code core-specs\data-channels\OPC-UA-Data-Channels.md
 
 ## What the implementation has already found
 
-Release 0.2.0 exists because someone built 0.1.0 against the OPC UA .NET Standard stack and worked
-through the bin-picking scenario of the Robotics-Vision Addendum. Issues #66 to #71 came out of it:
+Three releases so far, and each one came out of building against the OPC UA .NET Standard stack
+rather than out of review. Issues #66 to #71 came from working the bin-picking scenario:
 
 - **All 13 Methods with arguments were uncallable.** `InputArguments` and `OutputArguments` were
   qualified into the model's own namespace instead of namespace 0, so a stack resolving a Method's
@@ -83,13 +85,22 @@ through the bin-picking scenario of the Robotics-Vision Addendum. Issues #66 to 
 - **An empty observation was inexpressible**, so an agent that had emptied the bin could not report
   it, and a false positive could not be retracted.
 
-This is the honest version of "what it would take to make this runnable": part of it is done, and
-doing it is what found the defects above.
+0.3.0 separated results from events — what *is* against what *happened* — and 0.4.0 addressed the
+assumption underneath the correlation rule: Annex I.7 told a consumer to correlate a Vision event
+with a Robot Intent event by their `Time`, but nothing said whether the two Servers' clocks agree.
+`ClockSynchronised` and `TimeSyncSource` let a Server say, and both are Optional on purpose — a
+**shall** most conformant Servers would fail is a fiction, so what is required is only that a
+Server unable to support the correlation says so.
+
+This is the honest version of "what it would take to make this runnable": most of it is written,
+and writing it is what found the defects above.
 
 ## What is still missing to make it runnable
 
-- The committed branch head compiles clean.
-- The bin-picking client's perception loop correlates a `RunInference` result with a published result node.
+- The Vision samples compile. `BinPickingCell` and `VisualInspectionCell` both fail
+  nullable-analysis, which is what keeps upstream #4235 red.
+- The bin-picking client's perception loop correlates a `RunInference` result with a published
+  result node.
 - A `run-demo.ps1` here, once both hold.
 
 ## Links
