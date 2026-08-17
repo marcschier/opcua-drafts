@@ -1,7 +1,7 @@
 {
   "specId": "vision",
-  "sourceCommit": "7001dcb9ddfed7cfd7c0ce97157254a8f72471bc",
-  "sourceDigest": "552f174d4ddf1f73",
+  "sourceCommit": "f474bf309f9c593d3521be2b8a87517425259734",
+  "sourceDigest": "a2416231ef71b0a8",
   "pipelineVersion": "2",
   "sources": [
     "word-drafts/tools/specs/vision.json",
@@ -116,12 +116,6 @@
       "index": 78,
       "kind": "nodetable",
       "para": 81
-    },
-    "004186B7": {
-      "owner": "template"
-    },
-    "004A610B": {
-      "owner": "template"
     },
     "004C2535": {
       "owner": "generated",
@@ -315,9 +309,6 @@
       "block": 10,
       "para": 0
     },
-    "00E6AA3A": {
-      "owner": "template"
-    },
     "00E73357": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -338,9 +329,6 @@
       "section": "1.3 What this specification does not (yet) do",
       "block": 2,
       "para": 0
-    },
-    "00F7A6E6": {
-      "owner": "template"
     },
     "00FC2FE2": {
       "owner": "generated",
@@ -421,9 +409,6 @@
       "section": "F.4 Media endpoints",
       "block": 1,
       "para": 3
-    },
-    "013F473E": {
-      "owner": "template"
     },
     "0140F81B": {
       "owner": "markdown",
@@ -589,9 +574,6 @@
       "block": 0,
       "para": 0
     },
-    "01C32FC8": {
-      "owner": "template"
-    },
     "01CFDE0D": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -688,9 +670,6 @@
       "section": "1 Scope",
       "block": 1,
       "para": 5
-    },
-    "021286BB": {
-      "owner": "template"
     },
     "0215041D": {
       "owner": "generated",
@@ -816,9 +795,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 775
-    },
-    "02636CE8": {
-      "owner": "template"
     },
     "027749B7": {
       "owner": "generated",
@@ -997,9 +973,6 @@
       "kind": "nodetable",
       "para": 676
     },
-    "02F8744F": {
-      "owner": "template"
-    },
     "02FE8EF7": {
       "owner": "generated",
       "region": "annex-a",
@@ -1100,9 +1073,6 @@
     "0334E2AD": {
       "owner": "template"
     },
-    "033C555F": {
-      "owner": "template"
-    },
     "03401220": {
       "owner": "generated",
       "region": "objecttypes",
@@ -1182,9 +1152,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 440
-    },
-    "036A3B29": {
-      "owner": "template"
     },
     "036EDF45": {
       "owner": "generated",
@@ -1286,12 +1253,6 @@
       "section": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
       "block": 7,
       "para": 2
-    },
-    "03B28D60": {
-      "owner": "template"
-    },
-    "03B9352D": {
-      "owner": "template"
     },
     "03CF76E5": {
       "owner": "markdown",
@@ -1421,9 +1382,6 @@
     "04209087": {
       "owner": "template"
     },
-    "0421E775": {
-      "owner": "template"
-    },
     "04287581": {
       "owner": "generated",
       "region": "datatypes",
@@ -1493,9 +1451,6 @@
       "section": "5.4 `VisionSensorType : BaseObjectType` (abstract)",
       "block": 1,
       "para": 5
-    },
-    "04808E0A": {
-      "owner": "template"
     },
     "0496681F": {
       "owner": "generated",
@@ -1630,9 +1585,6 @@
       "kind": "nodetable",
       "para": 300
     },
-    "04E1559F": {
-      "owner": "template"
-    },
     "04EDF511": {
       "owner": "generated",
       "region": "annex-a",
@@ -1705,9 +1657,6 @@
     "052A3926": {
       "owner": "template"
     },
-    "052B2A78": {
-      "owner": "template"
-    },
     "05364A09": {
       "owner": "template"
     },
@@ -1745,13 +1694,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 422
-    },
-    "05472EBF": {
-      "owner": "generated",
-      "region": "scope",
-      "index": 6,
-      "kind": "clause",
-      "para": 0
     },
     "054958FD": {
       "owner": "generated",
@@ -1844,9 +1786,6 @@
       "kind": "enumtable",
       "para": 1
     },
-    "057A0051": {
-      "owner": "template"
-    },
     "05823626": {
       "owner": "generated",
       "region": "datatypes",
@@ -1889,9 +1828,6 @@
       "kind": "nodetable",
       "para": 148
     },
-    "05B99F5F": {
-      "owner": "template"
-    },
     "05BC3AD4": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -1929,9 +1865,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 1
-    },
-    "05D336A5": {
-      "owner": "template"
     },
     "05DCAD7F": {
       "owner": "markdown",
@@ -2019,9 +1952,6 @@
       "index": 87,
       "kind": "nodetable",
       "para": 34
-    },
-    "061A9B74": {
-      "owner": "template"
     },
     "0621E5B5": {
       "owner": "generated",
@@ -2175,9 +2105,6 @@
       "kind": "methodtable",
       "para": 6
     },
-    "0686E666": {
-      "owner": "template"
-    },
     "068D1A4A": {
       "owner": "template"
     },
@@ -2266,9 +2193,6 @@
     "06CEAECD": {
       "owner": "template"
     },
-    "06CF5439": {
-      "owner": "template"
-    },
     "06D82147": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -2310,9 +2234,6 @@
       "index": 87,
       "kind": "nodetable",
       "para": 25
-    },
-    "06FCAA2F": {
-      "owner": "template"
     },
     "06FD97BF": {
       "owner": "markdown",
@@ -2362,9 +2283,6 @@
       "section": "9.2 The four purposes",
       "block": 1,
       "para": 2
-    },
-    "070E7C39": {
-      "owner": "template"
     },
     "070E987B": {
       "owner": "generated",
@@ -2544,9 +2462,6 @@
       "block": 1,
       "para": 8
     },
-    "07A89675": {
-      "owner": "template"
-    },
     "07AA5066": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -2588,9 +2503,6 @@
       "index": 43,
       "kind": "nodetable",
       "para": 58
-    },
-    "07C17DEE": {
-      "owner": "template"
     },
     "07C22F91": {
       "owner": "generated",
@@ -2654,9 +2566,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 407
-    },
-    "07D90FEF": {
-      "owner": "template"
     },
     "07DB2280": {
       "owner": "markdown",
@@ -3167,9 +3076,6 @@
       "kind": "enumtable",
       "para": 8
     },
-    "0965851E": {
-      "owner": "template"
-    },
     "096CF4A3": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3371,9 +3277,6 @@
       "kind": "nodetable",
       "para": 34
     },
-    "0A34F449": {
-      "owner": "template"
-    },
     "0A3DBC06": {
       "owner": "generated",
       "region": "annex-a",
@@ -3548,9 +3451,6 @@
       "kind": "nodetable",
       "para": 43
     },
-    "0ABC527D": {
-      "owner": "template"
-    },
     "0AC05766": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -3610,18 +3510,12 @@
       "kind": "nodetable",
       "para": 5
     },
-    "0AD82902": {
-      "owner": "template"
-    },
     "0AD90AFB": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 874
-    },
-    "0ADB40B8": {
-      "owner": "template"
     },
     "0AE061B1": {
       "owner": "generated",
@@ -3729,9 +3623,6 @@
       "section": "B.2 Sensor and intrinsics",
       "block": 0,
       "para": 6
-    },
-    "0B2D0D64": {
-      "owner": "template"
     },
     "0B2DEFF9": {
       "owner": "markdown",
@@ -3865,9 +3756,6 @@
       "kind": "nodetable",
       "para": 168
     },
-    "0BB41524": {
-      "owner": "template"
-    },
     "0BB94B5D": {
       "owner": "template"
     },
@@ -3943,18 +3831,12 @@
       "kind": "nodetable",
       "para": 38
     },
-    "0BF36E21": {
-      "owner": "template"
-    },
     "0BFCFF60": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
       "section": "G.5 Coordinate frames and calibration",
       "block": 3,
       "para": 13
-    },
-    "0BFEE242": {
-      "owner": "template"
     },
     "0C07A519": {
       "owner": "generated",
@@ -3969,9 +3851,6 @@
       "index": 84,
       "kind": "nodetable",
       "para": 12
-    },
-    "0C0E8562": {
-      "owner": "template"
     },
     "0C1017B0": {
       "owner": "generated",
@@ -4071,9 +3950,6 @@
       "kind": "para",
       "para": 0
     },
-    "0C734083": {
-      "owner": "template"
-    },
     "0C73FF00": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -4112,9 +3988,6 @@
       "kind": "nodetable",
       "para": 6
     },
-    "0C98B892": {
-      "owner": "template"
-    },
     "0C9DC625": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -4136,6 +4009,13 @@
       "kind": "methodtable",
       "para": 29
     },
+    "0CBC0D6A": {
+      "owner": "generated",
+      "region": "scope",
+      "index": 7,
+      "kind": "clause",
+      "para": 0
+    },
     "0CC2AC30": {
       "owner": "generated",
       "region": "datatypes",
@@ -4150,9 +4030,6 @@
       "kind": "nodetable",
       "para": 39
     },
-    "0CCD0F07": {
-      "owner": "template"
-    },
     "0CCD713A": {
       "owner": "generated",
       "region": "datatypes",
@@ -4166,9 +4043,6 @@
       "index": 68,
       "kind": "nodetable",
       "para": 12
-    },
-    "0CD2C243": {
-      "owner": "template"
     },
     "0CDE8FA4": {
       "owner": "markdown",
@@ -4372,9 +4246,6 @@
       "kind": "nodetable",
       "para": 827
     },
-    "0D5C90D1": {
-      "owner": "template"
-    },
     "0D6BE527": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4516,9 +4387,6 @@
       "block": 0,
       "para": 3
     },
-    "0DE0CCEA": {
-      "owner": "template"
-    },
     "0DEA1A6C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4583,9 +4451,6 @@
       "para": 0
     },
     "0E437D06": {
-      "owner": "template"
-    },
-    "0E44B173": {
       "owner": "template"
     },
     "0E49E4AD": {
@@ -4776,9 +4641,6 @@
       "block": 0,
       "para": 21
     },
-    "0ED4B2B8": {
-      "owner": "template"
-    },
     "0EDD56FB": {
       "owner": "generated",
       "region": "datatypes",
@@ -4799,9 +4661,6 @@
       "index": 46,
       "kind": "nodetable",
       "para": 97
-    },
-    "0EE8C627": {
-      "owner": "template"
     },
     "0EEAE71E": {
       "owner": "generated",
@@ -4927,9 +4786,6 @@
       "section": "G.5 Coordinate frames and calibration",
       "block": 7,
       "para": 12
-    },
-    "0F41D211": {
-      "owner": "template"
     },
     "0F447576": {
       "owner": "markdown",
@@ -5122,9 +4978,6 @@
       "block": 0,
       "para": 0
     },
-    "1004F46C": {
-      "owner": "template"
-    },
     "10093D84": {
       "owner": "generated",
       "region": "datatypes",
@@ -5169,9 +5022,6 @@
       "index": 15,
       "kind": "enumtable",
       "para": 3
-    },
-    "102915D9": {
-      "owner": "template"
     },
     "102ADB94": {
       "owner": "generated",
@@ -5340,9 +5190,6 @@
       "block": 7,
       "para": 17
     },
-    "107A0B81": {
-      "owner": "template"
-    },
     "107E262A": {
       "owner": "generated",
       "region": "objecttypes",
@@ -5380,9 +5227,6 @@
       "section": "E.2 ONVIF — Profiles S, T and M",
       "block": 1,
       "para": 11
-    },
-    "10929BF8": {
-      "owner": "template"
     },
     "1095E11A": {
       "owner": "generated",
@@ -5467,9 +5311,6 @@
       "index": 43,
       "kind": "nodetable",
       "para": 50
-    },
-    "10D8FE42": {
-      "owner": "template"
     },
     "10DA4AE9": {
       "owner": "generated",
@@ -5798,9 +5639,6 @@
       "block": 0,
       "para": 10
     },
-    "11F13034": {
-      "owner": "template"
-    },
     "11F1A9B5": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -5979,9 +5817,6 @@
       "kind": "nodetable",
       "para": 7
     },
-    "12656854": {
-      "owner": "template"
-    },
     "12695B74": {
       "owner": "generated",
       "region": "objecttypes",
@@ -6117,9 +5952,6 @@
       "kind": "table",
       "para": 8
     },
-    "12D2D62B": {
-      "owner": "template"
-    },
     "12D39D9E": {
       "owner": "generated",
       "region": "objecttypes",
@@ -6167,9 +5999,6 @@
       "section": "G.5 Coordinate frames and calibration",
       "block": 1,
       "para": 4
-    },
-    "12E40B58": {
-      "owner": "template"
     },
     "12E750AF": {
       "owner": "markdown",
@@ -6226,9 +6055,6 @@
       "index": 293,
       "kind": "clause",
       "para": 0
-    },
-    "13067BF8": {
-      "owner": "template"
     },
     "130A0EB6": {
       "owner": "generated",
@@ -6327,9 +6153,6 @@
       "kind": "nodetable",
       "para": 33
     },
-    "1337D8DC": {
-      "owner": "template"
-    },
     "13500168": {
       "owner": "template"
     },
@@ -6416,9 +6239,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 562
-    },
-    "1390521C": {
-      "owner": "template"
     },
     "139B6847": {
       "owner": "markdown",
@@ -6626,9 +6446,6 @@
       "kind": "methodtable",
       "para": 13
     },
-    "145D50EE": {
-      "owner": "template"
-    },
     "14613847": {
       "owner": "template"
     },
@@ -6660,9 +6477,6 @@
       "kind": "nodetable",
       "para": 23
     },
-    "14761115": {
-      "owner": "template"
-    },
     "147FF53C": {
       "owner": "generated",
       "region": "referencetypes",
@@ -6686,9 +6500,6 @@
       "section": "F.5 Coordinate frames and calibration",
       "block": 7,
       "para": 5
-    },
-    "148BC9B8": {
-      "owner": "template"
     },
     "14A07D74": {
       "owner": "template"
@@ -6758,9 +6569,6 @@
       "section": "6.6 Endpoint state model (normative)",
       "block": 3,
       "para": 0
-    },
-    "14D4AEF3": {
-      "owner": "template"
     },
     "14D6A36F": {
       "owner": "generated",
@@ -6878,12 +6686,6 @@
       "para": 30
     },
     "151E84D9": {
-      "owner": "template"
-    },
-    "152264E2": {
-      "owner": "template"
-    },
-    "15232B42": {
       "owner": "template"
     },
     "152CD608": {
@@ -7039,9 +6841,6 @@
       "block": 1,
       "para": 8
     },
-    "159846CC": {
-      "owner": "template"
-    },
     "1599F7F6": {
       "owner": "generated",
       "region": "objecttypes",
@@ -7062,9 +6861,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 12
-    },
-    "159F59D6": {
-      "owner": "template"
     },
     "15A265CC": {
       "owner": "template"
@@ -7337,9 +7133,6 @@
       "block": 1,
       "para": 10
     },
-    "169BBE6D": {
-      "owner": "template"
-    },
     "16A02667": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -7398,9 +7191,6 @@
       "index": 61,
       "kind": "nodetable",
       "para": 13
-    },
-    "16B091C3": {
-      "owner": "template"
     },
     "16B0B0D9": {
       "owner": "generated",
@@ -7672,9 +7462,6 @@
       "kind": "nodetable",
       "para": 57
     },
-    "17708B28": {
-      "owner": "template"
-    },
     "17719FA2": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -7733,9 +7520,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 593
-    },
-    "179C7538": {
-      "owner": "template"
     },
     "179DBF14": {
       "owner": "generated",
@@ -8028,9 +7812,6 @@
       "kind": "nodetable",
       "para": 11
     },
-    "184E7670": {
-      "owner": "template"
-    },
     "184F3F84": {
       "owner": "generated",
       "region": "objecttypes",
@@ -8149,12 +7930,6 @@
       "kind": "nodetable",
       "para": 1
     },
-    "18B30F89": {
-      "owner": "template"
-    },
-    "18B409C9": {
-      "owner": "template"
-    },
     "18BAB4A0": {
       "owner": "generated",
       "region": "objecttypes",
@@ -8183,9 +7958,6 @@
       "kind": "nodetable",
       "para": 873
     },
-    "18D450CE": {
-      "owner": "template"
-    },
     "18DA7DEE": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -8206,12 +7978,6 @@
       "index": 15,
       "kind": "term",
       "para": 0
-    },
-    "18EC4144": {
-      "owner": "template"
-    },
-    "18EFFF83": {
-      "owner": "template"
     },
     "18FAC65C": {
       "owner": "generated",
@@ -8334,9 +8100,6 @@
       "kind": "nodetable",
       "para": 73
     },
-    "197CF0C6": {
-      "owner": "template"
-    },
     "197F6FBC": {
       "owner": "template"
     },
@@ -8409,9 +8172,6 @@
       "index": 49,
       "kind": "nodetable",
       "para": 53
-    },
-    "19BB7EDE": {
-      "owner": "template"
     },
     "19C01F40": {
       "owner": "generated",
@@ -8687,9 +8447,6 @@
       "block": 9,
       "para": 4
     },
-    "1AF38F72": {
-      "owner": "template"
-    },
     "1AF5BDF6": {
       "owner": "generated",
       "region": "objecttypes",
@@ -8732,9 +8489,6 @@
       "block": 0,
       "para": 14
     },
-    "1B0FA2AF": {
-      "owner": "template"
-    },
     "1B1216ED": {
       "owner": "generated",
       "region": "annex-a",
@@ -8762,9 +8516,6 @@
       "section": "H.2 Acquisition parameters",
       "block": 1,
       "para": 10
-    },
-    "1B3BAB0D": {
-      "owner": "template"
     },
     "1B3D0453": {
       "owner": "markdown",
@@ -8799,9 +8550,6 @@
       "section": "5.12 Units, encodings and conventions (normative)",
       "block": 1,
       "para": 27
-    },
-    "1B53B133": {
-      "owner": "template"
     },
     "1B6C3891": {
       "owner": "generated",
@@ -8882,9 +8630,6 @@
       "index": 8,
       "kind": "nodetable",
       "para": 1
-    },
-    "1BC755CE": {
-      "owner": "template"
     },
     "1BC7FF02": {
       "owner": "generated",
@@ -9025,9 +8770,6 @@
       "kind": "nodetable",
       "para": 11
     },
-    "1C3D27D6": {
-      "owner": "template"
-    },
     "1C4294FC": {
       "owner": "generated",
       "region": "datatypes",
@@ -9129,9 +8871,6 @@
       "kind": "enumtable",
       "para": 1
     },
-    "1C9054DD": {
-      "owner": "template"
-    },
     "1C98D566": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -9155,9 +8894,6 @@
       "index": 59,
       "kind": "enumtable",
       "para": 14
-    },
-    "1CA27A60": {
-      "owner": "template"
     },
     "1CA3AF9E": {
       "owner": "markdown",
@@ -9262,9 +8998,6 @@
       "index": 87,
       "kind": "nodetable",
       "para": 28
-    },
-    "1CE0488B": {
-      "owner": "template"
     },
     "1CE777B5": {
       "owner": "generated",
@@ -9426,9 +9159,6 @@
       "kind": "nodetable",
       "para": 590
     },
-    "1D463126": {
-      "owner": "template"
-    },
     "1D4C9AEB": {
       "owner": "generated",
       "region": "annex-a",
@@ -9481,9 +9211,6 @@
       "kind": "nodetable",
       "para": 38
     },
-    "1D6C43A0": {
-      "owner": "template"
-    },
     "1D773FDE": {
       "owner": "generated",
       "region": "datatypes",
@@ -9532,9 +9259,6 @@
       "index": 87,
       "kind": "nodetable",
       "para": 30
-    },
-    "1D8DDA17": {
-      "owner": "template"
     },
     "1D90A791": {
       "owner": "markdown",
@@ -9793,9 +9517,6 @@
       "block": 1,
       "para": 7
     },
-    "1E52F808": {
-      "owner": "template"
-    },
     "1E5BBA86": {
       "owner": "generated",
       "region": "annex-a",
@@ -9892,9 +9613,6 @@
       "index": 46,
       "kind": "nodetable",
       "para": 48
-    },
-    "1EA555B4": {
-      "owner": "template"
     },
     "1EAC738D": {
       "owner": "generated",
@@ -10070,9 +9788,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 577
-    },
-    "1EFC9386": {
-      "owner": "template"
     },
     "1F1342BD": {
       "owner": "generated",
@@ -10287,9 +10002,6 @@
       "kind": "nodetable",
       "para": 644
     },
-    "1FA8FD1D": {
-      "owner": "template"
-    },
     "1FAACDD3": {
       "owner": "generated",
       "region": "objecttypes",
@@ -10334,9 +10046,6 @@
       "index": 9,
       "kind": "nodetable",
       "para": 57
-    },
-    "1FD74964": {
-      "owner": "template"
     },
     "1FD7F26C": {
       "owner": "template"
@@ -10491,9 +10200,6 @@
       "kind": "nodetable",
       "para": 373
     },
-    "203D7CBC": {
-      "owner": "template"
-    },
     "203FCBC4": {
       "owner": "generated",
       "region": "annex-a",
@@ -10590,9 +10296,6 @@
       "index": 52,
       "kind": "nodetable",
       "para": 2
-    },
-    "209BC1C5": {
-      "owner": "template"
     },
     "209C0051": {
       "owner": "markdown",
@@ -10804,9 +10507,6 @@
       "kind": "nodetable",
       "para": 28
     },
-    "2127333C": {
-      "owner": "template"
-    },
     "213640FD": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -10883,9 +10583,6 @@
       "kind": "nodetable",
       "para": 314
     },
-    "215B8E22": {
-      "owner": "template"
-    },
     "2162379C": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -10928,18 +10625,12 @@
       "kind": "nodetable",
       "para": 5
     },
-    "21A9D937": {
-      "owner": "template"
-    },
     "21AAE60E": {
       "owner": "generated",
       "region": "datatypes",
       "index": 44,
       "kind": "nodetable",
       "para": 0
-    },
-    "21B7AC1F": {
-      "owner": "template"
     },
     "21B971E1": {
       "owner": "generated",
@@ -11284,9 +10975,6 @@
       "block": 1,
       "para": 13
     },
-    "22AABA5D": {
-      "owner": "template"
-    },
     "22ABE184": {
       "owner": "template"
     },
@@ -11578,9 +11266,6 @@
       "kind": "nodetable",
       "para": 30
     },
-    "23722E52": {
-      "owner": "template"
-    },
     "237B19AC": {
       "owner": "generated",
       "region": "namespaces",
@@ -11664,9 +11349,6 @@
       "kind": "nodetable",
       "para": 14
     },
-    "23B91AB2": {
-      "owner": "template"
-    },
     "23C96ADC": {
       "owner": "generated",
       "region": "datatypes",
@@ -11747,9 +11429,6 @@
       "kind": "nodetable",
       "para": 70
     },
-    "241FB654": {
-      "owner": "template"
-    },
     "2422FBF2": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -11799,9 +11478,6 @@
       "kind": "methodtable",
       "para": 15
     },
-    "242CBB6A": {
-      "owner": "template"
-    },
     "242FA2EE": {
       "owner": "generated",
       "region": "annex-a",
@@ -11815,9 +11491,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 350
-    },
-    "243CE746": {
-      "owner": "template"
     },
     "243E283D": {
       "owner": "markdown",
@@ -11919,9 +11592,6 @@
       "section": "8.2.1 Usage model",
       "block": 1,
       "para": 12
-    },
-    "24822037": {
-      "owner": "template"
     },
     "248EFC41": {
       "owner": "generated",
@@ -12122,9 +11792,6 @@
       "kind": "enumtable",
       "para": 14
     },
-    "2508BB8D": {
-      "owner": "template"
-    },
     "2511228A": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -12145,9 +11812,6 @@
       "index": 73,
       "kind": "methodtable",
       "para": 3
-    },
-    "251B0C81": {
-      "owner": "template"
     },
     "252F9D86": {
       "owner": "generated",
@@ -12343,9 +12007,6 @@
       "kind": "nodetable",
       "para": 20
     },
-    "25F1CD11": {
-      "owner": "template"
-    },
     "25F28ADE": {
       "owner": "generated",
       "region": "datatypes",
@@ -12401,9 +12062,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 791
-    },
-    "26198E7D": {
-      "owner": "template"
     },
     "261F86E6": {
       "owner": "template"
@@ -13137,12 +12795,6 @@
       "kind": "methodtable",
       "para": 25
     },
-    "285F8C61": {
-      "owner": "template"
-    },
-    "2867B105": {
-      "owner": "template"
-    },
     "286D7FCF": {
       "owner": "generated",
       "region": "datatypes",
@@ -13205,9 +12857,6 @@
       "index": 76,
       "kind": "nodetable",
       "para": 13
-    },
-    "28899F0F": {
-      "owner": "template"
     },
     "288B5E76": {
       "owner": "generated",
@@ -13331,9 +12980,6 @@
       "kind": "nodetable",
       "para": 5
     },
-    "28D84072": {
-      "owner": "template"
-    },
     "28DE0F45": {
       "owner": "generated",
       "region": "objecttypes",
@@ -13413,9 +13059,6 @@
       "index": 87,
       "kind": "nodetable",
       "para": 21
-    },
-    "29218C42": {
-      "owner": "template"
     },
     "2922D9AD": {
       "owner": "generated",
@@ -13541,9 +13184,6 @@
       "block": 1,
       "para": 24
     },
-    "2983D082": {
-      "owner": "template"
-    },
     "29849280": {
       "owner": "generated",
       "region": "terms",
@@ -13564,9 +13204,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 18
-    },
-    "29933A1C": {
-      "owner": "template"
     },
     "29936FEA": {
       "owner": "generated",
@@ -13762,9 +13399,6 @@
       "kind": "nodetable",
       "para": 19
     },
-    "2A2921A6": {
-      "owner": "template"
-    },
     "2A316CA3": {
       "owner": "template"
     },
@@ -13781,9 +13415,6 @@
       "index": 49,
       "kind": "nodetable",
       "para": 44
-    },
-    "2A3FF03A": {
-      "owner": "template"
     },
     "2A4159ED": {
       "owner": "generated",
@@ -14070,18 +13701,12 @@
       "kind": "para",
       "para": 0
     },
-    "2B249982": {
-      "owner": "template"
-    },
     "2B255624": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
       "section": "G.5 Coordinate frames and calibration",
       "block": 3,
       "para": 2
-    },
-    "2B264324": {
-      "owner": "template"
     },
     "2B26E876": {
       "owner": "generated",
@@ -14309,9 +13934,6 @@
       "kind": "nodetable",
       "para": 4
     },
-    "2BDD4990": {
-      "owner": "template"
-    },
     "2BE9DD6A": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -14392,12 +14014,6 @@
       "kind": "enumtable",
       "para": 10
     },
-    "2C1D2367": {
-      "owner": "template"
-    },
-    "2C29CC96": {
-      "owner": "template"
-    },
     "2C30CC07": {
       "owner": "generated",
       "region": "annex-a",
@@ -14431,9 +14047,6 @@
       "index": 18,
       "kind": "nodetable",
       "para": 2
-    },
-    "2C497256": {
-      "owner": "template"
     },
     "2C4EC229": {
       "owner": "template"
@@ -14479,9 +14092,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 26
-    },
-    "2C8C4719": {
-      "owner": "template"
     },
     "2C8E4E99": {
       "owner": "generated",
@@ -14630,9 +14240,6 @@
       "kind": "enumtable",
       "para": 8
     },
-    "2CFED3C6": {
-      "owner": "template"
-    },
     "2D06B47A": {
       "owner": "generated",
       "region": "objecttypes",
@@ -14733,9 +14340,6 @@
       "section": "F.6 The simulated twin",
       "block": 1,
       "para": 20
-    },
-    "2D44FF78": {
-      "owner": "template"
     },
     "2D4EB2D5": {
       "owner": "markdown",
@@ -15210,9 +14814,6 @@
     "2EC57924": {
       "owner": "template"
     },
-    "2ECEB453": {
-      "owner": "template"
-    },
     "2ED01BD0": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -15342,9 +14943,6 @@
       "block": 0,
       "para": 4
     },
-    "2F1AA29E": {
-      "owner": "template"
-    },
     "2F1C0F46": {
       "owner": "generated",
       "region": "datatypes",
@@ -15410,12 +15008,6 @@
       "index": 16,
       "kind": "annex",
       "para": 0
-    },
-    "2F844E78": {
-      "owner": "template"
-    },
-    "2F8468EA": {
-      "owner": "template"
     },
     "2F8A9CAF": {
       "owner": "generated",
@@ -15898,9 +15490,6 @@
       "block": 5,
       "para": 15
     },
-    "3102F3AA": {
-      "owner": "template"
-    },
     "3105C15A": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -16050,9 +15639,6 @@
       "kind": "nodetable",
       "para": 1
     },
-    "31AC85B5": {
-      "owner": "template"
-    },
     "31ACFF0C": {
       "owner": "generated",
       "region": "normative-references",
@@ -16066,9 +15652,6 @@
       "section": "12.6 Off-server inference crosses a trust boundary",
       "block": 2,
       "para": 0
-    },
-    "31B1F853": {
-      "owner": "template"
     },
     "31B34666": {
       "owner": "markdown",
@@ -16091,21 +15674,12 @@
       "kind": "nodetable",
       "para": 485
     },
-    "31BD978E": {
-      "owner": "template"
-    },
-    "31BF1ED4": {
-      "owner": "template"
-    },
     "31C4499A": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 15,
       "kind": "nodetable",
       "para": 30
-    },
-    "31C6472D": {
-      "owner": "template"
     },
     "31D462CB": {
       "owner": "generated",
@@ -16164,9 +15738,6 @@
       "para": 13
     },
     "321382D8": {
-      "owner": "template"
-    },
-    "321939D9": {
       "owner": "template"
     },
     "3221D565": {
@@ -16361,9 +15932,6 @@
       "kind": "enumtable",
       "para": 14
     },
-    "329DE2DD": {
-      "owner": "template"
-    },
     "32A11BFA": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -16551,9 +16119,6 @@
       "index": 59,
       "kind": "clause",
       "para": 0
-    },
-    "332C6B22": {
-      "owner": "template"
     },
     "332F43B1": {
       "owner": "generated",
@@ -16935,9 +16500,6 @@
       "block": 1,
       "para": 3
     },
-    "340D2A34": {
-      "owner": "template"
-    },
     "340D9E37": {
       "owner": "generated",
       "region": "referencetypes",
@@ -17057,9 +16619,6 @@
       "kind": "nodetable",
       "para": 325
     },
-    "346AE92F": {
-      "owner": "template"
-    },
     "346BAD6D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -17107,9 +16666,6 @@
     "3483B7AE": {
       "owner": "template"
     },
-    "348EC587": {
-      "owner": "template"
-    },
     "349EABA5": {
       "owner": "generated",
       "region": "objecttypes",
@@ -17154,9 +16710,6 @@
       "section": "G.6 Inference",
       "block": 2,
       "para": 0
-    },
-    "34BB5C5B": {
-      "owner": "template"
     },
     "34C32A74": {
       "owner": "generated",
@@ -17206,9 +16759,6 @@
       "index": 79,
       "kind": "enumtable",
       "para": 8
-    },
-    "34DE18FF": {
-      "owner": "template"
     },
     "34E2AD0D": {
       "owner": "markdown",
@@ -17264,9 +16814,6 @@
       "section": "1.3 What this specification does not (yet) do",
       "block": 3,
       "para": 0
-    },
-    "3518022C": {
-      "owner": "template"
     },
     "35198E3D": {
       "owner": "generated",
@@ -17466,9 +17013,6 @@
       "block": 7,
       "para": 2
     },
-    "35B65459": {
-      "owner": "template"
-    },
     "35BFEF21": {
       "owner": "generated",
       "region": "objecttypes",
@@ -17608,9 +17152,6 @@
       "block": 0,
       "para": 9
     },
-    "3621C9EC": {
-      "owner": "template"
-    },
     "3623A4EB": {
       "owner": "generated",
       "region": "datatypes",
@@ -17726,9 +17267,6 @@
       "kind": "enumtable",
       "para": 28
     },
-    "36889B6B": {
-      "owner": "template"
-    },
     "3689E5F4": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -17795,9 +17333,6 @@
     "369AF152": {
       "owner": "template"
     },
-    "36A2071D": {
-      "owner": "template"
-    },
     "36A4050B": {
       "owner": "generated",
       "region": "datatypes",
@@ -17842,9 +17377,6 @@
       "section": "E.2 ONVIF — Profiles S, T and M",
       "block": 1,
       "para": 4
-    },
-    "36D854E0": {
-      "owner": "template"
     },
     "36D8CA0E": {
       "owner": "generated",
@@ -17920,9 +17452,6 @@
       "index": 44,
       "kind": "nodetable",
       "para": 22
-    },
-    "370C00BA": {
-      "owner": "template"
     },
     "370CDB8B": {
       "owner": "generated",
@@ -18069,9 +17598,6 @@
     "3741515E": {
       "owner": "template"
     },
-    "3744CCED": {
-      "owner": "template"
-    },
     "374BD34E": {
       "owner": "generated",
       "region": "datatypes",
@@ -18198,9 +17724,6 @@
       "kind": "nodetable",
       "para": 64
     },
-    "37CA8458": {
-      "owner": "template"
-    },
     "37CC0C4C": {
       "owner": "template"
     },
@@ -18289,9 +17812,6 @@
       "index": 43,
       "kind": "nodetable",
       "para": 51
-    },
-    "380CCB7F": {
-      "owner": "template"
     },
     "380F9DBE": {
       "owner": "generated",
@@ -18584,9 +18104,6 @@
       "block": 5,
       "para": 23
     },
-    "38FAE7BB": {
-      "owner": "template"
-    },
     "38FF8E02": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -18841,9 +18358,6 @@
       "kind": "nodetable",
       "para": 1
     },
-    "39B01F28": {
-      "owner": "template"
-    },
     "39B14B0D": {
       "owner": "generated",
       "region": "datatypes",
@@ -19063,9 +18577,6 @@
       "kind": "nodetable",
       "para": 9
     },
-    "3A2ED7CA": {
-      "owner": "template"
-    },
     "3A3893E3": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -19087,9 +18598,6 @@
       "kind": "nodetable",
       "para": 14
     },
-    "3A44595D": {
-      "owner": "template"
-    },
     "3A532551": {
       "owner": "template"
     },
@@ -19099,9 +18607,6 @@
       "index": 68,
       "kind": "nodetable",
       "para": 22
-    },
-    "3A5A576A": {
-      "owner": "template"
     },
     "3A62B5B7": {
       "owner": "generated",
@@ -19161,9 +18666,6 @@
       "index": 28,
       "kind": "methodtable",
       "para": 16
-    },
-    "3A909C01": {
-      "owner": "template"
     },
     "3A9480FF": {
       "owner": "generated",
@@ -19379,9 +18881,6 @@
       "kind": "nodetable",
       "para": 716
     },
-    "3B55C032": {
-      "owner": "template"
-    },
     "3B5A4B62": {
       "owner": "generated",
       "region": "annex-a",
@@ -19543,9 +19042,6 @@
       "section": "G.5 Coordinate frames and calibration",
       "block": 5,
       "para": 19
-    },
-    "3BF295B4": {
-      "owner": "template"
     },
     "3BF75E9F": {
       "owner": "template"
@@ -19821,9 +19317,6 @@
       "kind": "nodetable",
       "para": 21
     },
-    "3C7E8F99": {
-      "owner": "template"
-    },
     "3C80F93C": {
       "owner": "generated",
       "region": "datatypes",
@@ -19845,9 +19338,6 @@
       "kind": "nodetable",
       "para": 364
     },
-    "3C8CD6A0": {
-      "owner": "template"
-    },
     "3C8E7C39": {
       "owner": "template"
     },
@@ -19857,9 +19347,6 @@
       "index": 87,
       "kind": "enumtable",
       "para": 7
-    },
-    "3CA3D423": {
-      "owner": "template"
     },
     "3CAB95B1": {
       "owner": "generated",
@@ -20018,9 +19505,6 @@
       "block": 9,
       "para": 8
     },
-    "3D23A221": {
-      "owner": "template"
-    },
     "3D27C3A9": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -20105,9 +19589,6 @@
       "block": 8,
       "para": 0
     },
-    "3D6EF18F": {
-      "owner": "template"
-    },
     "3D748371": {
       "owner": "generated",
       "region": "objecttypes",
@@ -20128,9 +19609,6 @@
       "section": "8.4 Inference Method definitions (normative)",
       "block": 3,
       "para": 7
-    },
-    "3D7C1AD7": {
-      "owner": "template"
     },
     "3D7F5579": {
       "owner": "generated",
@@ -20332,9 +19810,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 231
-    },
-    "3E485447": {
-      "owner": "template"
     },
     "3E5274E2": {
       "owner": "generated",
@@ -20682,9 +20157,6 @@
       "kind": "para",
       "para": 0
     },
-    "3F68038F": {
-      "owner": "template"
-    },
     "3F7E3AA9": {
       "owner": "generated",
       "region": "objecttypes",
@@ -20762,6 +20234,13 @@
       "block": 1,
       "para": 24
     },
+    "3F9F5245": {
+      "owner": "generated",
+      "region": "general",
+      "index": 5,
+      "kind": "para",
+      "para": 0
+    },
     "3FA22DE1": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -20782,9 +20261,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 556
-    },
-    "3FC4BDC2": {
-      "owner": "template"
     },
     "3FC95756": {
       "owner": "generated",
@@ -20808,9 +20284,6 @@
       "index": 20,
       "kind": "nodetable",
       "para": 3
-    },
-    "3FECB6EC": {
-      "owner": "template"
     },
     "3FED12F4": {
       "owner": "template"
@@ -20996,9 +20469,6 @@
       "kind": "nodetable",
       "para": 6
     },
-    "4079A442": {
-      "owner": "template"
-    },
     "407A1458": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -21012,9 +20482,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 3
-    },
-    "407C82CB": {
-      "owner": "template"
     },
     "408123E9": {
       "owner": "template"
@@ -21163,9 +20630,6 @@
       "para": 6
     },
     "40DEA1BE": {
-      "owner": "template"
-    },
-    "40E2D76E": {
       "owner": "template"
     },
     "40E8C736": {
@@ -21507,9 +20971,6 @@
       "block": 1,
       "para": 19
     },
-    "41E0CD1F": {
-      "owner": "template"
-    },
     "41E3DCBC": {
       "owner": "generated",
       "region": "objecttypes",
@@ -21606,9 +21067,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 736
-    },
-    "422F26D7": {
-      "owner": "template"
     },
     "4231F2F1": {
       "owner": "generated",
@@ -21731,9 +21189,6 @@
       "kind": "nodetable",
       "para": 25
     },
-    "42922D4C": {
-      "owner": "template"
-    },
     "42966EAD": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -21762,9 +21217,6 @@
       "kind": "nodetable",
       "para": 10
     },
-    "42A7DB17": {
-      "owner": "template"
-    },
     "42A888BD": {
       "owner": "generated",
       "region": "annex-a",
@@ -21787,9 +21239,6 @@
       "para": 22
     },
     "42B1F660": {
-      "owner": "template"
-    },
-    "42B4537C": {
       "owner": "template"
     },
     "42BDA3C6": {
@@ -21890,18 +21339,12 @@
       "kind": "nodetable",
       "para": 61
     },
-    "42F3300B": {
-      "owner": "template"
-    },
     "42F92FDB": {
       "owner": "generated",
       "region": "datatypes",
       "index": 64,
       "kind": "nodetable",
       "para": 7
-    },
-    "42FCA76A": {
-      "owner": "template"
     },
     "43014068": {
       "owner": "template"
@@ -21940,9 +21383,6 @@
       "section": "G.5 Coordinate frames and calibration",
       "block": 5,
       "para": 17
-    },
-    "4320DB55": {
-      "owner": "template"
     },
     "432268CF": {
       "owner": "template"
@@ -22045,9 +21485,6 @@
       "kind": "nodetable",
       "para": 13
     },
-    "4396AA93": {
-      "owner": "template"
-    },
     "43989A6B": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -22138,9 +21575,6 @@
       "section": "H.2 Acquisition parameters",
       "block": 1,
       "para": 16
-    },
-    "440C6FCC": {
-      "owner": "template"
     },
     "440F7502": {
       "owner": "generated",
@@ -22385,9 +21819,6 @@
     "44DE6F8C": {
       "owner": "template"
     },
-    "44E9F642": {
-      "owner": "template"
-    },
     "44EA233A": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -22443,9 +21874,6 @@
       "index": 80,
       "kind": "methodtable",
       "para": 14
-    },
-    "45102F36": {
-      "owner": "template"
     },
     "451A78E6": {
       "owner": "generated",
@@ -22571,9 +21999,6 @@
     "456E2E72": {
       "owner": "template"
     },
-    "45747014": {
-      "owner": "template"
-    },
     "457A5953": {
       "owner": "generated",
       "region": "objecttypes",
@@ -22692,9 +22117,6 @@
       "block": 1,
       "para": 3
     },
-    "45CA60A5": {
-      "owner": "template"
-    },
     "45D03106": {
       "owner": "generated",
       "region": "objecttypes",
@@ -22715,9 +22137,6 @@
       "index": 92,
       "kind": "nodetable",
       "para": 3
-    },
-    "45D81D4C": {
-      "owner": "template"
     },
     "45EA32C4": {
       "owner": "generated",
@@ -22969,9 +22388,6 @@
     "46DBE0D6": {
       "owner": "template"
     },
-    "46E36681": {
-      "owner": "template"
-    },
     "46E7E3B9": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -23015,9 +22431,6 @@
       "para": 19
     },
     "470D529A": {
-      "owner": "template"
-    },
-    "470F2D4B": {
       "owner": "template"
     },
     "4718281A": {
@@ -23135,9 +22548,6 @@
       "kind": "clause",
       "para": 0
     },
-    "4771BC7D": {
-      "owner": "template"
-    },
     "4772F29D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -23146,9 +22556,6 @@
       "para": 13
     },
     "47772F2D": {
-      "owner": "template"
-    },
-    "4777345E": {
       "owner": "template"
     },
     "47791276": {
@@ -23238,9 +22645,6 @@
       "kind": "nodetable",
       "para": 36
     },
-    "47D59163": {
-      "owner": "template"
-    },
     "47D8BE15": {
       "owner": "generated",
       "region": "annex-a",
@@ -23264,9 +22668,6 @@
       "index": 79,
       "kind": "enumtable",
       "para": 19
-    },
-    "47E99C21": {
-      "owner": "template"
     },
     "48037A0A": {
       "owner": "generated",
@@ -23330,9 +22731,6 @@
       "kind": "nodetable",
       "para": 24
     },
-    "4854B92D": {
-      "owner": "template"
-    },
     "4857DBB7": {
       "owner": "generated",
       "region": "annex-a",
@@ -23374,9 +22772,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 169
-    },
-    "487671CC": {
-      "owner": "template"
     },
     "487D1D64": {
       "owner": "generated",
@@ -23517,9 +22912,6 @@
       "kind": "nodetable",
       "para": 17
     },
-    "48FEC17F": {
-      "owner": "template"
-    },
     "49026A96": {
       "owner": "generated",
       "region": "objecttypes",
@@ -23597,9 +22989,6 @@
       "kind": "nodetable",
       "para": 1
     },
-    "49337736": {
-      "owner": "template"
-    },
     "493D4FA5": {
       "owner": "generated",
       "region": "namespaces",
@@ -23627,9 +23016,6 @@
       "index": 10,
       "kind": "term",
       "para": 1
-    },
-    "494C3754": {
-      "owner": "template"
     },
     "4956D329": {
       "owner": "generated",
@@ -23892,18 +23278,12 @@
       "kind": "nodetable",
       "para": 1
     },
-    "4A16BC96": {
-      "owner": "template"
-    },
     "4A18A123": {
       "owner": "generated",
       "region": "datatypes",
       "index": 31,
       "kind": "enumtable",
       "para": 13
-    },
-    "4A18BA36": {
-      "owner": "template"
     },
     "4A190B4B": {
       "owner": "generated",
@@ -23930,9 +23310,6 @@
       "para": 1
     },
     "4A267FEB": {
-      "owner": "template"
-    },
-    "4A2A16B6": {
       "owner": "template"
     },
     "4A2BA465": {
@@ -24001,9 +23378,6 @@
       "kind": "nodetable",
       "para": 47
     },
-    "4A54C95B": {
-      "owner": "template"
-    },
     "4A55D102": {
       "owner": "generated",
       "region": "annex-a",
@@ -24017,9 +23391,6 @@
       "section": "B.2 Sensor and intrinsics",
       "block": 0,
       "para": 10
-    },
-    "4A5DAD54": {
-      "owner": "template"
     },
     "4A646FAF": {
       "owner": "template"
@@ -24223,9 +23594,6 @@
       "block": 2,
       "para": 24
     },
-    "4AD26E03": {
-      "owner": "template"
-    },
     "4AD338D1": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -24261,9 +23629,6 @@
       "kind": "enumtable",
       "para": 10
     },
-    "4AE88D66": {
-      "owner": "template"
-    },
     "4AE8FBC8": {
       "owner": "template"
     },
@@ -24297,9 +23662,6 @@
       "index": 73,
       "kind": "methodtable",
       "para": 22
-    },
-    "4B09688C": {
-      "owner": "template"
     },
     "4B0B3304": {
       "owner": "generated",
@@ -24394,9 +23756,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 87
-    },
-    "4B531AC7": {
-      "owner": "template"
     },
     "4B5F86B1": {
       "owner": "generated",
@@ -24495,9 +23854,6 @@
       "kind": "enumtable",
       "para": 7
     },
-    "4BB620F4": {
-      "owner": "template"
-    },
     "4BBB68D1": {
       "owner": "generated",
       "region": "objecttypes",
@@ -24542,9 +23898,6 @@
       "index": 4,
       "kind": "nodetable",
       "para": 1
-    },
-    "4BE98D50": {
-      "owner": "template"
     },
     "4BEC3D13": {
       "owner": "markdown",
@@ -24650,9 +24003,6 @@
       "index": 17,
       "kind": "term",
       "para": 0
-    },
-    "4C3AB832": {
-      "owner": "template"
     },
     "4C3B4235": {
       "owner": "generated",
@@ -25049,9 +24399,6 @@
     "4D91E427": {
       "owner": "template"
     },
-    "4D9F9AF8": {
-      "owner": "template"
-    },
     "4D9FFA8E": {
       "owner": "generated",
       "region": "objecttypes",
@@ -25079,9 +24426,6 @@
       "index": 26,
       "kind": "methodtable",
       "para": 18
-    },
-    "4DB5A0E0": {
-      "owner": "template"
     },
     "4DB85C4A": {
       "owner": "generated",
@@ -25118,9 +24462,6 @@
       "kind": "nodetable",
       "para": 806
     },
-    "4DCC214C": {
-      "owner": "template"
-    },
     "4DD27EB1": {
       "owner": "generated",
       "region": "datatypes",
@@ -25143,9 +24484,6 @@
       "para": 627
     },
     "4DE51120": {
-      "owner": "template"
-    },
-    "4DE834DE": {
       "owner": "template"
     },
     "4DEEECA3": {
@@ -25205,9 +24543,6 @@
       "section": "8.4 Inference Method definitions (normative)",
       "block": 1,
       "para": 7
-    },
-    "4E372181": {
-      "owner": "template"
     },
     "4E394E5D": {
       "owner": "generated",
@@ -25560,9 +24895,6 @@
       "kind": "annex",
       "para": 0
     },
-    "4F81305C": {
-      "owner": "template"
-    },
     "4F821B58": {
       "owner": "generated",
       "region": "datatypes",
@@ -25866,9 +25198,6 @@
       "block": 0,
       "para": 0
     },
-    "50686EA4": {
-      "owner": "template"
-    },
     "506E5C0F": {
       "owner": "generated",
       "region": "datatypes",
@@ -25954,6 +25283,13 @@
     },
     "50B4D4B8": {
       "owner": "template"
+    },
+    "50C4AC18": {
+      "owner": "generated",
+      "region": "scope",
+      "index": 4,
+      "kind": "clause",
+      "para": 0
     },
     "50C576BB": {
       "owner": "generated",
@@ -26154,12 +25490,6 @@
       "kind": "enumtable",
       "para": 13
     },
-    "51695D92": {
-      "owner": "template"
-    },
-    "516BE0DA": {
-      "owner": "template"
-    },
     "516CE9F2": {
       "owner": "generated",
       "region": "annex-a",
@@ -26225,9 +25555,6 @@
       "index": 15,
       "kind": "nodetable",
       "para": 11
-    },
-    "5193F9AC": {
-      "owner": "template"
     },
     "51971989": {
       "owner": "markdown",
@@ -26299,9 +25626,6 @@
       "kind": "nodetable",
       "para": 0
     },
-    "51C04BAE": {
-      "owner": "template"
-    },
     "51C0DB9B": {
       "owner": "generated",
       "region": "objecttypes",
@@ -26315,9 +25639,6 @@
       "index": 10,
       "kind": "clause",
       "para": 0
-    },
-    "51C663E5": {
-      "owner": "template"
     },
     "51CBE88F": {
       "owner": "template"
@@ -26472,9 +25793,6 @@
       "index": 75,
       "kind": "enumtable",
       "para": 21
-    },
-    "52379BA1": {
-      "owner": "template"
     },
     "524526F5": {
       "owner": "generated",
@@ -26676,9 +25994,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 478
-    },
-    "52D5C091": {
-      "owner": "template"
     },
     "52D9ED54": {
       "owner": "generated",
@@ -26899,9 +26214,6 @@
       "kind": "nodetable",
       "para": 11
     },
-    "536E2F0F": {
-      "owner": "template"
-    },
     "536EDC15": {
       "owner": "generated",
       "region": "annex-a",
@@ -26944,18 +26256,12 @@
       "kind": "nodetable",
       "para": 13
     },
-    "5397361A": {
-      "owner": "template"
-    },
     "539D6AAF": {
       "owner": "generated",
       "region": "datatypes",
       "index": 29,
       "kind": "clause",
       "para": 0
-    },
-    "539E5534": {
-      "owner": "template"
     },
     "53A0791E": {
       "owner": "generated",
@@ -27027,18 +26333,12 @@
       "block": 0,
       "para": 0
     },
-    "53CD470A": {
-      "owner": "template"
-    },
     "53D3581D": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
       "section": "5.4 `VisionSensorType : BaseObjectType` (abstract)",
       "block": 1,
       "para": 0
-    },
-    "53D5C0DD": {
-      "owner": "template"
     },
     "53DE3897": {
       "owner": "markdown",
@@ -27781,9 +27081,6 @@
     "56000702": {
       "owner": "template"
     },
-    "56083951": {
-      "owner": "template"
-    },
     "560C1B4F": {
       "owner": "generated",
       "region": "datatypes",
@@ -27903,9 +27200,6 @@
       "kind": "term",
       "para": 1
     },
-    "56712603": {
-      "owner": "template"
-    },
     "5673E345": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -27941,18 +27235,12 @@
       "block": 2,
       "para": 1
     },
-    "56855333": {
-      "owner": "template"
-    },
     "5686540B": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 6,
       "kind": "nodetable",
       "para": 36
-    },
-    "568A1E2A": {
-      "owner": "template"
     },
     "5691954E": {
       "owner": "generated",
@@ -28254,9 +27542,6 @@
       "kind": "enumtable",
       "para": 14
     },
-    "5760161C": {
-      "owner": "template"
-    },
     "57634CF0": {
       "owner": "generated",
       "region": "objecttypes",
@@ -28399,9 +27684,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 363
-    },
-    "57F97222": {
-      "owner": "template"
     },
     "57FB8776": {
       "owner": "generated",
@@ -28706,9 +27988,6 @@
       "block": 1,
       "para": 29
     },
-    "58BDA515": {
-      "owner": "template"
-    },
     "58C2651C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -28758,9 +28037,6 @@
       "kind": "nodetable",
       "para": 21
     },
-    "590EE2EE": {
-      "owner": "template"
-    },
     "591A871B": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -28781,9 +28057,6 @@
       "section": "E.4 ROS 2 `vision_msgs`",
       "block": 0,
       "para": 1
-    },
-    "59243C29": {
-      "owner": "template"
     },
     "592527B6": {
       "owner": "generated",
@@ -28834,9 +28107,6 @@
       "block": 5,
       "para": 10
     },
-    "594A8817": {
-      "owner": "template"
-    },
     "594CD59B": {
       "owner": "generated",
       "region": "objecttypes",
@@ -28885,9 +28155,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 115
-    },
-    "596F6662": {
-      "owner": "template"
     },
     "59776B67": {
       "owner": "generated",
@@ -29042,9 +28309,6 @@
       "block": 5,
       "para": 0
     },
-    "59DF0B08": {
-      "owner": "template"
-    },
     "59E817E0": {
       "owner": "generated",
       "region": "datatypes",
@@ -29065,9 +28329,6 @@
       "index": 5,
       "kind": "annex",
       "para": 0
-    },
-    "59ED5F07": {
-      "owner": "template"
     },
     "59EE1FD5": {
       "owner": "generated",
@@ -29176,9 +28437,6 @@
       "kind": "nodetable",
       "para": 70
     },
-    "5A675CBD": {
-      "owner": "template"
-    },
     "5A6A3810": {
       "owner": "generated",
       "region": "datatypes",
@@ -29245,9 +28503,6 @@
       "block": 2,
       "para": 0
     },
-    "5A9A6A69": {
-      "owner": "template"
-    },
     "5A9B3B81": {
       "owner": "generated",
       "region": "annex-a",
@@ -29261,9 +28516,6 @@
       "index": 15,
       "kind": "enumtable",
       "para": 1
-    },
-    "5AB43081": {
-      "owner": "template"
     },
     "5ABA4B96": {
       "owner": "generated",
@@ -29296,12 +28548,6 @@
       "kind": "table",
       "para": 2
     },
-    "5ADEC6FA": {
-      "owner": "template"
-    },
-    "5AF674FB": {
-      "owner": "template"
-    },
     "5AF7115C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -29330,9 +28576,6 @@
       "kind": "nodetable",
       "para": 8
     },
-    "5B0FCA84": {
-      "owner": "template"
-    },
     "5B11FB8B": {
       "owner": "generated",
       "region": "annex-a",
@@ -29360,9 +28603,6 @@
       "index": 185,
       "kind": "clause",
       "para": 0
-    },
-    "5B1DC858": {
-      "owner": "template"
     },
     "5B2538B0": {
       "owner": "generated",
@@ -29866,9 +29106,6 @@
       "kind": "nodetable",
       "para": 30
     },
-    "5C7F6F22": {
-      "owner": "template"
-    },
     "5C849073": {
       "owner": "generated",
       "region": "objecttypes",
@@ -29917,9 +29154,6 @@
       "index": 88,
       "kind": "nodetable",
       "para": 12
-    },
-    "5CB70AFF": {
-      "owner": "template"
     },
     "5CBAD203": {
       "owner": "markdown",
@@ -30096,9 +29330,6 @@
       "kind": "nodetable",
       "para": 529
     },
-    "5D1E843E": {
-      "owner": "template"
-    },
     "5D1FB800": {
       "owner": "generated",
       "region": "objecttypes",
@@ -30164,9 +29395,6 @@
       "section": "G.5 Coordinate frames and calibration",
       "block": 3,
       "para": 3
-    },
-    "5D6B1FA6": {
-      "owner": "template"
     },
     "5D6C1E13": {
       "owner": "generated",
@@ -30345,9 +29573,6 @@
       "block": 7,
       "para": 3
     },
-    "5DD29976": {
-      "owner": "template"
-    },
     "5DDE29ED": {
       "owner": "generated",
       "region": "annex-a",
@@ -30361,9 +29586,6 @@
       "index": 87,
       "kind": "nodetable",
       "para": 11
-    },
-    "5DE797AF": {
-      "owner": "template"
     },
     "5DED5468": {
       "owner": "generated",
@@ -30448,9 +29670,6 @@
       "block": 0,
       "para": 19
     },
-    "5E24C497": {
-      "owner": "template"
-    },
     "5E25C451": {
       "owner": "generated",
       "region": "objecttypes",
@@ -30471,9 +29690,6 @@
       "section": "5 Information model",
       "block": 1,
       "para": 22
-    },
-    "5E2F30C0": {
-      "owner": "template"
     },
     "5E3025F2": {
       "owner": "markdown",
@@ -30510,9 +29726,6 @@
       "kind": "nodetable",
       "para": 703
     },
-    "5E40DA25": {
-      "owner": "template"
-    },
     "5E4B9F72": {
       "owner": "generated",
       "region": "objecttypes",
@@ -30529,9 +29742,6 @@
       "section": "5.11 ReferenceTypes",
       "block": 2,
       "para": 3
-    },
-    "5E57A849": {
-      "owner": "template"
     },
     "5E5B14D6": {
       "owner": "generated",
@@ -30606,9 +29816,6 @@
       "kind": "nodetable",
       "para": 38
     },
-    "5E8B15E8": {
-      "owner": "template"
-    },
     "5E8B5726": {
       "owner": "generated",
       "region": "annex-a",
@@ -30620,9 +29827,6 @@
       "owner": "template"
     },
     "5E97D844": {
-      "owner": "template"
-    },
-    "5E9928B4": {
       "owner": "template"
     },
     "5E9A2697": {
@@ -30669,9 +29873,6 @@
       "index": 18,
       "kind": "nodetable",
       "para": 4
-    },
-    "5EDB7771": {
-      "owner": "template"
     },
     "5EE00F48": {
       "owner": "generated",
@@ -30805,9 +30006,6 @@
       "index": 4,
       "kind": "nodetable",
       "para": 0
-    },
-    "5F548FAD": {
-      "owner": "template"
     },
     "5F5B7818": {
       "owner": "generated",
@@ -31103,9 +30301,6 @@
       "block": 0,
       "para": 7
     },
-    "6041021C": {
-      "owner": "template"
-    },
     "60472757": {
       "owner": "generated",
       "region": "objecttypes",
@@ -31171,9 +30366,6 @@
       "index": 67,
       "kind": "nodetable",
       "para": 35
-    },
-    "60873E25": {
-      "owner": "template"
     },
     "609124C7": {
       "owner": "markdown",
@@ -31465,9 +30657,6 @@
       "index": 40,
       "kind": "nodetable",
       "para": 21
-    },
-    "615446B9": {
-      "owner": "template"
     },
     "6154E230": {
       "owner": "generated",
@@ -31934,9 +31123,6 @@
       "block": 2,
       "para": 6
     },
-    "6284BA4F": {
-      "owner": "template"
-    },
     "628B29A1": {
       "owner": "generated",
       "region": "objecttypes",
@@ -32020,9 +31206,6 @@
       "kind": "nodetable",
       "para": 11
     },
-    "62B1F017": {
-      "owner": "template"
-    },
     "62BA5D7F": {
       "owner": "generated",
       "region": "objecttypes",
@@ -32096,9 +31279,6 @@
       "kind": "nodetable",
       "para": 101
     },
-    "631E9D69": {
-      "owner": "template"
-    },
     "6325E0F0": {
       "owner": "generated",
       "region": "terms",
@@ -32150,21 +31330,12 @@
       "kind": "nodetable",
       "para": 72
     },
-    "634BC2A1": {
-      "owner": "template"
-    },
     "6359B607": {
       "owner": "generated",
       "region": "datatypes",
       "index": 79,
       "kind": "enumtable",
       "para": 23
-    },
-    "635AB309": {
-      "owner": "template"
-    },
-    "635BDBB2": {
-      "owner": "template"
     },
     "635CAE28": {
       "owner": "generated",
@@ -32184,9 +31355,6 @@
       "para": 731
     },
     "636BD5A9": {
-      "owner": "template"
-    },
-    "63764572": {
       "owner": "template"
     },
     "63772ED3": {
@@ -32216,9 +31384,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 693
-    },
-    "6384DC6F": {
-      "owner": "template"
     },
     "6386F8EA": {
       "owner": "markdown",
@@ -32286,9 +31451,6 @@
       "kind": "nodetable",
       "para": 111
     },
-    "63BB15AE": {
-      "owner": "template"
-    },
     "63C55BAC": {
       "owner": "generated",
       "region": "objecttypes",
@@ -32352,9 +31514,6 @@
       "kind": "nodetable",
       "para": 33
     },
-    "63DFF234": {
-      "owner": "template"
-    },
     "63E1F481": {
       "owner": "template"
     },
@@ -32406,9 +31565,6 @@
       "index": 18,
       "kind": "nodetable",
       "para": 12
-    },
-    "6408FD48": {
-      "owner": "template"
     },
     "6413C7F4": {
       "owner": "generated",
@@ -32483,18 +31639,12 @@
       "kind": "nodetable",
       "para": 78
     },
-    "6435CECB": {
-      "owner": "template"
-    },
     "643A17F9": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 37,
       "kind": "nodetable",
       "para": 1
-    },
-    "643C9698": {
-      "owner": "template"
     },
     "64424287": {
       "owner": "markdown",
@@ -32561,9 +31711,6 @@
       "index": 71,
       "kind": "methodtable",
       "para": 16
-    },
-    "6465F008": {
-      "owner": "template"
     },
     "646EDEF3": {
       "owner": "markdown",
@@ -32802,9 +31949,6 @@
       "block": 0,
       "para": 5
     },
-    "6513D8E3": {
-      "owner": "template"
-    },
     "6516B949": {
       "owner": "generated",
       "region": "referencetypes",
@@ -32888,9 +32032,6 @@
       "kind": "nodetable",
       "para": 41
     },
-    "654D9A09": {
-      "owner": "template"
-    },
     "655D5429": {
       "owner": "generated",
       "region": "objecttypes",
@@ -32927,9 +32068,6 @@
       "para": 12
     },
     "657397AA": {
-      "owner": "template"
-    },
-    "65768121": {
       "owner": "template"
     },
     "65797119": {
@@ -33049,9 +32187,6 @@
       "section": "F.3 The sensor",
       "block": 0,
       "para": 12
-    },
-    "65F47580": {
-      "owner": "template"
     },
     "6608821C": {
       "owner": "generated",
@@ -33259,9 +32394,6 @@
       "index": 22,
       "kind": "methodtable",
       "para": 12
-    },
-    "66B29387": {
-      "owner": "template"
     },
     "66B40C5B": {
       "owner": "generated",
@@ -33475,9 +32607,6 @@
       "kind": "para",
       "para": 0
     },
-    "6737693D": {
-      "owner": "template"
-    },
     "674349DA": {
       "owner": "generated",
       "region": "annex-a",
@@ -33491,6 +32620,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 535
+    },
+    "674DE831": {
+      "owner": "markdown",
+      "file": "metaverse-specs/vision/OPC-UA-Vision.md",
+      "section": "1 Scope",
+      "block": 2,
+      "para": 0
     },
     "674E213E": {
       "owner": "generated",
@@ -33696,12 +32832,6 @@
       "kind": "nodetable",
       "para": 96
     },
-    "68146066": {
-      "owner": "template"
-    },
-    "68178A2F": {
-      "owner": "template"
-    },
     "681865C7": {
       "owner": "generated",
       "region": "annex-a",
@@ -33744,9 +32874,6 @@
       "kind": "nodetable",
       "para": 3
     },
-    "6829E4EB": {
-      "owner": "template"
-    },
     "683C193F": {
       "owner": "generated",
       "region": "objecttypes",
@@ -33774,12 +32901,6 @@
       "index": 55,
       "kind": "nodetable",
       "para": 46
-    },
-    "6849AA47": {
-      "owner": "template"
-    },
-    "685FB1A4": {
-      "owner": "template"
     },
     "6864A390": {
       "owner": "markdown",
@@ -33976,9 +33097,6 @@
       "block": 3,
       "para": 1
     },
-    "692D9ACB": {
-      "owner": "template"
-    },
     "693079CA": {
       "owner": "generated",
       "region": "annex-a",
@@ -34147,9 +33265,6 @@
       "block": 1,
       "para": 1
     },
-    "69A0BD46": {
-      "owner": "template"
-    },
     "69A57B15": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -34295,9 +33410,6 @@
       "section": "F.6 The simulated twin",
       "block": 1,
       "para": 21
-    },
-    "6A1D1200": {
-      "owner": "template"
     },
     "6A250D89": {
       "owner": "markdown",
@@ -34665,9 +33777,6 @@
       "block": 1,
       "para": 3
     },
-    "6B03629A": {
-      "owner": "template"
-    },
     "6B0F5FC7": {
       "owner": "template"
     },
@@ -34698,12 +33807,6 @@
       "section": "11.2 Facets",
       "block": 0,
       "para": 38
-    },
-    "6B24A0E1": {
-      "owner": "template"
-    },
-    "6B2523B8": {
-      "owner": "template"
     },
     "6B296429": {
       "owner": "generated",
@@ -34921,9 +34024,6 @@
       "kind": "nodetable",
       "para": 6
     },
-    "6BD28EE9": {
-      "owner": "template"
-    },
     "6BD4F1EA": {
       "owner": "generated",
       "region": "terms",
@@ -35114,9 +34214,6 @@
       "kind": "nodetable",
       "para": 13
     },
-    "6C7674ED": {
-      "owner": "template"
-    },
     "6C7A3D38": {
       "owner": "generated",
       "region": "annex-a",
@@ -35260,12 +34357,6 @@
       "kind": "nodetable",
       "para": 11
     },
-    "6CD2F376": {
-      "owner": "template"
-    },
-    "6CD9BBAC": {
-      "owner": "template"
-    },
     "6CE0C759": {
       "owner": "generated",
       "region": "objecttypes",
@@ -35309,12 +34400,6 @@
       "para": 26
     },
     "6D12B652": {
-      "owner": "template"
-    },
-    "6D1643D3": {
-      "owner": "template"
-    },
-    "6D1B3969": {
       "owner": "template"
     },
     "6D1F17A5": {
@@ -35382,9 +34467,6 @@
       "index": 20,
       "kind": "methodtable",
       "para": 29
-    },
-    "6D495796": {
-      "owner": "template"
     },
     "6D53F723": {
       "owner": "generated",
@@ -35606,9 +34688,6 @@
       "kind": "nodetable",
       "para": 303
     },
-    "6E14FFB0": {
-      "owner": "template"
-    },
     "6E15E066": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -35661,9 +34740,6 @@
       "block": 1,
       "para": 13
     },
-    "6E4CA4D6": {
-      "owner": "template"
-    },
     "6E5164F1": {
       "owner": "generated",
       "region": "annex-a",
@@ -35705,9 +34781,6 @@
       "section": "B.2 Sensor and intrinsics",
       "block": 1,
       "para": 0
-    },
-    "6E67BBF4": {
-      "owner": "template"
     },
     "6E680038": {
       "owner": "generated",
@@ -35901,9 +34974,6 @@
       "block": 11,
       "para": 6
     },
-    "6F022619": {
-      "owner": "template"
-    },
     "6F0D6B4E": {
       "owner": "template"
     },
@@ -35949,18 +35019,12 @@
       "kind": "nodetable",
       "para": 31
     },
-    "6F3B7B63": {
-      "owner": "template"
-    },
     "6F3E9614": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 25,
       "kind": "clause",
       "para": 0
-    },
-    "6F44060C": {
-      "owner": "template"
     },
     "6F469DA7": {
       "owner": "template"
@@ -36091,12 +35155,6 @@
       "kind": "nodetable",
       "para": 720
     },
-    "6F9EF367": {
-      "owner": "template"
-    },
-    "6FA2710E": {
-      "owner": "template"
-    },
     "6FA47E63": {
       "owner": "generated",
       "region": "referencetypes",
@@ -36113,9 +35171,6 @@
       "index": 8,
       "kind": "table",
       "para": 2
-    },
-    "6FBDE2C7": {
-      "owner": "template"
     },
     "6FC137F1": {
       "owner": "generated",
@@ -36190,9 +35245,6 @@
       "kind": "nodetable",
       "para": 5
     },
-    "6FE525D9": {
-      "owner": "template"
-    },
     "6FEDED82": {
       "owner": "generated",
       "region": "datatypes",
@@ -36220,9 +35272,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 475
-    },
-    "70020B6B": {
-      "owner": "template"
     },
     "7003FA48": {
       "owner": "markdown",
@@ -36388,9 +35437,6 @@
       "kind": "annex",
       "para": 0
     },
-    "7051FD79": {
-      "owner": "template"
-    },
     "7055C01C": {
       "owner": "generated",
       "region": "datatypes",
@@ -36549,9 +35595,6 @@
     "70BE33C3": {
       "owner": "template"
     },
-    "70C31925": {
-      "owner": "template"
-    },
     "70C3237E": {
       "owner": "generated",
       "region": "objecttypes",
@@ -36600,9 +35643,6 @@
       "index": 4,
       "kind": "nodetable",
       "para": 16
-    },
-    "70F128C4": {
-      "owner": "template"
     },
     "70F1AEF0": {
       "owner": "generated",
@@ -36725,9 +35765,6 @@
       "kind": "methodtable",
       "para": 41
     },
-    "712DF34A": {
-      "owner": "template"
-    },
     "712EC88B": {
       "owner": "generated",
       "region": "objecttypes",
@@ -36779,9 +35816,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 48
-    },
-    "7158D6AE": {
-      "owner": "template"
     },
     "715910FE": {
       "owner": "generated",
@@ -36891,9 +35925,6 @@
       "kind": "nodetable",
       "para": 9
     },
-    "7193444D": {
-      "owner": "template"
-    },
     "71943553": {
       "owner": "generated",
       "region": "objecttypes",
@@ -36939,18 +35970,12 @@
       "kind": "nodetable",
       "para": 140
     },
-    "71AA0AEE": {
-      "owner": "template"
-    },
     "71AA7C7D": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 559
-    },
-    "71AF5E34": {
-      "owner": "template"
     },
     "71AF6D1C": {
       "owner": "generated",
@@ -37039,18 +36064,12 @@
     "71E5C5D5": {
       "owner": "template"
     },
-    "71E6F330": {
-      "owner": "template"
-    },
     "71EF7BD4": {
       "owner": "generated",
       "region": "datatypes",
       "index": 67,
       "kind": "enumtable",
       "para": 13
-    },
-    "71EFA747": {
-      "owner": "template"
     },
     "71FD362C": {
       "owner": "markdown",
@@ -37487,9 +36506,6 @@
       "block": 13,
       "para": 3
     },
-    "7339BF1C": {
-      "owner": "template"
-    },
     "733B364A": {
       "owner": "generated",
       "region": "objecttypes",
@@ -37519,12 +36535,6 @@
       "para": 668
     },
     "73514716": {
-      "owner": "template"
-    },
-    "73560E80": {
-      "owner": "template"
-    },
-    "735624E6": {
       "owner": "template"
     },
     "73570C82": {
@@ -37639,8 +36649,12 @@
       "kind": "nodetable",
       "para": 909
     },
-    "739CB4D7": {
-      "owner": "template"
+    "73A2DFD7": {
+      "owner": "generated",
+      "region": "scope",
+      "index": 14,
+      "kind": "clause",
+      "para": 0
     },
     "73ADD32D": {
       "owner": "generated",
@@ -37698,9 +36712,6 @@
       "kind": "nodetable",
       "para": 11
     },
-    "73D2D506": {
-      "owner": "template"
-    },
     "73D3F6FD": {
       "owner": "generated",
       "region": "objecttypes",
@@ -37735,9 +36746,6 @@
       "index": 46,
       "kind": "nodetable",
       "para": 1
-    },
-    "73E6575D": {
-      "owner": "template"
     },
     "73E81EC1": {
       "owner": "generated",
@@ -37787,9 +36795,6 @@
       "section": "G.5 Coordinate frames and calibration",
       "block": 5,
       "para": 5
-    },
-    "740E0626": {
-      "owner": "template"
     },
     "740F5074": {
       "owner": "generated",
@@ -38003,9 +37008,6 @@
     "749636ED": {
       "owner": "template"
     },
-    "749934E2": {
-      "owner": "template"
-    },
     "7499CEE2": {
       "owner": "generated",
       "region": "objecttypes",
@@ -38058,9 +37060,6 @@
       "block": 1,
       "para": 1
     },
-    "74C1B902": {
-      "owner": "template"
-    },
     "74CA5D23": {
       "owner": "generated",
       "region": "objecttypes",
@@ -38110,18 +37109,12 @@
       "kind": "nodetable",
       "para": 452
     },
-    "74E3DFF6": {
-      "owner": "template"
-    },
     "74EAB5B9": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
       "section": "G.3 The sensor",
       "block": 0,
       "para": 4
-    },
-    "74F9A5EE": {
-      "owner": "template"
     },
     "74FB5BAD": {
       "owner": "markdown",
@@ -38164,9 +37157,6 @@
       "index": 49,
       "kind": "nodetable",
       "para": 21
-    },
-    "75180F33": {
-      "owner": "template"
     },
     "751E53EF": {
       "owner": "generated",
@@ -38217,9 +37207,6 @@
       "kind": "nodetable",
       "para": 45
     },
-    "752DB159": {
-      "owner": "template"
-    },
     "753343BF": {
       "owner": "generated",
       "region": "objecttypes",
@@ -38264,9 +37251,6 @@
       "index": 60,
       "kind": "nodetable",
       "para": 10
-    },
-    "7550CF6E": {
-      "owner": "template"
     },
     "755368D8": {
       "owner": "generated",
@@ -38404,9 +37388,6 @@
       "block": 1,
       "para": 11
     },
-    "75B52A92": {
-      "owner": "template"
-    },
     "75BB1218": {
       "owner": "template"
     },
@@ -38451,9 +37432,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 182
-    },
-    "75EA9072": {
-      "owner": "template"
     },
     "75EE072B": {
       "owner": "generated",
@@ -38751,9 +37729,6 @@
     "76B940C9": {
       "owner": "template"
     },
-    "76C42C11": {
-      "owner": "template"
-    },
     "76C8A17C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -38903,9 +37878,6 @@
       "kind": "nodetable",
       "para": 220
     },
-    "773242FD": {
-      "owner": "template"
-    },
     "773359F6": {
       "owner": "generated",
       "region": "annex-a",
@@ -38926,9 +37898,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 324
-    },
-    "773CB53F": {
-      "owner": "template"
     },
     "77402A44": {
       "owner": "markdown",
@@ -39117,9 +38086,6 @@
       "kind": "nodetable",
       "para": 20
     },
-    "77D603E0": {
-      "owner": "template"
-    },
     "77DB7BE3": {
       "owner": "generated",
       "region": "datatypes",
@@ -39135,9 +38101,6 @@
       "para": 40
     },
     "77E223F5": {
-      "owner": "template"
-    },
-    "77E53738": {
       "owner": "template"
     },
     "77E99AEF": {
@@ -39167,9 +38130,6 @@
       "section": "9.4 Closing the loop",
       "block": 0,
       "para": 0
-    },
-    "7801A13B": {
-      "owner": "template"
     },
     "7801D9FB": {
       "owner": "generated",
@@ -39220,9 +38180,6 @@
       "block": 2,
       "para": 0
     },
-    "7818ECA5": {
-      "owner": "template"
-    },
     "781DEDF4": {
       "owner": "generated",
       "region": "annex-a",
@@ -39260,9 +38217,6 @@
       "index": 92,
       "kind": "nodetable",
       "para": 5
-    },
-    "7830D827": {
-      "owner": "template"
     },
     "783772A5": {
       "owner": "generated",
@@ -39305,9 +38259,6 @@
       "index": 22,
       "kind": "methodtable",
       "para": 8
-    },
-    "78487D89": {
-      "owner": "template"
     },
     "784B1EB2": {
       "owner": "generated",
@@ -39546,9 +38497,6 @@
       "kind": "clause",
       "para": 0
     },
-    "78FDAF8E": {
-      "owner": "template"
-    },
     "78FE469F": {
       "owner": "markdown",
       "file": "metaverse-specs/vision/OPC-UA-Vision.md",
@@ -39562,13 +38510,6 @@
       "section": "H.3 Pixel formats",
       "block": 1,
       "para": 15
-    },
-    "7901AAD9": {
-      "owner": "generated",
-      "region": "scope",
-      "index": 3,
-      "kind": "clause",
-      "para": 0
     },
     "790470FC": {
       "owner": "generated",
@@ -39603,9 +38544,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 476
-    },
-    "792A07F0": {
-      "owner": "template"
     },
     "792A5FAE": {
       "owner": "generated",
@@ -39813,9 +38751,6 @@
       "para": 3
     },
     "79A3F12E": {
-      "owner": "template"
-    },
-    "79B08F65": {
       "owner": "template"
     },
     "79B172E7": {
@@ -40072,9 +39007,6 @@
       "kind": "nodetable",
       "para": 3
     },
-    "7A433B64": {
-      "owner": "template"
-    },
     "7A44DE91": {
       "owner": "generated",
       "region": "objecttypes",
@@ -40267,13 +39199,6 @@
       "kind": "nodetable",
       "para": 443
     },
-    "7AB85DC0": {
-      "owner": "generated",
-      "region": "scope",
-      "index": 13,
-      "kind": "clause",
-      "para": 0
-    },
     "7AB893E5": {
       "owner": "generated",
       "region": "datatypes",
@@ -40315,9 +39240,6 @@
       "kind": "nodetable",
       "para": 3
     },
-    "7ACE9C9A": {
-      "owner": "template"
-    },
     "7AD7F9B3": {
       "owner": "generated",
       "region": "objecttypes",
@@ -40352,9 +39274,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 886
-    },
-    "7B098036": {
-      "owner": "template"
     },
     "7B09D64D": {
       "owner": "template"
@@ -40609,9 +39528,6 @@
       "kind": "nodetable",
       "para": 19
     },
-    "7BEAA202": {
-      "owner": "template"
-    },
     "7BEB8A59": {
       "owner": "generated",
       "region": "datatypes",
@@ -40745,9 +39661,6 @@
       "kind": "nodetable",
       "para": 12
     },
-    "7C379EAD": {
-      "owner": "template"
-    },
     "7C438C78": {
       "owner": "generated",
       "region": "referencetypes",
@@ -40768,9 +39681,6 @@
       "section": "F.5 Coordinate frames and calibration",
       "block": 3,
       "para": 3
-    },
-    "7C582FD0": {
-      "owner": "template"
     },
     "7C5CB184": {
       "owner": "generated",
@@ -40912,9 +39822,6 @@
       "kind": "enumtable",
       "para": 12
     },
-    "7CCF5D89": {
-      "owner": "template"
-    },
     "7CD44298": {
       "owner": "generated",
       "region": "objecttypes",
@@ -40931,9 +39838,6 @@
       "section": "G.5 Coordinate frames and calibration",
       "block": 9,
       "para": 0
-    },
-    "7CE08D74": {
-      "owner": "template"
     },
     "7CECD763": {
       "owner": "markdown",
@@ -41449,9 +40353,6 @@
       "block": 0,
       "para": 14
     },
-    "7E7304D8": {
-      "owner": "template"
-    },
     "7E7873ED": {
       "owner": "generated",
       "region": "objecttypes",
@@ -41665,9 +40566,6 @@
       "kind": "nodetable",
       "para": 1
     },
-    "7F08F16F": {
-      "owner": "template"
-    },
     "7F0EDCE6": {
       "owner": "generated",
       "region": "annex-a",
@@ -41751,9 +40649,6 @@
       "index": 10,
       "kind": "table",
       "para": 5
-    },
-    "7F4B2566": {
-      "owner": "template"
     },
     "7F4D6A5A": {
       "owner": "generated",
@@ -41988,9 +40883,6 @@
       "section": "5.11 ReferenceTypes",
       "block": 2,
       "para": 25
-    },
-    "7FEA79EC": {
-      "owner": "template"
     },
     "7FF1C8A5": {
       "owner": "generated",

@@ -1,8 +1,12 @@
-# Changelog — OPC UA — Vision
+# Changelog — OPC UA for Vision Systems
 
 All notable changes to this specification and its information model.
 
 NodeId assignment is **append-only**: a new member takes the next free id, so every previously published NodeId is stable across the releases below.
+
+## Unreleased
+
+The specification is named *OPC UA for Vision Systems* and states explicitly that it complements OPC 40100-1 and OPC 40100-2. The scope and Annex D assign job orchestration, recipes, configurations and result transfer to Part 1; asset identity, condition and maintenance to Part 2; and sensing, media, calibration, perception semantics, AI provenance and feedback to this specification.
 
 ## 0.2.0 — 2026-08-11
 

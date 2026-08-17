@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generator for the OPC UA — Vision worked examples.
+Generator for the OPC UA for Vision Systems worked examples.
 
 Reads a JSON descriptor and emits, deterministically:
   * ../../../vision/<folder>/Opc.Ua.<Domain>.Vision.NodeSet2.xml  - an instance overlay
@@ -737,7 +737,7 @@ def emit_addendum(d, annex=None):
     else:
         A(f"# OPC UA {d['domain']} — Vision Addendum")
         A("")
-        A(f"**Implementer annex to *OPC UA — Vision* (Release {vm.VERSION} — "
+        A(f"**Implementer annex to *OPC UA for Vision Systems* (Release {vm.VERSION} — "
           "Draft).**")
         A("")
         A(f"> {d['summary']} The machine-readable source of truth is "
@@ -756,7 +756,7 @@ def emit_addendum(d, annex=None):
     head("Normative references")
     A("")
     if not annex:
-        A("- *OPC UA — Vision*, Release " + vm.VERSION + " (the base specification), "
+        A("- *OPC UA for Vision Systems*, Release " + vm.VERSION + " (the base specification), "
           "`../OPC-UA-Vision.md`.")
     for r in d.get("references", []):
         A(f"- {r}")

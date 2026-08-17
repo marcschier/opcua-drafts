@@ -1,6 +1,6 @@
 # OPC UA Robotics — Vision Addendum
 
-**Implementer annex to *OPC UA — Vision* (Release 0.2.0 — Draft).**
+**Implementer annex to *OPC UA for Vision Systems* (Release 0.2.0 — Draft).**
 
 > A worked example of vision-guided robotics: an eye-in-hand 3D camera on a robot flange detects parts in a bin and publishes 6-DoF pick poses, with inference running off-server on an edge GPU and a simulated twin sensor rendering the same cell in NVIDIA Isaac Sim. The machine-readable source of truth is [`Robotics.Vision.json`](../../extras/vision/examples/robotics/Robotics.Vision.json); this document and `Opc.Ua.Robotics.Vision.NodeSet2.xml` are both generated from it by `build_examples.py`, so prose and model cannot drift. It is also published as Annex F of [`OPC-UA-Vision.md`](../OPC-UA-Vision.md).
 
@@ -12,7 +12,7 @@ This worked example binds one eye-in-hand camera to a robot flange frame and sho
 
 ## 2 Normative references
 
-- *OPC UA — Vision*, Release 0.2.0 (the base specification), `../OPC-UA-Vision.md`.
+- *OPC UA for Vision Systems*, Release 0.2.0 (the base specification), `../OPC-UA-Vision.md`.
 - [OPC 40010-1](https://reference.opcfoundation.org/specs/OPC-40010-1/) — OPC UA for Robotics, whose `MotionDeviceSystemType` describes the robot this camera is mounted on. Not a dependency of this model.
 - ISO 9787:2013 — coordinate systems, the source of the frame roles used here.
 - ROS 2 `vision_msgs` — the convention `VisionDetectionDataType` field naming follows.
