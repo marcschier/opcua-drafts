@@ -1,6 +1,6 @@
 # OPC UA — Robot Intent
 
-> Status: Working-group draft (Release 0.1.0). This document, together with `Opc.Ua.RobotIntent.NodeSet2.xml` and `Opc.Ua.RobotIntent.NodeIds.csv`, defines an OPC UA information model for **commanding a robot at the level of task intent** — move there, grasp that, pick from here, place at that — with a lifecycle that survives the minutes such work actually takes.
+> Status: Working-group draft (Release 0.3.0). This document, together with `Opc.Ua.RobotIntent.NodeSet2.xml` and `Opc.Ua.RobotIntent.NodeIds.csv`, defines an OPC UA information model for **commanding a robot at the level of task intent** — move there, grasp that, pick from here, place at that — with a lifecycle that survives the minutes such work actually takes.
 >
 > Nothing here is normative, official, or endorsed by the OPC Foundation, VDMA or any robot manufacturer; namespace URIs and NodeIds are **provisional** and for prototyping only. The prior art, the gaps this model fills, and the decisions those gaps forced are recorded in the companion research report, [`OPC-UA-Robot-Intent-Research.md`](OPC-UA-Robot-Intent-Research.md).
 
@@ -45,7 +45,7 @@ Neither statement is about the importance of the omitted capability. The first i
 
 ### 1.4 Capabilities and versioning
 
-Release 0.1.0 covers the intent vocabulary — joint, linear and circular moves, trajectories, Cartesian paths, force-controlled moves, grasping, picking and placing, tool change, output, program call, waiting, and six application processes — together with the execution lifecycle, queueing and blending, cancellation, missions with a committed base, a revisable horizon and a step graph, command authority, safety awareness, the robot's kinematic description, real-time channel brokerage, and capability declaration.
+Release 0.3.0 covers the intent vocabulary — joint, linear and circular moves, trajectories, Cartesian paths, force-controlled moves, grasping, picking and placing, tool change, output, program call, waiting, and six application processes — together with the execution lifecycle, queueing and blending, cancellation, missions with a committed base, a revisable horizon and a step graph, command authority, safety awareness, the robot's kinematic description, real-time channel brokerage, and capability declaration.
 
 The NodeSet declares exactly one `RequiredModel` — the base OPC UA namespace — so a Server can adopt it without pulling in any companion model. A Server implements the facets it can honour and declares the rest false; only **RI-Base** is mandatory (§12.2).
 
@@ -364,7 +364,9 @@ A Server **shall** report `ForceControlSupported` false unless the robot genuine
 
 Each parameter set is the subset the vendor languages agree on — ABB `seamdata`/`welddata`/`weavedata`, FANUC weld schedules and KUKA ArcTech for arc welding, and their equivalents elsewhere. Where an installation works to a welding procedure specification, `WeldProcedureRef` names it and this specification does not restate its content.
 
-Two of these deserve their reasoning stated.
+Three of these deserve their reasoning stated.
+
+**Seam tracking is a switch, not a channel.** `ArcWeldIntentDataType.SeamTrackingEnabled` asks the equipment to run *its own* seam-tracking facility for the duration of this weld. It does not make this interface a real-time one: §4.3 permits seam tracking through a brokered channel **or the robot's own facility**, and this is the second of those. The sensing, the correction and the control period stay inside the controller, where the arc voltage or laser seam finder already is; nothing is sampled, carried or closed over OPC UA. A Server whose equipment provides no such facility **shall** refuse an intent carrying `SeamTrackingEnabled` true with `CapabilityNotSupported`, rather than accepting it and welding an uncorrected path.
 
 **Fastening is deliberately thin.** OPC 40450 and OPC 40451 already define industrial joining and tightening in full, including step-wise results and traces. Where a controller exposes such a model, `FastenIntentDataType.Joint` references the joint in that model and the result belongs there. Where no such model is exposed under the controller, `Joint` is null, the remaining fastening parameters stand alone, and a Server **shall** refuse a non-null `Joint` with `CapabilityNotSupported`. Restating torque strategies here would create a second definition of a fact that specification already owns — the same reason `PickIntentDataType.Source` references a `Location` node instead of naming a station in a string.
 
@@ -640,6 +642,12 @@ When an operation reaches a terminal state its `Result` **shall** be complete an
 
 A Server **shall** retain a terminated operation for long enough that a client which was disconnected at the moment of completion can still read its result on reconnection. It **may** then delete it; `AutoDelete` and `RecycleCount`, inherited from Part 10, describe what it does.
 
+**What decided this intent.** `IntentOperationType.DecidedBy` is an Optional `NodeId` naming the artefact that produced the intent's parameters — typically a result published by a perception model, or the model itself — and is null where a human taught the pose or a program held it.
+
+It exists because a pick pose is increasingly computed rather than taught, and an investigation into why a cell did something starts at the motion. Without this member the trail ends exactly there: a Server can say *what* it was asked to do and *what happened*, and nothing about *what decided it*. A specification that publishes a model's digest, the deployment that served it and the result it produced, and then loses the thread at the point the robot actually moved, has documented everything except the step that mattered.
+
+A Server **shall not** populate it with an identifier it cannot resolve at the moment of submission, and a client **shall not** assume the target is still resolvable later — the deciding artefact may be retained under a different lifetime than the operation, and §11.3 governs what a NodeId-valued member may point at. This model defines no type for the target and takes **no dependency** on any model that might: the base OPC UA namespace remains its only `RequiredModel` (§2), which is why this is a NodeId Property rather than a reference. Where the *OPC UA — Vision* model is also implemented, the natural value is the `ResultId`-bearing `VisionResultType` instance the pose came from, and Annex E.7 says what a consumer can then reconstruct.
+
 ### 6.8 Trajectory execution (normative)
 
 A trajectory is submitted like any other intent and tracked by the same lifecycle. Two things are particular to it.
@@ -668,6 +676,44 @@ Two rules keep the division of labour honest:
 - A Server **shall not** represent a brokered channel as being under this interface's control. Its behaviour, its guarantees and its failure modes are the transport's.
 
 Of the transports named, only `OpcUaFx` — OPC UA FX, OPC 10000-80 to -84 — is an OPC Foundation specification. It is the open path, and a Server that offers it gives a client something it can implement from published documents rather than from a vendor SDK.
+
+### 6.10 Events (normative)
+
+An `IntentOperationType` is a `ProgramStateMachineType`, so OPC 10000-10 already raises a transition event whenever its state changes. What that event cannot carry is **which** intent changed and to **what outcome**: it names the state machine and the transition, and a consumer supervising a cell of robots must read the operation back to learn anything useful — by which time the Server may have recycled it, since §6.7 requires the result to outlive only a reconnect.
+
+`IntentEventType` is the abstract base; `IntentCompletedEventType` and `MissionCompletedEventType` are what a Server raises. They do not replace the Part 10 transition events and a Server **shall** continue to raise those: a Part 10 client that knows nothing of this model still works.
+
+| Type | Member | Type | Rule | Meaning |
+|---|---|---|---|---|
+| `IntentEventType` *(abstract)* | `IntentId` | String | M | The intent this event concerns |
+| | `Operation` | NodeId | M | The `IntentOperationType` tracking it |
+| | `IntentTypeId` | NodeId | M | The `IntentDataType` subtype that was submitted |
+| | `MissionId` | String | O | Mission it belongs to, or empty |
+| `IntentCompletedEventType` | `State` | `ExecutionStateEnum` | M | Terminal state |
+| | `Failure` | `IntentFailureEnum` | M | Why it did not succeed, or `None` |
+| | `Result` | `IntentResultDataType` | M | The full result |
+| | `DecidedBy` | NodeId | O | What produced the intent's parameters (§6.7) |
+| `MissionCompletedEventType` | `State` | `ExecutionStateEnum` | M | Terminal state of the mission |
+| | `CompletedSteps` | UInt32 | M | How many steps reached a terminal state |
+| | `FailedStepId` | String | O | The step that ended the mission, or empty |
+
+**Raised once, and only on a terminal transition.** A Server **shall** raise `IntentCompletedEventType` exactly once per intent, on the transition into `Succeeded`, `Failed`, `Cancelled` or `Retriable`, and **shall not** raise it for an intermediate state. `Cancelling` is not terminal (§6.5), and an event raised there would tell a consumer the work had stopped while the robot was still moving. Where `Retry` creates a new operation (§6.6), that operation raises its own event on its own terminal transition; the original's event stands and is not retracted.
+
+**`IntentTypeId` is what makes the event filterable.** It names the `IntentDataType` subtype submitted, so a client subscribes to picks — or to arc welds, or to everything that failed — with an `EventFilter` and the Server sends nothing else. Without it a consumer receives every completion in the cell and discards most of them, which is the cost events exist to avoid.
+
+**`Result` is repeated deliberately.** It is the one piece of state these events duplicate, because the `Operation` node it would otherwise be read from need not still exist by the time a consumer reacts. Everything else is a reference to be followed.
+
+**Where events are raised.** The well-known `RobotIntent` object declares `EventNotifier` with the `SubscribeToEvents` bit set and is the target of a `HasNotifier` reference from the Server object, so a client subscribes at either and receives every intent event in the Server. A Server **shall** additionally set `EventNotifier` on each `IntentControllerType` instance and **shall** add a `HasNotifier` reference from the `RobotIntent` object to it, so a client that supervises one robot subscribes to that robot alone. `SourceNode` **shall** be the `IntentControllerType` instance that executed the work.
+
+**Severity.** A Server **shall** raise a completion whose `State` is `Succeeded` at a severity of 1 to 199, and one whose `State` is `Failed` at 500 or above. `Cancelled` and `Retriable` are the operator's or the client's own doing rather than a fault, and **should** be raised below 500.
+
+**The time base is stated, not assumed.** Annex E.7 has a consumer correlating a completion raised here with a perception event raised by another Server, so whether the two clocks agree matters. `RobotIntentRootType.ClockSynchronised` is `true` only where this Server's clock is disciplined to an external reference shared with those systems, and `TimeSyncSource` names it. A Server **shall not** report it true on the strength of having set its clock once — the member asserts an ongoing discipline — and where it is `false` or absent a consumer **shall not** attribute a completion to an observation on timing alone.
+
+Neither member is Mandatory and no synchronisation is required: most cells do not have a disciplined time base, and clause 4.3 already places anything needing tighter timing than this interface offers on a brokered channel. What is required is that a Server unable to support the correlation says so.
+
+**These are events, not conditions.** A completion occurs and is over. A robot that is unable to accept work — `Ready` false, a protective stop active — is a *state* that persists, and OPC 10000-9 `ConditionType` is what models that; this specification defines no alarm types, because a Server that needs to alarm on a stop already has `SafetyStateType` to alarm from and nothing about such an alarm is specific to intent.
+
+**Safety is unaffected.** These events report. Clause 10 governs what may be commanded and by what, and nothing in this clause changes it: a consumer **shall not** treat an event as authorisation for anything, and a Server **shall not** make any safety function contingent on one being delivered.
 
 ---
 
@@ -884,6 +930,7 @@ The expected type is fixed for every such member, so that "the expected type" is
 | `CallProgramIntentDataType.Program`, `ProcessIntentDataType.ProcessProgram` | a `ProgramType` instance under the controller |
 | `WaitIntentDataType.Signal` | an `OutputSignalType` instance under the controller, or a Variable of DataType `Boolean` under it |
 | `FastenIntentDataType.Joint` | a joint in an OPC 40450 / OPC 40451 model under the controller where one is implemented; otherwise the intent's own parameters stand alone and the member is null |
+| `IntentOperationType.DecidedBy` | any Node the Server can resolve at submission, or null. **The exception to the rule above**: it is written by the Server rather than supplied by a client, so it is not untrusted input, and it deliberately names an artefact this specification does not define — see §6.7 |
 
 `CallProgramIntentDataType` deserves particular care: it runs code the Server holds. A Server **shall** restrict it to programs it has published as `ProgramType` instances, and **shall not** accept a program identifier that names anything else.
 
@@ -905,7 +952,7 @@ A Server declares conformance by exposing `RobotIntentRootType` under the Server
 
 A Server shall not list a facet whose structural requirements are unmet. The behavioural requirements are the Server's own attestation and are subject to the honesty rules of clause 9 — a Server that lists **RI-Blending** while treating the blending buffer modes as `Buffered` is making a false statement in exactly the sense clause 9 forbids, and is no more conformant than one that reports `BlendingSupported` true under the same conditions.
 
-The NodeSet assigns every Node to one of three conformance units: `RobotIntent` for the ObjectTypes and their members, `RobotIntent DataTypes` for the intent hierarchy and the enumerations, and `RobotIntent ReferenceTypes` for the references. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to.
+The NodeSet assigns every Node to one of four conformance units: `RobotIntent` for the ObjectTypes and their members, `RobotIntent DataTypes` for the intent hierarchy and the enumerations, `RobotIntent ReferenceTypes` for the references, and `RobotIntent Events` for the EventTypes of §6.10. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to.
 
 ### 12.2 Facets
 
@@ -922,6 +969,7 @@ Requirements are of two kinds. **Structural** requirements are settled by readin
 | **RI-Force** | `ForceIntentDataType` and `ForceControlSupported` true — the robot genuinely regulates force. |
 | **RI-RealTimeChannel** | `RealTimeChannelsSupported` true; the `RealTimeChannels` folder with at least one `RealTimeChannelType`; `OpenRealTimeChannel` and `CloseRealTimeChannel` with the lease rules of §6.9. |
 | **RI-Safety** | `SafetyState` populated from the safety system, and the refusals of §10.4. |
+| **RI-Events** | The EventTypes of §6.10 and every rule in that clause. A Server claiming it **shall** raise `IntentCompletedEventType` for **every** intent that reaches a terminal state, including those it refused after admission and those cancelled by another client — a facet under which a Server may report some completions and not others is worth nothing, because silence would then be ambiguous between "still running" and "finished, unreported". `MissionCompletedEventType` is additionally required where **RI-Mission** is claimed. Raising these does not relieve a Server of the Part 10 transition events. |
 | **RI-Description** | `Description` with a `KinematicChain` covering every axis, `ReachRadius`, `PayloadLimit` and `MaxCartesianSpeed`. |
 | **RI-Process-ArcWeld** | `ArcWeldIntentDataType`. |
 | **RI-Process-SpotWeld** | `SpotWeldIntentDataType`. |
@@ -1121,3 +1169,11 @@ This annex imposes **no** NodeSet dependency in either direction. Both models ke
 **E.5 An empty `FrameId` is not passed outward.** §5.2 rule 4 reads an empty `FrameId` as this Server's default work frame. A vision model may forbid an empty value entirely, so a boundary publishing a pose outward **shall** substitute the named frame explicitly.
 
 **E.6 A grasp pose is resolved to the tool centre point.** A pose received for execution **shall** be resolved, through the frame tree, to the `Tool` frame named by the intent's `ToolFrame`. A hand-eye calibration resolves to the mechanical interface, and the offset from there to the tool centre point is exactly what it does not measure — so a Server **shall not** execute a pose that resolves only to `MechanicalInterface`, and **shall** refuse it with `ParameterInvalid`.
+
+**E.7 This model is the authority on what the robot did.** A cell that wants to know a part was picked takes that from `IntentCompletedEventType` (§6.10), where `IntentTypeId` names `PickIntentDataType` and `State` is `Succeeded`. A vision model can report what a camera saw and cannot report what a robot did; this model can, and a consumer joining the two **shall** treat the completion as authoritative for the action and the observation as corroborating it.
+
+This is why §6.10 carries `IntentTypeId`. It makes the kind of work the event is about selectable by an `EventFilter`, so a line controller subscribes to the completions it cares about — the picks, or everything that failed — without receiving and discarding the rest. The intent vocabulary is therefore also the manufacturing-event vocabulary: `pick`, `place` and the others are already named as intent types, and a completion event is what turns each of them into an occurrence something downstream can react to. A separate event vocabulary naming the same acts would be a second definition able to disagree with the first about what happened.
+
+**E.8 The chain reaches the decision.** Where both models are implemented, `IntentOperationType.DecidedBy` (§6.7) **should** name the `VisionResultType` instance the intent's parameters came from. A consumer holding an `IntentCompletedEventType` can then follow `DecidedBy` to the result, the result to its pipeline and deployment, and the deployment to the model and its digest — so the question *which model caused this motion* is answerable from one notification and a walk, rather than by correlating two event streams on timing and hoping.
+
+This is the one place the two models compose into something neither provides alone. The vision model can say which model produced a pose and cannot say whether a robot acted on it; this model can say what the robot did and, without `DecidedBy`, cannot say why. Populating it costs a Server that implements both nothing it does not already know at submission.

@@ -1231,19 +1231,7 @@ or using the Version, respectively, the Server and Consumer **shall** perform al
    `DigestAlg` and `Digest`; and
 4. retrieve the package blob and independently recompute and compare `Digest` using `DigestAlg`.
 
-`ManifestDigest` **shall** be the sole authority for OCI Version identity, and `VersionId`
-**shall** be the always-hashed symbolic identifier of its exact value. A raw OCI tag **may** locate
-a current manifest only as a mutable Resource-level alias and **shall never** be a `VersionId`.
-The tag **shall** match `[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}` and **shall** be preserved byte-for-byte,
-including case and a leading underscore. Moving a tag to a previously unseen manifest **shall**
-create and retain a distinct immutable Version and **shall not** mutate or replace the old Version.
-The xRegistry base `ResourceType` declares the `Attestations` attribute, and
-`AASAttestationDataType` is the AAS payload type for that attribute. An `AASPackageFileType` Version
-**shall not** instantiate `Subject` or `Attestations`: the prohibition is on the package Version,
-not on use of the DataType. An attestation or other OCI referrer **shall** be represented as a
-separate immutable Resource and **shall not** become a Version of the package Resource it refers to.
-Adding, removing or discovering a referrer **shall not** change that package Resource's Version
-collection, default Version, document, attributes, `Epoch` or `ModifiedAt`.
+`ManifestDigest` **shall** be the sole authority for OCI Version identity, and `VersionId` **shall** be the always-hashed symbolic identifier of its exact value. A raw OCI tag **may** locate a current manifest only as a mutable Resource-level alias and **shall never** be a `VersionId`. The tag **shall** match `[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}` and **shall** be preserved byte-for-byte, including case and a leading underscore. Moving a tag to a previously unseen manifest **shall** create and retain a distinct immutable Version and **shall not** mutate or replace the old Version. The xRegistry base `ResourceType` declares the `Attestations` attribute, and `AASAttestationDataType` is the AAS payload type for that attribute. An `AASPackageFileType` Version **shall not** instantiate `Subject` or `Attestations`: the prohibition is on the package Version, not on use of the DataType. An attestation or other OCI referrer **shall** be represented as a separate immutable Resource and **shall not** become a Version of the package Resource it refers to. Adding, removing or discovering a referrer **shall not** change that package Resource's Version collection, default Version, document, attributes, `Epoch` or `ModifiedAt`.
 
 #### 6.5.5 Discovery and resolution
 

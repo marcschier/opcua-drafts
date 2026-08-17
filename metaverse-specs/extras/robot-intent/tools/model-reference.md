@@ -24,6 +24,9 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=1;i=1012 | SafetyStateType | ObjectType | BaseObjectType |
 | ns=1;i=1013 | RealTimeChannelType | ObjectType | BaseObjectType |
 | ns=1;i=1014 | RobotDescriptionType | ObjectType | BaseObjectType |
+| ns=1;i=1015 | IntentEventType | ObjectType | i=2041 |
+| ns=1;i=1016 | IntentCompletedEventType | ObjectType | IntentEventType |
+| ns=1;i=1017 | MissionCompletedEventType | ObjectType | IntentEventType |
 | ns=1;i=3001 | ExecutionStateEnum | DataType | Enumeration |
 | ns=1;i=3002 | BufferModeEnum | DataType | Enumeration |
 | ns=1;i=3003 | BlockingModeEnum | DataType | Enumeration |
@@ -97,6 +100,8 @@ Server-level entry point. A client that has just connected browses here to find 
 |---|---|---|---|---|---|
 | Controllers | Object |  |  | Mandatory | The intent surfaces this Server offers, one per commandable robot. |
 | SpecificationVersion | Variable | String | Scalar | Mandatory | Release of this specification the Server implements, for example '0.1.0'. |
+| ClockSynchronised | Variable | Boolean | Scalar | Optional | True where this Server's clock is disciplined to an external time reference shared with the systems its events are correlated against. False, or absent, means the clock is free-running and a consumer shall not assume sub-second agreement with another Server. See clause 6.10. |
+| TimeSyncSource | Variable | String | Scalar | Optional | What the clock is disciplined to when ClockSynchronised is true - for example IEEE1588, NTP or GPS - as free text, because the set of answers is open and a consumer uses it to judge the order of accuracy rather than to parse. Empty or absent where the Server does not state one. |
 
 ### IntentControllerType — `ns=1;i=1002`
 
@@ -277,6 +282,7 @@ One submitted intent, tracked to completion. It is a Part 10 program instance, s
 | QueuePosition | Variable | UInt32 | Scalar | Optional | Place in the queue while ExecutionState is Queued, 1 being next. Zero once it is no longer queued. |
 | FinalResultData | Object |  |  | Mandatory | Part 10 result container. Carries the same IntentResultDataType value as Result, so a Part 10 client finds the outcome where Part 10 says it will be. Mandatory here because clause 6.7 requires it and an Optional member cannot carry a SHALL. |
 | ProgramDiagnostic | Variable | i=24033 | Scalar | Mandatory | Part 10 invocation diagnostics: which Session invoked the program, when, with what arguments and to what outcome. Mandatory here because the auditable-commanding property of clause 1.2 is exactly this member, and a capability the specification advertises cannot rest on one a Server may omit. Declared exactly as OPC 10000-10 declares it - a Variable of ProgramDiagnostic2Type reached by HasComponent, with the inherited namespace-0 BrowseName - because a promotion that altered the inherited member's TypeDefinition, reference type or BrowseName namespace would declare a second member rather than promote the inherited one. |
+| DecidedBy | Variable | NodeId | Scalar | Optional | NodeId of the artefact that produced this intent's parameters - typically a result published by a perception model, or the model itself - or null where a human taught the pose or a program held it. It is what lets an investigation that starts at a motion reach the decision behind it; without it the provenance chain ends at the boundary where the robot moved, which is exactly where such an investigation begins. This model does not define what the NodeId points at and takes no dependency on any model that might: see clause 11.3. |
 
 ### MissionType — `ns=1;i=1004`
 
@@ -451,6 +457,44 @@ Enough of the robot's construction for a client to plan against it without a sec
 | PayloadLimit | Variable | Double | Scalar | Mandatory | Largest payload at the mechanical interface, in kilograms. |
 | MaxCartesianSpeed | Variable | Double | Scalar | Mandatory | Largest tool centre point speed the robot will produce, in metres per second. |
 | MaxCartesianAcceleration | Variable | Double | Scalar | Optional | Largest tool centre point acceleration, in metres per second squared. |
+
+### IntentEventType (abstract) — `ns=1;i=1015`
+
+*Subtype of:* `i=2041`
+
+Abstract base of every event this model raises. It identifies the work the event is about, and its subtypes say what became of it. Time is inherited from BaseEventType and is when the reported transition occurred.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| IntentId | Variable | String | Scalar | Mandatory | IntentId of the intent this event concerns. |
+| Operation | Variable | NodeId | Scalar | Mandatory | The IntentOperationType instance tracking it. A consumer that wants the full history reads this node; a consumer that only needs the outcome does not, because the outcome is on the event. |
+| IntentTypeId | Variable | NodeId | Scalar | Mandatory | NodeId of the IntentDataType subtype that was submitted - PickIntentDataType, LinearMoveIntentDataType and so on. This is what makes an event filterable by KIND of work: a client subscribing to picks selects on this field rather than reading every completion and discarding most of them. |
+| MissionId | Variable | String | Scalar | Optional | Mission the intent belongs to, or empty where it was submitted on its own. |
+
+### IntentCompletedEventType — `ns=1;i=1016`
+
+*Subtype of:* `IntentEventType`
+
+An intent reached a terminal state. Raised exactly once per intent, on the transition into Succeeded, Failed, Cancelled or Retriable, and never for an intermediate state - Cancelling is not terminal (clause 6.5) and an event raised there would tell a consumer the work had stopped while the robot was still moving.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| State | Variable | ExecutionStateEnum | Scalar | Mandatory | The terminal ExecutionState. One of Succeeded, Failed, Cancelled or Retriable. |
+| Failure | Variable | IntentFailureEnum | Scalar | Mandatory | Why it did not succeed, or None. Mandatory rather than optional because a consumer deciding whether to retry, re-plan or escalate decides on this value alone (clause 5.8), and an absent field would make that decision unavailable exactly when it is needed. |
+| Result | Variable | IntentResultDataType | Scalar | Mandatory | The full result, identical to the Operation's Result. It is the one piece of state this event does repeat, because the operation node it would otherwise be read from need not still exist. |
+| DecidedBy | Variable | NodeId | Scalar | Optional | The Operation's DecidedBy, repeated so a consumer auditing from the event stream alone does not have to read a node that need not still exist. Null where the Operation's is null. |
+
+### MissionCompletedEventType — `ns=1;i=1017`
+
+*Subtype of:* `IntentEventType`
+
+A mission reached a terminal state. IntentId carries the last intent the mission ran, so a consumer that missed the per-intent events still learns where the mission stopped.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| State | Variable | ExecutionStateEnum | Scalar | Mandatory | The terminal ExecutionState of the mission. |
+| CompletedSteps | Variable | UInt32 | Scalar | Mandatory | How many steps reached a terminal state, whether they succeeded or not. With the mission's step count this says how far it got. |
+| FailedStepId | Variable | String | Scalar | Optional | StepId of the step that ended the mission, or empty where it completed. A step that failed under an ErrorPolicy of Skip does not end a mission and is not named here. |
 
 ## A.4 DataTypes
 

@@ -31,6 +31,7 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=2;i=1012 | ModelResourceType | ObjectType | AiResourceType |
 | ns=2;i=1013 | DatasetResourceType | ObjectType | AiResourceType |
 | ns=2;i=1017 | InferenceTransferType | ObjectType | BaseObjectType |
+| ns=2;i=1018 | ModelPromotedEventType | ObjectType | i=2041 |
 | ns=2;i=3001 | InferenceLocationEnum | DataType | Enumeration |
 | ns=2;i=3002 | AcceleratorKindEnum | DataType | Enumeration |
 | ns=2;i=3003 | DeploymentStateEnum | DataType | Enumeration |
@@ -483,6 +484,20 @@ Request and Response are Part 5 FileType objects: the client opens the request, 
 **Method `Abort`** (Optional) — Abandons the exchange and releases what it holds. A client that has stopped caring about a response SHOULD say so rather than leaving the Server to wait out ExpiresAt.
 
 Takes no arguments and returns none.
+
+### ModelPromotedEventType — `ns=2;i=1018`
+
+*Subtype of:* `i=2041`
+
+A deployment began serving a different model version. Raised on promotion, and also on a rollback or any other Server-initiated substitution, because a consumer auditing what decided a verdict cares that the model changed and not why the operator called it a promotion.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| Deployment | Variable | NodeId | Scalar | Mandatory | The DeploymentType instance whose model changed. |
+| NewModel | Variable | NodeId | Scalar | Mandatory | The ModelType now being served. Its Digest is what ties a later verdict to a verifiable artefact, so a consumer that records only one field records this. |
+| PreviousModel | Variable | NodeId | Scalar | Optional | The ModelType that was being served, or null where the deployment was serving none. A rollback is distinguishable from a promotion only by comparing the two, which is why both are carried. |
+| EvaluationRun | Variable | NodeId | Scalar | Optional | The EvaluationRunType whose Passed result gated this promotion, or null where none did. Clause 7.2 says promotion SHOULD be gated on one; null here is the observable consequence of a Server that promoted without it, which is the fact an audit is looking for. |
+| PromotedBy | Variable | String | Scalar | Optional | Identity of the authenticated principal that promoted, as the Server authenticated it. BaseEventType carries no user field, and clause 12.3 requires promotion to be separately authorized - a requirement whose satisfaction is unobservable if the identity is not recorded where the act is. Empty where the Server initiated the change itself. |
 
 ## A.4 DataTypes
 

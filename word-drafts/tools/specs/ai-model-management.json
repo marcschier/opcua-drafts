@@ -21,8 +21,8 @@
     "capabilityIdentifier": "AIM",
     "namespaceUri": "http://opcfoundation.org/UA/AI/",
     "namespaceIndexInDocument": 2,
-    "version": "0.4.0",
-    "publicationDate": "2026-08-06",
+    "version": "0.5.0",
+    "publicationDate": "2026-08-12",
     "releaseType": "Draft",
     "mantisProjectId": "<nnn>",
     "otherOrganization": "xRegistry project",
@@ -366,6 +366,11 @@
       "from": "7.3 Partial implementation",
       "number": "6.11.3",
       "title": "Partial implementation"
+    },
+    {
+      "from": "7.4 Events (normative)",
+      "number": "6.11.4",
+      "title": "Events"
     },
     {
       "from": "8 Inference (normative)",
@@ -821,6 +826,7 @@
     "7.1": "6.11.1",
     "7.2": "6.11.2",
     "7.3": "6.11.3",
+    "7.4": "6.11.4",
     "8": "6.12",
     "8.1": "6.12.1",
     "8.2": "6.12.2",

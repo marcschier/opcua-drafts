@@ -383,7 +383,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Neither list is a statement that the omitted capability is unimportant — only that Release 0.2.0 does not define it, and that a Server is conformant without it."
+            "text": "Neither list is a statement that the omitted capability is unimportant — only that Release 0.4.0 does not define it, and that a Server is conformant without it."
           }
         ],
         "src": {
@@ -404,7 +404,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Release 0.2.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by "
+            "text": "Release 0.4.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by "
           },
           {
             "r": "t",
@@ -14632,6 +14632,1374 @@
       },
       {
         "t": "clause",
+        "id": "c6-19-5",
+        "title": "Events",
+        "level": 3
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A result is a "
+          },
+          {
+            "r": "t",
+            "text": "record",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": "; an event is an "
+          },
+          {
+            "r": "t",
+            "text": "occurrence",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ". The types above are records: they persist, they are re-readable, and a consumer that arrives late still finds them. That is what a result must be, and it is why they are Objects rather than notifications. But it obliges every consumer to poll and to re-derive, from a changed array, what actually happened — and two consumers polling the same Server can reach different conclusions about when a thing occurred."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This clause adds the occurrence. "
+          },
+          {
+            "r": "code",
+            "text": "VisionEventType"
+          },
+          {
+            "r": "t",
+            "text": " is the abstract base; "
+          },
+          {
+            "r": "code",
+            "text": "ObjectDetectedEventType"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "InspectionCompletedEventType"
+          },
+          {
+            "r": "t",
+            "text": " are what a Server raises. They are ordinary OPC UA EventTypes, so a client subscribes with an "
+          },
+          {
+            "r": "code",
+            "text": "EventFilter"
+          },
+          {
+            "r": "t",
+            "text": " and the existing machinery of OPC 10000-4 applies unchanged."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 1
+        }
+      },
+      {
+        "t": "table",
+        "id": "events-tab1",
+        "caption": "Events",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Type"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Member"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Type"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Rule"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Meaning"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "VisionEventType"
+              },
+              {
+                "r": "t",
+                "text": " "
+              },
+              {
+                "r": "t",
+                "text": "(abstract)",
+                "i": true
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "ResultId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The result that substantiates this event"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "Sensor"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "NodeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The sensor the observation was made with"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "GroundTruth"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Boolean"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "True where this is simulator ground truth, not a prediction"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "Pipeline"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "NodeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The pipeline that produced the result, where one did"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "ModelVersionUsed"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Version of the model that decided"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "Confidence"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Double"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "0.0 to 1.0; absent is not zero"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "InferenceEndTime"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "UtcTime"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "When inference finished; "
+              },
+              {
+                "r": "code",
+                "text": "Time"
+              },
+              {
+                "r": "t",
+                "text": " is when the frame was acquired"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "ObjectDetectedEventType"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Detection"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "VisionDetectionDataType"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The detection this event reports"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "InspectionCompletedEventType"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Evaluation"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "VisionResultEvaluationEnum"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "M"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The verdict"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "PartId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The inspected part, where the result names one"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "RecipeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "String"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The recipe that ran, where the result names one"
+              }
+            ]
+          ],
+          [
+            [],
+            [
+              {
+                "r": "code",
+                "text": "FailedCharacteristics"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "VisionCharacteristicDataType[]"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Only the characteristics whose "
+              },
+              {
+                "r": "code",
+                "text": "Status"
+              },
+              {
+                "r": "t",
+                "text": " is not "
+              },
+              {
+                "r": "code",
+                "text": "InTolerance"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "An event names its result and does not repeat it.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Every event carries "
+          },
+          {
+            "r": "code",
+            "text": "ResultId"
+          },
+          {
+            "r": "t",
+            "text": ", and a consumer that needs the detail reads the "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType"
+          },
+          {
+            "r": "t",
+            "text": " it names. Copying result content into the event would create a second copy of a fact that can disagree with the first. Two fields are deliberate exceptions, because they are what a consumer filters on and requiring a read to obtain them would defeat the purpose: the "
+          },
+          {
+            "r": "code",
+            "text": "Detection"
+          },
+          {
+            "r": "t",
+            "text": " on "
+          },
+          {
+            "r": "code",
+            "text": "ObjectDetectedEventType"
+          },
+          {
+            "r": "t",
+            "text": ", and "
+          },
+          {
+            "r": "code",
+            "text": "Evaluation"
+          },
+          {
+            "r": "t",
+            "text": " on "
+          },
+          {
+            "r": "code",
+            "text": "InspectionCompletedEventType"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "FailedCharacteristics"
+          },
+          {
+            "r": "t",
+            "text": " carries the failing characteristics and only those; a passing inspection carries an empty array. Repeating every characteristic would duplicate the result for the common case where none failed, while repeating the failing ones lets a consumer act on "
+          },
+          {
+            "r": "t",
+            "text": "why",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " a part was rejected without a read. A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " include a characteristic whose "
+          },
+          {
+            "r": "code",
+            "text": "Status"
+          },
+          {
+            "r": "t",
+            "text": " is "
+          },
+          {
+            "r": "code",
+            "text": "InTolerance"
+          },
+          {
+            "r": "t",
+            "text": ", and a consumer "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " treat the array as the complete characteristic set — that is in the result."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "Time"
+          },
+          {
+            "r": "t",
+            "text": " is when the frame was acquired.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "BaseEventType.Time"
+          },
+          {
+            "r": "t",
+            "text": " is the time of the occurrence, and for an inferred observation the occurrence is the "
+          },
+          {
+            "r": "t",
+            "text": "frame",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", not the inference. A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " set "
+          },
+          {
+            "r": "code",
+            "text": "Time"
+          },
+          {
+            "r": "t",
+            "text": " to the acquisition timestamp of the frame the result was derived from — the "
+          },
+          {
+            "r": "code",
+            "text": "Timestamp"
+          },
+          {
+            "r": "t",
+            "text": " of the result's "
+          },
+          {
+            "r": "code",
+            "text": "Frame"
+          },
+          {
+            "r": "t",
+            "text": ", where it carries one — and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " set it to the moment inference completed. "
+          },
+          {
+            "r": "code",
+            "text": "InferenceEndTime"
+          },
+          {
+            "r": "t",
+            "text": " carries that moment separately, so the difference between the two is the inference latency of this observation. A Server that cannot establish an acquisition timestamp "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " omit "
+          },
+          {
+            "r": "code",
+            "text": "InferenceEndTime"
+          },
+          {
+            "r": "t",
+            "text": " rather than set both to the same value, because equal values assert a latency of zero."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "One event per detection.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A "
+          },
+          {
+            "r": "code",
+            "text": "DetectionResultType"
+          },
+          {
+            "r": "t",
+            "text": " carrying "
+          },
+          {
+            "r": "t",
+            "text": "n",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " detections raises "
+          },
+          {
+            "r": "t",
+            "text": "n",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "ObjectDetectedEventType"
+          },
+          {
+            "r": "t",
+            "text": "s, all naming the same "
+          },
+          {
+            "r": "code",
+            "text": "ResultId"
+          },
+          {
+            "r": "t",
+            "text": ". This is what makes "
+          },
+          {
+            "r": "code",
+            "text": "ClassLabel"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "Confidence"
+          },
+          {
+            "r": "t",
+            "text": " available to an "
+          },
+          {
+            "r": "code",
+            "text": "EventFilter"
+          },
+          {
+            "r": "t",
+            "text": ", so a client asks for the classes it cares about above a confidence it chooses and the Server sends nothing else. A single event per result would move that filtering to the client and give up most of the reason to raise events at all. A Server "
+          },
+          {
+            "r": "t",
+            "text": "may",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " omit events for detections a configured threshold excludes, and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " vary the "
+          },
+          {
+            "r": "code",
+            "text": "ResultId"
+          },
+          {
+            "r": "t",
+            "text": " between events derived from one result."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 6
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Inferred is not measured.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "GroundTruth"
+          },
+          {
+            "r": "t",
+            "text": " is Mandatory on every event. It is "
+          },
+          {
+            "r": "code",
+            "text": "true"
+          },
+          {
+            "r": "t",
+            "text": " only where the value is simulator ground truth rather than a prediction, mirroring "
+          },
+          {
+            "r": "code",
+            "text": "IVisionSimulatedType.GroundTruthAvailable"
+          },
+          {
+            "r": "t",
+            "text": " on the sensor, and "
+          },
+          {
+            "r": "xref",
+            "target": "c6-22",
+            "kind": "clause",
+            "prefix": "6.22"
+          },
+          {
+            "r": "t",
+            "text": " already requires the two to be distinguishable. A consumer "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " have to infer from "
+          },
+          {
+            "r": "code",
+            "text": "Confidence"
+          },
+          {
+            "r": "t",
+            "text": ", or from the sensor's "
+          },
+          {
+            "r": "code",
+            "text": "RealityKind"
+          },
+          {
+            "r": "t",
+            "text": ", whether it is being told a measurement or a guess."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 7
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The time base is stated, not assumed.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Every timestamp in this model is "
+          },
+          {
+            "r": "code",
+            "text": "UtcTime"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "t",
+            "text": "§5.12"
+          },
+          {
+            "r": "t",
+            "text": "), which fixes the "
+          },
+          {
+            "r": "t",
+            "text": "representation",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " and says nothing about whether two Servers agree. Annex I.7 has a consumer correlating an event raised here with one raised by a commanding model, so the agreement matters and is made discoverable rather than assumed: "
+          },
+          {
+            "r": "code",
+            "text": "VisionRootType.ClockSynchronised"
+          },
+          {
+            "r": "t",
+            "text": " is "
+          },
+          {
+            "r": "code",
+            "text": "true"
+          },
+          {
+            "r": "t",
+            "text": " only where this Server's clock is disciplined to an external reference shared with the systems its events are correlated against, and "
+          },
+          {
+            "r": "code",
+            "text": "TimeSyncSource"
+          },
+          {
+            "r": "t",
+            "text": " names what that reference is."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 8
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " report "
+          },
+          {
+            "r": "code",
+            "text": "ClockSynchronised"
+          },
+          {
+            "r": "t",
+            "text": " true on the strength of having set its clock once; the member asserts an ongoing discipline. Where it is "
+          },
+          {
+            "r": "code",
+            "text": "false"
+          },
+          {
+            "r": "t",
+            "text": " or absent a consumer "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " treat cross-Server ordering as unreliable below the accuracy its own observation supports, and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " attribute a detection to a motion on timing alone."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 9
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Neither member is Mandatory and no synchronisation is required. Most cells do not have a disciplined time base, and a "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " that most conformant Servers would fail is not a requirement — it is a statement that the specification is not implementable. What this model requires instead is that a Server which cannot support the correlation Annex I.7 describes says so, so a consumer learns it by reading rather than by misattributing a frame. Where sub-frame correlation is genuinely needed, IEEE 1588 is the usual answer and "
+          },
+          {
+            "r": "code",
+            "text": "TimeSyncSource"
+          },
+          {
+            "r": "t",
+            "text": " is where a Server says it uses it."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 10
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Where events are raised.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " The well-known "
+          },
+          {
+            "r": "code",
+            "text": "Vision"
+          },
+          {
+            "r": "t",
+            "text": " object declares "
+          },
+          {
+            "r": "code",
+            "text": "EventNotifier"
+          },
+          {
+            "r": "t",
+            "text": " with the "
+          },
+          {
+            "r": "code",
+            "text": "SubscribeToEvents"
+          },
+          {
+            "r": "t",
+            "text": " bit set and is the target of a "
+          },
+          {
+            "r": "code",
+            "text": "HasNotifier"
+          },
+          {
+            "r": "t",
+            "text": " reference from the Server object, so a client subscribes at either and receives every Vision event in the Server. A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " additionally set "
+          },
+          {
+            "r": "code",
+            "text": "EventNotifier"
+          },
+          {
+            "r": "t",
+            "text": " on each "
+          },
+          {
+            "r": "code",
+            "text": "InferencePipelineType"
+          },
+          {
+            "r": "t",
+            "text": " instance that raises events and "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " add a "
+          },
+          {
+            "r": "code",
+            "text": "HasNotifier"
+          },
+          {
+            "r": "t",
+            "text": " reference from the "
+          },
+          {
+            "r": "code",
+            "text": "Vision"
+          },
+          {
+            "r": "t",
+            "text": " object to it, so a client that wants one pipeline can subscribe to that pipeline alone. "
+          },
+          {
+            "r": "code",
+            "text": "SourceNode"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be the pipeline that produced the result, or the sensor where no pipeline did."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 11
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Severity.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "BaseEventType.Severity"
+          },
+          {
+            "r": "t",
+            "text": " is 1 to 1000. A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " raise "
+          },
+          {
+            "r": "code",
+            "text": "ObjectDetectedEventType"
+          },
+          {
+            "r": "t",
+            "text": " and a passing "
+          },
+          {
+            "r": "code",
+            "text": "InspectionCompletedEventType"
+          },
+          {
+            "r": "t",
+            "text": " at a severity of 1 to 199, because neither demands attention, and "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " raise an "
+          },
+          {
+            "r": "code",
+            "text": "InspectionCompletedEventType"
+          },
+          {
+            "r": "t",
+            "text": " whose "
+          },
+          {
+            "r": "code",
+            "text": "Evaluation"
+          },
+          {
+            "r": "t",
+            "text": " is "
+          },
+          {
+            "r": "code",
+            "text": "NotOk"
+          },
+          {
+            "r": "t",
+            "text": " at 500 or above. Anything else would make a routine detection indistinguishable, in a generic alarm client, from a rejected part."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 12
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "These are events, not conditions.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A detection and a verdict are transient: they occur, they are reported, and nothing about them persists in a state a client would acknowledge. OPC 10000-9 "
+          },
+          {
+            "r": "code",
+            "text": "ConditionType"
+          },
+          {
+            "r": "t",
+            "text": " models the opposite — something that stays true until it stops being true — and neither of these is that. A Server that needs to raise an "
+          },
+          {
+            "r": "t",
+            "text": "alarm",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " about its vision system, such as a sensor that has stopped responding, uses the base OPC UA alarm types; this model defines none, because nothing about such an alarm is specific to vision."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 13
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Semantic identifiers.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A Server "
+          },
+          {
+            "r": "t",
+            "text": "may",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " add a "
+          },
+          {
+            "r": "code",
+            "text": "HasDictionaryEntry"
+          },
+          {
+            "r": "t",
+            "text": " reference (OPC 10000-19) from any EventType defined here to a dictionary entry naming the same concept in ECLASS, IEC CDD or another vocabulary. This specification prescribes no dictionary and defines no identifiers of its own: no agreed identifier exists for these concepts, and minting one here would create a vocabulary with a single member and no authority behind it."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.5 Events (normative)",
+          "b": 14
+        }
+      },
+      {
+        "t": "clause",
         "id": "c6-20",
         "title": "AI integration",
         "level": 2
@@ -21138,6 +22506,75 @@
         "caption": "VisionRootType definition",
         "browseName": "VisionRootType",
         "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-22",
+        "title": "VisionEventType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Abstract base of every event this model raises. It adds to BaseEventType the provenance a vision event needs to be actionable: which result substantiates it, which sensor and pipeline produced it, which model version decided, and how far the answer can be trusted. Time is inherited from BaseEventType and clause 7.5 fixes what it means here."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-22-def",
+        "caption": "VisionEventType definition",
+        "browseName": "VisionEventType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-23",
+        "title": "ObjectDetectedEventType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "One detected instance, raised once per entry in a DetectionResultType's Detections. One event per detection rather than one per result is what makes the class and the confidence available to an EventFilter, so a client asks for the two classes it cares about above a confidence it chooses and the Server sends nothing else. A per-result event would move that filtering to the client and give up most of the reason to use events at all."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-23-def",
+        "caption": "ObjectDetectedEventType definition",
+        "browseName": "ObjectDetectedEventType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-24",
+        "title": "InspectionCompletedEventType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "An inspection reached a verdict. Raised once per InspectionResultType, because an inspection concludes once - unlike detection, where a single frame yields many independent findings."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-24-def",
+        "caption": "InspectionCompletedEventType definition",
+        "browseName": "InspectionCompletedEventType",
+        "kind": "type"
       }
     ],
     "datatypes": [
@@ -21957,7 +23394,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "The well-known Vision entry point, a component of the Server object. A conformant Server exposes exactly one."
+            "text": "The well-known Vision entry point, a component of the Server object. A conformant Server exposes exactly one. It carries EventNotifier because it is the notifier for every Vision event in the Server (clause 7.5): a client subscribes here, or at the Server object above it, and does not have to find each pipeline first."
           }
         ]
       },
@@ -22188,7 +23625,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "The NodeSet assigns every Node to one of three conformance units: "
+            "text": "The NodeSet assigns every Node to one of four conformance units: "
           },
           {
             "r": "code",
@@ -22204,7 +23641,7 @@
           },
           {
             "r": "t",
-            "text": " for the structures and enumerations, and "
+            "text": " for the structures and enumerations, "
           },
           {
             "r": "code",
@@ -22212,7 +23649,25 @@
           },
           {
             "r": "t",
-            "text": " for the references. The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to."
+            "text": " for the references, and "
+          },
+          {
+            "r": "code",
+            "text": "Vision Events"
+          },
+          {
+            "r": "t",
+            "text": " for the EventTypes of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-5",
+            "kind": "clause",
+            "prefix": "6.19.5"
+          },
+          {
+            "r": "t",
+            "text": ". The facets below are expressed over those Nodes, so a Server claiming a facet implements the units the facet's members belong to."
           }
         ],
         "src": {
@@ -23035,6 +24490,74 @@
               {
                 "r": "t",
                 "text": " rule"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "VIS-Events",
+                "b": true
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The EventTypes of "
+              },
+              {
+                "r": "xref",
+                "target": "c6-19-5",
+                "kind": "clause",
+                "prefix": "6.19.5"
+              },
+              {
+                "r": "t",
+                "text": " and every rule in that clause. A Server claiming it "
+              },
+              {
+                "r": "t",
+                "text": "shall",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " raise "
+              },
+              {
+                "r": "code",
+                "text": "ObjectDetectedEventType"
+              },
+              {
+                "r": "t",
+                "text": " for every detection it publishes and "
+              },
+              {
+                "r": "code",
+                "text": "InspectionCompletedEventType"
+              },
+              {
+                "r": "t",
+                "text": " for every inspection it concludes — a facet that permits a Server to raise events for some results and not others tells a client nothing, because silence would then be ambiguous between \"nothing happened\" and \"this one was not reported\". Requires "
+              },
+              {
+                "r": "t",
+                "text": "VIS-Result-Detection",
+                "i": true
+              },
+              {
+                "r": "t",
+                "text": " for the first and "
+              },
+              {
+                "r": "t",
+                "text": "VIS-Result-Inspection",
+                "i": true
+              },
+              {
+                "r": "t",
+                "text": " for the second, whichever the Server publishes; a Server that publishes only one kind of result claims this facet on the strength of that kind alone."
               }
             ]
           ],
@@ -23981,7 +25504,7 @@
             [
               {
                 "r": "t",
-                "text": "0.2.0"
+                "text": "0.4.0"
               }
             ]
           ],
@@ -24001,7 +25524,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-08-11"
+                "text": "2026-08-13"
               }
             ]
           ],
@@ -34314,6 +35837,435 @@
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
           "b": 10
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "I.7 A manufacturing event is composed, not invented.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " A cell wants to know that a part was picked, placed, aligned or rejected. This model deliberately defines no "
+          },
+          {
+            "r": "code",
+            "text": "PickEventType"
+          },
+          {
+            "r": "t",
+            "text": ", and a Server "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " publish one under this specification, because "
+          },
+          {
+            "r": "t",
+            "text": "a camera cannot know that a pick happened",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ". It can report what it saw; the robot is what knows what it did."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
+          "b": 11
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "So the two halves come from the two models, and a consumer joins them:"
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
+          "b": 12
+        }
+      },
+      {
+        "t": "table",
+        "id": "robot-intent-interop-profile-tab2",
+        "caption": "Robot Intent interop profile (2)",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Half"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Source"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Carries"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "t",
+                "text": "The "
+              },
+              {
+                "r": "t",
+                "text": "action",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " — authoritative"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "IntentCompletedEventType"
+              },
+              {
+                "r": "t",
+                "text": " on the commanding model, where the submitted intent was a pick and the terminal state is success"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "that the robot picked, and what its own result says about the outcome"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "t",
+                "text": "The "
+              },
+              {
+                "r": "t",
+                "text": "observation",
+                "b": true
+              },
+              {
+                "r": "t",
+                "text": " — corroborating"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "ObjectDetectedEventType"
+              },
+              {
+                "r": "t",
+                "text": " ("
+              },
+              {
+                "r": "xref",
+                "target": "c6-19-5",
+                "kind": "clause",
+                "prefix": "6.19.5"
+              },
+              {
+                "r": "t",
+                "text": ") on this model"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "that an object of a class was seen, where, and with what confidence"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
+          "b": 13
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The action alone is sufficient: a robot that reports a successful pick has picked, whatever a camera thinks. The observation adds what the robot cannot supply — which object, at what pose, identified by which model version — and is what makes the event traceable back to a decision under "
+          },
+          {
+            "r": "xref",
+            "target": "c6-23-6",
+            "kind": "clause",
+            "prefix": "6.23.6"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
+          "b": 14
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A consumer correlating the two "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " use the event "
+          },
+          {
+            "r": "code",
+            "text": "Time"
+          },
+          {
+            "r": "t",
+            "text": " of each, which "
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-5",
+            "kind": "clause",
+            "prefix": "6.19.5"
+          },
+          {
+            "r": "t",
+            "text": " fixes as the frame acquisition time on this side, and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " assume the two arrive in that order or in the same notification: they are raised by different objects and, in a Server that implements only one of the two models, one of them does not exist at all. Where the intent named a "
+          },
+          {
+            "r": "code",
+            "text": "Location"
+          },
+          {
+            "r": "t",
+            "text": " and the detection carries a pose, the two "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be related through the frame tree of I.1 rather than by comparing coordinates in different frames."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
+          "b": 15
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Correlation on time is only as good as the clocks.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Both models publish "
+          },
+          {
+            "r": "code",
+            "text": "ClockSynchronised"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "TimeSyncSource"
+          },
+          {
+            "r": "t",
+            "text": " on their roots ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-5",
+            "kind": "clause",
+            "prefix": "6.19.5"
+          },
+          {
+            "r": "t",
+            "text": "). A consumer "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " read both before correlating on timing, and where either Server reports "
+          },
+          {
+            "r": "code",
+            "text": "false"
+          },
+          {
+            "r": "t",
+            "text": " or omits the member "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " attribute a detection to a motion on timing alone — it uses "
+          },
+          {
+            "r": "code",
+            "text": "DecidedBy"
+          },
+          {
+            "r": "t",
+            "text": " instead, which states the link rather than inferring it."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
+          "b": 16
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The link can be stated rather than inferred.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " Where the commanding model populates "
+          },
+          {
+            "r": "code",
+            "text": "IntentOperationType.DecidedBy"
+          },
+          {
+            "r": "t",
+            "text": " with the "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType"
+          },
+          {
+            "r": "t",
+            "text": " instance a pose came from, the correlation stops being a timing argument: a consumer follows the reference from the completion to the result, and from the result through "
+          },
+          {
+            "r": "code",
+            "text": "ProducedBy"
+          },
+          {
+            "r": "t",
+            "text": " to the pipeline, deployment, model and digest. That is the whole provenance chain in one walk, and it is what the commanding model's Annex E.8 asks a Server implementing both to do."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
+          "b": 17
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The consequence is that the intent vocabulary "
+          },
+          {
+            "r": "t",
+            "text": "is",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " the manufacturing-event vocabulary. "
+          },
+          {
+            "r": "code",
+            "text": "pick"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "place"
+          },
+          {
+            "r": "t",
+            "text": " and the rest are already named — as intent types the commanding model defines — and a completion event carrying the intent type is what turns each of them into an occurrence a line controller can subscribe to. Nothing further needs to be invented here, and inventing it would produce a second vocabulary that could disagree with the first about what happened."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "Annex I — Robot Intent interop profile (normative for *VIS-Interop-RobotIntent*)",
+          "b": 18
         }
       }
     ]
