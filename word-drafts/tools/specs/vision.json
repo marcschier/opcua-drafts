@@ -12,10 +12,10 @@
   "identity": {
     "docNumber": "OPC nnnnn-m",
     "partNumber": "Part 1",
-    "partName": "Vision",
-    "title": "Vision",
+    "partName": "Vision Systems",
+    "title": "Vision Systems",
     "subjectTerm": "vision system",
-    "mainTitle": "OPC UA FOR VISION",
+    "mainTitle": "OPC UA FOR VISION SYSTEMS",
     "subTitle": "Part 1: Sensors, media, inference and results",
     "shortName": "VIS",
     "capabilityIdentifier": "VIS",
@@ -29,7 +29,8 @@
     "introduction": [
       "A camera is one of the few devices on a plant floor whose output no OPC UA specification describes. A Server can publish a torque, a temperature and a machine state in an interoperable form, and then has no defined way to say what its vision system saw, which model interpreted it, or what the verdict actually means. Two Servers can be fully conformant to the existing machine vision specifications and remain mutually unintelligible.",
       "The gap is not the imagery. Moving pixels is a solved problem, and this document deliberately does not try to solve it again — media is obtained by reference, from an endpoint the Server describes. What is missing is everything around the imagery: which sensor produced it, how it is calibrated and in which coordinate frame, what inference ran over it, what the result contains, and how a correction travels back.",
-      "This document defines those as one information model. A physical camera and a simulated sensor in a renderer expose the same members with the same meaning, so a client written against one works against the other, and synthetic data, training and the corrections coming off a production line all describe themselves in the same terms."
+      "This document defines those as one information model. A physical camera and a simulated sensor in a renderer expose the same members with the same meaning, so a client written against one works against the other, and synthetic data, training and the corrections coming off a production line all describe themselves in the same terms.",
+      "This document complements OPC 40100-1 and OPC 40100-2. It does not replace their machine-vision job orchestration, recipe and configuration management, result transfer, asset identity, condition monitoring or maintenance models."
     ],
     "draftBanner": "PROVISIONAL WORKING DRAFT — not normative, not endorsed by the OPC Foundation. The document number, the Mantis project identifier and every NodeId in this document are placeholders; the OPC Foundation assigns the real values."
   },

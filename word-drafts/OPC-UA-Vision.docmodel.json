@@ -101,6 +101,21 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This specification complements OPC 40100-1 and OPC 40100-2. It does not define machine-vision job orchestration, recipe or configuration management, or asset lifecycle management. OPC 40100-1 remains authoritative for jobs, system state, recipes, configurations and result transfer, and OPC 40100-2 remains authoritative for asset identity, component inventory, condition monitoring and maintenance. This specification extends those models with sensor acquisition semantics, media endpoints, calibration and coordinate frames, AI inference and provenance, defined result content, and feedback. Annex D defines the integration contract for a Server that exposes the same equipment through this specification and OPC 40100."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "1 Scope",
+          "b": 2
+        }
+      },
+      {
         "t": "clause",
         "id": "c1-1",
         "title": "Motivation",
@@ -722,7 +737,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "It is assumed that basic concepts of OPC UA information modelling and of Vision are understood in this document. This document uses these concepts to describe the Vision Information Model. For the purposes of this document, the terms and definitions given in OPC 10000-1, OPC 10000-3, OPC 10000-4, OPC 10000-5 and OPC 10000-7, as well as the following, apply."
+            "text": "It is assumed that basic concepts of OPC UA information modelling and of Vision Systems are understood in this document. This document uses these concepts to describe the Vision Systems Information Model. For the purposes of this document, the terms and definitions given in OPC 10000-1, OPC 10000-3, OPC 10000-4, OPC 10000-5 and OPC 10000-7, as well as the following, apply."
           }
         ]
       },
@@ -1444,6 +1459,16 @@
           {
             "r": "t",
             "text": "This document defines those as one information model. A physical camera and a simulated sensor in a renderer expose the same members with the same meaning, so a client written against one works against the other, and synthetic data, training and the corrections coming off a production line all describe themselves in the same terms."
+          }
+        ]
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "This document complements OPC 40100-1 and OPC 40100-2. It does not replace their machine-vision job orchestration, recipe and configuration management, result transfer, asset identity, condition monitoring or maintenance models."
           }
         ]
       },
@@ -27279,7 +27304,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "OPC 40100-1 orchestrates a vision system — its state machine, recipes and configurations — and OPC 40100-2 describes its components as assets. This specification describes the sensing, the media, the AI and the result content. The two are complementary, and a Server may expose both."
+            "text": "OPC 40100-1 orchestrates a vision system through its state machine, jobs, recipes, configurations and result transfer. OPC 40100-2 describes the system's assets, components, condition and maintenance information. This specification extends that family at the sensing and perception layer: it defines acquisition parameters, media endpoints, calibration and coordinate frames, AI inference and provenance, the content carried by a result, and the feedback path. It does not replace either OPC 40100 part."
           }
         ],
         "src": {
@@ -27691,19 +27716,23 @@
           [
             {
               "r": "t",
-              "text": "OPC 40100"
+              "text": "Existing OPC 40100 authority or extension point"
             }
           ],
           [
             {
               "r": "t",
-              "text": "This specification"
+              "text": "Extension defined by this specification"
             }
           ]
         ],
         "rows": [
           [
             [
+              {
+                "r": "t",
+                "text": "OPC 40100-1 "
+              },
               {
                 "r": "code",
                 "text": "VisionSystemType"
@@ -27716,34 +27745,42 @@
             [
               {
                 "r": "t",
-                "text": "not duplicated; use OPC 40100-1"
+                "text": "Not duplicated; Vision results and pipelines are associated with the job controlled by OPC 40100-1"
               }
             ]
           ],
           [
             [
+              {
+                "r": "t",
+                "text": "OPC 40100-1 "
+              },
               {
                 "r": "code",
                 "text": "ResultDataType.ResultContent"
               },
               {
                 "r": "t",
-                "text": " (undefined)"
+                "text": " (application-specific)"
               }
             ],
             [
               {
-                "r": "t",
-                "text": "populate from "
-              },
-              {
                 "r": "code",
                 "text": "InspectionResultType.Characteristics"
+              },
+              {
+                "r": "t",
+                "text": " defines interoperable inspection-result content"
               }
             ]
           ],
           [
             [
+              {
+                "r": "t",
+                "text": "OPC 40100-1 "
+              },
               {
                 "r": "code",
                 "text": "ResultDataType.ResultId"
@@ -27753,6 +27790,10 @@
               {
                 "r": "code",
                 "text": "VisionResultType.ResultId"
+              },
+              {
+                "r": "t",
+                "text": " provides the join key between orchestration and perception views"
               }
             ]
           ],
@@ -27760,13 +27801,17 @@
             [
               {
                 "r": "t",
-                "text": "Recipe identity"
+                "text": "OPC 40100-1 recipe identity and management"
               }
             ],
             [
               {
                 "r": "code",
                 "text": "InspectionResultType.RecipeId"
+              },
+              {
+                "r": "t",
+                "text": " identifies the recipe used without redefining its content or lifecycle"
               }
             ]
           ],
@@ -27788,7 +27833,7 @@
               },
               {
                 "r": "t",
-                "text": ", member names already aligned"
+                "text": " provides the operational optics projection, with aligned member names and consistent values"
               }
             ]
           ],
@@ -27818,23 +27863,7 @@
               },
               {
                 "r": "t",
-                "text": ", member names already aligned; "
-              },
-              {
-                "r": "code",
-                "text": "LampType"
-              },
-              {
-                "r": "t",
-                "text": " and "
-              },
-              {
-                "r": "code",
-                "text": "LightingMode"
-              },
-              {
-                "r": "t",
-                "text": " enumerated here, converted per requirement 4"
+                "text": " provides the operational illumination projection; enumerated values are converted per requirement 4"
               }
             ]
           ],
@@ -27850,7 +27879,7 @@
               },
               {
                 "r": "t",
-                "text": " (no members), and its DI/nameplate context"
+                "text": " and its DI/nameplate context"
               }
             ],
             [
@@ -27860,7 +27889,7 @@
               },
               {
                 "r": "t",
-                "text": " supplies the imaging parameters it lacks; populated nameplate projections match the authoritative standard Object"
+                "text": " adds acquisition and imaging semantics; the OPC 40100-2 or DI Object remains authoritative for asset identity"
               }
             ]
           ],
@@ -27882,7 +27911,7 @@
               },
               {
                 "r": "t",
-                "text": " for the model specifically"
+                "text": " identifies the AI model specifically and adds model provenance"
               }
             ]
           ]
@@ -27901,7 +27930,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "The intended division is that OPC 40100 answers "
+            "text": "The intended division is that OPC 40100-1 answers "
           },
           {
             "r": "t",
@@ -27910,16 +27939,25 @@
           },
           {
             "r": "t",
-            "text": " and this specification answers "
+            "text": ", OPC 40100-2 answers "
           },
           {
             "r": "t",
-            "text": "\"what did it see, how, and with what model\"",
+            "text": "\"what equipment is installed and what condition is it in\"",
             "i": true
           },
           {
             "r": "t",
-            "text": ". Neither requires the other, and a Server is fully conformant to this specification without this facet."
+            "text": ", and this specification answers "
+          },
+          {
+            "r": "t",
+            "text": "\"what did the system see, how was it observed, and what produced the interpretation\"",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ". Neither model requires the other, and a Server is fully conformant to this specification without this facet."
           }
         ],
         "src": {

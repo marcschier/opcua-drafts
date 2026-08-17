@@ -1,4 +1,4 @@
-# OPC UA — Vision
+# OPC UA for Vision Systems
 
 > Status: Working-group draft (Release 0.4.0). This document, together with `Opc.Ua.Vision.NodeSet2.xml` and `Opc.Ua.Vision.NodeIds.csv`, defines an OPC UA information model for **machine vision and robotics vision systems**: the sensors, the media they emit, the AI that interprets them, the results they produce, and the path by which corrected results flow back in. It is deliberately **sim/real symmetric** — one model describes a physical camera and a simulated sensor in a renderer such as NVIDIA Isaac Sim identically.
 >
@@ -16,6 +16,8 @@ This specification defines an OPC UA information model that lets a Server descri
 - **what AI runs on them**, whether that inference happens on the Server or somewhere else entirely;
 - **what results they produce**, with content that is actually defined rather than left to the application;
 - **how a consumer feeds information back**, including corrections that become training data.
+
+This specification complements OPC 40100-1 and OPC 40100-2. It does not define machine-vision job orchestration, recipe or configuration management, or asset lifecycle management. OPC 40100-1 remains authoritative for jobs, system state, recipes, configurations and result transfer, and OPC 40100-2 remains authoritative for asset identity, component inventory, condition monitoring and maintenance. This specification extends those models with sensor acquisition semantics, media endpoints, calibration and coordinate frames, AI inference and provenance, defined result content, and feedback. Annex D defines the integration contract for a Server that exposes the same equipment through this specification and OPC 40100.
 
 ### 1.1 Motivation
 
@@ -1354,7 +1356,7 @@ A Server that implements only this specification uses `PrimPath` as an opaque, p
 
 ## Annex D — OPC 40100 Machine Vision interop profile (normative for *VIS-Interop-40100*)
 
-OPC 40100-1 orchestrates a vision system — its state machine, recipes and configurations — and OPC 40100-2 describes its components as assets. This specification describes the sensing, the media, the AI and the result content. The two are complementary, and a Server may expose both.
+OPC 40100-1 orchestrates a vision system through its state machine, jobs, recipes, configurations and result transfer. OPC 40100-2 describes the system's assets, components, condition and maintenance information. This specification extends that family at the sensing and perception layer: it defines acquisition parameters, media endpoints, calibration and coordinate frames, AI inference and provenance, the content carried by a result, and the feedback path. It does not replace either OPC 40100 part.
 
 This annex is informative for a Server that does not claim *VIS-Interop-40100*, and normative for one that does. A Server claiming the facet exposes both this model and OPC 40100 for the same equipment, and **shall** satisfy all five requirements below.
 
@@ -1366,18 +1368,18 @@ This annex is informative for a Server that does not claim *VIS-Interop-40100*, 
 
 The alignment table below records the correspondence the requirements above rest on:
 
-| OPC 40100 | This specification |
+| Existing OPC 40100 authority or extension point | Extension defined by this specification |
 |---|---|
-| `VisionSystemType` job orchestration and state machine | not duplicated; use OPC 40100-1 |
-| `ResultDataType.ResultContent` (undefined) | populate from `InspectionResultType.Characteristics` |
-| `ResultDataType.ResultId` | `VisionResultType.ResultId` |
-| Recipe identity | `InspectionResultType.RecipeId` |
-| OPC 40100-2 `ILensType` | `OpticsType`, member names already aligned |
-| OPC 40100-2 `ILampType`, `ILightingControllerType` | `IlluminationType`, member names already aligned; `LampType` and `LightingMode` enumerated here, converted per requirement 4 |
-| OPC 40100-2 `VisionImageSensorType` (no members), and its DI/nameplate context | `ImageSensorType` supplies the imaging parameters it lacks; populated nameplate projections match the authoritative standard Object |
-| OPC 40100-2 `SoftwareComponents` | `ModelType` for the model specifically |
+| OPC 40100-1 `VisionSystemType` job orchestration and state machine | Not duplicated; Vision results and pipelines are associated with the job controlled by OPC 40100-1 |
+| OPC 40100-1 `ResultDataType.ResultContent` (application-specific) | `InspectionResultType.Characteristics` defines interoperable inspection-result content |
+| OPC 40100-1 `ResultDataType.ResultId` | `VisionResultType.ResultId` provides the join key between orchestration and perception views |
+| OPC 40100-1 recipe identity and management | `InspectionResultType.RecipeId` identifies the recipe used without redefining its content or lifecycle |
+| OPC 40100-2 `ILensType` | `OpticsType` provides the operational optics projection, with aligned member names and consistent values |
+| OPC 40100-2 `ILampType`, `ILightingControllerType` | `IlluminationType` provides the operational illumination projection; enumerated values are converted per requirement 4 |
+| OPC 40100-2 `VisionImageSensorType` and its DI/nameplate context | `ImageSensorType` adds acquisition and imaging semantics; the OPC 40100-2 or DI Object remains authoritative for asset identity |
+| OPC 40100-2 `SoftwareComponents` | `ModelType` identifies the AI model specifically and adds model provenance |
 
-The intended division is that OPC 40100 answers *"what job is the system running"* and this specification answers *"what did it see, how, and with what model"*. Neither requires the other, and a Server is fully conformant to this specification without this facet.
+The intended division is that OPC 40100-1 answers *"what job is the system running"*, OPC 40100-2 answers *"what equipment is installed and what condition is it in"*, and this specification answers *"what did the system see, how was it observed, and what produced the interpretation"*. Neither model requires the other, and a Server is fully conformant to this specification without this facet.
 
 ---
 

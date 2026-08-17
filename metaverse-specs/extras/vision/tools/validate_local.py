@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Local structural + modelling-rule validator for the OPC UA — Vision NodeSet.
+Local structural + modelling-rule validator for the OPC UA for Vision Systems NodeSet.
 
 Reproducible in-repo gate (mirrors the openusd-binding validate_local.py convention).
 Checks, against Opc.Ua.Vision.NodeSet2.xml:

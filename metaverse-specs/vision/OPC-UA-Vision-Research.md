@@ -1,4 +1,4 @@
-# OPC UA — Vision — Research and design rationale
+# OPC UA for Vision Systems — Research and design rationale
 
 > **Companion research report to [`OPC-UA-Vision.md`](OPC-UA-Vision.md).** This document records the prior art that was surveyed before drafting, the four gaps that survey identified, and the design decisions those gaps forced. It is **informative**: nothing here is normative, and where a finding is uncertain it is flagged as such.
 >
