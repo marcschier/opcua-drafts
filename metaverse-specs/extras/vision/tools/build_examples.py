@@ -653,8 +653,8 @@ def build_overlay(d):
         put(ov, deployment, "AcceleratorName", "String", dep["acceleratorName"])
     if "endpointUri" in dep:
         put(ov, deployment, "EndpointUri", "String", dep["endpointUri"])
-    # The AI specification requires exactly one UsesModel per deployment. It is the only path from a
-    # result to the model artefact and its Digest, which §12.6 depends on.
+    # UsesModel identifies the model serving now. A retained result's ModelUsed identifies
+    # the model that actually produced that result.
     ov.ref(deployment, UsesModel, f"ns=1;i={model}")
 
     pl = ai["pipeline"]
@@ -962,9 +962,10 @@ def emit_addendum(d, annex=None):
     A(d["inferenceNote"])
     A("")
     A("The deployment carries exactly one `UsesModel` reference to the model above, as "
-      "*OPC UA — AI Model Management and Inference* requires. That reference is the only defined "
-      "path from a result to the model artefact and its `Digest`, so it is what makes the "
-      "base specification's §12.6 provenance check possible.")
+      "*OPC UA — AI Model Management and Inference* requires. That reference says which "
+      "model is serving now. Each retained result records the model that actually answered "
+      "in `ModelUsed`, so an audit follows `result.ModelUsed` to the model and its `Digest` "
+      "even after a promotion, fallback or followed-reference change.")
     A("")
     head("Results")
     A("")

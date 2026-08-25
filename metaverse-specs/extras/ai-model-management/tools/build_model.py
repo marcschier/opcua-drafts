@@ -746,9 +746,9 @@ RateLimitDataType = T(3056)
 # ---------------------------------------------------------------------------
 reference_type(4001, "UsesModel", "IsUsedByDeployment",
                "Links a Deployment to the Model it executes. Clause 6.5 requires "
-               "exactly one such reference per deployment; it is the only defined path "
-               "from a result to the model artefact and its Digest, on which the "
-               "provenance requirement of clause 12 depends.")
+               "exactly one such reference per deployment so the model serving now is "
+               "unambiguous. Historical result provenance uses the ModelUsed identity "
+               "returned by invocation and retained by the consuming specification.")
 UsesModel = T(4001)
 
 reference_type(4002, "TrainedOn", "IsTrainingDataFor",
@@ -828,8 +828,8 @@ prop_var(AM, "ModelType", "TaskKind", String,
 prop_var(AM, "ModelType", "Digest", ByteString,
          "Cryptographic digest of the model artefact, for provenance and integrity. "
          "Mandatory: clause 12 requires it for every model whose artefact is obtainable "
-         "through ArtifactUri, and it is the terminus of the provenance chain that "
-         "UsesModel keeps intact.",
+         "through ArtifactUri, and it is the terminus of the historical provenance "
+         "chain from ModelUsed.",
          MR_Mandatory)
 prop_var(AM, "ModelType", "DigestAlgorithm", String,
          "Hash function used for Digest. SHALL name a function with at least 256-bit "

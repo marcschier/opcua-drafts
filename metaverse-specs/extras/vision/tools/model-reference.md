@@ -362,6 +362,7 @@ Abstract base for a vision result. Unlike OPC 40100-1, whose ResultContent is Ba
 | Confidence | Variable | Double | Scalar | Optional | Overall confidence in the range 0.0 to 1.0, where the model reports one. |
 | ExplanationUri | Variable | String | Scalar | Optional | Location of an explanation artefact, for example a saliency map. Treated as untrusted input. |
 | Frame | Variable | VisionImageReferenceDataType | Scalar | Optional | Reference to the frame this result was computed from. |
+| ModelUsed | Variable | NodeId | Scalar | Optional | NodeId of the ModelType instance that actually produced this result. Where the pipeline names an OPC UA - AI Model Management and Inference deployment, this is the ModelUsed returned by that invocation, not necessarily the model the deployment names when the result is read. |
 
 ### InspectionResultType — `ns=1;i=1021`
 

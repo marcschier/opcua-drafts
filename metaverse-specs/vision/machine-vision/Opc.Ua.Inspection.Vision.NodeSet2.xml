@@ -7,9 +7,9 @@
     <Uri>http://opcfoundation.org/UA/AI/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/Vision/Examples/Inspection/" Version="0.1.0" PublicationDate="2026-08-13T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/Vision/Examples/Inspection/" Version="0.1.0" PublicationDate="2026-08-25T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.4.0" PublicationDate="2026-08-13T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.4.1" PublicationDate="2026-08-25T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/AI/" Version="0.5.0" PublicationDate="2026-08-12T00:00:00Z" />
     </Model>
   </Models>

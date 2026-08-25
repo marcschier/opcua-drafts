@@ -579,7 +579,7 @@ Where a deployment executes somewhere this Server does not control, `State` is n
 
 A `DeploymentType` instance **shall** have **exactly one** `UsesModel` reference, and its target **shall** be a `ModelType` instance.
 
-This is the only defined path from a running deployment to the artefact its results depend on, and §12.1's provenance argument is a walk along it. Zero references breaks the chain; more than one makes "which model produced this?" unanswerable, which is the question the chain exists to answer.
+This is the defined path from a running deployment to the model it is configured to serve now. Zero references leaves the deployment's current model unknown; more than one makes that current configuration ambiguous. It is not a historical record: a client asking which model produced a retained result follows the invocation-time `ModelUsed` identity instead (§8.2.1 and §12.1).
 
 `TrainedOn` links a model to a dataset it was trained or validated on. It is optional and may repeat: a model whose training data cannot be named is a model whose behaviour cannot be explained, but not every installation holds that information.
 
@@ -753,6 +753,8 @@ A Server **shall** return the model that actually produced the response, which i
 Two mechanisms defined here can move it between the call and the read: a fallback (§9.4) answers from a different deployment entirely, and a `FollowsRef` binding (§9.3) can be repointed at a new version. In both cases the deployment's current model is the *wrong* answer to "what produced this result", and it is wrong in the direction that matters — it names a model that looks plausible.
 
 The provenance chain of §12.1 therefore walks `ModelUsed`, not the deployment.
+
+A consuming specification that persists an inference result **shall** retain this value with the result when historical model identity is part of its contract. *OPC UA for Vision Systems* does so as `VisionResultType.ModelUsed`: its result-to-model path has the same meaning as this Method output and as `InferenceJobType.ModelUsed`.
 
 #### 8.2.2 `FinishReason`
 
@@ -1173,16 +1175,16 @@ Where a safety policy is applied to an inference call, what it produces is a set
 
 Provenance is the point of the digest: without it the other members describe an artefact nobody can confirm they hold.
 
-A published result is traceable to the artefact that produced it by: result → deployment (the consuming specification's `NodeId` Property) → `UsesModel` → `ModelType` → `Digest`.
+A published result is traceable to the artefact that produced it by retaining the invocation's `ModelUsed` NodeId and following `ModelUsed` → `ModelType` → `Digest`. The deployment's `UsesModel` reference identifies the model serving now; it is not a historical record.
 
-Every link is required for the chain to hold, which is why `UsesModel` is exactly-one (§6.5) and `Digest` is Mandatory (§6.2). A Server **shall** populate `Digest` for every model whose artefact is obtainable through `ArtifactUri`.
+`Digest` is Mandatory because the historical chain cannot identify artefact bytes without it (§6.2). `UsesModel` remains exactly-one so a deployment's current serving configuration is unambiguous (§6.5). A Server **shall** populate `Digest` for every model whose artefact is obtainable through `ArtifactUri`.
 
 `DigestAlgorithm` **shall** name a hash function with **at least 256-bit output and no known collision weakness**; `SHA-256` is the default and is always acceptable. It **shall not** be `MD5`, `SHA-1` or a truncated variant — chosen-prefix collisions against those are practical, so a substituted artefact would pass verification, and a verification that can be passed by the wrong artefact is worse than none because it is believed.
 
 ```mermaid
 flowchart LR
-    R["a published result"] --> D["DeploymentType"]
-    D -->|"ModelUsed<br/><b>not</b> UsesModel"| M["ModelType"]
+    R["a published result"] -->|"ModelUsed"| M["ModelType"]
+    D["DeploymentType"] -->|"UsesModel<br/>serving now"| M
     M -->|Digest + DigestAlgorithm| A["the artefact bytes"]
     M -->|ImportedFrom| CR["catalogue resource<br/>where it came from"]
     M -->|DerivedFrom| B["the model it came from"]
@@ -1214,7 +1216,7 @@ Where such an identifier **locates** the artefact or its provenance record, it b
 
 #### 12.1.2 Broken links
 
-The walk is: result → deployment → `ModelUsed` → `ModelType` → `Digest`, and — where the model was imported — `ImportedFrom` → the catalogue resource it came from.
+The walk is: result → `ModelUsed` → `ModelType` → `Digest`, and — where the model was imported — `ImportedFrom` → the catalogue resource it came from.
 
 Two of those links can be broken by a Server that is otherwise behaving correctly:
 
@@ -1395,7 +1397,7 @@ Not normative references, and no dependency. Recorded because this model borrowe
 - **IDTA 02059** *AI Model Management* — the member set of `DeploymentType`, including the inference-location concept.
 - **OPC 30270** — the OPC UA ⇄ Asset Administration Shell bridge, over which the alignments above become a populated AAS.
 - **xRegistry** — [the CNCF specification](https://github.com/xregistry/spec) the OPC UA projection in this repository follows. Its `groups` / `resources` / `versions` structure is what clause 10 extends, and public proxies over model hubs already present exactly the arrangement adopted here: publisher as group, models and datasets as sibling resource types, versions immutable and identified by content, mutable branch and tag names as pointers rather than versions.
-- **OPC UA — Vision** in this repository is the first consuming specification. Its `InferencePipelineType.Deployment` is a `NodeId` Property naming a `DeploymentType` here, per §5.2, and neither NodeSet requires the other.
+- **OPC UA for Vision Systems** in this repository is the first consuming specification. Its `InferencePipelineType.Deployment` is a `NodeId` Property naming a `DeploymentType` here, and its `VisionResultType.ModelUsed` retains the model that actually answered, per §8.2.1. Neither NodeSet requires the other. See the informative [Vision and AI Model Management walkthrough](../vision-ai-walkthrough.md) for the combined browse path.
 
 ---
 

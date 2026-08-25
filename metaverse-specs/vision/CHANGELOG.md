@@ -4,7 +4,15 @@ All notable changes to this specification and its information model.
 
 NodeId assignment is **append-only**: a new member takes the next free id, so every previously published NodeId is stable across the releases below.
 
-## Unreleased
+## 0.4.1 — 2026-08-25
+
+### Results retain the model that actually answered
+
+`VisionResultType.ModelUsed` (`NodeId`, Optional) is appended at `i=6215`; no existing NodeId moves. It records the `ModelType` that actually produced a result, matching the `ModelUsed` output of *OPC UA — AI Model Management and Inference*. Servers claiming **VIS-Inference-OnServer** or **VIS-Inference-OffServer** populate it on every result produced through a `DeploymentType`.
+
+The distinction is historical rather than cosmetic. `Deployment → UsesModel` identifies the model serving now, but promotion, fallback and a `FollowsRef` repointing can change that answer after a result was produced. An audit now follows `result.ModelUsed → ModelType → Digest`, while configuration discovery continues to follow `pipeline.Deployment → UsesModel`.
+
+`ModelVersionUsed` remains the readable and event-filterable version value. Where a result publishes both fields, it matches the referenced `ModelType.Version`, so the two representations cannot disagree. A Server retains a referenced model node for as long as it retains a result that names it.
 
 The specification is named *OPC UA for Vision Systems* and states explicitly that it complements OPC 40100-1 and OPC 40100-2. The scope and Annex D assign job orchestration, recipes, configurations and result transfer to Part 1; asset identity, condition and maintenance to Part 2; and sensing, media, calibration, perception semantics, AI provenance and feedback to this specification.
 

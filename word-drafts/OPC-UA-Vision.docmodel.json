@@ -383,7 +383,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Neither list is a statement that the omitted capability is unimportant — only that Release 0.4.0 does not define it, and that a Server is conformant without it."
+            "text": "Neither list is a statement that the omitted capability is unimportant — only that this specification does not define it, and that a Server is conformant without it."
           }
         ],
         "src": {
@@ -404,7 +404,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Release 0.4.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by "
+            "text": "This specification covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by "
           },
           {
             "r": "t",
@@ -3032,7 +3032,7 @@
         "id": "fig-vis-instances",
         "caption": "Instance structure and references",
         "source": "mermaid",
-        "mermaid": "graph TD\n    ROOT[\"Vision : VisionRootType\"]\n    AIROOT[\"AiModelManagement : AiRootType<br/><i>AI Model Management spec, beside this one<br/>under the Server object</i>\"]\n    AIROOT --> FM[\"Models\"]\n    AIROOT --> FJ[\"LearningJobs\"]\n    ROOT --> FS[\"Sensors\"]\n    ROOT --> FP[\"Pipelines\"]\n    ROOT --> FF[\"Frames\"]\n\n    FS --> SENSOR[\"ImageSensorType<br/>SensorId, RealityKind, Modality<br/>Width, Height, PixelFormat\"]\n    SENSOR --> MEDIA[\"Media : VisionMediaManagementType<br/>GetStreamEndpoint, GetClip\"]\n    MEDIA --> SEP[\"StreamEndpoints/<br/>StreamEndpointType<br/>StreamProtocol, ProtocolVersion\"]\n    MEDIA --> CEP[\"ClipEndpoints/<br/>ClipEndpointType<br/>ClipFormat, LatestClip\"]\n    SENSOR --> OPT[\"Optics : OpticsType<br/>FocalLength, Aperture\"]\n    SENSOR --> ILL[\"Illumination : IlluminationType<br/>Wavelength, Intensity\"]\n    SENSOR --> CALS[\"Calibrations/\"]\n    CALS --> ICAL[\"IntrinsicCalibrationType<br/>Intrinsics\"]\n    CALS --> ECAL[\"ExtrinsicCalibrationType<br/>Mount, Transform\"]\n\n    FF --> FRAME[\"CoordinateFrameType<br/>FrameId, Role\"]\n\n    FM --> MODEL[\"ModelType<br/>ModelId, Version, Digest<br/><i>AI Model Management spec</i>\"]\n    FM --> DSET[\"DatasetType<br/>SourceKind<br/><i>AI Model Management spec</i>\"]\n    FM --> DEPL[\"DeploymentType<br/>InferenceLocation, EndpointUri<br/><i>AI Model Management spec</i>\"]\n\n    FP --> PIPE[\"InferencePipelineType<br/>State, Continuous\"]\n    PIPE --> RES[\"Results/<br/>InspectionResultType | DetectionResultType\"]\n    PIPE --> FB[\"Feedback : VisionFeedbackType<br/>SubmitCorrection\"]\n\n    FJ --> JOB[\"LearningJobType<br/>State, SamplesCollected<br/><i>AI Model Management spec</i>\"]\n\n    SENSOR -.HasCalibration.-> ICAL\n    SENSOR -.HasCalibration.-> ECAL\n    SENSOR -.MountedOn.-> FRAME\n    SENSOR -.HasScenePrim.-> PRIM[\"UsdGeomCameraType<br/>(OpenUSD Part 2, Annex D)\"]\n    DEPL -.UsesModel exactly 1.-> MODEL\n    RES -.ProducedBy.-> PIPE\n\n    PIPE -.->|Sensor| SENSOR\n    PIPE -.->|Deployment| DEPL\n    ECAL -.->|SourceFrame / TargetFrame| FRAME\n    FRAME -.->|ParentFrame| FRAME\n    JOB -.->|Dataset| DSET\n    JOB -.->|CandidateModel| MODEL",
+        "mermaid": "graph TD\n    ROOT[\"Vision : VisionRootType\"]\n    AIROOT[\"AiModelManagement : AiRootType<br/><i>AI Model Management spec, beside this one<br/>under the Server object</i>\"]\n    AIROOT --> FM[\"Models\"]\n    AIROOT --> FJ[\"LearningJobs\"]\n    ROOT --> FS[\"Sensors\"]\n    ROOT --> FP[\"Pipelines\"]\n    ROOT --> FF[\"Frames\"]\n\n    FS --> SENSOR[\"ImageSensorType<br/>SensorId, RealityKind, Modality<br/>Width, Height, PixelFormat\"]\n    SENSOR --> MEDIA[\"Media : VisionMediaManagementType<br/>GetStreamEndpoint, GetClip\"]\n    MEDIA --> SEP[\"StreamEndpoints/<br/>StreamEndpointType<br/>StreamProtocol, ProtocolVersion\"]\n    MEDIA --> CEP[\"ClipEndpoints/<br/>ClipEndpointType<br/>ClipFormat, LatestClip\"]\n    SENSOR --> OPT[\"Optics : OpticsType<br/>FocalLength, Aperture\"]\n    SENSOR --> ILL[\"Illumination : IlluminationType<br/>Wavelength, Intensity\"]\n    SENSOR --> CALS[\"Calibrations/\"]\n    CALS --> ICAL[\"IntrinsicCalibrationType<br/>Intrinsics\"]\n    CALS --> ECAL[\"ExtrinsicCalibrationType<br/>Mount, Transform\"]\n\n    FF --> FRAME[\"CoordinateFrameType<br/>FrameId, Role\"]\n\n    FM --> MODEL[\"ModelType<br/>ModelId, Version, Digest<br/><i>AI Model Management spec</i>\"]\n    FM --> DSET[\"DatasetType<br/>SourceKind<br/><i>AI Model Management spec</i>\"]\n    FM --> DEPL[\"DeploymentType<br/>InferenceLocation, EndpointUri<br/><i>AI Model Management spec</i>\"]\n\n    FP --> PIPE[\"InferencePipelineType<br/>State, Continuous\"]\n    PIPE --> RES[\"Results/<br/>InspectionResultType | DetectionResultType\"]\n    PIPE --> FB[\"Feedback : VisionFeedbackType<br/>SubmitCorrection\"]\n\n    FJ --> JOB[\"LearningJobType<br/>State, SamplesCollected<br/><i>AI Model Management spec</i>\"]\n\n    SENSOR -.HasCalibration.-> ICAL\n    SENSOR -.HasCalibration.-> ECAL\n    SENSOR -.MountedOn.-> FRAME\n    SENSOR -.HasScenePrim.-> PRIM[\"UsdGeomCameraType<br/>(OpenUSD Part 2, Annex D)\"]\n    DEPL -.UsesModel exactly 1.-> MODEL\n    RES -.ProducedBy.-> PIPE\n    RES -.->|ModelUsed| MODEL\n\n    PIPE -.->|Sensor| SENSOR\n    PIPE -.->|Deployment| DEPL\n    ECAL -.->|SourceFrame / TargetFrame| FRAME\n    FRAME -.->|ParentFrame| FRAME\n    JOB -.->|Dataset| DSET\n    JOB -.->|CandidateModel| MODEL",
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.2 Instance structure and references",
@@ -3223,15 +3223,23 @@
             },
             {
               "r": "t",
-              "text": " — result → "
+              "text": " — a historical result follows "
             },
             {
               "r": "code",
-              "text": "ProducedBy"
+              "text": "ModelUsed"
             },
             {
               "r": "t",
-              "text": " → pipeline → "
+              "text": " → model → "
+            },
+            {
+              "r": "code",
+              "text": "Digest"
+            },
+            {
+              "r": "t",
+              "text": "; the pipeline follows "
             },
             {
               "r": "code",
@@ -3247,15 +3255,17 @@
             },
             {
               "r": "t",
-              "text": " → model → "
+              "text": " → model to discover what is serving now ("
             },
             {
-              "r": "code",
-              "text": "Digest"
+              "r": "xref",
+              "target": "c6-20-1",
+              "kind": "clause",
+              "prefix": "6.20.1"
             },
             {
               "r": "t",
-              "text": " ("
+              "text": ", "
             },
             {
               "r": "xref",
@@ -3265,7 +3275,7 @@
             },
             {
               "r": "t",
-              "text": "). This chain is why "
+              "text": "). "
             },
             {
               "r": "code",
@@ -3273,7 +3283,15 @@
             },
             {
               "r": "t",
-              "text": " has cardinality exactly 1."
+              "text": " has cardinality exactly 1 so the deployment's current state is unambiguous; "
+            },
+            {
+              "r": "code",
+              "text": "ModelUsed"
+            },
+            {
+              "r": "t",
+              "text": " preserves the identity that answered after that state changes."
             }
           ]
         ],
@@ -7374,15 +7392,23 @@
           },
           {
             "r": "t",
-            "text": ", which also states its exactly-one cardinality; "
+            "text": ", which also states its exactly-one cardinality; it identifies the model serving now. Historical provenance instead follows "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType.ModelUsed"
           },
           {
             "r": "t",
-            "text": "§12.6"
+            "text": " to the model that actually answered and its "
+          },
+          {
+            "r": "code",
+            "text": "Digest"
           },
           {
             "r": "t",
-            "text": "'s provenance check walks it, and the "
+            "text": ", and the "
           },
           {
             "r": "t",
@@ -7391,11 +7417,33 @@
           },
           {
             "r": "t",
-            "text": "* facets require that specification for exactly that reason ("
+            "text": "* facets require that specification so both paths have defined targets ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-1",
+            "kind": "clause",
+            "prefix": "6.19.1"
           },
           {
             "r": "t",
-            "text": "§11.2"
+            "text": ", "
+          },
+          {
+            "r": "xref",
+            "target": "c11-2",
+            "kind": "clause",
+            "prefix": "11.2"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "xref",
+            "target": "c6-23-6",
+            "kind": "clause",
+            "prefix": "6.23.6"
           },
           {
             "r": "t",
@@ -8747,6 +8795,14 @@
           {
             "r": "code",
             "text": "Deployment"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
           },
           {
             "r": "t",
@@ -13613,6 +13669,14 @@
           },
           {
             "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
             "text": "ModelVersionUsed"
           },
           {
@@ -13674,6 +13738,172 @@
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "7.1 `VisionResultType` (abstract)",
           "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " is the "
+          },
+          {
+            "r": "code",
+            "text": "NodeId"
+          },
+          {
+            "r": "t",
+            "text": " of the model that actually produced the result. Where the Server also implements "
+          },
+          {
+            "r": "t",
+            "text": "OPC UA — AI Model Management and Inference",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", a non-null value "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " resolve to the "
+          },
+          {
+            "r": "code",
+            "text": "ModelType"
+          },
+          {
+            "r": "t",
+            "text": " returned as "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " by the synchronous invocation or retained on the asynchronous inference job. It may differ from the model reached through the pipeline's current "
+          },
+          {
+            "r": "code",
+            "text": "Deployment → UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " path after a fallback, promotion or "
+          },
+          {
+            "r": "code",
+            "text": "FollowsRef"
+          },
+          {
+            "r": "t",
+            "text": " repointing. Where "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " is non-null and "
+          },
+          {
+            "r": "code",
+            "text": "ModelVersionUsed"
+          },
+          {
+            "r": "t",
+            "text": " is populated, "
+          },
+          {
+            "r": "code",
+            "text": "ModelVersionUsed"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " equal the referenced "
+          },
+          {
+            "r": "code",
+            "text": "ModelType.Version"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.1 `VisionResultType` (abstract)",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " retain a "
+          },
+          {
+            "r": "code",
+            "text": "ModelType"
+          },
+          {
+            "r": "t",
+            "text": " instance referenced by "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " for at least as long as it retains any "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType"
+          },
+          {
+            "r": "t",
+            "text": " instance that names it. Otherwise the Server would publish a non-null NodeId that no longer resolves and the historical decision chain would end before its digest."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.1 `VisionResultType` (abstract)",
+          "b": 3
         }
       },
       {
@@ -14899,7 +15129,7 @@
             [
               {
                 "r": "t",
-                "text": "Version of the model that decided"
+                "text": "Version of the model that decided; repeated as a filterable value while the result carries the model NodeId"
               }
             ]
           ],
@@ -16089,17 +16319,39 @@
           },
           {
             "r": "t",
-            "text": " instance and the chain in "
+            "text": " instance. Two related paths are then available: "
           },
           {
-            "r": "xref",
-            "target": "c6-23-6",
-            "kind": "clause",
-            "prefix": "6.23.6"
+            "r": "code",
+            "text": "pipeline.Deployment → DeploymentType → UsesModel → ModelType"
           },
           {
             "r": "t",
-            "text": " — result → deployment → model → digest — is available end to end. Where it does not, "
+            "text": " identifies the model serving now, while "
+          },
+          {
+            "r": "code",
+            "text": "result.ModelUsed → ModelType → Digest"
+          },
+          {
+            "r": "t",
+            "text": " identifies and verifies the model that produced a retained result. The second path is authoritative for historical provenance because fallback, promotion and "
+          },
+          {
+            "r": "code",
+            "text": "FollowsRef"
+          },
+          {
+            "r": "t",
+            "text": " repointing can make the deployment's current model differ from the one that answered. Where the Server does not implement both specifications, the "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " target's semantics are out of scope and "
           },
           {
             "r": "xref",
@@ -16118,7 +16370,7 @@
           },
           {
             "r": "t",
-            "text": "* facets require it ("
+            "text": "* facets require the AI model ("
           },
           {
             "r": "xref",
@@ -16608,7 +16860,7 @@
         "id": "fig-vis-exchange",
         "caption": "The client exchange, identical at every inference location",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n    participant C as Client\n    participant S as OPC UA Server\n    C->>S: Call RunInference(Timestamp)\n    S-->>C: ResultId (Good)\n    C->>S: Read Results/<ResultId>\n    S-->>C: InspectionResultType / DetectionResultType\n    C->>S: Browse result -> ProducedBy -> Deployment -> UsesModel\n    S-->>C: ModelType (Version, Digest)",
+        "mermaid": "sequenceDiagram\n    participant C as Client\n    participant S as OPC UA Server\n    C->>S: Call RunInference(Timestamp)\n    S-->>C: ResultId (Good)\n    C->>S: Read Results/<ResultId>\n    S-->>C: InspectionResultType / DetectionResultType\n    C->>S: Read result.ModelUsed\n    S-->>C: ModelType NodeId that produced the result\n    C->>S: Read ModelType (Version, Digest)\n    S-->>C: Historical model identity and integrity\n    C->>S: Browse pipeline.Deployment -> UsesModel\n    S-->>C: ModelType serving now",
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "8.2.1 Usage model",
@@ -19648,6 +19900,14 @@
             },
             {
               "r": "code",
+              "text": "ModelUsed"
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "code",
               "text": "ModelVersionUsed"
             },
             {
@@ -21252,7 +21512,40 @@
         "runs": [
           {
             "r": "t",
-            "text": "Digest verification is the terminus of the provenance chain, and "
+            "text": "Digest verification is the terminus of the provenance chain. "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType.ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " keeps the historical chain intact by recording which "
+          },
+          {
+            "r": "code",
+            "text": "ModelType"
+          },
+          {
+            "r": "t",
+            "text": " answered at inference time. A client auditing a retained result "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " walk "
+          },
+          {
+            "r": "code",
+            "text": "result.ModelUsed → ModelType → Digest"
+          },
+          {
+            "r": "t",
+            "text": ", not the deployment's current "
           },
           {
             "r": "code",
@@ -21260,7 +21553,7 @@
           },
           {
             "r": "t",
-            "text": " is what keeps that chain intact."
+            "text": " reference, which describes what is serving now."
           }
         ],
         "src": {
@@ -24741,7 +25034,33 @@
               },
               {
                 "r": "t",
-                "text": " constraint. Where "
+                "text": " constraint. Every result produced through that deployment populates "
+              },
+              {
+                "r": "code",
+                "text": "ModelUsed"
+              },
+              {
+                "r": "t",
+                "text": " with the "
+              },
+              {
+                "r": "code",
+                "text": "ModelType"
+              },
+              {
+                "r": "t",
+                "text": " that actually answered ("
+              },
+              {
+                "r": "xref",
+                "target": "c6-19-1",
+                "kind": "clause",
+                "prefix": "6.19.1"
+              },
+              {
+                "r": "t",
+                "text": "). Where "
               },
               {
                 "r": "code",
@@ -24812,7 +25131,15 @@
               },
               {
                 "r": "t",
-                "text": ", plus "
+                "text": ", including "
+              },
+              {
+                "r": "code",
+                "text": "ModelUsed"
+              },
+              {
+                "r": "t",
+                "text": " on every result, plus "
               },
               {
                 "r": "code",
@@ -25352,7 +25679,16 @@
           },
           {
             "r": "t",
-            "text": ". This is the only place either specification depends on the other, and it is stated as a facet precondition rather than a "
+            "text": ". "
+          },
+          {
+            "r": "t",
+            "text": "AI-Events",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " is independent: the Vision inference facets do not require promotion events, and a Server claims that AI facet separately when it exposes them. This is the only place either specification depends on the other, and it is stated as a facet precondition rather than a "
           },
           {
             "r": "code",
@@ -25504,7 +25840,7 @@
             [
               {
                 "r": "t",
-                "text": "0.4.0"
+                "text": "0.4.1"
               }
             ]
           ],
@@ -25524,7 +25860,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-08-13"
+                "text": "2026-08-25"
               }
             ]
           ],
@@ -31605,7 +31941,23 @@
           },
           {
             "r": "t",
-            "text": " requires. That reference is the only defined path from a result to the model artefact and its "
+            "text": " requires. That reference says which model is serving now. Each retained result records the model that actually answered in "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": ", so an audit follows "
+          },
+          {
+            "r": "code",
+            "text": "result.ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " to the model and its "
           },
           {
             "r": "code",
@@ -31613,15 +31965,7 @@
           },
           {
             "r": "t",
-            "text": ", so it is what makes the base specification's "
-          },
-          {
-            "r": "t",
-            "text": "§12.6"
-          },
-          {
-            "r": "t",
-            "text": " provenance check possible."
+            "text": " even after a promotion, fallback or followed-reference change."
           }
         ],
         "src": {
@@ -31651,6 +31995,22 @@
           {
             "r": "t",
             "text": " whose "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " names "
+          },
+          {
+            "r": "code",
+            "text": "GraspPoseNet"
+          },
+          {
+            "r": "t",
+            "text": ", the model that actually answered, even if the deployment later promotes another model or routes one call through a fallback. Its "
           },
           {
             "r": "code",
@@ -33616,7 +33976,23 @@
           },
           {
             "r": "t",
-            "text": " requires. That reference is the only defined path from a result to the model artefact and its "
+            "text": " requires. That reference says which model is serving now. Each retained result records the model that actually answered in "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": ", so an audit follows "
+          },
+          {
+            "r": "code",
+            "text": "result.ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " to the model and its "
           },
           {
             "r": "code",
@@ -33624,15 +34000,7 @@
           },
           {
             "r": "t",
-            "text": ", so it is what makes the base specification's "
-          },
-          {
-            "r": "t",
-            "text": "§12.6"
-          },
-          {
-            "r": "t",
-            "text": " provenance check possible."
+            "text": " even after a promotion, fallback or followed-reference change."
           }
         ],
         "src": {
@@ -33661,7 +34029,31 @@
           },
           {
             "r": "t",
-            "text": ". "
+            "text": ". Its "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " names "
+          },
+          {
+            "r": "code",
+            "text": "SealDefectNet"
+          },
+          {
+            "r": "t",
+            "text": ", the model that actually answered, while the deployment's "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " reference says which model is serving now. "
           },
           {
             "r": "code",
@@ -36211,7 +36603,15 @@
           },
           {
             "r": "t",
-            "text": " instance a pose came from, the correlation stops being a timing argument: a consumer follows the reference from the completion to the result, and from the result through "
+            "text": " instance a pose came from, the correlation stops being a timing argument: a consumer follows the reference from the completion to the result, and from "
+          },
+          {
+            "r": "code",
+            "text": "result.ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " to the model and digest. "
           },
           {
             "r": "code",
@@ -36219,7 +36619,15 @@
           },
           {
             "r": "t",
-            "text": " to the pipeline, deployment, model and digest. That is the whole provenance chain in one walk, and it is what the commanding model's Annex E.8 asks a Server implementing both to do."
+            "text": " still identifies the pipeline, whose "
+          },
+          {
+            "r": "code",
+            "text": "Deployment → UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " path shows what is serving now. Together those paths give the historical decision and current configuration without conflating them, and that is what the commanding model's Annex E.8 asks a Server implementing both to do."
           }
         ],
         "src": {

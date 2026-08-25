@@ -5625,7 +5625,25 @@
         "runs": [
           {
             "r": "t",
-            "text": "This is the only defined path from a running deployment to the artefact its results depend on, and "
+            "text": "This is the defined path from a running deployment to the model it is configured to serve now. Zero references leaves the deployment's current model unknown; more than one makes that current configuration ambiguous. It is not a historical record: a client asking which model produced a retained result follows the invocation-time "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " identity instead ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-12-2-1",
+            "kind": "clause",
+            "prefix": "6.12.2.1"
+          },
+          {
+            "r": "t",
+            "text": " and "
           },
           {
             "r": "xref",
@@ -5635,7 +5653,7 @@
           },
           {
             "r": "t",
-            "text": "'s provenance argument is a walk along it. Zero references breaks the chain; more than one makes \"which model produced this?\" unanswerable, which is the question the chain exists to answer."
+            "text": ")."
           }
         ],
         "src": {
@@ -8457,6 +8475,55 @@
           "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
           "s": "8.2.1 `ModelUsed`",
           "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A consuming specification that persists an inference result "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " retain this value with the result when historical model identity is part of its contract. "
+          },
+          {
+            "r": "t",
+            "text": "OPC UA for Vision Systems",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " does so as "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType.ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": ": its result-to-model path has the same meaning as this Method output and as "
+          },
+          {
+            "r": "code",
+            "text": "InferenceJobType.ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "8.2.1 `ModelUsed`",
+          "b": 3
         }
       },
       {
@@ -15077,19 +15144,19 @@
         "runs": [
           {
             "r": "t",
-            "text": "A published result is traceable to the artefact that produced it by: result → deployment (the consuming specification's "
+            "text": "A published result is traceable to the artefact that produced it by retaining the invocation's "
           },
           {
             "r": "code",
-            "text": "NodeId"
+            "text": "ModelUsed"
           },
           {
             "r": "t",
-            "text": " Property) → "
+            "text": " NodeId and following "
           },
           {
             "r": "code",
-            "text": "UsesModel"
+            "text": "ModelUsed"
           },
           {
             "r": "t",
@@ -15109,7 +15176,15 @@
           },
           {
             "r": "t",
-            "text": "."
+            "text": ". The deployment's "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " reference identifies the model serving now; it is not a historical record."
           }
         ],
         "src": {
@@ -15123,8 +15198,22 @@
         "style": "PARAGRAPH",
         "runs": [
           {
+            "r": "code",
+            "text": "Digest"
+          },
+          {
             "r": "t",
-            "text": "Every link is required for the chain to hold, which is why "
+            "text": " is Mandatory because the historical chain cannot identify artefact bytes without it ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-6",
+            "kind": "clause",
+            "prefix": "6.6"
+          },
+          {
+            "r": "t",
+            "text": "). "
           },
           {
             "r": "code",
@@ -15132,31 +15221,13 @@
           },
           {
             "r": "t",
-            "text": " is exactly-one ("
+            "text": " remains exactly-one so a deployment's current serving configuration is unambiguous ("
           },
           {
             "r": "xref",
             "target": "c6-9",
             "kind": "clause",
             "prefix": "6.9"
-          },
-          {
-            "r": "t",
-            "text": ") and "
-          },
-          {
-            "r": "code",
-            "text": "Digest"
-          },
-          {
-            "r": "t",
-            "text": " is Mandatory ("
-          },
-          {
-            "r": "xref",
-            "target": "c6-6",
-            "kind": "clause",
-            "prefix": "6.6"
           },
           {
             "r": "t",
@@ -15269,7 +15340,7 @@
         "id": "fig-aim-prov",
         "caption": "Provenance of a trained model",
         "source": "mermaid",
-        "mermaid": "flowchart LR\n    R[\"a published result\"] --> D[\"DeploymentType\"]\n    D -->|\"ModelUsed<br/><b>not</b> UsesModel\"| M[\"ModelType\"]\n    M -->|Digest + DigestAlgorithm| A[\"the artefact bytes\"]\n    M -->|ImportedFrom| CR[\"catalogue resource<br/>where it came from\"]\n    M -->|DerivedFrom| B[\"the model it came from\"]\n    M -->|TrainedOn| DS[\"DatasetType\"]",
+        "mermaid": "flowchart LR\n    R[\"a published result\"] -->|\"ModelUsed\"| M[\"ModelType\"]\n    D[\"DeploymentType\"] -->|\"UsesModel<br/>serving now\"| M\n    M -->|Digest + DigestAlgorithm| A[\"the artefact bytes\"]\n    M -->|ImportedFrom| CR[\"catalogue resource<br/>where it came from\"]\n    M -->|DerivedFrom| B[\"the model it came from\"]\n    M -->|TrainedOn| DS[\"DatasetType\"]",
         "src": {
           "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
           "s": "12.1 Provenance",
@@ -15856,7 +15927,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "The walk is: result → deployment → "
+            "text": "The walk is: result → "
           },
           {
             "r": "code",
@@ -17486,7 +17557,8 @@
       {
         "t": "enumtable",
         "id": "c8-1-items",
-        "browseName": "InferenceLocationEnum"
+        "browseName": "InferenceLocationEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17514,7 +17586,8 @@
       {
         "t": "enumtable",
         "id": "c8-2-items",
-        "browseName": "AcceleratorKindEnum"
+        "browseName": "AcceleratorKindEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17542,7 +17615,8 @@
       {
         "t": "enumtable",
         "id": "c8-3-items",
-        "browseName": "DeploymentStateEnum"
+        "browseName": "DeploymentStateEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17570,7 +17644,8 @@
       {
         "t": "enumtable",
         "id": "c8-4-items",
-        "browseName": "DatasetSourceEnum"
+        "browseName": "DatasetSourceEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17598,7 +17673,8 @@
       {
         "t": "enumtable",
         "id": "c8-5-items",
-        "browseName": "LearningJobStateEnum"
+        "browseName": "LearningJobStateEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17626,7 +17702,8 @@
       {
         "t": "enumtable",
         "id": "c8-6-items",
-        "browseName": "FinishReasonEnum"
+        "browseName": "FinishReasonEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17654,7 +17731,8 @@
       {
         "t": "enumtable",
         "id": "c8-7-items",
-        "browseName": "ApiDialectEnum"
+        "browseName": "ApiDialectEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17682,7 +17760,8 @@
       {
         "t": "enumtable",
         "id": "c8-8-items",
-        "browseName": "AuthenticationKindEnum"
+        "browseName": "AuthenticationKindEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17710,7 +17789,8 @@
       {
         "t": "enumtable",
         "id": "c8-9-items",
-        "browseName": "FallbackPolicyEnum"
+        "browseName": "FallbackPolicyEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17738,7 +17818,8 @@
       {
         "t": "enumtable",
         "id": "c8-10-items",
-        "browseName": "VersionBindingEnum"
+        "browseName": "VersionBindingEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17766,7 +17847,8 @@
       {
         "t": "enumtable",
         "id": "c8-11-items",
-        "browseName": "ImportModeEnum"
+        "browseName": "ImportModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17794,7 +17876,8 @@
       {
         "t": "enumtable",
         "id": "c8-12-items",
-        "browseName": "SafetySeverityEnum"
+        "browseName": "SafetySeverityEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17822,7 +17905,8 @@
       {
         "t": "enumtable",
         "id": "c8-13-items",
-        "browseName": "ReachabilityEnum"
+        "browseName": "ReachabilityEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17850,7 +17934,8 @@
       {
         "t": "enumtable",
         "id": "c8-14-items",
-        "browseName": "TransferStateEnum"
+        "browseName": "TransferStateEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17878,7 +17963,8 @@
       {
         "t": "enumtable",
         "id": "c8-15-items",
-        "browseName": "DigestProvenanceEnum"
+        "browseName": "DigestProvenanceEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17906,7 +17992,8 @@
       {
         "t": "enumtable",
         "id": "c8-16-items",
-        "browseName": "TensorSignatureDataType"
+        "browseName": "TensorSignatureDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17934,7 +18021,8 @@
       {
         "t": "enumtable",
         "id": "c8-17-items",
-        "browseName": "ModelReferenceDataType"
+        "browseName": "ModelReferenceDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17962,7 +18050,8 @@
       {
         "t": "enumtable",
         "id": "c8-18-items",
-        "browseName": "UsageDataType"
+        "browseName": "UsageDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17990,7 +18079,8 @@
       {
         "t": "enumtable",
         "id": "c8-19-items",
-        "browseName": "CapabilityDataType"
+        "browseName": "CapabilityDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18018,7 +18108,8 @@
       {
         "t": "enumtable",
         "id": "c8-20-items",
-        "browseName": "SafetyAssessmentDataType"
+        "browseName": "SafetyAssessmentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18046,7 +18137,8 @@
       {
         "t": "enumtable",
         "id": "c8-21-items",
-        "browseName": "EvaluationMetricDataType"
+        "browseName": "EvaluationMetricDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18074,7 +18166,8 @@
       {
         "t": "enumtable",
         "id": "c8-22-items",
-        "browseName": "RateLimitDataType"
+        "browseName": "RateLimitDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18103,7 +18196,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Links a Deployment to the Model it executes. Clause 6.5 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which the provenance requirement of clause 12 depends."
+            "text": "Links a Deployment to the Model it executes. Clause 6.5 requires exactly one such reference per deployment so the model serving now is unambiguous. Historical result provenance uses the ModelUsed identity returned by invocation and retained by the consuming specification."
           }
         ]
       },
@@ -20953,7 +21046,7 @@
           [
             {
               "r": "t",
-              "text": "OPC UA — Vision",
+              "text": "OPC UA for Vision Systems",
               "b": true
             },
             {
@@ -20982,17 +21075,32 @@
             },
             {
               "r": "t",
-              "text": " here, per "
+              "text": " here, and its "
             },
             {
-              "r": "xref",
-              "target": "c6-2",
-              "kind": "clause",
-              "prefix": "6.2"
+              "r": "code",
+              "text": "VisionResultType.ModelUsed"
             },
             {
               "r": "t",
-              "text": ", and neither NodeSet requires the other."
+              "text": " retains the model that actually answered, per "
+            },
+            {
+              "r": "t",
+              "text": "§8.2.1"
+            },
+            {
+              "r": "t",
+              "text": ". Neither NodeSet requires the other. See the informative "
+            },
+            {
+              "r": "link",
+              "text": "Vision and AI Model Management walkthrough",
+              "href": "../vision-ai-walkthrough.md"
+            },
+            {
+              "r": "t",
+              "text": " for the combined browse path."
             }
           ]
         ],

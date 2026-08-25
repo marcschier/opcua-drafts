@@ -460,7 +460,7 @@
   </UAObject>
   <UAReferenceType NodeId="ns=2;i=4001" BrowseName="2:UsesModel">
     <DisplayName>UsesModel</DisplayName>
-    <Description>Links a Deployment to the Model it executes. Clause 6.5 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which the provenance requirement of clause 12 depends.</Description>
+    <Description>Links a Deployment to the Model it executes. Clause 6.5 requires exactly one such reference per deployment so the model serving now is unambiguous. Historical result provenance uses the ModelUsed identity returned by invocation and retained by the consuming specification.</Description>
     <Category>AiModelManagement ReferenceTypes</Category>
     <InverseName>IsUsedByDeployment</InverseName>
     <References>
@@ -659,7 +659,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=2;i=6012" BrowseName="2:Digest" ParentNodeId="ns=2;i=1002" DataType="ByteString" ValueRank="-1">
     <DisplayName>Digest</DisplayName>
-    <Description>Cryptographic digest of the model artefact, for provenance and integrity. Mandatory: clause 12 requires it for every model whose artefact is obtainable through ArtifactUri, and it is the terminus of the provenance chain that UsesModel keeps intact.</Description>
+    <Description>Cryptographic digest of the model artefact, for provenance and integrity. Mandatory: clause 12 requires it for every model whose artefact is obtainable through ArtifactUri, and it is the terminus of the historical provenance chain from ModelUsed.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>

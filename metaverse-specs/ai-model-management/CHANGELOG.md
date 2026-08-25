@@ -2,6 +2,10 @@
 
 All notable changes to this specification and its information model.
 
+## Unreleased
+
+The Vision cross-reference now states how `VisionResultType.ModelUsed` persists this specification's invocation-time model identity. The `UsesModel` ReferenceType description is corrected to distinguish the model serving now from the historical `ModelUsed` identity. No type, member, NodeId, release version or publication date changes.
+
 ## 0.5.0 — 2026-08-12
 
 ### Promotion is observable, and auditable

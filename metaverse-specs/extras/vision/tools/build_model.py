@@ -40,8 +40,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/Vision/"
-VERSION = "0.4.0"
-PUBDATE = "2026-08-13T00:00:00Z"
+VERSION = "0.4.1"
+PUBDATE = "2026-08-25T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -1460,6 +1460,14 @@ prop_var(VRT, "VisionRootType", "TimeSyncSource", String,
          "IEEE1588, NTP or GPS - as free text, because the set of answers is open and a "
          "consumer uses it to judge the order of accuracy rather than to parse. Empty "
          "or absent where the Server does not state one.")
+
+# A result must retain the model that actually answered. This is appended here rather
+# than beside ModelVersionUsed so every previously published member NodeId stays fixed.
+prop_var(VR, "VisionResultType", "ModelUsed", NodeId_,
+         "NodeId of the ModelType instance that actually produced this result. Where "
+         "the pipeline names an OPC UA - AI Model Management and Inference deployment, "
+         "this is the ModelUsed returned by that invocation, not necessarily the model "
+         "the deployment names when the result is read.")
 
 
 # ===========================================================================

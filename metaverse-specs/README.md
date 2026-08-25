@@ -29,11 +29,13 @@ Pick Part 1 when you already have an artist-authored USD asset and want to drive
 | Question | *What does this camera see, and what did it conclude?* | *How do I tell this robot what to do?* | *Which model produced this answer, and can I audit it?* |
 | The gap | OPC 40100-1 leaves result content undefined; OPC 40010-1 has no vision types at all | OPC 40010-1 describes robot topology and defines **no motion verbs** | OPC UA has no way to say what an AI model *is*, where it runs, or what it was trained on |
 | Namespace | `http://opcfoundation.org/UA/Vision/` | `http://opcfoundation.org/UA/RobotIntent/` | `http://opcfoundation.org/UA/AI/` |
-| Release | 0.1.0 | 0.1.0 | 0.4.0 |
+| Release | 0.4.1 | 0.3.0 | 0.5.0 |
 
 Vision and Robot Intent are self-contained on base OPC UA. AI Model Management additionally requires *OPC UA — xRegistry*, because its model catalogue is a domain extension of that abstract registry rather than a private invention — a model catalogue **is** a registry, and defining a second one would leave two incompatible ways to describe the same artefact.
 
-**They compose without coupling.** Vision's `InferencePipelineType.Deployment` is a plain `NodeId`, so a Server can publish cameras and verdicts with no AI model at all; where it does describe one, the chain *result → deployment → model → digest* is available end to end. Vision and Robot Intent share a frame vocabulary with identical literals and numbering. In every case the join is a **facet precondition**, never a `RequiredModel` — which is what lets a domain adopt one model without inheriting the others.
+**They compose without coupling.** Vision's `InferencePipelineType.Deployment` and `VisionResultType.ModelUsed` are plain `NodeId` Properties, so a Server can publish cameras and verdicts with no AI model at all. Where it implements both models, `Deployment → UsesModel` identifies the model serving now, while `result.ModelUsed → ModelType → Digest` identifies the model that produced a retained result. Vision and Robot Intent share a frame vocabulary with identical literals and numbering. In every case the join is a **facet precondition**, never a `RequiredModel` — which is what lets a domain adopt one model without inheriting the others.
+
+For a short browse-oriented introduction to the two models and their ownership boundary, see [Vision and AI Model Management walkthrough](vision-ai-walkthrough.md).
 
 ## Layout
 
