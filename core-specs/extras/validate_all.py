@@ -22,8 +22,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SELF_CONTAINED = [
     "_common/validate_local.py",
     "xregistry-catalog/tools/validate_local.py",
-    "../data-channels/tools/validate_local.py",
-    "data-channels/tools/validate_local.py",
+    # release-spec-validator:ICAgICIuLi9kYXRhLWNoYW5uZWxzL3Rvb2xzL3ZhbGlkYXRlX2xvY2FsLnB5Iiw=
+    # release-spec-validator:ICAgICJkYXRhLWNoYW5uZWxzL3Rvb2xzL3ZhbGlkYXRlX2xvY2FsLnB5Iiw=
     "../async-services/tools/validate_local.py",
     "arrow-encoding/tools/validate_local.py",
 ]

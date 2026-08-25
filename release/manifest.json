@@ -44,7 +44,7 @@
       "$comment": "Releasable base-namespace errata package. The combined specification, the insertion-ready Part 3, Part 4 and Part 6 errata, the generated model, the wire tooling, and the linked informative throughput report form one review unit. Both validators are self-contained and the draft has no RequiredModel dependency, so it needs neither closure nor vendored specifications.",
       "title": "OPC UA — Data Channels",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "core-specs/data-channels",
         "core-specs/extras/data-channels",
