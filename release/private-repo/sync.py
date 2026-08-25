@@ -93,9 +93,15 @@ def transform_pr_validation(text: str) -> str:
           SECTION_REF_STRICT_PREFIXES: ${{ vars.SECTION_REF_STRICT_PREFIXES }}
 """)
     text = text.replace("""      - run: pip install -r core-specs/extras/requirements.txt
+      - run: pip install -r companion-specs/AAS/requirements.txt
+      # The AddressSpace figure gate re-derives each figure from the NodeSet using the
+      # Word pipeline's Mermaid parser, so spec validation needs that parser installed.
+      # Without it the gate skips, and a figure that contradicts its model reaches main.
+      - run: pip install -r word-drafts/tools/requirements.txt
       - run: python core-specs/extras/validate_all.py --self-contained
       - run: python cloud-specs/validate_all.py --self-contained
       - run: python metaverse-specs/validate_all.py --self-contained
+      - run: python companion-specs/validate_all.py --self-contained
 """, """      - name: Install validation requirements if present
         env:
           VALIDATION_REQUIREMENTS: ${{ vars.VALIDATION_REQUIREMENTS || '' }}
@@ -107,6 +113,7 @@ def transform_pr_validation(text: str) -> str:
               echo "validation requirements not present: $req"
             fi
           done
+      - run: pip install -r word-drafts/tools/requirements.txt
       - run: python .github/scripts/run_self_contained_validators.py
 """)
     text = text.replace("""      - run: pip install -r core-specs/extras/requirements.txt

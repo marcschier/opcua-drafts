@@ -4,12 +4,12 @@
     {
       "stored": "payload/dot-github/ISSUE_TEMPLATE/spec-feedback.yml.bundle",
       "destination": ".github/ISSUE_TEMPLATE/spec-feedback.yml",
-      "sha256": "4f98cd13b88a6f0af83a31a582a5669ba3fabdeb74d71101dd52cc2f04e88cfd"
+      "sha256": "145225f2f4d945126e5196738b2757d67614033f1ed688b4212f37e01be7522f"
     },
     {
       "stored": "payload/dot-github/copilot-instructions.md.bundle",
       "destination": ".github/copilot-instructions.md",
-      "sha256": "0c38dea0b858a05f260fc52f3a5384a93f30338f55eb4289df4cd65073ff2e52"
+      "sha256": "9065a5c07d365eafdddf27291a055e3f427cf1f8650aa0c5b55a78fdf1429c80"
     },
     {
       "stored": "payload/dot-github/pull_request_template.md.bundle",
@@ -22,6 +22,11 @@
       "sha256": "478cc926c5bcf1a8750c7c365489dce18703f56f8c255f3106083a2bfc56858f"
     },
     {
+      "stored": "payload/dot-github/scripts/check_browsename_namespace.py.bundle",
+      "destination": ".github/scripts/check_browsename_namespace.py",
+      "sha256": "4b972d92e3043e8c2b8a743a1022301b62960c1c4214152d6a5e2ac2421eaa82"
+    },
+    {
       "stored": "payload/dot-github/scripts/check_determinism.py.bundle",
       "destination": ".github/scripts/check_determinism.py",
       "sha256": "5fecdf5e58ca1ffa99da53133724a28f209dcdffe1dfff1c942fa370f744e777"
@@ -29,7 +34,7 @@
     {
       "stored": "payload/dot-github/scripts/check_links.py.bundle",
       "destination": ".github/scripts/check_links.py",
-      "sha256": "6e235053c0fbcac2a7ec4f508910d5a63d7d95cd1c868f6bcb48fa287524363f"
+      "sha256": "87f0832ecfd57238cb9c5c81ccc23c3ffb3be5977bc65a507abb307146f473da"
     },
     {
       "stored": "payload/dot-github/scripts/check_mermaid.py.bundle",
@@ -44,7 +49,7 @@
     {
       "stored": "payload/dot-github/scripts/check_yaml_json.py.bundle",
       "destination": ".github/scripts/check_yaml_json.py",
-      "sha256": "be8e900438c10bde2d93027b699dd8b3d7037bdcd854ea83c246eccb1a164b7d"
+      "sha256": "c1d2f797d2c37459bd0f458cb1228d1dd14836525b6e84d5313792a410347d0d"
     },
     {
       "stored": "payload/dot-github/scripts/run_self_contained_validators.py.bundle",
@@ -64,7 +69,7 @@
     {
       "stored": "payload/dot-github/workflows/pr-validation.yml.bundle",
       "destination": ".github/workflows/pr-validation.yml",
-      "sha256": "ed4e81a4203bfc5c9032c3238319a9b57298dc5a379b40c188368334249019a6"
+      "sha256": "e14954cbcc780b80b6bf3dfc62f19fb43d7f8dc550f59e40a17e98779ccf765d"
     },
     {
       "stored": "payload/dot-github/workflows/word-drafts-refresh.yml.bundle",
@@ -89,12 +94,17 @@
     {
       "stored": "payload/skills/opcua-observability-export/SKILL.md.bundle",
       "destination": "skills/opcua-observability-export/SKILL.md",
-      "sha256": "2350ca505e54e71f763179d8479d1ebae9843469aad43bdfd6a0c820c87761b3"
+      "sha256": "3d37568e6a6de00041cff52c59491ec641de01ab5ff991d98751e44ee7c73bcb"
     },
     {
       "stored": "payload/skills/opcua-spec-to-word/SKILL.md.bundle",
       "destination": "skills/opcua-spec-to-word/SKILL.md",
       "sha256": "a65246650f035a76a0be223a8e37937ba9d040d5fffc33d4c0b802e805d1d9a8"
+    },
+    {
+      "stored": "payload/skills/opcua-spec-to-word/reference/addressspace-figures.md.bundle",
+      "destination": "skills/opcua-spec-to-word/reference/addressspace-figures.md",
+      "sha256": "94615faf246090c9d67deb99eaf6604b20eccbb2e94de82ff73843291c004415"
     },
     {
       "stored": "payload/skills/opcua-spec-to-word/reference/ingest.md.bundle",
@@ -104,7 +114,7 @@
     {
       "stored": "payload/skills/opcua-spec-to-word/reference/pipeline.md.bundle",
       "destination": "skills/opcua-spec-to-word/reference/pipeline.md",
-      "sha256": "34df99c14794c6c83cb9e76c147248e4ce803fb5f0213d7ac35b2ffbed3667d5"
+      "sha256": "151551b0eb07a9f963cabd6c73ed7fe9c5705dbbf2d65b44436228c165356156"
     },
     {
       "stored": "payload/skills/opcua-spec-to-word/reference/template-contract.md.bundle",
@@ -179,12 +189,17 @@
     {
       "stored": "payload/word-drafts/tools/opcdocx/md_parse.py.bundle",
       "destination": "word-drafts/tools/opcdocx/md_parse.py",
-      "sha256": "d5668f076bf379601adcb29d798270a11b3a2e20b0109c0dfe49d639865b8345"
+      "sha256": "b2f18645f77fcb34a3811ba984bd2f09420e71431172e5bf0ad1e01f8ce807d0"
     },
     {
       "stored": "payload/word-drafts/tools/opcdocx/mermaid_pptx.py.bundle",
       "destination": "word-drafts/tools/opcdocx/mermaid_pptx.py",
-      "sha256": "025d5dd161bbbe823100ce22441c3491398fb291364c140ea6d7e39c51d061e8"
+      "sha256": "f3eeaa67c50117e8c638feafeefaf2e755f5dfadfdc125dbb41f232f40182cf0"
+    },
+    {
+      "stored": "payload/word-drafts/tools/opcdocx/nodeset_diagram.py.bundle",
+      "destination": "word-drafts/tools/opcdocx/nodeset_diagram.py",
+      "sha256": "92a6d2a064dfcea8bf92aaabe87932c3621de4fca4ce1bd0ae35d32676bba65a"
     },
     {
       "stored": "payload/word-drafts/tools/opcdocx/nodeset_tables.py.bundle",
@@ -219,7 +234,7 @@
     {
       "stored": "payload/word-drafts/tools/render_docx.py.bundle",
       "destination": "word-drafts/tools/render_docx.py",
-      "sha256": "e04623591dc2f0a930bc3ae7bbf9d35fd9562f9aeb1f020831966f6f0c8a01d3"
+      "sha256": "a616390eec78b0d6f8ec05838c319a6086eab6aba1728a1927a7e21f7630117e"
     },
     {
       "stored": "payload/word-drafts/tools/requirements.txt.bundle",
@@ -229,7 +244,7 @@
     {
       "stored": "payload/word-drafts/tools/restructure_markdown.py.bundle",
       "destination": "word-drafts/tools/restructure_markdown.py",
-      "sha256": "9f335366984079b006c6afa2a298ef3c045dc4fb09867d5ecb3fb9afe7a7e72c"
+      "sha256": "ccaedfa2c3cea6dca028251bc30491712735a1cbcb2fa456ac4f0ae57f803e47"
     },
     {
       "stored": "payload/word-drafts/tools/specs/batch.json.bundle",

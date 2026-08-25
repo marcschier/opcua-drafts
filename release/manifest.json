@@ -40,6 +40,40 @@
         "word-drafts/tools/specs/batch.json"
       ]
     },
+    "data-channels": {
+      "$comment": "Releasable base-namespace errata package. The combined specification, the insertion-ready Part 3, Part 4 and Part 6 errata, the generated model, the wire tooling, and the linked informative throughput report form one review unit. Both validators are self-contained and the draft has no RequiredModel dependency, so it needs neither closure nor vendored specifications.",
+      "title": "OPC UA — Data Channels",
+      "submitted": true,
+      "state": "public",
+      "move": [
+        "core-specs/data-channels",
+        "core-specs/extras/data-channels",
+        "core-specs/extras/performance/OPC-UA-Data-Channel-Throughput.md",
+        "word-drafts/tools/specs/data-channels.json",
+        "word-drafts/OPC-UA-Data-Channels.docx",
+        "word-drafts/OPC-UA-Data-Channels.docmodel.json",
+        "word-drafts/OPC-UA-Data-Channels.provenance.json",
+        "word-drafts/figures/DataChannels-Fig1-Session.pptx",
+        "word-drafts/figures/DataChannels-Fig1-Session.png",
+        "word-drafts/figures/DataChannels-FigNotation.pptx",
+        "word-drafts/figures/DataChannels-FigNotation.png",
+        "word-drafts/figures/DataChannels-FigTypes.pptx",
+        "word-drafts/figures/DataChannels-FigTypes.png"
+      ],
+      "keepPublic": [],
+      "closure": [],
+      "vendor": [],
+      "wordSpecs": [
+        "word-drafts/tools/specs/data-channels.json"
+      ],
+      "validateAll": "core-specs/extras/validate_all.py",
+      "reverseRefs": [
+        "README.md",
+        "core-specs/extras/validate_all.py",
+        "word-drafts/README.md",
+        "word-drafts/tools/specs/batch.json"
+      ]
+    },
     "observability-export": {
       "$comment": "Releasable Observability Export companion specification. Its normative NodeSet has one authoritative review copy; the public repository carries a byte-identical fixture under shared tooling for self-contained generator validation.",
       "title": "OPC UA — Observability Export",

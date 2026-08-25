@@ -549,7 +549,7 @@ def validator_base(path: str) -> Path:
 
 
 def resolved_validator_path(aggregate: str, validator_rel: str) -> str:
-    return norm((Path(aggregate).parent / Path(*validator_rel.split("/"))).as_posix())
+    return norm(posixpath.normpath(posixpath.join(posixpath.dirname(aggregate), validator_rel)))
 
 
 def repair_validator_release(text: str, aggregate: str, files: set[str], roots: list[str]) -> tuple[str, int]:

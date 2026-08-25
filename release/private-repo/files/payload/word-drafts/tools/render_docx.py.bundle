@@ -232,7 +232,8 @@ def render(build, doc, template_path, out_path):
         creator='OPC UA drafts working group',
         description='Provisional working draft. Report or view errata: '
                     'http://www.opcfoundation.org/errata',
-        keywords='OPC UA, OpenUSD, companion specification, draft')
+        keywords=build.identity.get(
+            'keywords', 'OPC UA, OpenUSD, companion specification, draft'))
     pkg.force_field_update_on_open()
     pkg.enable_track_changes()
     pkg.save(out_path)

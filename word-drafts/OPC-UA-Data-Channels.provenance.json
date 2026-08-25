@@ -1,6 +1,6 @@
 {
   "specId": "data-channels",
-  "sourceCommit": "ef0ab3daad78ca7d8b83961d61302d2d1fb43ebc",
+  "sourceCommit": "07537fc5c5cc003a54bb2c84acdb52426345eb6d",
   "sourceDigest": "43e4fe63a8499cdc",
   "pipelineVersion": "2",
   "sources": [
@@ -24,9 +24,6 @@
       "para": 0
     },
     "00334BA5": {
-      "owner": "template"
-    },
-    "003E1A56": {
       "owner": "template"
     },
     "003FE363": {
@@ -64,6 +61,9 @@
       "kind": "nodetable",
       "para": 12
     },
+    "00655527": {
+      "owner": "template"
+    },
     "007DD302": {
       "owner": "template"
     },
@@ -73,6 +73,9 @@
       "section": "quic_datagram_unreliable",
       "block": 2,
       "para": 48
+    },
+    "00A86657": {
+      "owner": "template"
     },
     "00AEED57": {
       "owner": "generated",
@@ -122,6 +125,9 @@
       "section": "Annex C — A worked media session (informative)",
       "block": 5,
       "para": 21
+    },
+    "00E209D5": {
+      "owner": "template"
     },
     "00E855BC": {
       "owner": "markdown",
@@ -275,9 +281,6 @@
       "section": "inline_pong",
       "block": 2,
       "para": 79
-    },
-    "01A1A3E4": {
-      "owner": "template"
     },
     "01AD91FB": {
       "owner": "generated",
@@ -503,6 +506,9 @@
       "block": 3,
       "para": 3
     },
+    "02E6A548": {
+      "owner": "template"
+    },
     "02F1DD5C": {
       "owner": "generated",
       "region": "datatypes",
@@ -671,9 +677,6 @@
       "section": "quic_data_stream",
       "block": 2,
       "para": 12
-    },
-    "03AD4BFA": {
-      "owner": "template"
     },
     "03B38EB3": {
       "owner": "markdown",
@@ -858,6 +861,9 @@
       "section": "5.3 State, and what \"unreliable\" means",
       "block": 1,
       "para": 4
+    },
+    "0494E259": {
+      "owner": "template"
     },
     "049882C7": {
       "owner": "generated",
@@ -1133,9 +1139,6 @@
       "block": 2,
       "para": 21
     },
-    "05D77ACC": {
-      "owner": "template"
-    },
     "05DFE512": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -1152,6 +1155,9 @@
       "index": 3,
       "kind": "nodetable",
       "para": 20
+    },
+    "06079473": {
+      "owner": "template"
     },
     "06087E1F": {
       "owner": "markdown",
@@ -1276,6 +1282,9 @@
       "block": 2,
       "para": 50
     },
+    "06A20318": {
+      "owner": "template"
+    },
     "06B274D7": {
       "owner": "template"
     },
@@ -1346,9 +1355,6 @@
       "section": "inline_pong",
       "block": 2,
       "para": 37
-    },
-    "075E9813": {
-      "owner": "template"
     },
     "077108A4": {
       "owner": "markdown",
@@ -1430,15 +1436,15 @@
     "080CB70E": {
       "owner": "template"
     },
+    "080F200D": {
+      "owner": "template"
+    },
     "0814510E": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
       "block": 4,
       "para": 5
-    },
-    "081E7F47": {
-      "owner": "template"
     },
     "082AB6F4": {
       "owner": "markdown",
@@ -1507,9 +1513,6 @@
       "index": 9,
       "kind": "nodetable",
       "para": 2
-    },
-    "087F95E3": {
-      "owner": "template"
     },
     "0886C29B": {
       "owner": "generated",
@@ -1603,9 +1606,6 @@
       "section": "9.3 Connection, control stream and channel streams",
       "block": 2,
       "para": 0
-    },
-    "08D78C8C": {
-      "owner": "template"
     },
     "08DA7DD6": {
       "owner": "template"
@@ -1901,9 +1901,6 @@
     "0A1D6897": {
       "owner": "template"
     },
-    "0A31590C": {
-      "owner": "template"
-    },
     "0A345D3C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -2008,10 +2005,13 @@
       "block": 2,
       "para": 28
     },
-    "0AB864B9": {
+    "0AB86585": {
       "owner": "template"
     },
     "0AC4315C": {
+      "owner": "template"
+    },
+    "0AD6EF3E": {
       "owner": "template"
     },
     "0AE44794": {
@@ -2026,6 +2026,9 @@
       "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
       "block": 2,
       "para": 3
+    },
+    "0AFDD464": {
+      "owner": "template"
     },
     "0B012609": {
       "owner": "markdown",
@@ -2050,6 +2053,9 @@
       "section": "6.6 Defaults, ranges and the no-preference sentinel",
       "block": 1,
       "para": 15
+    },
+    "0B126869": {
+      "owner": "template"
     },
     "0B12D194": {
       "owner": "generated",
@@ -2140,9 +2146,6 @@
       "section": "6.1 OpenDataChannel",
       "block": 9,
       "para": 29
-    },
-    "0B927CE4": {
-      "owner": "template"
     },
     "0B9BB37F": {
       "owner": "markdown",
@@ -2331,9 +2334,6 @@
       "kind": "table",
       "para": 2
     },
-    "0C6E9E37": {
-      "owner": "template"
-    },
     "0C70E716": {
       "owner": "generated",
       "region": "instances",
@@ -2386,15 +2386,15 @@
       "block": 4,
       "para": 4
     },
-    "0CBAD8DD": {
-      "owner": "template"
-    },
     "0CCAEDDF": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_ping",
       "block": 2,
       "para": 49
+    },
+    "0CE5759A": {
+      "owner": "template"
     },
     "0CE6E8B0": {
       "owner": "markdown",
@@ -2500,9 +2500,6 @@
       "kind": "nodetable",
       "para": 15
     },
-    "0D7B62E4": {
-      "owner": "template"
-    },
     "0D7CB810": {
       "owner": "generated",
       "region": "terms",
@@ -2551,6 +2548,9 @@
       "block": 2,
       "para": 33
     },
+    "0DB4E7AC": {
+      "owner": "template"
+    },
     "0DB6ED6D": {
       "owner": "generated",
       "region": "datatypes",
@@ -2562,9 +2562,6 @@
       "owner": "template"
     },
     "0DCC7E00": {
-      "owner": "template"
-    },
-    "0DCDDE3E": {
       "owner": "template"
     },
     "0DCEF140": {
@@ -2591,6 +2588,9 @@
       "kind": "para",
       "para": 0
     },
+    "0E05C6D3": {
+      "owner": "template"
+    },
     "0E06D8EF": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -2611,9 +2611,6 @@
       "section": "Annex E — When to use which mechanism (informative)",
       "block": 0,
       "para": 28
-    },
-    "0E2C322C": {
-      "owner": "template"
     },
     "0E31B896": {
       "owner": "markdown",
@@ -2702,6 +2699,9 @@
       "kind": "nodetable",
       "para": 214
     },
+    "0E82FEC7": {
+      "owner": "template"
+    },
     "0E91D09C": {
       "owner": "generated",
       "region": "datatypes",
@@ -2732,6 +2732,12 @@
       "section": "inline_end",
       "block": 2,
       "para": 18
+    },
+    "0EA93DCF": {
+      "owner": "template"
+    },
+    "0EB2AEFA": {
+      "owner": "template"
     },
     "0EC2F737": {
       "owner": "template"
@@ -2892,12 +2898,6 @@
       "kind": "enumtable",
       "para": 12
     },
-    "0F8E81E9": {
-      "owner": "template"
-    },
-    "0FAA577A": {
-      "owner": "template"
-    },
     "0FAC5245": {
       "owner": "template"
     },
@@ -2939,7 +2939,7 @@
       "block": 0,
       "para": 0
     },
-    "0FCDE0F5": {
+    "0FE4DD66": {
       "owner": "template"
     },
     "0FE8FE20": {
@@ -2948,6 +2948,9 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 86
+    },
+    "0FEF6FC1": {
+      "owner": "template"
     },
     "100D9D95": {
       "owner": "markdown",
@@ -3014,12 +3017,18 @@
     "103B5A5B": {
       "owner": "template"
     },
+    "10489C1B": {
+      "owner": "template"
+    },
     "1059115B": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 9,
       "kind": "nodetable",
       "para": 17
+    },
+    "105D5B08": {
+      "owner": "template"
     },
     "105F31BD": {
       "owner": "generated",
@@ -3041,6 +3050,9 @@
       "index": 0,
       "kind": "clause",
       "para": 0
+    },
+    "1074DC47": {
+      "owner": "template"
     },
     "107A1AF4": {
       "owner": "markdown",
@@ -3101,12 +3113,18 @@
       "kind": "nodetable",
       "para": 65
     },
+    "10CB3D5A": {
+      "owner": "template"
+    },
     "10CDC57B": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "Annex C — A worked media session (informative)",
       "block": 3,
       "para": 6
+    },
+    "10EE22B8": {
+      "owner": "template"
     },
     "10F99E5A": {
       "owner": "markdown",
@@ -3137,6 +3155,9 @@
       "para": 132
     },
     "11186A60": {
+      "owner": "template"
+    },
+    "1127F803": {
       "owner": "template"
     },
     "112E9587": {
@@ -3295,12 +3316,18 @@
       "block": 2,
       "para": 55
     },
+    "11DDC9D6": {
+      "owner": "template"
+    },
     "11DF7663": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 3,
       "kind": "nodetable",
       "para": 62
+    },
+    "121021DA": {
+      "owner": "template"
     },
     "121595E7": {
       "owner": "markdown",
@@ -3326,15 +3353,15 @@
       "block": 5,
       "para": 19
     },
+    "1233BFB4": {
+      "owner": "template"
+    },
     "12373F9D": {
       "owner": "generated",
       "region": "datatypes",
       "index": 27,
       "kind": "enumtable",
       "para": 27
-    },
-    "123C6D25": {
-      "owner": "template"
     },
     "123CAF34": {
       "owner": "generated",
@@ -3427,9 +3454,6 @@
       "para": 0
     },
     "12CA7E9B": {
-      "owner": "template"
-    },
-    "12CDA9C2": {
       "owner": "template"
     },
     "12D0379C": {
@@ -3826,9 +3850,6 @@
     "14A26184": {
       "owner": "template"
     },
-    "14A4EEFD": {
-      "owner": "template"
-    },
     "14C5D68B": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -3885,9 +3906,6 @@
       "block": 1,
       "para": 17
     },
-    "14EAAE67": {
-      "owner": "template"
-    },
     "14EB4BED": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -3901,9 +3919,6 @@
       "section": "inline_data_final",
       "block": 0,
       "para": 0
-    },
-    "1505758D": {
-      "owner": "template"
     },
     "15158699": {
       "owner": "generated",
@@ -4046,9 +4061,6 @@
       "block": 2,
       "para": 7
     },
-    "15C3FC68": {
-      "owner": "template"
-    },
     "15C4A750": {
       "owner": "generated",
       "region": "normative-references",
@@ -4072,9 +4084,6 @@
       "section": "3.2 The design in one page",
       "block": 0,
       "para": 0
-    },
-    "15E72958": {
-      "owner": "template"
     },
     "15FD6D8A": {
       "owner": "markdown",
@@ -4180,7 +4189,7 @@
     "165FAE10": {
       "owner": "template"
     },
-    "16711CE8": {
+    "1671C1F8": {
       "owner": "template"
     },
     "16824AB6": {
@@ -4264,6 +4273,9 @@
       "block": 0,
       "para": 15
     },
+    "16FF073B": {
+      "owner": "template"
+    },
     "17022E1B": {
       "owner": "generated",
       "region": "datatypes",
@@ -4291,6 +4303,9 @@
       "section": "inline_data_signed",
       "block": 2,
       "para": 77
+    },
+    "17242FBA": {
+      "owner": "template"
     },
     "172BDD6E": {
       "owner": "template"
@@ -4358,6 +4373,9 @@
       "block": 2,
       "para": 24
     },
+    "17735BF1": {
+      "owner": "template"
+    },
     "1774587E": {
       "owner": "template"
     },
@@ -4419,6 +4437,12 @@
       "kind": "nodetable",
       "para": 25
     },
+    "17F6D701": {
+      "owner": "template"
+    },
+    "17F722E7": {
+      "owner": "template"
+    },
     "17FAA915": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -4472,6 +4496,9 @@
       "para": 0
     },
     "18284838": {
+      "owner": "template"
+    },
+    "1828D311": {
       "owner": "template"
     },
     "1831D74A": {
@@ -4594,9 +4621,6 @@
       "section": "inline_credit_connection",
       "block": 2,
       "para": 43
-    },
-    "18B445A0": {
-      "owner": "template"
     },
     "18C34C63": {
       "owner": "generated",
@@ -4799,6 +4823,9 @@
     "197F6FBC": {
       "owner": "template"
     },
+    "1982980F": {
+      "owner": "template"
+    },
     "1984E168": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -4861,9 +4888,6 @@
       "section": "Annex C — A worked media session (informative)",
       "block": 5,
       "para": 17
-    },
-    "19DE0A33": {
-      "owner": "template"
     },
     "19E8EA61": {
       "owner": "template"
@@ -4930,6 +4954,9 @@
       "block": 2,
       "para": 16
     },
+    "1A523277": {
+      "owner": "template"
+    },
     "1A74FCF1": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4971,10 +4998,7 @@
       "block": 2,
       "para": 10
     },
-    "1AAD75F2": {
-      "owner": "template"
-    },
-    "1AB6EB23": {
+    "1AB69CF3": {
       "owner": "template"
     },
     "1ABA0737": {
@@ -5105,6 +5129,9 @@
       "kind": "nodetable",
       "para": 1
     },
+    "1BC8429A": {
+      "owner": "template"
+    },
     "1BF2D1CC": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -5194,9 +5221,6 @@
       "section": "quic_datagram_unreliable",
       "block": 2,
       "para": 42
-    },
-    "1C69DCDC": {
-      "owner": "template"
     },
     "1C7B033D": {
       "owner": "generated",
@@ -5294,9 +5318,6 @@
       "block": 2,
       "para": 87
     },
-    "1CE63195": {
-      "owner": "template"
-    },
     "1CF8F167": {
       "owner": "template"
     },
@@ -5306,6 +5327,9 @@
       "section": "Annex F — A worked reverse-connect `opc.quic` session (informative)",
       "block": 4,
       "para": 18
+    },
+    "1D0FBAC2": {
+      "owner": "template"
     },
     "1D1FB70D": {
       "owner": "markdown",
@@ -5327,6 +5351,9 @@
       "section": "5.3 State, and what \"unreliable\" means",
       "block": 1,
       "para": 10
+    },
+    "1D35CFFD": {
+      "owner": "template"
     },
     "1D36C850": {
       "owner": "generated",
@@ -5425,6 +5452,12 @@
       "block": 2,
       "para": 20
     },
+    "1D92E8CD": {
+      "owner": "template"
+    },
+    "1D94169E": {
+      "owner": "template"
+    },
     "1D97E370": {
       "owner": "generated",
       "region": "namespaces",
@@ -5498,7 +5531,7 @@
       "block": 2,
       "para": 67
     },
-    "1DEE807B": {
+    "1DF48BAB": {
       "owner": "template"
     },
     "1E0AA45C": {
@@ -5593,6 +5626,9 @@
     "1E8E2FF3": {
       "owner": "template"
     },
+    "1E90FF3E": {
+      "owner": "template"
+    },
     "1E957270": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -5620,6 +5656,9 @@
       "section": "inline_pong",
       "block": 2,
       "para": 60
+    },
+    "1EAE875F": {
+      "owner": "template"
     },
     "1EB37CB5": {
       "owner": "generated",
@@ -5813,6 +5852,9 @@
       "block": 5,
       "para": 0
     },
+    "1FA246F6": {
+      "owner": "template"
+    },
     "1FA3C2B8": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -5933,9 +5975,6 @@
     "207494B6": {
       "owner": "template"
     },
-    "20803D22": {
-      "owner": "template"
-    },
     "2083F9D4": {
       "owner": "generated",
       "region": "namespaces",
@@ -5985,9 +6024,6 @@
       "block": 2,
       "para": 58
     },
-    "20AC5F39": {
-      "owner": "template"
-    },
     "20B0AC8A": {
       "owner": "generated",
       "region": "datatypes",
@@ -6009,9 +6045,6 @@
       "kind": "nodetable",
       "para": 23
     },
-    "20DB0A70": {
-      "owner": "template"
-    },
     "20DF5C31": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -6032,9 +6065,6 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 43
-    },
-    "20ED4ECB": {
-      "owner": "template"
     },
     "20EE3319": {
       "owner": "markdown",
@@ -6078,18 +6108,12 @@
       "block": 2,
       "para": 87
     },
-    "211ACE52": {
-      "owner": "template"
-    },
     "211B42C7": {
       "owner": "generated",
       "region": "datatypes",
       "index": 27,
       "kind": "enumtable",
       "para": 15
-    },
-    "211CCF63": {
-      "owner": "template"
     },
     "212CDA65": {
       "owner": "markdown",
@@ -6174,9 +6198,6 @@
       "block": 2,
       "para": 44
     },
-    "21A5D472": {
-      "owner": "template"
-    },
     "21A5D57E": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -6184,15 +6205,15 @@
       "block": 7,
       "para": 0
     },
+    "21A87D27": {
+      "owner": "template"
+    },
     "21C168EC": {
       "owner": "generated",
       "region": "datatypes",
       "index": 24,
       "kind": "nodetable",
       "para": 18
-    },
-    "21CA5216": {
-      "owner": "template"
     },
     "21CB66B9": {
       "owner": "markdown",
@@ -6202,6 +6223,9 @@
       "para": 0
     },
     "21CC5579": {
+      "owner": "template"
+    },
+    "21CFEB49": {
       "owner": "template"
     },
     "21D054B0": {
@@ -6287,9 +6311,6 @@
       "block": 2,
       "para": 57
     },
-    "22135CEC": {
-      "owner": "template"
-    },
     "221FF16A": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -6297,13 +6318,7 @@
       "block": 4,
       "para": 5
     },
-    "2231DA9B": {
-      "owner": "template"
-    },
     "223374EF": {
-      "owner": "template"
-    },
-    "22380DAE": {
       "owner": "template"
     },
     "223DACAD": {
@@ -6411,6 +6426,9 @@
       "block": 2,
       "para": 85
     },
+    "22E8541E": {
+      "owner": "template"
+    },
     "22E9A4E9": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -6438,9 +6456,6 @@
       "section": "inline_credit_connection",
       "block": 2,
       "para": 52
-    },
-    "2301E4A6": {
-      "owner": "template"
     },
     "230B498F": {
       "owner": "markdown",
@@ -6587,9 +6602,6 @@
       "block": 2,
       "para": 7
     },
-    "23C7548F": {
-      "owner": "template"
-    },
     "23C96ADC": {
       "owner": "generated",
       "region": "datatypes",
@@ -6704,9 +6716,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 45
-    },
-    "244A98D3": {
-      "owner": "template"
     },
     "2458110F": {
       "owner": "generated",
@@ -6840,9 +6849,6 @@
       "block": 4,
       "para": 0
     },
-    "25193723": {
-      "owner": "template"
-    },
     "251D4C07": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -6870,6 +6876,9 @@
       "index": 4,
       "kind": "clause",
       "para": 0
+    },
+    "252B02AA": {
+      "owner": "template"
     },
     "25421E6E": {
       "owner": "template"
@@ -6919,6 +6928,9 @@
       "block": 2,
       "para": 77
     },
+    "257898F7": {
+      "owner": "template"
+    },
     "2582E86B": {
       "owner": "template"
     },
@@ -6942,6 +6954,9 @@
       "section": "inline_data_final",
       "block": 2,
       "para": 19
+    },
+    "2593401F": {
+      "owner": "template"
     },
     "25958CF9": {
       "owner": "markdown",
@@ -7078,9 +7093,6 @@
       "kind": "term",
       "para": 2
     },
-    "267C7483": {
-      "owner": "template"
-    },
     "268BBEA0": {
       "owner": "template"
     },
@@ -7100,9 +7112,6 @@
       "section": "10.3 Connection, control stream and channel streams",
       "block": 0,
       "para": 0
-    },
-    "26A31D72": {
-      "owner": "template"
     },
     "26A3EA99": {
       "owner": "generated",
@@ -7370,9 +7379,6 @@
       "block": 7,
       "para": 18
     },
-    "27F45BC8": {
-      "owner": "template"
-    },
     "27F54950": {
       "owner": "generated",
       "region": "objecttypes",
@@ -7383,7 +7389,7 @@
     "27F5E138": {
       "owner": "template"
     },
-    "27FC49B8": {
+    "27F9B47A": {
       "owner": "template"
     },
     "2807D229": {
@@ -7473,6 +7479,9 @@
       "kind": "nodetable",
       "para": 61
     },
+    "28766177": {
+      "owner": "template"
+    },
     "287913FA": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -7500,6 +7509,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 181
+    },
+    "288BFDC3": {
+      "owner": "template"
     },
     "288DEA9F": {
       "owner": "markdown",
@@ -7553,9 +7565,6 @@
       "block": 5,
       "para": 1
     },
-    "28CB8EF4": {
-      "owner": "template"
-    },
     "28CFC9FA": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -7576,6 +7585,12 @@
       "section": "inline_credit_channel",
       "block": 2,
       "para": 50
+    },
+    "28DC2DA5": {
+      "owner": "template"
+    },
+    "28DCE0AB": {
+      "owner": "template"
     },
     "28E4AF5B": {
       "owner": "markdown",
@@ -7718,9 +7733,6 @@
       "block": 2,
       "para": 4
     },
-    "2977997F": {
-      "owner": "template"
-    },
     "29849280": {
       "owner": "generated",
       "region": "terms",
@@ -7749,6 +7761,9 @@
       "block": 2,
       "para": 75
     },
+    "29B6430D": {
+      "owner": "template"
+    },
     "29BED0B2": {
       "owner": "generated",
       "region": "annex-a",
@@ -7769,9 +7784,6 @@
       "section": "Annex E — When to use which mechanism (informative)",
       "block": 0,
       "para": 24
-    },
-    "29DA6871": {
-      "owner": "template"
     },
     "29E1B465": {
       "owner": "markdown",
@@ -7857,9 +7869,6 @@
       "section": "quic_datagram_unreliable",
       "block": 2,
       "para": 37
-    },
-    "2A486B19": {
-      "owner": "template"
     },
     "2A5685A2": {
       "owner": "markdown",
@@ -8006,9 +8015,6 @@
       "index": 9,
       "kind": "nodetable",
       "para": 6
-    },
-    "2AF56FE2": {
-      "owner": "template"
     },
     "2AFE4675": {
       "owner": "generated",
@@ -8172,9 +8178,6 @@
       "block": 2,
       "para": 45
     },
-    "2BCBB290": {
-      "owner": "template"
-    },
     "2BD56F1B": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -8197,6 +8200,9 @@
       "para": 15
     },
     "2BEFB40F": {
+      "owner": "template"
+    },
+    "2BEFFC67": {
       "owner": "template"
     },
     "2BFC08C8": {
@@ -8285,9 +8291,6 @@
       "block": 2,
       "para": 0
     },
-    "2C9ECC73": {
-      "owner": "template"
-    },
     "2CA1452C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -8295,7 +8298,7 @@
       "block": 2,
       "para": 36
     },
-    "2CA5479B": {
+    "2CAFDA5C": {
       "owner": "template"
     },
     "2CB41109": {
@@ -8318,6 +8321,9 @@
       "index": 3,
       "kind": "para",
       "para": 0
+    },
+    "2CB97365": {
+      "owner": "template"
     },
     "2CE559B1": {
       "owner": "generated",
@@ -8381,6 +8387,9 @@
       "index": 20,
       "kind": "nodetable",
       "para": 22
+    },
+    "2D1B736D": {
+      "owner": "template"
     },
     "2D1C4F1B": {
       "owner": "template"
@@ -8482,9 +8491,6 @@
     "2D85298B": {
       "owner": "template"
     },
-    "2D8B4E7B": {
-      "owner": "template"
-    },
     "2D955DF3": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -8529,9 +8535,6 @@
       "section": "inline_data_first",
       "block": 2,
       "para": 58
-    },
-    "2DD3B8D5": {
-      "owner": "template"
     },
     "2DE212F0": {
       "owner": "markdown",
@@ -8627,9 +8630,6 @@
       "kind": "nodetable",
       "para": 23
     },
-    "2E6681B8": {
-      "owner": "template"
-    },
     "2E696F40": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -8664,6 +8664,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 71
+    },
+    "2E838164": {
+      "owner": "template"
     },
     "2E83DEF1": {
       "owner": "markdown",
@@ -8758,9 +8761,6 @@
       "block": 2,
       "para": 84
     },
-    "2F17AED8": {
-      "owner": "template"
-    },
     "2F1C0F46": {
       "owner": "generated",
       "region": "datatypes",
@@ -8820,9 +8820,6 @@
       "block": 2,
       "para": 90
     },
-    "2F5CCA27": {
-      "owner": "template"
-    },
     "2F611FE8": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -8850,6 +8847,9 @@
       "section": "Annex E — When to use which mechanism (informative)",
       "block": 0,
       "para": 1
+    },
+    "2F8909B5": {
+      "owner": "template"
     },
     "2F8A9CAF": {
       "owner": "generated",
@@ -8893,9 +8893,6 @@
       "kind": "nodetable",
       "para": 10
     },
-    "2FABED09": {
-      "owner": "template"
-    },
     "2FB93115": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -8932,6 +8929,9 @@
       "para": 53
     },
     "2FCB1D35": {
+      "owner": "template"
+    },
+    "2FCCA4B0": {
       "owner": "template"
     },
     "2FCF5A02": {
@@ -8971,6 +8971,9 @@
       "section": "inline_credit_channel",
       "block": 2,
       "para": 44
+    },
+    "2FEC1B6C": {
+      "owner": "template"
     },
     "2FF52600": {
       "owner": "template"
@@ -9098,12 +9101,18 @@
       "block": 2,
       "para": 83
     },
+    "3099F90F": {
+      "owner": "template"
+    },
     "30B0FC23": {
       "owner": "generated",
       "region": "terms",
       "index": 5,
       "kind": "term",
       "para": 0
+    },
+    "30B2B809": {
+      "owner": "template"
     },
     "30B5B86E": {
       "owner": "markdown",
@@ -9127,6 +9136,9 @@
       "para": 31
     },
     "30C36FBC": {
+      "owner": "template"
+    },
+    "30CFC9F5": {
       "owner": "template"
     },
     "30D8FFAD": {
@@ -9174,9 +9186,6 @@
       "block": 3,
       "para": 0
     },
-    "3103AE6B": {
-      "owner": "template"
-    },
     "3105175C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -9190,9 +9199,6 @@
       "section": "inline_end",
       "block": 2,
       "para": 78
-    },
-    "31191228": {
-      "owner": "template"
     },
     "311AD334": {
       "owner": "markdown",
@@ -9246,6 +9252,9 @@
       "block": 1,
       "para": 26
     },
+    "3152638D": {
+      "owner": "template"
+    },
     "315C92E6": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -9288,9 +9297,6 @@
       "block": 2,
       "para": 47
     },
-    "31799878": {
-      "owner": "template"
-    },
     "317DF218": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -9304,6 +9310,9 @@
       "section": "inline_end",
       "block": 2,
       "para": 38
+    },
+    "318D620C": {
+      "owner": "template"
     },
     "318F6F9D": {
       "owner": "template"
@@ -9366,6 +9375,9 @@
       "section": "inline_ping",
       "block": 2,
       "para": 81
+    },
+    "31D8DC6E": {
+      "owner": "template"
     },
     "31E25965": {
       "owner": "markdown",
@@ -9623,9 +9635,6 @@
       "index": 11,
       "kind": "enumtable",
       "para": 22
-    },
-    "3333CF3A": {
-      "owner": "template"
     },
     "33427B7F": {
       "owner": "markdown",
@@ -9895,9 +9904,6 @@
       "kind": "nodetable",
       "para": 3
     },
-    "3466159C": {
-      "owner": "template"
-    },
     "346F5517": {
       "owner": "template"
     },
@@ -9911,7 +9917,13 @@
     "347235E9": {
       "owner": "template"
     },
+    "3478D362": {
+      "owner": "template"
+    },
     "34803C6D": {
+      "owner": "template"
+    },
+    "34819655": {
       "owner": "template"
     },
     "3483B7AE": {
@@ -9930,9 +9942,6 @@
       "section": "inline_gap",
       "block": 2,
       "para": 50
-    },
-    "348B34A8": {
-      "owner": "template"
     },
     "34A1B3AA": {
       "owner": "markdown",
@@ -9963,9 +9972,6 @@
       "para": 7
     },
     "34B4B014": {
-      "owner": "template"
-    },
-    "34CF75CE": {
       "owner": "template"
     },
     "34D0C2E3": {
@@ -10099,6 +10105,9 @@
     "35603A85": {
       "owner": "template"
     },
+    "357FA7F9": {
+      "owner": "template"
+    },
     "357FDAE6": {
       "owner": "generated",
       "region": "annex-a",
@@ -10112,6 +10121,9 @@
       "index": 0,
       "kind": "annex",
       "para": 0
+    },
+    "35847F99": {
+      "owner": "template"
     },
     "35896CE6": {
       "owner": "generated",
@@ -10171,6 +10183,9 @@
       "section": "inline_pong",
       "block": 2,
       "para": 63
+    },
+    "35BCED7F": {
+      "owner": "template"
     },
     "35BFEF21": {
       "owner": "generated",
@@ -10248,12 +10263,18 @@
       "kind": "nodetable",
       "para": 9
     },
+    "3631D8AE": {
+      "owner": "template"
+    },
     "364DCA77": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_droppable",
       "block": 2,
       "para": 62
+    },
+    "3659DDAD": {
+      "owner": "template"
     },
     "365ED989": {
       "owner": "template"
@@ -10279,9 +10300,6 @@
       "block": 2,
       "para": 83
     },
-    "368EA85F": {
-      "owner": "template"
-    },
     "36906034": {
       "owner": "generated",
       "region": "annex-a",
@@ -10297,6 +10315,9 @@
       "para": 0
     },
     "369AF152": {
+      "owner": "template"
+    },
+    "369F8B1C": {
       "owner": "template"
     },
     "36A4050B": {
@@ -10377,7 +10398,13 @@
       "kind": "enumtable",
       "para": 9
     },
+    "371AD774": {
+      "owner": "template"
+    },
     "371ECE2C": {
+      "owner": "template"
+    },
+    "371FD631": {
       "owner": "template"
     },
     "37202494": {
@@ -10421,10 +10448,10 @@
       "kind": "enumtable",
       "para": 11
     },
-    "3741515E": {
+    "374086B1": {
       "owner": "template"
     },
-    "3741572E": {
+    "3741515E": {
       "owner": "template"
     },
     "37441EC2": {
@@ -10440,6 +10467,9 @@
       "section": "6.2 ModifyDataChannel",
       "block": 4,
       "para": 4
+    },
+    "37464364": {
+      "owner": "template"
     },
     "3749886D": {
       "owner": "generated",
@@ -10613,6 +10643,12 @@
       "section": "quic_data_stream",
       "block": 2,
       "para": 9
+    },
+    "3819D514": {
+      "owner": "template"
+    },
+    "38205C60": {
+      "owner": "template"
     },
     "383020E9": {
       "owner": "template"
@@ -10828,9 +10864,6 @@
       "block": 2,
       "para": 55
     },
-    "3936F752": {
-      "owner": "template"
-    },
     "393A5EA4": {
       "owner": "generated",
       "region": "datatypes",
@@ -10945,6 +10978,9 @@
       "block": 2,
       "para": 87
     },
+    "399E8118": {
+      "owner": "template"
+    },
     "39B91422": {
       "owner": "generated",
       "region": "objecttypes",
@@ -11010,9 +11046,6 @@
       "index": 27,
       "kind": "enumtable",
       "para": 22
-    },
-    "39E5CA2D": {
-      "owner": "template"
     },
     "39E66F2B": {
       "owner": "template"
@@ -11107,9 +11140,6 @@
       "block": 2,
       "para": 13
     },
-    "3A57F260": {
-      "owner": "template"
-    },
     "3A590D16": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -11126,9 +11156,6 @@
       "section": "inline_data_first",
       "block": 2,
       "para": 29
-    },
-    "3A6E1816": {
-      "owner": "template"
     },
     "3A8BDDBB": {
       "owner": "generated",
@@ -11157,9 +11184,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 204
-    },
-    "3A9B513C": {
-      "owner": "template"
     },
     "3AAEA05C": {
       "owner": "template"
@@ -11202,9 +11226,6 @@
       "block": 2,
       "para": 17
     },
-    "3AC9E4D6": {
-      "owner": "template"
-    },
     "3ACE2EA7": {
       "owner": "template"
     },
@@ -11214,9 +11235,6 @@
       "section": "inline_data_final",
       "block": 2,
       "para": 0
-    },
-    "3AE58936": {
-      "owner": "template"
     },
     "3AF0B2A6": {
       "owner": "template"
@@ -11369,6 +11387,9 @@
       "index": 27,
       "kind": "enumtable",
       "para": 31
+    },
+    "3B9CBA40": {
+      "owner": "template"
     },
     "3BA165ED": {
       "owner": "markdown",
@@ -11602,6 +11623,9 @@
       "section": "10.2 URL scheme, ALPN and discovery",
       "block": 2,
       "para": 0
+    },
+    "3CA3D577": {
+      "owner": "template"
     },
     "3CA7C6E1": {
       "owner": "generated",
@@ -11919,6 +11943,9 @@
       "kind": "nodetable",
       "para": 231
     },
+    "3E458AAA": {
+      "owner": "template"
+    },
     "3E569869": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -11995,9 +12022,6 @@
       "block": 2,
       "para": 9
     },
-    "3EC0C0B2": {
-      "owner": "template"
-    },
     "3ED9FEDF": {
       "owner": "generated",
       "region": "datatypes",
@@ -12048,18 +12072,12 @@
     "3F066B25": {
       "owner": "template"
     },
-    "3F0721D9": {
-      "owner": "template"
-    },
     "3F07CC28": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_final",
       "block": 2,
       "para": 32
-    },
-    "3F12628B": {
-      "owner": "template"
     },
     "3F1F98D9": {
       "owner": "template"
@@ -12113,9 +12131,6 @@
       "block": 2,
       "para": 84
     },
-    "3F5B37C7": {
-      "owner": "template"
-    },
     "3F5CA239": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -12136,6 +12151,9 @@
       "index": 9,
       "kind": "para",
       "para": 0
+    },
+    "3F6655B8": {
+      "owner": "template"
     },
     "3F6C8135": {
       "owner": "markdown",
@@ -12172,9 +12190,6 @@
       "block": 2,
       "para": 0
     },
-    "3F89E3C9": {
-      "owner": "template"
-    },
     "3F947831": {
       "owner": "generated",
       "region": "normative-references",
@@ -12188,6 +12203,9 @@
       "index": 8,
       "kind": "para",
       "para": 0
+    },
+    "3F9AECEA": {
+      "owner": "template"
     },
     "3F9B6BD6": {
       "owner": "generated",
@@ -12364,15 +12382,15 @@
     "408123E9": {
       "owner": "template"
     },
+    "408208EA": {
+      "owner": "template"
+    },
     "4082A1DB": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "9.8 Choosing between transports",
       "block": 1,
       "para": 8
-    },
-    "408E1AB3": {
-      "owner": "template"
     },
     "4096BDC3": {
       "owner": "markdown",
@@ -12425,6 +12443,9 @@
       "index": 9,
       "kind": "nodetable",
       "para": 51
+    },
+    "40C1F7FB": {
+      "owner": "template"
     },
     "40D527EF": {
       "owner": "markdown",
@@ -12483,9 +12504,6 @@
       "section": "Annex D — Comparison with WebRTC (informative)",
       "block": 0,
       "para": 3
-    },
-    "41278B56": {
-      "owner": "template"
     },
     "412C21F6": {
       "owner": "markdown",
@@ -12549,6 +12567,9 @@
       "block": 2,
       "para": 56
     },
+    "417C00A7": {
+      "owner": "template"
+    },
     "417D8A01": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -12583,6 +12604,9 @@
       "section": "inline_pong",
       "block": 2,
       "para": 66
+    },
+    "418E0852": {
+      "owner": "template"
     },
     "418F18E4": {
       "owner": "generated",
@@ -12646,6 +12670,9 @@
       "para": 13
     },
     "42064A04": {
+      "owner": "template"
+    },
+    "421035A4": {
       "owner": "template"
     },
     "4216E970": {
@@ -12724,9 +12751,6 @@
       "kind": "para",
       "para": 0
     },
-    "4258B088": {
-      "owner": "template"
-    },
     "4258C739": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -12735,6 +12759,9 @@
       "para": 73
     },
     "42599F46": {
+      "owner": "template"
+    },
+    "425D4092": {
       "owner": "template"
     },
     "4265476E": {
@@ -12752,6 +12779,9 @@
       "para": 84
     },
     "4274134E": {
+      "owner": "template"
+    },
+    "427C5D9E": {
       "owner": "template"
     },
     "428DCE94": {
@@ -12987,9 +13017,6 @@
       "block": 0,
       "para": 2
     },
-    "43858BC0": {
-      "owner": "template"
-    },
     "439FAE69": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -13039,6 +13066,9 @@
       "block": 1,
       "para": 0
     },
+    "43E05A1F": {
+      "owner": "template"
+    },
     "43E27757": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -13059,12 +13089,6 @@
       "section": "inline_data_signed",
       "block": 3,
       "para": 1
-    },
-    "44047E03": {
-      "owner": "template"
-    },
-    "44113F4A": {
-      "owner": "template"
     },
     "44201414": {
       "owner": "generated",
@@ -13093,6 +13117,9 @@
       "section": "inline_pong",
       "block": 2,
       "para": 48
+    },
+    "4443F69D": {
+      "owner": "template"
     },
     "444B922C": {
       "owner": "template"
@@ -13217,6 +13244,9 @@
       "block": 2,
       "para": 12
     },
+    "456255A5": {
+      "owner": "template"
+    },
     "45646260": {
       "owner": "template"
     },
@@ -13306,7 +13336,7 @@
       "kind": "nodetable",
       "para": 5
     },
-    "45EB3583": {
+    "45EFB613": {
       "owner": "template"
     },
     "45F8AE6B": {
@@ -13332,9 +13362,6 @@
       "index": 8,
       "kind": "table",
       "para": 6
-    },
-    "4608EDC8": {
-      "owner": "template"
     },
     "4617F8D4": {
       "owner": "generated",
@@ -13384,6 +13411,9 @@
       "section": "inline_pong",
       "block": 2,
       "para": 43
+    },
+    "4638C47E": {
+      "owner": "template"
     },
     "46420ED5": {
       "owner": "markdown",
@@ -13447,9 +13477,6 @@
     "46AB9790": {
       "owner": "template"
     },
-    "46AE6214": {
-      "owner": "template"
-    },
     "46B0E88A": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -13463,6 +13490,9 @@
       "index": 23,
       "kind": "enumtable",
       "para": 7
+    },
+    "46C9AA10": {
+      "owner": "template"
     },
     "46DBE0D6": {
       "owner": "template"
@@ -13533,6 +13563,9 @@
       "kind": "enumtable",
       "para": 8
     },
+    "47256375": {
+      "owner": "template"
+    },
     "47313799": {
       "owner": "generated",
       "region": "objecttypes",
@@ -13577,6 +13610,9 @@
       "section": "7 The model",
       "block": 5,
       "para": 0
+    },
+    "474D3AE2": {
+      "owner": "template"
     },
     "4757ED08": {
       "owner": "generated",
@@ -13734,9 +13770,6 @@
       "block": 2,
       "para": 91
     },
-    "4819D341": {
-      "owner": "template"
-    },
     "481AF48C": {
       "owner": "generated",
       "region": "annex-a",
@@ -13784,12 +13817,6 @@
       "index": 7,
       "kind": "enumtable",
       "para": 11
-    },
-    "48408F7E": {
-      "owner": "template"
-    },
-    "48651ADA": {
-      "owner": "template"
     },
     "486F82F8": {
       "owner": "generated",
@@ -13999,7 +14026,7 @@
       "block": 2,
       "para": 3
     },
-    "49A128FE": {
+    "499EE315": {
       "owner": "template"
     },
     "49A15C1E": {
@@ -14192,6 +14219,9 @@
       "block": 1,
       "para": 1
     },
+    "4A805DE2": {
+      "owner": "template"
+    },
     "4A81BD2D": {
       "owner": "generated",
       "region": "datatypes",
@@ -14265,6 +14295,9 @@
       "block": 2,
       "para": 12
     },
+    "4ADBA057": {
+      "owner": "template"
+    },
     "4AE8FBC8": {
       "owner": "template"
     },
@@ -14284,9 +14317,6 @@
       "section": "inline_data_first",
       "block": 2,
       "para": 56
-    },
-    "4AF48807": {
-      "owner": "template"
     },
     "4AF538FE": {
       "owner": "markdown",
@@ -14315,9 +14345,6 @@
       "index": 27,
       "kind": "enumtable",
       "para": 0
-    },
-    "4B107C1E": {
-      "owner": "template"
     },
     "4B1A03C5": {
       "owner": "generated",
@@ -14385,9 +14412,6 @@
       "block": 2,
       "para": 3
     },
-    "4B57C807": {
-      "owner": "template"
-    },
     "4B5EEF36": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -14408,9 +14432,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 6
-    },
-    "4B66745F": {
-      "owner": "template"
     },
     "4B6BE05E": {
       "owner": "markdown",
@@ -14658,6 +14679,9 @@
       "block": 2,
       "para": 50
     },
+    "4C84B0E1": {
+      "owner": "template"
+    },
     "4C90E8DB": {
       "owner": "generated",
       "region": "datatypes",
@@ -14773,6 +14797,9 @@
       "block": 2,
       "para": 15
     },
+    "4D31E407": {
+      "owner": "template"
+    },
     "4D3200FF": {
       "owner": "generated",
       "region": "datatypes",
@@ -14831,9 +14858,6 @@
       "block": 2,
       "para": 89
     },
-    "4D862C42": {
-      "owner": "template"
-    },
     "4D8891A9": {
       "owner": "template"
     },
@@ -14881,9 +14905,6 @@
       "section": "7 The model",
       "block": 9,
       "para": 0
-    },
-    "4DC770FF": {
-      "owner": "template"
     },
     "4DDAB95F": {
       "owner": "generated",
@@ -14980,9 +15001,6 @@
       "section": "inline_data_signed",
       "block": 2,
       "para": 62
-    },
-    "4E55B09B": {
-      "owner": "template"
     },
     "4E57BD10": {
       "owner": "markdown",
@@ -15181,7 +15199,7 @@
       "kind": "enumtable",
       "para": 0
     },
-    "4F86FE53": {
+    "4F7C18CC": {
       "owner": "template"
     },
     "4F8FE53B": {
@@ -15274,7 +15292,7 @@
       "kind": "nodetable",
       "para": 62
     },
-    "50379AE5": {
+    "50371579": {
       "owner": "template"
     },
     "503987E7": {
@@ -15343,9 +15361,6 @@
       "block": 2,
       "para": 14
     },
-    "508D8066": {
-      "owner": "template"
-    },
     "50908176": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -15410,6 +15425,9 @@
       "section": "inline_reset",
       "block": 2,
       "para": 75
+    },
+    "50C519F4": {
+      "owner": "template"
     },
     "50CC867A": {
       "owner": "markdown",
@@ -15564,9 +15582,6 @@
     "5189B8D0": {
       "owner": "template"
     },
-    "518D6EF0": {
-      "owner": "template"
-    },
     "51996578": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -15580,6 +15595,9 @@
       "section": "6.6 Defaults, ranges and the no-preference sentinel",
       "block": 1,
       "para": 11
+    },
+    "5199DF9B": {
+      "owner": "template"
     },
     "519B3FC3": {
       "owner": "markdown",
@@ -15690,6 +15708,9 @@
     "52084AF0": {
       "owner": "template"
     },
+    "52104365": {
+      "owner": "template"
+    },
     "5210D8E3": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -15759,7 +15780,7 @@
       "block": 2,
       "para": 71
     },
-    "52765800": {
+    "5274D4AF": {
       "owner": "template"
     },
     "5279B63A": {
@@ -15801,9 +15822,6 @@
       "para": 28
     },
     "52A86A61": {
-      "owner": "template"
-    },
-    "52CC712C": {
       "owner": "template"
     },
     "52CF894C": {
@@ -15861,18 +15879,12 @@
       "kind": "clause",
       "para": 0
     },
-    "52FCB3AB": {
-      "owner": "template"
-    },
     "5302FDE2": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_final",
       "block": 3,
       "para": 0
-    },
-    "530841BE": {
-      "owner": "template"
     },
     "530CA902": {
       "owner": "markdown",
@@ -15986,6 +15998,9 @@
       "block": 1,
       "para": 0
     },
+    "534B0916": {
+      "owner": "template"
+    },
     "534F71EA": {
       "owner": "generated",
       "region": "namespaces",
@@ -16005,9 +16020,6 @@
       "section": "inline_data_signed",
       "block": 2,
       "para": 80
-    },
-    "53650BD6": {
-      "owner": "template"
     },
     "537180D4": {
       "owner": "markdown",
@@ -16093,6 +16105,9 @@
       "block": 2,
       "para": 67
     },
+    "53F341D8": {
+      "owner": "template"
+    },
     "53FE2E88": {
       "owner": "generated",
       "region": "datatypes",
@@ -16149,15 +16164,15 @@
       "kind": "clause",
       "para": 0
     },
+    "54478A5E": {
+      "owner": "template"
+    },
     "5449CEB7": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 48
-    },
-    "544E87F8": {
-      "owner": "template"
     },
     "546280BF": {
       "owner": "markdown",
@@ -16255,6 +16270,9 @@
       "block": 2,
       "para": 65
     },
+    "54F65F71": {
+      "owner": "template"
+    },
     "54FE5289": {
       "owner": "generated",
       "region": "datatypes",
@@ -16306,6 +16324,9 @@
       "section": "inline_gap",
       "block": 2,
       "para": 23
+    },
+    "55346338": {
+      "owner": "template"
     },
     "55360287": {
       "owner": "markdown",
@@ -16432,6 +16453,9 @@
       "kind": "nodetable",
       "para": 10
     },
+    "55CF418C": {
+      "owner": "template"
+    },
     "55DB5FAF": {
       "owner": "template"
     },
@@ -16508,9 +16532,6 @@
       "block": 2,
       "para": 47
     },
-    "56640A99": {
-      "owner": "template"
-    },
     "56690209": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -16546,6 +16567,9 @@
       "block": 2,
       "para": 25
     },
+    "569A2BDD": {
+      "owner": "template"
+    },
     "56AF5B1B": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -16567,18 +16591,12 @@
       "block": 2,
       "para": 19
     },
-    "56DFDD18": {
-      "owner": "template"
-    },
     "56EA8FB2": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_credit_channel",
       "block": 2,
       "para": 69
-    },
-    "56F7861E": {
-      "owner": "template"
     },
     "57097228": {
       "owner": "generated",
@@ -16656,6 +16674,9 @@
       "kind": "nodetable",
       "para": 29
     },
+    "576AC6CF": {
+      "owner": "template"
+    },
     "5777DEFD": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -16680,6 +16701,15 @@
       "kind": "enumtable",
       "para": 21
     },
+    "578F0A84": {
+      "owner": "template"
+    },
+    "5794167B": {
+      "owner": "template"
+    },
+    "579CD817": {
+      "owner": "template"
+    },
     "579DCEEA": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -16694,9 +16724,6 @@
       "block": 2,
       "para": 63
     },
-    "57B14F6B": {
-      "owner": "template"
-    },
     "57B2E274": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -16710,6 +16737,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 200
+    },
+    "57D5FBB0": {
+      "owner": "template"
     },
     "57D64DA9": {
       "owner": "markdown",
@@ -16773,9 +16803,6 @@
       "section": "1 Scope",
       "block": 2,
       "para": 0
-    },
-    "581EE8A2": {
-      "owner": "template"
     },
     "581F1FA1": {
       "owner": "markdown",
@@ -16961,6 +16988,9 @@
       "block": 3,
       "para": 13
     },
+    "58D6CF6C": {
+      "owner": "template"
+    },
     "58D80637": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -17121,15 +17151,15 @@
       "block": 2,
       "para": 49
     },
-    "59D0488F": {
-      "owner": "template"
-    },
     "59D7A807": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_gap",
       "block": 2,
       "para": 33
+    },
+    "59DD4041": {
+      "owner": "template"
     },
     "59DF1CF0": {
       "owner": "markdown",
@@ -17158,6 +17188,9 @@
       "index": 4,
       "kind": "nodetable",
       "para": 22
+    },
+    "5A0E3964": {
+      "owner": "template"
     },
     "5A0E650A": {
       "owner": "markdown",
@@ -17210,6 +17243,9 @@
       "kind": "clause",
       "para": 0
     },
+    "5A59599D": {
+      "owner": "template"
+    },
     "5A652556": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -17241,6 +17277,9 @@
       "kind": "enumtable",
       "para": 9
     },
+    "5A8A8DF5": {
+      "owner": "template"
+    },
     "5A9B3B81": {
       "owner": "generated",
       "region": "annex-a",
@@ -17261,9 +17300,6 @@
       "index": 15,
       "kind": "enumtable",
       "para": 1
-    },
-    "5AAD5EC7": {
-      "owner": "template"
     },
     "5ABA4B96": {
       "owner": "generated",
@@ -17295,9 +17331,6 @@
       "section": "inline_ping",
       "block": 2,
       "para": 57
-    },
-    "5AFA3001": {
-      "owner": "template"
     },
     "5AFDA560": {
       "owner": "markdown",
@@ -17396,10 +17429,7 @@
       "block": 0,
       "para": 8
     },
-    "5B6FEA32": {
-      "owner": "template"
-    },
-    "5B71969D": {
+    "5B68E5D3": {
       "owner": "template"
     },
     "5B74B1E1": {
@@ -17450,9 +17480,6 @@
     "5BB67A54": {
       "owner": "template"
     },
-    "5BB8E07F": {
-      "owner": "template"
-    },
     "5BB9C219": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -17479,9 +17506,6 @@
       "index": 3,
       "kind": "enumtable",
       "para": 2
-    },
-    "5BE07E2F": {
-      "owner": "template"
     },
     "5BE12E38": {
       "owner": "generated",
@@ -17585,6 +17609,9 @@
       "section": "inline_end",
       "block": 1,
       "para": 0
+    },
+    "5C3C41BC": {
+      "owner": "template"
     },
     "5C3C5F24": {
       "owner": "generated",
@@ -17715,6 +17742,9 @@
       "block": 2,
       "para": 73
     },
+    "5CB1D3E9": {
+      "owner": "template"
+    },
     "5CBDFBAC": {
       "owner": "generated",
       "region": "datatypes",
@@ -17728,9 +17758,6 @@
       "section": "6.1 OpenDataChannel",
       "block": 6,
       "para": 10
-    },
-    "5CD59345": {
-      "owner": "template"
     },
     "5CD5B36C": {
       "owner": "markdown",
@@ -17766,9 +17793,6 @@
       "index": 9,
       "kind": "nodetable",
       "para": 60
-    },
-    "5CFFB065": {
-      "owner": "template"
     },
     "5D01A73B": {
       "owner": "markdown",
@@ -18064,6 +18088,9 @@
       "kind": "toc",
       "para": 0
     },
+    "5E66CD3B": {
+      "owner": "template"
+    },
     "5E70C855": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -18072,9 +18099,6 @@
       "para": 37
     },
     "5E78D9AD": {
-      "owner": "template"
-    },
-    "5E894426": {
       "owner": "template"
     },
     "5E8C06AB": {
@@ -18100,6 +18124,9 @@
       "block": 0,
       "para": 0
     },
+    "5EBC2E5F": {
+      "owner": "template"
+    },
     "5EC8FB46": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -18114,9 +18141,6 @@
       "block": 1,
       "para": 0
     },
-    "5EDB5CB4": {
-      "owner": "template"
-    },
     "5EF96C8B": {
       "owner": "generated",
       "region": "datatypes",
@@ -18130,9 +18154,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 3
-    },
-    "5EFCBE49": {
-      "owner": "template"
     },
     "5EFDB514": {
       "owner": "markdown",
@@ -18168,6 +18189,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 179
+    },
+    "5F1B4F45": {
+      "owner": "template"
     },
     "5F2A247F": {
       "owner": "markdown",
@@ -18238,9 +18262,6 @@
       "block": 2,
       "para": 26
     },
-    "5F791AC2": {
-      "owner": "template"
-    },
     "5F7C43AD": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -18248,18 +18269,12 @@
       "block": 0,
       "para": 29
     },
-    "5F83AEA8": {
-      "owner": "template"
-    },
     "5F8B9421": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "4.2 Frame types",
       "block": 0,
       "para": 28
-    },
-    "5F96E486": {
-      "owner": "template"
     },
     "5F9E0535": {
       "owner": "generated",
@@ -18276,9 +18291,6 @@
       "para": 83
     },
     "5FADA1C8": {
-      "owner": "template"
-    },
-    "5FB7A355": {
       "owner": "template"
     },
     "5FB97CC0": {
@@ -18398,9 +18410,6 @@
       "kind": "nodetable",
       "para": 157
     },
-    "6029CFB6": {
-      "owner": "template"
-    },
     "602C9726": {
       "owner": "generated",
       "region": "objecttypes",
@@ -18474,6 +18483,9 @@
       "block": 2,
       "para": 63
     },
+    "6085E061": {
+      "owner": "template"
+    },
     "6092887C": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -18487,12 +18499,6 @@
       "index": 9,
       "kind": "nodetable",
       "para": 15
-    },
-    "60BA42EC": {
-      "owner": "template"
-    },
-    "60C3487D": {
-      "owner": "template"
     },
     "60C5BBFA": {
       "owner": "markdown",
@@ -18672,6 +18678,9 @@
       "block": 2,
       "para": 14
     },
+    "618CB3A5": {
+      "owner": "template"
+    },
     "618D0688": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -18696,15 +18705,15 @@
     "61B64046": {
       "owner": "template"
     },
+    "61B9CCA1": {
+      "owner": "template"
+    },
     "61C386CB": {
       "owner": "generated",
       "region": "normative-references",
       "index": 26,
       "kind": "para",
       "para": 0
-    },
-    "61C3B38A": {
-      "owner": "template"
     },
     "61C6BC17": {
       "owner": "markdown",
@@ -18783,6 +18792,12 @@
       "section": "inline_end",
       "block": 2,
       "para": 65
+    },
+    "6245A931": {
+      "owner": "template"
+    },
+    "6247B40E": {
+      "owner": "template"
     },
     "625D9401": {
       "owner": "markdown",
@@ -18884,10 +18899,7 @@
       "kind": "nodetable",
       "para": 32
     },
-    "6316240D": {
-      "owner": "template"
-    },
-    "6319EB5D": {
+    "631B057D": {
       "owner": "template"
     },
     "631E0074": {
@@ -18975,9 +18987,6 @@
     "636BD5A9": {
       "owner": "template"
     },
-    "6372037A": {
-      "owner": "template"
-    },
     "639275D4": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -19022,9 +19031,6 @@
       "section": "inline_ping",
       "block": 2,
       "para": 31
-    },
-    "63C31347": {
-      "owner": "template"
     },
     "63C8D3C6": {
       "owner": "markdown",
@@ -19168,9 +19174,6 @@
     "645CEE86": {
       "owner": "template"
     },
-    "6471BF40": {
-      "owner": "template"
-    },
     "647B6181": {
       "owner": "template"
     },
@@ -19195,21 +19198,12 @@
       "kind": "nodetable",
       "para": 27
     },
-    "64A62EF3": {
-      "owner": "template"
-    },
-    "64A6F437": {
-      "owner": "template"
-    },
     "64A8DE4B": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 1,
       "kind": "clause",
       "para": 0
-    },
-    "64B5C722": {
-      "owner": "template"
     },
     "64D3A2A3": {
       "owner": "markdown",
@@ -19304,9 +19298,6 @@
       "block": 3,
       "para": 0
     },
-    "6531D6FB": {
-      "owner": "template"
-    },
     "6547DC25": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -19328,6 +19319,12 @@
       "block": 2,
       "para": 76
     },
+    "655F6052": {
+      "owner": "template"
+    },
+    "656A9DE8": {
+      "owner": "template"
+    },
     "657397AA": {
       "owner": "template"
     },
@@ -19339,9 +19336,6 @@
       "para": 81
     },
     "65985FB0": {
-      "owner": "template"
-    },
-    "65A1B30B": {
       "owner": "template"
     },
     "65A4B672": {
@@ -19437,15 +19431,15 @@
       "kind": "nodetable",
       "para": 28
     },
+    "664E066C": {
+      "owner": "template"
+    },
     "66511C2A": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_credit_connection",
       "block": 2,
       "para": 9
-    },
-    "6657994E": {
-      "owner": "template"
     },
     "665E919E": {
       "owner": "template"
@@ -19474,9 +19468,6 @@
     "6671E4CD": {
       "owner": "template"
     },
-    "6683ED94": {
-      "owner": "template"
-    },
     "6687F206": {
       "owner": "template"
     },
@@ -19489,6 +19480,9 @@
       "section": "inline_credit_channel",
       "block": 2,
       "para": 3
+    },
+    "66A30132": {
+      "owner": "template"
     },
     "66AA9123": {
       "owner": "generated",
@@ -19516,6 +19510,9 @@
       "section": "inline_credit_channel",
       "block": 2,
       "para": 63
+    },
+    "66D035EE": {
+      "owner": "template"
     },
     "66D63B55": {
       "owner": "generated",
@@ -19569,6 +19566,9 @@
       "block": 3,
       "para": 2
     },
+    "671026D9": {
+      "owner": "template"
+    },
     "6718562D": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -19604,6 +19604,9 @@
       "block": 2,
       "para": 60
     },
+    "672F60D2": {
+      "owner": "template"
+    },
     "6730A53D": {
       "owner": "generated",
       "region": "normative-references",
@@ -19638,6 +19641,9 @@
       "section": "quic_data_stream",
       "block": 2,
       "para": 48
+    },
+    "678D2420": {
+      "owner": "template"
     },
     "679A78EF": {
       "owner": "markdown",
@@ -19787,9 +19793,6 @@
       "kind": "nodetable",
       "para": 34
     },
-    "683BC2E9": {
-      "owner": "template"
-    },
     "68447416": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -19845,6 +19848,12 @@
       "section": "inline_data_final",
       "block": 2,
       "para": 56
+    },
+    "6879F4EE": {
+      "owner": "template"
+    },
+    "687C6A83": {
+      "owner": "template"
     },
     "68834CC3": {
       "owner": "markdown",
@@ -19968,9 +19977,6 @@
       "block": 2,
       "para": 4
     },
-    "691A8396": {
-      "owner": "template"
-    },
     "691CC841": {
       "owner": "template"
     },
@@ -20008,9 +20014,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 21
-    },
-    "694CCCC6": {
-      "owner": "template"
     },
     "694F5FCB": {
       "owner": "generated",
@@ -20082,15 +20085,15 @@
       "block": 0,
       "para": 16
     },
+    "697F6693": {
+      "owner": "template"
+    },
     "6983CB49": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_ping",
       "block": 1,
       "para": 0
-    },
-    "6985123B": {
-      "owner": "template"
     },
     "698AC366": {
       "owner": "markdown",
@@ -20120,18 +20123,12 @@
       "block": 2,
       "para": 66
     },
-    "69BBD7ED": {
-      "owner": "template"
-    },
     "69BFF3D0": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "Annex C — A worked media session (informative)",
       "block": 5,
       "para": 16
-    },
-    "69C3F04A": {
-      "owner": "template"
     },
     "69C41241": {
       "owner": "generated",
@@ -20237,9 +20234,6 @@
       "kind": "nodetable",
       "para": 10
     },
-    "6A53839F": {
-      "owner": "template"
-    },
     "6A53D773": {
       "owner": "generated",
       "region": "datatypes",
@@ -20264,6 +20258,9 @@
       "block": 2,
       "para": 38
     },
+    "6A711BE9": {
+      "owner": "template"
+    },
     "6A758512": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -20278,15 +20275,15 @@
       "kind": "enumtable",
       "para": 11
     },
-    "6A83FDA8": {
-      "owner": "template"
-    },
     "6A9EF9EF": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 58
+    },
+    "6AAFE147": {
+      "owner": "template"
     },
     "6ABC0ECF": {
       "owner": "markdown",
@@ -20468,9 +20465,6 @@
       "block": 2,
       "para": 13
     },
-    "6B70AF3D": {
-      "owner": "template"
-    },
     "6B77FFDD": {
       "owner": "generated",
       "region": "referencetypes",
@@ -20572,6 +20566,9 @@
     "6BC19F84": {
       "owner": "template"
     },
+    "6BD6BF50": {
+      "owner": "template"
+    },
     "6BD99771": {
       "owner": "generated",
       "region": "normative-references",
@@ -20651,6 +20648,9 @@
     "6C3E5E2B": {
       "owner": "template"
     },
+    "6C3FB54C": {
+      "owner": "template"
+    },
     "6C4124F1": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -20658,15 +20658,15 @@
       "block": 0,
       "para": 24
     },
-    "6C486C8F": {
-      "owner": "template"
-    },
     "6C4A1A0E": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_droppable",
       "block": 2,
       "para": 17
+    },
+    "6C533744": {
+      "owner": "template"
     },
     "6C587E0F": {
       "owner": "template"
@@ -20704,6 +20704,9 @@
       "section": "6.1 OpenDataChannel",
       "block": 9,
       "para": 13
+    },
+    "6CAFD008": {
+      "owner": "template"
     },
     "6CB1786C": {
       "owner": "markdown",
@@ -20823,9 +20826,6 @@
       "kind": "nodetable",
       "para": 126
     },
-    "6D9C3D74": {
-      "owner": "template"
-    },
     "6DA6E3C6": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -20853,6 +20853,9 @@
       "index": 0,
       "kind": "nodetable",
       "para": 82
+    },
+    "6DD4A57E": {
+      "owner": "template"
     },
     "6DD5239A": {
       "owner": "markdown",
@@ -20920,6 +20923,9 @@
       "block": 5,
       "para": 0
     },
+    "6E335553": {
+      "owner": "template"
+    },
     "6E340689": {
       "owner": "generated",
       "region": "datatypes",
@@ -20937,9 +20943,6 @@
       "block": 2,
       "para": 30
     },
-    "6E3E22A0": {
-      "owner": "template"
-    },
     "6E425CAA": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -20953,9 +20956,6 @@
       "section": "inline_data_final",
       "block": 2,
       "para": 23
-    },
-    "6E5CBEC1": {
-      "owner": "template"
     },
     "6E6DE116": {
       "owner": "template"
@@ -21053,6 +21053,9 @@
       "block": 0,
       "para": 23
     },
+    "6EBC9907": {
+      "owner": "template"
+    },
     "6EC5A462": {
       "owner": "template"
     },
@@ -21092,9 +21095,6 @@
       "section": "inline_data_first",
       "block": 2,
       "para": 69
-    },
-    "6EEE6A07": {
-      "owner": "template"
     },
     "6EF1C03A": {
       "owner": "generated",
@@ -21179,15 +21179,15 @@
       "kind": "nodetable",
       "para": 29
     },
-    "6F785FD8": {
-      "owner": "template"
-    },
     "6F842F1A": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_final",
       "block": 2,
       "para": 53
+    },
+    "6F87E150": {
+      "owner": "template"
     },
     "6F8BB8A1": {
       "owner": "generated",
@@ -21202,6 +21202,9 @@
       "section": "inline_pong",
       "block": 2,
       "para": 8
+    },
+    "6F9F047F": {
+      "owner": "template"
     },
     "6FA55308": {
       "owner": "template"
@@ -21243,9 +21246,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 218
-    },
-    "6FCDA385": {
-      "owner": "template"
     },
     "6FCF0796": {
       "owner": "markdown",
@@ -21319,6 +21319,12 @@
       "section": "inline_data_signed",
       "block": 2,
       "para": 41
+    },
+    "7028712C": {
+      "owner": "template"
+    },
+    "702A5413": {
+      "owner": "template"
     },
     "702F5EF2": {
       "owner": "markdown",
@@ -21457,9 +21463,6 @@
       "block": 0,
       "para": 0
     },
-    "70E1145F": {
-      "owner": "template"
-    },
     "70E5FE23": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -21525,6 +21528,9 @@
     "7128BAD1": {
       "owner": "template"
     },
+    "7135F6AF": {
+      "owner": "template"
+    },
     "7138B8CC": {
       "owner": "generated",
       "region": "datatypes",
@@ -21555,6 +21561,9 @@
       "section": "inline_data_final",
       "block": 2,
       "para": 69
+    },
+    "7158C320": {
+      "owner": "template"
     },
     "715BF5ED": {
       "owner": "generated",
@@ -21639,7 +21648,7 @@
       "block": 2,
       "para": 81
     },
-    "71B1509A": {
+    "71AF3489": {
       "owner": "template"
     },
     "71B3C4A9": {
@@ -21648,9 +21657,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 60
-    },
-    "71D3EEFB": {
-      "owner": "template"
     },
     "71D6DC5F": {
       "owner": "generated",
@@ -21793,15 +21799,15 @@
       "block": 7,
       "para": 2
     },
+    "72A4CC5A": {
+      "owner": "template"
+    },
     "72B42823": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_data_first",
       "block": 2,
       "para": 64
-    },
-    "72B60FB9": {
-      "owner": "template"
     },
     "72C2035F": {
       "owner": "markdown",
@@ -21935,7 +21941,7 @@
       "block": 2,
       "para": 4
     },
-    "7388508C": {
+    "7391A56F": {
       "owner": "template"
     },
     "7395BE4A": {
@@ -21966,6 +21972,9 @@
       "block": 4,
       "para": 0
     },
+    "73A30F96": {
+      "owner": "template"
+    },
     "73A793B4": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -21986,6 +21995,9 @@
       "index": 4,
       "kind": "nodetable",
       "para": 14
+    },
+    "73D373D8": {
+      "owner": "template"
     },
     "73D98769": {
       "owner": "markdown",
@@ -22021,9 +22033,6 @@
       "section": "quic_data_stream",
       "block": 1,
       "para": 0
-    },
-    "73F3C82E": {
-      "owner": "template"
     },
     "73FA0FB8": {
       "owner": "markdown",
@@ -22101,6 +22110,9 @@
       "block": 2,
       "para": 20
     },
+    "74410BCC": {
+      "owner": "template"
+    },
     "74422415": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -22114,6 +22126,9 @@
       "section": "inline_data_droppable",
       "block": 2,
       "para": 0
+    },
+    "744BDBA2": {
+      "owner": "template"
     },
     "744F2556": {
       "owner": "markdown",
@@ -22142,9 +22157,6 @@
       "section": "inline_data_first",
       "block": 2,
       "para": 19
-    },
-    "74672793": {
-      "owner": "template"
     },
     "74685BBD": {
       "owner": "markdown",
@@ -22250,6 +22262,9 @@
       "block": 2,
       "para": 7
     },
+    "75429C4E": {
+      "owner": "template"
+    },
     "7542E034": {
       "owner": "generated",
       "region": "datatypes",
@@ -22258,12 +22273,6 @@
       "para": 10
     },
     "75444632": {
-      "owner": "template"
-    },
-    "754708BF": {
-      "owner": "template"
-    },
-    "754F1C6A": {
       "owner": "template"
     },
     "755207C5": {
@@ -22475,9 +22484,6 @@
       "block": 0,
       "para": 38
     },
-    "7639F727": {
-      "owner": "template"
-    },
     "763EB8B0": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -22519,9 +22525,6 @@
       "index": 27,
       "kind": "enumtable",
       "para": 20
-    },
-    "766770E2": {
-      "owner": "template"
     },
     "767FD943": {
       "owner": "generated",
@@ -22636,9 +22639,6 @@
     "76E7AD87": {
       "owner": "template"
     },
-    "76F63E0E": {
-      "owner": "template"
-    },
     "76F7E7D2": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -22655,9 +22655,6 @@
       "section": "quic_data_stream",
       "block": 2,
       "para": 19
-    },
-    "7701FC46": {
-      "owner": "template"
     },
     "77060DDB": {
       "owner": "markdown",
@@ -22687,18 +22684,12 @@
       "block": 10,
       "para": 0
     },
-    "770EEA38": {
-      "owner": "template"
-    },
     "77118488": {
       "owner": "generated",
       "region": "namespaces",
       "index": 3,
       "kind": "para",
       "para": 0
-    },
-    "771E421D": {
-      "owner": "template"
     },
     "7722B35E": {
       "owner": "generated",
@@ -22727,9 +22718,6 @@
       "section": "inline_gap",
       "block": 2,
       "para": 91
-    },
-    "7746B72E": {
-      "owner": "template"
     },
     "774827E3": {
       "owner": "template"
@@ -22837,15 +22825,15 @@
       "block": 1,
       "para": 0
     },
+    "77EF72F3": {
+      "owner": "template"
+    },
     "7801D9FB": {
       "owner": "generated",
       "region": "datatypes",
       "index": 4,
       "kind": "nodetable",
       "para": 17
-    },
-    "7801DFF2": {
-      "owner": "template"
     },
     "780403E8": {
       "owner": "markdown",
@@ -22906,6 +22894,9 @@
       "block": 6,
       "para": 15
     },
+    "78625A2C": {
+      "owner": "template"
+    },
     "78635D15": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -22964,6 +22955,9 @@
       "index": 3,
       "kind": "enumtable",
       "para": 11
+    },
+    "78D8D7B9": {
+      "owner": "template"
     },
     "78DBCAC3": {
       "owner": "generated",
@@ -23067,9 +23061,6 @@
       "index": 6,
       "kind": "nodetable",
       "para": 15
-    },
-    "79627FC4": {
-      "owner": "template"
     },
     "7971F051": {
       "owner": "generated",
@@ -23288,6 +23279,9 @@
       "block": 2,
       "para": 23
     },
+    "7A9FF443": {
+      "owner": "template"
+    },
     "7AAA0D0E": {
       "owner": "generated",
       "region": "datatypes",
@@ -23303,9 +23297,6 @@
       "para": 7
     },
     "7AB8EA0A": {
-      "owner": "template"
-    },
-    "7AC2F1E8": {
       "owner": "template"
     },
     "7AC7DD3A": {
@@ -23352,9 +23343,6 @@
       "index": 6,
       "kind": "nodetable",
       "para": 4
-    },
-    "7AF93821": {
-      "owner": "template"
     },
     "7B09D64D": {
       "owner": "template"
@@ -23448,9 +23436,6 @@
       "index": 4,
       "kind": "nodetable",
       "para": 4
-    },
-    "7B630464": {
-      "owner": "template"
     },
     "7B6ADCA4": {
       "owner": "markdown",
@@ -23764,9 +23749,6 @@
       "block": 0,
       "para": 17
     },
-    "7D4E27C0": {
-      "owner": "template"
-    },
     "7D51D6C9": {
       "owner": "generated",
       "region": "datatypes",
@@ -23780,6 +23762,9 @@
       "index": 9,
       "kind": "nodetable",
       "para": 26
+    },
+    "7D5BC290": {
+      "owner": "template"
     },
     "7D5D0597": {
       "owner": "template"
@@ -23978,6 +23963,9 @@
     "7E116BAF": {
       "owner": "template"
     },
+    "7E11F6BE": {
+      "owner": "template"
+    },
     "7E1F47A4": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -24048,12 +24036,18 @@
       "block": 2,
       "para": 82
     },
+    "7E58B8E0": {
+      "owner": "template"
+    },
     "7E5CDF69": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
       "section": "inline_reset",
       "block": 2,
       "para": 28
+    },
+    "7E6E7B94": {
+      "owner": "template"
     },
     "7E76F010": {
       "owner": "markdown",
@@ -24139,9 +24133,6 @@
       "block": 1,
       "para": 13
     },
-    "7ECEEAFD": {
-      "owner": "template"
-    },
     "7ED24D6E": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -24187,6 +24178,9 @@
       "kind": "nodetable",
       "para": 1
     },
+    "7F02C8C3": {
+      "owner": "template"
+    },
     "7F04DE17": {
       "owner": "markdown",
       "file": "core-specs/data-channels/OPC-UA-Data-Channels.md",
@@ -24200,6 +24194,9 @@
       "index": 3,
       "kind": "enumtable",
       "para": 12
+    },
+    "7F24BCA7": {
+      "owner": "template"
     },
     "7F31878B": {
       "owner": "markdown",
@@ -24259,6 +24256,9 @@
       "section": "inline_data_first",
       "block": 2,
       "para": 32
+    },
+    "7F7C619D": {
+      "owner": "template"
     },
     "7F7C9DA3": {
       "owner": "generated",

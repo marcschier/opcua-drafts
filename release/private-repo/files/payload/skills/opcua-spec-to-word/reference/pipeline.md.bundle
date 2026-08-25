@@ -115,11 +115,12 @@ worked:
 | Data Channels | **a document that owns no namespace** — its Nodes are additions to the base namespace, so `namespaceIndexInDocument` is 0, `IsNamespaceSubset` is True, and base names must print unprefixed; a Terms clause read from a *sibling* document (`termsFrom`); a Use cases clause **written in config** because the document has no material shaped like one |
 | Avro and Arrow Encoding | **scale, and nothing else** — 121 and 106 clause-map entries, five heading levels deep. Both are the WoT Binding shape (`no-information-model`), and the only new mechanism either needed was a clause **authored in config**, because neither has a Use cases or a conformance clause of its own |
 | The seven folded annexes | **more than one markdown source per document** — `additionalMarkdown` plus `"in"` on a clause-map entry, with sections keyed per source so a folded "1 Scope" does not collide with the base document's; and the class-diagram relations `..\|>` and `<\|..`, which only a worked example drew |
+| Asset Administration Shell | **lower-case `clause` references and a generated Annex A after source restructuring** — written-out references now become live fields and renumber with the map, including lists and ranges; external-document qualifiers may follow the number; and a model generator can replace the generated body while preserving the OPC 20020 Annex A heading and anchor |
 
-**How much of this is really config.** Eleven specifications have now been onboarded, and each new
+**How much of this is really config.** Twelve specifications have now been onboarded, and each new
 *shape* cost a generalisation before its config worked.
 
-Everything above is now driven by the docmodel and the config, and a twelfth specification of any of
+Everything above is now driven by the docmodel and the config, and a thirteenth specification of any of
 those shapes is genuinely a config file. **Config carries what varies between documents of the same
 shape; a new shape is code.**
 
@@ -181,7 +182,7 @@ Word and is not byte-deterministic.
 
 ## Declared partial compliance
 
-The template admits no deviation, and for eight of the eleven documents none was needed. Three need
+The template admits no deviation, and for nine of the twelve documents none was needed. Three need
 one, all for the same reason: WoT Binding defines a JSON-LD vocabulary and a NodeSet↔WoT mapping,
 and the Avro and Arrow specifications define a wire format. None has a NodeSet, ObjectTypes or
 Instances, so the NodeClass clauses and Annex A's NodeSet block have nothing to present.

@@ -10591,7 +10591,8 @@
       {
         "t": "enumtable",
         "id": "c9-1-items",
-        "browseName": "DataChannelDirection"
+        "browseName": "DataChannelDirection",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -10619,7 +10620,8 @@
       {
         "t": "enumtable",
         "id": "c9-2-items",
-        "browseName": "DataChannelDeliveryMode"
+        "browseName": "DataChannelDeliveryMode",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -10647,7 +10649,8 @@
       {
         "t": "enumtable",
         "id": "c9-3-items",
-        "browseName": "DataChannelState"
+        "browseName": "DataChannelState",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -10675,7 +10678,8 @@
       {
         "t": "enumtable",
         "id": "c9-4-items",
-        "browseName": "DataChannelParametersDataType"
+        "browseName": "DataChannelParametersDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -10703,7 +10707,8 @@
       {
         "t": "enumtable",
         "id": "c9-5-items",
-        "browseName": "DataChannelStatusDataType"
+        "browseName": "DataChannelStatusDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -10731,7 +10736,8 @@
       {
         "t": "enumtable",
         "id": "c9-6-items",
-        "browseName": "DataChannelOfferDataType"
+        "browseName": "DataChannelOfferDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -10759,7 +10765,8 @@
       {
         "t": "enumtable",
         "id": "c9-7-items",
-        "browseName": "DataChannelDiagnosticsDataType"
+        "browseName": "DataChannelDiagnosticsDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -10880,7 +10887,15 @@
             [
               {
                 "r": "t",
-                "text": "Part 6 errata clause 5"
+                "text": "Part 6 errata "
+              },
+              {
+                "r": "t",
+                "text": "clause "
+              },
+              {
+                "r": "t",
+                "text": "5"
               }
             ]
           ],
@@ -10964,7 +10979,19 @@
             [
               {
                 "r": "t",
-                "text": "Part 6 errata clause 7 except "
+                "text": "Part 6 errata "
+              },
+              {
+                "r": "t",
+                "text": "clause "
+              },
+              {
+                "r": "t",
+                "text": "7"
+              },
+              {
+                "r": "t",
+                "text": " except "
               },
               {
                 "r": "t",
@@ -11020,7 +11047,19 @@
             [
               {
                 "r": "t",
-                "text": "Part 6 errata clause 8 except "
+                "text": "Part 6 errata "
+              },
+              {
+                "r": "t",
+                "text": "clause "
+              },
+              {
+                "r": "t",
+                "text": "8"
+              },
+              {
+                "r": "t",
+                "text": " except "
               },
               {
                 "r": "t",
@@ -11084,7 +11123,19 @@
             [
               {
                 "r": "t",
-                "text": "Part 4 errata clause 5, "
+                "text": "Part 4 errata "
+              },
+              {
+                "r": "t",
+                "text": "clause "
+              },
+              {
+                "r": "t",
+                "text": "5"
+              },
+              {
+                "r": "t",
+                "text": ", "
               },
               {
                 "r": "t",
@@ -11140,7 +11191,15 @@
             [
               {
                 "r": "t",
-                "text": "Part 4 errata clause 6"
+                "text": "Part 4 errata "
+              },
+              {
+                "r": "t",
+                "text": "clause "
+              },
+              {
+                "r": "t",
+                "text": "6"
               }
             ]
           ],
@@ -11192,7 +11251,23 @@
             [
               {
                 "r": "t",
-                "text": "Part 3 errata clauses 5-7"
+                "text": "Part 3 errata "
+              },
+              {
+                "r": "t",
+                "text": "clauses "
+              },
+              {
+                "r": "t",
+                "text": "5"
+              },
+              {
+                "r": "t",
+                "text": "-"
+              },
+              {
+                "r": "t",
+                "text": "7"
               }
             ]
           ],
@@ -11236,7 +11311,15 @@
             [
               {
                 "r": "t",
-                "text": "Part 3 errata clause 8"
+                "text": "Part 3 errata "
+              },
+              {
+                "r": "t",
+                "text": "clause "
+              },
+              {
+                "r": "t",
+                "text": "8"
               }
             ]
           ],
@@ -11256,7 +11339,15 @@
             [
               {
                 "r": "t",
-                "text": "Part 3 errata clause 8"
+                "text": "Part 3 errata "
+              },
+              {
+                "r": "t",
+                "text": "clause "
+              },
+              {
+                "r": "t",
+                "text": "8"
               }
             ]
           ]
