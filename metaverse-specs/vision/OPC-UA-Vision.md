@@ -70,7 +70,7 @@ Informative alignments — GenICam SFNC and PFNC, QIF (ISO 23952), ROS 2 `vision
 
 Two further informative references are called out here rather than in Annex E, because §6.7 defines an optional facet against the first:
 
-- **OPC UA — Data Channels** — [`../../core-specs/data-channels/OPC-UA-Data-Channels.md`](../../core-specs/data-channels/OPC-UA-Data-Channels.md). A **working draft in this repository**, written as an errata package against OPC 10000-3, -4 and -6. It is **not a released OPC UA specification**: its NodeIds (`65000+`), its `STR` MessageType, its ALPN identifier and its StatusCodes are all provisional, and it may change or be abandoned. It is **informative and non-normative here, and imposes no dependency** — §6.7 defines an entirely optional facet against it, this model references none of its identifiers, and a Server that has never heard of it is fully conformant to this specification.
+- **OPC UA — Data Channels** — <!-- release-spec-link:W2AuLi8uLi9jb3JlLXNwZWNzL2RhdGEtY2hhbm5lbHMvT1BDLVVBLURhdGEtQ2hhbm5lbHMubWRgXSguLi8uLi9jb3JlLXNwZWNzL2RhdGEtY2hhbm5lbHMvT1BDLVVBLURhdGEtQ2hhbm5lbHMubWQp -->`../../core-specs/data-channels/OPC-UA-Data-Channels.md`<!-- /release-spec-link -->. A **working draft in this repository**, written as an errata package against OPC 10000-3, -4 and -6. It is **not a released OPC UA specification**: its NodeIds (`65000+`), its `STR` MessageType, its ALPN identifier and its StatusCodes are all provisional, and it may change or be abandoned. It is **informative and non-normative here, and imposes no dependency** — §6.7 defines an entirely optional facet against it, this model references none of its identifiers, and a Server that has never heard of it is fully conformant to this specification.
 
 ---
 

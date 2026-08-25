@@ -3,7 +3,6 @@
   "converted": [
     "schema-registry",
     "generators",
-    "data-channels",
     "arrow-encoding",
     "async-services",
     "vision",

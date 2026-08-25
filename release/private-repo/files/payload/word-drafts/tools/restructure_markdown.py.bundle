@@ -27,7 +27,7 @@ SECTION_REF_RE = re.compile(r'§\s*(\d+(?:\.\d+)*)')
 # `Part 2 Annex E`. Anything naming another standard or Part is left alone.
 FOREIGN_QUALIFIER = re.compile(
     r'(?:OPC\s*\d{4,5}|IEC\s*\d+|xRegistry|AOUSD|RFC\s*\d+|W3C'
-    r'|Part\s*\d+|\bthe base\b|\bbase (?:spec|specification|model)\b'
+    r'|Part\s*\d+|\bthe base\b|\bbase(?: (?:spec|specification|model))?\b'
     r'|\*[^*]*OPC UA[^*]*\*)[^§]{0,60}$', re.IGNORECASE)
 
 
@@ -40,7 +40,7 @@ def is_annex(number):
     return str(number)[0].isalpha()
 
 
-def rewrite_refs(text, xref_map, annex_map=None):
+def rewrite_refs(text, xref_map, annex_map=None, foreign_anchors=None):
     """Rewrite every section reference through the clause map, longest key first."""
     keys = sorted(xref_map, key=len, reverse=True)
     pattern = re.compile(
@@ -62,6 +62,21 @@ def rewrite_refs(text, xref_map, annex_map=None):
         return out
 
     text = pattern.sub(repl, text)
+    anchors = md_parse.foreign_anchor_re(foreign_anchors or [])
+
+    def repl_word(m):
+        if md_parse._is_foreign(text, m.start(), anchors, m.end()):
+            return m.group(0)
+
+        def replace_number(n):
+            old = n.group(0)
+            new = xref_map.get(old, old)
+            return new.removeprefix('Annex ')
+
+        return re.sub(r'[0-9]+(?:\.[0-9]+)*(?!\.?[0-9])(?![A-Za-z])',
+                      replace_number, m.group(0))
+
+    text = md_parse.WORD_REF_LIST_RE.sub(repl_word, text)
     if annex_map:
         text = _rewrite_annexes(text, annex_map)
     return text
@@ -128,6 +143,8 @@ def restructure(cfg):
             out.append('')
             out.append('---')
             out.append('')
+            out.append('<a id="annex-%s"></a>' % number.lower())
+            out.append('')
             kind = 'normative' if entry.get('normative') else 'informative'
             out.append('## Annex %s (%s) — %s' % (number, kind, title))
         elif is_annex(number):
@@ -166,7 +183,9 @@ def restructure(cfg):
 
     out.append('')
     body_text = '\n'.join(out).rstrip() + '\n'
-    body_text = rewrite_refs(body_text, cfg['xrefMap'], cfg.get('annexMap'))
+    body_text = rewrite_refs(
+        body_text, cfg['xrefMap'], cfg.get('annexMap'),
+        cfg.get('foreignAnchors'))
     body_text = re.sub(r'\n{3,}', '\n\n', body_text)
 
     missing = [k for k in order
