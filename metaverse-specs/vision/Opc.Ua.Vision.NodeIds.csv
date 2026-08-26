@@ -242,3 +242,5 @@ InspectionCompletedEventType_FailedCharacteristics,6212,Variable
 VisionRootType_ClockSynchronised,6213,Variable
 VisionRootType_TimeSyncSource,6214,Variable
 VisionResultType_ModelUsed,6215,Variable
+InferencePipelineType_MaxResultAge,6216,Variable
+InferencePipelineType_MaxRetainedResults,6217,Variable

@@ -28,6 +28,9 @@ Structural checks, against Opc.Ua.AiModelManagement.NodeSet2.xml:
     encoded Argument entries.
   * Opc.Ua.AiModelManagement.NodeIds.csv and the NodeSet agree exactly - same id set in both
     directions, same NodeClass, and the CSV name resolves to the NodeSet BrowseName.
+  * Published NodeIds are append-only: the 0.5.0 symbol/id/class table matches its
+    canonical baseline digest, and every 0.5.1 symbol has an explicit expected NodeId.
+    Coordinated renumbering of the NodeSet and CSV therefore still fails.
 
 Specification invariants (the reason this file is not generic):
   * ModelType.Digest and DigestAlgorithm MUST be Mandatory. The provenance chain from a
@@ -54,6 +57,7 @@ Exit code 0 and "OK" on success; non-zero with an ERRORS list otherwise.
 """
 from __future__ import annotations
 import csv
+import hashlib
 import os
 import re
 import sys
@@ -82,6 +86,37 @@ ALIAS_OF = {"HasComponent": "i=47", "HasProperty": "i=46", "Organizes": "i=35",
             "HasInterface": "i=17603"}
 
 ERRORS: list[str] = []
+
+# The 0.5.0 symbol/id/class table is pinned as one canonical digest rather than copied
+# here as 253 brittle assertions. Category bounds stop later append-only allocations
+# from changing the digest. The 0.5.1 additions are explicit below so a failure names
+# the symbol that moved.
+PUBLISHED_050_NODEID_SHA256 = (
+    "06d33934b37fb449cdbc729916c224a47ed3e912ce7885e2406a2c10d0a6ba73"
+)
+PUBLISHED_051_NODEIDS = {
+    "ModelChangeKindEnum": "3016",
+    "ModelChangeKindEnum_EnumStrings": "3916",
+    "ModelIdentitySnapshotDataType": "3057",
+    "ModelIdentitySnapshotDataType_Encoding_DefaultBinary": "5008",
+    "PromotionRecordType": "1019",
+    "PromotionRecordType_RecordId": "6185",
+    "PromotionRecordType_Deployment": "6186",
+    "PromotionRecordType_DeploymentId": "6187",
+    "PromotionRecordType_PreviousModel": "6188",
+    "PromotionRecordType_NewModel": "6189",
+    "PromotionRecordType_PreviousModelIdentity": "6190",
+    "PromotionRecordType_NewModelIdentity": "6191",
+    "PromotionRecordType_EvaluationRun": "6192",
+    "PromotionRecordType_EvaluationRunId": "6193",
+    "PromotionRecordType_ChangedAt": "6194",
+    "PromotionRecordType_ChangedBy": "6195",
+    "PromotionRecordType_ChangeKind": "6196",
+    "PromotionRecordType_Reason": "6197",
+    "DeploymentType_PromotionRecords": "6198",
+    "DeploymentType_PromotionRecords_PromotionRecord": "6199",
+    "ModelPromotedEventType_PromotionRecord": "6200",
+}
 
 
 def err(msg: str) -> None:
@@ -225,6 +260,11 @@ def check_model_header(m: Model) -> None:
     if len(models) != 1:
         err(f"expected exactly one <Model>, found {len(models)}")
         return
+    if models[0].get("Version") != "0.5.1":
+        err(f"Model Version must be 0.5.1, found {models[0].get('Version')!r}")
+    if models[0].get("PublicationDate") != "2026-08-26T00:00:00Z":
+        err("Model PublicationDate must be 2026-08-26T00:00:00Z, found "
+            f"{models[0].get('PublicationDate')!r}")
     req = models[0].findall("u:RequiredModel", NS)
     uris = [r.get("ModelUri") for r in req]
     if uris != [UA_NAMESPACE, XREG_NS]:
@@ -449,6 +489,40 @@ def check_csv(m: Model) -> None:
         if sid not in csv_ids:
             err(f"NodeSet node {m.bname(nid)} ({nid}) is missing from NodeIds.csv")
 
+    symbols = {name: sid for sid, (name, _cls) in csv_ids.items()}
+    for name, expected in PUBLISHED_051_NODEIDS.items():
+        actual = symbols.get(name)
+        if actual != expected:
+            err(f"published NodeId {name} must remain {expected}; found "
+                f"{actual or 'missing'}")
+
+    def published_050(sid: str) -> bool:
+        value = int(sid)
+        return (
+            1001 <= value <= 1018
+            or 3001 <= value <= 3015
+            or 3050 <= value <= 3056
+            or 3901 <= value <= 3915
+            or 4001 <= value <= 4006
+            or 5001 <= value <= 5007
+            or 6001 <= value <= 6184
+            or value == 7001
+        )
+
+    baseline_rows = [
+        (name, sid, cls)
+        for sid, (name, cls) in csv_ids.items()
+        if published_050(sid)
+    ]
+    canonical = "".join(
+        ",".join(row) + "\n" for row in sorted(baseline_rows)
+    ).encode("utf-8")
+    actual_digest = hashlib.sha256(canonical).hexdigest()
+    if actual_digest != PUBLISHED_050_NODEID_SHA256:
+        err("the published 0.5.0 symbol/NodeId/class baseline changed; NodeIds are "
+            "append-only (expected SHA-256 "
+            f"{PUBLISHED_050_NODEID_SHA256}, found {actual_digest})")
+
 
 def _arg_names(m, method_nid, which):
     """Argument names declared in a Method's InputArguments/OutputArguments node."""
@@ -600,6 +674,70 @@ def check_spec_invariants(m: Model) -> None:
     if not m.by_name("UsesModel"):
         err("UsesModel must exist: it is the only defined path from a deployment to "
             "the artefact its results depend on")
+
+    change_kind = dt("ModelChangeKindEnum")
+    if change_kind:
+        want = {
+            "Promotion": 0,
+            "Rollback": 1,
+            "AutomaticSubstitution": 2,
+            "MutableReferenceRepoint": 3,
+            "OtherAdministrativeReplacement": 4,
+        }
+        got = dict(m.enum_fields(change_kind))
+        if got != want:
+            err(f"ModelChangeKindEnum must classify the five triggers explicitly; "
+                f"found {got}")
+
+    snapshot = dt("ModelIdentitySnapshotDataType")
+    if snapshot:
+        got = {
+            f.get("Name"): f.get("DataType")
+            for f in m.struct_fields(snapshot)
+        }
+        want = {
+            "ModelId": "i=12",
+            "Version": "i=12",
+            "Digest": "i=15",
+            "DigestAlgorithm": "i=12",
+            "DigestProvenance": f"{m.own}i=3015",
+        }
+        if got != want:
+            err("ModelIdentitySnapshotDataType must carry the exact durable identity "
+                f"field/DataType mapping {want}; found {got}")
+
+    record = dt("PromotionRecordType")
+    if record:
+        mandatory = {
+            "RecordId", "Deployment", "DeploymentId", "PreviousModel", "NewModel",
+            "PreviousModelIdentity", "NewModelIdentity", "ChangedAt", "ChangedBy",
+            "ChangeKind",
+        }
+        for name in mandatory:
+            mm = m.member_named(record, name)
+            if not mm:
+                err(f"PromotionRecordType must declare {name}")
+            elif m.modelling_rule(mm) != "Mandatory":
+                err(f"PromotionRecordType.{name} must be Mandatory")
+        for name in ("EvaluationRun", "EvaluationRunId", "Reason"):
+            if not m.member_named(record, name):
+                err(f"PromotionRecordType must declare {name}")
+
+    if dep_t:
+        history = m.member_named(dep_t, "PromotionRecords")
+        if not history:
+            err("DeploymentType must declare the conditionally required "
+                "PromotionRecords folder")
+        elif m.modelling_rule(history) != "Optional":
+            err("DeploymentType.PromotionRecords must be Optional in the type and "
+                "conditionally required by the specification")
+        elif not m.member_named(history, "<PromotionRecord>"):
+            err("DeploymentType.PromotionRecords must declare a PromotionRecord "
+                "placeholder")
+
+    event = dt("ModelPromotedEventType")
+    if event and not m.member_named(event, "PromotionRecord"):
+        err("ModelPromotedEventType must append the PromotionRecord field")
 
     expect_values = {
         "DatasetSourceEnum": {"Real": 0, "Synthetic": 1, "Mixed": 2},

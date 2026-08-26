@@ -5,7 +5,7 @@
     <Uri>http://opcfoundation.org/UA/Vision/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.4.1" PublicationDate="2026-08-25T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.4.1" PublicationDate="2026-08-26T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
     </Model>
   </Models>
@@ -1696,7 +1696,7 @@
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6137" BrowseName="1:ResultId" ParentNodeId="ns=1;i=1020" DataType="String" ValueRank="-1">
     <DisplayName>ResultId</DisplayName>
-    <Description>Identifier of the result, unique within the Server.</Description>
+    <Description>Immutable identifier of the result, unique within the Server and never reused for a different result, including after eviction or Server restart.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -2011,6 +2011,8 @@
       <Reference ReferenceType="HasComponent">ns=1;i=6175</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6176</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6198</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6216</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6217</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6165" BrowseName="1:PipelineId" ParentNodeId="ns=1;i=1018" DataType="String" ValueRank="-1">
@@ -2383,6 +2385,24 @@
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1020</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6216" BrowseName="1:MaxResultAge" ParentNodeId="ns=1;i=1018" DataType="Duration" ValueRank="-1">
+    <DisplayName>MaxResultAge</DisplayName>
+    <Description>Maximum age of result nodes retained under Results, in milliseconds. Zero means no age limit. Where Results is instantiated this member is required under an inference facet and at least one retention limit is non-zero.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1018</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6217" BrowseName="1:MaxRetainedResults" ParentNodeId="ns=1;i=1018" DataType="UInt32" ValueRank="-1">
+    <DisplayName>MaxRetainedResults</DisplayName>
+    <Description>Maximum number of result nodes retained under Results. Zero means no count limit. Count pressure evicts the oldest CreationTime first, with ResultId as the deterministic tie-break. Where Results is instantiated this member is required under an inference facet and at least one retention limit is non-zero.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1018</Reference>
     </References>
   </UAVariable>
 </UANodeSet>

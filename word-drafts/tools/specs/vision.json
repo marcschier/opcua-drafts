@@ -22,7 +22,7 @@
     "namespaceUri": "http://opcfoundation.org/UA/Vision/",
     "namespaceIndexInDocument": 1,
     "version": "0.4.1",
-    "publicationDate": "2026-08-25",
+    "publicationDate": "2026-08-26",
     "releaseType": "Draft",
     "mantisProjectId": "<nnn>",
     "otherOrganization": "EMVA and the Alliance for OpenUSD",
@@ -382,6 +382,11 @@
       "from": "7.1 `VisionResultType` (abstract)",
       "number": "6.19.1",
       "title": "Results"
+    },
+    {
+      "from": "7.1.1 Result-node retention",
+      "number": "6.19.1.1",
+      "title": "Result-node retention"
     },
     {
       "from": "7.2 `InspectionResultType`",
@@ -961,6 +966,7 @@
     "6.7": "6.18.7",
     "7": "6.19",
     "7.1": "6.19.1",
+    "7.1.1": "6.19.1.1",
     "7.2": "6.19.2",
     "7.3": "6.19.3",
     "7.4": "6.19.4",

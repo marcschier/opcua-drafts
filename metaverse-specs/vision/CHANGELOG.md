@@ -4,7 +4,15 @@ All notable changes to this specification and its information model.
 
 NodeId assignment is **append-only**: a new member takes the next free id, so every previously published NodeId is stable across the releases below.
 
-## 0.4.1 — 2026-08-25
+## 0.4.1 — 2026-08-26
+
+### Result retention is bounded and deterministic
+
+`InferencePipelineType.MaxResultAge` (`Duration`, Optional) and `MaxRetainedResults` (`UInt32`, Optional) are appended at `i=6216`–`i=6217`; no existing NodeId moves. Where `Results` is instantiated under an inference facet, both members are required and at least one value is non-zero. Zero means no limit in that dimension.
+
+Results remain retrievable until age or count pressure requires eviction. Count eviction uses oldest `CreationTime` first and `ResultId` as the deterministic tie-break; lowering a limit evicts oldest results until compliant. Evicted node reads return the applicable `Bad_NodeIdUnknown`, while ResultId-scoped Methods return `Bad_NotFound`.
+
+`ResultId` is now explicitly immutable, Server-wide and never reused for a different result, including after eviction or restart. Result-node retention is distinguished from frame/clip retention, external artefact retention and application evidence retention. Event-only pipelines without `Results` acquire no meaningless retention members.
 
 ### Results retain the model that actually answered
 

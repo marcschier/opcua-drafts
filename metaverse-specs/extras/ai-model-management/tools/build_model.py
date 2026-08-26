@@ -39,8 +39,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/AI/"
-VERSION = "0.5.0"
-PUBDATE = "2026-08-12T00:00:00Z"
+VERSION = "0.5.1"
+PUBDATE = "2026-08-26T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -643,6 +643,23 @@ enum_type(3015, "DigestProvenanceEnum",
             "which is the strongest statement this model can carry.")])
 DigestProvenanceEnum = T(3015)
 
+enum_type(3016, "ModelChangeKindEnum",
+          "The trigger that caused a deployment's UsesModel reference to be "
+          "substituted. Classification is by the administrative trigger, never by "
+          "comparing model versions: version strings are not necessarily ordered and "
+          "a rollback can target a version whose spelling sorts later.",
+          [("Promotion", 0, "An approved candidate replaced the serving model."),
+           ("Rollback", 1, "An operator or policy restored a previously used model."),
+           ("AutomaticSubstitution", 2,
+            "The Server changed the deployment's configured UsesModel target "
+            "automatically. Per-invocation fallback that leaves UsesModel unchanged "
+            "is not this value and creates no promotion record."),
+           ("MutableReferenceRepoint", 3,
+            "A followed mutable reference resolved to a different model."),
+           ("OtherAdministrativeReplacement", 4,
+            "Another administrative action replaced the configured model.")])
+ModelChangeKindEnum = T(3016)
+
 # ---------------------------------------------------------------------------
 # Structured DataTypes (3050+)
 # ---------------------------------------------------------------------------
@@ -740,6 +757,26 @@ struct_type(3056, "RateLimitDataType",
              ("RetryAfter", Duration, "How long to wait before retrying. Zero when "
                                       "the endpoint gave no guidance.")])
 RateLimitDataType = T(3056)
+
+struct_type(3057, "ModelIdentitySnapshotDataType",
+            "Durable identity of a model at the instant a deployment's UsesModel "
+            "reference changed. It is copied into a promotion record rather than "
+            "resolved through a retained NodeId, so the history remains complete "
+            "after the ModelType instance or artefact location disappears. Digest "
+            "trust provenance is retained with the digest so a later reader can tell "
+            "whether it was declared, computed or verified.",
+            [("ModelId", String, "ModelType.ModelId at the instant of change."),
+             ("Version", String, "ModelType.Version at the instant of change."),
+             ("Digest", ByteString,
+              "ModelType.Digest at the instant of change, including an empty value "
+              "where DigestProvenance was NotAvailable."),
+             ("DigestAlgorithm", String,
+              "ModelType.DigestAlgorithm at the instant of change."),
+             ("DigestProvenance", DigestProvenanceEnum,
+              "ModelType.DigestProvenance at the instant of change. Retained because "
+              "the same digest bytes carry different evidentiary weight when declared "
+              "by a source, computed by this Server, or verified during staging.")])
+ModelIdentitySnapshotDataType = T(3057)
 
 # ---------------------------------------------------------------------------
 # ReferenceTypes (4001+)
@@ -1623,7 +1660,7 @@ prop_var(1008, "InferenceJobType", "Transfer", NodeId_,
 # happens to keep.
 MPE = 1018
 event_type(MPE, "ModelPromotedEventType", BaseEventType,
-           "A deployment began serving a different model version. Raised on promotion, "
+           "A deployment's configured UsesModel target changed. Raised on promotion, "
            "and also on a rollback or any other Server-initiated substitution, because "
            "a consumer auditing what decided a verdict cares that the model changed and "
            "not why the operator called it a promotion.")
@@ -1643,11 +1680,80 @@ prop_var(MPE, "ModelPromotedEventType", "EvaluationRun", NodeId_,
          "observable consequence of a Server that promoted without it, which is the "
          "fact an audit is looking for.")
 prop_var(MPE, "ModelPromotedEventType", "PromotedBy", String,
-         "Identity of the authenticated principal that promoted, as the Server "
-         "authenticated it. BaseEventType carries no user field, and clause 12.3 "
+         "Identity that authorized or initiated the change, as the Server "
+         "authenticated it. For an automatic substitution this is the Server's stable "
+         "system identity. BaseEventType carries no user field, and clause 12.3 "
          "requires promotion to be separately authorized - a requirement whose "
          "satisfaction is unobservable if the identity is not recorded where the act "
-         "is. Empty where the Server initiated the change itself.")
+         "is.")
+
+# ---------------------------------------------------------------------------
+# Promotion history added in 0.5.1. All member ids append after the 0.5.0
+# event fields. A record snapshots identities rather than retaining target nodes:
+# history must survive deletion of the ModelType and EvaluationRunType instances.
+# ---------------------------------------------------------------------------
+PR = 1019
+object_type(PR, "PromotionRecordType", BaseObjectType,
+            "Immutable, authoritative record of one successful substitution of a "
+            "DeploymentType UsesModel target. The record is created atomically with "
+            "the substitution, is read-only after creation, and remains available for "
+            "at least the lifetime of the deployment.")
+prop_var(PR, "PromotionRecordType", "RecordId", String,
+         "Server-wide unique identifier of this record.", MR_Mandatory)
+prop_var(PR, "PromotionRecordType", "Deployment", NodeId_,
+         "Convenience NodeId of the DeploymentType whose UsesModel target changed.",
+         MR_Mandatory)
+prop_var(PR, "PromotionRecordType", "DeploymentId", String,
+         "Snapshot of DeploymentType.DeploymentId at the instant of change.",
+         MR_Mandatory)
+prop_var(PR, "PromotionRecordType", "PreviousModel", NodeId_,
+         "Convenience NodeId of the previous ModelType. The identity snapshot, not "
+         "this reference, is durable when that node disappears.", MR_Mandatory)
+prop_var(PR, "PromotionRecordType", "NewModel", NodeId_,
+         "Convenience NodeId of the new ModelType. The identity snapshot, not this "
+         "reference, is durable when that node disappears.", MR_Mandatory)
+prop_var(PR, "PromotionRecordType", "PreviousModelIdentity",
+         ModelIdentitySnapshotDataType,
+         "Self-contained identity of the model replaced by the substitution.",
+         MR_Mandatory)
+prop_var(PR, "PromotionRecordType", "NewModelIdentity",
+         ModelIdentitySnapshotDataType,
+         "Self-contained identity of the model selected by the substitution.",
+         MR_Mandatory)
+prop_var(PR, "PromotionRecordType", "EvaluationRun", NodeId_,
+         "Convenience NodeId of the EvaluationRunType that gated the change, or null "
+         "where none did.")
+prop_var(PR, "PromotionRecordType", "EvaluationRunId", String,
+         "Snapshot of EvaluationRunType.RunId. SHALL be populated when EvaluationRun "
+         "is populated and remains authoritative if that node disappears.")
+prop_var(PR, "PromotionRecordType", "ChangedAt", UtcTime,
+         "Time at which the successful UsesModel substitution took effect.",
+         MR_Mandatory)
+prop_var(PR, "PromotionRecordType", "ChangedBy", String,
+         "Authenticated identity that authorized or initiated the change. For an "
+         "automatic substitution, the Server SHALL use its stable system identity.",
+         MR_Mandatory)
+prop_var(PR, "PromotionRecordType", "ChangeKind", ModelChangeKindEnum,
+         "Trigger for the change, classified by cause and never by version ordering.",
+         MR_Mandatory)
+prop_var(PR, "PromotionRecordType", "Reason", LocalizedText,
+         "Optional human-readable administrative reason. SHALL NOT be parsed.")
+
+promotion_records = folder_member(
+    AY, "DeploymentType", "PromotionRecords",
+    "Complete immutable history of successful UsesModel substitutions for this "
+    "deployment. Conditionally required wherever the configured UsesModel target can "
+    "change and retained for at least the deployment lifetime.", MR_Optional)
+obj_member(promotion_records, "DeploymentType_PromotionRecords",
+           "<PromotionRecord>", T(PR),
+           "One immutable PromotionRecordType in this deployment's history.",
+           MR_OptionalPlaceholder)
+
+prop_var(MPE, "ModelPromotedEventType", "PromotionRecord", NodeId_,
+         "PromotionRecordType created atomically with this substitution. It SHALL be "
+         "populated whenever the event is raised by a Server claiming AI-Events, and "
+         "the event's deployment, model, evaluation and actor fields SHALL agree with "
+         "the authoritative record.")
 
 # ===========================================================================
 # ==================================  EMIT  =================================

@@ -6,7 +6,7 @@
     <Uri>http://opcfoundation.org/UA/AI/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/AI/" Version="0.5.0" PublicationDate="2026-08-12T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/AI/" Version="0.5.1" PublicationDate="2026-08-26T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.5.0" PublicationDate="2026-07-31T00:00:00Z" />
     </Model>
@@ -332,6 +332,25 @@
     </References>
     <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>NotAvailable</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>DeclaredBySource</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>ComputedByServer</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>VerifiedOnStage</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
   </UAVariable>
+  <UADataType NodeId="ns=2;i=3016" BrowseName="2:ModelChangeKindEnum">
+    <DisplayName>ModelChangeKindEnum</DisplayName>
+    <Description>The trigger that caused a deployment's UsesModel reference to be substituted. Classification is by the administrative trigger, never by comparing model versions: version strings are not necessarily ordered and a rollback can target a version whose spelling sorts later.</Description>
+    <Category>AiModelManagement DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=3916</Reference>
+    </References>
+    <Definition Name="ModelChangeKindEnum"><Field Name="Promotion" Value="0"><Description>An approved candidate replaced the serving model.</Description></Field><Field Name="Rollback" Value="1"><Description>An operator or policy restored a previously used model.</Description></Field><Field Name="AutomaticSubstitution" Value="2"><Description>The Server changed the deployment's configured UsesModel target automatically. Per-invocation fallback that leaves UsesModel unchanged is not this value and creates no promotion record.</Description></Field><Field Name="MutableReferenceRepoint" Value="3"><Description>A followed mutable reference resolved to a different model.</Description></Field><Field Name="OtherAdministrativeReplacement" Value="4"><Description>Another administrative action replaced the configured model.</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=2;i=3916" BrowseName="EnumStrings" ParentNodeId="ns=2;i=3016" DataType="LocalizedText" ValueRank="1" ArrayDimensions="5">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=3016</Reference>
+    </References>
+    <Value><uax:ListOfLocalizedText xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"><uax:LocalizedText><uax:Text>Promotion</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>Rollback</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>AutomaticSubstitution</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>MutableReferenceRepoint</uax:Text></uax:LocalizedText><uax:LocalizedText><uax:Text>OtherAdministrativeReplacement</uax:Text></uax:LocalizedText></uax:ListOfLocalizedText></Value>
+  </UAVariable>
   <UADataType NodeId="ns=2;i=3050" BrowseName="2:TensorSignatureDataType">
     <DisplayName>TensorSignatureDataType</DisplayName>
     <Description>Shape and element type of one model input or output tensor. This is what lets a client check that what it intends to send matches what the model expects, before it sends it.</Description>
@@ -456,6 +475,24 @@
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
       <Reference ReferenceType="HasEncoding" IsForward="false">ns=2;i=3056</Reference>
+    </References>
+  </UAObject>
+  <UADataType NodeId="ns=2;i=3057" BrowseName="2:ModelIdentitySnapshotDataType">
+    <DisplayName>ModelIdentitySnapshotDataType</DisplayName>
+    <Description>Durable identity of a model at the instant a deployment's UsesModel reference changed. It is copied into a promotion record rather than resolved through a retained NodeId, so the history remains complete after the ModelType instance or artefact location disappears. Digest trust provenance is retained with the digest so a later reader can tell whether it was declared, computed or verified.</Description>
+    <Category>AiModelManagement DataTypes</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+      <Reference ReferenceType="HasEncoding">ns=2;i=5008</Reference>
+    </References>
+    <Definition Name="ModelIdentitySnapshotDataType"><Field Name="ModelId" DataType="i=12"><Description>ModelType.ModelId at the instant of change.</Description></Field><Field Name="Version" DataType="i=12"><Description>ModelType.Version at the instant of change.</Description></Field><Field Name="Digest" DataType="i=15"><Description>ModelType.Digest at the instant of change, including an empty value where DigestProvenance was NotAvailable.</Description></Field><Field Name="DigestAlgorithm" DataType="i=12"><Description>ModelType.DigestAlgorithm at the instant of change.</Description></Field><Field Name="DigestProvenance" DataType="ns=2;i=3015"><Description>ModelType.DigestProvenance at the instant of change. Retained because the same digest bytes carry different evidentiary weight when declared by a source, computed by this Server, or verified during staging.</Description></Field></Definition>
+  </UADataType>
+  <UAObject NodeId="ns=2;i=5008" BrowseName="Default Binary" SymbolicName="DefaultBinary">
+    <DisplayName>Default Binary</DisplayName>
+    <Description>Default Binary encoding of the structure.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=2;i=3057</Reference>
     </References>
   </UAObject>
   <UAReferenceType NodeId="ns=2;i=4001" BrowseName="2:UsesModel">
@@ -854,6 +891,7 @@
       <Reference ReferenceType="HasProperty">ns=2;i=6173</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6174</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6175</Reference>
+      <Reference ReferenceType="HasComponent">ns=2;i=6198</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6028" BrowseName="2:DeploymentId" ParentNodeId="ns=2;i=1004" DataType="String" ValueRank="-1">
@@ -2460,7 +2498,7 @@ Invoke carries the same pair, and the asymmetry would otherwise leave the jobs m
   </UAVariable>
   <UAObjectType NodeId="ns=2;i=1018" BrowseName="2:ModelPromotedEventType">
     <DisplayName>ModelPromotedEventType</DisplayName>
-    <Description>A deployment began serving a different model version. Raised on promotion, and also on a rollback or any other Server-initiated substitution, because a consumer auditing what decided a verdict cares that the model changed and not why the operator called it a promotion.</Description>
+    <Description>A deployment's configured UsesModel target changed. Raised on promotion, and also on a rollback or any other Server-initiated substitution, because a consumer auditing what decided a verdict cares that the model changed and not why the operator called it a promotion.</Description>
     <Category>AiModelManagement Events</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=2041</Reference>
@@ -2469,6 +2507,7 @@ Invoke carries the same pair, and the asymmetry would otherwise leave the jobs m
       <Reference ReferenceType="HasProperty">ns=2;i=6182</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6183</Reference>
       <Reference ReferenceType="HasProperty">ns=2;i=6184</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6200</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=2;i=6180" BrowseName="2:Deployment" ParentNodeId="ns=2;i=1018" DataType="NodeId" ValueRank="-1">
@@ -2509,7 +2548,173 @@ Invoke carries the same pair, and the asymmetry would otherwise leave the jobs m
   </UAVariable>
   <UAVariable NodeId="ns=2;i=6184" BrowseName="2:PromotedBy" ParentNodeId="ns=2;i=1018" DataType="String" ValueRank="-1">
     <DisplayName>PromotedBy</DisplayName>
-    <Description>Identity of the authenticated principal that promoted, as the Server authenticated it. BaseEventType carries no user field, and clause 12.3 requires promotion to be separately authorized - a requirement whose satisfaction is unobservable if the identity is not recorded where the act is. Empty where the Server initiated the change itself.</Description>
+    <Description>Identity that authorized or initiated the change, as the Server authenticated it. For an automatic substitution this is the Server's stable system identity. BaseEventType carries no user field, and clause 12.3 requires promotion to be separately authorized - a requirement whose satisfaction is unobservable if the identity is not recorded where the act is.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1018</Reference>
+    </References>
+  </UAVariable>
+  <UAObjectType NodeId="ns=2;i=1019" BrowseName="2:PromotionRecordType">
+    <DisplayName>PromotionRecordType</DisplayName>
+    <Description>Immutable, authoritative record of one successful substitution of a DeploymentType UsesModel target. The record is created atomically with the substitution, is read-only after creation, and remains available for at least the lifetime of the deployment.</Description>
+    <Category>AiModelManagement</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6185</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6186</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6187</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6188</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6189</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6190</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6191</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6192</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6193</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6194</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6195</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6196</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=6197</Reference>
+    </References>
+  </UAObjectType>
+  <UAVariable NodeId="ns=2;i=6185" BrowseName="2:RecordId" ParentNodeId="ns=2;i=1019" DataType="String" ValueRank="-1">
+    <DisplayName>RecordId</DisplayName>
+    <Description>Server-wide unique identifier of this record.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6186" BrowseName="2:Deployment" ParentNodeId="ns=2;i=1019" DataType="NodeId" ValueRank="-1">
+    <DisplayName>Deployment</DisplayName>
+    <Description>Convenience NodeId of the DeploymentType whose UsesModel target changed.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6187" BrowseName="2:DeploymentId" ParentNodeId="ns=2;i=1019" DataType="String" ValueRank="-1">
+    <DisplayName>DeploymentId</DisplayName>
+    <Description>Snapshot of DeploymentType.DeploymentId at the instant of change.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6188" BrowseName="2:PreviousModel" ParentNodeId="ns=2;i=1019" DataType="NodeId" ValueRank="-1">
+    <DisplayName>PreviousModel</DisplayName>
+    <Description>Convenience NodeId of the previous ModelType. The identity snapshot, not this reference, is durable when that node disappears.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6189" BrowseName="2:NewModel" ParentNodeId="ns=2;i=1019" DataType="NodeId" ValueRank="-1">
+    <DisplayName>NewModel</DisplayName>
+    <Description>Convenience NodeId of the new ModelType. The identity snapshot, not this reference, is durable when that node disappears.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6190" BrowseName="2:PreviousModelIdentity" ParentNodeId="ns=2;i=1019" DataType="ns=2;i=3057" ValueRank="-1">
+    <DisplayName>PreviousModelIdentity</DisplayName>
+    <Description>Self-contained identity of the model replaced by the substitution.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6191" BrowseName="2:NewModelIdentity" ParentNodeId="ns=2;i=1019" DataType="ns=2;i=3057" ValueRank="-1">
+    <DisplayName>NewModelIdentity</DisplayName>
+    <Description>Self-contained identity of the model selected by the substitution.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6192" BrowseName="2:EvaluationRun" ParentNodeId="ns=2;i=1019" DataType="NodeId" ValueRank="-1">
+    <DisplayName>EvaluationRun</DisplayName>
+    <Description>Convenience NodeId of the EvaluationRunType that gated the change, or null where none did.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6193" BrowseName="2:EvaluationRunId" ParentNodeId="ns=2;i=1019" DataType="String" ValueRank="-1">
+    <DisplayName>EvaluationRunId</DisplayName>
+    <Description>Snapshot of EvaluationRunType.RunId. SHALL be populated when EvaluationRun is populated and remains authoritative if that node disappears.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6194" BrowseName="2:ChangedAt" ParentNodeId="ns=2;i=1019" DataType="UtcTime" ValueRank="-1">
+    <DisplayName>ChangedAt</DisplayName>
+    <Description>Time at which the successful UsesModel substitution took effect.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6195" BrowseName="2:ChangedBy" ParentNodeId="ns=2;i=1019" DataType="String" ValueRank="-1">
+    <DisplayName>ChangedBy</DisplayName>
+    <Description>Authenticated identity that authorized or initiated the change. For an automatic substitution, the Server SHALL use its stable system identity.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6196" BrowseName="2:ChangeKind" ParentNodeId="ns=2;i=1019" DataType="ns=2;i=3016" ValueRank="-1">
+    <DisplayName>ChangeKind</DisplayName>
+    <Description>Trigger for the change, classified by cause and never by version ordering.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=78</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=6197" BrowseName="2:Reason" ParentNodeId="ns=2;i=1019" DataType="LocalizedText" ValueRank="-1">
+    <DisplayName>Reason</DisplayName>
+    <Description>Optional human-readable administrative reason. SHALL NOT be parsed.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=1019</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=2;i=6198" BrowseName="2:PromotionRecords" ParentNodeId="ns=2;i=1004">
+    <DisplayName>PromotionRecords</DisplayName>
+    <Description>Complete immutable history of successful UsesModel substitutions for this deployment. Conditionally required wherever the configured UsesModel target can change and retained for at least the deployment lifetime.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=1004</Reference>
+      <Reference ReferenceType="HasComponent">ns=2;i=6199</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=2;i=6199" BrowseName="2:&lt;PromotionRecord&gt;" ParentNodeId="ns=2;i=6198">
+    <DisplayName>&lt;PromotionRecord&gt;</DisplayName>
+    <Description>One immutable PromotionRecordType in this deployment's history.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=11508</Reference>
+      <Reference ReferenceType="HasTypeDefinition">ns=2;i=1019</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=2;i=6198</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=2;i=6200" BrowseName="2:PromotionRecord" ParentNodeId="ns=2;i=1018" DataType="NodeId" ValueRank="-1">
+    <DisplayName>PromotionRecord</DisplayName>
+    <Description>PromotionRecordType created atomically with this substitution. It SHALL be populated whenever the event is raised by a Server claiming AI-Events, and the event's deployment, model, evaluation and actor fields SHALL agree with the authoritative record.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>

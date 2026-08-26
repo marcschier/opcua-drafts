@@ -7,10 +7,10 @@
     <Uri>http://opcfoundation.org/UA/AI/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/Vision/Examples/Inspection/" Version="0.1.0" PublicationDate="2026-08-25T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/Vision/Examples/Inspection/" Version="0.1.0" PublicationDate="2026-08-26T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.4.1" PublicationDate="2026-08-25T00:00:00Z" />
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/AI/" Version="0.5.0" PublicationDate="2026-08-12T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/Vision/" Version="0.4.1" PublicationDate="2026-08-26T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/AI/" Version="0.5.1" PublicationDate="2026-08-26T00:00:00Z" />
     </Model>
   </Models>
   <Aliases>
@@ -89,7 +89,7 @@
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5005</Reference>
     </References>
-    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0.5.0</uax:String></Value>
+    <Value><uax:String xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">0.5.1</uax:String></Value>
   </UAVariable>
   <UAObject NodeId="ns=1;i=5007" BrowseName="3:Models" ParentNodeId="ns=1;i=5005">
     <DisplayName>Models</DisplayName>
@@ -1000,6 +1000,8 @@
       <Reference ReferenceType="HasProperty">ns=1;i=5111</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=5112</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=5113</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=5114</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=5115</Reference>
     </References>
   </UAObject>
   <UAVariable NodeId="ns=1;i=5107" BrowseName="1:PipelineId" ParentNodeId="ns=1;i=5106" DataType="String">
@@ -1058,4 +1060,20 @@
       <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=5106</Reference>
     </References>
   </UAObject>
+  <UAVariable NodeId="ns=1;i=5114" BrowseName="1:MaxResultAge" ParentNodeId="ns=1;i=5106" DataType="Duration">
+    <DisplayName>MaxResultAge</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5106</Reference>
+    </References>
+    <Value><uax:Double xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">86400000.0</uax:Double></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=5115" BrowseName="1:MaxRetainedResults" ParentNodeId="ns=1;i=5106" DataType="UInt32">
+    <DisplayName>MaxRetainedResults</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=5106</Reference>
+    </References>
+    <Value><uax:UInt32 xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd">10000</uax:UInt32></Value>
+  </UAVariable>
 </UANodeSet>

@@ -41,7 +41,7 @@ import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/Vision/"
 VERSION = "0.4.1"
-PUBDATE = "2026-08-25T00:00:00Z"
+PUBDATE = "2026-08-26T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -1116,7 +1116,9 @@ VR = 1020
 _reserve_through(6136)
 
 prop_var(VR, "VisionResultType", "ResultId", String,
-         "Identifier of the result, unique within the Server.", MR_Mandatory)
+         "Immutable identifier of the result, unique within the Server and never reused "
+         "for a different result, including after eviction or Server restart.",
+         MR_Mandatory)
 prop_var(VR, "VisionResultType", "CreationTime", UtcTime,
          "When the result was produced.", MR_Mandatory)
 prop_var(VR, "VisionResultType", "Sensor", NodeId_, "Sensor the frame came from.")
@@ -1468,6 +1470,20 @@ prop_var(VR, "VisionResultType", "ModelUsed", NodeId_,
          "the pipeline names an OPC UA - AI Model Management and Inference deployment, "
          "this is the ModelUsed returned by that invocation, not necessarily the model "
          "the deployment names when the result is read.")
+
+# Retention limits are appended after ModelUsed so all previously published member
+# NodeIds remain stable. They are Optional in the type model because an event-only
+# pipeline has no Results folder and therefore has no result nodes to retain. The
+# inference facets make both limits mandatory wherever Results is instantiated.
+prop_var(IP, "InferencePipelineType", "MaxResultAge", Duration,
+         "Maximum age of result nodes retained under Results, in milliseconds. Zero "
+         "means no age limit. Where Results is instantiated this member is required "
+         "under an inference facet and at least one retention limit is non-zero.")
+prop_var(IP, "InferencePipelineType", "MaxRetainedResults", UInt32,
+         "Maximum number of result nodes retained under Results. Zero means no count "
+         "limit. Count pressure evicts the oldest CreationTime first, with ResultId as "
+         "the deterministic tie-break. Where Results is instantiated this member is "
+         "required under an inference facet and at least one retention limit is non-zero.")
 
 
 # ===========================================================================

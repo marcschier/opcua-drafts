@@ -66,7 +66,7 @@ This specification covers sensors, the media they emit, coordinate frames and ca
 
 Informative alignments — GenICam SFNC and PFNC, QIF (ISO 23952), ROS 2 `vision_msgs`, IDTA 02058/02059/02060 — are listed in Annex E. They are **not** normative references and impose no dependency.
 
-- **OPC UA — AI Model Management and Inference** — [`../ai-model-management/OPC-UA-AI-Model-Management.md`](../ai-model-management/OPC-UA-AI-Model-Management.md). A **working draft in this repository**. It defines the model nameplate, the dataset, the deployment and the learning job that clauses 8 and 9 use. It is a **conditional** reference: this NodeSet declares no `RequiredModel` on it, `InferencePipelineType.Deployment` and `VisionResultType.ModelUsed` are plain `NodeId` Properties, and a Server claiming only **VIS-Base** need not implement it. The **VIS-Inference-\*** and **VIS-Learning** facets do require it (clause 11), because without it there is no auditable path from a verdict to the artefact that produced it. The informative [Vision and AI Model Management walkthrough](../vision-ai-walkthrough.md) shows the combined browse path.
+- **OPC UA — AI Model Management and Inference** — [`../ai-model-management/OPC-UA-AI-Model-Management.md`](../ai-model-management/OPC-UA-AI-Model-Management.md). A **working draft in this repository**. It defines the model nameplate, the dataset, the deployment and the learning job that clauses 8 and 9 use. It is a **conditional** reference: this NodeSet declares no `RequiredModel` on it, `InferencePipelineType.Deployment` and `VisionResultType.ModelUsed` are plain `NodeId` Properties, and a Server claiming only **VIS-Base** need not implement it. The **VIS-Inference-\*** and **VIS-Learning** facets do require it (clause 11), because without it there is no auditable path from a verdict to the artefact that produced it. The informative [Vision and AI Model Management walkthrough](../vision-ai-walkthrough.md) shows the combined browse path, and the informative [external result mapping](../vision-ai-external-result-mapping.md) describes how an application can preserve these identities outside the Server without creating another conformance profile.
 
 Two further informative references are called out here rather than in Annex E, because §6.7 defines an optional facet against the first:
 
@@ -286,7 +286,7 @@ graph TD
     FM --> DSET["DatasetType<br/>SourceKind<br/><i>AI Model Management spec</i>"]
     FM --> DEPL["DeploymentType<br/>InferenceLocation, EndpointUri<br/><i>AI Model Management spec</i>"]
 
-    FP --> PIPE["InferencePipelineType<br/>State, Continuous"]
+    FP --> PIPE["InferencePipelineType<br/>State, Continuous<br/>MaxResultAge, MaxRetainedResults"]
     PIPE --> RES["Results/<br/>InspectionResultType | DetectionResultType"]
     PIPE --> FB["Feedback : VisionFeedbackType<br/>SubmitCorrection"]
 
@@ -660,11 +660,11 @@ Where the selected endpoint is a data-channel endpoint (§6.7), `Session.Uri` **
 | StatusCode | Condition |
 |---|---|
 | `Bad_InvalidArgument` | both selectors unspecified, or both specified |
-| `Bad_NotFound` | `ResultId` does not designate a result produced from **this sensor**, or no frame near `Timestamp` within retention |
+| `Bad_NotFound` | `ResultId` does not designate a currently retained result produced from **this sensor**, including an identifier whose result node was evicted; or no frame near `Timestamp` within the frame/clip retention policy |
 | `Bad_NotSupported` | `Format` cannot be produced by any clip endpoint of this sensor |
 | `Bad_UserAccessDenied` | the caller is not authorized for media access (§12.1) |
 
-`ResultId` is unique Server-wide, but this Method is scoped to one sensor. A Server **shall** return `Bad_NotFound` when `ResultId` designates a result produced from a different sensor, and **shall not** disclose whether the identifier exists elsewhere in the Server — otherwise the per-sensor authorization of §12.1 could be bypassed simply by presenting another sensor's identifier here. Where results are subject to per-sensor authorization, `ResultId` **shall not** be derived from a predictable sequence.
+`ResultId` is immutable and unique Server-wide (§7.1), but this Method is scoped to one sensor. A Server **shall** return `Bad_NotFound` when `ResultId` designates a result produced from a different sensor or a result node that has been evicted, and **shall not** disclose whether the identifier exists or previously existed elsewhere in the Server — otherwise the per-sensor authorization of §12.1 could be bypassed simply by presenting another sensor's identifier here. Where results are subject to per-sensor authorization, `ResultId` **shall not** be derived from a predictable sequence.
 
 ### 6.6 Endpoint state model (normative)
 
@@ -739,6 +739,18 @@ The trust members are not decoration. Where a deployment falls under a high-risk
 
 A Server **shall** retain a `ModelType` instance referenced by `ModelUsed` for at least as long as it retains any `VisionResultType` instance that names it. Otherwise the Server would publish a non-null NodeId that no longer resolves and the historical decision chain would end before its digest.
 
+`ResultId` is immutable and unique Server-wide. A Server **shall never** reuse a `ResultId` for a different result, including after the original result is evicted or after the Server restarts. Persistence of this non-reuse guarantee is part of the identifier contract; eviction frees a result node, not its identity.
+
+#### 7.1.1 Result-node retention
+
+Where an `InferencePipelineType` instantiates `Results`, the applicable inference facet requires both `MaxResultAge` (`Duration`) and `MaxRetainedResults` (`UInt32`) to be instantiated. At least one value **shall** be non-zero. Zero means **no limit in that dimension**; it does not authorize arbitrary eviction. `MaxResultAge` is measured from `CreationTime` in the milliseconds used by `Duration`.
+
+A result **shall** remain browsable and readable under `Results` until either its age exceeds the non-zero `MaxResultAge`, or retaining it would exceed the non-zero `MaxRetainedResults`. Under count pressure the Server **shall** evict the result with the oldest `CreationTime` first; equal `CreationTime` values are ordered by `ResultId` using ascending Unicode code-point order. Lowering either limit **shall** immediately evict results in that order until the retained set is compliant. Raising a limit does not restore evicted nodes.
+
+After eviction, Services addressing the old result node **shall** return the applicable `Bad_NodeIdUnknown`. Methods that select by `ResultId`, including `GetClip` and the feedback Methods, **shall** return `Bad_NotFound` when the result is no longer retained in their scope. The permanent non-reuse rule above prevents either response from later resolving to a different result.
+
+These limits govern only **result nodes** under `Results`. They do not govern the frame or clip named by `Frame`, an out-of-band explanation or model artefact named by a URI, or evidence retained by an external application. Each has an independent owner and retention policy. Evicting a result therefore neither requires nor implies deleting media, external artefacts or application evidence, whose retention may outlive the Vision node. Conversely, retaining a result does not promise that an external URI remains resolvable unless another applicable policy requires it.
+
 ### 7.2 `InspectionResultType`
 
 The machine-vision outcome. Mandatory `Evaluation` and `Characteristics`; optional `PartId` and `RecipeId`.
@@ -771,7 +783,7 @@ The mapping is by pixel value, so a mask is single-label: one pixel belongs to o
 
 ### 7.5 Events (normative)
 
-A result is a **record**; an event is an **occurrence**. The types above are records: they persist, they are re-readable, and a consumer that arrives late still finds them. That is what a result must be, and it is why they are Objects rather than notifications. But it obliges every consumer to poll and to re-derive, from a changed array, what actually happened — and two consumers polling the same Server can reach different conclusions about when a thing occurred.
+A result is a **retained record**; an event is an **occurrence**. The types above are records: within the explicit limits of §7.1.1 they persist and are re-readable, so a late consumer can find them. That is why they are Objects rather than notifications. An event-only pipeline may omit `Results` entirely; it raises occurrences but makes no result-node retention promise. This distinction avoids adding meaningless retention members to such a pipeline.
 
 This clause adds the occurrence. `VisionEventType` is the abstract base; `ObjectDetectedEventType` and `InspectionCompletedEventType` are what a Server raises. They are ordinary OPC UA EventTypes, so a client subscribes with an `EventFilter` and the existing machinery of OPC 10000-4 applies unchanged.
 
@@ -790,7 +802,7 @@ This clause adds the occurrence. `VisionEventType` is the abstract base; `Object
 | | `RecipeId` | String | O | The recipe that ran, where the result names one |
 | | `FailedCharacteristics` | `VisionCharacteristicDataType[]` | O | Only the characteristics whose `Status` is not `InTolerance` |
 
-**An event names its result and does not repeat it.** Every event carries `ResultId`, and a consumer that needs the detail reads the `VisionResultType` it names. Copying result content into the event would create a second copy of a fact that can disagree with the first. Two fields are deliberate exceptions, because they are what a consumer filters on and requiring a read to obtain them would defeat the purpose: the `Detection` on `ObjectDetectedEventType`, and `Evaluation` on `InspectionCompletedEventType`.
+**An event names its result and does not repeat it.** Every event carries `ResultId`, and a consumer that needs detail may read the retained `VisionResultType` it names. That read can return `Bad_NodeIdUnknown` after retention expires; an event is not an extension of the result node's lifetime. Copying result content into the event would create a second copy of a fact that can disagree with the first. Two fields are deliberate exceptions, because they are what a consumer filters on and requiring a read to obtain them would defeat the purpose: the `Detection` on `ObjectDetectedEventType`, and `Evaluation` on `InspectionCompletedEventType`.
 
 `FailedCharacteristics` carries the failing characteristics and only those; a passing inspection carries an empty array. Repeating every characteristic would duplicate the result for the common case where none failed, while repeating the failing ones lets a consumer act on *why* a part was rejected without a read. A Server **shall not** include a characteristic whose `Status` is `InTolerance`, and a consumer **shall not** treat the array as the complete characteristic set — that is in the result.
 
@@ -928,7 +940,9 @@ A Server **shall not** vary the result types, member meanings or StatusCodes by 
 
 ### 8.3 `InferencePipelineType`
 
-Binds a `Sensor` to a `Deployment`, exposes `State` and `Continuous`, holds a `Results` folder and an optional `Feedback` object, carries an optional `LearningJob`, and offers `RunInference`, `StartContinuous` and `Stop`. `PipelineId` is Mandatory and identifies the pipeline uniquely within the Server, in the same way `SensorId` identifies a sensor; it is what a `VisionResultType` names in its `Pipeline` Property (§5.11).
+Binds a `Sensor` to a `Deployment`, exposes `State` and `Continuous`, optionally holds a `Results` folder and `Feedback` object, carries an optional `LearningJob`, and offers `RunInference`, `StartContinuous` and `Stop`. `PipelineId` is Mandatory and identifies the pipeline uniquely within the Server, in the same way `SensorId` identifies a sensor; it is what a `VisionResultType` names in its `Pipeline` Property (§5.11).
+
+`MaxResultAge` and `MaxRetainedResults` are Optional in the type model because a pipeline that only raises events has no `Results` instance and no result nodes to retain. Where `Results` is instantiated under an inference facet, both limits are required and §7.1.1 governs them.
 
 `LearningJob` is an Optional `NodeId` naming the job that consumes the `GroundTruthLabel` corrections submitted through this pipeline's `Feedback` object, or null where the Server retains none. It is a `NodeId` and not a reference for the same reason `Deployment` is: this specification takes no dependency on the model that defines the job. §9.5.1 requires it to be non-null wherever such a correction is retained — it is how a client establishes that its label reached a learning loop at all, rather than being accepted and discarded.
 
@@ -936,7 +950,7 @@ A Server whose inference is entirely off-server and continuously running may imp
 
 ### 8.4 Inference Method definitions (normative)
 
-**`RunInference(Timestamp) → (ResultId)`** — runs inference once on the frame nearest `Timestamp`, or on the newest frame when `Timestamp` is unspecified per §5.12, and returns the identifier of the result produced. A Server that implements `RunInference` **shall** instantiate `Results`, and the result **shall** exist and be retrievable under it before the Method returns `Good`. Clause 11 makes this a condition of the inference facets.
+**`RunInference(Timestamp) → (ResultId)`** — runs inference once on the frame nearest `Timestamp`, or on the newest frame when `Timestamp` is unspecified per §5.12, and returns the identifier of the result produced. A Server that implements `RunInference` **shall** instantiate `Results`, `MaxResultAge` and `MaxRetainedResults`; the result **shall** exist and be retrievable under `Results` before the Method returns `Good`. Its subsequent lifetime follows §7.1.1. Clause 11 makes this a condition of the inference facets.
 
 | StatusCode | Condition |
 |---|---|
@@ -1057,7 +1071,7 @@ An accidentally empty call is still refused, because the flag is what distinguis
 
 | StatusCode | Condition | Applies to |
 |---|---|---|
-| `Bad_NotFound` | `ResultId` is non-empty and does not designate a result of **this pipeline** | all four |
+| `Bad_NotFound` | `ResultId` is non-empty and does not designate a currently retained result of **this pipeline**, including an identifier whose node was evicted | all four |
 | `Bad_InvalidArgument` | `Detections` empty and `SceneIsEmpty` false; or `Detections` non-empty and `SceneIsEmpty` true; or `SubmitCorrection` supplies both corrected arrays; or supplies neither with `RetractAll` false; or supplies either with `RetractAll` true | `SubmitDetections`, `SubmitCorrection` |
 | `Bad_TypeMismatch` | the corrected array kind does not match the referenced result | `SubmitCorrection` |
 | `Bad_EncodingLimitsExceeded` | `InlineImage` exceeds `MaxInlineFeedbackImageSize` | `SubmitDetections`, `SubmitCorrection` |
@@ -1122,8 +1136,8 @@ The NodeSet assigns every Node to one of four conformance units: `Vision` for th
 | **VIS-Result-Detection** | `DetectionResultType` with `Detections`, the §5.12 pose conventions, and the §7.3 `FrameId` rule |
 | **VIS-Events** | The EventTypes of §7.5 and every rule in that clause. A Server claiming it **shall** raise `ObjectDetectedEventType` for every detection it publishes and `InspectionCompletedEventType` for every inspection it concludes — a facet that permits a Server to raise events for some results and not others tells a client nothing, because silence would then be ambiguous between "nothing happened" and "this one was not reported". Requires *VIS-Result-Detection* for the first and *VIS-Result-Inspection* for the second, whichever the Server publishes; a Server that publishes only one kind of result claims this facet on the strength of that kind alone. |
 | **VIS-Feedback** | `VisionFeedbackType` with at least `SubmitImageReference`, the §9.3 and §9.5 rules, the §12.3 inbound-URI validation, and the §12.7 feedback-integrity rules. A Server claiming this facet **shall** accept at least `Trigger` and `Overlay` on `SubmitImageReference`, and on `SubmitDetections` where that Method is instantiated. Accepting `Reconciliation` needs no further facet. Accepting `GroundTruthLabel` on `SubmitCorrection` requires *VIS-Learning* in addition. |
-| **VIS-Inference-OnServer** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer`, and the `UsesModel` constraint. Every result produced through that deployment populates `ModelUsed` with the `ModelType` that actually answered (§7.1). Where `RunInference` is implemented, `Results` (§8.4). `ModelType.Digest` and `DigestAlgorithm` per §12.6 |
-| **VIS-Inference-OffServer** | As above with any other `InferenceLocation`, including `ModelUsed` on every result, plus `EndpointUri` naming an authenticated, confidential scheme (§12.6) |
+| **VIS-Inference-OnServer** | `InferencePipelineType` with a deployment whose `InferenceLocation` is `OnServer`, and the `UsesModel` constraint. Every result produced through that deployment populates `ModelUsed` with the `ModelType` that actually answered (§7.1). Where `Results` is instantiated, both `MaxResultAge` and `MaxRetainedResults`, at least one non-zero, and every rule of §7.1.1; `RunInference` requires `Results` (§8.4). `ModelType.Digest` and `DigestAlgorithm` per §12.6 |
+| **VIS-Inference-OffServer** | As above with any other `InferenceLocation`, including the same conditional retention requirements and `ModelUsed` on every result, plus `EndpointUri` naming an authenticated, confidential scheme (§12.6) |
 | **VIS-Simulation** | `IVisionSimulatedType` on every sensor whose `RealityKind` is `Simulated` or `Hybrid` (§4.3, §10). **Required** of any Server that reports either value. |
 | **VIS-Learning** | `VisionFeedbackType.SubmitCorrection` accepting `GroundTruthLabel`, the §9.5.1 join rules, and the **AI-Learning** facet of *OPC UA — AI Model Management and Inference*, which carries `LearningJobType`, its state model and the **distinct `PromoteModel` authorization** this specification also requires in §12.5 |
 | **VIS-Interop-Scene** | The numbered requirements of Annex C, which are normative for a Server claiming this facet |
@@ -1198,13 +1212,15 @@ Every `VisionFeedbackType` Method mutates state: overlays change what operators 
 
 A Server **shall** retain an audit record of every correction and promotion, including the authenticated caller identity and the timestamp, and **shall not** include a credential-bearing URI in it (§12.2). Where the deployment falls under a high-risk regulatory regime, this record and the §7.1 trust members are what make the decision chain reconstructible.
 
+Result-node eviction under §7.1.1 **shall not** be treated as authorization to delete this audit record or evidence retained by an external application. Those records have independent retention obligations defined by their application policies. Conversely, an audit or evidence record that preserves a `ResultId` does not keep the Vision result node alive and **shall not** cause that identifier to be reused or rebound.
+
 ### 12.6 Off-server inference crosses a trust boundary
 
 When `InferenceLocation` is not `OnServer`, results were computed by a system the OPC UA client cannot inspect. A Server **shall** establish an authenticated, integrity-protected channel to that service. `DeploymentType.EndpointUri` **shall** name a scheme that provides authentication and confidentiality — for example `https` or `grpcs`, not their plaintext counterparts — and a Server **shall not** publish a plaintext scheme for a deployment it claims conformance for.
 
 **Artefact integrity.** A model artefact fetched out of band is bytes this Server did not serve, so the only thing that ties it to the answer is the digest. *OPC UA — AI Model Management and Inference* makes the model's `Digest` and `DigestAlgorithm` Mandatory, bars weak and truncated hash functions, and requires a client to refuse an algorithm it does not recognise rather than skip verification and report success. This specification does not restate those rules — it makes them a **condition of the inference facets** (clause 11): a Server claiming **VIS-Inference-OffServer** without a verifiable digest has published an unauditable verdict, which is the whole failure this clause exists to prevent.
 
-Digest verification is the terminus of the provenance chain. `VisionResultType.ModelUsed` keeps the historical chain intact by recording which `ModelType` answered at inference time. A client auditing a retained result **shall** walk `result.ModelUsed → ModelType → Digest`, not the deployment's current `UsesModel` reference, which describes what is serving now.
+Digest verification is the terminus of the provenance chain. `VisionResultType.ModelUsed` keeps the historical chain intact while the result is retained by recording which `ModelType` answered at inference time. A client auditing a retained result **shall** walk `result.ModelUsed → ModelType → Digest`, not the deployment's current `UsesModel` reference, which describes what is serving now. If evidence must outlive `MaxResultAge` or `MaxRetainedResults`, the application **shall** preserve it under its applicable evidence-retention policy before the Vision result is evicted; this specification does not silently extend either lifetime or prescribe that external policy.
 
 ### 12.7 Feedback is untrusted training data
 
@@ -1615,6 +1631,8 @@ The twin additionally implements `IVisionSimulatedType`:
 | `InferenceLocation` | **`EdgeOffServer`** |
 | `AcceleratorKind` | `Gpu` |
 | `EndpointUri` | `grpcs://192.0.2.60:8001/graspposenet` |
+| `MaxResultAge` | `3600000` ms |
+| `MaxRetainedResults` | `2000` |
 
 Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `ModelType.Digest` lets a consumer confirm which artefact produced a result.
 
@@ -1622,7 +1640,7 @@ The deployment carries exactly one `UsesModel` reference to the model above, as 
 
 ### F.8 Results
 
-Each cycle produces a `DetectionResultType` whose `ModelUsed` names `GraspPoseNet`, the model that actually answered, even if the deployment later promotes another model or routes one call through a fallback. Its `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain the pose in robot coordinates, and camera → flange → `gripper_tcp` to obtain what the gripper must actually reach. The two are distinct: the calibration resolves to the mechanical interface, while a grasp is executed at the tool centre point, and the frame tree carries the offset between them rather than leaving it to be assumed. `ResidualError` on the calibration is what tells the consumer how much to trust it.
+Each cycle produces a `DetectionResultType`; the pipeline retains result nodes for at most one hour and 2,000 results, evicting oldest `CreationTime` first when count pressure applies. Its `ModelUsed` names `GraspPoseNet`, the model that actually answered, even if the deployment later promotes another model or routes one call through a fallback. Its `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain the pose in robot coordinates, and camera → flange → `gripper_tcp` to obtain what the gripper must actually reach. The two are distinct: the calibration resolves to the mechanical interface, while a grasp is executed at the tool centre point, and the frame tree carries the offset between them rather than leaving it to be assumed. `ResidualError` on the calibration is what tells the consumer how much to trust it. Result-node eviction is independent of frame/clip, external artefact, and application evidence retention.
 
 ### F.9 Feedback
 
@@ -1752,6 +1770,8 @@ Each calibration is reachable from the sensor by a `HasCalibration` reference, a
 | `TaskKind` | `Segmentation` |
 | `InferenceLocation` | **`OnServer`** |
 | `AcceleratorKind` | `Npu` |
+| `MaxResultAge` | `86400000` ms |
+| `MaxRetainedResults` | `10000` |
 
 Inference runs **on-server**: `InferenceLocation = OnServer`, on an NPU in the station industrial PC. A client consuming the results cannot distinguish this from the off-server robotics example except by reading that one property — which is the intent of base specification §8.2. Because the pipeline is not continuous, `RunInference` is called per part by the station PLC and returns the `ResultId` it produced.
 
@@ -1759,7 +1779,7 @@ The deployment carries exactly one `UsesModel` reference to the model above, as 
 
 ### G.7 Results
 
-Each part produces an `InspectionResultType`. Its `ModelUsed` names `SealDefectNet`, the model that actually answered, while the deployment's `UsesModel` reference says which model is serving now. `Evaluation` uses the OPC 40001-101 value semantics, and the `Characteristics` array carries one `VisionCharacteristicDataType` per measured feature — for example a flatness with `Nominal = 0.0`, `Actual = 0.018`, `UpperTolerance = 0.020`, `Unit = mm` and `Uncertainty = 0.004`. That last field is the point: because the expanded uncertainty spans the tolerance limit, the Server reports `NotDecidable` rather than asserting `Ok` from the point estimate alone. A verdict recorded this way is reproducible by a third party, and a QIF document can be generated from it without inventing information.
+Each part produces an `InspectionResultType`. The pipeline retains result nodes for at most 24 hours and 10,000 results; whichever bound first requires eviction applies. Its `ModelUsed` names `SealDefectNet`, the model that actually answered, while the deployment's `UsesModel` reference says which model is serving now. `Evaluation` uses the OPC 40001-101 value semantics, and the `Characteristics` array carries one `VisionCharacteristicDataType` per measured feature — for example a flatness with `Nominal = 0.0`, `Actual = 0.018`, `UpperTolerance = 0.020`, `Unit = mm` and `Uncertainty = 0.004`. That last field is the point: because the expanded uncertainty spans the tolerance limit, the Server reports `NotDecidable` rather than asserting `Ok` from the point estimate alone. A verdict recorded this way is reproducible by a third party, and a QIF document can be generated from it without inventing information. Evicting the result node does not define the lifetime of its JPEG, external explanation artefact, or application evidence record.
 
 ### G.8 Feedback
 

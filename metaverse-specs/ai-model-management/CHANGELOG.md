@@ -4,7 +4,21 @@ All notable changes to this specification and its information model.
 
 ## Unreleased
 
-The Vision cross-reference now states how `VisionResultType.ModelUsed` persists this specification's invocation-time model identity. The `UsesModel` ReferenceType description is corrected to distinguish the model serving now from the historical `ModelUsed` identity. No type, member, NodeId, release version or publication date changes.
+## 0.5.1 — 2026-08-26
+
+### Durable promotion history
+
+`ModelChangeKindEnum` (`i=3016`) classifies a configured `UsesModel` substitution by its trigger — `Promotion`, `Rollback`, `AutomaticSubstitution`, `MutableReferenceRepoint` or `OtherAdministrativeReplacement` — never by comparing opaque version strings.
+
+`PromotionRecordType` (`i=1019`) records every successful configured substitution atomically and immutably. Its server-wide `RecordId`, deployment identity, authenticated actor, time, trigger and optional reason are joined to self-contained previous/new `ModelIdentitySnapshotDataType` (`i=3057`) values. The snapshots preserve `ModelId`, `Version`, `Digest`, `DigestAlgorithm` and `DigestProvenance` after target nodes disappear, retaining whether each digest was source-declared, Server-computed or verified during staging. Evaluation evidence has both a convenience NodeId and durable `EvaluationRunId`. A deployment whose configured target can change exposes `PromotionRecords` and retains its complete history for at least the deployment lifetime.
+
+Failed changes create no successful record. Per-invocation fallback does not change `UsesModel`, remains represented by `ModelUsed`, and creates neither a promotion record nor a promotion event. A policy that actually changes the configured target is `AutomaticSubstitution`.
+
+`ModelPromotedEventType.PromotionRecord` (`i=6200`) points at the authoritative record. It remains Optional in the type for compatibility and is conditionally required by **AI-Events**; existing event fields remain available for filtering and agree with the record.
+
+### Provenance clarification included
+
+The previously Unreleased clarification is part of this release: the Vision cross-reference states how `VisionResultType.ModelUsed` persists this specification's invocation-time model identity, and the `UsesModel` description distinguishes the model serving now from historical invocation-time `ModelUsed` identity. No Vision NodeId changes result from that clarification.
 
 ## 0.5.0 — 2026-08-12
 

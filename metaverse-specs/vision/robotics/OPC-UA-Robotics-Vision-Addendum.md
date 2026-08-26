@@ -150,6 +150,8 @@ The twin additionally implements `IVisionSimulatedType`:
 | `InferenceLocation` | **`EdgeOffServer`** |
 | `AcceleratorKind` | `Gpu` |
 | `EndpointUri` | `grpcs://192.0.2.60:8001/graspposenet` |
+| `MaxResultAge` | `3600000` ms |
+| `MaxRetainedResults` | `2000` |
 
 Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `ModelType.Digest` lets a consumer confirm which artefact produced a result.
 
@@ -157,7 +159,7 @@ The deployment carries exactly one `UsesModel` reference to the model above, as 
 
 ## 8 Results
 
-Each cycle produces a `DetectionResultType` whose `ModelUsed` names `GraspPoseNet`, the model that actually answered, even if the deployment later promotes another model or routes one call through a fallback. Its `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain the pose in robot coordinates, and camera → flange → `gripper_tcp` to obtain what the gripper must actually reach. The two are distinct: the calibration resolves to the mechanical interface, while a grasp is executed at the tool centre point, and the frame tree carries the offset between them rather than leaving it to be assumed. `ResidualError` on the calibration is what tells the consumer how much to trust it.
+Each cycle produces a `DetectionResultType`; the pipeline retains result nodes for at most one hour and 2,000 results, evicting oldest `CreationTime` first when count pressure applies. Its `ModelUsed` names `GraspPoseNet`, the model that actually answered, even if the deployment later promotes another model or routes one call through a fallback. Its `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain the pose in robot coordinates, and camera → flange → `gripper_tcp` to obtain what the gripper must actually reach. The two are distinct: the calibration resolves to the mechanical interface, while a grasp is executed at the tool centre point, and the frame tree carries the offset between them rather than leaving it to be assumed. `ResidualError` on the calibration is what tells the consumer how much to trust it. Result-node eviction is independent of frame/clip, external artefact, and application evidence retention.
 
 ## 9 Feedback
 

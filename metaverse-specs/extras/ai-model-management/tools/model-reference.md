@@ -32,6 +32,7 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=2;i=1013 | DatasetResourceType | ObjectType | AiResourceType |
 | ns=2;i=1017 | InferenceTransferType | ObjectType | BaseObjectType |
 | ns=2;i=1018 | ModelPromotedEventType | ObjectType | i=2041 |
+| ns=2;i=1019 | PromotionRecordType | ObjectType | BaseObjectType |
 | ns=2;i=3001 | InferenceLocationEnum | DataType | Enumeration |
 | ns=2;i=3002 | AcceleratorKindEnum | DataType | Enumeration |
 | ns=2;i=3003 | DeploymentStateEnum | DataType | Enumeration |
@@ -47,6 +48,7 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=2;i=3013 | ReachabilityEnum | DataType | Enumeration |
 | ns=2;i=3014 | TransferStateEnum | DataType | Enumeration |
 | ns=2;i=3015 | DigestProvenanceEnum | DataType | Enumeration |
+| ns=2;i=3016 | ModelChangeKindEnum | DataType | Enumeration |
 | ns=2;i=3050 | TensorSignatureDataType | DataType | Structure |
 | ns=2;i=3051 | ModelReferenceDataType | DataType | Structure |
 | ns=2;i=3052 | UsageDataType | DataType | Structure |
@@ -54,6 +56,7 @@ This annex is the authoritative node reference for the specification: it carries
 | ns=2;i=3054 | SafetyAssessmentDataType | DataType | Structure |
 | ns=2;i=3055 | EvaluationMetricDataType | DataType | Structure |
 | ns=2;i=3056 | RateLimitDataType | DataType | Structure |
+| ns=2;i=3057 | ModelIdentitySnapshotDataType | DataType | Structure |
 
 ## A.2 ReferenceTypes
 
@@ -168,6 +171,7 @@ A model made executable somewhere. Aligned with the IDTA 02059 AI Deployment sub
 | EndpointDescriptionUri | Variable | String | Scalar | Optional | Where the request and response contract for this deployment is documented. Untrusted input, subject to clause 12.2. Required in practice wherever ApiDialect is Proprietary, because nothing else then says what to send. |
 | RuntimeIdentity | Variable | String | Scalar | Optional | Opaque identifier of the serving configuration currently behind this deployment - a serving-stack fingerprint, an engine profile, a container image digest. Compared for equality and never parsed, on the same terms as Digest.<br><br>It is not the model. The same artefact served by two runtime builds can produce different numbers, and where the execution site publishes such an identity it is the only thing that records the difference. A change to it under a Pinned binding IS the observable change to the deployment that clause 9.3 says a pinned artefact cannot move without. |
 | ObservedLatency | Variable | Duration | Scalar | Optional | Most recent inference latency this Server measured for this deployment.<br><br>LatencyBudget states what the deployment is expected to meet, and clause 6.4.3 makes Degraded the state of a deployment that is answering but missing it. Without a measurement the comparison has no published input, so the state transition could not be checked against a Server that claimed it. A Server that reports Degraded on latency grounds SHALL populate this. |
+| PromotionRecords | Object |  |  | Optional | Complete immutable history of successful UsesModel substitutions for this deployment. Conditionally required wherever the configured UsesModel target can change and retained for at least the deployment lifetime. |
 
 **Method `Invoke`** (Optional) — Run inference and return the result. The payload is opaque here: what goes in and comes out is the consuming specification's vocabulary, and an envelope that tried to type it would have to be extended for every domain. What this Method fixes is everything AROUND the payload - routing, parameters, accounting, why it stopped, and which model actually ran.
 
@@ -489,7 +493,7 @@ Takes no arguments and returns none.
 
 *Subtype of:* `i=2041`
 
-A deployment began serving a different model version. Raised on promotion, and also on a rollback or any other Server-initiated substitution, because a consumer auditing what decided a verdict cares that the model changed and not why the operator called it a promotion.
+A deployment's configured UsesModel target changed. Raised on promotion, and also on a rollback or any other Server-initiated substitution, because a consumer auditing what decided a verdict cares that the model changed and not why the operator called it a promotion.
 
 | BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
 |---|---|---|---|---|---|
@@ -497,7 +501,30 @@ A deployment began serving a different model version. Raised on promotion, and a
 | NewModel | Variable | NodeId | Scalar | Mandatory | The ModelType now being served. Its Digest is what ties a later verdict to a verifiable artefact, so a consumer that records only one field records this. |
 | PreviousModel | Variable | NodeId | Scalar | Optional | The ModelType that was being served, or null where the deployment was serving none. A rollback is distinguishable from a promotion only by comparing the two, which is why both are carried. |
 | EvaluationRun | Variable | NodeId | Scalar | Optional | The EvaluationRunType whose Passed result gated this promotion, or null where none did. Clause 7.2 says promotion SHOULD be gated on one; null here is the observable consequence of a Server that promoted without it, which is the fact an audit is looking for. |
-| PromotedBy | Variable | String | Scalar | Optional | Identity of the authenticated principal that promoted, as the Server authenticated it. BaseEventType carries no user field, and clause 12.3 requires promotion to be separately authorized - a requirement whose satisfaction is unobservable if the identity is not recorded where the act is. Empty where the Server initiated the change itself. |
+| PromotedBy | Variable | String | Scalar | Optional | Identity that authorized or initiated the change, as the Server authenticated it. For an automatic substitution this is the Server's stable system identity. BaseEventType carries no user field, and clause 12.3 requires promotion to be separately authorized - a requirement whose satisfaction is unobservable if the identity is not recorded where the act is. |
+| PromotionRecord | Variable | NodeId | Scalar | Optional | PromotionRecordType created atomically with this substitution. It SHALL be populated whenever the event is raised by a Server claiming AI-Events, and the event's deployment, model, evaluation and actor fields SHALL agree with the authoritative record. |
+
+### PromotionRecordType — `ns=2;i=1019`
+
+*Subtype of:* `BaseObjectType`
+
+Immutable, authoritative record of one successful substitution of a DeploymentType UsesModel target. The record is created atomically with the substitution, is read-only after creation, and remains available for at least the lifetime of the deployment.
+
+| BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
+|---|---|---|---|---|---|
+| RecordId | Variable | String | Scalar | Mandatory | Server-wide unique identifier of this record. |
+| Deployment | Variable | NodeId | Scalar | Mandatory | Convenience NodeId of the DeploymentType whose UsesModel target changed. |
+| DeploymentId | Variable | String | Scalar | Mandatory | Snapshot of DeploymentType.DeploymentId at the instant of change. |
+| PreviousModel | Variable | NodeId | Scalar | Mandatory | Convenience NodeId of the previous ModelType. The identity snapshot, not this reference, is durable when that node disappears. |
+| NewModel | Variable | NodeId | Scalar | Mandatory | Convenience NodeId of the new ModelType. The identity snapshot, not this reference, is durable when that node disappears. |
+| PreviousModelIdentity | Variable | ModelIdentitySnapshotDataType | Scalar | Mandatory | Self-contained identity of the model replaced by the substitution. |
+| NewModelIdentity | Variable | ModelIdentitySnapshotDataType | Scalar | Mandatory | Self-contained identity of the model selected by the substitution. |
+| EvaluationRun | Variable | NodeId | Scalar | Optional | Convenience NodeId of the EvaluationRunType that gated the change, or null where none did. |
+| EvaluationRunId | Variable | String | Scalar | Optional | Snapshot of EvaluationRunType.RunId. SHALL be populated when EvaluationRun is populated and remains authoritative if that node disappears. |
+| ChangedAt | Variable | UtcTime | Scalar | Mandatory | Time at which the successful UsesModel substitution took effect. |
+| ChangedBy | Variable | String | Scalar | Mandatory | Authenticated identity that authorized or initiated the change. For an automatic substitution, the Server SHALL use its stable system identity. |
+| ChangeKind | Variable | ModelChangeKindEnum | Scalar | Mandatory | Trigger for the change, classified by cause and never by version ordering. |
+| Reason | Variable | LocalizedText | Scalar | Optional | Optional human-readable administrative reason. SHALL NOT be parsed. |
 
 ## A.4 DataTypes
 
@@ -705,6 +732,20 @@ Where a Digest came from, or why there is none. Digest is Mandatory so that its 
 | ComputedByServer | 2 | This Server hashed the artefact it holds. The value is evidence, but nothing independent agrees with it - a substitution that happened before the Server obtained the bytes is not detected. |
 | VerifiedOnStage | 3 | This Server hashed the artefact during a staging import (clause 10.4) and it matched what the source declared. Two independent parties agree, which is the strongest statement this model can carry. |
 
+### ModelChangeKindEnum — `ns=2;i=3016`
+
+*Subtype of:* `Enumeration`
+
+The trigger that caused a deployment's UsesModel reference to be substituted. Classification is by the administrative trigger, never by comparing model versions: version strings are not necessarily ordered and a rollback can target a version whose spelling sorts later.
+
+| Name | Value | Description |
+|---|---|---|
+| Promotion | 0 | An approved candidate replaced the serving model. |
+| Rollback | 1 | An operator or policy restored a previously used model. |
+| AutomaticSubstitution | 2 | The Server changed the deployment's configured UsesModel target automatically. Per-invocation fallback that leaves UsesModel unchanged is not this value and creates no promotion record. |
+| MutableReferenceRepoint | 3 | A followed mutable reference resolved to a different model. |
+| OtherAdministrativeReplacement | 4 | Another administrative action replaced the configured model. |
+
 ### TensorSignatureDataType — `ns=2;i=3050`
 
 *Subtype of:* `Structure`
@@ -795,3 +836,17 @@ Capacity a remote endpoint is currently granting. Surfaced so a client can disti
 | Remaining | UInt64 | Scalar |  | Units still available in the current interval. |
 | Interval | Duration | Scalar |  | Length of the interval the limit applies to. |
 | RetryAfter | Duration | Scalar |  | How long to wait before retrying. Zero when the endpoint gave no guidance. |
+
+### ModelIdentitySnapshotDataType — `ns=2;i=3057`
+
+*Subtype of:* `Structure`
+
+Durable identity of a model at the instant a deployment's UsesModel reference changed. It is copied into a promotion record rather than resolved through a retained NodeId, so the history remains complete after the ModelType instance or artefact location disappears. Digest trust provenance is retained with the digest so a later reader can tell whether it was declared, computed or verified.
+
+| Field | DataType | ValueRank | ArrayDimensions | Description |
+|---|---|---|---|---|
+| ModelId | String | Scalar |  | ModelType.ModelId at the instant of change. |
+| Version | String | Scalar |  | ModelType.Version at the instant of change. |
+| Digest | ByteString | Scalar |  | ModelType.Digest at the instant of change, including an empty value where DigestProvenance was NotAvailable. |
+| DigestAlgorithm | String | Scalar |  | ModelType.DigestAlgorithm at the instant of change. |
+| DigestProvenance | DigestProvenanceEnum | Scalar |  | ModelType.DigestProvenance at the instant of change. Retained because the same digest bytes carry different evidentiary weight when declared by a source, computed by this Server, or verified during staging. |

@@ -354,7 +354,7 @@ Abstract base for a vision result. Unlike OPC 40100-1, whose ResultContent is Ba
 
 | BrowseName | NodeClass | DataType | ValueRank | ModellingRule | Description |
 |---|---|---|---|---|---|
-| ResultId | Variable | String | Scalar | Mandatory | Identifier of the result, unique within the Server. |
+| ResultId | Variable | String | Scalar | Mandatory | Immutable identifier of the result, unique within the Server and never reused for a different result, including after eviction or Server restart. |
 | CreationTime | Variable | UtcTime | Scalar | Mandatory | When the result was produced. |
 | Sensor | Variable | NodeId | Scalar | Optional | Sensor the frame came from. |
 | Pipeline | Variable | NodeId | Scalar | Optional | Pipeline that produced it. |
@@ -466,6 +466,8 @@ Binds a sensor to a deployment and publishes the results. The same type serves o
 | Results | Object |  |  | Optional | Recent VisionResultType instances produced by this pipeline. |
 | Feedback | Object |  |  | Optional | Feedback surface for pushing results back into the vision system. |
 | LearningJob | Variable | NodeId | Scalar | Optional | LearningJobType instance that consumes GroundTruthLabel corrections submitted through this pipeline's Feedback object, or null where the Server retains none. A NodeId and not a reference, for the same reason Deployment is: this model takes no dependency on the model that defines the job. Section 9.5.1 requires this to be non-null wherever such a correction is retained - without it a client cannot establish whether its label reached a learning loop at all. |
+| MaxResultAge | Variable | Duration | Scalar | Optional | Maximum age of result nodes retained under Results, in milliseconds. Zero means no age limit. Where Results is instantiated this member is required under an inference facet and at least one retention limit is non-zero. |
+| MaxRetainedResults | Variable | UInt32 | Scalar | Optional | Maximum number of result nodes retained under Results. Zero means no count limit. Count pressure evicts the oldest CreationTime first, with ResultId as the deterministic tie-break. Where Results is instantiated this member is required under an inference facet and at least one retention limit is non-zero. |
 
 **Method `RunInference`** (Optional) — Run inference once, on the current or a specified frame, and return the identifier of the result that was produced.
 
