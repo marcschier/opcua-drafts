@@ -22,20 +22,25 @@ BLOCKQUOTE_RE = re.compile(r'^>\s?(.*)$')
 # `§5.15.3`, `§5.15`, `§7` and the "Part 1 §5.15" form used across the sibling drafts.
 SECTION_REF_RE = re.compile(r'§\s*([0-9]+(?:\.[0-9]+)*)')
 
-# Some drafts spell a cross-reference out as "Section 9.2" or "Sections 9.2 and 10.1"
-# instead of using §. Those are references too, and a build that did not recognise them
+# Some drafts spell a cross-reference out as "Section 9.2", "clause 9.2" or
+# "Sections 9.2 and 10.1" instead of using §. Those are references too, and a
+# build that did not recognise them
 # shipped a document whose every cross-reference still pointed at the source document's
 # pre-restructure numbering.
-WORD_REF_RE = re.compile(r'(?P<word>\bSections?\s+)(?P<num>[0-9]+(?:\.[0-9]+)*)'
-                         r'(?!\.?[0-9])')
+WORD_REF_RE = re.compile(
+    r'(?P<word>\b(?:Sections?|clauses?)\s+)'
+    r'(?P<num>[0-9]+(?:\.[0-9]+)*)(?!\.?[0-9])(?![A-Za-z])',
+    re.IGNORECASE)
 
 # A list form: "Sections 9.2 and 10.1", "Sections 5, 6, and 10". Every number in the list
 # is a reference; rewriting only the first would leave the rest pointing at the source
 # document's own numbering.
 _NUM = r'[0-9]+(?:\.[0-9]+)*'
 WORD_REF_LIST_RE = re.compile(
-    r'\bSections?\s+' + _NUM + r'(?:(?:,\s+and\s+|,\s+|\s+and\s+)' + _NUM + r')*'
-    r'(?!\.?[0-9])')
+    r'\b(?:Sections?|clauses?)\s+' + _NUM
+    + r'(?:(?:,\s+and\s+|,\s+|\s+(?:and|to)\s+|\s*[\u2013\u2014-]\s*)'
+    + _NUM + r')*(?!\.?[0-9])(?![A-Za-z])',
+    re.IGNORECASE)
 
 _MARKUP_IN_LABEL_RE = re.compile(r'[`*]')
 
@@ -66,7 +71,7 @@ _QUALIFIER_GAP = (r'(?:(?!\.\s)[^\u00a7\n]|\u00a7\s*[0-9][0-9.]*\s*(?:,|and|to|;
 FOREIGN_QUALIFIER_RE = re.compile(
     r'(?:OPC\s*\d{4,5}|IEC\s*\d+|RFC\s*\d+|W3C|AOUSD|xRegistry'
     r'|WoT\s+Binding|WoT-Binding|Thing\s+Description\s+1\.1'
-    r'|Part\s*\d+|\bthe base\b|\bbase (?:spec|specification|model)\b'
+    r'|Part\s*\d+|\bthe base\b|\bbase(?: (?:spec|specification|model))?\b'
     r'|\*[^*]*OPC UA[^*]*\*)'
     + _QUALIFIER_GAP + r'$', re.IGNORECASE)
 
@@ -74,7 +79,7 @@ FOREIGN_QUALIFIER_RE = re.compile(
 _LINK_TARGET_RE = re.compile(r'\]\([^)]*\)')
 
 
-def _is_foreign(text, start, extra=None):
+def _is_foreign(text, start, extra=None, end=None):
     window = text[max(0, start - 260):start]
     # A markdown link's URL is invisible to the reader but counts against the distance
     # between the qualifier and the reference, and a single reference.opcfoundation.org
@@ -82,6 +87,13 @@ def _is_foreign(text, start, extra=None):
     window = _LINK_TARGET_RE.sub('', window).replace('[', '')
     if extra is not None and extra.search(window):
         return True
+    if end is not None and extra is not None:
+        after = text[end:end + 140]
+        sentence_tail = re.split(r'\.\s', after, maxsplit=1)[0].rstrip('.')
+        if (re.match(r'^\s+(?:of|in)\s+(?:the\s+)?',
+                     sentence_tail, re.IGNORECASE)
+                and extra.search(sentence_tail)):
+            return True
     return bool(FOREIGN_QUALIFIER_RE.search(window))
 
 
@@ -196,7 +208,8 @@ def parse_inline(text, *, xref_resolver=None, foreign_anchors=None):
         elif m.group('ref'):
             number = SECTION_REF_RE.match(m.group('ref')).group(1)
             resolved = (xref_resolver(number)
-                        if xref_resolver and not _is_foreign(text, m.start(), foreign_anchors)
+                        if xref_resolver and not _is_foreign(
+                            text, m.start(), foreign_anchors, m.end())
                         else None)
             if resolved:
                 target, label = resolved
@@ -204,7 +217,8 @@ def parse_inline(text, *, xref_resolver=None, foreign_anchors=None):
             else:
                 runs.append(dm.t(m.group('ref')))
         elif m.group('wordref'):
-            resolver = (None if _is_foreign(text, m.start(), foreign_anchors)
+            resolver = (None if _is_foreign(
+                            text, m.start(), foreign_anchors, m.end())
                         else xref_resolver)
             runs.extend(_word_reference_runs(m.group('wordref'), resolver))
         pos = m.end()

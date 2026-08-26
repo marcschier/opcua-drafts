@@ -198,17 +198,35 @@ jobs:
           git remote set-head origin --auto
           base=$(git symbolic-ref --short refs/remotes/origin/HEAD | sed 's#^origin/##')
           git checkout -B "$PRIVATE_BRANCH" "origin/$base"
-          cp -a ../export/. .
+          cd "$GITHUB_WORKSPACE"
+          python release/tools/prepare_private_release.py "$SPEC_ID" \
+            --root "$WORK_DIR/private" \
+            --export "$WORK_DIR/export"
+          cd "$WORK_DIR/private"
           python - <<'PY'
           from pathlib import Path
+          import subprocess
+          import sys
+
           missing = []
-          for source in Path("../export").rglob("*"):
+          export = Path("../export")
+          for source in export.rglob("*"):
               if source.is_file():
-                  rel = source.relative_to("../export")
+                  rel = source.relative_to(export)
                   if not Path(rel).is_file():
                       missing.append(str(rel))
           if missing:
               raise SystemExit("exported files missing from private checkout: " + ", ".join(missing))
+
+          validators = sorted(
+              source.relative_to(export)
+              for source in export.rglob("validate_local.py")
+          )
+          if not validators:
+              raise SystemExit("release export contains no local validators")
+          for validator in validators:
+              print(f"=== private {validator.as_posix()} ===")
+              subprocess.run([sys.executable, str(validator)], check=True)
           PY
           git add -A
           if git diff --cached --quiet; then
