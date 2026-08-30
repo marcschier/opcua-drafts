@@ -90,7 +90,6 @@ The abstract base namespace is `http://opcfoundation.org/UA/xRegistry/`. Draft n
 
 `RegistryType` is a subtype of `FolderType` and is the registry root — a folder that organizes the groups it contains. It creates a group through its `CreateGroup` Method (or the idempotent `GetOrCreateGroup`); a group is removed with the group's own `Delete` Method. Its Properties carry the registry-level xRegistry attributes: the Mandatory `RegistryId` and the optional `SpecVersion` (the xRegistry spec version), plus the common attributes of §6.4. The `Capabilities` document (xRegistry `/capabilities`) is exposed **two ways**: as a component `FileType` object (`Capabilities`, the raw JSON read with `Open`/`Read`/`Close`) and as a typed Variable (`CapabilitiesInfo`) of the `RegistryCapabilitiesDataType` Structure (§6.7) whose fixed fields a client reads in one Variant value without parsing JSON. The `Model` document (xRegistry `/model`) is exposed only as a `FileType` object, because the OPC UA AddressSpace type system (the ObjectTypes and their members) is the structural equivalent of the model, so no structured DataType is defined for it. Its `<Group>` OptionalPlaceholder declares that its folder members are `GroupType` instances. A domain registry subtypes `RegistryType` (for example `SchemaRegistryType`) and constrains `<Group>` to its own group type.
 
-
 *Table - RegistryType Definition* {#tbl-registrytype-definition defines=RegistryType}
 
 | **Attribute** | **Value** |  |  |  |  |
@@ -126,7 +125,6 @@ The abstract base namespace is `http://opcfoundation.org/UA/xRegistry/`. Draft n
 
 `GroupType` is a subtype of `FolderType` and is a group folder — an entry of an xRegistry `GROUPS` collection. It carries the Mandatory `GroupId` and `Name` and the common attributes of §6.4, and its `<Resource>` OptionalPlaceholder declares that its members are `ResourceType` files, created through its `CreateResource` Method (or the idempotent `GetOrCreateResource`); a new version of an existing resource is created as a new sibling file keyed by `(ResourceId, VersionId)` through the same Method. The group is removed by its own `Delete(ExpectedEpoch: UInt32)` Method, which deletes the group together with the resources it contains; `ExpectedEpoch` provides the same optimistic-concurrency check as in §6.6 (non-zero and unequal to the group's `Epoch` → `Bad_InvalidState`, no change; `0` disables it). A domain group subtypes `GroupType` to add the **group key** — the group's source identity (§6.9), from which its `GroupId` is constructed: for example `SchemaGroupType` adds a Mandatory `NamespaceUri`.
 
-
 *Table - GroupType Definition* {#tbl-grouptype-definition defines=GroupType}
 
 | **Attribute** | **Value** |  |  |  |  |
@@ -159,7 +157,6 @@ The abstract base namespace is `http://opcfoundation.org/UA/xRegistry/`. Draft n
 ### ResourceType {#sec-resourcetype}
 
 `ResourceType` is a subtype of `FileType`: the resource/version **document is the file**, read and written through the inherited `Open` / `Read` / `Write` / `Close` Methods. It carries the resource-level xRegistry attributes: the Mandatory `ResourceId` and `Name`, the `VersionId`, the `Format` (the xRegistry format string) and `ContentType` (the document media type), the federation links `ExternalReference` and `ResourceUrl` (§8), and the common attributes of §6.4 (including its `Labels` container, §6.6). It is removed by its own `Delete(ExpectedEpoch: UInt32)` Method, symmetric with `GroupType.Delete` — a resource is a file, and deleting it removes its versions and `Labels`; `ExpectedEpoch` applies the same optimistic-concurrency check (non-zero and unequal to the resource's `Epoch` → `Bad_InvalidState`, no change; `0` disables it). A domain resource subtypes `ResourceType` (for example `SchemaFileType`) to add its own metadata, including the Mandatory Property that carries its source identity (§6.9).
-
 
 *Table - ResourceType Definition* {#tbl-resourcetype-definition defines=ResourceType}
 
@@ -217,7 +214,6 @@ The extensible xRegistry `labels` (and any other dynamic extension attributes) a
 
 This follows the established OPC UA extensible-container pattern (a container ObjectType with an OptionalPlaceholder member plus Add/Remove Methods, as used for dynamic parameter/property sets), and is the OPC UA form of an xRegistry `PATCH` of an entity's `labels`. Each entity exposes one such container as its `Labels` component (§6.4); the labels are deleted together with the entity. A server that does not allow post-creation configuration need not expose the Methods. An `AddIn`/interface composition (`HasAddIn`/`HasInterface`) is a viable alternative for attaching the container; the component form is used here for simplicity.
 
-
 *Table - AttributesType Definition* {#tbl-attributestype-definition defines=AttributesType}
 
 | **Attribute** | **Value** |  |  |  |  |
@@ -239,7 +235,6 @@ This follows the established OPC UA extensible-container pattern (a container Ob
 ### RegistryCapabilitiesDataType {#sec-registrycapabilitiesdatatype}
 
 `RegistryCapabilitiesDataType` is a Structure DataType that carries the fixed fields of the xRegistry `/capabilities` document, so a client reads a registry's advertised capabilities as one typed Variant value (the `RegistryType.CapabilitiesInfo` Variable, §6.1) without parsing the `Capabilities` file JSON. Its fields mirror the xRegistry capabilities schema: `Flags` (`String[]`, the enabled request-flag names), `Mutable` (`String[]`, the mutable entity kinds), `Pagination` (`Boolean`), `ShortSelf` (`Boolean`), `SpecVersions` (`String[]`), `StickyVersions` (`Boolean`), `EnforceCompatibility` (`Boolean`), `Apis` (`String[]`) and `Schemas` (`String[]`). xRegistry allows vendor-defined capability keys; a server that advertises such extension keys conveys them through the raw `Capabilities` file, which remains the authoritative document. The typed value is a convenience view of the standard fields.
-
 
 *Table - RegistryCapabilitiesDataType Definition* {#tbl-registrycapabilitiesdatatype-definition defines=RegistryCapabilitiesDataType}
 
@@ -343,7 +338,6 @@ The conformance units below are testable against a Server. The `XREG` prefix is 
 The NodeSet, CSV and Annex A are generated from `tools/build_model.py`. The local validator (`tools/validate_local.py`) checks XML well-formedness, unique NodeIds, that each ObjectType has a `HasSubtype` back-reference to its base (`FolderType` / `FileType` / `BaseObjectType`), that members carry a `HasModellingRule` and a `HasTypeDefinition`, and that the CSV and NodeSet agree. Domain NodeSets that extend this base declare it as a `<RequiredModel>` and reference its types by namespace-qualified NodeId.
 
 ---
-
 
 ## Information model {#anx-a annex=normative}
 

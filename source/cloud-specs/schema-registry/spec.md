@@ -80,7 +80,6 @@ The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft 
 
 `SchemaRegistryType` is a subtype of the base `RegistryType` (itself a `FolderType`). It is exposed as one well-known `SchemaRegistry` Object as a `HasComponent` of the `Server` Object (`i=2253`), so **any** Client that can reach the standard `Server` object discovers schema resolution, independent of whether the Server implements PubSub. A Server that also implements Part 14 PubSub **may** additionally add a reference from its `PublishSubscribe` Object to the same `SchemaRegistry` Object so PubSub clients find it in the familiar place, parallel to the Security Key Service (Annex C); that reference is optional and adds no dependency. Its `<SchemaGroup>` OptionalPlaceholder constrains the base `<Group>` to `SchemaGroupType`. It adds the `GetSchema` Method (§6.4) as the method form of the SchemaId fast path. The well-known `SchemaRegistry` Object **materializes** its `GetSchema` Method as a concrete Method node (as the Part 14 `PublishSubscribe` Object declares its methods), so the generated NodeSet yields a callable registry; a Server binds the Method handler and the Opaque-`SchemaId`-NodeId resolution to its schema store. Registration uses the base `CreateResource` Method and `Write` (§5.2); no bespoke register Method is required.
 
-
 *Table - SchemaRegistryType Definition* {#tbl-schemaregistrytype-definition defines=SchemaRegistryType}
 
 | **Attribute** | **Value** |  |  |  |  |
@@ -103,7 +102,6 @@ The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft 
 ### SchemaGroupType {#sec-schemagrouptype}
 
 `SchemaGroupType` is a subtype of the base `GroupType`. Each instance is a folder of schema files for one OPC UA namespace, keyed by that namespace URI: its Mandatory `NamespaceUri` Property is the group key and the group's **source identity**, and the xRegistry `groupid` is the symbolic identifier constructed from it (§6.7), with `NamespaceUri` retained verbatim and repeated as the group's `Name`. Keying a schema group by an OPC UA namespace URI is a domain convention of this profile; the generic xRegistry schema group imposes no key or format constraint on its members. Its `<Schema>` OptionalPlaceholder constrains the base `<Resource>` to `SchemaFileType`. Under the PubSub DataSet schema profile (Annex C) the PubSub envelope schemas (NetworkMessage / DataSetMessage) live in the base-namespace group `http://opcfoundation.org/UA/`.
-
 
 *Table - SchemaGroupType Definition* {#tbl-schemagrouptype-definition defines=SchemaGroupType}
 
@@ -140,7 +138,6 @@ The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft 
 - `ExpiryTime` (DateTime) and `Ttl` (Duration) — optional mirror/cache metadata (§9).
 
 The inherited `Labels` container (an `AttributesType`, base §6.6) and its `AddAttribute`/`RemoveAttribute` Methods configure further xRegistry labels on a schema file.
-
 
 *Table - SchemaFileType Definition* {#tbl-schemafiletype-definition defines=SchemaFileType}
 
@@ -333,7 +330,6 @@ Conformance is composed from independently implementable **conformance units (CU
 The NodeSet, CSV and Annex A are generated from `tools/build_model.py`. The local validator (`tools/validate_local.py`) checks XML well-formedness, unique NodeIds, CSV ↔ NodeSet consistency, that the well-known `SchemaRegistry` instance is attached to the `Server` object (`i=2253`), that each schema type has a `HasSubtype` back-reference to its xRegistry base type, and that base UA and xRegistry-base NodeId references resolve (the xRegistry base `NodeIds.csv` is loaded to resolve the `<RequiredModel>` cross-namespace references). Because the schema-registry NodeSet lists the xRegistry base namespace first (index 1) and its own namespace second (index 2), base-type references are `ns=1;i=63xxx` and own nodes are `ns=2;i=62xxx`.
 
 ---
-
 
 ## Information model {#anx-a annex=normative}
 

@@ -568,7 +568,6 @@ Each unit is decomposed into individually checkable **test assertions** — 38 f
 
 <!-- BEGIN GENERATED: model-reference -->
 
-
 ## Information model {#anx-a annex=normative}
 
 ```{clause}

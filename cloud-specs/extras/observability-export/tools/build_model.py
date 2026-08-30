@@ -1088,7 +1088,7 @@ if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
     # The standardized NodeSet/CSV live in cloud-specs/observability-export; this generator lives
     # alongside the other specs' secondary tooling under cloud-specs/extras/observability-export.
-    outdir = os.path.abspath(os.path.join(here, "..", "..", "..", "observability-export"))
+    outdir = os.path.abspath(os.path.join(here, "..", "..", "..", "..", "model"))
     with open(os.path.join(outdir, "Opc.Ua.ObservabilityExport.NodeSet2.xml"), "w",
               encoding="utf-8") as f:
         f.write(emit())

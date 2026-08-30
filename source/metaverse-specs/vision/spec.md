@@ -218,7 +218,6 @@ This type exists because discovery has to be deterministic. Without a well-known
 
 `Sensors` is Mandatory; `Pipelines`, `Models`, `Frames` and `LearningJobs` are Optional, and their absence is meaningful — a Server with no `Models` folder is not doing AI, and a client can determine that in one Browse rather than by inference.
 
-
 *Table - VisionRootType Definition* {#tbl-visionroottype-definition defines=VisionRootType}
 
 | **Attribute** | **Value** |  |  |  |  |
@@ -262,7 +261,6 @@ A Server never instantiates it directly. It instantiates `ImageSensorType`, `Dep
 
 `Media` is mandatory because a sensor a client cannot obtain imagery from is not usefully described. `RealityKind` is mandatory because a client that cannot tell a rendered frame from a real one cannot safely act on it (§4.3).
 
-
 *Table - VisionSensorType Definition* {#tbl-visionsensortype-definition defines=VisionSensorType}
 
 | **Attribute** | **Value** |  |  |  |  |
@@ -301,7 +299,6 @@ This type exists to close the gap that makes vision integration bespoke today: O
 A Server instantiates it for any 2-D camera: area-scan, line-scan or thermal. `Modality` distinguishes them, so the member set does not have to.
 
 A client uses it for three things. It sizes buffers and picks a decoder from `Width`, `Height` and `PixelFormat`. It reasons about motion blur and throughput from `ExposureTime` and `AcquisitionFrameRate` — a result that arrives late is often an exposure problem, not a network one. And it uses `Width` and `Height` together with `Intrinsics` to convert pixel coordinates into rays, which is what makes a 2-D detection usable in 3-D.
-
 
 *Table - ImageSensorType Definition* {#tbl-imagesensortype-definition defines=ImageSensorType}
 
@@ -344,7 +341,6 @@ A Server instantiates it for stereo, time-of-flight, structured-light or laser-t
 A client uses it to reject detections outside `[MinDepth, MaxDepth]`, to convert raw depth samples with `DepthScale`, and to size its expectations from `PointsPerFrame`.
 
 Point clouds are obtained through a media endpoint and are never read as an OPC UA array: a single frame is routinely megabytes and would exceed practical message limits, and §12.4 explains why an OPC UA Subscription is the wrong transport for one.
-
 
 *Table - Depth3DSensorType Definition* {#tbl-depth3dsensortype-definition defines=Depth3DSensorType}
 
@@ -402,7 +398,6 @@ It is an interface rather than a subtype because being simulated is orthogonal t
 A Server applies it to every sensor whose `RealityKind` is `Simulated` or `Hybrid`; clause 11 makes *VIS-Simulation* required in that case rather than optional.
 
 A training-data pipeline uses `RandomizationSeed` to reproduce a run exactly. A validation client uses `GroundTruthAvailable` to know that results from this sensor are simulator truth rather than predictions, and so **shall not** use them to measure model accuracy. An operator tool uses `PrimPath` to open the corresponding camera in the scene.
-
 
 *Table - IVisionSimulatedType Definition* {#tbl-ivisionsimulatedtype-definition defines=IVisionSimulatedType}
 
@@ -720,7 +715,6 @@ Mandatory `ResultId` and `CreationTime`. Optional `Sensor`, `Pipeline`, `Frame` 
 
 The trust members are not decoration. Where a deployment falls under a high-risk regime, the question *"which model version produced this decision, and on what basis"* must be answerable from the address space rather than reconstructed from logs (§12.5).
 
-
 *Table - VisionResultType Definition* {#tbl-visionresulttype-definition defines=VisionResultType}
 
 | **Attribute** | **Value** |  |  |  |  |
@@ -756,7 +750,6 @@ Uncertainty is what makes a verdict reproducible by a third party, and it is the
 
 Because §5.12 fixes the coverage factor at k = 2, two Servers that both evaluate uncertainty and are presented with the same measurement reach the same verdict. The converse is equally normative and is the limit of the guarantee: `Uncertainty = 0` means uncertainty was **not evaluated**, not that it is negligible, so the interval test above degenerates to the point estimate and the resulting `Evaluation` is **not comparable** with that of a Server which does evaluate it. A Server claiming *VIS-Result-Inspection* **shall** therefore either report a genuine expanded uncertainty for every characteristic it publishes, or report `0` for every characteristic — it **shall not** mix the two within one result, since that would make the result's own `Evaluation` incoherent. A client **shall not** compare verdicts across Servers, or across results, whose uncertainty reporting differs in this respect.
 
-
 *Table - InspectionResultType Definition* {#tbl-inspectionresulttype-definition defines=InspectionResultType}
 
 | **Attribute** | **Value** |  |  |  |  |
@@ -784,7 +777,6 @@ The robotics-vision outcome. Mandatory `Detections`; optional `FrameId` naming t
 
 A pose is only actionable if its frame is known, which is why `VisionPose3DDataType` carries `FrameId` and why §5.8 exists. `FrameId` **shall** be non-empty whenever `HasPose` is `true`. Where the Server also implements *VIS-Calibration*, `FrameId` **shall** be the `FrameId` of a `CoordinateFrameType` instance that exists in the same Server, so that the pose can be composed through the frame tree. Where the Server does not implement *VIS-Calibration* it has no frame tree to resolve against; `FrameId` **shall** then be an identifier that is stable for the lifetime of the Server and agreed out of band, and a client **shall not** assume it is resolvable in the address space. A Server that publishes poses **should** implement *VIS-Calibration* for exactly this reason.
 
-
 *Table - DetectionResultType Definition* {#tbl-detectionresulttype-definition defines=DetectionResultType}
 
 | **Attribute** | **Value** |  |  |  |  |
@@ -807,7 +799,6 @@ A pose is only actionable if its frame is known, which is why `VisionPose3DDataT
 Mandatory `Mask`, a `VisionImageReferenceDataType`. Masks are images and follow the media rules of §6; they are referenced, not inlined into the result.
 
 ---
-
 
 *Table - SegmentationResultType Definition* {#tbl-segmentationresulttype-definition defines=SegmentationResultType}
 
@@ -938,7 +929,6 @@ A Server **shall not** vary the result types, member meanings or StatusCodes by 
 Binds a `Sensor` to a `Deployment`, exposes `State` and `Continuous`, holds a `Results` folder and an optional `Feedback` object, and offers `RunInference`, `StartContinuous` and `Stop`.
 
 A Server whose inference is entirely off-server and continuously running may implement none of the three Methods; the pipeline still describes the binding and publishes the results.
-
 
 *Table - InferencePipelineType Definition* {#tbl-inferencepipelinetype-definition defines=InferencePipelineType}
 
