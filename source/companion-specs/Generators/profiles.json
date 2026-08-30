@@ -1,0 +1,103 @@
+{
+  "conformanceUnits": [
+    {
+      "name": "GEN-GeneratorSet",
+      "group": "Generators",
+      "category": "Server",
+      "description": "Support for GeneratorSetType with its mandatory content, and for the enumerations and structures the model is written in."
+    },
+    {
+      "name": "GEN-Components",
+      "group": "Generators",
+      "category": "Server",
+      "description": "Support for the engine, the alternator, the alternator phases and the support subsystems: fuel, cooling, lubrication, starting and exhaust aftertreatment."
+    },
+    {
+      "name": "GEN-Identification",
+      "group": "Generators",
+      "category": "Server",
+      "description": "Support for the generator-set nameplate beyond the nameplate inherited from OPC 10000-100."
+    },
+    {
+      "name": "GEN-StateMachine",
+      "group": "Generators",
+      "category": "Server",
+      "description": "Support for GeneratorStateMachineType, its states and transitions, and the operating modes."
+    },
+    {
+      "name": "GEN-Rating",
+      "group": "Generators",
+      "category": "Server",
+      "description": "Support for GeneratorRatingType and for the set of ratings a generator set is certified for."
+    },
+    {
+      "name": "GEN-Alarms",
+      "group": "Generators",
+      "category": "Server",
+      "description": "Support for the protection and alarm conditions and their condition state."
+    },
+    {
+      "name": "GEN-CANbus",
+      "group": "Generators",
+      "category": "Server",
+      "description": "Support for the CAN bus interface of the engine and for the diagnostic trouble codes it reports."
+    },
+    {
+      "name": "GEN-TransferSwitch",
+      "group": "Generators",
+      "category": "Server",
+      "description": "Support for AutomaticTransferSwitchType and its transfer behaviour."
+    },
+    {
+      "name": "GEN-Paralleling",
+      "group": "Generators",
+      "category": "Server",
+      "description": "Support for ParallelingControllerType and for the paralleling and load-sharing behaviour."
+    },
+    {
+      "name": "GEN-System",
+      "group": "Generators",
+      "category": "Server",
+      "description": "Support for GeneratorSystemType, the aggregate of several generator sets."
+    }
+  ],
+
+  "profiles": [
+    {
+      "name": "Generator Set Server Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/Generators/Server/GeneratorSetServerFacet",
+      "description": "This Facet defines support for a single generator set: its identification, its operating state and mode, its components and its ratings.",
+      "includes": [
+        { "name": "GEN-GeneratorSet", "optional": false },
+        { "name": "GEN-Components", "optional": false },
+        { "name": "GEN-Identification", "optional": false },
+        { "name": "GEN-StateMachine", "optional": false },
+        { "name": "GEN-Rating", "optional": false }
+      ]
+    },
+    {
+      "name": "Generator Set Diagnostics Server Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/Generators/Server/GeneratorSetDiagnosticsServerFacet",
+      "description": "This Facet adds the protection and alarm conditions and the CAN bus diagnostic interface to a generator set.",
+      "includes": [
+        { "name": "Generator Set Server Facet", "optional": false },
+        { "name": "GEN-Alarms", "optional": false },
+        { "name": "GEN-CANbus", "optional": false }
+      ]
+    },
+    {
+      "name": "Generator Plant Server Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/Generators/Server/GeneratorPlantServerFacet",
+      "description": "This Facet defines support for a plant of several generator sets: the transfer switches that connect them to a load, the paralleling controller that shares load between them, and the system that aggregates them.",
+      "includes": [
+        { "name": "Generator Set Diagnostics Server Facet", "optional": false },
+        { "name": "GEN-TransferSwitch", "optional": false },
+        { "name": "GEN-Paralleling", "optional": false },
+        { "name": "GEN-System", "optional": false }
+      ]
+    }
+  ]
+}

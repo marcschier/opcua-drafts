@@ -98,7 +98,8 @@ env:
     cloud-specs
     metaverse-specs
     wot-specs
-    companion-specs
+    source
+    model
     word-drafts/tools
 
 jobs:

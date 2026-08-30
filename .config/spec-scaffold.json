@@ -1,0 +1,20 @@
+{
+  "$comment": "Written by Opc.Ua.SpecificationPublisher upgrade. 'files' is what the tool last wrote, so a file you have edited can be told from one that is merely out of date; 'yours' is the files you have taken over, which it will not touch again. Not edited by hand.",
+  "version": "1.0.59",
+  "files": {
+    ".github/workflows/publish.yml": "2ba17457545c1736c9aed0475fae3da44cb4b508bb114c173ca142d0be6ea5b0",
+    "AUTHORING.md": "eb15ca63d8aff5673c928aa4ed14515a27b354f8378df579cd7df2d7588ec1b6",
+    "legal.md": "cf6fa5c8b7f4b568a5a96da38c1f1efa93c5daaf9cd8e5e61ad7d5507b36f1cc",
+    "skills/opcua-companion-spec/SKILL.md": "def70ce7f32bae3423ebbfee0dc08c1456585611621a18d6e209458e142a43c7",
+    "skills/opcua-word-to-markdown/SKILL.md": "7b8e68af18e4243bb245f5bebfc8f7d24f59aeb305001d561c791f5828e0e221",
+    "source/figures/uashapes-library.drawio.xml": "8c483068797be44deef9d6cc7de2bcde5d3d451221f9d2f4d0fe171d332e947b",
+    "tools/office-to-svg.ps1": "5859a009b1b79e1dba11d7395131db8d7ca4d7959f3cbd10f696fec397a8dead",
+    "tools/office-to-svg.sh": "826f0d4ad1601bf6a80286ba0fcfd2f9728f297d930ceb0e77a68373af9a1efe"
+  },
+  "yours": [
+    ".gitattributes",
+    ".github/pull_request_template.md",
+    ".gitignore",
+    ".markdownlint-cli2.yaml"
+  ]
+}

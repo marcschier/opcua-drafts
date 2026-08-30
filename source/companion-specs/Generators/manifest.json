@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 1,
+  "sourceOfTruth": "markdown",
+
+  "identity": {
+    "docNumber": "OPC 99007-1",
+    "partName": "Generators",
+    "title": "OPC UA for Generators",
+    "shortTitle": "Generators",
+    "shortName": "Generators",
+    "organization": "OPC Foundation",
+    "capabilityIdentifier": "GEN",
+    "namespaceUri": "http://opcfoundation.org/UA/Generators/",
+    "version": "1.1.0",
+    "publicationDate": "2026-07-30",
+    "releaseType": "Draft",
+    "gitHubTag": "",
+    "mantisUrl": "https://mantis.opcfoundation.org",
+    "license": {
+      "spdxId": "LicenseRef-OPC-Specification-1.15",
+      "copyright": "Copyright (c) 2026, OPC Federation AISBL",
+      "url": "https://opcfoundation.org/license/specifications/1.15/"
+    }
+  },
+
+  "model": {
+    "nodeset": "model/Opc.Ua.Generators.NodeSet2.xml",
+    "generated": true,
+    "generator": "source/companion-specs/Generators/tools/build_model.py"
+  },
+
+  "markdown": {
+    "main": "spec.md",
+    "objecttypes": "object-types.md",
+    "datatypes": "data-types.md",
+    "figures": "figures"
+  },
+
+  "figureGenerators": {
+    ".drawio.svg": "",
+    ".pptx": { "win": "tools/office-to-svg.ps1", "default": "tools/office-to-svg.sh" }
+  },
+
+  "output": {
+    "sts": "artifacts/OPC-99007-1.xml",
+    "documentationCsv": "artifacts/OPC-99007-1-documentation.csv"
+  },
+
+  "normativeReferences": [
+    {
+      "id": "uapart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "uapart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "uapart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "uapart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "uapart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "uapart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "uapart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "uapart8",
+      "label": "OPC 10000-8",
+      "title": "OPC Unified Architecture - Part 8: Data Access",
+      "url": "http://www.opcfoundation.org/documents/10000-8/"
+    },
+    {
+      "id": "uapart9",
+      "label": "OPC 10000-9",
+      "title": "OPC Unified Architecture - Part 9: Alarms and Conditions",
+      "url": "http://www.opcfoundation.org/documents/10000-9/"
+    },
+    {
+      "id": "uapart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "uapart14",
+      "label": "OPC 10000-14",
+      "title": "OPC Unified Architecture - Part 14: PubSub",
+      "url": "http://www.opcfoundation.org/documents/10000-14/"
+    },
+    {
+      "id": "uapart16",
+      "label": "OPC 10000-16",
+      "title": "OPC Unified Architecture - Part 16: State Machines",
+      "url": "http://www.opcfoundation.org/documents/10000-16/"
+    },
+    {
+      "id": "uapart100",
+      "label": "OPC 10000-100",
+      "title": "OPC Unified Architecture - Part 100: Devices",
+      "url": "http://www.opcfoundation.org/documents/10000-100/"
+    },
+    {
+      "id": "ua11030",
+      "label": "OPC 11030",
+      "title": "OPC Unified Architecture - Modelling Best Practices",
+      "url": "http://www.opcfoundation.org/documents/11030/"
+    },
+    {
+      "id": "ua40001",
+      "label": "OPC 40001-1",
+      "title": "OPC UA for Machinery - Part 1: Basic Building Blocks",
+      "url": "http://www.opcfoundation.org/documents/40001-1/"
+    },
+    {
+      "id": "iso8528",
+      "label": "ISO 8528",
+      "title": "Reciprocating internal combustion engine driven alternating current generating sets",
+      "url": "https://www.iso.org/standard/76713.html"
+    },
+    {
+      "id": "saej1939",
+      "label": "SAE J1939",
+      "title": "Serial control and communications heavy duty vehicle network",
+      "url": "https://www.sae.org/standards/content/j1939/"
+    },
+    {
+      "id": "nfpa110",
+      "label": "NFPA 110",
+      "title": "Standard for Emergency and Standby Power Systems",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-110-standard-development/110"
+    }
+  ],
+
+  "terms": [
+    {
+      "term": "alternator",
+      "definition": "AC generator end that converts mechanical power into electrical power"
+    },
+    {
+      "term": "generator set",
+      "definition": "complete power-generation unit combining a prime mover and an alternator with control and support subsystems",
+      "notes": [
+        "Abbreviated to GenSet in common use."
+      ],
+      "source": "ISO 8528"
+    },
+    {
+      "term": "prime mover",
+      "definition": "engine that drives the alternator",
+      "notes": [
+        "Diesel and natural gas are the common fuels."
+      ],
+      "source": "ISO 8528"
+    },
+    {
+      "term": "rating",
+      "definition": "declared power a generator set may deliver under a stated duty",
+      "notes": [
+        "ISO 8528 defines Emergency Standby Power (ESP), Prime Power (PRP), Continuous Power (COP) and Limited-Time Power (LTP). Data-Centre Continuous (DCC) is an industry duty beyond that set."
+      ],
+      "source": "ISO 8528"
+    }
+  ],
+
+  "abbreviations": [
+    ["ATS", "Automatic Transfer Switch"],
+    ["AVR", "Automatic Voltage Regulator"],
+    ["CAN", "Controller Area Network"],
+    ["COP", "Continuous Power"],
+    ["DCC", "Data-Centre Continuous"],
+    ["DI", "Devices"],
+    ["DTC", "Diagnostic Trouble Code"],
+    ["ECU", "Electronic Control Unit"],
+    ["ESP", "Emergency Standby Power"],
+    ["FMI", "Failure Mode Identifier"],
+    ["HTTP", "Hypertext Transfer Protocol"],
+    ["JSON", "JavaScript Object Notation"],
+    ["LTP", "Limited-Time Power"],
+    ["PMG", "Permanent Magnet Generator"],
+    ["PRP", "Prime Power"],
+    ["SAE", "Society of Automotive Engineers"],
+    ["SPN", "Suspect Parameter Number"],
+    ["URI", "Uniform Resource Identifier"],
+    ["UTC", "Coordinated Universal Time"]
+  ],
+
+  "namespaces": {
+    "documentNamespaceIndex": 1,
+    "table": [
+      {
+        "uri": "http://opcfoundation.org/UA/",
+        "index": 0,
+        "example": "0:EngineeringUnits",
+        "definedBy": "uapart5",
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0."
+      },
+      {
+        "uri": "http://opcfoundation.org/UA/Generators/",
+        "index": 1,
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model."
+      },
+      {
+        "uri": "http://opcfoundation.org/UA/DI/",
+        "index": 2,
+        "example": "2:DeviceRevision",
+        "definedBy": "uapart100",
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in OPC 10000-100."
+      },
+      {
+        "uri": "http://opcfoundation.org/UA/Machinery/",
+        "index": 3,
+        "example": "3:MachineIdentificationType",
+        "definedBy": "ua40001",
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in OPC 40001-1."
+      },
+      {
+        "uri": "http://opcfoundation.org/UA/IA/",
+        "index": 4,
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in OPC 40080-1. This model does not use it directly; it is declared because OPC 40001-1 borrows from it."
+      }
+    ]
+  }
+}

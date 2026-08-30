@@ -14,3 +14,8 @@ Thumbs.db
 # the public commit, and this rule is the second, independent barrier against
 # committing a private checkout into this public repository.
 node_modules/
+
+# The specification publisher's scratch output. `build` writes the STS and the NodeIds CSV
+# here and `publish` the HTML and Word editions, so nothing in it is a source and nothing in
+# it is reviewed; the committed artifacts are written to artifacts/ with an explicit --out.
+_work/

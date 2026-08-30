@@ -2404,7 +2404,9 @@ def emit_md():
 
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
-    outdir = os.path.dirname(here)  # companion-specs/Generators/
+    repo = os.path.abspath(os.path.join(here, "..", "..", "..", ".."))
+    outdir = os.path.join(repo, "model")  # the repository's model/, shared by every part
+    os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "Opc.Ua.Generators.NodeSet2.xml"), "w",
               encoding="utf-8") as f:
         f.write(emit())

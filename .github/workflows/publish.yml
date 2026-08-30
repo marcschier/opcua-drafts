@@ -1,0 +1,182 @@
+# Build the STS XML and the browsable rendering on every check-in to main.
+#
+# This is the only workflow in the repository, and the only logic that runs against this
+# specification lives in the tool it installs - nothing here is a script this repository
+# carries, so a rule is fixed by a tool release rather than by the same edit repeated in
+# every specification repository.
+#
+#     source/<spec>/manifest.json + source/<spec>/ + model/
+#         -> Opc.Ua.SpecificationPublisher build     -> artifacts/   STS XML + NodeIds.csv, for machines
+#         -> Opc.Ua.SpecificationPublisher publish   -> docs/        browsable HTML, for people
+#                                                    -> artifacts/   the Word edition, beside the STS
+#
+# Every specification in the repository, in one run. A specification is a directory under
+# source/ with a manifest beside its spec.md; adding one is adding a directory, and there is
+# no list here to remember to update. artifacts/ is flat and holds all of them; docs/ mirrors
+# source/, so each is published where it is authored, under a root index that lists them.
+#
+# STS is the hub. The browsable tree is rendered *from it*, not from the markdown source,
+# and so is the Word submission. Two renderings of one interchange format cannot disagree
+# with each other; two renderers reading the source independently certainly would.
+#
+# It also means the browsable tree is a standing check on the STS: if a clause, a table or a
+# cross-reference cannot be reconstructed from the XML for a human to read, it was not
+# carried, and that shows up as something visibly missing rather than as silence.
+#
+# docs/ is what GitHub Pages serves (main, /docs), so the rendering an author reviews is the
+# one this workflow committed.
+#
+# Both commands run locally, identically — without the directory flags they write under
+# _work/, which is gitignored, so a local rebuild does not dirty what is committed:
+#
+#     dotnet tool restore
+#     dotnet Opc.Ua.SpecificationPublisher build
+#     dotnet Opc.Ua.SpecificationPublisher publish
+
+name: Publish
+
+on:
+  push:
+    branches: [main]
+    # Everything except what this workflow itself writes.
+    #
+    # An allowlist of source/, model/ and manifest.json was too narrow: bumping the tool pin,
+    # changing this workflow, or editing AUTHORING.md all left the published document built by
+    # some earlier run, and the only way to refresh it was to remember to press the button. A
+    # check-in is the trigger; nothing here should need a person to notice.
+    #
+    # The exclusion is load-bearing rather than tidiness. This workflow commits to artifacts/
+    # and docs/, and without it that commit starts the workflow again, forever. Push events
+    # ignore a commit only when *every* changed path is excluded - which is exactly the shape
+    # of the commit below, and not the shape of any commit a person makes.
+    paths-ignore:
+      - "artifacts/**"
+      - "docs/**"
+  workflow_dispatch:
+
+# The tool version is not set here. `dotnet tool restore` below takes it from
+# .config/dotnet-tools.json, so CI runs exactly the build an author has locally and moving to
+# a new one is a reviewable commit to that file:
+#
+#     dotnet tool update OPCFoundation.Opc.Ua.SpecificationPublisher --version "1.0.*"
+#
+# There is no repository setting to check and nothing that can differ between a person's
+# machine and this workflow.
+
+permissions:
+  contents: write
+  pages: read      # to read the site URL for docs/README.md
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "10.0.x"
+          
+      - name: Install SpecificationPublisher Tools
+        run: dotnet tool restore
+
+      # The Word edition needs the SVG figures as rasters - Word will not show an SVG unless the
+      # drawing also carries one - and the tool rasterises them with Skia, whose native library
+      # links against fontconfig. Without it the figure is dropped and the publish stops.
+      #
+      # Installed rather than assumed: libfontconfig1 is not in the runner image's documented
+      # package list, so a build that relies on it being there is relying on something no one
+      # promised. It also brings the DejaVu fonts, without which the diagram labels rasterise
+      # blank. Seconds when it is already present.
+      - name: Install fontconfig, for rasterising the figures
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libfontconfig1
+
+
+      # A red main publishes nothing. The rules run on every pull request, but main can take
+      # a direct push, and two pull requests that were each green can merge into a main that
+      # is not. Keeping the last good rendering is better than replacing it with one built
+      # from a document that does not validate.
+      #
+      # Checking the document against its NodeSets is a second tool,
+      # Opc.Ua.SpecificationValidator, and it reads the STS rather than the markdown - so the
+      # step sits after the build below rather than here. `build` itself already refuses
+      # anything the STS cannot carry, which is why there is nothing to run at this point.
+
+      # Both directories are entirely generated, and a rebuild only overwrites what it writes.
+      # A specification that is renamed, moved to a different group or withdrawn would otherwise
+      # keep its old pages on the published site forever - reachable, indexed, and indisputably
+      # wrong. Emptying them first makes what is committed below exactly what this run produced.
+      - name: Clear what the build regenerates
+        run: rm -rf artifacts docs
+
+      - name: Build STS XML
+        run: dotnet Opc.Ua.SpecificationPublisher build --out artifacts/
+
+      # Every table in the document against the NodeSets it describes: BrowseNames, DataTypes,
+      # ModellingRules, references, attribute values, Conformance Units. Here rather than before
+      # the build because it reads the STS, and before the commit so that a document which does
+      # not validate leaves the previous run's artifacts/ and docs/ in place.
+      #
+      # Off by default, because it will have findings on a specification that has never been run
+      # through it and a red main on the first push is not a useful welcome. Turning it on is two
+      # edits: add OPCFoundation.Opc.Ua.SpecificationValidator to .config/dotnet-tools.json so
+      # `dotnet tool restore` installs it, and uncomment this.
+      #
+      # One line per specification rather than a loop over artifacts/: each names the NodeSet it
+      # describes, and which of the models in model/ is the primary one for a given document is
+      # not derivable from the file names.
+      #
+      # - name: Validate against the NodeSets
+      #   run: |
+      #     dotnet Opc.Ua.SpecificationValidator validate \
+      #       artifacts/<doc>.xml model/<primary>.NodeSet2.xml --dependency-dir model/dependencies
+
+      - name: Render the browsable specification
+        # Numbered clauses, materialised node tables, generated boilerplate, resolved
+        # cross-references, and figures the reader can actually see. Nothing renders a
+        # diagram here: figures are editable SVG, which is the picture and its source in one
+        # file, and mermaid is emitted as a fenced block that GitHub draws itself.
+        # Both directories are named explicitly. The tool defaults to _work/, which is
+        # gitignored, so that a local rebuild does not dirty the committed artifacts — what
+        # gets committed is decided here rather than by where the command is running.
+        env:
+          # Not exported automatically; a step has to ask for it. No PAT is involved - the
+          # automatic token can read the Pages configuration given the permission above.
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          # A private Pages site has a randomised hostname, so it cannot be derived from the
+          # repository name. If this cannot be read the publish still runs; docs/README.md then
+          # explains the directory without linking to the page.
+          url=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq .html_url 2>/dev/null || true)
+          echo "Pages URL: ${url:-<unavailable>}"
+          dotnet Opc.Ua.SpecificationPublisher publish --in artifacts/ --out docs/ ${url:+--site-url "$url"}
+
+      - name: Commit what changed
+        # This commit touches artifacts/ and docs/ and nothing else, which is precisely what
+        # `paths-ignore` above excludes - so it does not retrigger the workflow.
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add artifacts/ docs/
+          if git diff --cached --quiet; then
+            echo "The build is already in step with the sources; nothing to commit."
+            exit 0
+          fi
+          git commit -m "Rebuild STS and the browsable specification from ${GITHUB_SHA::8}
+
+          Generated by .github/workflows/publish.yml. Edit source/, model/ or
+          manifest.json — never artifacts/ or docs/, which the next build discards."
+          git push
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: specification
+          path: |
+            artifacts/
+            docs/
+          if-no-files-found: warn
