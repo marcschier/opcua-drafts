@@ -82,7 +82,7 @@ Every operation that creates, modifies or deletes registry content or metadata s
 
 Registry reads should use a secured channel. An implementation may expose read-only Browse, Read and FileType `Open`/`Read`/`Close` operations over `MessageSecurityMode` `None` when its deployment policy permits this. A client using such an endpoint shall not infer authenticity, integrity or confidentiality for the returned registry metadata or document bytes.
 
-## Information model {#sec-information-model}
+## Types the prose does not introduce {#sec-types-not-introduced}
 
 The abstract base namespace is `http://opcfoundation.org/UA/xRegistry/`. Draft numeric NodeIds use the provisional `63000+` block; final NodeIds are assigned by the OPC Foundation. The four base ObjectTypes and their members are the normative node reference in Annex A. This clause describes their intent. Every Variable in the model has an explicit TypeDefinition: fixed attributes are `PropertyType` Variables, and each dynamic label is a `PropertyType` Variable under an `AttributesType` container (§6.6). A server **shall** set each group's, resource's and version's BrowseName to its identifier (`GroupId` / `ResourceId` / `VersionId`) so a client selects and filters entities directly from Browse results without a Read per candidate; the [*xRegistry — OPC UA API*](xRegistry-OPC-UA-Api.md) relies on this for read-free collection filtering. §6.9 defines how a `GroupId` and a `ResourceId` are constructed and requires a human-readable `Name` beside each.
 

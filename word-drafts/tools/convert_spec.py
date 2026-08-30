@@ -116,7 +116,7 @@ def attach_tables(lines: list[str], model, doc_ns_index: int, defined_in: dict):
 
     missing = [n for n in declared if n not in placed]
     if missing:
-        tail = ['', '## Information model {#sec-information-model}', '',
+        tail = ['', '## Types the prose does not introduce {#sec-types-not-introduced}', '',
                 'The types below are declared by the model. Each clause was generated because no '
                 'clause of this document named its type; fold them into the prose where they '
                 'belong.', '']

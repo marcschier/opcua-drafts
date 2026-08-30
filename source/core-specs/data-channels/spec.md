@@ -1069,7 +1069,7 @@ Over `opc.wt` the same rule applies. WebTransport has server-initiated streams, 
 
 The payoff is the whole point of the feature: one outbound connection from the plant device, zero inbound ports on the Server, no second media port on the Client, and media and control both flowing under the same SecureChannel, certificates, Session and user authorization.
 
-## Information model {#sec-information-model}
+## Types the prose does not introduce {#sec-types-not-introduced}
 
 The types below are declared by the model. Each clause was generated because no clause of this document named its type; fold them into the prose where they belong.
 
@@ -1389,4 +1389,3 @@ Links a functional Object or Variable to the DataChannelSource endpoint through 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
 | DCH-Model |  |  |  |  |  |
-

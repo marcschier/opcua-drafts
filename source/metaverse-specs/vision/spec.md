@@ -110,7 +110,7 @@ graph TD
 
 ---
 
-## Information model {#sec-information-model}
+## Types the prose does not introduce {#sec-types-not-introduced}
 
 The model has **25 ObjectTypes**, and they exist in five groups, each answering one question a vision integration has to answer:
 
@@ -1879,7 +1879,7 @@ A client that does not recognise a `PixelFormat` **shall not** guess: it obtains
 
 There is no published GenICam-to-OPC-UA mapping specification. This annex is a binding for this model only, and does not claim to be one.
 
-## Information model {#sec-information-model}
+## Types the prose does not introduce {#sec-types-not-introduced}
 
 The types below are declared by the model. Each clause was generated because no clause of this document named its type; fold them into the prose where they belong.
 
@@ -2903,4 +2903,3 @@ Links a result to the inference pipeline that produced it.
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
 | Vision ReferenceTypes |  |  |  |  |  |
-

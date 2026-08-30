@@ -73,4 +73,3 @@ An xRegistry ResourceType whose file content is one concrete schema document (Av
 | BrowseName | NodeId | TypeDefinition | Note |
 |---|---|---|---|
 | SchemaRegistry | ns=2;i=62100 | [SchemaRegistryType](#type-SchemaRegistryType) | Server-wide in-server Schema Registry, a well-known component of the Server object. A server that supports PubSub may additionally reference this object from PublishSubscribe. |
-

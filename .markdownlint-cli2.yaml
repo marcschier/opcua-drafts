@@ -29,6 +29,12 @@ config:
   # First line need not be a top-level heading (some generated fragments start with an anchor).
   MD041: false
 
+  # Link fragments: markdownlint resolves a fragment against GitHub heading slugs, and the
+  # OPC UA specification template anchors a heading with a `{#anchor}` attribute instead, so
+  # every valid cross-reference in a converted document looks broken to it. The publisher
+  # reports an unresolved cross-reference on its source line, and `check_links.py` understands
+  # the attribute form, so this is checked twice already -- just not by this rule.
+  MD051: false
 globs:
   - "**/*.md"
 

@@ -109,7 +109,7 @@ flowchart TB
   Bridge -->|OTLP metrics/logs/traces| Coll
 ```
 
-## Information model {#sec-information-model}
+## Types the prose does not introduce {#sec-types-not-introduced}
 
 The full node reference — every type, member, DataType and well-known instance — is generated in **[Annex A](#anx-a)**. This clause states the intent and the normative rules. All types are defined in this specification's own namespace `http://opcfoundation.org/UA/ObservabilityExport/` (which requires the base OPC UA namespace); NodeIds are draft.
 
@@ -618,7 +618,7 @@ The NodeSet, CSV and Annex A are generated from a single source of truth (`cloud
 kind: annex-a
 ```
 
-## Information model {#sec-information-model}
+## Types the prose does not introduce {#sec-types-not-introduced}
 
 The types below are declared by the model. Each clause was generated because no clause of this document named its type; fold them into the prose where they belong.
 
@@ -851,4 +851,3 @@ Links the server-wide Observability registry to the ObservabilityBindingGroups i
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
 | OBS-Discovery |  |  |  |  |  |
-

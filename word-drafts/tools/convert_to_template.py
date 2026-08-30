@@ -338,6 +338,8 @@ def tidy(lines: list[str]) -> list[str]:
             out.append('')
     while out and not out[0]:
         out.pop(0)
+    while out and not out[-1]:
+        out.pop()
     # A heading followed by a blank we just added, then the blank that was already there.
     squeezed = []
     for line in out:
