@@ -1,0 +1,325 @@
+"""Convert a specification from this repository's dialect to the OPC UA template's.
+
+Two halves, because they fail differently.
+
+`manifest` is a schema translation. Every field the template's `manifest.json` wants -- the
+identity, the normative references, the abbreviations, the namespace table -- is already in
+`word-drafts/tools/specs/<spec>.json` in a different shape, so this half is a rename and a
+reshape and it either succeeds or names the field it could not find.
+
+`prose` is a rewrite of the markdown, and it is where guessing would do damage. It does only
+what is mechanical and reversible: strip the number from a heading and give it the anchor its
+text implies, move an `<a id="...">` onto the heading that follows it, repoint the links that
+cited either, and delete a `reference.opcfoundation.org` link while keeping its text, because
+`OPC030` forbids the link and the generated clauses carry the address. Everything else -- a
+table that needs a caption, a clause that has to become a directive, a figure to extract -- is
+reported with its line number and left alone, because a person has to decide what it means.
+
+Usage:
+    python convert_to_template.py manifest <spec> --doc-number "OPC 99006-1" --out <path>
+    python convert_to_template.py prose <markdown> [--write]
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import pathlib
+import re
+import sys
+
+HERE = pathlib.Path(__file__).resolve().parent
+REPO = HERE.parent.parent
+
+# A numbered heading in our dialect: `## 4.3 Namespaces`, `### 6.1 [GeneratorSetType](#type-X)`.
+NUMBERED_HEADING = re.compile(r'^(#{1,6})\s+(\d+(?:\.\d+)*)\s+(.*?)\s*$')
+PLAIN_HEADING = re.compile(r'^(#{1,6})\s+(.*?)\s*$')
+HTML_ANCHOR = re.compile(r'^\s*<a\s+id="([^"]+)"\s*>\s*</a>\s*$')
+REFERENCE_LINK = re.compile(r'\[([^\]]+)\]\(https?://reference\.opcfoundation\.org/[^)]*\)')
+INLINE_LINK = re.compile(r'\[([^\]]*)\]\(#([^)]+)\)')
+MERMAID_FENCE = re.compile(r'^```mermaid\s*$')
+TABLE_ROW = re.compile(r'^\s*\|')
+SECTION_REF = re.compile(r'§\s*[\d.]+')
+
+
+def anchor(text: str) -> str:
+    """A heading anchor: lower case, non-alphanumerics collapsed to a single dash."""
+    text = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', text)   # links become their text
+    text = re.sub(r'[`*_~]', '', text)
+    text = re.sub(r'[^a-z0-9]+', '-', text.lower())
+    return text.strip('-')
+
+
+# --------------------------------------------------------------------------- manifest
+
+LICENCE = {
+    'spdxId': 'LicenseRef-OPC-Specification-1.15',
+    'copyright': 'Copyright (c) 2026, OPC Federation AISBL',
+    'url': 'https://opcfoundation.org/license/specifications/1.15/',
+}
+
+
+def build_manifest(cfg: dict, doc_number: str) -> tuple[dict, list[str]]:
+    """Reshape a Word build config into a template manifest, reporting what is not there."""
+    findings = []
+    ident = cfg.get('identity') or {}
+
+    def need(key):
+        value = ident.get(key)
+        if not value:
+            findings.append('identity.%s is not in the Word config; fill it in by hand' % key)
+        return value or ''
+
+    # Our configs carry the cover title in upper case (`OPC UA FOR SCHEMA REGISTRY`) beside a
+    # properly cased short one (`Schema Registry`). Case-folding the former turns `OPC UA` into
+    # `Opc Ua`, so the title is composed from the short one instead, and a config that does not
+    # follow the pattern is reported rather than guessed at.
+    main_title = ident.get('mainTitle') or ''
+    short = need('title')
+    if re.match(r'^OPC UA FOR ', main_title):
+        title = 'OPC UA for %s' % short
+        # The cover title may say more than the short one -- "OPC UA FOR APACHE ARROW ENCODING"
+        # beside "Arrow Encoding" -- and composing from the short one would quietly drop a word.
+        # Case-folding the cover title instead would turn "OPC UA" into "Opc Ua", so neither is
+        # safe on its own; where they disagree, say so and let a person choose.
+        covered = set(re.findall(r'[A-Za-z0-9]+', main_title[len('OPC UA FOR '):].lower()))
+        if covered - set(re.findall(r'[A-Za-z0-9]+', short.lower())):
+            findings.append('identity.mainTitle is %r but identity.title is %r; the manifest '
+                            'title is composed from the latter, so check it reads as intended'
+                            % (main_title, short))
+    elif main_title:
+        title = main_title
+        findings.append('identity.mainTitle is %r, which does not begin "OPC UA FOR"; check the '
+                        'capitalisation of identity.title in the manifest' % main_title)
+    else:
+        title = short
+
+    manifest = {
+        'schemaVersion': 1,
+        'sourceOfTruth': 'markdown',
+        'identity': {
+            'docNumber': doc_number,
+            'partName': need('partName'),
+            'title': title,
+            'shortTitle': short,
+            'shortName': need('shortName'),
+            # `otherOrganization` names a partner on a joint work; the template's single
+            # `organization` field is printed as the Author and written into the STS as the
+            # copyright holder, so a joint work names both.
+            'organization': ('OPC Foundation and the %s' % ident['otherOrganization']
+                             if ident.get('otherOrganization') else 'OPC Foundation'),
+            'capabilityIdentifier': ident.get('capabilityIdentifier', ''),
+            'namespaceUri': need('namespaceUri'),
+            'version': need('version'),
+            'publicationDate': need('publicationDate'),
+            'releaseType': ident.get('releaseType', 'Draft'),
+            'gitHubTag': '',
+            'mantisUrl': 'https://mantis.opcfoundation.org',
+            'license': dict(LICENCE),
+        },
+    }
+
+    nodeset = (cfg.get('source') or {}).get('nodeset')
+    if nodeset:
+        manifest['model'] = {
+            'nodeset': 'model/%s' % os.path.basename(nodeset),
+            'generated': True,
+        }
+    else:
+        findings.append('no nodeset in the Word config, so the model block is omitted and the '
+                        'build will report "model: none" - correct for a specification that '
+                        'defines none, a finding for one that does')
+
+    manifest['markdown'] = {'main': 'spec.md', 'figures': 'figures'}
+    for key in sorted((cfg.get('additionalMarkdown') or {})):
+        manifest['markdown'][key] = '%s.md' % key
+
+    manifest['figureGenerators'] = {
+        '.drawio.svg': '',
+        '.pptx': {'win': 'tools/office-to-svg.ps1', 'default': 'tools/office-to-svg.sh'},
+    }
+    flat = doc_number.replace(' ', '-')
+    manifest['output'] = {
+        'sts': 'artifacts/%s.xml' % flat,
+        'documentationCsv': 'artifacts/%s-documentation.csv' % flat,
+    }
+
+    # `id` becomes the anchor a `[](#ref-<id>)` citation names, and the template writes it in
+    # lower case; ours are mixed (`UAPart1`), so they are folded here rather than in the prose.
+    manifest['normativeReferences'] = [
+        {'id': r['id'].lower(), 'label': r['label'], 'title': r['title'], 'url': r.get('url', '')}
+        for r in (cfg.get('normativeReferences') or [])
+    ]
+    if not manifest['normativeReferences']:
+        findings.append('no normativeReferences in the Word config; clause 2 would be empty')
+
+    manifest['terms'] = []
+    findings.append('terms are not carried by the Word config: take them from the document\'s '
+                    'own Terms clause, which this conversion deletes')
+    manifest['abbreviations'] = [list(a) for a in (cfg.get('abbreviations') or [])]
+
+    index = ident.get('namespaceIndexInDocument')
+    if index is None:
+        findings.append('identity.namespaceIndexInDocument is not set, so the namespace table '
+                        'cannot be built; write namespaces by hand')
+    else:
+        manifest['namespaces'] = {
+            'documentNamespaceIndex': index,
+            'table': [{
+                'uri': 'http://opcfoundation.org/UA/',
+                'index': 0,
+                'definedBy': 'uapart5',
+                'description': 'Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA '
+                               'specification. This namespace shall have namespace index 0.',
+            }],
+        }
+        if index != 0:
+            manifest['namespaces']['table'].append({
+                'uri': ident.get('namespaceUri', ''),
+                'index': index,
+                'description': 'Namespace for *NodeIds* and *BrowseNames* defined in this model.',
+            })
+        findings.append('the namespace table holds only namespace 0 and this document\'s own; '
+                        'add every namespace the model or its dependencies reach, or the build '
+                        'reports an unknown namespace')
+
+    return manifest, findings
+
+
+# --------------------------------------------------------------------------- prose
+
+def convert_prose(lines: list[str]) -> tuple[list[str], list[str]]:
+    """Rewrite what is mechanical; report what needs a decision."""
+    findings = []
+    out = []
+    renames = {}          # old anchor -> new anchor
+    pending_html = None   # an <a id> waiting for the heading it labels
+    in_fence = False
+    seen = set()
+
+    for number, line in enumerate(lines, 1):
+        if line.startswith('```'):
+            in_fence = not in_fence
+            if MERMAID_FENCE.match(line):
+                findings.append('%d: mermaid fence - extract it to figures/<name>.mmd and cite '
+                                'it with a {figure} directive; note that the Word writer cannot '
+                                'embed one, so a .drawio.svg or .pptx is the safer source'
+                                % number)
+            out.append(line)
+            continue
+        if in_fence:
+            out.append(line)
+            continue
+
+        html = HTML_ANCHOR.match(line)
+        if html:
+            pending_html = html.group(1)
+            continue      # the anchor moves onto the heading below it
+
+        heading = NUMBERED_HEADING.match(line) or PLAIN_HEADING.match(line)
+        if heading:
+            hashes = heading.group(1)
+            text = heading.group(3) if heading.re is NUMBERED_HEADING else heading.group(2)
+            if '{#' in text:
+                out.append(line)
+                pending_html = None
+                continue
+            slug = anchor(text)
+            prefix = 'anx' if re.match(r'^annex\b', slug) else 'sec'
+            slug = re.sub(r'^annex-[a-z]-*', '', slug) or 'annex'
+            new = '%s-%s' % (prefix, slug)
+            while new in seen:
+                new += '-x'
+            seen.add(new)
+            if pending_html:
+                renames[pending_html] = new
+                pending_html = None
+            if heading.re is NUMBERED_HEADING:
+                renames.setdefault(anchor(text), new)
+            attrs = ' annex=normative' if prefix == 'anx' else ''
+            out.append('%s %s {#%s%s}' % (hashes, text.strip(), new, attrs))
+            continue
+
+        pending_html = None
+        out.append(line)
+
+    # Second pass: repoint the citations, and strip the links OPC030 forbids.
+    result = []
+    for number, line in enumerate(out, 1):
+        before = line
+        line = REFERENCE_LINK.sub(r'\1', line)
+        if line != before:
+            findings.append('%d: reference.opcfoundation.org link removed (OPC030); the '
+                            'designation links itself from the normative references' % number)
+        line = INLINE_LINK.sub(
+            lambda m: '[%s](#%s)' % (m.group(1), renames.get(m.group(2), m.group(2))), line)
+        for stale in INLINE_LINK.finditer(line):
+            target = stale.group(2)
+            if target not in seen and target not in renames.values():
+                findings.append('%d: link to #%s has no anchor in this file; it may be in an '
+                                'included part, or it may be stale' % (number, target))
+        if SECTION_REF.search(line):
+            findings.append('%d: a section reference by number - the template derives numbers, '
+                            'so write [](#sec-...) and let the renderer fill it in' % number)
+        if TABLE_ROW.match(line) and not TABLE_ROW.match(out[number - 2] if number > 1 else ''):
+            findings.append('%d: a table starts here with no caption above it; every table '
+                            'needs *Table - X* {#tbl-x}, and one documenting a type needs '
+                            'defines=' % number)
+        result.append(line)
+
+    return result, findings
+
+
+# --------------------------------------------------------------------------- entry
+
+def main(argv: list[str]) -> int:
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest='verb', required=True)
+
+    m = sub.add_parser('manifest', help='a Word build config -> a template manifest.json')
+    m.add_argument('spec', help='the name of a word-drafts/tools/specs/<spec>.json')
+    m.add_argument('--doc-number', required=True, help='e.g. "OPC 99006-1"')
+    m.add_argument('--out', type=pathlib.Path)
+
+    p = sub.add_parser('prose', help='rewrite one markdown file into the template dialect')
+    p.add_argument('markdown', type=pathlib.Path)
+    p.add_argument('--write', action='store_true', help='edit in place instead of reporting')
+
+    args = ap.parse_args(argv)
+
+    if args.verb == 'manifest':
+        path = HERE / 'specs' / ('%s.json' % args.spec)
+        if not path.exists():
+            print('no such Word config: %s' % path, file=sys.stderr)
+            return 2
+        cfg = json.loads(path.read_text(encoding='utf-8'))
+        manifest, findings = build_manifest(cfg, args.doc_number)
+        text = json.dumps(manifest, indent=2, ensure_ascii=False) + '\n'
+        if args.out:
+            args.out.parent.mkdir(parents=True, exist_ok=True)
+            args.out.write_text(text, encoding='utf-8', newline='\n')
+            print('wrote %s' % args.out)
+        else:
+            print(text)
+    else:
+        lines = args.markdown.read_text(encoding='utf-8').splitlines()
+        converted, findings = convert_prose(lines)
+        if args.write:
+            args.markdown.write_text('\n'.join(converted) + '\n',
+                                     encoding='utf-8', newline='\n')
+            print('rewrote %s (%d lines)' % (args.markdown, len(converted)))
+        else:
+            print('would rewrite %s (%d lines); pass --write to apply'
+                  % (args.markdown, len(converted)))
+
+    if findings:
+        print('\n%d finding(s) for a person to resolve:' % len(findings), file=sys.stderr)
+        for f in findings:
+            print('  %s' % f, file=sys.stderr)
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main(sys.argv[1:]))
