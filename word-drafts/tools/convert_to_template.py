@@ -39,6 +39,7 @@ HTML_ANCHOR = re.compile(r'^\s*<a\s+id="([^"]+)"\s*>\s*</a>\s*$')
 REFERENCE_LINK = re.compile(r'\[([^\]]+)\]\(https?://reference\.opcfoundation\.org/[^)]*\)')
 INLINE_LINK = re.compile(r'\[([^\]]*)\]\(#([^)]+)\)')
 MERMAID_FENCE = re.compile(r'^```mermaid\s*$')
+ATTR_ID_RE = re.compile(r'\{#([A-Za-z0-9][A-Za-z0-9_.:-]*)')
 TABLE_ROW = re.compile(r'^\s*\|')
 SECTION_REF = re.compile(r'§\s*[\d.]+')
 
@@ -189,7 +190,127 @@ def build_manifest(cfg: dict, doc_number: str) -> tuple[dict, list[str]]:
 
 # --------------------------------------------------------------------------- prose
 
-def convert_prose(lines: list[str]) -> tuple[list[str], list[str]]:
+def strip_front_matter(lines: list[str]) -> tuple[list[str], list[str]]:
+    """Drop the title and the banner above the first clause.
+
+    A document in this repository opens with an H1 and a status banner naming the release, the
+    namespace and the publication date. All of that is identity, and identity is in
+    `manifest.json`: the tool builds the cover from it. Left in the markdown the H1 becomes
+    clause 1, and the build then reports that clause 1 is not Scope -- correctly, because the
+    title is sitting in front of it.
+    """
+    for i, line in enumerate(lines):
+        if re.match(r'^##\s', line):
+            if i == 0:
+                return lines, []
+            return lines[i:], ['%d line(s) of title and banner removed from the top; the '
+                               'cover is built from manifest.json -> identity, so check that '
+                               'nothing normative was in them' % i]
+    return lines, ['no ## clause found, so nothing was treated as front matter']
+
+
+def strip_generated(lines: list[str], has_model: bool = True) -> tuple[list[str], list[str], dict]:
+    """Remove the clauses the publisher writes, and ask for them where they belong.
+
+    A specification with no model has no generated annex, so its Annex A is one somebody wrote
+    and is kept. That is why `has_model` is asked for rather than assumed: the two cases look
+    identical in the markdown and only the manifest can tell them apart.
+
+    Clause 2 and clause 3 are generated from `manifest.json`, and the Annex A our documents
+    carry was generated into the markdown by the model generator. Leaving any of them in place
+    publishes the clause twice and leaves the copy that can drift from the model.
+
+    The annex is where the old anchors live -- `<a id="type-SomeType">` -- so removing it is
+    also what makes the `#type-...` citations in the prose dangle, which is a finding rather
+    than damage: the clause that documents a type is where that citation should point, and only
+    a person can say which one that is.
+    """
+    findings = []
+    out = []
+    skipping = None
+    redirect = {}
+    for line in lines:
+        heading = re.match(r'^(#{1,6})\s+(.*?)(\s*\{#([^}\s]+)[^}]*\})?\s*$', line)
+        if heading:
+            level = len(heading.group(1))
+            slug = heading.group(4) or ''
+            if skipping is not None and level <= skipping[0]:
+                skipping = None
+            if skipping is None:
+                if slug == 'sec-normative-references':
+                    skipping = (level, None)
+                    findings.append('clause 2 removed; it is generated from '
+                                    'manifest.json -> normativeReferences')
+                    continue
+                if re.match(r'^sec-terms\b', slug) or slug == 'sec-terms-and-abbreviations':
+                    skipping = (level, None)
+                    findings.append('clause 3 removed; terms and abbreviations are generated '
+                                    'from manifest.json, and a {clause} kind: terms directive '
+                                    'switches the Terms subclause on')
+                    continue
+                if slug == 'anx-a' and has_model:
+                    skipping = (level, 'anx-a')
+                    findings.append('the generated Annex A removed and replaced by a directive; '
+                                    'every #type-... citation in the prose pointed into it and '
+                                    'now needs repointing at the clause documenting that type')
+                    out += ['## Information model {#anx-a annex=normative}', '',
+                            '```{clause}', 'kind: annex-a', '```', '']
+                    continue
+                if slug.startswith('anx-'):
+                    findings.append('%s is an annex this document wrote, so it is kept; only '
+                                    'Annex A is generated from the model' % slug)
+        if skipping is None:
+            out.append(line)
+        else:
+            # Remember every anchor going away, so a citation of one can be sent to whatever
+            # replaces it -- Annex A is replaced by the directive, and a heading inside it is
+            # therefore the directive too. A clause with no replacement maps to nothing and
+            # its citations are reported.
+            for gone in ATTR_ID_RE.findall(line):
+                redirect[gone] = skipping[1]
+    return out, findings, redirect
+
+
+def extract_terms(lines: list[str]) -> tuple[list[dict], list[str]]:
+    """Read the Terms clause's table into the manifest's `terms` list before it is deleted.
+
+    Clause 3 is generated from `manifest.json`, so the conversion deletes the authored one --
+    and with it every definition the working group wrote, unless they are carried across. Our
+    documents state them as a two-column table under a "Terms" heading, which is enough to
+    read: the first column is the term, the second its definition.
+
+    A term is written lower case, because that is how ISO renders one and how the generated
+    clause prints it; the `<a id="term-...">` some of them carry is dropped, because the
+    generated clause anchors them itself.
+    """
+    findings = []
+    terms = []
+    inside = False
+    for line in lines:
+        heading = re.match(r'^(#{1,6})\s+(.*)$', line)
+        if heading:
+            if inside:
+                break
+            inside = bool(re.search(r'\bterms?\b', heading.group(2), re.I))
+            continue
+        if not inside or not line.startswith('|'):
+            continue
+        cells = [c.strip() for c in line.strip().strip('|').split('|')]
+        if len(cells) < 2 or set(cells[0]) <= set('- :') or cells[0].lower() == 'term':
+            continue
+        term = re.sub(r'<a\s+id="[^"]*"\s*>\s*</a>', '', cells[0]).strip()
+        term = re.sub(r'[`*]', '', term).strip()
+        definition = re.sub(r'<a\s+id="[^"]*"\s*>\s*</a>', '', cells[1]).strip()
+        if term and definition:
+            terms.append({'term': term[:1].lower() + term[1:], 'definition': definition})
+    if terms:
+        findings.append('%d term(s) carried from the Terms clause into manifest.json; check '
+                        'the wording, because a definition written for a table is not always a '
+                        'noun phrase' % len(terms))
+    return terms, findings
+
+
+def convert_prose(lines: list[str], has_model: bool = True) -> tuple[list[str], list[str]]:
     """Rewrite what is mechanical; report what needs a decision."""
     findings = []
     out = []
@@ -226,23 +347,55 @@ def convert_prose(lines: list[str]) -> tuple[list[str], list[str]]:
                 pending_html = None
                 continue
             slug = anchor(text)
-            prefix = 'anx' if re.match(r'^annex\b', slug) else 'sec'
-            slug = re.sub(r'^annex-[a-z]-*', '', slug) or 'annex'
-            new = '%s-%s' % (prefix, slug)
+            annex = re.match(r'^annex-([a-z])\b-*(.*)$', slug)
+            if annex:
+                # Keep the letter in the anchor so a later pass can tell Annex A -- which our
+                # documents generate from the model -- from an annex somebody wrote. The label
+                # is derived by the renderer, so the heading text drops "Annex X —".
+                new = 'anx-%s' % annex.group(1)
+                text = re.sub(r'^\s*Annex\s+[A-Za-z]\s*[-\u2013\u2014:]*\s*', '', text.strip())
+                attrs = ' annex=normative'
+            else:
+                new = 'sec-%s' % slug
+                attrs = ''
             while new in seen:
                 new += '-x'
             seen.add(new)
             if pending_html:
                 renames[pending_html] = new
                 pending_html = None
-            if heading.re is NUMBERED_HEADING:
-                renames.setdefault(anchor(text), new)
-            attrs = ' annex=normative' if prefix == 'anx' else ''
+            # Register the slug GitHub would have given this heading, because that is what the
+            # old in-document links used. Both forms occur -- a numbered heading was cited by
+            # its slug and an unnumbered one by the slug of its whole title -- so the original
+            # text is what has to be slugged, before the annex label is taken off it.
+            renames.setdefault(anchor(heading.group(3) if heading.re is NUMBERED_HEADING
+                                      else heading.group(2)), new)
             out.append('%s %s {#%s%s}' % (hashes, text.strip(), new, attrs))
             continue
 
-        pending_html = None
+        pending_html = None if line.strip() else pending_html
         out.append(line)
+
+    # Drop the clauses the publisher writes for itself, *before* the citations are repointed.
+    # The generated Annex A is where the old `<a id="type-...">` anchors lived, so a rename
+    # onto one of its headings would point at something this pass is about to delete. Pruning
+    # the map to the anchors that survive leaves those citations as `#type-...`, which is what
+    # lets a later pass repoint them at the clause that documents the type.
+    out, stripped, redirect = strip_generated(out, has_model)
+    surviving = set()
+    for line in out:
+        surviving |= set(ATTR_ID_RE.findall(line))
+    # A rename onto a heading that has gone follows it to its replacement, if it has one --
+    # except a `type-...` citation, which is deliberately left alone so the pass that places
+    # the node tables can send it to the clause that documents that type. Sending it to the
+    # annex directive instead would be worse than leaving it dangling: it would resolve, and
+    # it would resolve to the wrong place.
+    renames = {old: (new if old.startswith('type-') else redirect.get(new, new))
+               for old, new in renames.items()
+               if new in surviving or (redirect.get(new) and not old.startswith('type-'))}
+    renames.update({gone: to for gone, to in redirect.items()
+                    if to and not gone.startswith('type-')})
+    seen &= surviving
 
     # Second pass: repoint the citations, and strip the links OPC030 forbids.
     result = []
@@ -254,6 +407,19 @@ def convert_prose(lines: list[str]) -> tuple[list[str], list[str]]:
                             'designation links itself from the normative references' % number)
         line = INLINE_LINK.sub(
             lambda m: '[%s](#%s)' % (m.group(1), renames.get(m.group(2), m.group(2))), line)
+        # A citation of a term defined in the clause this conversion deleted becomes the term
+        # marker instead of a link. `*Term*` is what AUTHORING.md asks for -- it feeds the term
+        # index -- and the generated Terms clause is where the definition now lives, so a link
+        # to a particular anchor is both broken and unnecessary.
+        def term_marker(m):
+            if m.group(2).startswith('term-') and m.group(2) not in surviving:
+                return '*%s*' % re.sub(r'[`*]', '', m.group(1))
+            return m.group(0)
+        before_terms = line
+        line = INLINE_LINK.sub(term_marker, line)
+        if line != before_terms:
+            findings.append('%d: a citation of a term became the term marker *...*, because '
+                            'the Terms clause it pointed into is now generated' % number)
         for stale in INLINE_LINK.finditer(line):
             target = stale.group(2)
             if target not in seen and target not in renames.values():
@@ -268,7 +434,9 @@ def convert_prose(lines: list[str]) -> tuple[list[str], list[str]]:
                             'defines=' % number)
         result.append(line)
 
-    return result, findings
+    # Last: drop the title and the banner above the first clause.
+    result, front = strip_front_matter(result)
+    return result, findings + stripped + front
 
 
 # --------------------------------------------------------------------------- entry

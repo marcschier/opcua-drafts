@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "sourceOfTruth": "markdown",
+  "identity": {
+    "docNumber": "OPC 99011-1",
+    "partName": "Vision",
+    "title": "OPC UA for Vision",
+    "shortTitle": "Vision",
+    "shortName": "VIS",
+    "organization": "OPC Foundation",
+    "capabilityIdentifier": "VIS",
+    "namespaceUri": "http://opcfoundation.org/UA/Vision/",
+    "version": "0.1.0",
+    "publicationDate": "2026-07-26",
+    "releaseType": "Draft",
+    "gitHubTag": "",
+    "mantisUrl": "https://mantis.opcfoundation.org",
+    "license": {
+      "spdxId": "LicenseRef-OPC-Specification-1.15",
+      "copyright": "Copyright (c) 2026, OPC Federation AISBL",
+      "url": "https://opcfoundation.org/license/specifications/1.15/"
+    }
+  },
+  "model": {
+    "nodeset": "model/Opc.Ua.Vision.NodeSet2.xml",
+    "generated": true
+  },
+  "markdown": {
+    "main": "spec.md",
+    "figures": "figures"
+  },
+  "figureGenerators": {
+    ".drawio.svg": "",
+    ".pptx": {
+      "win": "tools/office-to-svg.ps1",
+      "default": "tools/office-to-svg.sh"
+    }
+  },
+  "output": {
+    "sts": "artifacts/OPC-99011-1.xml",
+    "documentationCsv": "artifacts/OPC-99011-1-documentation.csv"
+  },
+  "normativeReferences": [
+    {
+      "id": "uapart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "uapart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "uapart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "uapart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "uapart8",
+      "label": "OPC 10000-8",
+      "title": "OPC Unified Architecture - Part 8: Data Access",
+      "url": "http://www.opcfoundation.org/documents/10000-8/"
+    },
+    {
+      "id": "uapart9",
+      "label": "OPC 10000-9",
+      "title": "OPC Unified Architecture - Part 9: Alarms and Conditions",
+      "url": "http://www.opcfoundation.org/documents/10000-9/"
+    },
+    {
+      "id": "uapart14",
+      "label": "OPC 10000-14",
+      "title": "OPC Unified Architecture - Part 14: PubSub",
+      "url": "http://www.opcfoundation.org/documents/10000-14/"
+    },
+    {
+      "id": "uapart100",
+      "label": "OPC 10000-100",
+      "title": "OPC Unified Architecture - Part 100: Devices",
+      "url": "http://www.opcfoundation.org/documents/10000-100/"
+    },
+    {
+      "id": "ua40100",
+      "label": "OPC 40100-1",
+      "title": "OPC UA for Machine Vision - Part 1: Control, Configuration Management, Recipe Management and Result Management",
+      "url": "http://www.opcfoundation.org/documents/40100-1/"
+    }
+  ],
+  "terms": [
+    {
+      "term": "sensor",
+      "definition": "A source of imagery or range data, physical or simulated. Modelled as `VisionSensorType`."
+    },
+    {
+      "term": "media endpoint",
+      "definition": "A described access point at which media can be obtained. Modelled as `MediaEndpointType`."
+    },
+    {
+      "term": "clip",
+      "definition": "A single still image associated with a moment or a result."
+    },
+    {
+      "term": "stream",
+      "definition": "Continuous media, obtained by leasing a session."
+    },
+    {
+      "term": "inline delivery",
+      "definition": "The optional publication of an encoded clip as an OPC UA `ByteString`, subject to a size limit."
+    },
+    {
+      "term": "result",
+      "definition": "A published outcome of interpreting sensor data — an inspection verdict or a set of detections."
+    },
+    {
+      "term": "characteristic",
+      "definition": "One measured property of an inspected part, with nominal, actual, tolerance and uncertainty."
+    },
+    {
+      "term": "detection",
+      "definition": "One detected instance, with a class, a score, and geometry."
+    },
+    {
+      "term": "deployment",
+      "definition": "A model made executable at a stated location."
+    },
+    {
+      "term": "on-server / off-server inference",
+      "definition": "Whether the computation happens in the Server's process or elsewhere. Distinguished by `VisionInferenceLocationEnum`, and by nothing else."
+    },
+    {
+      "term": "sim/real symmetry",
+      "definition": "The property that a physical and a simulated sensor expose the same members with the same meaning, so a client works against either without change (§4.3)."
+    },
+    {
+      "term": "point cloud",
+      "definition": "An unordered set of 3-D points, each at least an (x, y, z) coordinate in a named frame and optionally carrying intensity, colour or a normal. It is the native output of a depth or laser-triangulation sensor. A single frame is routinely megabytes, so this specification obtains one through a media endpoint and never as an OPC UA array (§5.6)."
+    },
+    {
+      "term": "6-DoF pose",
+      "definition": "A rigid-body placement with **six degrees of freedom** — three of position (x, y, z) and three of orientation — expressed relative to a named frame. It is what a robot controller needs in order to move to an object: position alone cannot say how to approach or grip it. Carried by `VisionPose3DDataType`, whose orientation is a unit quaternion ordered (x, y, z, w) per §5.12."
+    },
+    {
+      "term": "frame (coordinate frame)",
+      "definition": "A named right-handed Cartesian coordinate system that a pose or a measurement is expressed relative to. Frames form a tree through `ParentFrame`, so a pose can be re-expressed in another frame by composing the transforms between them. Modelled as `CoordinateFrameType`. Not to be confused with a *video frame*, which this specification calls an image or a clip."
+    },
+    {
+      "term": "intrinsic calibration",
+      "definition": "The parameters of the camera itself — focal lengths, principal point and lens distortion — that map a direction in space to a pixel. Needed to turn a 2-D detection into a ray."
+    },
+    {
+      "term": "extrinsic calibration",
+      "definition": "The rigid transform between two frames, for example from a camera to the robot flange it is bolted to. Needed to turn a ray or a pose into something the robot can act on."
+    },
+    {
+      "term": "hand-eye calibration",
+      "definition": "The particular extrinsic calibration relating a camera to a robot. *Eye-in-hand* means the camera moves with the tool; *eye-to-hand* means it is fixed and watches the robot."
+    },
+    {
+      "term": "ground truth",
+      "definition": "A label known to be correct — from a simulator, which knows the true answer by construction, or from a human correcting a result. Used to train and to evaluate a model, and never to be confused with a prediction (§10)."
+    },
+    {
+      "term": "inference",
+      "definition": "One execution of a trained AI model over sensor data to produce a result."
+    },
+    {
+      "term": "facet",
+      "definition": "A named, individually claimable subset of this specification's requirements, published in `ServerProfileArray` so a client can discover what a Server supports. Defined in clause 11; *VIS-Base* is the only mandatory one."
+    },
+    {
+      "term": "pFNC",
+      "definition": "Pixel Format Naming Convention (EMVA GenICam). Used for pixel format strings."
+    },
+    {
+      "term": "sFNC",
+      "definition": "Standard Features Naming Convention (EMVA GenICam). Used for acquisition parameter names."
+    },
+    {
+      "term": "tCP",
+      "definition": "Tool centre point (ISO 9787). A frame role, not the transport protocol."
+    }
+  ],
+  "abbreviations": [
+    [
+      "AI",
+      "Artificial Intelligence"
+    ],
+    [
+      "FOV",
+      "Field Of View"
+    ],
+    [
+      "HDR",
+      "High Dynamic Range"
+    ],
+    [
+      "ROI",
+      "Region Of Interest"
+    ],
+    [
+      "URI",
+      "Uniform Resource Identifier"
+    ],
+    [
+      "UTC",
+      "Coordinated Universal Time"
+    ]
+  ],
+  "namespaces": {
+    "documentNamespaceIndex": 1,
+    "table": [
+      {
+        "uri": "http://opcfoundation.org/UA/",
+        "index": 0,
+        "definedBy": "uapart5",
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0."
+      },
+      {
+        "uri": "http://opcfoundation.org/UA/Vision/",
+        "index": 1,
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model."
+      }
+    ]
+  },
+  "profiles": "profiles.json"
+}

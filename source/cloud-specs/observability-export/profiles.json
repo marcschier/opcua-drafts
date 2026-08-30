@@ -1,0 +1,65 @@
+{
+  "conformanceUnits": [
+    {
+      "name": "OBS-BindingGrouping",
+      "group": "ObservabilityExport",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "OBS-BindingInheritance",
+      "group": "ObservabilityExport",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "OBS-BrowsePathResolution",
+      "group": "ObservabilityExport",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "OBS-DataSetCardinality",
+      "group": "ObservabilityExport",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "OBS-DataSetClassIdentity",
+      "group": "ObservabilityExport",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "OBS-Discovery",
+      "group": "ObservabilityExport",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "OBS-LogsMapping",
+      "group": "ObservabilityExport",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "OBS-MetricsMapping",
+      "group": "ObservabilityExport",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "OBS-SemanticCrossReference",
+      "group": "ObservabilityExport",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "OBS-TracesMapping",
+      "group": "ObservabilityExport",
+      "category": "Server",
+      "description": ""
+    }
+  ],
+  "profiles": []
+}

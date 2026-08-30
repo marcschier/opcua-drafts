@@ -37,7 +37,7 @@
       "validateAll": "core-specs/extras/validate_all.py",
       "reverseRefs": [
         "README.md",
-        "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+        "source/cloud-specs/schema-registry/spec.md",
         "core-specs/extras/performance/OPC-UA-Encoding-Performance-Comparison.md",
         "word-drafts/tools/specs/batch.json"
       ]
@@ -48,7 +48,7 @@
       "submitted": false,
       "state": "public",
       "move": [
-        "cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml"
+        "model/Opc.Ua.ObservabilityExport.NodeSet2.xml"
       ],
       "keepPublic": [],
       "closure": [],
@@ -98,7 +98,7 @@
       "validateAll": "metaverse-specs/validate_all.py",
       "reverseRefs": [
         "README.md",
-        "core-specs/xregistry/README.md",
+        "source/core-specs/xregistry/README.md",
         "metaverse-specs/README.md",
         "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
         "word-drafts/tools/specs/batch.json"
@@ -129,8 +129,8 @@
       "reverseRefs": [
         "README.md",
         "metaverse-specs/README.md",
-        "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
-        "metaverse-specs/openusd-binding/README.md",
+        "source/metaverse-specs/openusd-binding/spec.md",
+        "source/metaverse-specs/openusd-binding/README.md",
         "word-drafts/tools/specs/batch.json",
         "word-drafts/tools/specs/openusd-binding.json"
       ]
@@ -195,7 +195,7 @@
       "validateAll": null,
       "reverseRefs": [
         "README.md",
-        "core-specs/xregistry/README.md",
+        "source/core-specs/xregistry/README.md",
         "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
         "word-drafts/tools/specs/batch.json",
         "word-drafts/tools/specs/wot-binding.json"
@@ -207,10 +207,10 @@
       "submitted": false,
       "state": "public",
       "move": [
-        "core-specs/xregistry/Opc.Ua.XRegistry.NodeSet2.xml",
-        "core-specs/xregistry/Opc.Ua.XRegistry.NodeIds.csv",
-        "core-specs/xregistry/OPC-UA-xRegistry.md",
-        "core-specs/xregistry/xRegistry-OPC-UA-Api.md"
+        "model/Opc.Ua.XRegistry.NodeSet2.xml",
+        "model/Opc.Ua.XRegistry.NodeIds.csv",
+        "source/core-specs/xregistry/spec.md",
+        "source/core-specs/xregistry/xRegistry-OPC-UA-Api.md"
       ],
       "keepPublic": [],
       "closure": [],
@@ -219,10 +219,10 @@
       "validateAll": null,
       "reverseRefs": [
         "README.md",
-        "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
-        "cloud-specs/schema-registry/README.md",
-        "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
-        "metaverse-specs/openusd-binding/README.md",
+        "source/cloud-specs/schema-registry/spec.md",
+        "source/cloud-specs/schema-registry/README.md",
+        "source/metaverse-specs/openusd-binding/spec.md",
+        "source/metaverse-specs/openusd-binding/README.md",
         "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
         "wot-specs/WoT-Connectivity/README.md",
         "word-drafts/tools/specs/batch.json"

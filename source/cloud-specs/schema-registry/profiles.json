@@ -1,0 +1,41 @@
+{
+  "conformanceUnits": [
+    {
+      "name": "SREG-Identity",
+      "group": "SchemaRegistry",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "SREG-SchemaDownload",
+      "group": "SchemaRegistry",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "SREG-SchemaVersioning",
+      "group": "SchemaRegistry",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "SREG-StructureMaterialization",
+      "group": "SchemaRegistry",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "SREG-TtlMirror",
+      "group": "SchemaRegistry",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "SREG-XRegistryApi",
+      "group": "SchemaRegistry",
+      "category": "Server",
+      "description": ""
+    }
+  ],
+  "profiles": []
+}

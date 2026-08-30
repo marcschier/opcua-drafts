@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "sourceOfTruth": "markdown",
+  "identity": {
+    "docNumber": "OPC 99012",
+    "partName": "",
+    "title": "OPC UA Vision — Research and design rationale",
+    "shortTitle": "Vision Research",
+    "shortName": "VisionResearch",
+    "organization": "OPC Foundation",
+    "capabilityIdentifier": "",
+    "namespaceUri": "http://opcfoundation.org/UA/Vision/",
+    "version": "0.1.0",
+    "publicationDate": "2026-07-26",
+    "releaseType": "Draft",
+    "gitHubTag": "",
+    "mantisUrl": "https://mantis.opcfoundation.org",
+    "license": {
+      "spdxId": "LicenseRef-OPC-Specification-1.15",
+      "copyright": "Copyright (c) 2026, OPC Federation AISBL",
+      "url": "https://opcfoundation.org/license/specifications/1.15/"
+    }
+  },
+
+  "$comment_structure": [
+    "This is not a companion specification. It records the prior art, the gaps and the",
+    "decisions behind OPC 99011-1, and it opens with why it exists rather than with Scope.",
+    "Turning the three mandatory clauses off stops them being generated and stops the build",
+    "insisting on them; the Agreement of Use stays, because the document is published by the",
+    "Foundation like any other."
+  ],
+  "structure": {
+    "scope": false,
+    "normativeReferences": false,
+    "termsDefinitionsAndAbbreviations": false,
+    "frontMatter": true
+  },
+
+  "markdown": {
+    "main": "spec.md",
+    "figures": "figures"
+  },
+
+  "output": {
+    "sts": "artifacts/OPC-99012.xml",
+    "documentationCsv": "artifacts/OPC-99012-documentation.csv"
+  },
+
+  "normativeReferences": [],
+  "terms": [],
+  "abbreviations": []
+}

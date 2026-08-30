@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "sourceOfTruth": "markdown",
+  "identity": {
+    "docNumber": "OPC 99001-1",
+    "partName": "Arrow Encoding",
+    "title": "OPC UA for Arrow Encoding",
+    "shortTitle": "Arrow Encoding",
+    "shortName": "ARROW",
+    "organization": "OPC Foundation and the Apache Software Foundation",
+    "capabilityIdentifier": "ARROW",
+    "namespaceUri": "http://opcfoundation.org/UA/",
+    "version": "0.1.0",
+    "publicationDate": "2026-07-30",
+    "releaseType": "Draft",
+    "gitHubTag": "",
+    "mantisUrl": "https://mantis.opcfoundation.org",
+    "license": {
+      "spdxId": "LicenseRef-OPC-Specification-1.15",
+      "copyright": "Copyright (c) 2026, OPC Federation AISBL",
+      "url": "https://opcfoundation.org/license/specifications/1.15/"
+    }
+  },
+  "markdown": {
+    "main": "spec.md",
+    "figures": "figures"
+  },
+  "figureGenerators": {
+    ".drawio.svg": "",
+    ".pptx": {
+      "win": "tools/office-to-svg.ps1",
+      "default": "tools/office-to-svg.sh"
+    }
+  },
+  "output": {
+    "sts": "artifacts/OPC-99001-1.xml",
+    "documentationCsv": "artifacts/OPC-99001-1-documentation.csv"
+  },
+  "normativeReferences": [
+    {
+      "id": "uapart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "uapart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "uapart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "uapart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "uapart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "uapart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings, which this document extends with a new DataEncoding.",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "uapart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "uapart11",
+      "label": "OPC 10000-11",
+      "title": "OPC Unified Architecture - Part 11: Historical Access",
+      "url": "http://www.opcfoundation.org/documents/10000-11/"
+    },
+    {
+      "id": "uapart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "uapart14",
+      "label": "OPC 10000-14",
+      "title": "OPC Unified Architecture - Part 14: PubSub, whose NetworkMessage and DataSetMessage this document maps.",
+      "url": "http://www.opcfoundation.org/documents/10000-14/"
+    },
+    {
+      "id": "arrowspec",
+      "label": "Apache Arrow specification",
+      "title": "The Arrow columnar format and its IPC framing, which this document maps onto.",
+      "url": "https://arrow.apache.org/docs/format/Columnar.html"
+    },
+    {
+      "id": "adbc",
+      "label": "Apache Arrow ADBC",
+      "title": "Arrow Database Connectivity, the statement and result model the historian access surface follows.",
+      "url": "https://arrow.apache.org/adbc/"
+    },
+    {
+      "id": "sreg",
+      "label": "OPC UA for Schema Registry",
+      "title": "The in-server registry that resolves a SchemaId to the schema document that produced it.",
+      "url": ""
+    }
+  ],
+  "terms": [
+    {
+      "term": "arrow value array",
+      "definition": "The length-1 Arrow Array carrying one OPC UA value."
+    },
+    {
+      "term": "dataSet column",
+      "definition": "An Arrow RecordBatch column whose `DataType` is the Part 6 mapping for the DataSet field DataType."
+    },
+    {
+      "term": "null slot",
+      "definition": "An Arrow validity-bitmap null. Null slots are the canonical null mechanism."
+    },
+    {
+      "term": "matrix",
+      "definition": "An OPC UA multi-dimensional array represented as dimensions plus row-major values."
+    },
+    {
+      "term": "default Arrow",
+      "definition": "The DataTypeEncoding Object for the Arrow encoding of an OPC UA DataType; the analogue of Default Binary, Default XML and Default JSON."
+    },
+    {
+      "term": "schemaId",
+      "definition": "The first 8 bytes of the SHA-256 fingerprint of the serialized Arrow `Schema` IPC message bytes; it identifies the exact Arrow schema needed to decode a payload and is independent of PubSub ConfigurationVersion."
+    },
+    {
+      "term": "bare RecordBatch",
+      "definition": "The `batch` `ArrowIpcFormat`: a single Arrow RecordBatch message with no preceding IPC Schema message, whose schema is resolved out of band by SchemaId."
+    },
+    {
+      "term": "aDBC",
+      "definition": "Arrow Database Connectivity — a client API surface (`Connection → Statement → ExecuteQuery → ArrowArrayStream`)."
+    }
+  ],
+  "abbreviations": [
+    [
+      "ADBC",
+      "Arrow Database Connectivity"
+    ],
+    [
+      "API",
+      "Application Programming Interface"
+    ],
+    [
+      "CRC",
+      "Cyclic Redundancy Check"
+    ],
+    [
+      "IANA",
+      "Internet Assigned Numbers Authority"
+    ],
+    [
+      "IPC",
+      "Inter-Process Communication"
+    ],
+    [
+      "JSON",
+      "JavaScript Object Notation"
+    ],
+    [
+      "SQL",
+      "Structured Query Language"
+    ],
+    [
+      "UTC",
+      "Coordinated Universal Time"
+    ],
+    [
+      "UTF",
+      "Unicode Transformation Format"
+    ],
+    [
+      "XML",
+      "Extensible Markup Language"
+    ]
+  ],
+  "namespaces": {
+    "documentNamespaceIndex": 0,
+    "table": [
+      {
+        "uri": "http://opcfoundation.org/UA/",
+        "index": 0,
+        "definedBy": "uapart5",
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0."
+      }
+    ]
+  }
+}

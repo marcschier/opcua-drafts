@@ -44,6 +44,16 @@ NS0_DEFINING_PART = {
     'FolderType': 'OPC 10000-5',
     'BaseEventType': 'OPC 10000-5',
     'BaseObjectState': 'OPC 10000-5',
+    'FileType': 'OPC 10000-5',
+    'FileDirectoryType': 'OPC 10000-5',
+    'ServerType': 'OPC 10000-5',
+    'ServerCapabilitiesType': 'OPC 10000-5',
+    'NamespaceMetadataType': 'OPC 10000-5',
+    'BaseInterfaceType': 'OPC 10000-5',
+    'AuditEventType': 'OPC 10000-5',
+    'AuditSessionEventType': 'OPC 10000-5',
+    'AuditUpdateMethodEventType': 'OPC 10000-5',
+    'HasComponent': 'OPC 10000-5',
     'BaseDataType': 'OPC 10000-3',
     'Enumeration': 'OPC 10000-3',
     'Structure': 'OPC 10000-3',
@@ -90,17 +100,25 @@ def escape(text: str) -> str:
     return text.replace('|', r'\|').replace('\r\n', ' ').replace('\n', ' ').strip()
 
 
-def subtype_phrase(supertype: str, defined_in, doc_ns_index: int, unnamed: list) -> str:
+def subtype_phrase(supertype: str, defined_in, doc_ns_index: int, unnamed: list,
+                   own: set | None = None) -> str:
     """`Subtype of the X defined in OPC N`, naming the document that actually defines X.
 
     A supertype has to name the specification that defines it, because the reader cannot
     otherwise look it up. Namespace 0 is not one document -- FiniteStateMachineType is
     OPC 10000-16 and OffNormalAlarmType is OPC 10000-9 -- so it is resolved per type and
     anything unrecognised is reported rather than attributed to a part at random.
+
+    A name with no prefix is this document's own when the model declares it. That is not the
+    same as namespace 0: a specification that adds to the base namespace has a document index
+    of 0 and prints its own types unprefixed, and so does one whose supertype happens to be
+    printed without an index.
     """
     cell = escape(supertype)
     prefix, _, plain = cell.rpartition(':')
     if prefix == str(doc_ns_index):
+        return cell
+    if not prefix and own and plain in own:
         return cell
     document = NS0_DEFINING_PART.get(plain) if prefix in ('', '0') else defined_in.get(prefix)
     if not document:
@@ -135,7 +153,7 @@ def definition_table(model, type_name: str, *, doc_ns_index: int,
     if spec['subtypeOf']:
         out.append(row(['Subtype of the %s' % subtype_phrase(
             spec['subtypeOf'], defined_in or {}, doc_ns_index,
-            unnamed if unnamed is not None else [])]))
+            unnamed if unnamed is not None else [], set(model.by_name))]))
     for member in spec['members']:
         out.append(row([
             escape(member['referenceType']),

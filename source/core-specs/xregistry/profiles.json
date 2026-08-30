@@ -1,0 +1,53 @@
+{
+  "conformanceUnits": [
+    {
+      "name": "XREG-Attributes",
+      "group": "xRegistry",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "XREG-Capabilities",
+      "group": "xRegistry",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "XREG-Federation",
+      "group": "xRegistry",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "XREG-Group",
+      "group": "xRegistry",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "XREG-Identity",
+      "group": "xRegistry",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "XREG-Registration",
+      "group": "xRegistry",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "XREG-Registry",
+      "group": "xRegistry",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "XREG-Resource",
+      "group": "xRegistry",
+      "category": "Server",
+      "description": ""
+    }
+  ],
+  "profiles": []
+}

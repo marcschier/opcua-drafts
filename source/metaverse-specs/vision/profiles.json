@@ -1,0 +1,23 @@
+{
+  "conformanceUnits": [
+    {
+      "name": "Vision",
+      "group": "Vision",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "Vision DataTypes",
+      "group": "Vision",
+      "category": "Server",
+      "description": ""
+    },
+    {
+      "name": "Vision ReferenceTypes",
+      "group": "Vision",
+      "category": "Server",
+      "description": ""
+    }
+  ],
+  "profiles": []
+}

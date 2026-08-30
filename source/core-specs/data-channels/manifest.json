@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "sourceOfTruth": "markdown",
+  "identity": {
+    "docNumber": "OPC 99003-1",
+    "partName": "Data Channels",
+    "title": "OPC UA for Data Channels",
+    "shortTitle": "Data Channels",
+    "shortName": "DCH",
+    "organization": "OPC Foundation and the IETF QUIC working group",
+    "capabilityIdentifier": "DCH",
+    "namespaceUri": "http://opcfoundation.org/UA/",
+    "version": "0.1.1",
+    "publicationDate": "2026-07-30",
+    "releaseType": "Draft",
+    "gitHubTag": "",
+    "mantisUrl": "https://mantis.opcfoundation.org",
+    "license": {
+      "spdxId": "LicenseRef-OPC-Specification-1.15",
+      "copyright": "Copyright (c) 2026, OPC Federation AISBL",
+      "url": "https://opcfoundation.org/license/specifications/1.15/"
+    }
+  },
+  "model": {
+    "nodeset": "model/Opc.Ua.DataChannels.NodeSet2.xml",
+    "generated": true
+  },
+  "markdown": {
+    "main": "spec.md",
+    "figures": "figures"
+  },
+  "figureGenerators": {
+    ".drawio.svg": "",
+    ".pptx": {
+      "win": "tools/office-to-svg.ps1",
+      "default": "tools/office-to-svg.sh"
+    }
+  },
+  "output": {
+    "sts": "artifacts/OPC-99003-1.xml",
+    "documentationCsv": "artifacts/OPC-99003-1-documentation.csv"
+  },
+  "normativeReferences": [
+    {
+      "id": "uapart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "uapart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "uapart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model, which this document proposes to extend with the data channel source types.",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "uapart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services, which this document proposes to extend with the DataChannel Service Set.",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "uapart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "uapart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings, which this document proposes to extend with the STR frame and the opc.quic transport.",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "uapart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "uapart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "uapart14",
+      "label": "OPC 10000-14",
+      "title": "OPC Unified Architecture - Part 14: PubSub",
+      "url": "http://www.opcfoundation.org/documents/10000-14/"
+    },
+    {
+      "id": "uapart20",
+      "label": "OPC 10000-20",
+      "title": "OPC Unified Architecture - Part 20: File Transfer",
+      "url": "http://www.opcfoundation.org/documents/10000-20/"
+    },
+    {
+      "id": "rfc9000",
+      "label": "IETF RFC 9000",
+      "title": "QUIC: A UDP-Based Multiplexed and Secure Transport",
+      "url": "https://www.rfc-editor.org/rfc/rfc9000"
+    },
+    {
+      "id": "rfc9221",
+      "label": "IETF RFC 9221",
+      "title": "An Unreliable Datagram Extension to QUIC",
+      "url": "https://www.rfc-editor.org/rfc/rfc9221"
+    },
+    {
+      "id": "rfc8446",
+      "label": "IETF RFC 8446",
+      "title": "The Transport Layer Security (TLS) Protocol Version 1.3",
+      "url": "https://www.rfc-editor.org/rfc/rfc8446"
+    }
+  ],
+  "terms": [],
+  "abbreviations": [
+    [
+      "ALPN",
+      "Application-Layer Protocol Negotiation"
+    ],
+    [
+      "API",
+      "Application Programming Interface"
+    ],
+    [
+      "IANA",
+      "Internet Assigned Numbers Authority"
+    ],
+    [
+      "MTU",
+      "Maximum Transmission Unit"
+    ],
+    [
+      "QUIC",
+      "Quick UDP Internet Connections"
+    ],
+    [
+      "RPC",
+      "Remote Procedure Call"
+    ],
+    [
+      "RTT",
+      "Round-Trip Time"
+    ],
+    [
+      "TLS",
+      "Transport Layer Security"
+    ],
+    [
+      "UDP",
+      "User Datagram Protocol"
+    ],
+    [
+      "URI",
+      "Uniform Resource Identifier"
+    ],
+    [
+      "URL",
+      "Uniform Resource Locator"
+    ]
+  ],
+  "namespaces": {
+    "documentNamespaceIndex": 0,
+    "table": [
+      {
+        "uri": "http://opcfoundation.org/UA/",
+        "index": 0,
+        "definedBy": "uapart5",
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0."
+      }
+    ]
+  },
+  "profiles": "profiles.json"
+}

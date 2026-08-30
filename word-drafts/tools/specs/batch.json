@@ -1,31 +1,33 @@
 {
-  "_comment": "The conversion batch. `converted` are the specifications that have a config in this directory and a committed document; `ready` are the ones whose shape the pipeline already handles, so onboarding them is a config file plus the editorial work named in `needs`; `migrated` are the ones that have moved to Opc.Ua.SpecificationPublisher and are no longer built here. Run them with tools/build_all.py.",
-  "converted": [
-    "xregistry",
-    "observability-export",
-    "schema-registry",
-    "data-channels",
-    "arrow-encoding"
-  ],
+  "_comment": "The conversion batch. `converted` are the specifications that have a config in this directory and a committed document; `ready` are the ones whose shape this pipeline already handles; `migrated` are the ones that have moved to Opc.Ua.SpecificationPublisher and are no longer built here. Run what is left with tools/build_all.py.",
+
+  "_comment_migration": "Every specification in this repository has migrated. Their configs were removed rather than repointed, because this pipeline reads numbered headings and a hand-generated Annex A and a converted document has neither; what the configs carried -- the identity, the normative references, the abbreviations -- is now in each specification's manifest.json, which is where convert_to_template.py read it from. The committed word-drafts/*.docx stay until the publisher's Word edition is proven against them. The tooling itself stays: it is what emits the node tables and converts a specification, and the private repository still has documents to convert.",
+
+  "converted": [],
   "ready": [],
+
   "migrated": [
-    {
-      "spec": "generators",
-      "markdown": "source/companion-specs/Generators/spec.md",
-      "why": "converted to the OPC UA specification template and built by Opc.Ua.SpecificationPublisher, which renders the Word edition from the same STS as the page. Its config was removed rather than repointed because this pipeline reads numbered headings and a hand-generated Annex A, and the converted document has neither. word-drafts/OPC-UA-Generators.docx stays until the publisher's Word edition is proven against it."
-    }
+    { "spec": "generators",           "markdown": "source/companion-specs/Generators/spec.md",       "docNumber": "OPC 99007-1" },
+    { "spec": "xregistry",            "markdown": "source/core-specs/xregistry/spec.md",             "docNumber": "OPC 99004-1" },
+    { "spec": "schema-registry",      "markdown": "source/cloud-specs/schema-registry/spec.md",      "docNumber": "OPC 99006-1" },
+    { "spec": "arrow-encoding",       "markdown": "source/core-specs/arrow-encoding/spec.md",        "docNumber": "OPC 99001-1" },
+    { "spec": "data-channels",        "markdown": "source/core-specs/data-channels/spec.md",         "docNumber": "OPC 99003-1" },
+    { "spec": "observability-export", "markdown": "source/cloud-specs/observability-export/spec.md", "docNumber": "OPC 99005-1" },
+    { "spec": "vision",               "markdown": "source/metaverse-specs/vision/spec.md",           "docNumber": "OPC 99011-1" },
+    { "spec": "vision-research",      "markdown": "source/metaverse-specs/vision-research/spec.md",  "docNumber": "OPC 99012" }
   ],
+
   "notAFit": [
     {
-      "markdown": "core-specs/data-channels/OPC-UA-Part3-Data-Channel-Model.md",
-      "why": "an amendment to OPC 10000-3, not a companion specification. OPC 20020 is the companion-specification template; rendering a core-part amendment into it would misrepresent what the document is. The same content is carried by OPC-UA-Data-Channels.md, which is a companion specification and is listed as ready."
+      "markdown": "source/core-specs/data-channels/OPC-UA-Part3-Data-Channel-Model.md",
+      "why": "an amendment to OPC 10000-3, not a companion specification. OPC 20020 is the companion-specification template; rendering a core-part amendment into it would misrepresent what the document is. The same content is carried by the specification itself, which is a companion specification and has migrated."
     },
     {
-      "markdown": "core-specs/data-channels/OPC-UA-Part4-Data-Channel-Services.md",
+      "markdown": "source/core-specs/data-channels/OPC-UA-Part4-Data-Channel-Services.md",
       "why": "an amendment to OPC 10000-4; see above."
     },
     {
-      "markdown": "core-specs/data-channels/OPC-UA-Part6-Data-Channel-Transport.md",
+      "markdown": "source/core-specs/data-channels/OPC-UA-Part6-Data-Channel-Transport.md",
       "why": "an amendment to OPC 10000-6; see above."
     },
     {
@@ -33,36 +35,16 @@
       "why": "a measurement report, not a specification."
     },
     {
-      "markdown": "cloud-specs/observability-export/di/OPC-UA-DI-Pumps-Inheritance.md",
+      "markdown": "source/cloud-specs/observability-export/di/OPC-UA-DI-Pumps-Inheritance.md",
       "why": "an explanatory note about how two addenda compose, not a specification of its own."
     },
     {
-      "markdown": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex D, so it is published — as what it is."
+      "markdown": "source/core-specs/xregistry/xRegistry-OPC-UA-Api.md",
+      "why": "an xRegistry domain specification, submitted to that body in RFC 2119 upper case. Building it into the OPC 20020 template would change what it is. See DOCUMENT-NUMBERS.md."
     },
     {
-      "markdown": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex F, so it is published — as what it is."
-    },
-    {
-      "markdown": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex G, so it is published — as what it is."
-    },
-    {
-      "markdown": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex H, so it is published — as what it is."
-    },
-    {
-      "markdown": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into OpenUSD Binding Part 1, Annex G, so it is published — as what it is."
-    },
-    {
-      "markdown": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into OpenUSD Binding Part 1, Annex H, so it is published — as what it is."
-    },
-    {
-      "markdown": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex E, so it is published — as what it is."
+      "markdown": "metaverse-specs/openusd-binding/xRegistry-OpenUsd.md",
+      "why": "an xRegistry domain specification; see above."
     }
   ]
 }
