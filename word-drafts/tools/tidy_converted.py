@@ -25,8 +25,15 @@ def main(argv: list[str]) -> int:
     ap.add_argument('--write', action='store_true')
     args = ap.parse_args(argv)
 
+    # `upgrade --write` downloads these from the OPC Foundation and overwrites whatever is
+    # there. Editing one makes it ours and it is never refreshed again, so a whitespace tidy
+    # is exactly the wrong reason to take ownership of it.
+    owned = {'agreement-of-use.md'}
+
     changed = 0
     for md in sorted((args.root / 'source').rglob('*.md')):
+        if md.name in owned:
+            continue
         before = md.read_text(encoding='utf-8')
         after = '\n'.join(ctt.tidy(before.splitlines())) + '\n'
         if after != before:
