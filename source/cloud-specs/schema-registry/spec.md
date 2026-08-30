@@ -331,7 +331,7 @@ The NodeSet, CSV and Annex A are generated from `tools/build_model.py`. The loca
 
 ---
 
-## Information model {#anx-a annex=normative}
+## Information model reference {#anx-a annex=normative}
 
 ```{clause}
 kind: annex-a

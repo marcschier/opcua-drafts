@@ -253,7 +253,7 @@ def strip_generated(lines: list[str], has_model: bool = True) -> tuple[list[str]
                     findings.append('the generated Annex A removed and replaced by a directive; '
                                     'every #type-... citation in the prose pointed into it and '
                                     'now needs repointing at the clause documenting that type')
-                    out += ['## Information model {#anx-a annex=normative}', '',
+                    out += ['## Information model reference {#anx-a annex=normative}', '',
                             '```{clause}', 'kind: annex-a', '```', '']
                     continue
                 if slug.startswith('anx-'):

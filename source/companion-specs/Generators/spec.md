@@ -189,7 +189,7 @@ Multi-site supervision, contractual reporting, and regulatory and emergency-powe
 | `GenSet.Compliance` | `EmissionsStandard`, `Engine/Aftertreatment/AftertreatmentState`, `Engine/Aftertreatment/DefLevel`, `Engine/Aftertreatment/DpfSootLoad`, `Engine/EngineHours`, `FuelSystem/TotalFuelConsumed`. Test runs are recorded through the `StartTest` Method and the protection and condition events | periodic, and on event |
 | `System.Fleet` | For each set the `OperatingState/CurrentState` and `Alternator/TotalRealPower`; for the system the `TotalSystemLoad`, `TotalSystemCapacity` and `NumberOfGeneratorSets` | 1 s to 10 s |
 
-## Information model {#anx-a annex=normative}
+## Information model reference {#anx-a annex=normative}
 
 ```{clause}
 kind: annex-a

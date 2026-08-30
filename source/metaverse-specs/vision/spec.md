@@ -110,7 +110,7 @@ graph TD
 
 ---
 
-## Types the prose does not introduce {#sec-types-not-introduced}
+## Information model {#sec-information-model}
 
 The model has **25 ObjectTypes**, and they exist in five groups, each answering one question a vision integration has to answer:
 
@@ -1288,7 +1288,7 @@ The NodeSet and NodeIds are generated and byte-deterministic; do not hand-edit t
 
 ---
 
-## Information model {#anx-a annex=normative}
+## Information model reference {#anx-a annex=normative}
 
 ```{clause}
 kind: annex-a
