@@ -38,3 +38,11 @@ ignores:
   - "**/tools/ref/**"
   # Pure-generated node-reference tables (emitted by build_model.py); fix at the generator, not here.
   - "**/tools/model-reference.md"
+  # Written and owned by `Opc.Ua.SpecificationPublisher upgrade`. Editing one makes it ours
+  # and it is never refreshed again, so a lint finding in it is not a finding for us: it
+  # belongs upstream, in the template.
+  - "AUTHORING.md"
+  - "legal.md"
+  - "skills/opcua-companion-spec/**"
+  - "skills/opcua-word-to-markdown/**"
+  - "source/agreement-of-use.md"
