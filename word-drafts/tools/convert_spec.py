@@ -211,12 +211,13 @@ def main(argv: list[str]) -> int:
         findings += profiles_from(model, dest / 'profiles.json')
         manifest['profiles'] = 'profiles.json'
 
-    (dest / 'spec.md').write_text('\n'.join(lines) + '\n', encoding='utf-8', newline='\n')
+    (dest / 'spec.md').write_text('\n'.join(ctt.tidy(lines)) + '\n',
+                                  encoding='utf-8', newline='\n')
 
     for key, rel in (cfg.get('additionalMarkdown') or {}).items():
         part = REPO / rel
         body, f = ctt.convert_prose(part.read_text(encoding='utf-8').splitlines(), has_model=False)
-        (dest / ('%s.md' % key)).write_text('\n'.join(body) + '\n',
+        (dest / ('%s.md' % key)).write_text('\n'.join(ctt.tidy(body)) + '\n',
                                             encoding='utf-8', newline='\n')
         findings += ['%s.md: written from %s; add a ```{include %s} directive where it belongs'
                      % (key, rel, key)]

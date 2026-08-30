@@ -99,7 +99,7 @@ def _name_matches(csv_name: str, browse_name: str) -> bool:
 
 def main():
     here = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.normpath(os.path.join(here, "..", "..", "..", "vision",
+    path = os.path.normpath(os.path.join(here, "..", "..", "..", "..", "model",
                                          "Opc.Ua.Vision.NodeSet2.xml"))
     try:
         tree = ET.parse(path)
@@ -344,7 +344,7 @@ def main():
     # are two views of one model, so every id must appear in both with the same
     # NodeClass and BrowseName. This is what catches a hand-edited artifact, or one of
     # the pair being regenerated without the other.
-    csv_path = os.path.normpath(os.path.join(here, "..", "..", "..", "vision",
+    csv_path = os.path.normpath(os.path.join(here, "..", "..", "..", "..", "model",
                                              "Opc.Ua.Vision.NodeIds.csv"))
     if not os.path.exists(csv_path):
         err("Opc.Ua.Vision.NodeIds.csv not found next to the NodeSet")
@@ -388,10 +388,10 @@ def main():
     # Annexes F and G are spliced into OPC-UA-Vision.md by build_examples.py. If the
     # markers go missing the splice silently stops updating them, so the spec would
     # keep stale worked examples while every other artifact regenerated.
-    spec_path = os.path.normpath(os.path.join(here, "..", "..", "..", "vision",
-                                              "OPC-UA-Vision.md"))
+    spec_path = os.path.normpath(os.path.join(
+        here, "..", "..", "..", "..", "source", "metaverse-specs", "vision", "spec.md"))
     if not os.path.exists(spec_path):
-        err("OPC-UA-Vision.md not found")
+        err("the Vision specification prose was not found")
     else:
         with open(spec_path, encoding="utf-8") as f:
             spec_text = f.read()
@@ -400,28 +400,29 @@ def main():
             begin = f"<!-- BEGIN GENERATED: {marker} -->"
             end = f"<!-- END GENERATED: {marker} -->"
             if begin not in spec_text or end not in spec_text:
-                err(f"OPC-UA-Vision.md is missing the '{marker}' generated-annex "
+                err(f"the Vision specification prose is missing the '{marker}' generated-annex "
                     "markers; build_examples.py cannot splice the annex")
                 continue
             body = spec_text[spec_text.index(begin) + len(begin):
                              spec_text.index(end)]
-            if f"## Annex {letter} " not in body:
-                err(f"OPC-UA-Vision.md '{marker}' region does not contain an "
+            if f"{{#anx-{letter.lower()} " not in body:
+                err(f"the Vision specification prose '{marker}' region does not contain an "
                     f"'Annex {letter}' heading; regenerate with build_examples.py")
 
     # ---- example overlays --------------------------------------------------
     # Each overlay instantiates the base model. Verify it is well-formed, declares the
     # Vision namespace as a RequiredModel, and only references type NodeIds that this
     # base NodeSet actually defines - the failure mode a hand-authored overlay has.
-    vision_dir = os.path.normpath(os.path.join(here, "..", "..", "..", "vision"))
-    overlays = []
-    for sub in sorted(os.listdir(vision_dir)):
-        subdir = os.path.join(vision_dir, sub)
-        if not os.path.isdir(subdir):
-            continue
-        for fn in sorted(os.listdir(subdir)):
-            if fn.endswith(".NodeSet2.xml"):
-                overlays.append(os.path.join(subdir, fn))
+    # The example overlays are NodeSets, so they live in the repository's model/ with the
+    # base model they instantiate. They are named for it -- Opc.Ua.<Domain>.Vision.NodeSet2.xml
+    # -- which is what tells them apart from the base model and from the published NodeSets in
+    # dependencies/ that every specification here borrows from.
+    vision_dir = os.path.normpath(os.path.join(here, "..", "..", "..", "..", "model"))
+    overlays = [
+        os.path.join(vision_dir, fn)
+        for fn in sorted(os.listdir(vision_dir))
+        if fn.endswith(".Vision.NodeSet2.xml") and fn != "Opc.Ua.Vision.NodeSet2.xml"
+    ]
 
     own_ids = {int(k.split("i=")[1]) for k in by_id if k.startswith("ns=1;i=")}
 

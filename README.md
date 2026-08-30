@@ -39,7 +39,7 @@ git submodule update --remote spec-drafts
 
 The submodule is a pinned commit like any other, so `git status` showing it behind is normal — it moves when someone commits a new pointer.
 
-Two documents that were part of the OpenUSD work stay here, because they are proposed to [xregistry.org](https://github.com/xregistry/spec) rather than to the OPC Foundation: [`xRegistry-OpenUsd.md`](metaverse-specs/openusd-binding/xRegistry-OpenUsd.md) and its model. The [`xregistry/`](core-specs/xregistry) base model they build on also stays, because the specifications that subtype it are still public.
+Two documents that were part of the OpenUSD work stay here, because they are proposed to [xregistry.org](https://github.com/xregistry/spec) rather than to the OPC Foundation: [`xRegistry-OpenUsd.md`](metaverse-specs/openusd-binding/xRegistry-OpenUsd.md) and its model. The [`xregistry/`](source/core-specs/xregistry) base model they build on also stays, because the specifications that subtype it are still public.
 
 Each specification returns here once its review completes.
 

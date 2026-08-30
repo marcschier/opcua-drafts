@@ -16,7 +16,7 @@ EX = os.path.dirname(HERE)
 REF = os.path.join(HERE, "ref")
 # The base spec NodeSet and the per-spec example overlays are standardized artifacts under
 # cloud-specs/observability-export/; the descriptors + this validator are secondary here under cloud-specs/extras.
-CORE = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", "observability-export"))
+CORE = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", "..", "model"))
 BIND = os.path.join(CORE, "Opc.Ua.ObservabilityExport.NodeSet2.xml")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 
@@ -40,7 +40,7 @@ errors = []
 def check(domain, spec):
     base_files = spec["base"]
     folder = spec.get("folder", domain.lower())
-    f = os.path.join(CORE, folder, f"Opc.Ua.{domain}.ObservabilityExport.NodeSet2.xml")
+    f = os.path.join(CORE, f"Opc.Ua.{domain}.ObservabilityExport.NodeSet2.xml")
     tree = ET.parse(f)  # raises on malformed
     root = tree.getroot()
     nodes = [e for e in root if e.tag.startswith(NS + "UA")]

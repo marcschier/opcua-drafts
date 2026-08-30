@@ -866,7 +866,12 @@ def inject(path, rendered):
 
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
-    outdir = os.path.abspath(os.path.join(here, ".."))
+    # The NodeSet and its CSV belong to the repository, not to this specification: the
+    # publisher reads them from model/, and a sibling published alongside borrows types
+    # from them by ModelUri.
+    outdir = os.path.abspath(os.path.join(
+        here, os.pardir, os.pardir, os.pardir, os.pardir, "model"))
+    os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "Opc.Ua.DataChannels.NodeSet2.xml"), "w",
               encoding="utf-8", newline="\n") as f:
         f.write(emit())
@@ -877,9 +882,9 @@ if __name__ == "__main__":
     with open(os.path.join(here, "model-reference.md"), "w",
               encoding="utf-8", newline="\n") as f:
         f.write(annex)
-    for doc in ("OPC-UA-Part3-Data-Channel-Model.md", "OPC-UA-Data-Channels.md"):
-        if inject(os.path.join(outdir, doc), annex):
-            print(f"Injected Annex A into {doc}")
+    # Annex A is no longer written into the prose: it is a `{clause} kind: annex-a`
+    # directive that the publisher fills from this same NodeSet, so injecting it here
+    # would publish it twice and leave the copy that can drift.
     nt = sum(1 for k in NODES
              if NODES[k].cls in ("UAObjectType", "UADataType", "UAReferenceType"))
     print(f"Nodes: {len(NODES)}  (types: {nt})")

@@ -310,6 +310,43 @@ def extract_terms(lines: list[str]) -> tuple[list[dict], list[str]]:
     return terms, findings
 
 
+def tidy(lines: list[str]) -> list[str]:
+    """Normalise the whitespace the conversion disturbs.
+
+    Deleting a clause or a banner leaves the blank lines that surrounded it, and inserting a
+    table between two clauses can leave none. Neither is a judgement call -- markdownlint
+    states the rule (`MD012`, `MD022`, `MD009`) and the fix is the same every time -- so it is
+    done here rather than left as a finding for a person to apply mechanically.
+    """
+    out = []
+    in_fence = False
+    for line in lines:
+        if line.startswith('```') or line.startswith('~~~'):
+            in_fence = not in_fence
+            out.append(line)
+            continue
+        if in_fence:
+            out.append(line)
+            continue
+        line = line.rstrip()
+        if not line and out and not out[-1]:
+            continue                      # one blank line is enough
+        if re.match(r'^#{1,6}\s', line) and out and out[-1]:
+            out.append('')                # a heading opens on its own
+        out.append(line)
+        if re.match(r'^#{1,6}\s', line):
+            out.append('')
+    while out and not out[0]:
+        out.pop(0)
+    # A heading followed by a blank we just added, then the blank that was already there.
+    squeezed = []
+    for line in out:
+        if not line and squeezed and not squeezed[-1]:
+            continue
+        squeezed.append(line)
+    return squeezed
+
+
 def convert_prose(lines: list[str], has_model: bool = True) -> tuple[list[str], list[str]]:
     """Rewrite what is mechanical; report what needs a decision."""
     findings = []
@@ -354,7 +391,12 @@ def convert_prose(lines: list[str], has_model: bool = True) -> tuple[list[str], 
                 # is derived by the renderer, so the heading text drops "Annex X —".
                 new = 'anx-%s' % annex.group(1)
                 text = re.sub(r'^\s*Annex\s+[A-Za-z]\s*[-\u2013\u2014:]*\s*', '', text.strip())
-                attrs = ' annex=normative'
+                # An annex that calls itself informative is informative. Getting this wrong
+                # changes what the document requires, so it is read from the title rather than
+                # assumed, and a title that says nothing is normative -- which is what an
+                # annex of a companion specification is unless it says otherwise.
+                kind = 'informative' if re.search(r'\(informative\)', text, re.I) else 'normative'
+                attrs = ' annex=%s' % kind
             else:
                 new = 'sec-%s' % slug
                 attrs = ''
@@ -436,7 +478,7 @@ def convert_prose(lines: list[str], has_model: bool = True) -> tuple[list[str], 
 
     # Last: drop the title and the banner above the first clause.
     result, front = strip_front_matter(result)
-    return result, findings + stripped + front
+    return tidy(result), findings + stripped + front
 
 
 # --------------------------------------------------------------------------- entry

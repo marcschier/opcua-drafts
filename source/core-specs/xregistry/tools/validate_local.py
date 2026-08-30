@@ -5,10 +5,14 @@ import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 GEN = os.path.dirname(HERE)
+# The NodeSets live in the repository's model/, shared by every specification
+# published together, because resolution is by ModelUri rather than by directory.
+MODEL = os.path.abspath(os.path.join(
+    HERE, os.pardir, os.pardir, os.pardir, os.pardir, "model"))
 REF = os.path.join(HERE, "ref")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
-XML = os.path.join(GEN, "Opc.Ua.XRegistry.NodeSet2.xml")
-CSVF = os.path.join(GEN, "Opc.Ua.XRegistry.NodeIds.csv")
+XML = os.path.join(MODEL, "Opc.Ua.XRegistry.NodeSet2.xml")
+CSVF = os.path.join(MODEL, "Opc.Ua.XRegistry.NodeIds.csv")
 OWN_NS = 1
 OWN_MIN = 63000
 

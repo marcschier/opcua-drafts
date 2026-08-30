@@ -27,7 +27,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SELF_CONTAINED = [
     "extras/observability-export/tools/validate_local.py",
     "extras/observability-export/examples/tools/validate_examples.py",
-    "schema-registry/tools/validate_local.py",
+    "../source/cloud-specs/schema-registry/tools/validate_local.py",
 ]
 
 # Validators that additionally need untracked base data (none yet).

@@ -1016,7 +1016,7 @@ Every span below is verified to be contiguous and non-overlapping, and every vec
 
 All integers are little-endian, matching the OPC UA Binary DataEncoding.
 
-### inline_data_first
+### inline_data_first {#sec-inlinedatafirst}
 
 **Framing** inline (opc.tcp, opc.wss) · **Frame type** `DATA` · **ChannelId** 1 · **Total** 52 bytes
 
@@ -1045,7 +1045,7 @@ The first frame of a logical application message on channel 1, marked as a synch
 0030  0C 0D 0E 0F                                      ....
 ```
 
-### inline_data_final
+### inline_data_final {#sec-inlinedatafinal}
 
 **Framing** inline (opc.tcp, opc.wss) · **Frame type** `DATA` · **ChannelId** 1 · **Total** 40 bytes
 
@@ -1073,7 +1073,7 @@ The closing frame of the same logical message. MessageEnd is what delimits an ap
 0020  02 00 00 00 AA BB CC DD                          ........
 ```
 
-### inline_data_droppable
+### inline_data_droppable {#sec-inlinedatadroppable}
 
 **Framing** inline (opc.tcp, opc.wss) · **Frame type** `DATA` · **ChannelId** 2 · **Total** 52 bytes
 
@@ -1103,7 +1103,7 @@ A self-contained media frame that the sender may discard if it is still queued a
 0030  05 06 07 08                                      ....
 ```
 
-### inline_credit_channel
+### inline_credit_channel {#sec-inlinecreditchannel}
 
 **Framing** inline (opc.tcp, opc.wss) · **Frame type** `CREDIT` · **ChannelId** 2 · **Total** 44 bytes
 
@@ -1132,7 +1132,7 @@ A window update for channel 2 alone. CREDIT frames are exempt from flow control;
 0020  62 00 00 00 00 00 01 00 00 00 00 00              b...........
 ```
 
-### inline_credit_connection
+### inline_credit_connection {#sec-inlinecreditconnection}
 
 **Framing** inline (opc.tcp, opc.wss) · **Frame type** `CREDIT` · **ChannelId** 0 · **Total** 44 bytes
 
@@ -1161,7 +1161,7 @@ A connection-level window update on the reserved control channel 0, which govern
 0020  0B 00 00 00 00 00 00 00 00 00 04 00              ............
 ```
 
-### inline_gap
+### inline_gap {#sec-inlinegap}
 
 **Framing** inline (opc.tcp, opc.wss) · **Frame type** `GAP` · **ChannelId** 2 · **Total** 44 bytes
 
@@ -1190,7 +1190,7 @@ The sender discarded frames 99 through 102 because their deadlines passed. Witho
 0020  67 00 00 00 63 00 00 00 66 00 00 00              g...c...f...
 ```
 
-### inline_reset
+### inline_reset {#sec-inlinereset}
 
 **Framing** inline (opc.tcp, opc.wss) · **Frame type** `RESET` · **ChannelId** 2 · **Total** 40 bytes
 
@@ -1218,7 +1218,7 @@ Abort one data channel and leave every other channel and the SecureChannel itsel
 0020  68 00 00 00 00 00 B1 81                          h.......
 ```
 
-### inline_end
+### inline_end {#sec-inlineend}
 
 **Framing** inline (opc.tcp, opc.wss) · **Frame type** `END` · **ChannelId** 1 · **Total** 36 bytes
 
@@ -1245,7 +1245,7 @@ Orderly half-close: this direction of channel 1 will send nothing further, while
 0020  03 00 00 00                                      ....
 ```
 
-### inline_ping
+### inline_ping {#sec-inlineping}
 
 **Framing** inline (opc.tcp, opc.wss) · **Frame type** `PING` · **ChannelId** 0 · **Total** 44 bytes
 
@@ -1273,7 +1273,7 @@ A round trip probe on the control channel. The measured round trip time is what 
 0020  0C 00 00 00 00 80 20 9B CB 82 D8 01              ...... .....
 ```
 
-### inline_pong
+### inline_pong {#sec-inlinepong}
 
 **Framing** inline (opc.tcp, opc.wss) · **Frame type** `PONG` · **ChannelId** 0 · **Total** 44 bytes
 
@@ -1301,7 +1301,7 @@ The echo. The Timestamp is copied verbatim from the PING, so the sender needs to
 0020  0D 00 00 00 00 80 20 9B CB 82 D8 01              ...... .....
 ```
 
-### inline_data_signed
+### inline_data_signed {#sec-inlinedatasigned}
 
 **Framing** inline (opc.tcp, opc.wss) · **Frame type** `DATA` · **ChannelId** 1 · **Total** 73 bytes
 
@@ -1332,7 +1332,7 @@ The same inline frame under a signing security policy, showing where the Part 6 
 0040  5A 5A 5A 5A 5A 5A 5A 5A 5A                       ZZZZZZZZZ
 ```
 
-### quic_data_stream
+### quic_data_stream {#sec-quicdatastream}
 
 **Framing** QUIC (opc.quic) · **Frame type** `DATA` · **ChannelId** 1 · **Total** 40 bytes
 
@@ -1357,7 +1357,7 @@ The same DATA frame carried on a QUIC stream. TLS 1.3 already authenticates and 
 0020  08 09 0A 0B 0C 0D 0E 0F                          ........
 ```
 
-### quic_datagram_unreliable
+### quic_datagram_unreliable {#sec-quicdatagramunreliable}
 
 **Framing** QUIC (opc.quic) · **Frame type** `DATA` · **ChannelId** 3 · **Total** 30 bytes
 

@@ -5,10 +5,14 @@ import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 GEN = os.path.dirname(HERE)
+# The NodeSets live in the repository's model/, shared by every specification
+# published together, because resolution is by ModelUri rather than by directory.
+MODEL = os.path.abspath(os.path.join(
+    HERE, os.pardir, os.pardir, os.pardir, os.pardir, "model"))
 REF = os.path.join(HERE, "ref")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
-XML = os.path.join(GEN, "Opc.Ua.SchemaRegistry.NodeSet2.xml")
-CSVF = os.path.join(GEN, "Opc.Ua.SchemaRegistry.NodeIds.csv")
+XML = os.path.join(MODEL, "Opc.Ua.SchemaRegistry.NodeSet2.xml")
+CSVF = os.path.join(MODEL, "Opc.Ua.SchemaRegistry.NodeIds.csv")
 XR_NS = 1          # required model: abstract xRegistry base (http://opcfoundation.org/UA/xRegistry/)
 OWN_NS = 2         # this specification's own namespace (SchemaRegistry)
 OWN_MIN = 62000
@@ -25,7 +29,7 @@ _ua_csv = os.path.join(REF, "UA.NodeIds.csv")
 UA = load_ids(_ua_csv) if os.path.exists(_ua_csv) else None
 UA_EXTRA = {297, 2253}
 # xRegistry base NodeIds (the required model this spec extends), resolved across the two-file dependency.
-_xr_csv = os.path.join(GEN, "..", "xregistry", "Opc.Ua.XRegistry.NodeIds.csv")
+_xr_csv = os.path.join(MODEL, "Opc.Ua.XRegistry.NodeIds.csv")
 XR = load_ids(_xr_csv) if os.path.exists(_xr_csv) else None
 errors, warnings = [], []
 ALIAS = {}

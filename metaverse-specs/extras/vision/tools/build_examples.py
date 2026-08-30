@@ -668,7 +668,8 @@ def emit_addendum(d, annex=None):
         A(f"### {annex}.{sec[0]} {title}" if annex else f"## {sec[0]} {title}")
 
     if annex:
-        A(f"## Annex {annex} — Worked example: {d['annexTitle']} (informative)")
+        A(f"## Worked example: {d['annexTitle']} (informative) "
+          f"{{#anx-{annex.lower()} annex=informative}}")
         A("")
         A(f"> {d['summary']} This annex and the overlay "
           f"[`{nodeset}`]({nodeset_link}) are both generated from "

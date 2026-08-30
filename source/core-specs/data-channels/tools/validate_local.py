@@ -18,13 +18,17 @@ import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 GEN = os.path.dirname(HERE)
+# The NodeSets live in the repository's model/, shared by every specification
+# published together, because resolution is by ModelUri rather than by directory.
+MODEL = os.path.abspath(os.path.join(
+    HERE, os.pardir, os.pardir, os.pardir, os.pardir, "model"))
 REF = os.path.join(HERE, "ref")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 
-XML = os.path.join(GEN, "Opc.Ua.DataChannels.NodeSet2.xml")
-CSVF = os.path.join(GEN, "Opc.Ua.DataChannels.NodeIds.csv")
+XML = os.path.join(MODEL, "Opc.Ua.DataChannels.NodeSet2.xml")
+CSVF = os.path.join(MODEL, "Opc.Ua.DataChannels.NodeIds.csv")
 ANNEX = os.path.join(HERE, "model-reference.md")
-DOCS = ("OPC-UA-Part3-Data-Channel-Model.md", "OPC-UA-Data-Channels.md")
+DOCS = ("OPC-UA-Part3-Data-Channel-Model.md", "spec.md")
 BEGIN_MARK = "<!-- BEGIN GENERATED: model-reference -->"
 END_MARK = "<!-- END GENERATED: model-reference -->"
 
@@ -283,7 +287,10 @@ for name in DOCS:
     with open(path, encoding="utf-8") as f:
         text = f.read()
     if BEGIN_MARK not in text or END_MARK not in text:
-        errors.append(f"{name}: model-reference markers are missing")
+        # The specification prose carries a `{clause} kind: annex-a` directive now, and the
+        # publisher fills it from this same NodeSet, so there is no embedded copy to compare
+        # against. An amendment to a core part still carries one, because it is not built by
+        # the publisher.
         continue
     embedded = text[text.index(BEGIN_MARK) + len(BEGIN_MARK):text.index(END_MARK)]
     if embedded.strip() != annex.strip():

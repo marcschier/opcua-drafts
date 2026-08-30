@@ -12,6 +12,7 @@ markers - regenerate.
 from __future__ import annotations
 
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -22,8 +23,9 @@ from frame_codec import (  # noqa: E402
 from gen_vectors import vectors  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SPEC_DIR = os.path.abspath(os.path.join(HERE, "..", "..", "..", "data-channels"))
-DOCS = ("OPC-UA-Part6-Data-Channel-Transport.md", "OPC-UA-Data-Channels.md")
+SPEC_DIR = os.path.abspath(os.path.join(
+    HERE, "..", "..", "..", "..", "source", "core-specs", "data-channels"))
+DOCS = ("OPC-UA-Part6-Data-Channel-Transport.md", "spec.md")
 SIDECAR = os.path.join(HERE, "annex-wire-layouts.md")
 BEGIN = "<!-- BEGIN GENERATED: wire-layouts -->"
 END = "<!-- END GENERATED: wire-layouts -->"
@@ -41,7 +43,10 @@ def _section(v: dict) -> str:
     assert frame.payload == v["frame"].payload
 
     mode_label = "inline (opc.tcp, opc.wss)" if v["mode"] == INLINE else "QUIC (opc.quic)"
-    out = [f"### {v['name']}", "",
+    # The heading carries its anchor, because the template derives the number and matches an
+    # anchor exactly; a generated heading without one is a clause nothing can cite.
+    anchor = re.sub(r"[^a-z0-9]+", "", v["name"].lower())
+    out = [f"### {v['name']} {{#sec-{anchor}}}", "",
            f"**Framing** {mode_label} · **Frame type** `{v['frame'].type_name}` · "
            f"**ChannelId** {v['frame'].channel_id} · **Total** {len(data)} bytes", "",
            v["description"], "",

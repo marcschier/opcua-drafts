@@ -22,7 +22,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SELF_CONTAINED = [
     "_common/validate_local.py",
     "xregistry-catalog/tools/validate_local.py",
-    "../data-channels/tools/validate_local.py",
+    "../../source/core-specs/data-channels/tools/validate_local.py",
     "data-channels/tools/validate_local.py",
 ]
 

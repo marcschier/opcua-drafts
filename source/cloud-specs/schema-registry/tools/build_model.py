@@ -520,7 +520,12 @@ def inject(path, rendered):
 
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
-    outdir = os.path.dirname(here)
+    # The NodeSet and its CSV belong to the repository, not to this
+    # specification: the publisher reads them from model/, and a sibling
+    # published alongside borrows types from them by ModelUri.
+    outdir = os.path.abspath(os.path.join(
+        here, os.pardir, os.pardir, os.pardir, os.pardir, "model"))
+    os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "Opc.Ua.SchemaRegistry.NodeSet2.xml"), "w", encoding="utf-8") as f:
         f.write(emit())
     with open(os.path.join(outdir, "Opc.Ua.SchemaRegistry.NodeIds.csv"), "w", encoding="utf-8") as f:
@@ -528,8 +533,6 @@ if __name__ == "__main__":
     annex = emit_md()
     with open(os.path.join(here, "model-reference.md"), "w", encoding="utf-8") as f:
         f.write(annex)
-    if inject(os.path.join(outdir, "OPC-UA-Schema-Registry.md"), annex):
-        print("Injected Annex A into OPC-UA-Schema-Registry.md")
     nt = sum(1 for k in NODES if NODES[k].cls in ("UAObjectType", "UADataType", "UAReferenceType"))
     print(f"Nodes: {len(NODES)}  (types: {nt})")
     print(f"Member id range: 62500..{_next_member[0] - 1}")
