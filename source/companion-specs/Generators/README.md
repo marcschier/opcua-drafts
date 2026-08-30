@@ -30,7 +30,7 @@ it documents and the build reports where the two disagree. They were first emitt
 NodeSet by `word-drafts/tools/emit_node_tables.py`; from here on they are edited by hand and the
 build keeps them honest:
 
-```
+```text
 55 definition table(s) bound, 0 differ from the model
 ```
 
@@ -40,17 +40,18 @@ written with no table under it on purpose.
 
 ## A known build failure
 
-**The build currently fails, and the cause is in the publisher rather than in this
+**The build reports a missing dependency, and the cause is in the publisher rather than in this
 specification.**
 
-```
-error: Unknown namespace(s) referenced: Node 'nsu=http://opcfoundation.org/UA/Machinery/;i=5050'
-TypeId references unknown namespace 'http://opcfoundation.org/UA/IA/'
+```text
+missing dependency: http://opcfoundation.org/UA/IA/ - types borrowed from it cannot be resolved
 ```
 
 This model requires OPC 40001-1, which borrows one Object, `Stacklight`, from OPC 40080-1. The
-publisher does not register a namespace it reaches only through a dependency, so it cannot resolve
-that Object even though the file defining it is present.
+publisher does not register a namespace it reaches only through a dependency, so it cannot
+resolve that Object even when the file defining it is present — and a hard error on one
+specification stops the whole run, while a missing dependency does not. `model/dependencies/`
+therefore ships DI and Machinery but not IA.
 
 `model/dependencies/` holds the exactly consistent set: DI 1.04.0, Machinery 1.04.1 and IA 1.01.2,
 each the version the one above it declares. Five explanations were tested and eliminated — a
