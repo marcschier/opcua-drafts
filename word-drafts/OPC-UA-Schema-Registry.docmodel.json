@@ -46,7 +46,7 @@
           },
           {
             "r": "t",
-            "text": " of the abstract "
+            "text": " of the abstract <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKC4uLy4uL2NvcmUtc3BlY3MveHJlZ2lzdHJ5L09QQy1VQS14UmVnaXN0cnkubWQp -->"
           },
           {
             "r": "t",
@@ -55,7 +55,7 @@
           },
           {
             "r": "t",
-            "text": " base model — its registry, group and resource types are subtypes of the base "
+            "text": "<!-- /release-spec-link --> base model — its registry, group and resource types are subtypes of the base "
           },
           {
             "r": "code",
@@ -426,7 +426,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "It is explicitly out of scope to re-specify the Avro, Arrow or JSON encodings themselves, the PubSub message framing, the abstract xRegistry model, or the xRegistry API. The abstract model is defined by "
+            "text": "It is explicitly out of scope to re-specify the Avro, Arrow or JSON encodings themselves, the PubSub message framing, the abstract xRegistry model, or the xRegistry API. The abstract model is defined by <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKC4uLy4uL2NvcmUtc3BlY3MveHJlZ2lzdHJ5L09QQy1VQS14UmVnaXN0cnkubWQp -->"
           },
           {
             "r": "t",
@@ -435,7 +435,7 @@
           },
           {
             "r": "t",
-            "text": " and the OPC UA API for it by "
+            "text": "<!-- /release-spec-link --> and the OPC UA API for it by "
           },
           {
             "r": "t",
@@ -1488,10 +1488,8 @@
             "text": " — and reads it with the standard FileType Methods (base "
           },
           {
-            "r": "xref",
-            "target": "c5-1",
-            "kind": "clause",
-            "prefix": "5.1"
+            "r": "t",
+            "text": "§5.1"
           },
           {
             "r": "t",
@@ -1801,7 +1799,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "A Schema Registry is an xRegistry (per "
+            "text": "A Schema Registry is an xRegistry (per <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKC4uLy4uL2NvcmUtc3BlY3MveHJlZ2lzdHJ5L09QQy1VQS14UmVnaXN0cnkubWQp -->"
           },
           {
             "r": "t",
@@ -1810,7 +1808,7 @@
           },
           {
             "r": "t",
-            "text": ") whose groups are OPC UA namespaces and whose resources are schema documents. Because groups are folders and each schema document is a "
+            "text": "<!-- /release-spec-link -->) whose groups are OPC UA namespaces and whose resources are schema documents. Because groups are folders and each schema document is a "
           },
           {
             "r": "code",
@@ -2118,10 +2116,8 @@
               "text": " A schema referenced by one registry but hosted by another is resolved uniformly regardless of the hosting binding (base "
             },
             {
-              "r": "xref",
-              "target": "c6-11",
-              "kind": "clause",
-              "prefix": "6.11"
+              "r": "t",
+              "text": "§8"
             },
             {
               "r": "t",
@@ -3232,10 +3228,8 @@
             "text": ", base "
           },
           {
-            "r": "xref",
-            "target": "c6-8",
-            "kind": "clause",
-            "prefix": "6.8"
+            "r": "t",
+            "text": "§6.6"
           },
           {
             "r": "t",
@@ -4107,10 +4101,8 @@
             "text": "Base "
           },
           {
-            "r": "xref",
-            "target": "c6-9",
-            "kind": "clause",
-            "prefix": "6.9"
+            "r": "t",
+            "text": "§6.9"
           },
           {
             "r": "t",
@@ -4326,10 +4318,8 @@
             "text": " — that is, the construction of base "
           },
           {
-            "r": "xref",
-            "target": "c6-9",
-            "kind": "clause",
-            "prefix": "6.9"
+            "r": "t",
+            "text": "§6.9"
           },
           {
             "r": "t",
@@ -4816,10 +4806,8 @@
               "text": " (base "
             },
             {
-              "r": "xref",
-              "target": "c6-9",
-              "kind": "clause",
-              "prefix": "6.9"
+              "r": "t",
+              "text": "§6.7"
             },
             {
               "r": "t",
@@ -5076,10 +5064,8 @@
               "text": " resolve it against a federated registry the local registry references (base "
             },
             {
-              "r": "xref",
-              "target": "c6-11",
-              "kind": "clause",
-              "prefix": "6.11"
+              "r": "t",
+              "text": "§8"
             },
             {
               "r": "t",
@@ -6521,7 +6507,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "An implementation conforms if it exposes the in-server Schema Registry as a subtype of the "
+            "text": "An implementation conforms if it exposes the in-server Schema Registry as a subtype of the <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKC4uLy4uL2NvcmUtc3BlY3MveHJlZ2lzdHJ5L09QQy1VQS14UmVnaXN0cnkubWQp -->"
           },
           {
             "r": "t",
@@ -6530,7 +6516,7 @@
           },
           {
             "r": "t",
-            "text": " base model — a "
+            "text": "<!-- /release-spec-link --> base model — a "
           },
           {
             "r": "code",
@@ -9665,10 +9651,8 @@
                 "text": "Browse the sibling version files (base "
               },
               {
-                "r": "xref",
-                "target": "c6-2",
-                "kind": "clause",
-                "prefix": "6.2"
+                "r": "t",
+                "text": "§6"
               },
               {
                 "r": "t",
@@ -9809,10 +9793,8 @@
                 "text": " Method (base "
               },
               {
-                "r": "xref",
-                "target": "c6-2",
-                "kind": "clause",
-                "prefix": "6.2"
+                "r": "t",
+                "text": "§6"
               },
               {
                 "r": "t",

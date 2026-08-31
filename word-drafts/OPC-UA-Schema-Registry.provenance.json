@@ -1,7 +1,7 @@
 {
   "specId": "schema-registry",
-  "sourceCommit": "ef0ab3daad78ca7d8b83961d61302d2d1fb43ebc",
-  "sourceDigest": "8eed36f7f4ba4250",
+  "sourceCommit": "8901f9da5cf472c93873231c3cc996ab2f183328",
+  "sourceDigest": "f76a398fe6434217",
   "pipelineVersion": "2",
   "sources": [
     "word-drafts/tools/specs/schema-registry.json",
@@ -85,9 +85,6 @@
       "block": 3,
       "para": 20
     },
-    "0108BB48": {
-      "owner": "template"
-    },
     "011DA4C9": {
       "owner": "template"
     },
@@ -97,9 +94,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 9
-    },
-    "018D9FD7": {
-      "owner": "template"
     },
     "0197BAFD": {
       "owner": "template"
@@ -229,9 +223,6 @@
     "031AFF64": {
       "owner": "template"
     },
-    "032019E2": {
-      "owner": "template"
-    },
     "0334E2AD": {
       "owner": "template"
     },
@@ -306,12 +297,6 @@
       "kind": "nodetable",
       "para": 61
     },
-    "04CEDA5B": {
-      "owner": "template"
-    },
-    "04E20D9C": {
-      "owner": "template"
-    },
     "04FCFD07": {
       "owner": "template"
     },
@@ -344,9 +329,6 @@
       "section": "4 Overview",
       "block": 1,
       "para": 0
-    },
-    "05A2418E": {
-      "owner": "template"
     },
     "05A54A67": {
       "owner": "markdown",
@@ -562,9 +544,6 @@
     "08A4DE78": {
       "owner": "template"
     },
-    "08AE0153": {
-      "owner": "template"
-    },
     "08B14697": {
       "owner": "generated",
       "region": "instances",
@@ -656,9 +635,6 @@
       "section": "Annex D — HTTP binding correspondence (informative)",
       "block": 1,
       "para": 14
-    },
-    "09B277EB": {
-      "owner": "template"
     },
     "09B53FE6": {
       "owner": "generated",
@@ -875,9 +851,6 @@
     "0E9752BF": {
       "owner": "template"
     },
-    "0E9B87DD": {
-      "owner": "template"
-    },
     "0EC2F737": {
       "owner": "template"
     },
@@ -922,9 +895,6 @@
     "0F2FBC87": {
       "owner": "template"
     },
-    "0F5C397C": {
-      "owner": "template"
-    },
     "0F60C0AE": {
       "owner": "template"
     },
@@ -934,9 +904,6 @@
       "index": 8,
       "kind": "table",
       "para": 13
-    },
-    "0FA71BF1": {
-      "owner": "template"
     },
     "0FAC5245": {
       "owner": "template"
@@ -957,9 +924,6 @@
       "index": 1,
       "kind": "clause",
       "para": 0
-    },
-    "0FF3F457": {
-      "owner": "template"
     },
     "10211433": {
       "owner": "template"
@@ -1138,9 +1102,6 @@
     "13500168": {
       "owner": "template"
     },
-    "13AF7109": {
-      "owner": "template"
-    },
     "13F9004A": {
       "owner": "generated",
       "region": "objecttypes",
@@ -1184,12 +1145,6 @@
     "14A26184": {
       "owner": "template"
     },
-    "14A73223": {
-      "owner": "template"
-    },
-    "14B72AA9": {
-      "owner": "template"
-    },
     "14CC40EE": {
       "owner": "generated",
       "region": "objecttypes",
@@ -1201,9 +1156,6 @@
       "owner": "template"
     },
     "151E84D9": {
-      "owner": "template"
-    },
-    "15247055": {
       "owner": "template"
     },
     "1524B08A": {
@@ -1294,12 +1246,6 @@
     "165FAE10": {
       "owner": "template"
     },
-    "16756FFF": {
-      "owner": "template"
-    },
-    "16768424": {
-      "owner": "template"
-    },
     "16A0FD3A": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -1354,9 +1300,6 @@
       "para": 23
     },
     "172BDD6E": {
-      "owner": "template"
-    },
-    "1750C075": {
       "owner": "template"
     },
     "17598360": {
@@ -1433,9 +1376,6 @@
     "18284838": {
       "owner": "template"
     },
-    "1833D3CB": {
-      "owner": "template"
-    },
     "1849E80F": {
       "owner": "template"
     },
@@ -1479,9 +1419,6 @@
       "index": 15,
       "kind": "term",
       "para": 0
-    },
-    "18E79E3B": {
-      "owner": "template"
     },
     "18EF2DD7": {
       "owner": "generated",
@@ -1558,9 +1495,6 @@
       "kind": "table",
       "para": 4
     },
-    "19D9F187": {
-      "owner": "template"
-    },
     "19E8EA61": {
       "owner": "template"
     },
@@ -1624,9 +1558,6 @@
       "index": 5,
       "kind": "methodtable",
       "para": 35
-    },
-    "1B3DD6E1": {
-      "owner": "template"
     },
     "1B42AD91": {
       "owner": "template"
@@ -1746,9 +1677,6 @@
       "kind": "methodtable",
       "para": 27
     },
-    "1CF16B0D": {
-      "owner": "template"
-    },
     "1CF8F167": {
       "owner": "template"
     },
@@ -1817,9 +1745,6 @@
       "index": 2,
       "kind": "para",
       "para": 0
-    },
-    "1EAF2909": {
-      "owner": "template"
     },
     "1ECCD897": {
       "owner": "generated",
@@ -2013,9 +1938,6 @@
       "kind": "para",
       "para": 0
     },
-    "2296D647": {
-      "owner": "template"
-    },
     "22ABE184": {
       "owner": "template"
     },
@@ -2026,9 +1948,6 @@
       "owner": "template"
     },
     "22CB6F04": {
-      "owner": "template"
-    },
-    "22E1AE37": {
       "owner": "template"
     },
     "22E265C5": {
@@ -2674,9 +2593,6 @@
       "kind": "nodetable",
       "para": 35
     },
-    "2E692B50": {
-      "owner": "template"
-    },
     "2E8260BE": {
       "owner": "generated",
       "region": "annex-a",
@@ -2756,9 +2672,6 @@
     "300CB483": {
       "owner": "template"
     },
-    "30237F0C": {
-      "owner": "template"
-    },
     "303B0651": {
       "owner": "template"
     },
@@ -2819,9 +2732,6 @@
     "31219329": {
       "owner": "template"
     },
-    "31399915": {
-      "owner": "template"
-    },
     "31460FCA": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -2870,9 +2780,6 @@
       "block": 2,
       "para": 4
     },
-    "31F635C9": {
-      "owner": "template"
-    },
     "31F9FDED": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -2889,9 +2796,6 @@
       "section": "12 Conformance",
       "block": 1,
       "para": 0
-    },
-    "32564EDF": {
-      "owner": "template"
     },
     "3287CEB4": {
       "owner": "markdown",
@@ -2980,9 +2884,6 @@
       "section": "Annex D — HTTP binding correspondence (informative)",
       "block": 1,
       "para": 9
-    },
-    "341C948F": {
-      "owner": "template"
     },
     "34373C17": {
       "owner": "markdown",
@@ -3122,9 +3023,6 @@
     "35E11470": {
       "owner": "template"
     },
-    "35E6DF55": {
-      "owner": "template"
-    },
     "35F96F34": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -3149,9 +3047,6 @@
       "owner": "template"
     },
     "36ACB4D3": {
-      "owner": "template"
-    },
-    "36CC0D06": {
       "owner": "template"
     },
     "36CD0CDC": {
@@ -3211,9 +3106,6 @@
       "owner": "template"
     },
     "3741515E": {
-      "owner": "template"
-    },
-    "37858F5F": {
       "owner": "template"
     },
     "37AAD1F2": {
@@ -3354,12 +3246,6 @@
       "kind": "nodetable",
       "para": 43
     },
-    "3971D30E": {
-      "owner": "template"
-    },
-    "3975C5AE": {
-      "owner": "template"
-    },
     "397DE111": {
       "owner": "generated",
       "region": "namespaces",
@@ -3378,9 +3264,6 @@
       "owner": "template"
     },
     "398A594D": {
-      "owner": "template"
-    },
-    "398C72A5": {
       "owner": "template"
     },
     "39C2371C": {
@@ -3586,9 +3469,6 @@
       "kind": "para",
       "para": 0
     },
-    "3C853195": {
-      "owner": "template"
-    },
     "3C8E7C39": {
       "owner": "template"
     },
@@ -3598,9 +3478,6 @@
       "index": 20,
       "kind": "clause",
       "para": 0
-    },
-    "3CB9A8C5": {
-      "owner": "template"
     },
     "3CD1E582": {
       "owner": "template"
@@ -3714,9 +3591,6 @@
       "block": 1,
       "para": 20
     },
-    "3EDED51B": {
-      "owner": "template"
-    },
     "3EEF2598": {
       "owner": "template"
     },
@@ -3724,9 +3598,6 @@
       "owner": "template"
     },
     "3F013233": {
-      "owner": "template"
-    },
-    "3F014079": {
       "owner": "template"
     },
     "3F02669E": {
@@ -3902,9 +3773,6 @@
     "409F4EDE": {
       "owner": "template"
     },
-    "40A1A797": {
-      "owner": "template"
-    },
     "40AFA4FD": {
       "owner": "generated",
       "region": "objecttypes",
@@ -3918,9 +3786,6 @@
       "index": 11,
       "kind": "nodetable",
       "para": 55
-    },
-    "40C5F202": {
-      "owner": "template"
     },
     "40CD9EC3": {
       "owner": "generated",
@@ -4019,9 +3884,6 @@
     "41C6218D": {
       "owner": "template"
     },
-    "41ECEDF6": {
-      "owner": "template"
-    },
     "42064A04": {
       "owner": "template"
     },
@@ -4031,9 +3893,6 @@
       "section": "6.7 Group and schema identifiers",
       "block": 2,
       "para": 7
-    },
-    "4210AF5E": {
-      "owner": "template"
     },
     "4217FEAB": {
       "owner": "markdown",
@@ -4160,9 +4019,6 @@
       "index": 5,
       "kind": "methodtable",
       "para": 5
-    },
-    "4425B3CF": {
-      "owner": "template"
     },
     "443F78F0": {
       "owner": "markdown",
@@ -4318,18 +4174,12 @@
     "46DBE0D6": {
       "owner": "template"
     },
-    "46E53C96": {
-      "owner": "template"
-    },
     "4703DADC": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
       "section": "6.7 Group and schema identifiers",
       "block": 4,
       "para": 11
-    },
-    "470570FA": {
-      "owner": "template"
     },
     "470D529A": {
       "owner": "template"
@@ -4352,9 +4202,6 @@
       "para": 28
     },
     "47772F2D": {
-      "owner": "template"
-    },
-    "477BF9BB": {
       "owner": "template"
     },
     "47857AE0": {
@@ -4432,9 +4279,6 @@
     "483BDBB6": {
       "owner": "template"
     },
-    "483D41A1": {
-      "owner": "template"
-    },
     "486F82F8": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4442,13 +4286,7 @@
       "kind": "nodetable",
       "para": 1
     },
-    "48833A24": {
-      "owner": "template"
-    },
     "48CBD829": {
-      "owner": "template"
-    },
-    "48E51A6E": {
       "owner": "template"
     },
     "48EE46DA": {
@@ -4685,9 +4523,6 @@
       "block": 2,
       "para": 2
     },
-    "4C443C8F": {
-      "owner": "template"
-    },
     "4C5EA14D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4707,12 +4542,6 @@
       "index": 11,
       "kind": "nodetable",
       "para": 9
-    },
-    "4C7D2C6D": {
-      "owner": "template"
-    },
-    "4C9018FF": {
-      "owner": "template"
     },
     "4C9ACC5A": {
       "owner": "template"
@@ -4745,9 +4574,6 @@
       "kind": "nodetable",
       "para": 13
     },
-    "4D1C7B31": {
-      "owner": "template"
-    },
     "4D3D45BD": {
       "owner": "template"
     },
@@ -4777,9 +4603,6 @@
       "index": 17,
       "kind": "para",
       "para": 0
-    },
-    "4D7A2FBE": {
-      "owner": "template"
     },
     "4D8891A9": {
       "owner": "template"
@@ -4838,9 +4661,6 @@
       "index": 2,
       "kind": "annex-clause",
       "para": 0
-    },
-    "4F1BC75A": {
-      "owner": "template"
     },
     "4F2CC5EA": {
       "owner": "generated",
@@ -4999,9 +4819,6 @@
       "index": 11,
       "kind": "nodetable",
       "para": 73
-    },
-    "51EC4413": {
-      "owner": "template"
     },
     "51F818ED": {
       "owner": "template"
@@ -5411,9 +5228,6 @@
       "kind": "table",
       "para": 6
     },
-    "58AEE2BD": {
-      "owner": "template"
-    },
     "58B11B66": {
       "owner": "generated",
       "region": "normative-references",
@@ -5424,24 +5238,12 @@
     "58B6E67B": {
       "owner": "template"
     },
-    "58D49097": {
-      "owner": "template"
-    },
     "58E1449F": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 11,
       "kind": "nodetable",
       "para": 5
-    },
-    "59137C7E": {
-      "owner": "template"
-    },
-    "596CC317": {
-      "owner": "template"
-    },
-    "59A0B1B9": {
-      "owner": "template"
     },
     "59BC2737": {
       "owner": "template"
@@ -5536,9 +5338,6 @@
       "kind": "table",
       "para": 8
     },
-    "5B9BCD4E": {
-      "owner": "template"
-    },
     "5BA3A881": {
       "owner": "generated",
       "region": "model-overview",
@@ -5547,9 +5346,6 @@
       "para": 0
     },
     "5BB67A54": {
-      "owner": "template"
-    },
-    "5BB82282": {
       "owner": "template"
     },
     "5BBB184C": {
@@ -5583,9 +5379,6 @@
       "para": 4
     },
     "5C1502E1": {
-      "owner": "template"
-    },
-    "5C16FF0E": {
       "owner": "template"
     },
     "5C17EB58": {
@@ -5639,21 +5432,12 @@
       "kind": "nodetable",
       "para": 20
     },
-    "5CCBEE01": {
-      "owner": "template"
-    },
-    "5CCDC41A": {
-      "owner": "template"
-    },
     "5CD39F72": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 11,
       "kind": "nodetable",
       "para": 12
-    },
-    "5CE903FE": {
-      "owner": "template"
     },
     "5D43B04A": {
       "owner": "template"
@@ -5758,9 +5542,6 @@
       "block": 1,
       "para": 6
     },
-    "5EBA8E03": {
-      "owner": "template"
-    },
     "5EBDE072": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -5845,12 +5626,6 @@
     "6010B015": {
       "owner": "template"
     },
-    "601609CF": {
-      "owner": "template"
-    },
-    "6020E794": {
-      "owner": "template"
-    },
     "603FDD20": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -5866,9 +5641,6 @@
       "para": 3
     },
     "604D1432": {
-      "owner": "template"
-    },
-    "60BD8DE7": {
       "owner": "template"
     },
     "60CB01C3": {
@@ -5971,9 +5743,6 @@
       "kind": "table",
       "para": 1
     },
-    "62F9C210": {
-      "owner": "template"
-    },
     "62FE8FBE": {
       "owner": "generated",
       "region": "annex-a",
@@ -6004,19 +5773,10 @@
     "63456E43": {
       "owner": "template"
     },
-    "635220B4": {
-      "owner": "template"
-    },
     "635D28DD": {
       "owner": "template"
     },
     "636BD5A9": {
-      "owner": "template"
-    },
-    "6386700D": {
-      "owner": "template"
-    },
-    "63933EEB": {
       "owner": "template"
     },
     "6395D5A8": {
@@ -6060,9 +5820,6 @@
       "owner": "template"
     },
     "647B6181": {
-      "owner": "template"
-    },
-    "649C847B": {
       "owner": "template"
     },
     "64A8DE4B": {
@@ -6116,9 +5873,6 @@
       "owner": "template"
     },
     "65D28AF5": {
-      "owner": "template"
-    },
-    "660494FD": {
       "owner": "template"
     },
     "661F49E3": {
@@ -6344,9 +6098,6 @@
       "block": 0,
       "para": 16
     },
-    "696113DF": {
-      "owner": "template"
-    },
     "69788417": {
       "owner": "generated",
       "region": "terms",
@@ -6549,21 +6300,12 @@
     "6D2EFE75": {
       "owner": "template"
     },
-    "6D3B19DE": {
-      "owner": "template"
-    },
-    "6D5A5F27": {
-      "owner": "template"
-    },
     "6D741545": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 8,
       "kind": "nodetable",
       "para": 22
-    },
-    "6DBBD329": {
-      "owner": "template"
     },
     "6DCC9D93": {
       "owner": "generated",
@@ -6661,9 +6403,6 @@
       "block": 2,
       "para": 0
     },
-    "6F30D16A": {
-      "owner": "template"
-    },
     "6F425160": {
       "owner": "generated",
       "region": "objecttypes",
@@ -6743,9 +6482,6 @@
       "kind": "term",
       "para": 0
     },
-    "6FFC6CF5": {
-      "owner": "template"
-    },
     "70176A3A": {
       "owner": "template"
     },
@@ -6788,9 +6524,6 @@
       "kind": "nodetable",
       "para": 84
     },
-    "70D41F06": {
-      "owner": "template"
-    },
     "71081859": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -6799,9 +6532,6 @@
       "para": 7
     },
     "710B1B3E": {
-      "owner": "template"
-    },
-    "710B9693": {
       "owner": "template"
     },
     "712800E9": {
@@ -6906,9 +6636,6 @@
       "kind": "nodetable",
       "para": 11
     },
-    "71EF3673": {
-      "owner": "template"
-    },
     "7215D2D9": {
       "owner": "template"
     },
@@ -6939,9 +6666,6 @@
       "index": 60,
       "kind": "clause",
       "para": 0
-    },
-    "724B0C59": {
-      "owner": "template"
     },
     "7262113F": {
       "owner": "template"
@@ -7062,9 +6786,6 @@
       "kind": "term",
       "para": 2
     },
-    "748CD24D": {
-      "owner": "template"
-    },
     "749636ED": {
       "owner": "template"
     },
@@ -7078,16 +6799,10 @@
     "74AC7D25": {
       "owner": "template"
     },
-    "75129C56": {
-      "owner": "template"
-    },
     "75444632": {
       "owner": "template"
     },
     "7568F3A8": {
-      "owner": "template"
-    },
-    "756FE13D": {
       "owner": "template"
     },
     "7571AB2E": {
@@ -7141,9 +6856,6 @@
       "index": 10,
       "kind": "table",
       "para": 7
-    },
-    "762D74C2": {
-      "owner": "template"
     },
     "768467F7": {
       "owner": "template"
@@ -7228,9 +6940,6 @@
       "kind": "methodtable",
       "para": 25
     },
-    "77BBA3EE": {
-      "owner": "template"
-    },
     "77CA4C8E": {
       "owner": "template"
     },
@@ -7260,9 +6969,6 @@
       "index": 5,
       "kind": "methodtable",
       "para": 13
-    },
-    "785A40D3": {
-      "owner": "template"
     },
     "786C2F65": {
       "owner": "generated",
@@ -7363,9 +7069,6 @@
     "7930BCDD": {
       "owner": "template"
     },
-    "79439120": {
-      "owner": "template"
-    },
     "794E96CA": {
       "owner": "markdown",
       "file": "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
@@ -7424,9 +7127,6 @@
       "owner": "template"
     },
     "7A1CE53B": {
-      "owner": "template"
-    },
-    "7A285538": {
       "owner": "template"
     },
     "7A407262": {
@@ -7737,9 +7437,6 @@
       "index": 11,
       "kind": "nodetable",
       "para": 0
-    },
-    "7FB7E29A": {
-      "owner": "template"
     }
   }
 }
