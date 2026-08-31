@@ -4,7 +4,7 @@ This folder redirects to the two bodies that maintain the xRegistry work. The ab
 
 A registry and its groups are `FolderType` folders; a resource/version document *is* a `FileType` file. The base defines four ObjectTypes — `RegistryType`, `GroupType`, `ResourceType`, `AttributesType` — plus the common xRegistry attributes as Properties, a `Labels` (`AttributesType`) container whose `AddAttribute`/`RemoveAttribute` Methods add/remove individual browsable label Properties, auto-bootstrap, symbolic entity identifiers derived from a domain source identity beside a Mandatory human-readable `Name`, the three xRegistry representations (files / API server / document), and federation via `ExpandedNodeId`. The model is **domain-neutral**: concrete registries subtype these base types. The [Schema Registry](../../source/cloud-specs/schema-registry), the OpenUSD artifact registry and the WoT Thing-Description registry are domain extensions built on it.
 
-The model version is **0.3.0** (`2026-07-31`); a domain NodeSet that subtypes these types declares it as a `<RequiredModel>` at that version.
+The model version is **0.4.0** (`2026-08-31`); a domain NodeSet that subtypes these types declares it as a `<RequiredModel>` at that version.
 
 ## Where the base specification lives
 

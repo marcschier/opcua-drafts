@@ -2,11 +2,12 @@
 
 Repository-owned model artifacts mirror their specification under
 `model/<group>/<spec>/`. For example, the model for
-`source/core-specs/xregistry/` is in `model/core-specs/xregistry/`.
+`source/cloud-specs/schema-registry/` is in `model/cloud-specs/schema-registry/`.
 
 `model/dependencies/` remains flat because the specification publisher uses that
-directory for downloaded external dependencies. A model defined by this repository is
-not an external dependency and belongs in its specification's mirrored directory.
+directory for external dependencies. The released xRegistry model is kept there because
+its authoritative specification is under review in `OPCF-Members/spec-drafts`; a model
+defined by this repository belongs in its specification's mirrored directory.
 
 Pass `--nodesets model` to `Opc.Ua.SpecificationPublisher build` so dependency
 resolution searches the complete mirrored tree.
