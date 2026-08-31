@@ -1,7 +1,7 @@
 {
   "specId": "aas",
-  "sourceCommit": "f809bb056a336f35e3a37f965ec0e16de28f6024",
-  "sourceDigest": "bf164638a62d77a2",
+  "sourceCommit": "e949dc49ca62f3a468acaf5a4a621794f6693619",
+  "sourceDigest": "20660dc5e409f712",
   "pipelineVersion": "2",
   "sources": [
     "word-drafts/tools/specs/aas.json",
@@ -197,15 +197,19 @@
       "kind": "clause",
       "para": 0
     },
+    "00B2AF4F": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.5 Absent versus empty",
+      "block": 16,
+      "para": 0
+    },
     "00B6C00B": {
       "owner": "generated",
       "region": "instances",
       "index": 7,
       "kind": "methodtable",
       "para": 42
-    },
-    "00B8B2FF": {
-      "owner": "template"
     },
     "00BCD291": {
       "owner": "markdown",
@@ -339,9 +343,6 @@
       "index": 66,
       "kind": "nodetable",
       "para": 11
-    },
-    "0119FCE0": {
-      "owner": "template"
     },
     "011DA4C9": {
       "owner": "template"
@@ -551,9 +552,6 @@
       "index": 85,
       "kind": "enumtable",
       "para": 13
-    },
-    "01C0099D": {
-      "owner": "template"
     },
     "01C59B67": {
       "owner": "generated",
@@ -1052,9 +1050,6 @@
       "kind": "nodetable",
       "para": 108
     },
-    "0307C001": {
-      "owner": "template"
-    },
     "030B51F0": {
       "owner": "generated",
       "region": "use-cases",
@@ -1085,9 +1080,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 570
-    },
-    "0310113F": {
-      "owner": "template"
     },
     "0316A066": {
       "owner": "markdown",
@@ -1179,9 +1171,6 @@
       "block": 52,
       "para": 0
     },
-    "03412526": {
-      "owner": "template"
-    },
     "034BA8F7": {
       "owner": "generated",
       "region": "objecttypes",
@@ -1195,6 +1184,13 @@
       "section": "B.1 Referable and Identifiable",
       "block": 0,
       "para": 15
+    },
+    "034ECF05": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 130,
+      "kind": "clause",
+      "para": 0
     },
     "034FCA2F": {
       "owner": "template"
@@ -1356,9 +1352,6 @@
       "kind": "nodetable",
       "para": 30
     },
-    "03B17D25": {
-      "owner": "template"
-    },
     "03B69CB0": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -1407,9 +1400,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 937
-    },
-    "03CC45A0": {
-      "owner": "template"
     },
     "03D1BC78": {
       "owner": "generated",
@@ -1553,8 +1543,12 @@
       "block": 3,
       "para": 53
     },
-    "0422802C": {
-      "owner": "template"
+    "04284E59": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 153,
+      "kind": "clause",
+      "para": 0
     },
     "042F0024": {
       "owner": "generated",
@@ -1576,12 +1570,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 405
-    },
-    "0442BD79": {
-      "owner": "template"
-    },
-    "04488BFF": {
-      "owner": "template"
     },
     "0448B788": {
       "owner": "markdown",
@@ -1673,9 +1661,6 @@
       "index": 113,
       "kind": "nodetable",
       "para": 25
-    },
-    "04833729": {
-      "owner": "template"
     },
     "04844E81": {
       "owner": "generated",
@@ -1788,9 +1773,6 @@
       "index": 107,
       "kind": "nodetable",
       "para": 11
-    },
-    "04C647E3": {
-      "owner": "template"
     },
     "04C678B6": {
       "owner": "generated",
@@ -2077,9 +2059,6 @@
       "kind": "nodetable",
       "para": 142
     },
-    "0561B873": {
-      "owner": "template"
-    },
     "0569E3C1": {
       "owner": "generated",
       "region": "annex-a",
@@ -2094,9 +2073,6 @@
       "kind": "enumtable",
       "para": 26
     },
-    "057639DC": {
-      "owner": "template"
-    },
     "05795EE3": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2110,9 +2086,6 @@
       "section": "6.3.1 The xsd type mapping",
       "block": 4,
       "para": 0
-    },
-    "05815A7B": {
-      "owner": "template"
     },
     "0587FD6F": {
       "owner": "generated",
@@ -2661,13 +2634,6 @@
       "kind": "nodetable",
       "para": 361
     },
-    "071841DC": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 478,
-      "kind": "clause",
-      "para": 0
-    },
     "07196251": {
       "owner": "generated",
       "region": "objecttypes",
@@ -2874,9 +2840,6 @@
       "kind": "nodetable",
       "para": 707
     },
-    "078C0017": {
-      "owner": "template"
-    },
     "078D8723": {
       "owner": "generated",
       "region": "datatypes",
@@ -2884,15 +2847,19 @@
       "kind": "nodetable",
       "para": 9
     },
+    "0793E0F5": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 304,
+      "kind": "clause",
+      "para": 0
+    },
     "07A51FD5": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "F.4 A worked Thing Description",
       "block": 6,
       "para": 16
-    },
-    "07AA87C5": {
-      "owner": "template"
     },
     "07AA91A9": {
       "owner": "generated",
@@ -2914,9 +2881,6 @@
       "index": 9,
       "kind": "nodetable",
       "para": 1
-    },
-    "07C5446A": {
-      "owner": "template"
     },
     "07C5B902": {
       "owner": "markdown",
@@ -2973,9 +2937,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 407
-    },
-    "07D8EC12": {
-      "owner": "template"
     },
     "07DD76FA": {
       "owner": "generated",
@@ -3077,9 +3038,6 @@
       "index": 90,
       "kind": "nodetable",
       "para": 4
-    },
-    "082B2003": {
-      "owner": "template"
     },
     "082BB640": {
       "owner": "generated",
@@ -3337,9 +3295,6 @@
       "kind": "nodetable",
       "para": 245
     },
-    "08CD61E4": {
-      "owner": "template"
-    },
     "08CD7839": {
       "owner": "generated",
       "region": "annex-a",
@@ -3374,9 +3329,6 @@
       "kind": "enumtable",
       "para": 8
     },
-    "08E1A4AF": {
-      "owner": "template"
-    },
     "08E556E8": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -3390,9 +3342,6 @@
       "section": "1 Scope",
       "block": 5,
       "para": 0
-    },
-    "08EA7542": {
-      "owner": "template"
     },
     "08EAF303": {
       "owner": "generated",
@@ -3627,13 +3576,6 @@
       "block": 0,
       "para": 12
     },
-    "0993F899": {
-      "owner": "markdown",
-      "file": "companion-specs/AAS/OPC-UA-AAS.md",
-      "section": "6.5.4 Versioning and the lifecycle record",
-      "block": 30,
-      "para": 0
-    },
     "09AB5F0D": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -3714,9 +3656,6 @@
     "09E306DA": {
       "owner": "template"
     },
-    "09E76382": {
-      "owner": "template"
-    },
     "09EF8FD9": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -3751,9 +3690,6 @@
       "index": 7,
       "kind": "methodtable",
       "para": 9
-    },
-    "09FDDDF4": {
-      "owner": "template"
     },
     "0A014901": {
       "owner": "generated",
@@ -4077,9 +4013,6 @@
       "kind": "methodtable",
       "para": 7
     },
-    "0B02EAFF": {
-      "owner": "template"
-    },
     "0B05F558": {
       "owner": "generated",
       "region": "objecttypes",
@@ -4193,13 +4126,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 1033
-    },
-    "0B6A776F": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 218,
-      "kind": "clause",
-      "para": 0
     },
     "0B740C60": {
       "owner": "generated",
@@ -4373,9 +4299,6 @@
       "index": 30,
       "kind": "nodetable",
       "para": 33
-    },
-    "0BFEF76F": {
-      "owner": "template"
     },
     "0C03125B": {
       "owner": "markdown",
@@ -4552,9 +4475,6 @@
       "kind": "para",
       "para": 0
     },
-    "0C7500A0": {
-      "owner": "template"
-    },
     "0C7D54AF": {
       "owner": "generated",
       "region": "datatypes",
@@ -4607,9 +4527,6 @@
       "kind": "nodetable",
       "para": 15
     },
-    "0CACEE4B": {
-      "owner": "template"
-    },
     "0CB83642": {
       "owner": "generated",
       "region": "datatypes",
@@ -4644,9 +4561,6 @@
       "section": "B.4 Submodel elements",
       "block": 3,
       "para": 72
-    },
-    "0CE1372A": {
-      "owner": "template"
     },
     "0CE2A0E3": {
       "owner": "generated",
@@ -4689,6 +4603,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 258
+    },
+    "0D089165": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 401,
+      "kind": "clause",
+      "para": 0
     },
     "0D08FC30": {
       "owner": "markdown",
@@ -5088,12 +5009,6 @@
       "index": 7,
       "kind": "para",
       "para": 0
-    },
-    "0DFB0777": {
-      "owner": "template"
-    },
-    "0E03E198": {
-      "owner": "template"
     },
     "0E0DAF15": {
       "owner": "generated",
@@ -5505,8 +5420,12 @@
       "kind": "nodetable",
       "para": 21
     },
-    "0F6B8554": {
-      "owner": "template"
+    "0F655999": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.4 Round-trip conformance",
+      "block": 8,
+      "para": 4
     },
     "0F6D0F7E": {
       "owner": "markdown",
@@ -5541,13 +5460,6 @@
       "region": "datatypes",
       "index": 148,
       "kind": "para",
-      "para": 0
-    },
-    "0F808DFE": {
-      "owner": "markdown",
-      "file": "companion-specs/AAS/OPC-UA-AAS.md",
-      "section": "6.5.4 Versioning and the lifecycle record",
-      "block": 28,
       "para": 0
     },
     "0F8B9535": {
@@ -5591,9 +5503,6 @@
       "section": "B.1 Referable and Identifiable",
       "block": 0,
       "para": 3
-    },
-    "0FA1285D": {
-      "owner": "template"
     },
     "0FA47A63": {
       "owner": "generated",
@@ -5650,25 +5559,12 @@
       "kind": "nodetable",
       "para": 962
     },
-    "0FC6DD8B": {
-      "owner": "template"
-    },
     "0FCA0206": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "8 OPC UA DataTypes",
       "block": 0,
       "para": 0
-    },
-    "0FD48A69": {
-      "owner": "markdown",
-      "file": "companion-specs/AAS/OPC-UA-AAS.md",
-      "section": "6.5.4 Versioning and the lifecycle record",
-      "block": 35,
-      "para": 0
-    },
-    "0FDAFA10": {
-      "owner": "template"
     },
     "0FEF53F7": {
       "owner": "markdown",
@@ -5684,6 +5580,13 @@
       "block": 2,
       "para": 0
     },
+    "0FEFC14E": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.5 Absent versus empty",
+      "block": 8,
+      "para": 0
+    },
     "0FF0E09D": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -5697,9 +5600,6 @@
       "index": 33,
       "kind": "nodetable",
       "para": 27
-    },
-    "0FF9B3D6": {
-      "owner": "template"
     },
     "0FFD9294": {
       "owner": "generated",
@@ -5793,13 +5693,6 @@
       "index": 9,
       "kind": "nodetable",
       "para": 17
-    },
-    "105FD823": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 317,
-      "kind": "clause",
-      "para": 0
     },
     "106A0C2D": {
       "owner": "markdown",
@@ -5937,9 +5830,6 @@
       "kind": "nodetable",
       "para": 764
     },
-    "10BED013": {
-      "owner": "template"
-    },
     "10BF4B0E": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -5975,9 +5865,6 @@
       "kind": "nodetable",
       "para": 1
     },
-    "10D77987": {
-      "owner": "template"
-    },
     "10DA4AE9": {
       "owner": "generated",
       "region": "annex-a",
@@ -5998,9 +5885,6 @@
       "index": 45,
       "kind": "nodetable",
       "para": 25
-    },
-    "10EDC396": {
-      "owner": "template"
     },
     "10F16512": {
       "owner": "generated",
@@ -6088,9 +5972,6 @@
       "index": 30,
       "kind": "nodetable",
       "para": 24
-    },
-    "11295FEF": {
-      "owner": "template"
     },
     "1129C2CA": {
       "owner": "generated",
@@ -6333,9 +6214,6 @@
       "kind": "nodetable",
       "para": 624
     },
-    "11B29B5D": {
-      "owner": "template"
-    },
     "11BCD91C": {
       "owner": "generated",
       "region": "datatypes",
@@ -6439,9 +6317,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 737
-    },
-    "11EA7F77": {
-      "owner": "template"
     },
     "11ED4FBE": {
       "owner": "generated",
@@ -6550,9 +6425,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 144
-    },
-    "124B7951": {
-      "owner": "template"
     },
     "1260DC87": {
       "owner": "generated",
@@ -6686,9 +6558,6 @@
       "block": 41,
       "para": 0
     },
-    "12AE24BC": {
-      "owner": "template"
-    },
     "12B3EDF4": {
       "owner": "generated",
       "region": "annex-a",
@@ -6774,13 +6643,6 @@
       "index": 7,
       "kind": "methodtable",
       "para": 26
-    },
-    "12EA5211": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 356,
-      "kind": "clause",
-      "para": 0
     },
     "12F22233": {
       "owner": "markdown",
@@ -6952,8 +6814,12 @@
       "kind": "nodetable",
       "para": 1
     },
-    "13694AEE": {
-      "owner": "template"
+    "1366CC04": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.2 Canonical value representation",
+      "block": 29,
+      "para": 0
     },
     "1369664B": {
       "owner": "generated",
@@ -6968,9 +6834,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 146
-    },
-    "13748DF0": {
-      "owner": "template"
     },
     "13750A78": {
       "owner": "generated",
@@ -7070,9 +6933,6 @@
       "kind": "nodetable",
       "para": 1
     },
-    "13B17E3F": {
-      "owner": "template"
-    },
     "13B9DD53": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -7128,9 +6988,6 @@
       "index": 95,
       "kind": "nodetable",
       "para": 69
-    },
-    "13CDAF5C": {
-      "owner": "template"
     },
     "13CFA86A": {
       "owner": "generated",
@@ -7222,9 +7079,6 @@
       "index": 107,
       "kind": "nodetable",
       "para": 8
-    },
-    "140C4FE6": {
-      "owner": "template"
     },
     "140D66F8": {
       "owner": "generated",
@@ -7621,9 +7475,6 @@
       "kind": "nodetable",
       "para": 5
     },
-    "15355823": {
-      "owner": "template"
-    },
     "15418477": {
       "owner": "generated",
       "region": "objecttypes",
@@ -7644,13 +7495,6 @@
       "section": "6.3.1 The xsd type mapping",
       "block": 7,
       "para": 40
-    },
-    "1553C644": {
-      "owner": "markdown",
-      "file": "companion-specs/AAS/OPC-UA-AAS.md",
-      "section": "6.5.4 Versioning and the lifecycle record",
-      "block": 29,
-      "para": 0
     },
     "15548A58": {
       "owner": "generated",
@@ -7738,9 +7582,6 @@
       "index": 65,
       "kind": "enumtable",
       "para": 8
-    },
-    "1595DE69": {
-      "owner": "template"
     },
     "15A063AF": {
       "owner": "generated",
@@ -7991,9 +7832,6 @@
       "index": 81,
       "kind": "enumtable",
       "para": 5
-    },
-    "1661B5F7": {
-      "owner": "template"
     },
     "1662BF95": {
       "owner": "generated",
@@ -8380,6 +8218,13 @@
       "kind": "nodetable",
       "para": 33
     },
+    "176AFBF9": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.2 Canonical value representation",
+      "block": 27,
+      "para": 0
+    },
     "176DA544": {
       "owner": "generated",
       "region": "datatypes",
@@ -8445,9 +8290,6 @@
       "index": 113,
       "kind": "nodetable",
       "para": 39
-    },
-    "17AAF1D6": {
-      "owner": "template"
     },
     "17AB066E": {
       "owner": "generated",
@@ -8584,18 +8426,12 @@
     "17F09754": {
       "owner": "template"
     },
-    "17F30B30": {
-      "owner": "template"
-    },
     "17F53B3C": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 25
-    },
-    "17FA9418": {
-      "owner": "template"
     },
     "17FCD945": {
       "owner": "generated",
@@ -8617,9 +8453,6 @@
       "section": "6.5.9 Updateable registry",
       "block": 20,
       "para": 0
-    },
-    "180675CC": {
-      "owner": "template"
     },
     "180AFC30": {
       "owner": "generated",
@@ -9007,6 +8840,13 @@
       "block": 13,
       "para": 0
     },
+    "18E8E479": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.2 Canonical value representation",
+      "block": 26,
+      "para": 0
+    },
     "18FE1AB6": {
       "owner": "generated",
       "region": "datatypes",
@@ -9141,9 +8981,6 @@
       "index": 22,
       "kind": "para",
       "para": 0
-    },
-    "19748203": {
-      "owner": "template"
     },
     "1979CC8E": {
       "owner": "generated",
@@ -9340,6 +9177,13 @@
       "kind": "table",
       "para": 1
     },
+    "1A00357F": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 324,
+      "kind": "clause",
+      "para": 0
+    },
     "1A032736": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -9353,9 +9197,6 @@
       "section": "B.4 Submodel elements",
       "block": 3,
       "para": 45
-    },
-    "1A07C713": {
-      "owner": "template"
     },
     "1A07DAFC": {
       "owner": "generated",
@@ -9468,9 +9309,6 @@
       "kind": "nodetable",
       "para": 21
     },
-    "1A593578": {
-      "owner": "template"
-    },
     "1A5E24FF": {
       "owner": "generated",
       "region": "datatypes",
@@ -9519,9 +9357,6 @@
       "section": "6.5.2 Registry types",
       "block": 25,
       "para": 1
-    },
-    "1A725E07": {
-      "owner": "template"
     },
     "1A87835B": {
       "owner": "markdown",
@@ -9704,6 +9539,13 @@
       "kind": "para",
       "para": 0
     },
+    "1AE5BD60": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 418,
+      "kind": "clause",
+      "para": 0
+    },
     "1AE79D22": {
       "owner": "generated",
       "region": "objecttypes",
@@ -9788,9 +9630,6 @@
       "kind": "nodetable",
       "para": 282
     },
-    "1B1A5BCD": {
-      "owner": "template"
-    },
     "1B2C8ED6": {
       "owner": "generated",
       "region": "annex-a",
@@ -9816,9 +9655,6 @@
       "owner": "template"
     },
     "1B43258F": {
-      "owner": "template"
-    },
-    "1B44EB1D": {
       "owner": "template"
     },
     "1B4E4924": {
@@ -9985,13 +9821,6 @@
       "block": 27,
       "para": 0
     },
-    "1BB0E16E": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 141,
-      "kind": "clause",
-      "para": 0
-    },
     "1BB498CB": {
       "owner": "generated",
       "region": "objecttypes",
@@ -10005,9 +9834,6 @@
       "index": 85,
       "kind": "methodtable",
       "para": 15
-    },
-    "1BBDF749": {
-      "owner": "template"
     },
     "1BC77E62": {
       "owner": "generated",
@@ -10072,9 +9898,6 @@
       "kind": "nodetable",
       "para": 29
     },
-    "1BEA0855": {
-      "owner": "template"
-    },
     "1BF4CB94": {
       "owner": "generated",
       "region": "namespaces",
@@ -10088,9 +9911,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 486
-    },
-    "1BFAC944": {
-      "owner": "template"
     },
     "1BFADC21": {
       "owner": "generated",
@@ -10168,9 +9988,6 @@
       "kind": "nodetable",
       "para": 16
     },
-    "1C32C510": {
-      "owner": "template"
-    },
     "1C33550A": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -10198,6 +10015,13 @@
       "index": 3,
       "kind": "nodetable",
       "para": 19
+    },
+    "1C5077D1": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.5 Absent versus empty",
+      "block": 5,
+      "para": 0
     },
     "1C524E8B": {
       "owner": "markdown",
@@ -10240,12 +10064,6 @@
       "index": 45,
       "kind": "nodetable",
       "para": 31
-    },
-    "1C66FA30": {
-      "owner": "template"
-    },
-    "1C6A161D": {
-      "owner": "template"
     },
     "1C6F7A63": {
       "owner": "generated",
@@ -10337,6 +10155,13 @@
       "index": 21,
       "kind": "nodetable",
       "para": 33
+    },
+    "1C8999C6": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 276,
+      "kind": "clause",
+      "para": 0
     },
     "1C8AE963": {
       "owner": "template"
@@ -10433,9 +10258,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 683
-    },
-    "1CC2337D": {
-      "owner": "template"
     },
     "1CC75297": {
       "owner": "markdown",
@@ -10587,25 +10409,12 @@
       "kind": "nodetable",
       "para": 23
     },
-    "1D098070": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 345,
-      "kind": "clause",
-      "para": 0
-    },
-    "1D147D50": {
-      "owner": "template"
-    },
     "1D14B3FD": {
       "owner": "generated",
       "region": "datatypes",
       "index": 65,
       "kind": "enumtable",
       "para": 3
-    },
-    "1D1DD466": {
-      "owner": "template"
     },
     "1D216457": {
       "owner": "markdown",
@@ -10780,9 +10589,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 566
-    },
-    "1D8598CA": {
-      "owner": "template"
     },
     "1D86F1B3": {
       "owner": "generated",
@@ -11128,21 +10934,11 @@
     "1E6714A6": {
       "owner": "template"
     },
-    "1E69D222": {
-      "owner": "template"
-    },
     "1E6B09D2": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "6.5.6 Federation",
       "block": 1,
-      "para": 0
-    },
-    "1E71E7E4": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 126,
-      "kind": "clause",
       "para": 0
     },
     "1E7D90F5": {
@@ -11168,9 +10964,6 @@
       "index": 66,
       "kind": "nodetable",
       "para": 13
-    },
-    "1E939728": {
-      "owner": "template"
     },
     "1E966C91": {
       "owner": "markdown",
@@ -11389,9 +11182,6 @@
       "block": 22,
       "para": 0
     },
-    "1F1AA8BC": {
-      "owner": "template"
-    },
     "1F1CB714": {
       "owner": "generated",
       "region": "datatypes",
@@ -11405,9 +11195,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 776
-    },
-    "1F267271": {
-      "owner": "template"
     },
     "1F2ABA4A": {
       "owner": "generated",
@@ -11499,9 +11286,6 @@
       "index": 27,
       "kind": "nodetable",
       "para": 16
-    },
-    "1F4F47B4": {
-      "owner": "template"
     },
     "1F4FE1DE": {
       "owner": "generated",
@@ -11704,18 +11488,12 @@
       "kind": "term",
       "para": 1
     },
-    "200206D8": {
-      "owner": "template"
-    },
     "20118492": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "6.4 Round-trip conformance",
       "block": 20,
       "para": 0
-    },
-    "2011BAE1": {
-      "owner": "template"
     },
     "20149BFF": {
       "owner": "generated",
@@ -11877,13 +11655,6 @@
       "kind": "table",
       "para": 3
     },
-    "20AFB01C": {
-      "owner": "markdown",
-      "file": "companion-specs/AAS/OPC-UA-AAS.md",
-      "section": "6.5.4 Versioning and the lifecycle record",
-      "block": 31,
-      "para": 0
-    },
     "20BBEFA9": {
       "owner": "generated",
       "region": "objecttypes",
@@ -11947,9 +11718,6 @@
       "kind": "nodetable",
       "para": 27
     },
-    "20EC1F9D": {
-      "owner": "template"
-    },
     "20EFC7E7": {
       "owner": "generated",
       "region": "objecttypes",
@@ -11977,9 +11745,6 @@
       "section": "6.5.4 Versioning and the lifecycle record",
       "block": 26,
       "para": 0
-    },
-    "21012BEC": {
-      "owner": "template"
     },
     "21025AEF": {
       "owner": "generated",
@@ -12176,9 +11941,6 @@
       "kind": "para",
       "para": 0
     },
-    "217BA400": {
-      "owner": "template"
-    },
     "217FEC94": {
       "owner": "generated",
       "region": "objecttypes",
@@ -12357,9 +12119,6 @@
       "kind": "enumtable",
       "para": 9
     },
-    "21F2DE86": {
-      "owner": "template"
-    },
     "21FCCB5C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -12491,9 +12250,6 @@
       "kind": "methodtable",
       "para": 3
     },
-    "2258348A": {
-      "owner": "template"
-    },
     "2261CBF9": {
       "owner": "generated",
       "region": "datatypes",
@@ -12524,13 +12280,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 802
-    },
-    "226B458C": {
-      "owner": "markdown",
-      "file": "companion-specs/AAS/OPC-UA-AAS.md",
-      "section": "6.5.4 Versioning and the lifecycle record",
-      "block": 36,
-      "para": 0
     },
     "227B0C1D": {
       "owner": "markdown",
@@ -12938,9 +12687,6 @@
       "kind": "nodetable",
       "para": 26
     },
-    "239668CB": {
-      "owner": "template"
-    },
     "2399F5F8": {
       "owner": "generated",
       "region": "instances",
@@ -13258,6 +13004,13 @@
       "kind": "nodetable",
       "para": 347
     },
+    "243FDEB7": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 484,
+      "kind": "clause",
+      "para": 0
+    },
     "2446B637": {
       "owner": "generated",
       "region": "objecttypes",
@@ -13285,9 +13038,6 @@
       "index": 82,
       "kind": "nodetable",
       "para": 6
-    },
-    "245716AB": {
-      "owner": "template"
     },
     "2458110F": {
       "owner": "generated",
@@ -13462,9 +13212,6 @@
       "index": 95,
       "kind": "nodetable",
       "para": 61
-    },
-    "24C7975C": {
-      "owner": "template"
     },
     "24C98CDA": {
       "owner": "generated",
@@ -13783,18 +13530,12 @@
       "kind": "nodetable",
       "para": 24
     },
-    "258FFDA2": {
-      "owner": "template"
-    },
     "2599934D": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 113,
       "kind": "nodetable",
       "para": 44
-    },
-    "259B489C": {
-      "owner": "template"
     },
     "259CF75B": {
       "owner": "markdown",
@@ -13810,9 +13551,6 @@
       "block": 0,
       "para": 11
     },
-    "25A121F8": {
-      "owner": "template"
-    },
     "25A1FAC3": {
       "owner": "generated",
       "region": "annex-a",
@@ -13820,18 +13558,12 @@
       "kind": "nodetable",
       "para": 984
     },
-    "25AC6AFC": {
-      "owner": "template"
-    },
     "25B5F2B3": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 110,
       "kind": "nodetable",
       "para": 42
-    },
-    "25BAA157": {
-      "owner": "template"
     },
     "25C0E5C2": {
       "owner": "markdown",
@@ -13971,6 +13703,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 133
+    },
+    "262A079A": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 234,
+      "kind": "clause",
+      "para": 0
     },
     "2632D773": {
       "owner": "generated",
@@ -14330,9 +14069,6 @@
       "kind": "nodetable",
       "para": 32
     },
-    "2726A6BD": {
-      "owner": "template"
-    },
     "2729B5D5": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -14385,9 +14121,6 @@
       "kind": "nodetable",
       "para": 846
     },
-    "274FBBAB": {
-      "owner": "template"
-    },
     "2751EE8E": {
       "owner": "template"
     },
@@ -14432,9 +14165,6 @@
       "section": "6.2.4 Submodel elements",
       "block": 32,
       "para": 0
-    },
-    "276705C7": {
-      "owner": "template"
     },
     "276CB04C": {
       "owner": "generated",
@@ -14610,9 +14340,6 @@
       "kind": "nodetable",
       "para": 0
     },
-    "27E51F9E": {
-      "owner": "template"
-    },
     "27E72254": {
       "owner": "template"
     },
@@ -14752,9 +14479,6 @@
       "kind": "enumtable",
       "para": 48
     },
-    "2844ECD9": {
-      "owner": "template"
-    },
     "28481345": {
       "owner": "generated",
       "region": "objecttypes",
@@ -14837,9 +14561,6 @@
       "index": 6,
       "kind": "nodetable",
       "para": 9
-    },
-    "28C2A126": {
-      "owner": "template"
     },
     "28C8DF49": {
       "owner": "generated",
@@ -14997,9 +14718,6 @@
       "block": 0,
       "para": 4
     },
-    "29432D30": {
-      "owner": "template"
-    },
     "2944340D": {
       "owner": "template"
     },
@@ -15118,9 +14836,6 @@
       "block": 0,
       "para": 14
     },
-    "29906D8E": {
-      "owner": "template"
-    },
     "299361EF": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -15204,6 +14919,13 @@
       "index": 85,
       "kind": "methodtable",
       "para": 25
+    },
+    "29CF8E0A": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 325,
+      "kind": "clause",
+      "para": 0
     },
     "29DFA21F": {
       "owner": "generated",
@@ -15520,9 +15242,6 @@
       "block": 1,
       "para": 0
     },
-    "2AE6AE1A": {
-      "owner": "template"
-    },
     "2AFDDA16": {
       "owner": "generated",
       "region": "annex-a",
@@ -15805,6 +15524,13 @@
       "kind": "nodetable",
       "para": 7
     },
+    "2B81C1DF": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 252,
+      "kind": "clause",
+      "para": 0
+    },
     "2B82680C": {
       "owner": "template"
     },
@@ -15916,13 +15642,6 @@
       "block": 7,
       "para": 16
     },
-    "2BE9A611": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 547,
-      "kind": "clause",
-      "para": 0
-    },
     "2BEB52F0": {
       "owner": "generated",
       "region": "datatypes",
@@ -16010,9 +15729,6 @@
       "kind": "nodetable",
       "para": 103
     },
-    "2C420AD0": {
-      "owner": "template"
-    },
     "2C45E789": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -16064,9 +15780,6 @@
       "kind": "enumtable",
       "para": 19
     },
-    "2C5D8E8F": {
-      "owner": "template"
-    },
     "2C64AE08": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -16087,9 +15800,6 @@
       "index": 110,
       "kind": "nodetable",
       "para": 24
-    },
-    "2C74515A": {
-      "owner": "template"
     },
     "2C75CE09": {
       "owner": "markdown",
@@ -16182,9 +15892,6 @@
       "block": 20,
       "para": 0
     },
-    "2CDF0DD5": {
-      "owner": "template"
-    },
     "2CE2630E": {
       "owner": "generated",
       "region": "datatypes",
@@ -16192,15 +15899,19 @@
       "kind": "enumtable",
       "para": 44
     },
-    "2CE461DC": {
-      "owner": "template"
-    },
     "2CEB8DBF": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 80,
       "kind": "nodetable",
       "para": 1
+    },
+    "2CF6D371": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 553,
+      "kind": "clause",
+      "para": 0
     },
     "2CF6FB7C": {
       "owner": "generated",
@@ -16258,9 +15969,6 @@
       "block": 29,
       "para": 0
     },
-    "2D165B87": {
-      "owner": "template"
-    },
     "2D1B0286": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -16313,9 +16021,6 @@
       "kind": "nodetable",
       "para": 41
     },
-    "2D34B0F4": {
-      "owner": "template"
-    },
     "2D3B6CF2": {
       "owner": "generated",
       "region": "objecttypes",
@@ -16329,9 +16034,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 306
-    },
-    "2D3EC968": {
-      "owner": "template"
     },
     "2D407546": {
       "owner": "generated",
@@ -16586,9 +16288,6 @@
       "index": 142,
       "kind": "nodetable",
       "para": 28
-    },
-    "2DEB421C": {
-      "owner": "template"
     },
     "2DEFCD5A": {
       "owner": "generated",
@@ -16899,9 +16598,6 @@
       "section": "6.1.3 NodeId and BrowseName assignment",
       "block": 49,
       "para": 0
-    },
-    "2ED36BBA": {
-      "owner": "template"
     },
     "2ED3BF19": {
       "owner": "generated",
@@ -17552,9 +17248,6 @@
       "kind": "nodetable",
       "para": 28
     },
-    "308DF89B": {
-      "owner": "template"
-    },
     "308FC90C": {
       "owner": "generated",
       "region": "objecttypes",
@@ -17575,9 +17268,6 @@
       "section": "Annex C (informative) — OPC 30270 v1.00 correspondence",
       "block": 1,
       "para": 5
-    },
-    "309BC204": {
-      "owner": "template"
     },
     "30A13DA2": {
       "owner": "generated",
@@ -17666,9 +17356,6 @@
       "kind": "para",
       "para": 0
     },
-    "30E1E44E": {
-      "owner": "template"
-    },
     "30F4DF9C": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -17707,13 +17394,6 @@
       "block": 2,
       "para": 7
     },
-    "311434B2": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 269,
-      "kind": "clause",
-      "para": 0
-    },
     "3119D763": {
       "owner": "generated",
       "region": "datatypes",
@@ -17737,9 +17417,6 @@
       "index": 153,
       "kind": "enumtable",
       "para": 0
-    },
-    "312B8210": {
-      "owner": "template"
     },
     "312CDD1A": {
       "owner": "generated",
@@ -17839,9 +17516,6 @@
       "kind": "enumtable",
       "para": 2
     },
-    "3179C428": {
-      "owner": "template"
-    },
     "317D6343": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -17849,18 +17523,12 @@
       "block": 2,
       "para": 25
     },
-    "31822DE6": {
-      "owner": "template"
-    },
     "318264F0": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "B.4 Submodel elements",
       "block": 3,
       "para": 58
-    },
-    "318CB215": {
-      "owner": "template"
     },
     "318E304C": {
       "owner": "generated",
@@ -17892,9 +17560,6 @@
       "index": 39,
       "kind": "nodetable",
       "para": 11
-    },
-    "31A0FB64": {
-      "owner": "template"
     },
     "31A61335": {
       "owner": "template"
@@ -18147,9 +17812,6 @@
       "kind": "nodetable",
       "para": 109
     },
-    "3273FFBC": {
-      "owner": "template"
-    },
     "32744DF3": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -18202,9 +17864,6 @@
       "kind": "nodetable",
       "para": 22
     },
-    "329BBE8D": {
-      "owner": "template"
-    },
     "329CE0F2": {
       "owner": "generated",
       "region": "datatypes",
@@ -18231,6 +17890,13 @@
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "Annex D (informative) — Correspondence to the xRegistry HTTP binding",
       "block": 1,
+      "para": 0
+    },
+    "32B00E51": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 148,
+      "kind": "clause",
       "para": 0
     },
     "32B8DC33": {
@@ -18287,13 +17953,6 @@
       "index": 4,
       "kind": "table",
       "para": 25
-    },
-    "32ED7D38": {
-      "owner": "markdown",
-      "file": "companion-specs/AAS/OPC-UA-AAS.md",
-      "section": "6.5.4 Versioning and the lifecycle record",
-      "block": 33,
-      "para": 0
     },
     "32F03F89": {
       "owner": "markdown",
@@ -18801,9 +18460,6 @@
       "block": 26,
       "para": 3
     },
-    "342733DC": {
-      "owner": "template"
-    },
     "3428802E": {
       "owner": "generated",
       "region": "annex-a",
@@ -18831,13 +18487,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 580
-    },
-    "34480732": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 237,
-      "kind": "clause",
-      "para": 0
     },
     "344DEDA6": {
       "owner": "generated",
@@ -18956,9 +18605,6 @@
       "block": 7,
       "para": 88
     },
-    "34962FE8": {
-      "owner": "template"
-    },
     "34A90568": {
       "owner": "generated",
       "region": "datatypes",
@@ -19076,9 +18722,6 @@
       "index": 138,
       "kind": "nodetable",
       "para": 1
-    },
-    "3502F011": {
-      "owner": "template"
     },
     "350B7F33": {
       "owner": "template"
@@ -19219,12 +18862,6 @@
       "kind": "nodetable",
       "para": 253
     },
-    "3553FAEC": {
-      "owner": "template"
-    },
-    "355DF3DB": {
-      "owner": "template"
-    },
     "35603A85": {
       "owner": "template"
     },
@@ -19270,13 +18907,6 @@
       "kind": "nodetable",
       "para": 27
     },
-    "357E83BA": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 173,
-      "kind": "clause",
-      "para": 0
-    },
     "357FDAE6": {
       "owner": "generated",
       "region": "annex-a",
@@ -19304,9 +18934,6 @@
       "index": 0,
       "kind": "annex",
       "para": 0
-    },
-    "358833CF": {
-      "owner": "template"
     },
     "35896CE6": {
       "owner": "generated",
@@ -19357,9 +18984,6 @@
       "kind": "para",
       "para": 0
     },
-    "3598CF0B": {
-      "owner": "template"
-    },
     "359F4B0F": {
       "owner": "generated",
       "region": "annex-a",
@@ -19383,9 +19007,6 @@
       "index": 113,
       "kind": "nodetable",
       "para": 8
-    },
-    "35B0C021": {
-      "owner": "template"
     },
     "35B38B6B": {
       "owner": "markdown",
@@ -19428,9 +19049,6 @@
       "index": 27,
       "kind": "nodetable",
       "para": 46
-    },
-    "35DE53BA": {
-      "owner": "template"
     },
     "35E05057": {
       "owner": "generated",
@@ -19571,9 +19189,6 @@
     "36170D40": {
       "owner": "template"
     },
-    "36181618": {
-      "owner": "template"
-    },
     "361A78E6": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -19693,9 +19308,6 @@
       "block": 16,
       "para": 0
     },
-    "36557591": {
-      "owner": "template"
-    },
     "3656124A": {
       "owner": "generated",
       "region": "objecttypes",
@@ -19740,12 +19352,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 288
-    },
-    "3672504C": {
-      "owner": "template"
-    },
-    "367ADC0A": {
-      "owner": "template"
     },
     "367ED29A": {
       "owner": "markdown",
@@ -20025,9 +19631,6 @@
       "block": 8,
       "para": 0
     },
-    "36F73E6C": {
-      "owner": "template"
-    },
     "36F74192": {
       "owner": "template"
     },
@@ -20048,9 +19651,6 @@
       "kind": "nodetable",
       "para": 2
     },
-    "370DFDEE": {
-      "owner": "template"
-    },
     "371DE509": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -20064,9 +19664,6 @@
       "index": 60,
       "kind": "nodetable",
       "para": 14
-    },
-    "371EA6A1": {
-      "owner": "template"
     },
     "371ECE2C": {
       "owner": "template"
@@ -20171,18 +19768,12 @@
       "kind": "enumtable",
       "para": 23
     },
-    "3761E407": {
-      "owner": "template"
-    },
     "37658144": {
       "owner": "generated",
       "region": "datatypes",
       "index": 146,
       "kind": "nodetable",
       "para": 20
-    },
-    "376CF1D4": {
-      "owner": "template"
     },
     "376DC0E6": {
       "owner": "generated",
@@ -20365,9 +19956,6 @@
     "37E82FCA": {
       "owner": "template"
     },
-    "37EB9129": {
-      "owner": "template"
-    },
     "37EFD482": {
       "owner": "template"
     },
@@ -20408,9 +19996,6 @@
       "index": 115,
       "kind": "clause",
       "para": 0
-    },
-    "37FEAAB7": {
-      "owner": "template"
     },
     "380406CC": {
       "owner": "generated",
@@ -20598,9 +20183,6 @@
       "kind": "nodetable",
       "para": 10
     },
-    "38A0E5EB": {
-      "owner": "template"
-    },
     "38A24DC4": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -20692,9 +20274,6 @@
       "block": 8,
       "para": 0
     },
-    "38DF660A": {
-      "owner": "template"
-    },
     "38E60722": {
       "owner": "generated",
       "region": "annex-a",
@@ -20715,9 +20294,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 618
-    },
-    "38E7E07C": {
-      "owner": "template"
     },
     "38E80156": {
       "owner": "generated",
@@ -20869,9 +20445,6 @@
       "kind": "nodetable",
       "para": 80
     },
-    "394CC088": {
-      "owner": "template"
-    },
     "3950E019": {
       "owner": "generated",
       "region": "datatypes",
@@ -20899,6 +20472,13 @@
       "index": 154,
       "kind": "nodetable",
       "para": 2
+    },
+    "3958F0D7": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 195,
+      "kind": "clause",
+      "para": 0
     },
     "395B960C": {
       "owner": "generated",
@@ -21002,9 +20582,6 @@
       "owner": "template"
     },
     "398A594D": {
-      "owner": "template"
-    },
-    "39A6EAA3": {
       "owner": "template"
     },
     "39A823F4": {
@@ -21198,9 +20775,6 @@
       "block": 16,
       "para": 0
     },
-    "3A198014": {
-      "owner": "template"
-    },
     "3A1E7733": {
       "owner": "generated",
       "region": "objecttypes",
@@ -21333,9 +20907,6 @@
       "kind": "nodetable",
       "para": 22
     },
-    "3A82E638": {
-      "owner": "template"
-    },
     "3A86B89F": {
       "owner": "generated",
       "region": "annex-a",
@@ -21384,9 +20955,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 204
-    },
-    "3A9BB8A7": {
-      "owner": "template"
     },
     "3AA597A5": {
       "owner": "generated",
@@ -21668,9 +21236,6 @@
     "3B68BD0B": {
       "owner": "template"
     },
-    "3B6F39A3": {
-      "owner": "template"
-    },
     "3B782EAB": {
       "owner": "generated",
       "region": "annex-a",
@@ -21783,9 +21348,6 @@
       "index": 66,
       "kind": "nodetable",
       "para": 20
-    },
-    "3C0D6B39": {
-      "owner": "template"
     },
     "3C117294": {
       "owner": "markdown",
@@ -21967,9 +21529,6 @@
       "kind": "nodetable",
       "para": 0
     },
-    "3C7CC7BF": {
-      "owner": "template"
-    },
     "3C7DAE29": {
       "owner": "generated",
       "region": "datatypes",
@@ -22026,6 +21585,13 @@
       "owner": "generated",
       "region": "model-overview",
       "index": 20,
+      "kind": "clause",
+      "para": 0
+    },
+    "3CB563CB": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 289,
       "kind": "clause",
       "para": 0
     },
@@ -22136,9 +21702,6 @@
       "section": "F.3 Terms",
       "block": 0,
       "para": 42
-    },
-    "3D076BE4": {
-      "owner": "template"
     },
     "3D0CF341": {
       "owner": "generated",
@@ -22315,9 +21878,6 @@
       "kind": "nodetable",
       "para": 4
     },
-    "3D8E7D4D": {
-      "owner": "template"
-    },
     "3D8FBBA7": {
       "owner": "generated",
       "region": "datatypes",
@@ -22360,18 +21920,12 @@
       "kind": "nodetable",
       "para": 97
     },
-    "3DACE75D": {
-      "owner": "template"
-    },
     "3DC20DD6": {
       "owner": "generated",
       "region": "datatypes",
       "index": 126,
       "kind": "nodetable",
       "para": 21
-    },
-    "3DC3F74B": {
-      "owner": "template"
     },
     "3DC44C36": {
       "owner": "template"
@@ -22437,9 +21991,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 292
-    },
-    "3DFC822A": {
-      "owner": "template"
     },
     "3E078046": {
       "owner": "generated",
@@ -22643,9 +22194,6 @@
       "kind": "enumtable",
       "para": 9
     },
-    "3E85E41B": {
-      "owner": "template"
-    },
     "3E8ACF47": {
       "owner": "generated",
       "region": "objecttypes",
@@ -22669,9 +22217,6 @@
       "index": 101,
       "kind": "nodetable",
       "para": 4
-    },
-    "3EA4772E": {
-      "owner": "template"
     },
     "3EAF7545": {
       "owner": "generated",
@@ -22842,13 +22387,6 @@
       "kind": "nodetable",
       "para": 6
     },
-    "3F1D9B4A": {
-      "owner": "markdown",
-      "file": "companion-specs/AAS/OPC-UA-AAS.md",
-      "section": "6.5.4 Versioning and the lifecycle record",
-      "block": 34,
-      "para": 0
-    },
     "3F1F98D9": {
       "owner": "template"
     },
@@ -22936,9 +22474,6 @@
       "kind": "nodetable",
       "para": 941
     },
-    "3F3D80EF": {
-      "owner": "template"
-    },
     "3F421129": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -23022,9 +22557,6 @@
       "index": 9,
       "kind": "para",
       "para": 0
-    },
-    "3F7E849B": {
-      "owner": "template"
     },
     "3F873D95": {
       "owner": "generated",
@@ -23175,9 +22707,6 @@
       "kind": "methodtable",
       "para": 41
     },
-    "3FE7F164": {
-      "owner": "template"
-    },
     "3FED12F4": {
       "owner": "template"
     },
@@ -23236,9 +22765,6 @@
       "index": 118,
       "kind": "nodetable",
       "para": 0
-    },
-    "40246B09": {
-      "owner": "template"
     },
     "402499EC": {
       "owner": "markdown",
@@ -23786,6 +23312,13 @@
       "kind": "nodetable",
       "para": 52
     },
+    "413A950B": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 189,
+      "kind": "clause",
+      "para": 0
+    },
     "413B3BE2": {
       "owner": "generated",
       "region": "datatypes",
@@ -23889,9 +23422,6 @@
       "index": 8,
       "kind": "clause",
       "para": 0
-    },
-    "4175A03B": {
-      "owner": "template"
     },
     "417B133B": {
       "owner": "generated",
@@ -24052,9 +23582,6 @@
       "kind": "enumtable",
       "para": 3
     },
-    "41D3C4EF": {
-      "owner": "template"
-    },
     "41D71862": {
       "owner": "generated",
       "region": "datatypes",
@@ -24082,9 +23609,6 @@
       "index": 72,
       "kind": "nodetable",
       "para": 58
-    },
-    "41E7F270": {
-      "owner": "template"
     },
     "41E8481B": {
       "owner": "generated",
@@ -24208,9 +23732,6 @@
       "kind": "enumtable",
       "para": 30
     },
-    "42218E90": {
-      "owner": "template"
-    },
     "4228AD17": {
       "owner": "template"
     },
@@ -24300,9 +23821,6 @@
       "section": "B.4 Submodel elements",
       "block": 3,
       "para": 69
-    },
-    "424B9709": {
-      "owner": "template"
     },
     "42524AA8": {
       "owner": "markdown",
@@ -24459,6 +23977,13 @@
       "section": "F.4 A worked Thing Description",
       "block": 6,
       "para": 8
+    },
+    "42BDD758": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 51,
+      "kind": "clause",
+      "para": 0
     },
     "42CA143F": {
       "owner": "generated",
@@ -24723,16 +24248,6 @@
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "6.1.3 NodeId and BrowseName assignment",
       "block": 43,
-      "para": 0
-    },
-    "43C644A9": {
-      "owner": "template"
-    },
-    "43C64D52": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 395,
-      "kind": "clause",
       "para": 0
     },
     "43C9C4C3": {
@@ -25150,9 +24665,6 @@
       "kind": "nodetable",
       "para": 14
     },
-    "44CD77AA": {
-      "owner": "template"
-    },
     "44D00175": {
       "owner": "generated",
       "region": "annex-a",
@@ -25211,9 +24723,6 @@
       "index": 109,
       "kind": "enumtable",
       "para": 15
-    },
-    "44FED287": {
-      "owner": "template"
     },
     "4506C931": {
       "owner": "generated",
@@ -25281,18 +24790,12 @@
       "kind": "nodetable",
       "para": 42
     },
-    "45350C52": {
-      "owner": "template"
-    },
     "45373B5E": {
       "owner": "generated",
       "region": "datatypes",
       "index": 150,
       "kind": "nodetable",
       "para": 5
-    },
-    "453854A8": {
-      "owner": "template"
     },
     "453B22C5": {
       "owner": "generated",
@@ -25498,9 +25001,6 @@
       "kind": "nodetable",
       "para": 50
     },
-    "45C07767": {
-      "owner": "template"
-    },
     "45C0B24F": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -25542,9 +25042,6 @@
       "index": 7,
       "kind": "methodtable",
       "para": 11
-    },
-    "45F2457B": {
-      "owner": "template"
     },
     "45F84E67": {
       "owner": "generated",
@@ -25597,9 +25094,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 329
-    },
-    "46229644": {
-      "owner": "template"
     },
     "462C597D": {
       "owner": "generated",
@@ -25664,9 +25158,6 @@
       "kind": "nodetable",
       "para": 725
     },
-    "4654C49C": {
-      "owner": "template"
-    },
     "4654ED80": {
       "owner": "generated",
       "region": "datatypes",
@@ -25709,9 +25200,6 @@
       "block": 21,
       "para": 0
     },
-    "4673E4FB": {
-      "owner": "template"
-    },
     "4675F68F": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -25725,9 +25213,6 @@
       "index": 110,
       "kind": "nodetable",
       "para": 9
-    },
-    "467CFB6C": {
-      "owner": "template"
     },
     "467D174B": {
       "owner": "generated",
@@ -26097,9 +25582,6 @@
     "47772F2D": {
       "owner": "template"
     },
-    "47821912": {
-      "owner": "template"
-    },
     "478D1276": {
       "owner": "generated",
       "region": "objecttypes",
@@ -26134,9 +25616,6 @@
       "index": 30,
       "kind": "nodetable",
       "para": 50
-    },
-    "479CD87B": {
-      "owner": "template"
     },
     "47A0F086": {
       "owner": "generated",
@@ -26197,9 +25676,6 @@
       "kind": "nodetable",
       "para": 20
     },
-    "47C05C6F": {
-      "owner": "template"
-    },
     "47C7A199": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -26228,9 +25704,6 @@
       "block": 0,
       "para": 18
     },
-    "47D34A6C": {
-      "owner": "template"
-    },
     "47D36651": {
       "owner": "generated",
       "region": "objecttypes",
@@ -26251,6 +25724,13 @@
       "index": 0,
       "kind": "nodetable",
       "para": 610
+    },
+    "47DD9A7A": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 333,
+      "kind": "clause",
+      "para": 0
     },
     "47E1E2EF": {
       "owner": "template"
@@ -26401,9 +25881,6 @@
       "block": 26,
       "para": 0
     },
-    "487FAE24": {
-      "owner": "template"
-    },
     "4880EC82": {
       "owner": "generated",
       "region": "objecttypes",
@@ -26439,9 +25916,6 @@
       "block": 7,
       "para": 0
     },
-    "489FD797": {
-      "owner": "template"
-    },
     "48A0F069": {
       "owner": "generated",
       "region": "datatypes",
@@ -26455,9 +25929,6 @@
       "section": "6.2.4 Submodel elements",
       "block": 11,
       "para": 0
-    },
-    "48B7A0B3": {
-      "owner": "template"
     },
     "48BA327D": {
       "owner": "generated",
@@ -26518,9 +25989,6 @@
       "kind": "para",
       "para": 0
     },
-    "48DE6C71": {
-      "owner": "template"
-    },
     "48E18FB9": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -26551,9 +26019,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 171
-    },
-    "48FDE1FA": {
-      "owner": "template"
     },
     "48FEE932": {
       "owner": "generated",
@@ -26625,9 +26090,6 @@
       "block": 35,
       "para": 0
     },
-    "492D3672": {
-      "owner": "template"
-    },
     "492E8DB6": {
       "owner": "generated",
       "region": "datatypes",
@@ -26648,6 +26110,13 @@
       "section": "B.4 Submodel elements",
       "block": 3,
       "para": 60
+    },
+    "493ABDB8": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.5 Absent versus empty",
+      "block": 14,
+      "para": 0
     },
     "493D4FA5": {
       "owner": "generated",
@@ -26721,9 +26190,6 @@
       "index": 106,
       "kind": "nodetable",
       "para": 3
-    },
-    "496C4362": {
-      "owner": "template"
     },
     "496D8D54": {
       "owner": "generated",
@@ -27017,9 +26483,6 @@
       "kind": "enumtable",
       "para": 21
     },
-    "4A311E00": {
-      "owner": "template"
-    },
     "4A46C811": {
       "owner": "template"
     },
@@ -27138,9 +26601,6 @@
       "kind": "nodetable",
       "para": 15
     },
-    "4A98CE09": {
-      "owner": "template"
-    },
     "4A999619": {
       "owner": "generated",
       "region": "objecttypes",
@@ -27214,9 +26674,6 @@
       "kind": "enumtable",
       "para": 46
     },
-    "4AC6D254": {
-      "owner": "template"
-    },
     "4AC82863": {
       "owner": "generated",
       "region": "annex-a",
@@ -27244,9 +26701,6 @@
       "section": "6.3.1 The xsd type mapping",
       "block": 7,
       "para": 44
-    },
-    "4AE1D0A0": {
-      "owner": "template"
     },
     "4AE45D15": {
       "owner": "markdown",
@@ -27316,9 +26770,6 @@
       "index": 19,
       "kind": "para",
       "para": 0
-    },
-    "4B1A95EF": {
-      "owner": "template"
     },
     "4B1DA848": {
       "owner": "template"
@@ -27462,9 +26913,6 @@
       "index": 92,
       "kind": "nodetable",
       "para": 66
-    },
-    "4B876E32": {
-      "owner": "template"
     },
     "4B8B2C67": {
       "owner": "generated",
@@ -27650,9 +27098,6 @@
       "kind": "nodetable",
       "para": 6
     },
-    "4BE4D1F2": {
-      "owner": "template"
-    },
     "4BE8CD64": {
       "owner": "generated",
       "region": "datatypes",
@@ -27695,21 +27140,11 @@
       "kind": "nodetable",
       "para": 515
     },
-    "4C06B6D5": {
-      "owner": "template"
-    },
     "4C09B9A5": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "6.5.3 Identifiers",
       "block": 1,
-      "para": 0
-    },
-    "4C0B6612": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 474,
-      "kind": "clause",
       "para": 0
     },
     "4C0D238C": {
@@ -27789,9 +27224,6 @@
       "kind": "nodetable",
       "para": 5
     },
-    "4C5DE17A": {
-      "owner": "template"
-    },
     "4C5EC06B": {
       "owner": "template"
     },
@@ -27824,12 +27256,6 @@
       "para": 0
     },
     "4C6776DC": {
-      "owner": "template"
-    },
-    "4C74528E": {
-      "owner": "template"
-    },
-    "4C7F13A5": {
       "owner": "template"
     },
     "4C8E3658": {
@@ -27925,9 +27351,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 971
-    },
-    "4CC08B73": {
-      "owner": "template"
     },
     "4CC84D46": {
       "owner": "generated",
@@ -28089,6 +27512,13 @@
     "4D4D38A7": {
       "owner": "template"
     },
+    "4D4EDA5E": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 109,
+      "kind": "clause",
+      "para": 0
+    },
     "4D5064AE": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -28224,9 +27654,6 @@
       "kind": "nodetable",
       "para": 2
     },
-    "4DACE653": {
-      "owner": "template"
-    },
     "4DB218A3": {
       "owner": "generated",
       "region": "objecttypes",
@@ -28240,9 +27667,6 @@
       "section": "10 Profiles and conformance units",
       "block": 2,
       "para": 34
-    },
-    "4DC2053C": {
-      "owner": "template"
     },
     "4DC7ADF0": {
       "owner": "generated",
@@ -28452,9 +27876,6 @@
       "kind": "nodetable",
       "para": 16
     },
-    "4E78CAA5": {
-      "owner": "template"
-    },
     "4E79A416": {
       "owner": "generated",
       "region": "objecttypes",
@@ -28514,9 +27935,6 @@
       "kind": "nodetable",
       "para": 14
     },
-    "4E97B562": {
-      "owner": "template"
-    },
     "4E9B9825": {
       "owner": "template"
     },
@@ -28529,9 +27947,6 @@
       "index": 9,
       "kind": "methodtable",
       "para": 5
-    },
-    "4EB68D77": {
-      "owner": "template"
     },
     "4EB86386": {
       "owner": "generated",
@@ -28574,9 +27989,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 2
-    },
-    "4ED318C0": {
-      "owner": "template"
     },
     "4EDB4123": {
       "owner": "template"
@@ -28703,6 +28115,13 @@
       "kind": "nodetable",
       "para": 66
     },
+    "4F31B271": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 361,
+      "kind": "clause",
+      "para": 0
+    },
     "4F3290C1": {
       "owner": "generated",
       "region": "objecttypes",
@@ -28724,6 +28143,13 @@
       "kind": "nodetable",
       "para": 5
     },
+    "4F3F721C": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.5 Absent versus empty",
+      "block": 11,
+      "para": 0
+    },
     "4F4A401D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -28744,9 +28170,6 @@
       "section": "B.2 Shell and asset information",
       "block": 0,
       "para": 15
-    },
-    "4F671D16": {
-      "owner": "template"
     },
     "4F68B3FD": {
       "owner": "generated",
@@ -29013,9 +28436,6 @@
       "kind": "nodetable",
       "para": 0
     },
-    "502B0CB7": {
-      "owner": "template"
-    },
     "50302CF2": {
       "owner": "generated",
       "region": "instances",
@@ -29110,9 +28530,6 @@
       "kind": "nodetable",
       "para": 1046
     },
-    "5064D807": {
-      "owner": "template"
-    },
     "5066B514": {
       "owner": "generated",
       "region": "datatypes",
@@ -29148,18 +28565,12 @@
       "kind": "methodtable",
       "para": 24
     },
-    "5082FB05": {
-      "owner": "template"
-    },
     "5084AE83": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "6.5.7 Information disclosure tiers",
       "block": 13,
       "para": 0
-    },
-    "508AF296": {
-      "owner": "template"
     },
     "5090719F": {
       "owner": "generated",
@@ -29411,9 +28822,6 @@
       "kind": "enumtable",
       "para": 42
     },
-    "513D5759": {
-      "owner": "template"
-    },
     "513EEC4F": {
       "owner": "generated",
       "region": "objecttypes",
@@ -29491,9 +28899,6 @@
       "kind": "enumtable",
       "para": 18
     },
-    "5173DFEC": {
-      "owner": "template"
-    },
     "517B0156": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -29528,9 +28933,6 @@
       "index": 138,
       "kind": "nodetable",
       "para": 14
-    },
-    "5187166B": {
-      "owner": "template"
     },
     "5189B8D0": {
       "owner": "template"
@@ -29876,6 +29278,13 @@
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "6.5.7 Information disclosure tiers",
       "block": 1,
+      "para": 0
+    },
+    "5248F6AA": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.5 Absent versus empty",
+      "block": 7,
       "para": 0
     },
     "5249C901": {
@@ -30337,6 +29746,13 @@
     "5350E110": {
       "owner": "template"
     },
+    "53516D26": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.5 Absent versus empty",
+      "block": 6,
+      "para": 0
+    },
     "5351D94A": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -30424,9 +29840,6 @@
       "kind": "enumtable",
       "para": 4
     },
-    "53777A01": {
-      "owner": "template"
-    },
     "537C118D": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -30447,9 +29860,6 @@
       "index": 72,
       "kind": "nodetable",
       "para": 0
-    },
-    "538440A9": {
-      "owner": "template"
     },
     "5388EE81": {
       "owner": "markdown",
@@ -30591,9 +30001,6 @@
       "kind": "nodetable",
       "para": 3
     },
-    "53DA5999": {
-      "owner": "template"
-    },
     "53DF890D": {
       "owner": "generated",
       "region": "objecttypes",
@@ -30642,9 +30049,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 49
-    },
-    "540D68D5": {
-      "owner": "template"
     },
     "54121A0C": {
       "owner": "generated",
@@ -30855,9 +30259,6 @@
       "kind": "nodetable",
       "para": 26
     },
-    "549EDF9C": {
-      "owner": "template"
-    },
     "54A2254C": {
       "owner": "generated",
       "region": "annex-a",
@@ -30983,6 +30384,13 @@
       "kind": "nodetable",
       "para": 207
     },
+    "54EE8F65": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.5 Absent versus empty",
+      "block": 9,
+      "para": 0
+    },
     "54F505DE": {
       "owner": "generated",
       "region": "datatypes",
@@ -31069,9 +30477,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 1055
-    },
-    "55145AC1": {
-      "owner": "template"
     },
     "5517500E": {
       "owner": "generated",
@@ -31439,9 +30844,6 @@
       "kind": "nodetable",
       "para": 820
     },
-    "55F6D315": {
-      "owner": "template"
-    },
     "56000702": {
       "owner": "template"
     },
@@ -31584,9 +30986,6 @@
       "section": "6.5.4 Versioning and the lifecycle record",
       "block": 26,
       "para": 2
-    },
-    "566F60F4": {
-      "owner": "template"
     },
     "56712193": {
       "owner": "generated",
@@ -31944,9 +31343,6 @@
       "block": 10,
       "para": 0
     },
-    "577676B4": {
-      "owner": "template"
-    },
     "577A1930": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -32131,9 +31527,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 831
-    },
-    "5802BCB5": {
-      "owner": "template"
     },
     "58031C56": {
       "owner": "generated",
@@ -32407,9 +31800,6 @@
       "kind": "nodetable",
       "para": 7
     },
-    "5890E068": {
-      "owner": "template"
-    },
     "58988B59": {
       "owner": "generated",
       "region": "namespaces",
@@ -32436,6 +31826,13 @@
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "6.1.3 NodeId and BrowseName assignment",
       "block": 30,
+      "para": 0
+    },
+    "58A9DF4A": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 176,
+      "kind": "clause",
       "para": 0
     },
     "58B11B66": {
@@ -32468,9 +31865,6 @@
       "index": 34,
       "kind": "nodetable",
       "para": 6
-    },
-    "58C77C04": {
-      "owner": "template"
     },
     "58CBFDDF": {
       "owner": "markdown",
@@ -32548,13 +31942,6 @@
       "index": 114,
       "kind": "nodetable",
       "para": 5
-    },
-    "5912F64C": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 105,
-      "kind": "clause",
-      "para": 0
     },
     "591390A5": {
       "owner": "generated",
@@ -32654,18 +32041,12 @@
       "kind": "methodtable",
       "para": 17
     },
-    "5958CC5A": {
-      "owner": "template"
-    },
     "595CF88D": {
       "owner": "generated",
       "region": "datatypes",
       "index": 58,
       "kind": "nodetable",
       "para": 3
-    },
-    "5961E5E9": {
-      "owner": "template"
     },
     "59633E2D": {
       "owner": "markdown",
@@ -32701,9 +32082,6 @@
       "index": 125,
       "kind": "enumtable",
       "para": 22
-    },
-    "59755622": {
-      "owner": "template"
     },
     "5978EF2E": {
       "owner": "generated",
@@ -32958,9 +32336,6 @@
     "5A27D5A9": {
       "owner": "template"
     },
-    "5A283732": {
-      "owner": "template"
-    },
     "5A29DF4B": {
       "owner": "generated",
       "region": "objecttypes",
@@ -32987,13 +32362,6 @@
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "6.1.1 General",
       "block": 1,
-      "para": 0
-    },
-    "5A3B99CA": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 160,
-      "kind": "clause",
       "para": 0
     },
     "5A42D8FE": {
@@ -33097,9 +32465,6 @@
       "kind": "enumtable",
       "para": 20
     },
-    "5A7F474E": {
-      "owner": "template"
-    },
     "5A82FBEC": {
       "owner": "generated",
       "region": "objecttypes",
@@ -33176,9 +32541,6 @@
       "section": "6.5.4 Versioning and the lifecycle record",
       "block": 25,
       "para": 0
-    },
-    "5AC34870": {
-      "owner": "template"
     },
     "5AC72F2E": {
       "owner": "markdown",
@@ -33358,8 +32720,12 @@
       "kind": "clause",
       "para": 0
     },
-    "5B2DD8C3": {
-      "owner": "template"
+    "5B332A45": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.2 Canonical value representation",
+      "block": 28,
+      "para": 0
     },
     "5B336145": {
       "owner": "template"
@@ -33421,9 +32787,6 @@
       "para": 0
     },
     "5B4BDFBD": {
-      "owner": "template"
-    },
-    "5B5D97F7": {
       "owner": "template"
     },
     "5B5E87AA": {
@@ -33686,6 +33049,13 @@
       "kind": "nodetable",
       "para": 192
     },
+    "5C037EB8": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 285,
+      "kind": "clause",
+      "para": 0
+    },
     "5C0B28D2": {
       "owner": "generated",
       "region": "datatypes",
@@ -33792,9 +33162,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 735
-    },
-    "5C3EEC3E": {
-      "owner": "template"
     },
     "5C41C9B5": {
       "owner": "generated",
@@ -33904,9 +33271,6 @@
       "kind": "nodetable",
       "para": 1
     },
-    "5CAF300D": {
-      "owner": "template"
-    },
     "5CBBC4CC": {
       "owner": "generated",
       "region": "instances",
@@ -33914,18 +33278,12 @@
       "kind": "nodetable",
       "para": 20
     },
-    "5CC17585": {
-      "owner": "template"
-    },
     "5CC56974": {
       "owner": "generated",
       "region": "datatypes",
       "index": 21,
       "kind": "para",
       "para": 0
-    },
-    "5CC7E78C": {
-      "owner": "template"
     },
     "5CC88A5C": {
       "owner": "generated",
@@ -33997,9 +33355,6 @@
       "kind": "enumtable",
       "para": 64
     },
-    "5D06DB57": {
-      "owner": "template"
-    },
     "5D0A6C4D": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -34042,22 +33397,12 @@
       "kind": "nodetable",
       "para": 17
     },
-    "5D2A43D4": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 309,
-      "kind": "clause",
-      "para": 0
-    },
     "5D38EEDC": {
       "owner": "generated",
       "region": "datatypes",
       "index": 65,
       "kind": "enumtable",
       "para": 36
-    },
-    "5D409971": {
-      "owner": "template"
     },
     "5D43B04A": {
       "owner": "template"
@@ -34288,13 +33633,6 @@
       "kind": "nodetable",
       "para": 434
     },
-    "5DEE2B6F": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 47,
-      "kind": "clause",
-      "para": 0
-    },
     "5DFC4BF9": {
       "owner": "generated",
       "region": "objecttypes",
@@ -34356,13 +33694,6 @@
       "section": "B.5 Value classes",
       "block": 0,
       "para": 3
-    },
-    "5E25D91B": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 179,
-      "kind": "clause",
-      "para": 0
     },
     "5E2A17D4": {
       "owner": "markdown",
@@ -34489,9 +33820,6 @@
       "kind": "nodetable",
       "para": 1083
     },
-    "5E8ACD83": {
-      "owner": "template"
-    },
     "5E8B5726": {
       "owner": "generated",
       "region": "annex-a",
@@ -34563,9 +33891,6 @@
       "index": 7,
       "kind": "nodetable",
       "para": 6
-    },
-    "5EB7EFB5": {
-      "owner": "template"
     },
     "5EBE440C": {
       "owner": "markdown",
@@ -34650,9 +33975,6 @@
       "index": 3,
       "kind": "nodetable",
       "para": 3
-    },
-    "5EFD479A": {
-      "owner": "template"
     },
     "5EFE488F": {
       "owner": "generated",
@@ -34994,9 +34316,6 @@
       "kind": "nodetable",
       "para": 3
     },
-    "5FDF510D": {
-      "owner": "template"
-    },
     "5FEC56D2": {
       "owner": "generated",
       "region": "annex-a",
@@ -35091,13 +34410,6 @@
       "kind": "enumtable",
       "para": 20
     },
-    "603559A1": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 288,
-      "kind": "clause",
-      "para": 0
-    },
     "603653EC": {
       "owner": "generated",
       "region": "objecttypes",
@@ -35142,13 +34454,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 765
-    },
-    "606C1C99": {
-      "owner": "markdown",
-      "file": "companion-specs/AAS/OPC-UA-AAS.md",
-      "section": "6.5.4 Versioning and the lifecycle record",
-      "block": 37,
-      "para": 0
     },
     "606EE0E5": {
       "owner": "generated",
@@ -35247,9 +34552,6 @@
       "index": 98,
       "kind": "nodetable",
       "para": 27
-    },
-    "60C2CDC9": {
-      "owner": "template"
     },
     "60C82A66": {
       "owner": "markdown",
@@ -35445,12 +34747,6 @@
       "kind": "methodtable",
       "para": 41
     },
-    "613E150E": {
-      "owner": "template"
-    },
-    "613E6166": {
-      "owner": "template"
-    },
     "61407C73": {
       "owner": "generated",
       "region": "objecttypes",
@@ -35547,9 +34843,6 @@
       "index": 70,
       "kind": "nodetable",
       "para": 10
-    },
-    "61741740": {
-      "owner": "template"
     },
     "617566BD": {
       "owner": "generated",
@@ -35693,9 +34986,6 @@
       "kind": "para",
       "para": 0
     },
-    "61C4649D": {
-      "owner": "template"
-    },
     "61CDB42A": {
       "owner": "generated",
       "region": "datatypes",
@@ -35723,13 +35013,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 911
-    },
-    "61DAD622": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 438,
-      "kind": "clause",
-      "para": 0
     },
     "61E11834": {
       "owner": "markdown",
@@ -35778,9 +35061,6 @@
       "index": 6,
       "kind": "nodetable",
       "para": 18
-    },
-    "6200E5A3": {
-      "owner": "template"
     },
     "6203D05E": {
       "owner": "generated",
@@ -35840,6 +35120,13 @@
       "index": 142,
       "kind": "nodetable",
       "para": 2
+    },
+    "6216D1E3": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 372,
+      "kind": "clause",
+      "para": 0
     },
     "621816A7": {
       "owner": "template"
@@ -35931,9 +35218,6 @@
       "kind": "enumtable",
       "para": 16
     },
-    "62657993": {
-      "owner": "template"
-    },
     "6266BB93": {
       "owner": "generated",
       "region": "objecttypes",
@@ -35954,9 +35238,6 @@
       "index": 110,
       "kind": "nodetable",
       "para": 32
-    },
-    "626ED16B": {
-      "owner": "template"
     },
     "62715250": {
       "owner": "generated",
@@ -36013,9 +35294,6 @@
       "index": 151,
       "kind": "clause",
       "para": 0
-    },
-    "6290FA5F": {
-      "owner": "template"
     },
     "629B495E": {
       "owner": "generated",
@@ -36106,9 +35384,6 @@
       "index": 65,
       "kind": "enumtable",
       "para": 60
-    },
-    "62BECABB": {
-      "owner": "template"
     },
     "62C520E4": {
       "owner": "generated",
@@ -36239,9 +35514,6 @@
       "kind": "nodetable",
       "para": 40
     },
-    "63251133": {
-      "owner": "template"
-    },
     "6325E0F0": {
       "owner": "generated",
       "region": "terms",
@@ -36263,9 +35535,6 @@
       "kind": "enumtable",
       "para": 16
     },
-    "632C9F4B": {
-      "owner": "template"
-    },
     "63310EAC": {
       "owner": "template"
     },
@@ -36282,9 +35551,6 @@
       "index": 66,
       "kind": "nodetable",
       "para": 13
-    },
-    "633B0C0C": {
-      "owner": "template"
     },
     "633C744F": {
       "owner": "template"
@@ -36866,9 +36132,6 @@
       "kind": "methodtable",
       "para": 9
     },
-    "64AF749C": {
-      "owner": "template"
-    },
     "64B70583": {
       "owner": "generated",
       "region": "datatypes",
@@ -36956,18 +36219,12 @@
       "block": 17,
       "para": 0
     },
-    "6500454C": {
-      "owner": "template"
-    },
     "65055F20": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 24,
       "kind": "nodetable",
       "para": 9
-    },
-    "6508A4E6": {
-      "owner": "template"
     },
     "65102DBD": {
       "owner": "generated",
@@ -37021,6 +36278,13 @@
     "6522B0AC": {
       "owner": "template"
     },
+    "652653B2": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 157,
+      "kind": "clause",
+      "para": 0
+    },
     "6526C69E": {
       "owner": "template"
     },
@@ -37030,9 +36294,6 @@
       "index": 21,
       "kind": "nodetable",
       "para": 21
-    },
-    "65354417": {
-      "owner": "template"
     },
     "653BC94C": {
       "owner": "generated",
@@ -37055,9 +36316,6 @@
       "kind": "nodetable",
       "para": 0
     },
-    "65487BCF": {
-      "owner": "template"
-    },
     "6548BD93": {
       "owner": "generated",
       "region": "objecttypes",
@@ -37071,9 +36329,6 @@
       "index": 77,
       "kind": "methodtable",
       "para": 12
-    },
-    "65625386": {
-      "owner": "template"
     },
     "6564415D": {
       "owner": "markdown",
@@ -37400,9 +36655,6 @@
     "6687F206": {
       "owner": "template"
     },
-    "668E84A2": {
-      "owner": "template"
-    },
     "6695B3AC": {
       "owner": "template"
     },
@@ -37534,9 +36786,6 @@
       "kind": "nodetable",
       "para": 17
     },
-    "66F651D4": {
-      "owner": "template"
-    },
     "66FBFCFC": {
       "owner": "generated",
       "region": "objecttypes",
@@ -37593,18 +36842,12 @@
       "kind": "enumtable",
       "para": 51
     },
-    "6724506A": {
-      "owner": "template"
-    },
     "67292CFC": {
       "owner": "generated",
       "region": "datatypes",
       "index": 124,
       "kind": "para",
       "para": 0
-    },
-    "6729C9BD": {
-      "owner": "template"
     },
     "672AFA0E": {
       "owner": "generated",
@@ -37787,13 +37030,6 @@
       "index": 51,
       "kind": "nodetable",
       "para": 1
-    },
-    "67B2F15D": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 260,
-      "kind": "clause",
-      "para": 0
     },
     "67B52556": {
       "owner": "generated",
@@ -38202,12 +37438,6 @@
       "kind": "nodetable",
       "para": 5
     },
-    "68EE1D64": {
-      "owner": "template"
-    },
-    "68F686D1": {
-      "owner": "template"
-    },
     "68FA4EDC": {
       "owner": "generated",
       "region": "objecttypes",
@@ -38431,9 +37661,6 @@
       "block": 2,
       "para": 0
     },
-    "69862842": {
-      "owner": "template"
-    },
     "69896249": {
       "owner": "generated",
       "region": "objecttypes",
@@ -38525,9 +37752,6 @@
       "kind": "nodetable",
       "para": 779
     },
-    "69D74006": {
-      "owner": "template"
-    },
     "69D7E3F1": {
       "owner": "template"
     },
@@ -38579,9 +37803,6 @@
       "index": 63,
       "kind": "nodetable",
       "para": 19
-    },
-    "69F5EB85": {
-      "owner": "template"
     },
     "69F95DA9": {
       "owner": "generated",
@@ -38690,9 +37911,6 @@
       "index": 110,
       "kind": "nodetable",
       "para": 7
-    },
-    "6A279C88": {
-      "owner": "template"
     },
     "6A2E92AC": {
       "owner": "generated",
@@ -39084,9 +38302,6 @@
       "kind": "methodtable",
       "para": 24
     },
-    "6B197AC3": {
-      "owner": "template"
-    },
     "6B2218ED": {
       "owner": "generated",
       "region": "annex-a",
@@ -39108,18 +38323,12 @@
       "kind": "nodetable",
       "para": 20
     },
-    "6B389EA6": {
-      "owner": "template"
-    },
     "6B453EC1": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 12,
       "kind": "nodetable",
       "para": 21
-    },
-    "6B4A1F0B": {
-      "owner": "template"
     },
     "6B4A45F1": {
       "owner": "generated",
@@ -39144,9 +38353,6 @@
       "index": 101,
       "kind": "nodetable",
       "para": 18
-    },
-    "6B650280": {
-      "owner": "template"
     },
     "6B67CB45": {
       "owner": "markdown",
@@ -39347,9 +38553,6 @@
       "kind": "methodtable",
       "para": 24
     },
-    "6BEEF29D": {
-      "owner": "template"
-    },
     "6BF98608": {
       "owner": "template"
     },
@@ -39390,9 +38593,6 @@
       "section": "6.1.2 Canonical value representation",
       "block": 13,
       "para": 0
-    },
-    "6C28AE8D": {
-      "owner": "template"
     },
     "6C297A09": {
       "owner": "markdown",
@@ -39780,9 +38980,6 @@
       "kind": "nodetable",
       "para": 5
     },
-    "6D296AE3": {
-      "owner": "template"
-    },
     "6D2C42EB": {
       "owner": "generated",
       "region": "annex-a",
@@ -39821,9 +39018,6 @@
       "kind": "enumtable",
       "para": 6
     },
-    "6D5A5C15": {
-      "owner": "template"
-    },
     "6D5D35C1": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -39844,9 +39038,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 495
-    },
-    "6D74D73E": {
-      "owner": "template"
     },
     "6D773C69": {
       "owner": "generated",
@@ -39895,6 +39086,13 @@
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "6.5.10 Environment documents",
       "block": 17,
+      "para": 0
+    },
+    "6DBA0C8C": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 480,
+      "kind": "clause",
       "para": 0
     },
     "6DC3CAA5": {
@@ -39966,9 +39164,6 @@
       "index": 30,
       "kind": "nodetable",
       "para": 1
-    },
-    "6DF53BC9": {
-      "owner": "template"
     },
     "6DF78B34": {
       "owner": "generated",
@@ -40070,9 +39265,6 @@
       "index": 114,
       "kind": "nodetable",
       "para": 14
-    },
-    "6E2F6BA8": {
-      "owner": "template"
     },
     "6E328AA6": {
       "owner": "generated",
@@ -40219,6 +39411,13 @@
       "block": 7,
       "para": 0
     },
+    "6E9C49B9": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.5 Absent versus empty",
+      "block": 13,
+      "para": 0
+    },
     "6EA1DFF8": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -40250,18 +39449,12 @@
     "6EA979F9": {
       "owner": "template"
     },
-    "6EB1D2F7": {
-      "owner": "template"
-    },
     "6EB6E7CB": {
       "owner": "generated",
       "region": "datatypes",
       "index": 105,
       "kind": "enumtable",
       "para": 8
-    },
-    "6EBD09FE": {
-      "owner": "template"
     },
     "6EBF25AC": {
       "owner": "generated",
@@ -40309,9 +39502,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 241
-    },
-    "6EE1EA85": {
-      "owner": "template"
     },
     "6EE85F70": {
       "owner": "generated",
@@ -40421,9 +39611,6 @@
       "kind": "nodetable",
       "para": 11
     },
-    "6F267C1B": {
-      "owner": "template"
-    },
     "6F2D3311": {
       "owner": "generated",
       "region": "datatypes",
@@ -40436,13 +39623,6 @@
       "region": "datatypes",
       "index": 19,
       "kind": "nodetable",
-      "para": 0
-    },
-    "6F3AF1D1": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 273,
-      "kind": "clause",
       "para": 0
     },
     "6F3E9614": {
@@ -40475,6 +39655,13 @@
     },
     "6F469DA7": {
       "owner": "template"
+    },
+    "6F4C56B3": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 444,
+      "kind": "clause",
+      "para": 0
     },
     "6F5382D6": {
       "owner": "generated",
@@ -40584,9 +39771,6 @@
       "kind": "table",
       "para": 2
     },
-    "6FBD4B82": {
-      "owner": "template"
-    },
     "6FBEC638": {
       "owner": "generated",
       "region": "objecttypes",
@@ -40674,9 +39858,6 @@
       "kind": "term",
       "para": 0
     },
-    "6FDF9365": {
-      "owner": "template"
-    },
     "6FDFC2E6": {
       "owner": "generated",
       "region": "objecttypes",
@@ -40725,16 +39906,6 @@
       "index": 146,
       "kind": "nodetable",
       "para": 18
-    },
-    "6FF8E6B8": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 236,
-      "kind": "clause",
-      "para": 0
-    },
-    "6FFBFF30": {
-      "owner": "template"
     },
     "6FFC1485": {
       "owner": "generated",
@@ -40896,9 +40067,6 @@
     "705B8477": {
       "owner": "template"
     },
-    "7060DACB": {
-      "owner": "template"
-    },
     "706135BF": {
       "owner": "generated",
       "region": "objecttypes",
@@ -41016,9 +40184,6 @@
       "index": 109,
       "kind": "enumtable",
       "para": 3
-    },
-    "70A867FF": {
-      "owner": "template"
     },
     "70AEFD0E": {
       "owner": "generated",
@@ -41211,9 +40376,6 @@
       "owner": "template"
     },
     "7128BAD1": {
-      "owner": "template"
-    },
-    "712949D7": {
       "owner": "template"
     },
     "712A71DF": {
@@ -41434,9 +40596,6 @@
       "index": 7,
       "kind": "methodtable",
       "para": 20
-    },
-    "71CE05E6": {
-      "owner": "template"
     },
     "71D48807": {
       "owner": "markdown",
@@ -41689,9 +40848,6 @@
       "block": 3,
       "para": 9
     },
-    "725A10C8": {
-      "owner": "template"
-    },
     "725A94C5": {
       "owner": "generated",
       "region": "datatypes",
@@ -41855,6 +41011,13 @@
       "kind": "nodetable",
       "para": 19
     },
+    "72C9A325": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.5 Absent versus empty",
+      "block": 15,
+      "para": 0
+    },
     "72CF0024": {
       "owner": "generated",
       "region": "objecttypes",
@@ -41997,13 +41160,6 @@
       "index": 57,
       "kind": "nodetable",
       "para": 10
-    },
-    "731FEFDB": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 412,
-      "kind": "clause",
-      "para": 0
     },
     "7324BD53": {
       "owner": "markdown",
@@ -42274,9 +41430,6 @@
       "kind": "nodetable",
       "para": 59
     },
-    "73B1FB55": {
-      "owner": "template"
-    },
     "73BA2470": {
       "owner": "generated",
       "region": "objecttypes",
@@ -42333,15 +41486,19 @@
       "kind": "nodetable",
       "para": 795
     },
-    "73D06511": {
-      "owner": "template"
-    },
     "73D651D6": {
       "owner": "generated",
       "region": "objecttypes",
       "index": 48,
       "kind": "nodetable",
       "para": 3
+    },
+    "73DA802F": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.5 Absent versus empty",
+      "block": 10,
+      "para": 0
     },
     "73DD68BB": {
       "owner": "generated",
@@ -42406,9 +41563,6 @@
       "kind": "nodetable",
       "para": 9
     },
-    "74037F3C": {
-      "owner": "template"
-    },
     "74045FBC": {
       "owner": "generated",
       "region": "datatypes",
@@ -42422,9 +41576,6 @@
       "section": "6.4 Round-trip conformance",
       "block": 17,
       "para": 0
-    },
-    "7407EA86": {
-      "owner": "template"
     },
     "7408A858": {
       "owner": "generated",
@@ -42509,18 +41660,12 @@
       "kind": "nodetable",
       "para": 35
     },
-    "7433B57F": {
-      "owner": "template"
-    },
     "74351E99": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 317
-    },
-    "7436ECE6": {
-      "owner": "template"
     },
     "743B6828": {
       "owner": "generated",
@@ -42585,9 +41730,6 @@
       "kind": "nodetable",
       "para": 1
     },
-    "7479D62A": {
-      "owner": "template"
-    },
     "74840927": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -42621,13 +41763,6 @@
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
       "section": "F.1 Scope of the claim",
       "block": 3,
-      "para": 0
-    },
-    "748A6672": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 137,
-      "kind": "clause",
       "para": 0
     },
     "7495A28C": {
@@ -42727,9 +41862,6 @@
       "kind": "annex-clause",
       "para": 0
     },
-    "74F9DEB6": {
-      "owner": "template"
-    },
     "74FF44EC": {
       "owner": "generated",
       "region": "objecttypes",
@@ -42785,9 +41917,6 @@
       "index": 83,
       "kind": "nodetable",
       "para": 28
-    },
-    "753AD7C7": {
-      "owner": "template"
     },
     "753AFC01": {
       "owner": "generated",
@@ -43120,9 +42249,6 @@
       "kind": "methodtable",
       "para": 26
     },
-    "762B2B4E": {
-      "owner": "template"
-    },
     "7631BFFF": {
       "owner": "generated",
       "region": "objecttypes",
@@ -43150,9 +42276,6 @@
       "index": 12,
       "kind": "nodetable",
       "para": 6
-    },
-    "7642980F": {
-      "owner": "template"
     },
     "7646926D": {
       "owner": "generated",
@@ -43342,9 +42465,6 @@
       "kind": "clause",
       "para": 0
     },
-    "76B4C515": {
-      "owner": "template"
-    },
     "76B940C9": {
       "owner": "template"
     },
@@ -43476,9 +42596,6 @@
       "kind": "nodetable",
       "para": 220
     },
-    "772DED89": {
-      "owner": "template"
-    },
     "772EAC41": {
       "owner": "generated",
       "region": "objecttypes",
@@ -43513,9 +42630,6 @@
       "index": 87,
       "kind": "methodtable",
       "para": 33
-    },
-    "773F186C": {
-      "owner": "template"
     },
     "77462403": {
       "owner": "markdown",
@@ -43762,9 +42876,6 @@
       "index": 85,
       "kind": "enumtable",
       "para": 6
-    },
-    "77ED90F9": {
-      "owner": "template"
     },
     "77F3F0AB": {
       "owner": "generated",
@@ -44219,9 +43330,6 @@
     "790A6E9C": {
       "owner": "template"
     },
-    "790C9DA0": {
-      "owner": "template"
-    },
     "79125F80": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -44410,21 +43518,12 @@
       "kind": "nodetable",
       "para": 98
     },
-    "7974E04C": {
-      "owner": "template"
-    },
-    "7975E8C1": {
-      "owner": "template"
-    },
     "797616F3": {
       "owner": "generated",
       "region": "datatypes",
       "index": 10,
       "kind": "nodetable",
       "para": 12
-    },
-    "7977CEE1": {
-      "owner": "template"
     },
     "797A54EB": {
       "owner": "markdown",
@@ -44689,9 +43788,6 @@
       "kind": "nodetable",
       "para": 285
     },
-    "7A2B18DB": {
-      "owner": "template"
-    },
     "7A2B3CA6": {
       "owner": "generated",
       "region": "objecttypes",
@@ -44748,9 +43844,6 @@
       "block": 23,
       "para": 0
     },
-    "7A4C85A1": {
-      "owner": "template"
-    },
     "7A4D02E5": {
       "owner": "generated",
       "region": "objecttypes",
@@ -44792,9 +43885,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 199
-    },
-    "7A606189": {
-      "owner": "template"
     },
     "7A70A11D": {
       "owner": "generated",
@@ -44876,9 +43966,6 @@
       "kind": "nodetable",
       "para": 986
     },
-    "7AAC13A7": {
-      "owner": "template"
-    },
     "7AB3CE70": {
       "owner": "generated",
       "region": "annex-a",
@@ -44892,13 +43979,6 @@
       "index": 27,
       "kind": "nodetable",
       "para": 45
-    },
-    "7AB8BC0A": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 132,
-      "kind": "clause",
-      "para": 0
     },
     "7AB8EA0A": {
       "owner": "template"
@@ -45181,9 +44261,6 @@
       "kind": "nodetable",
       "para": 0
     },
-    "7B5210F6": {
-      "owner": "template"
-    },
     "7B521EA1": {
       "owner": "generated",
       "region": "datatypes",
@@ -45376,6 +44453,13 @@
       "kind": "nodetable",
       "para": 0
     },
+    "7BC46FC5": {
+      "owner": "generated",
+      "region": "model-overview",
+      "index": 253,
+      "kind": "clause",
+      "para": 0
+    },
     "7BC8A592": {
       "owner": "generated",
       "region": "objecttypes",
@@ -45519,12 +44603,6 @@
       "kind": "nodetable",
       "para": 346
     },
-    "7C0AC8FC": {
-      "owner": "template"
-    },
-    "7C0E527A": {
-      "owner": "template"
-    },
     "7C1B3453": {
       "owner": "generated",
       "region": "terms",
@@ -45573,9 +44651,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 809
-    },
-    "7C4E67F0": {
-      "owner": "template"
     },
     "7C53A421": {
       "owner": "generated",
@@ -45674,9 +44749,6 @@
       "section": "F.4 A worked Thing Description",
       "block": 6,
       "para": 7
-    },
-    "7CA58DEC": {
-      "owner": "template"
     },
     "7CA8C177": {
       "owner": "generated",
@@ -45786,9 +44858,6 @@
       "kind": "enumtable",
       "para": 2
     },
-    "7D0CEED7": {
-      "owner": "template"
-    },
     "7D11C7A3": {
       "owner": "markdown",
       "file": "companion-specs/AAS/OPC-UA-AAS.md",
@@ -45861,22 +44930,12 @@
     "7D426E6A": {
       "owner": "template"
     },
-    "7D470EFD": {
-      "owner": "markdown",
-      "file": "companion-specs/AAS/OPC-UA-AAS.md",
-      "section": "6.5.4 Versioning and the lifecycle record",
-      "block": 32,
-      "para": 0
-    },
     "7D48E989": {
       "owner": "generated",
       "region": "datatypes",
       "index": 73,
       "kind": "enumtable",
       "para": 17
-    },
-    "7D4F9231": {
-      "owner": "template"
     },
     "7D558197": {
       "owner": "generated",
@@ -45964,18 +45023,12 @@
       "kind": "nodetable",
       "para": 24
     },
-    "7D895123": {
-      "owner": "template"
-    },
     "7D8AD8F9": {
       "owner": "generated",
       "region": "annex-a",
       "index": 0,
       "kind": "nodetable",
       "para": 681
-    },
-    "7D989409": {
-      "owner": "template"
     },
     "7D9F5DF1": {
       "owner": "generated",
@@ -46119,6 +45172,13 @@
       "index": 141,
       "kind": "enumtable",
       "para": 6
+    },
+    "7E07A19E": {
+      "owner": "markdown",
+      "file": "companion-specs/AAS/OPC-UA-AAS.md",
+      "section": "6.1.5 Absent versus empty",
+      "block": 12,
+      "para": 0
     },
     "7E09A1C7": {
       "owner": "generated",
@@ -46382,9 +45442,6 @@
       "kind": "nodetable",
       "para": 3
     },
-    "7EC6D207": {
-      "owner": "template"
-    },
     "7ED0D370": {
       "owner": "generated",
       "region": "objecttypes",
@@ -46427,9 +45484,6 @@
       "kind": "nodetable",
       "para": 77
     },
-    "7EDF5E0E": {
-      "owner": "template"
-    },
     "7EE0A1A1": {
       "owner": "template"
     },
@@ -46467,9 +45521,6 @@
       "index": 110,
       "kind": "nodetable",
       "para": 10
-    },
-    "7F07F982": {
-      "owner": "template"
     },
     "7F09B242": {
       "owner": "generated",
@@ -46586,9 +45637,6 @@
     "7F52A6EE": {
       "owner": "template"
     },
-    "7F535F52": {
-      "owner": "template"
-    },
     "7F5BF5CF": {
       "owner": "generated",
       "region": "objecttypes",
@@ -46644,13 +45692,6 @@
       "index": 0,
       "kind": "nodetable",
       "para": 250
-    },
-    "7F7A43D8": {
-      "owner": "generated",
-      "region": "model-overview",
-      "index": 308,
-      "kind": "clause",
-      "para": 0
     },
     "7F7B148C": {
       "owner": "generated",
@@ -46715,9 +45756,6 @@
       "kind": "nodetable",
       "para": 118
     },
-    "7FA5B743": {
-      "owner": "template"
-    },
     "7FB1F207": {
       "owner": "generated",
       "region": "objecttypes",
@@ -46738,9 +45776,6 @@
       "index": 42,
       "kind": "nodetable",
       "para": 18
-    },
-    "7FD8975B": {
-      "owner": "template"
     },
     "7FE3DCBD": {
       "owner": "generated",

@@ -2828,6 +2828,114 @@
         "runs": [
           {
             "r": "t",
+            "text": "The canonical lexical representation is the one defined by XSD 1.1 Part 2: Datatypes. For"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.2 Canonical value representation",
+          "b": 20
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "xs:decimal"
+          },
+          {
+            "r": "t",
+            "text": ", the "
+          },
+          {
+            "r": "code",
+            "text": "decimalCanonicalMap"
+          },
+          {
+            "r": "t",
+            "text": " omits the fractional part where the value is integral:"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.2 Canonical value representation",
+          "b": 21
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "\"1\""
+          },
+          {
+            "r": "t",
+            "text": " therefore serializes as "
+          },
+          {
+            "r": "code",
+            "text": "\"1\""
+          },
+          {
+            "r": "t",
+            "text": ", not as the XSD 1.0 form "
+          },
+          {
+            "r": "code",
+            "text": "\"1.0\""
+          },
+          {
+            "r": "t",
+            "text": ". The same XSD 1.1"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.2 Canonical value representation",
+          "b": 22
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "canonical mapping governs the exponent form serialized for "
+          },
+          {
+            "r": "code",
+            "text": "xs:float"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "xs:double"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.2 Canonical value representation",
+          "b": 23
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
             "text": "A Property authored as "
           },
           {
@@ -2866,7 +2974,7 @@
         "src": {
           "f": "companion-specs/AAS/OPC-UA-AAS.md",
           "s": "6.1.2 Canonical value representation",
-          "b": 20
+          "b": 24
         }
       },
       {
@@ -2905,7 +3013,7 @@
         "src": {
           "f": "companion-specs/AAS/OPC-UA-AAS.md",
           "s": "6.1.2 Canonical value representation",
-          "b": 21
+          "b": 25
         }
       },
       {
@@ -2930,7 +3038,7 @@
         "src": {
           "f": "companion-specs/AAS/OPC-UA-AAS.md",
           "s": "6.1.2 Canonical value representation",
-          "b": 22
+          "b": 26
         }
       },
       {
@@ -2953,7 +3061,7 @@
         "src": {
           "f": "companion-specs/AAS/OPC-UA-AAS.md",
           "s": "6.1.2 Canonical value representation",
-          "b": 23
+          "b": 27
         }
       },
       {
@@ -2972,7 +3080,7 @@
         "src": {
           "f": "companion-specs/AAS/OPC-UA-AAS.md",
           "s": "6.1.2 Canonical value representation",
-          "b": 24
+          "b": 28
         }
       },
       {
@@ -3001,7 +3109,7 @@
         "src": {
           "f": "companion-specs/AAS/OPC-UA-AAS.md",
           "s": "6.1.2 Canonical value representation",
-          "b": 25
+          "b": 29
         }
       },
       {
@@ -5185,6 +5293,264 @@
           "f": "companion-specs/AAS/OPC-UA-AAS.md",
           "s": "6.1.5 Absent versus empty",
           "b": 4
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The rule presupposes that the field has a node of its own, and five do not. "
+          },
+          {
+            "r": "code",
+            "text": "submodelElements"
+          },
+          {
+            "r": "t",
+            "text": ","
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.5 Absent versus empty",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "SubmodelElementCollection.value"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "SubmodelElementList.value"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Entity.statements"
+          },
+          {
+            "r": "t",
+            "text": " and"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.5 Absent versus empty",
+          "b": 6
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "AnnotatedRelationshipElement.annotations"
+          },
+          {
+            "r": "t",
+            "text": " materialize as components of the parent node rather than"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.5 Absent versus empty",
+          "b": 7
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "as a node holding a collection (Annex B), so an absent one and a present-but-empty one both leave"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.5 Absent versus empty",
+          "b": 8
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "the parent with no children of that kind and no marker distinguishes them. For these five fields"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.5 Absent versus empty",
+          "b": 9
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "only, the distinction is therefore "
+          },
+          {
+            "r": "t",
+            "text": "not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " preserved: a serializer "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " emit the field as"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.5 Absent versus empty",
+          "b": 10
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "absent where the parent has no corresponding children, and "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-4",
+            "kind": "clause",
+            "prefix": "6.4"
+          },
+          {
+            "r": "t",
+            "text": " compares them accordingly."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.5 Absent versus empty",
+          "b": 11
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Collapsing the distinction is deliberate rather than an oversight. Preserving it would require a"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.5 Absent versus empty",
+          "b": 12
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "marker node on every collection-bearing element, which would appear in every AddressSpace to record"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.5 Absent versus empty",
+          "b": 13
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "a difference the metamodel draws but nothing observable depends on, and "
+          },
+          {
+            "r": "t",
+            "text": "clause "
+          },
+          {
+            "r": "xref",
+            "target": "c6-4",
+            "kind": "clause",
+            "prefix": "6.4"
+          },
+          {
+            "r": "t",
+            "text": " would still have"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.5 Absent versus empty",
+          "b": 14
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "to special-case it. Every other optional field keeps the distinction, because every other optional"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.5 Absent versus empty",
+          "b": 15
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "field has a node."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/AAS/OPC-UA-AAS.md",
+          "s": "6.1.5 Absent versus empty",
+          "b": 16
         }
       },
       {
@@ -9915,7 +10281,7 @@
             },
             {
               "r": "t",
-              "text": ", compared per XML Schema Part 2. "
+              "text": ", compared per XSD 1.1 Part 2: Datatypes. "
             },
             {
               "r": "code",
@@ -10023,7 +10389,67 @@
             },
             {
               "r": "t",
-              "text": " is false is compared as a bag: same members, same multiplicities, order disregarded."
+              "text": " is false is compared as a bag: same members, same multiplicities, order disregarded;"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "the five container fields of "
+            },
+            {
+              "r": "t",
+              "text": "clause "
+            },
+            {
+              "r": "xref",
+              "target": "c6-1-5",
+              "kind": "clause",
+              "prefix": "6.1.5"
+            },
+            {
+              "r": "t",
+              "text": " that materialize as parent components rather than as a node of their own — "
+            },
+            {
+              "r": "code",
+              "text": "submodelElements"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "SubmodelElementCollection.value"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "SubmodelElementList.value"
+            },
+            {
+              "r": "t",
+              "text": ", "
+            },
+            {
+              "r": "code",
+              "text": "Entity.statements"
+            },
+            {
+              "r": "t",
+              "text": " and "
+            },
+            {
+              "r": "code",
+              "text": "AnnotatedRelationshipElement.annotations"
+            },
+            {
+              "r": "t",
+              "text": " — are compared with absent and present-but-empty treated alike, since the mapping does not distinguish them."
             }
           ]
         ],
@@ -10960,7 +11386,7 @@
         "id": "fig-aas-registry",
         "caption": "The registry root, shells and their submodel documents",
         "source": "mermaid",
-        "mermaid": "flowchart TD\n  BREG[[RegistryType]]:::objecttype\n  BGRP[[GroupType]]:::objecttype\n  BRES[[ResourceType]]:::objecttype\n  REG[[AASRegistryType]]:::objecttype\n  SGT[[AASShellGroupType]]:::objecttype\n  SFT[[AASSubmodelFileType]]:::objecttype\n  SG[&lt;ShellGroup&gt;]:::object\n  SM[&lt;Submodel&gt;]:::object\n  LOOK(LookupShellsByAssetLink):::method\n  GET(GetSubmodel):::method\n  AID[AasIdentifier]:::variable\n  SID[SubmodelIdentifier]:::variable\n  AK[AssetKind]:::variable\n\n  BREG -->|HasSubtype| REG\n  BGRP -->|HasSubtype| SGT\n  BRES -->|HasSubtype| SFT\n  REG -->|Organizes| SG\n  REG -->|HasComponent| LOOK\n  REG -->|HasComponent| GET\n  SG ==> SGT\n  SGT -->|Organizes| SM\n  SM ==> SFT\n  SGT -->|HasProperty| AID\n  SGT -->|HasProperty| AK\n  SFT -->|HasProperty| SID\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef variable fill:#eef3fa,stroke:#444\n  classDef method fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px",
+        "mermaid": "flowchart TD\n  BREG[[RegistryType]]:::objecttype\n  BGRP[[GroupType]]:::objecttype\n  BRES[[ResourceType]]:::objecttype\n  REG[[AASRegistryType]]:::objecttype\n  SGT[[AASShellGroupType]]:::objecttype\n  SFT[[AASSubmodelFileType]]:::objecttype\n  EFT[[AASEnvironmentFileType]]:::objecttype\n  SG[&lt;ShellGroup&gt;]:::object\n  SM[&lt;Submodel&gt;]:::object\n  ENV[&lt;Environment&gt;]:::object\n  LOOK(LookupShellsByAssetLink):::method\n  GET(GetSubmodel):::method\n  AID[AasIdentifier]:::variable\n  SID[SubmodelIdentifier]:::variable\n  AK[AssetKind]:::variable\n\n  BREG -->|HasSubtype| REG\n  BGRP -->|HasSubtype| SGT\n  BRES -->|HasSubtype| SFT\n  BRES -->|HasSubtype| EFT\n  REG -->|Organizes| SG\n  REG -->|Organizes| ENV\n  REG -->|HasComponent| LOOK\n  REG -->|HasComponent| GET\n  SG ==> SGT\n  SGT -->|Organizes| SM\n  SM ==> SFT\n  ENV ==> EFT\n  SGT -->|HasProperty| AID\n  SGT -->|HasProperty| AK\n  SFT -->|HasProperty| SID\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef variable fill:#eef3fa,stroke:#444\n  classDef method fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px",
         "src": {
           "f": "companion-specs/AAS/OPC-UA-AAS.md",
           "s": "6.5.2 Registry types",
@@ -12120,18 +12546,11 @@
           {
             "r": "code",
             "text": "VersionId"
-          }
-        ],
-        "src": {
-          "f": "companion-specs/AAS/OPC-UA-AAS.md",
-          "s": "6.5.4 Versioning and the lifecycle record",
-          "b": 27
-        }
-      },
-      {
-        "t": "para",
-        "style": "PARAGRAPH",
-        "runs": [
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
           {
             "r": "t",
             "text": "shall",
@@ -12148,22 +12567,7 @@
           },
           {
             "r": "t",
-            "text": " locate"
-          }
-        ],
-        "src": {
-          "f": "companion-specs/AAS/OPC-UA-AAS.md",
-          "s": "6.5.4 Versioning and the lifecycle record",
-          "b": 28
-        }
-      },
-      {
-        "t": "para",
-        "style": "PARAGRAPH",
-        "runs": [
-          {
-            "r": "t",
-            "text": "a current manifest only as a mutable Resource-level alias and "
+            "text": " locate a current manifest only as a mutable Resource-level alias and "
           },
           {
             "r": "t",
@@ -12180,22 +12584,7 @@
           },
           {
             "r": "t",
-            "text": "."
-          }
-        ],
-        "src": {
-          "f": "companion-specs/AAS/OPC-UA-AAS.md",
-          "s": "6.5.4 Versioning and the lifecycle record",
-          "b": 29
-        }
-      },
-      {
-        "t": "para",
-        "style": "PARAGRAPH",
-        "runs": [
-          {
-            "r": "t",
-            "text": "The tag "
+            "text": ". The tag "
           },
           {
             "r": "t",
@@ -12221,42 +12610,16 @@
           },
           {
             "r": "t",
-            "text": " be preserved byte-for-byte,"
-          }
-        ],
-        "src": {
-          "f": "companion-specs/AAS/OPC-UA-AAS.md",
-          "s": "6.5.4 Versioning and the lifecycle record",
-          "b": 30
-        }
-      },
-      {
-        "t": "para",
-        "style": "PARAGRAPH",
-        "runs": [
-          {
-            "r": "t",
-            "text": "including case and a leading underscore. Moving a tag to a previously unseen manifest "
+            "text": " be preserved byte-for-byte, including case and a leading underscore. Moving a tag to a previously unseen manifest "
           },
           {
             "r": "t",
             "text": "shall",
             "b": true
-          }
-        ],
-        "src": {
-          "f": "companion-specs/AAS/OPC-UA-AAS.md",
-          "s": "6.5.4 Versioning and the lifecycle record",
-          "b": 31
-        }
-      },
-      {
-        "t": "para",
-        "style": "PARAGRAPH",
-        "runs": [
+          },
           {
             "r": "t",
-            "text": "create and retain a distinct immutable Version and "
+            "text": " create and retain a distinct immutable Version and "
           },
           {
             "r": "t",
@@ -12265,22 +12628,31 @@
           },
           {
             "r": "t",
-            "text": " mutate or replace the old Version."
-          }
-        ],
-        "src": {
-          "f": "companion-specs/AAS/OPC-UA-AAS.md",
-          "s": "6.5.4 Versioning and the lifecycle record",
-          "b": 32
-        }
-      },
-      {
-        "t": "para",
-        "style": "PARAGRAPH",
-        "runs": [
+            "text": " mutate or replace the old Version. The xRegistry base "
+          },
+          {
+            "r": "code",
+            "text": "ResourceType"
+          },
           {
             "r": "t",
-            "text": "An "
+            "text": " declares the "
+          },
+          {
+            "r": "code",
+            "text": "Attestations"
+          },
+          {
+            "r": "t",
+            "text": " attribute, and "
+          },
+          {
+            "r": "code",
+            "text": "AASAttestationDataType"
+          },
+          {
+            "r": "t",
+            "text": " is the AAS payload type for that attribute. An "
           },
           {
             "r": "code",
@@ -12313,22 +12685,7 @@
           },
           {
             "r": "t",
-            "text": ". An"
-          }
-        ],
-        "src": {
-          "f": "companion-specs/AAS/OPC-UA-AAS.md",
-          "s": "6.5.4 Versioning and the lifecycle record",
-          "b": 33
-        }
-      },
-      {
-        "t": "para",
-        "style": "PARAGRAPH",
-        "runs": [
-          {
-            "r": "t",
-            "text": "attestation or other OCI referrer "
+            "text": ": the prohibition is on the package Version, not on use of the DataType. An attestation or other OCI referrer "
           },
           {
             "r": "t",
@@ -12337,42 +12694,7 @@
           },
           {
             "r": "t",
-            "text": " be represented as a separate immutable Resource and"
-          }
-        ],
-        "src": {
-          "f": "companion-specs/AAS/OPC-UA-AAS.md",
-          "s": "6.5.4 Versioning and the lifecycle record",
-          "b": 34
-        }
-      },
-      {
-        "t": "para",
-        "style": "PARAGRAPH",
-        "runs": [
-          {
-            "r": "t",
-            "text": "shall not",
-            "b": true
-          },
-          {
-            "r": "t",
-            "text": " become a Version of the package Resource it refers to. Adding, removing or discovering"
-          }
-        ],
-        "src": {
-          "f": "companion-specs/AAS/OPC-UA-AAS.md",
-          "s": "6.5.4 Versioning and the lifecycle record",
-          "b": 35
-        }
-      },
-      {
-        "t": "para",
-        "style": "PARAGRAPH",
-        "runs": [
-          {
-            "r": "t",
-            "text": "a referrer "
+            "text": " be represented as a separate immutable Resource and "
           },
           {
             "r": "t",
@@ -12381,22 +12703,16 @@
           },
           {
             "r": "t",
-            "text": " change that package Resource's Version collection, default Version,"
-          }
-        ],
-        "src": {
-          "f": "companion-specs/AAS/OPC-UA-AAS.md",
-          "s": "6.5.4 Versioning and the lifecycle record",
-          "b": 36
-        }
-      },
-      {
-        "t": "para",
-        "style": "PARAGRAPH",
-        "runs": [
+            "text": " become a Version of the package Resource it refers to. Adding, removing or discovering a referrer "
+          },
           {
             "r": "t",
-            "text": "document, attributes, "
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " change that package Resource's Version collection, default Version, document, attributes, "
           },
           {
             "r": "code",
@@ -12418,7 +12734,7 @@
         "src": {
           "f": "companion-specs/AAS/OPC-UA-AAS.md",
           "s": "6.5.4 Versioning and the lifecycle record",
-          "b": 37
+          "b": 27
         }
       },
       {
@@ -17609,7 +17925,8 @@
       {
         "t": "enumtable",
         "id": "c8-12-items",
-        "browseName": "AASAssetKindDataType"
+        "browseName": "AASAssetKindDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17637,7 +17954,8 @@
       {
         "t": "enumtable",
         "id": "c8-13-items",
-        "browseName": "AASModellingKindDataType"
+        "browseName": "AASModellingKindDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17665,7 +17983,8 @@
       {
         "t": "enumtable",
         "id": "c8-14-items",
-        "browseName": "AASEntityTypeDataType"
+        "browseName": "AASEntityTypeDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17693,7 +18012,8 @@
       {
         "t": "enumtable",
         "id": "c8-15-items",
-        "browseName": "AASDirectionDataType"
+        "browseName": "AASDirectionDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17721,7 +18041,8 @@
       {
         "t": "enumtable",
         "id": "c8-16-items",
-        "browseName": "AASStateOfEventDataType"
+        "browseName": "AASStateOfEventDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17749,7 +18070,8 @@
       {
         "t": "enumtable",
         "id": "c8-17-items",
-        "browseName": "AASQualifierKindDataType"
+        "browseName": "AASQualifierKindDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17777,7 +18099,8 @@
       {
         "t": "enumtable",
         "id": "c8-18-items",
-        "browseName": "AASReferenceTypesDataType"
+        "browseName": "AASReferenceTypesDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17805,7 +18128,8 @@
       {
         "t": "enumtable",
         "id": "c8-19-items",
-        "browseName": "AASKeyTypesDataType"
+        "browseName": "AASKeyTypesDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17833,7 +18157,8 @@
       {
         "t": "enumtable",
         "id": "c8-20-items",
-        "browseName": "AASDataTypeDefXsdDataType"
+        "browseName": "AASDataTypeDefXsdDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17861,7 +18186,8 @@
       {
         "t": "enumtable",
         "id": "c8-21-items",
-        "browseName": "AASDataTypeIec61360DataType"
+        "browseName": "AASDataTypeIec61360DataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17889,7 +18215,8 @@
       {
         "t": "enumtable",
         "id": "c8-22-items",
-        "browseName": "AASSubmodelElementsDataType"
+        "browseName": "AASSubmodelElementsDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17917,7 +18244,8 @@
       {
         "t": "enumtable",
         "id": "c8-23-items",
-        "browseName": "AASDisclosureTierDataType"
+        "browseName": "AASDisclosureTierDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17945,7 +18273,8 @@
       {
         "t": "enumtable",
         "id": "c8-24-items",
-        "browseName": "AASLoadStateDataType"
+        "browseName": "AASLoadStateDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17973,7 +18302,8 @@
       {
         "t": "enumtable",
         "id": "c8-25-items",
-        "browseName": "AASMaterializationOutcomeDataType"
+        "browseName": "AASMaterializationOutcomeDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18001,7 +18331,8 @@
       {
         "t": "enumtable",
         "id": "c8-26-items",
-        "browseName": "AASKeyDataType"
+        "browseName": "AASKeyDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18029,7 +18360,8 @@
       {
         "t": "enumtable",
         "id": "c8-27-items",
-        "browseName": "AASReferenceDataType"
+        "browseName": "AASReferenceDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18057,7 +18389,8 @@
       {
         "t": "enumtable",
         "id": "c8-28-items",
-        "browseName": "AASLangStringDataType"
+        "browseName": "AASLangStringDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18085,7 +18418,8 @@
       {
         "t": "enumtable",
         "id": "c8-29-items",
-        "browseName": "AASSpecificAssetIdDataType"
+        "browseName": "AASSpecificAssetIdDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18113,7 +18447,8 @@
       {
         "t": "enumtable",
         "id": "c8-30-items",
-        "browseName": "AASAdministrativeInformationDataType"
+        "browseName": "AASAdministrativeInformationDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18141,7 +18476,8 @@
       {
         "t": "enumtable",
         "id": "c8-31-items",
-        "browseName": "AASQualifierDataType"
+        "browseName": "AASQualifierDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18169,7 +18505,8 @@
       {
         "t": "enumtable",
         "id": "c8-32-items",
-        "browseName": "AASEmbeddedDataSpecificationDataType"
+        "browseName": "AASEmbeddedDataSpecificationDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18197,7 +18534,8 @@
       {
         "t": "enumtable",
         "id": "c8-33-items",
-        "browseName": "AASDataSpecificationIec61360DataType"
+        "browseName": "AASDataSpecificationIec61360DataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18225,7 +18563,8 @@
       {
         "t": "enumtable",
         "id": "c8-34-items",
-        "browseName": "AASExtensionDataType"
+        "browseName": "AASExtensionDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18253,7 +18592,8 @@
       {
         "t": "enumtable",
         "id": "c8-35-items",
-        "browseName": "AASResourceDataType"
+        "browseName": "AASResourceDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18281,7 +18621,8 @@
       {
         "t": "enumtable",
         "id": "c8-36-items",
-        "browseName": "AASOperationVariableDataType"
+        "browseName": "AASOperationVariableDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18309,7 +18650,8 @@
       {
         "t": "enumtable",
         "id": "c8-37-items",
-        "browseName": "AASAuthorizationOptionDataType"
+        "browseName": "AASAuthorizationOptionDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18337,7 +18679,8 @@
       {
         "t": "enumtable",
         "id": "c8-38-items",
-        "browseName": "AASAttestationDataType"
+        "browseName": "AASAttestationDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18365,7 +18708,8 @@
       {
         "t": "enumtable",
         "id": "c8-39-items",
-        "browseName": "AASMaterializationResultDataType"
+        "browseName": "AASMaterializationResultDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18393,7 +18737,8 @@
       {
         "t": "enumtable",
         "id": "c8-40-items",
-        "browseName": "AASValueReferencePairDataType"
+        "browseName": "AASValueReferencePairDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18421,7 +18766,8 @@
       {
         "t": "enumtable",
         "id": "c8-41-items",
-        "browseName": "AASValueListDataType"
+        "browseName": "AASValueListDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -18449,7 +18795,8 @@
       {
         "t": "enumtable",
         "id": "c8-42-items",
-        "browseName": "AASLevelTypeDataType"
+        "browseName": "AASLevelTypeDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -20813,15 +21160,17 @@
               },
               {
                 "r": "t",
-                "text": " ("
-              },
-              {
-                "r": "code",
-                "text": "AASValueString"
+                "text": ", typed per "
               },
               {
                 "r": "t",
-                "text": ")"
+                "text": "clause "
+              },
+              {
+                "r": "xref",
+                "target": "c6-3-1",
+                "kind": "clause",
+                "prefix": "6.3.1"
               }
             ]
           ],
@@ -20855,15 +21204,17 @@
               },
               {
                 "r": "t",
-                "text": " ("
-              },
-              {
-                "r": "code",
-                "text": "AASValueString"
+                "text": ", typed per "
               },
               {
                 "r": "t",
-                "text": ")"
+                "text": "clause "
+              },
+              {
+                "r": "xref",
+                "target": "c6-3-1",
+                "kind": "clause",
+                "prefix": "6.3.1"
               }
             ]
           ],
@@ -22896,7 +23247,7 @@
               },
               {
                 "r": "code",
-                "text": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1050"
+                "text": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1021"
               }
             ]
           ],
@@ -24243,10 +24594,8 @@
             "text": "clause "
           },
           {
-            "r": "xref",
-            "target": "c1",
-            "kind": "clause",
-            "prefix": "1"
+            "r": "t",
+            "text": "1"
           },
           {
             "r": "t",
