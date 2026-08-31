@@ -4,7 +4,7 @@ This addendum defines example **observability export bindings** for `MotionDevic
 
 ## How the bindings are applied {#sec-how-the-bindings-are-applied}
 
-The machine-readable descriptor [`Robotics.ObservabilityExport.json`](../../../cloud-specs/extras/observability-export/examples/robotics/Robotics.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `MotionDeviceSystemType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml`](../../../model/Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleRobotSystem` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.
+The machine-readable descriptor [`Robotics.ObservabilityExport.json`](../../../cloud-specs/extras/observability-export/examples/robotics/Robotics.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `MotionDeviceSystemType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml`](../../../model/cloud-specs/observability-export/Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleRobotSystem` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.
 
 > **Theoretical instance model.** Robotics publishes no public instance example, so a compact theoretical MotionDeviceSystem is synthesised with one MotionDevice, one Axis, one PowerTrain/Motor, one Controller and one SafetyState. Placeholder path segments remain in type-level BrowsePaths.
 
@@ -172,6 +172,6 @@ Across all topologies the `DataSetClassId` per signal is unchanged — a subscri
 | File | Content |
 |---|---|
 | [`Robotics.ObservabilityExport.json`](../../../cloud-specs/extras/observability-export/examples/robotics/Robotics.ObservabilityExport.json) | Machine-readable ObservabilityExport descriptor (single source). |
-| [`Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml`](../../../model/Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExampleRobotSystem` instance. |
+| [`Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml`](../../../model/cloud-specs/observability-export/Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExampleRobotSystem` instance. |
 
 Regenerate from [`cloud-specs/extras/observability-export/examples/`](../../../cloud-specs/extras/observability-export/examples) with `python tools/build_bindings.py robotics/Robotics.ObservabilityExport.json tools/ref`.

@@ -5,7 +5,7 @@
 # carries, so a rule is fixed by a tool release rather than by the same edit repeated in
 # every specification repository.
 #
-#     source/<spec>/manifest.json + source/<spec>/ + model/
+#     source/<group>/<spec>/manifest.json + source/<group>/<spec>/ + model/<group>/<spec>/
 #         -> Opc.Ua.SpecificationPublisher build     -> artifacts/   STS XML + NodeIds.csv, for machines
 #         -> Opc.Ua.SpecificationPublisher publish   -> docs/        browsable HTML, for people
 #                                                    -> artifacts/   the Word edition, beside the STS
@@ -30,7 +30,7 @@
 # _work/, which is gitignored, so a local rebuild does not dirty what is committed:
 #
 #     dotnet tool restore
-#     dotnet Opc.Ua.SpecificationPublisher build
+#     dotnet Opc.Ua.SpecificationPublisher build --nodesets model
 #     dotnet Opc.Ua.SpecificationPublisher publish
 
 name: Publish
@@ -114,7 +114,7 @@ jobs:
         run: rm -rf artifacts docs
 
       - name: Build STS XML
-        run: dotnet Opc.Ua.SpecificationPublisher build --out artifacts/
+        run: dotnet Opc.Ua.SpecificationPublisher build --nodesets model --out artifacts/
 
       # Every table in the document against the NodeSets it describes: BrowseNames, DataTypes,
       # ModellingRules, references, attribute values, Conformance Units. Here rather than before
@@ -133,7 +133,7 @@ jobs:
       # - name: Validate against the NodeSets
       #   run: |
       #     dotnet Opc.Ua.SpecificationValidator validate \
-      #       artifacts/<doc>.xml model/<primary>.NodeSet2.xml --dependency-dir model/dependencies
+      #       artifacts/<doc>.xml model/<group>/<spec>/<primary>.NodeSet2.xml --dependency-dir model/dependencies
 
       - name: Render the browsable specification
         # Numbered clauses, materialised node tables, generated boilerplate, resolved

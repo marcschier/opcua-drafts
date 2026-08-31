@@ -22,7 +22,7 @@
     }
   },
   "model": {
-    "nodeset": "model/Opc.Ua.Generators.NodeSet2.xml",
+    "nodeset": "model/companion-specs/Generators/Opc.Ua.Generators.NodeSet2.xml",
     "generated": true,
     "generator": "source/companion-specs/Generators/tools/build_model.py"
   },

@@ -7,8 +7,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 GEN = os.path.dirname(HERE)
 # The NodeSets live in the repository's model/, shared by every specification
 # published together, because resolution is by ModelUri rather than by directory.
-MODEL = os.path.abspath(os.path.join(
+MODEL_ROOT = os.path.abspath(os.path.join(
     HERE, os.pardir, os.pardir, os.pardir, os.pardir, "model"))
+MODEL = os.path.join(MODEL_ROOT, "cloud-specs", "schema-registry")
 REF = os.path.join(HERE, "ref")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 XML = os.path.join(MODEL, "Opc.Ua.SchemaRegistry.NodeSet2.xml")
@@ -29,7 +30,8 @@ _ua_csv = os.path.join(REF, "UA.NodeIds.csv")
 UA = load_ids(_ua_csv) if os.path.exists(_ua_csv) else None
 UA_EXTRA = {297, 2253}
 # xRegistry base NodeIds (the required model this spec extends), resolved across the two-file dependency.
-_xr_csv = os.path.join(MODEL, "Opc.Ua.XRegistry.NodeIds.csv")
+_xr_csv = os.path.join(
+    MODEL_ROOT, "core-specs", "xregistry", "Opc.Ua.XRegistry.NodeIds.csv")
 XR = load_ids(_xr_csv) if os.path.exists(_xr_csv) else None
 errors, warnings = [], []
 ALIAS = {}

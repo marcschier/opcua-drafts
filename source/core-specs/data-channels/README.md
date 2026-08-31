@@ -10,8 +10,8 @@ It is written as an **errata package** against three core Parts. OPC UA today ha
 - `OPC-UA-Part6-Data-Channel-Transport.md` — Part 6 errata: the `STR` frame, flow control, scheduling, partial reliability, and the new `opc.quic` and `opc.wt` transports.
 - `OPC-UA-Part4-Data-Channel-Services.md` — Part 4 errata: the DataChannel Service Set, server-initiated offers, lifecycle, authorization, auditing and StatusCodes.
 - `OPC-UA-Part3-Data-Channel-Model.md` — Part 3 errata: `IDataChannelSourceType`, `DataChannelSourceType`, `HasDataChannel`, the DataTypes, the Events and `ServerCapabilities.DataChannelCapabilities`.
-- `Opc.Ua.DataChannels.NodeSet2.xml` — generated NodeSet.
-- `Opc.Ua.DataChannels.NodeIds.csv` — generated NodeIds.
+- `model/core-specs/data-channels/Opc.Ua.DataChannels.NodeSet2.xml` — generated NodeSet.
+- `model/core-specs/data-channels/Opc.Ua.DataChannels.NodeIds.csv` — generated NodeIds.
 - `tools/build_model.py` — the single source of truth for the model; emits the NodeSet, the CSV and Annex A.
 - `tools/model-reference.md` — generated Annex A, embedded verbatim in the Part 3 errata and the combined spec.
 - `tools/validate_local.py` — NodeSet, CSV, Annex and determinism gate.

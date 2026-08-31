@@ -4,7 +4,7 @@ This addendum defines example **observability export bindings** for `IVendorName
 
 ## How the bindings are applied {#sec-how-the-bindings-are-applied}
 
-The machine-readable descriptor [`DI.ObservabilityExport.json`](../../../cloud-specs/extras/observability-export/examples/di/DI.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `IVendorNameplateType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.DI.ObservabilityExport.NodeSet2.xml`](../../../model/Opc.Ua.DI.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleDeviceNameplate` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.
+The machine-readable descriptor [`DI.ObservabilityExport.json`](../../../cloud-specs/extras/observability-export/examples/di/DI.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `IVendorNameplateType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.DI.ObservabilityExport.NodeSet2.xml`](../../../model/cloud-specs/observability-export/Opc.Ua.DI.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleDeviceNameplate` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.
 
 > **Theoretical instance model.** A compact instance implementing IVendorNameplateType. A pump's Identification object composes the same DI facet, so the Pumps metrics binding extends this one.
 
@@ -61,6 +61,6 @@ graph TD
 | File | Content |
 |---|---|
 | [`DI.ObservabilityExport.json`](../../../cloud-specs/extras/observability-export/examples/di/DI.ObservabilityExport.json) | Machine-readable ObservabilityExport descriptor (single source). |
-| [`Opc.Ua.DI.ObservabilityExport.NodeSet2.xml`](../../../model/Opc.Ua.DI.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExampleDeviceNameplate` instance. |
+| [`Opc.Ua.DI.ObservabilityExport.NodeSet2.xml`](../../../model/cloud-specs/observability-export/Opc.Ua.DI.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExampleDeviceNameplate` instance. |
 
 Regenerate from [`cloud-specs/extras/observability-export/examples/`](../../../cloud-specs/extras/observability-export/examples) with `python tools/build_bindings.py di/DI.ObservabilityExport.json tools/ref`.

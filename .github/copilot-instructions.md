@@ -94,7 +94,7 @@ stops at `core-specs/`, so a specification that moves trees takes its entry with
 stops being validated.
 
 **Trees cross-reference, so a move is not just a rename.** The Avro and Arrow generators map
-`cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml` as their base model, and
+`model/cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml` as their base model, and
 Schema Registry subtypes `core-specs/xregistry/`. A relative link between trees needs one more `..`
 than it looks like it should, and a path built from components (`os.path.join(HERE, "..", …)`) is
 invisible to a search for the path it produces.

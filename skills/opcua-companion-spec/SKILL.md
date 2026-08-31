@@ -19,8 +19,9 @@ description: >-
 
 A repository holds as many specifications as its working group publishes together: one is a
 directory under `source/`, and a directory with no files in it only groups others. A published
-document is built from three things: `source/<spec>/spec.md` (prose), `model/*.NodeSet2.xml`
-(the models, shared by every specification in the repository) and `source/<spec>/manifest.json`
+document is built from three things: `source/<group>/<spec>/spec.md` (prose),
+`model/<group>/<spec>/*.NodeSet2.xml` (the owned models) and
+`source/<group>/<spec>/manifest.json`
 (identity, plus the clauses nobody should retype). The build emits STS XML into `artifacts/`, and everything downstream — the online
 reference, the search index, the Word rendering — is made from that.
 
@@ -72,7 +73,7 @@ Build and render before you claim to be done:
 
 ```
 dotnet tool restore
-dotnet Opc.Ua.SpecificationPublisher build             # fails on anything the STS cannot carry
+dotnet Opc.Ua.SpecificationPublisher build --nodesets model # fails on anything the STS cannot carry
 dotnet Opc.Ua.SpecificationPublisher publish           # render it and read it before saying it is done
 ```
 
@@ -80,7 +81,7 @@ While you are still editing, `html` does both in one pass and writes only the pa
 rendering, same reported problems, none of the artifacts you are not reading yet:
 
 ```
-dotnet Opc.Ua.SpecificationPublisher html
+dotnet Opc.Ua.SpecificationPublisher html --nodesets model
 ```
 
 `build` is not the rule checker. It catches what cannot be carried into the STS, and reports the
@@ -88,7 +89,7 @@ dialect rules on the line that broke them, but it does not compare the document 
 model. That is a separate tool, run on what `build` produced:
 
 ```
-Opc.Ua.SpecificationValidator validate artifacts/<doc>.xml model/<primary>.NodeSet2.xml --dependency-dir model/dependencies
+Opc.Ua.SpecificationValidator validate artifacts/<doc>.xml model/<group>/<spec>/<primary>.NodeSet2.xml --dependency-dir model/dependencies
 ```
 
 Between them they leave two things unchecked: the drawing inside a figure, and whether the prose

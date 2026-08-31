@@ -37,7 +37,8 @@ EXTRAS = os.path.abspath(os.path.join(HERE, "..", ".."))
 CORE_SPECS = EXTRAS
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 DEFAULT_NODESET = os.path.join(
-    REPO, "cloud-specs", "observability-export", "Opc.Ua.ObservabilityExport.NodeSet2.xml")
+    REPO, "model", "cloud-specs", "observability-export",
+    "Opc.Ua.ObservabilityExport.NodeSet2.xml")
 OUT = os.path.abspath(os.path.join(HERE, "..", "examples", "opcua-catalog.xregistry.json"))
 BASE_UA = "http://opcfoundation.org/UA/"
 _UA_NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"

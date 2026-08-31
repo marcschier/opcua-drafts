@@ -1,6 +1,6 @@
 # OPC UA Inspection — Vision Addendum
 
-**Implementer annex to *OPC UA — Vision* (Release 0.1.0 — Draft).**
+**Implementer annex to *OPC UA — Vision* (Release 0.2.0 — Draft).**
 
 > A worked example of machine-vision inspection: a fixed camera measures a sealing surface, on-server inference produces a verdict with QIF-shaped characteristics including measurement uncertainty, and each result carries a subscribable JPEG thumbnail through the optional size-gated inline delivery facet. The machine-readable source of truth is [`Inspection.Vision.json`](../../../../metaverse-specs/extras/vision/examples/machine-vision/Inspection.Vision.json); this document and `Opc.Ua.Inspection.Vision.NodeSet2.xml` are both generated from it by `build_examples.py`, so prose and model cannot drift. It is also published as Annex G of [`OPC-UA-Vision.md`](../spec.md).
 
@@ -12,7 +12,7 @@ This worked example shows the case OPC 40100-1 orchestrates but does not describ
 
 ## 2 Normative references
 
-- *OPC UA — Vision*, Release 0.1.0 (the base specification), `../OPC-UA-Vision.md`.
+- *OPC UA — Vision*, Release 0.2.0 (the base specification), `../spec.md`.
 - [OPC 40100-1](https://reference.opcfoundation.org/specs/OPC-40100-1/) — OPC UA for Machine Vision Part 1, whose `ResultContent` this example populates. Not a dependency of this model.
 - ISO 23952:2020 (QIF) — the shape `VisionCharacteristicDataType` mirrors.
 - ISO 14253 — the uncertainty semantics used by `Uncertainty` and `NotDecidable`.
@@ -129,6 +129,6 @@ When a quality engineer overrides a verdict at the review station, the HMI calls
 | File | Content |
 |---|---|
 | [`Inspection.Vision.json`](../../../../metaverse-specs/extras/vision/examples/machine-vision/Inspection.Vision.json) | Machine-readable descriptor (single source). |
-| [`Opc.Ua.Inspection.Vision.NodeSet2.xml`](../../../../model/Opc.Ua.Inspection.Vision.NodeSet2.xml) | The generated instance overlay. |
+| [`Opc.Ua.Inspection.Vision.NodeSet2.xml`](../../../../model/metaverse-specs/vision/Opc.Ua.Inspection.Vision.NodeSet2.xml) | The generated instance overlay. |
 
 Regenerate from the repository root with `python metaverse-specs/extras/vision/tools/build_examples.py`.

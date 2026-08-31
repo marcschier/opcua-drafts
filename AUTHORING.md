@@ -11,7 +11,7 @@ The source of truth for this document is **markdown plus the NodeSet**, not a Wo
 A repository holds as many specifications as its working group publishes together: one
 specification is a directory under `source/`, and
 `source/<spec>/spec.md` carries its prose, `source/<spec>/manifest.json` its identity and the
-clauses nobody should have to retype, and `model/*.NodeSet2.xml` — shared by all of them — the
+clauses nobody should have to retype, and `model/<group>/<spec>/*.NodeSet2.xml` — shared by all of them — the
 models. The build produces STS XML, and everything downstream — the online reference, the
 search index, the Word rendering — is made from that.
 
@@ -25,10 +25,10 @@ means what it says. Read those parts as what a reviewer will hold you to.
 ```
 dotnet tool restore                    # once, per clone
 
-dotnet Opc.Ua.SpecificationPublisher build                # markdown + NodeSet -> STS XML
+dotnet Opc.Ua.SpecificationPublisher build --nodesets model # markdown + NodeSets -> STS XML
 dotnet Opc.Ua.SpecificationPublisher publish              # render it and read it
 
-dotnet Opc.Ua.SpecificationPublisher html                 # just the page, while you write
+dotnet Opc.Ua.SpecificationPublisher html --nodesets model # just the page, while you write
 ```
 
 While you are writing, `html` is the one to run. It goes from the markdown to the same page

@@ -8,7 +8,8 @@ GEN = os.path.dirname(HERE)
 # The NodeSets live in the repository's model/, shared by every specification
 # published together, because resolution is by ModelUri rather than by directory.
 MODEL = os.path.abspath(os.path.join(
-    HERE, os.pardir, os.pardir, os.pardir, os.pardir, "model"))
+    HERE, os.pardir, os.pardir, os.pardir, os.pardir,
+    "model", "core-specs", "xregistry"))
 REF = os.path.join(HERE, "ref")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 XML = os.path.join(MODEL, "Opc.Ua.XRegistry.NodeSet2.xml")

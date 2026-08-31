@@ -228,7 +228,7 @@ All NodeSets, CSV, Annex A and addenda are **generated deterministically** from 
 - **Publisher Facet** — Part 14 realization plus PubSub metadata propagation.
 - **Bridge (Client) Facet** — browse, recognize, compose, realize (classic or PubSub), and emit the Metrics/Logs/Traces mapping.
 
-**Deliverables** — `Opc.Ua.ObservabilityExport.NodeSet2.xml` · `Opc.Ua.ObservabilityExport.NodeIds.csv` · Annex A (generated) · per-spec addenda · machine-readable descriptors and tooling under `cloud-specs/extras/observability-export/`.
+**Deliverables** — `model/cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml` · `model/cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeIds.csv` · Annex A (generated) · per-spec addenda · machine-readable descriptors and tooling under `cloud-specs/extras/observability-export/`.
 
 **Backend-agnostic** — OTEL is the normative target, but the same bindings drive Prometheus/Grafana, Splunk/Elastic, Jaeger/Tempo/Zipkin, Microsoft Fabric Real-Time Intelligence and an Apache Arrow lakehouse.
 

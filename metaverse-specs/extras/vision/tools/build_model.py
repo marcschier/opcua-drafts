@@ -1636,7 +1636,9 @@ def emit_md():
 
 def main():
     here = os.path.dirname(os.path.abspath(__file__))
-    std = os.path.normpath(os.path.join(here, "..", "..", "..", "..", "model"))
+    std = os.path.normpath(os.path.join(
+        here, "..", "..", "..", "..",
+        "model", "metaverse-specs", "vision"))
     os.makedirs(std, exist_ok=True)
     with open(os.path.join(std, "Opc.Ua.Vision.NodeSet2.xml"), "w",
               encoding="utf-8", newline="\n") as f:

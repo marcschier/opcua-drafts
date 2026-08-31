@@ -22,7 +22,7 @@
     }
   },
   "model": {
-    "nodeset": "model/Opc.Ua.DataChannels.NodeSet2.xml",
+    "nodeset": "model/core-specs/data-channels/Opc.Ua.DataChannels.NodeSet2.xml",
     "generated": true
   },
   "markdown": {

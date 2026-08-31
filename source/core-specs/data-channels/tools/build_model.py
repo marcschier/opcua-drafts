@@ -870,7 +870,8 @@ if __name__ == "__main__":
     # publisher reads them from model/, and a sibling published alongside borrows types
     # from them by ModelUri.
     outdir = os.path.abspath(os.path.join(
-        here, os.pardir, os.pardir, os.pardir, os.pardir, "model"))
+        here, os.pardir, os.pardir, os.pardir, os.pardir,
+        "model", "core-specs", "data-channels"))
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "Opc.Ua.DataChannels.NodeSet2.xml"), "w",
               encoding="utf-8", newline="\n") as f:

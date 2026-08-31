@@ -4,7 +4,7 @@ This addendum defines example **observability export bindings** for `IDeviceHeal
 
 ## How the bindings are applied {#sec-how-the-bindings-are-applied}
 
-The machine-readable descriptor [`DI.DeviceHealth.ObservabilityExport.json`](../../../cloud-specs/extras/observability-export/examples/di/DI.DeviceHealth.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `IDeviceHealthType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml`](../../../model/Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleDeviceHealth` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.
+The machine-readable descriptor [`DI.DeviceHealth.ObservabilityExport.json`](../../../cloud-specs/extras/observability-export/examples/di/DI.DeviceHealth.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `IDeviceHealthType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml`](../../../model/cloud-specs/observability-export/Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExampleDeviceHealth` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.
 
 > **Theoretical instance model.** A compact instance implementing IDeviceHealthType.
 
@@ -51,6 +51,6 @@ graph TD
 | File | Content |
 |---|---|
 | [`DI.DeviceHealth.ObservabilityExport.json`](../../../cloud-specs/extras/observability-export/examples/di/DI.DeviceHealth.ObservabilityExport.json) | Machine-readable ObservabilityExport descriptor (single source). |
-| [`Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml`](../../../model/Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExampleDeviceHealth` instance. |
+| [`Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml`](../../../model/cloud-specs/observability-export/Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExampleDeviceHealth` instance. |
 
 Regenerate from [`cloud-specs/extras/observability-export/examples/`](../../../cloud-specs/extras/observability-export/examples) with `python tools/build_bindings.py di/DI.DeviceHealth.ObservabilityExport.json tools/ref`.

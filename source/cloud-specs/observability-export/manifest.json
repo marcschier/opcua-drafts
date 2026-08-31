@@ -22,7 +22,7 @@
     }
   },
   "model": {
-    "nodeset": "model/Opc.Ua.ObservabilityExport.NodeSet2.xml",
+    "nodeset": "model/cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml",
     "generated": true
   },
   "markdown": {

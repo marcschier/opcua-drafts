@@ -24,7 +24,7 @@ BASE_SCHEMA_DIR = os.path.join(STD, "schemas")
 EXAMPLES_DIR = os.path.join(ROOT, "examples")
 # The mapped base model is a cloud-specs specification, so this is anchored to the
 # repository root rather than counted out from a sibling encoding folder.
-NODESET = os.path.join(REPO, "cloud-specs", "observability-export",
+NODESET = os.path.join(REPO, "model", "cloud-specs", "observability-export",
                        "Opc.Ua.ObservabilityExport.NodeSet2.xml")
 ARROW_SCHEMAID_BYTES = 8
 

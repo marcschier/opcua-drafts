@@ -7,8 +7,8 @@ The Schema Registry is a **domain extension of the abstract [OPC UA — xRegistr
 Files:
 
 - `OPC-UA-Schema-Registry.md` — the specification (extends the xRegistry base; minimal-first; SchemaId fast path; evolution/versioning; resolution flow; federation).
-- `Opc.Ua.SchemaRegistry.NodeSet2.xml` — generated NodeSet (requires the xRegistry base NodeSet as a `<RequiredModel>`).
-- `Opc.Ua.SchemaRegistry.NodeIds.csv` — generated NodeIds.
+- `model/cloud-specs/schema-registry/Opc.Ua.SchemaRegistry.NodeSet2.xml` — generated NodeSet (requires the xRegistry base NodeSet as a `<RequiredModel>`).
+- `model/cloud-specs/schema-registry/Opc.Ua.SchemaRegistry.NodeIds.csv` — generated NodeIds.
 - `tools/model-reference.md` — generated Annex A (embedded in the spec).
 
 Regenerate and validate (the xRegistry base must be generated first, as this NodeSet references it):

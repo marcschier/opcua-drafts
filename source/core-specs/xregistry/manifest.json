@@ -22,7 +22,7 @@
     }
   },
   "model": {
-    "nodeset": "model/Opc.Ua.XRegistry.NodeSet2.xml",
+    "nodeset": "model/core-specs/xregistry/Opc.Ua.XRegistry.NodeSet2.xml",
     "generated": true
   },
   "markdown": {

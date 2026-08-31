@@ -30,7 +30,7 @@ flowchart TD
 
 ## 2 The base binding — DI Metrics on `IVendorNameplateType`
 
-Generated overlay: [`Opc.Ua.DI.ObservabilityExport.NodeSet2.xml`](../../../../model/Opc.Ua.DI.ObservabilityExport.NodeSet2.xml), addendum [`OPC-UA-DI-Observability-Export-Addendum.md`](../di.md).
+Generated overlay: [`Opc.Ua.DI.ObservabilityExport.NodeSet2.xml`](../../../../model/cloud-specs/observability-export/Opc.Ua.DI.ObservabilityExport.NodeSet2.xml), addendum [`OPC-UA-DI-Observability-Export-Addendum.md`](../di.md).
 
 | Field | Kind | BrowsePath (facet-relative) |
 |---|---|---|
@@ -50,7 +50,7 @@ At compose time a Server/bridge unions this delta with the DI base binding, re-a
 
 - Bound target: `http://opcfoundation.org/UA/Pumps/;PumpType`
 - Composed **DataSetClassId** `04ec3212-44fd-579c-ad2f-38b3c32df9e8` · **BaseDataSetClassIds** `[ac52dde1-e3db-5534-bc44-5b18d9335b72]`.
-- Generated overlay: [`../pumps/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml`](../../../../model/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml).
+- Generated overlay: [`Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml`](../../../../model/cloud-specs/observability-export/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml).
 
 A subscriber that only knows the DI nameplate class recognizes the four base fields by `SourceBindingClassId`; a subscriber that knows the pump class consumes the full pump metrics DataSet.
 

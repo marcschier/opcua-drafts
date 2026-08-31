@@ -22,7 +22,7 @@
     }
   },
   "model": {
-    "nodeset": "model/Opc.Ua.SchemaRegistry.NodeSet2.xml",
+    "nodeset": "model/cloud-specs/schema-registry/Opc.Ua.SchemaRegistry.NodeSet2.xml",
     "generated": true
   },
   "markdown": {

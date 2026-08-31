@@ -1264,8 +1264,8 @@ A Server **should** bound the proportion of any dataset contributed by a single 
 |---|---|
 | This specification | `metaverse-specs/vision/OPC-UA-Vision.md` |
 | Research and design rationale | `metaverse-specs/vision/OPC-UA-Vision-Research.md` |
-| Base NodeSet | `metaverse-specs/vision/Opc.Ua.Vision.NodeSet2.xml` |
-| NodeIds | `metaverse-specs/vision/Opc.Ua.Vision.NodeIds.csv` |
+| Base NodeSet | `model/metaverse-specs/vision/Opc.Ua.Vision.NodeSet2.xml` |
+| NodeIds | `model/metaverse-specs/vision/Opc.Ua.Vision.NodeIds.csv` |
 | Annex A (generated node table) | `metaverse-specs/extras/vision/tools/model-reference.md` |
 | Generator | `metaverse-specs/extras/vision/tools/build_model.py` |
 | Validator | `metaverse-specs/extras/vision/tools/validate_local.py` |
@@ -1504,7 +1504,7 @@ There is no IDTA submodel template for machine vision, so `VisionSensorType` and
 
 ## Worked example: robotics vision, eye-in-hand picking (informative) {#anx-f annex=normative}
 
-> A worked example of vision-guided robotics: an eye-in-hand 3D camera on a robot flange detects parts in a bin and publishes 6-DoF pick poses, with inference running off-server on an edge GPU and a simulated twin sensor rendering the same cell in NVIDIA Isaac Sim. This annex and the overlay [`Opc.Ua.Robotics.Vision.NodeSet2.xml`](../../../model/Opc.Ua.Robotics.Vision.NodeSet2.xml) are both generated from [`Robotics.Vision.json`](../../../metaverse-specs/extras/vision/examples/robotics/Robotics.Vision.json) by `build_examples.py`, so prose and model cannot drift. The same content is published beside the overlay as [`OPC-UA-Robotics-Vision-Addendum.md`](robotics/OPC-UA-Robotics-Vision-Addendum.md).
+> A worked example of vision-guided robotics: an eye-in-hand 3D camera on a robot flange detects parts in a bin and publishes 6-DoF pick poses, with inference running off-server on an edge GPU and a simulated twin sensor rendering the same cell in NVIDIA Isaac Sim. This annex and the overlay [`Opc.Ua.Robotics.Vision.NodeSet2.xml`](../../../model/metaverse-specs/vision/Opc.Ua.Robotics.Vision.NodeSet2.xml) are both generated from [`Robotics.Vision.json`](../../../metaverse-specs/extras/vision/examples/robotics/Robotics.Vision.json) by `build_examples.py`, so prose and model cannot drift. The same content is published beside the overlay as [`OPC-UA-Robotics-Vision-Addendum.md`](robotics/OPC-UA-Robotics-Vision-Addendum.md).
 
 ### F.1 Scope {#sec-f-1-scope}
 
@@ -1666,7 +1666,7 @@ Two feedback paths are exercised. During commissioning, the HMI calls `SubmitDet
 | File | Content |
 |---|---|
 | [`Robotics.Vision.json`](../../../metaverse-specs/extras/vision/examples/robotics/Robotics.Vision.json) | Machine-readable descriptor (single source). |
-| [`Opc.Ua.Robotics.Vision.NodeSet2.xml`](../../../model/Opc.Ua.Robotics.Vision.NodeSet2.xml) | The generated instance overlay. |
+| [`Opc.Ua.Robotics.Vision.NodeSet2.xml`](../../../model/metaverse-specs/vision/Opc.Ua.Robotics.Vision.NodeSet2.xml) | The generated instance overlay. |
 | [`OPC-UA-Robotics-Vision-Addendum.md`](robotics/OPC-UA-Robotics-Vision-Addendum.md) | This annex, published standalone beside the overlay. |
 
 Regenerate from the repository root with `python metaverse-specs/extras/vision/tools/build_examples.py`.
@@ -1679,7 +1679,7 @@ Regenerate from the repository root with `python metaverse-specs/extras/vision/t
 
 ## Worked example: machine vision, dimensional inspection (informative) {#anx-g annex=normative}
 
-> A worked example of machine-vision inspection: a fixed camera measures a sealing surface, on-server inference produces a verdict with QIF-shaped characteristics including measurement uncertainty, and each result carries a subscribable JPEG thumbnail through the optional size-gated inline delivery facet. This annex and the overlay [`Opc.Ua.Inspection.Vision.NodeSet2.xml`](../../../model/Opc.Ua.Inspection.Vision.NodeSet2.xml) are both generated from [`Inspection.Vision.json`](../../../metaverse-specs/extras/vision/examples/machine-vision/Inspection.Vision.json) by `build_examples.py`, so prose and model cannot drift. The same content is published beside the overlay as [`OPC-UA-Inspection-Vision-Addendum.md`](machine-vision/OPC-UA-Inspection-Vision-Addendum.md).
+> A worked example of machine-vision inspection: a fixed camera measures a sealing surface, on-server inference produces a verdict with QIF-shaped characteristics including measurement uncertainty, and each result carries a subscribable JPEG thumbnail through the optional size-gated inline delivery facet. This annex and the overlay [`Opc.Ua.Inspection.Vision.NodeSet2.xml`](../../../model/metaverse-specs/vision/Opc.Ua.Inspection.Vision.NodeSet2.xml) are both generated from [`Inspection.Vision.json`](../../../metaverse-specs/extras/vision/examples/machine-vision/Inspection.Vision.json) by `build_examples.py`, so prose and model cannot drift. The same content is published beside the overlay as [`OPC-UA-Inspection-Vision-Addendum.md`](machine-vision/OPC-UA-Inspection-Vision-Addendum.md).
 
 ### G.1 Scope {#sec-g-1-scope}
 
@@ -1803,7 +1803,7 @@ When a quality engineer overrides a verdict at the review station, the HMI calls
 | File | Content |
 |---|---|
 | [`Inspection.Vision.json`](../../../metaverse-specs/extras/vision/examples/machine-vision/Inspection.Vision.json) | Machine-readable descriptor (single source). |
-| [`Opc.Ua.Inspection.Vision.NodeSet2.xml`](../../../model/Opc.Ua.Inspection.Vision.NodeSet2.xml) | The generated instance overlay. |
+| [`Opc.Ua.Inspection.Vision.NodeSet2.xml`](../../../model/metaverse-specs/vision/Opc.Ua.Inspection.Vision.NodeSet2.xml) | The generated instance overlay. |
 | [`OPC-UA-Inspection-Vision-Addendum.md`](machine-vision/OPC-UA-Inspection-Vision-Addendum.md) | This annex, published standalone beside the overlay. |
 
 Regenerate from the repository root with `python metaverse-specs/extras/vision/tools/build_examples.py`.

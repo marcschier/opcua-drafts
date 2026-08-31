@@ -566,7 +566,8 @@ if __name__ == "__main__":
     # specification: the publisher reads them from model/, and a sibling
     # published alongside borrows types from them by ModelUri.
     outdir = os.path.abspath(os.path.join(
-        here, os.pardir, os.pardir, os.pardir, os.pardir, "model"))
+        here, os.pardir, os.pardir, os.pardir, os.pardir,
+        "model", "cloud-specs", "schema-registry"))
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "Opc.Ua.SchemaRegistry.NodeSet2.xml"), "w", encoding="utf-8") as f:
         f.write(emit())

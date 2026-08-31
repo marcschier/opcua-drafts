@@ -748,7 +748,10 @@ def emit_addendum(descriptor, db, base_names, spec_folder, desc_base):
     A("")
     A("## 3 How the bindings are applied")
     A("")
-    A(f"The machine-readable descriptor [`{desc_base}`]({desc_rel}) lists each bound item as a `BrowsePath` from `{d['appliesToType']}`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml`](Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml) instantiates a compact `{d['instanceName']}` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.")
+    model_link = (
+        "../../../model/cloud-specs/observability-export/"
+        f"Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml")
+    A(f"The machine-readable descriptor [`{desc_base}`]({desc_rel}) lists each bound item as a `BrowsePath` from `{d['appliesToType']}`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml`]({model_link}) instantiates a compact `{d['instanceName']}` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.")
     if im.get("note"):
         A("")
         A(f"> **Theoretical instance model.** {im['note']}" + (f" See [{im.get('refName', 'instance example')}]({im['ref']})." if im.get("ref") else ""))
@@ -774,7 +777,7 @@ def emit_addendum(descriptor, db, base_names, spec_folder, desc_base):
     A("| File | Content |")
     A("|---|---|")
     A(f"| [`{desc_base}`]({desc_rel}) | Machine-readable ObservabilityExport descriptor (single source). |")
-    A(f"| [`Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml`](Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `{d['instanceName']}` instance. |")
+    A(f"| [`Opc.Ua.{d['domain']}.ObservabilityExport.NodeSet2.xml`]({model_link}) | The binding instances on the theoretical `{d['instanceName']}` instance. |")
     A("")
     A(f"Regenerate from [`cloud-specs/extras/observability-export/examples/`](../../extras/observability-export/examples/) with `python tools/build_bindings.py {spec_folder}/{desc_base} tools/ref`.")
     A("")
@@ -920,8 +923,11 @@ def emit_diagrams(descriptor):
 
 
 def main():
-    descriptor_path = sys.argv[1]
-    ref_dir = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "ref")
+    args = sys.argv[1:]
+    model_only = "--model-only" in args
+    args = [arg for arg in args if arg != "--model-only"]
+    descriptor_path = args[0]
+    ref_dir = args[1] if len(args) > 1 else os.path.join(HERE, "ref")
     # The descriptor is a secondary source under cloud-specs/extras/observability-export/examples/<spec>/;
     # the standardized outputs (overlay + addendum) land in cloud-specs/observability-export/<spec>/.
     desc_dir = os.path.dirname(os.path.abspath(descriptor_path))
@@ -929,7 +935,12 @@ def main():
     desc_base = os.path.basename(os.path.abspath(descriptor_path))
     core = os.path.abspath(os.path.join(desc_dir, "..", "..", "..", ".."))
     outdir = os.path.join(core, "observability-export", spec_folder)
-    os.makedirs(outdir, exist_ok=True)
+    repo = os.path.dirname(core)
+    model_dir = os.path.join(
+        repo, "model", "cloud-specs", "observability-export")
+    if not model_only:
+        os.makedirs(outdir, exist_ok=True)
+    os.makedirs(model_dir, exist_ok=True)
     d = json.load(open(descriptor_path, encoding="utf-8"))
     # DataSetClassId encodes MajorVersion; a browsing subscriber recomputes it from the binding's
     # exposed attributes. Per spec §5.7 a binding at MajorVersion != 1 SHALL expose
@@ -946,10 +957,11 @@ def main():
     em = Emitter(d, db)
     xml = em.document(type_key)
     base = f'Opc.Ua.{d["domain"]}.ObservabilityExport'
-    open(os.path.join(outdir, base + ".NodeSet2.xml"), "w", encoding="utf-8").write(xml)
-    addendum = f'OPC-UA-{d["domain"]}-Observability-Export-Addendum.md'
-    open(os.path.join(outdir, addendum), "w", encoding="utf-8").write(
-        emit_addendum(d, db, base_names, spec_folder, desc_base))
+    open(os.path.join(model_dir, base + ".NodeSet2.xml"), "w", encoding="utf-8").write(xml)
+    if not model_only:
+        addendum = f'OPC-UA-{d["domain"]}-Observability-Export-Addendum.md'
+        open(os.path.join(outdir, addendum), "w", encoding="utf-8").write(
+            emit_addendum(d, db, base_names, spec_folder, desc_base))
     nitems = sum(len(sb["boundItems"]) for sb in bindings(d))
     print(f'{d["domain"]}: {len(bindings(d))} signals, {nitems} bound items, '
           f'{em.next_id-5000} nodes emitted; all paths resolved OK')

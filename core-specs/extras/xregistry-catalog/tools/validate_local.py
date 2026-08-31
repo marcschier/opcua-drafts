@@ -34,7 +34,8 @@ EXAMPLE = os.path.abspath(os.path.join(HERE, "..", "examples", "opcua-catalog.xr
 # repository root, matching build_catalog.py's DEFAULT_NODESET.
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 SOURCE_NODESET = os.path.join(
-    REPO, "cloud-specs", "observability-export", "Opc.Ua.ObservabilityExport.NodeSet2.xml")
+    REPO, "model", "cloud-specs", "observability-export",
+    "Opc.Ua.ObservabilityExport.NodeSet2.xml")
 ALLOWED_FORMATS = {"Avro/1.11", "ApacheArrow/1.0", "JsonSchema/2020-12"}
 FORMAT_KEYS = ("avro", "arrow", "jsonschema")
 _UA_NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"

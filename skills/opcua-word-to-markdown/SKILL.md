@@ -65,7 +65,7 @@ and everything after this step is cross-platform.
 dotnet tool install --global OPCFoundation.Opc.Ua.SpecificationValidator
 
 Opc.Ua.SpecificationValidator convert-validate <input.docx> _work/reference/ \
-    --nodeset model/Opc.Ua.<Subject>.NodeSet2.xml \
+    --nodeset model/<group>/<spec>/Opc.Ua.<Subject>.NodeSet2.xml \
     --images
 ```
 
@@ -90,7 +90,7 @@ meaning anything.
 
 ## Step 2 — the model
 
-Copy the NodeSet into `model/` and name it from `manifest.json`, relative to the repository. Then:
+Copy the NodeSet into `model/<group>/<spec>/` and name it from `manifest.json`, relative to the repository. Then:
 
 ```
 Opc.Ua.SpecificationPublisher fetch-dependencies
@@ -341,8 +341,8 @@ figure source this repository has.
 ### Render, and commit both
 
 ```
-Opc.Ua.SpecificationPublisher update           # lists what it would run
-Opc.Ua.SpecificationPublisher update --write   # runs each generator
+Opc.Ua.SpecificationPublisher update --nodesets model         # lists what it would run
+Opc.Ua.SpecificationPublisher update --write --nodesets model # runs each generator
 ```
 
 `update` calls the script as `<script> <source> <svg>` from the repository root and writes the
@@ -419,8 +419,8 @@ Two kinds of figure never need to move at all:
 ## Step 7 — prove it
 
 ```
-Opc.Ua.SpecificationPublisher update --write     # anchors, namespace indices; read the diff
-Opc.Ua.SpecificationPublisher build              # markdown + NodeSet -> STS
+Opc.Ua.SpecificationPublisher update --write --nodesets model # anchors, namespace indices; read the diff
+Opc.Ua.SpecificationPublisher build --nodesets model # markdown + NodeSets -> STS
 Opc.Ua.SpecificationPublisher publish            # render it and actually read it
 ```
 

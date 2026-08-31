@@ -108,8 +108,10 @@ def _name_matches(csv_name: str, browse_name: str) -> bool:
 
 def main():
     here = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.normpath(os.path.join(here, "..", "..", "..", "..", "model",
-                                         "Opc.Ua.Vision.NodeSet2.xml"))
+    vision_dir = os.path.normpath(os.path.join(
+        here, "..", "..", "..", "..",
+        "model", "metaverse-specs", "vision"))
+    path = os.path.join(vision_dir, "Opc.Ua.Vision.NodeSet2.xml")
     try:
         tree = ET.parse(path)
     except ET.ParseError as e:
@@ -353,8 +355,7 @@ def main():
     # are two views of one model, so every id must appear in both with the same
     # NodeClass and BrowseName. This is what catches a hand-edited artifact, or one of
     # the pair being regenerated without the other.
-    csv_path = os.path.normpath(os.path.join(here, "..", "..", "..", "..", "model",
-                                             "Opc.Ua.Vision.NodeIds.csv"))
+    csv_path = os.path.join(vision_dir, "Opc.Ua.Vision.NodeIds.csv")
     if not os.path.exists(csv_path):
         err("Opc.Ua.Vision.NodeIds.csv not found next to the NodeSet")
     else:
@@ -426,7 +427,6 @@ def main():
     # base model they instantiate. They are named for it -- Opc.Ua.<Domain>.Vision.NodeSet2.xml
     # -- which is what tells them apart from the base model and from the published NodeSets in
     # dependencies/ that every specification here borrows from.
-    vision_dir = os.path.normpath(os.path.join(here, "..", "..", "..", "..", "model"))
     overlays = [
         os.path.join(vision_dir, fn)
         for fn in sorted(os.listdir(vision_dir))

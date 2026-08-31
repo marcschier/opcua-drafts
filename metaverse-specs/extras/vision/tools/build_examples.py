@@ -3,8 +3,8 @@
 Generator for the OPC UA — Vision worked examples.
 
 Reads a JSON descriptor and emits, deterministically:
-  * ../../../vision/<folder>/Opc.Ua.<Domain>.Vision.NodeSet2.xml  - an instance overlay
-  * ../../../vision/<folder>/OPC-UA-<Domain>-Vision-Addendum.md    - the addendum
+  * model/metaverse-specs/vision/Opc.Ua.<Domain>.Vision.NodeSet2.xml
+  * source/metaverse-specs/vision/<folder>/OPC-UA-<Domain>-Vision-Addendum.md
 
 Usage (from the repo root):
     python metaverse-specs/extras/vision/tools/build_examples.py            # all descriptors
@@ -30,6 +30,7 @@ sys.path.insert(0, HERE)
 import build_model as vm  # noqa: E402  (path set above)
 
 VISION_NS = vm.NAMESPACE
+EXAMPLE_VERSION = "0.2.0"
 
 # Base-UA NodeIds used by the overlays. Emitted through an <Aliases> block, as the
 # base NodeSets in this repository do, so the XML stays readable.
@@ -226,7 +227,7 @@ class Overlay:
                '  </NamespaceUris>',
                '  <Models>',
                f'    <Model ModelUri={sx.quoteattr(self.example_uri)} '
-               f'Version="0.1.0" '
+               f'Version="{EXAMPLE_VERSION}" '
                f'PublicationDate="{vm.PUBDATE}">',
                '      <RequiredModel ModelUri="http://opcfoundation.org/UA/" '
                f'Version="{vm.BASE_UA_VERSION}" '
@@ -646,30 +647,38 @@ def emit_addendum(d, annex=None):
 
     With annex=None the result is the standalone addendum published next to its
     overlay. With annex set to a letter it is the same content rendered for
-    embedding as an annex of OPC-UA-Vision.md: headings demoted one level and
-    numbered within the annex, and relative links rebased from vision/<folder>/ to
-    vision/. One renderer, so the two cannot drift.
+    embedding as an annex of spec.md: headings are demoted one level, numbered and
+    anchored within the annex. One renderer keeps the standalone and embedded forms
+    in step.
     """
     s = d["sensor"]
     st = d["stream"]
     cl = d["clip"]
     ai = d["ai"]
     dep = ai["deployment"]
-    up = ".." if annex else "../.."
-    rel = f"{up}/extras/vision/examples/{d['folder']}/{d['descriptorFile']}"
+    source_root = "../../.." if annex else "../../../.."
+    rel = (f"{source_root}/metaverse-specs/extras/vision/examples/"
+           f"{d['folder']}/{d['descriptorFile']}")
     nodeset = f"Opc.Ua.{d['domain']}.Vision.NodeSet2.xml"
-    nodeset_link = f"{d['outputFolder']}/{nodeset}" if annex else nodeset
+    nodeset_link = (
+        f"../../../model/metaverse-specs/vision/{nodeset}" if annex
+        else f"../../../../model/metaverse-specs/vision/{nodeset}")
     L = []
     A = L.append
     sec = [0]
 
     def head(title):
         sec[0] += 1
-        A(f"### {annex}.{sec[0]} {title}" if annex else f"## {sec[0]} {title}")
+        if annex:
+            slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
+            A(f"### {annex}.{sec[0]} {title} "
+              f"{{#sec-{annex.lower()}-{sec[0]}-{slug}}}")
+        else:
+            A(f"## {sec[0]} {title}")
 
     if annex:
         A(f"## Worked example: {d['annexTitle']} (informative) "
-          f"{{#anx-{annex.lower()} annex=informative}}")
+          f"{{#anx-{annex.lower()} annex=normative}}")
         A("")
         A(f"> {d['summary']} This annex and the overlay "
           f"[`{nodeset}`]({nodeset_link}) are both generated from "
@@ -689,7 +698,7 @@ def emit_addendum(d, annex=None):
           f"`{nodeset}` are both generated from it by "
           "`build_examples.py`, so prose and model cannot drift. It is also published "
           f"as Annex {d['annexLetter']} of "
-          "[`OPC-UA-Vision.md`](../OPC-UA-Vision.md).")
+          "[`OPC-UA-Vision.md`](../spec.md).")
         A("")
         A("---")
         A("")
@@ -701,8 +710,13 @@ def emit_addendum(d, annex=None):
     A("")
     if not annex:
         A("- *OPC UA — Vision*, Release " + vm.VERSION + " (the base specification), "
-          "`../OPC-UA-Vision.md`.")
+          "`../spec.md`.")
     for r in d.get("references", []):
+        if annex:
+            r = re.sub(
+                r"\[([^\]]+)\]\(https?://reference\.opcfoundation\.org/[^)]*\)",
+                r"\1",
+                r)
         A(f"- {r}")
     if annex and not d.get("references"):
         A("None beyond the normative references of clause 2.")
@@ -935,8 +949,9 @@ def emit_addendum(d, annex=None):
     return "\n".join(L).rstrip() + "\n"
 
 
-SPEC_PATH = os.path.normpath(os.path.join(HERE, "..", "..", "..", "vision",
-                                          "OPC-UA-Vision.md"))
+SPEC_PATH = os.path.normpath(os.path.join(
+    HERE, "..", "..", "..", "..",
+    "source", "metaverse-specs", "vision", "spec.md"))
 
 
 def splice(marker, body):
@@ -979,37 +994,46 @@ def safe_component(value, field):
     return value
 
 
-def process(path):
+def process(path, model_only=False):
     with open(path, encoding="utf-8") as f:
         d = json.load(f)
     d["descriptorFile"] = os.path.basename(path)
     d["folder"] = os.path.basename(os.path.dirname(os.path.abspath(path)))
     for field in ("outputFolder", "domain", "annexLetter", "annexMarker"):
         safe_component(d[field], field)
-    vision_root = os.path.normpath(os.path.join(HERE, "..", "..", "..", "vision"))
+    vision_root = os.path.normpath(os.path.join(
+        HERE, "..", "..", "..", "..",
+        "source", "metaverse-specs", "vision"))
     outdir = os.path.normpath(os.path.join(vision_root, d["outputFolder"]))
+    model_dir = os.path.normpath(os.path.join(
+        HERE, "..", "..", "..", "..",
+        "model", "metaverse-specs", "vision"))
     if os.path.commonpath([os.path.abspath(outdir),
                            os.path.abspath(vision_root)]) != os.path.abspath(
                                vision_root):
         raise SystemExit(f"outputFolder escapes the vision tree: {outdir}")
-    os.makedirs(outdir, exist_ok=True)
+    os.makedirs(model_dir, exist_ok=True)
     ov = build_overlay(d)
-    xml_path = os.path.join(outdir, f"Opc.Ua.{d['domain']}.Vision.NodeSet2.xml")
+    xml_path = os.path.join(model_dir, f"Opc.Ua.{d['domain']}.Vision.NodeSet2.xml")
     md_path = os.path.join(outdir, f"OPC-UA-{d['domain']}-Vision-Addendum.md")
     with open(xml_path, "w", encoding="utf-8", newline="\n") as f:
         f.write(ov.emit(d["domain"]))
-    with open(md_path, "w", encoding="utf-8", newline="\n") as f:
-        f.write(emit_addendum(d))
-    splice(d["annexMarker"], emit_addendum(d, annex=d["annexLetter"]))
+    if not model_only:
+        os.makedirs(outdir, exist_ok=True)
+        with open(md_path, "w", encoding="utf-8", newline="\n") as f:
+            f.write(emit_addendum(d))
+        splice(d["annexMarker"], emit_addendum(d, annex=d["annexLetter"]))
     print(f"{d['domain']}: {len(ov.nodes)} instance nodes -> {d['outputFolder']}/ "
           f"(+ Annex {d['annexLetter']})")
 
 
 def main():
     args = sys.argv[1:]
+    model_only = "--model-only" in args
+    args = [arg for arg in args if arg != "--model-only"]
     if args:
         for a in args:
-            process(a)
+            process(a, model_only=model_only)
         return 0
     root = os.path.join(HERE, "..", "examples")
     found = []
@@ -1018,7 +1042,7 @@ def main():
             if fn.endswith(".json"):
                 found.append(os.path.join(dirpath, fn))
     for p in sorted(found):
-        process(p)
+        process(p, model_only=model_only)
     if not found:
         print("no descriptors found")
         return 1

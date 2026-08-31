@@ -72,10 +72,10 @@ def available_models():
     """Map ModelUri to the local NodeSet that defines it."""
     available = {}
     model_dir = os.path.join(ROOT, "model")
-    for directory in (model_dir, os.path.join(model_dir, "dependencies")):
-        if not os.path.isdir(directory):
-            continue
-        for name in sorted(os.listdir(directory)):
+    if not os.path.isdir(model_dir):
+        return available
+    for directory, _dirnames, filenames in os.walk(model_dir):
+        for name in sorted(filenames):
             if not name.lower().endswith(".xml"):
                 continue
             path = os.path.join(directory, name)

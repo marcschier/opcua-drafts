@@ -4,7 +4,7 @@ This addendum defines example **observability export bindings** for `PumpType` â
 
 ## How the bindings are applied {#sec-how-the-bindings-are-applied}
 
-The machine-readable descriptor [`Pumps.ObservabilityExport.json`](../../../cloud-specs/extras/observability-export/examples/pumps/Pumps.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `PumpType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml`](../../../model/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExamplePump` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.
+The machine-readable descriptor [`Pumps.ObservabilityExport.json`](../../../cloud-specs/extras/observability-export/examples/pumps/Pumps.ObservabilityExport.json) lists each bound item as a `BrowsePath` from `PumpType`, with its observability `Kind` and OTEL `SignalKind`. The generated overlay [`Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml`](../../../model/cloud-specs/observability-export/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml) instantiates a compact `ExamplePump` object, applies `IObservableType`, and exposes an `ObservabilityBindingGroup` collected by (`CollectedBy`) the server-wide `Observability` registry.
 
 > **Theoretical instance model.** The theoretical instance mirrors the official Pumps instanceexample.xml (an ExamplePump : PumpType with Operational/Measurements, Identification, Supervision*, Maintenance and a <Drive>); the bound BrowsePaths resolve against exactly that structure. See [Pumps/instanceexample.xml](https://github.com/OPCFoundation/UA-Nodeset/blob/latest/Pumps/instanceexample.xml).
 
@@ -146,6 +146,6 @@ graph TD
 | File | Content |
 |---|---|
 | [`Pumps.ObservabilityExport.json`](../../../cloud-specs/extras/observability-export/examples/pumps/Pumps.ObservabilityExport.json) | Machine-readable ObservabilityExport descriptor (single source). |
-| [`Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml`](../../../model/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExamplePump` instance. |
+| [`Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml`](../../../model/cloud-specs/observability-export/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml) | The binding instances on the theoretical `ExamplePump` instance. |
 
 Regenerate from [`cloud-specs/extras/observability-export/examples/`](../../../cloud-specs/extras/observability-export/examples) with `python tools/build_bindings.py pumps/Pumps.ObservabilityExport.json tools/ref`.

@@ -4,8 +4,7 @@
 `source/<group>/<name>/`. What is left in the old directory is everything the conversion did
 not read: the generator, the README, the sibling documents, the example NodeSets. This moves
 them, with `git mv` so the history follows, and it puts every NodeSet and NodeIds CSV in
-`model/` -- which is where the tool's own documentation puts them, because a part borrows types
-from the siblings it is published with and resolution is by ModelUri rather than by directory.
+`model/<group>/<name>/`, mirroring the specification that owns it.
 
 The documents the conversion already read are deleted rather than moved: the main markdown
 became `spec.md`, and each addendum became the part named for it.
@@ -42,7 +41,7 @@ def main(argv: list[str]) -> int:
     cfg = json.loads(cfg_path.read_text(encoding='utf-8'))
     src = REPO / args.src
     dest = REPO / 'source' / args.group / args.name
-    model = REPO / 'model'
+    model = REPO / 'model' / args.group / args.name
     model.mkdir(parents=True, exist_ok=True)
 
     consumed = {REPO / cfg['source']['markdown']}
@@ -64,7 +63,8 @@ def main(argv: list[str]) -> int:
         git('mv', str(path.relative_to(REPO)).replace('\\', '/'),
             str(target.relative_to(REPO)).replace('\\', '/'))
 
-    print('moved %s -> %s (NodeSets to model/)' % (args.src, dest.relative_to(REPO)))
+    print('moved %s -> %s (NodeSets to %s)' %
+          (args.src, dest.relative_to(REPO), model.relative_to(REPO)))
     return 0
 
 

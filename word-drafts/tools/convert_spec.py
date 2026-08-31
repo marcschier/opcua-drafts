@@ -161,7 +161,8 @@ def main(argv: list[str]) -> int:
     dest.mkdir(parents=True, exist_ok=True)
     findings = []
 
-    manifest, f = ctt.build_manifest(cfg, args.doc_number)
+    model_dir = (pathlib.Path("model") / args.group / args.name).as_posix()
+    manifest, f = ctt.build_manifest(cfg, args.doc_number, model_dir)
     findings += f
 
     # The prose.

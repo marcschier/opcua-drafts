@@ -4,8 +4,10 @@ import os, sys, csv, re
 import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# The generated NodeSet/CSV live in the repository's model/, shared by every specification
-GEN = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", "model"))
+# The generated NodeSet/CSV live beside the specification's example overlays.
+GEN = os.path.abspath(os.path.join(
+    HERE, "..", "..", "..", "..",
+    "model", "cloud-specs", "observability-export"))
 REF = os.path.join(HERE, "ref")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 XML = os.path.join(GEN, "Opc.Ua.ObservabilityExport.NodeSet2.xml")

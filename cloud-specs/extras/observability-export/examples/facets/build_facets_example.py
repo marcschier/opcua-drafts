@@ -430,6 +430,7 @@ def emit_addendum(db):
 
 
 def main():
+    model_only = "--model-only" in sys.argv[1:]
     db = NodeSetDB()
     db.load(os.path.join(HERE, "Opc.Ua.FacetDemo.NodeSet2.xml"))
     em = Emit()
@@ -438,11 +439,16 @@ def main():
     # the FacetDemo model + this generator are secondary and stay under cloud-specs/extras.
     out = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..",
                                        "observability-export", "facets"))
-    os.makedirs(out, exist_ok=True)
-    open(os.path.join(out, "Opc.Ua.Facets.ObservabilityExport.NodeSet2.xml"), "w",
+    repo = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", ".."))
+    model_out = os.path.join(
+        repo, "model", "cloud-specs", "observability-export")
+    os.makedirs(model_out, exist_ok=True)
+    open(os.path.join(model_out, "Opc.Ua.Facets.ObservabilityExport.NodeSet2.xml"), "w",
          encoding="utf-8", newline="\n").write(xml)
-    open(os.path.join(out, "OPC-UA-Facets-Observability-Export-Addendum.md"), "w",
-         encoding="utf-8", newline="\n").write(emit_addendum(db))
+    if not model_only:
+        os.makedirs(out, exist_ok=True)
+        open(os.path.join(out, "OPC-UA-Facets-Observability-Export-Addendum.md"), "w",
+             encoding="utf-8", newline="\n").write(emit_addendum(db))
     n = em.nid - 5000
     print(f"Facets: {len(BASE_BINDINGS)} base + {len(DERIVED_BINDINGS)} derived bindings, "
           f"{n} nodes emitted")

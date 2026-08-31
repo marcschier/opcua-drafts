@@ -61,7 +61,7 @@ LICENCE = {
 }
 
 
-def build_manifest(cfg: dict, doc_number: str) -> tuple[dict, list[str]]:
+def build_manifest(cfg: dict, doc_number: str, model_dir: str = 'model') -> tuple[dict, list[str]]:
     """Reshape a Word build config into a template manifest, reporting what is not there."""
     findings = []
     ident = cfg.get('identity') or {}
@@ -124,7 +124,7 @@ def build_manifest(cfg: dict, doc_number: str) -> tuple[dict, list[str]]:
     nodeset = (cfg.get('source') or {}).get('nodeset')
     if nodeset:
         manifest['model'] = {
-            'nodeset': 'model/%s' % os.path.basename(nodeset),
+            'nodeset': '%s/%s' % (model_dir.rstrip('/'), os.path.basename(nodeset)),
             'generated': True,
         }
     else:
@@ -507,7 +507,14 @@ def main(argv: list[str]) -> int:
             print('no such Word config: %s' % path, file=sys.stderr)
             return 2
         cfg = json.loads(path.read_text(encoding='utf-8'))
-        manifest, findings = build_manifest(cfg, args.doc_number)
+        model_dir = 'model'
+        if args.out:
+            try:
+                spec_dir = args.out.resolve().parent.relative_to((REPO / 'source').resolve())
+                model_dir = (pathlib.Path('model') / spec_dir).as_posix()
+            except ValueError:
+                pass
+        manifest, findings = build_manifest(cfg, args.doc_number, model_dir)
         text = json.dumps(manifest, indent=2, ensure_ascii=False) + '\n'
         if args.out:
             args.out.parent.mkdir(parents=True, exist_ok=True)

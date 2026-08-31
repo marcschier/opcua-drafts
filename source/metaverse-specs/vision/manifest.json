@@ -22,7 +22,7 @@
     }
   },
   "model": {
-    "nodeset": "model/Opc.Ua.Vision.NodeSet2.xml",
+    "nodeset": "model/metaverse-specs/vision/Opc.Ua.Vision.NodeSet2.xml",
     "generated": true
   },
   "markdown": {

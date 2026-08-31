@@ -10,8 +10,8 @@ Files:
 
 - `OPC-UA-xRegistry.md` — the abstract base specification (minimal-first; three representations; federation annex). **Target:** OPC Foundation standardization — the reusable base for domain-specific registries (schema, Asset, Semantic, WoT, …).
 - [xRegistry OPC UA API](https://github.com/xregistry/spec/blob/main/workingdrafts/bindings/opcua.md) — the OPC UA protocol binding for the xRegistry API, published upstream after [xregistry/spec#511](https://github.com/xregistry/spec/pull/511) was merged.
-- `Opc.Ua.XRegistry.NodeSet2.xml` — generated base NodeSet.
-- `Opc.Ua.XRegistry.NodeIds.csv` — generated NodeIds.
+- `model/core-specs/xregistry/Opc.Ua.XRegistry.NodeSet2.xml` — generated base NodeSet.
+- `model/core-specs/xregistry/Opc.Ua.XRegistry.NodeIds.csv` — generated NodeIds.
 - `tools/model-reference.md` — generated Annex A (embedded in the spec).
 
 Regenerate and validate:

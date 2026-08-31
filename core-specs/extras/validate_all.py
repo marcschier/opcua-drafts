@@ -27,7 +27,7 @@ SELF_CONTAINED = [
 ]
 
 # Validators that additionally need untracked base data — a base NodeSet (e.g.
-# cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml, which the encoding
+# model/cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml, which the encoding
 # generators map) or the gitignored **/tools/ref/ tables — so they only run where that data is
 # present (locally, not on a clean CI checkout).
 #
