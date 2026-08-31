@@ -1,6 +1,6 @@
 # OPC UA — AI Model Management and Inference
 
-> Status: Working-group draft (Release 0.5.0). This document, together with `Opc.Ua.AiModelManagement.NodeSet2.xml` and `Opc.Ua.AiModelManagement.NodeIds.csv`, defines an OPC UA information model for **the AI models an installation runs**: what a model is, what it was trained on, where it executes, and how a better one replaces it.
+> Status: Working-group draft (Release 0.5.1, published 2026-08-26). This document, together with `Opc.Ua.AiModelManagement.NodeSet2.xml` and `Opc.Ua.AiModelManagement.NodeIds.csv`, defines an OPC UA information model for **the AI models an installation runs**: what a model is, what it was trained on, where it executes, and how a better one replaces it.
 >
 > It is deliberately **domain-neutral**. Nothing here names a camera, a sensor, an image or a robot: a model is trained on a dataset, deployed somewhere, and superseded — and that story is the same whether the input is a photograph, a vibration spectrum or a process trace.
 >
@@ -33,6 +33,7 @@
   - [6.3 `DatasetType`](#63-datasettype)
   - [6.4 `DeploymentType`](#64-deploymenttype)
   - [6.5 `UsesModel` and `TrainedOn`](#65-usesmodel-and-trainedon)
+    - [6.5.1 Promotion history](#651-promotion-history)
   - [6.6 `AiJobType`](#66-aijobtype)
 - [7 The learning loop (normative)](#7-the-learning-loop-normative)
   - [7.1 Method behaviour and StatusCodes (normative)](#71-method-behaviour-and-statuscodes-normative)
@@ -150,6 +151,7 @@ Informative alignments — IDTA 02058, IDTA 02059, IDTA 02060, and the OPC UA �
 | **Inference location** | Whether execution happens in the Server, on an edge node, in a cloud service or in a simulator. It changes the trust boundary and the latency, and it changes nothing else. |
 | **Learning job** | One turn of the capture, label, train and promote loop. Modelled as `LearningJobType`. |
 | **Promotion** | Making a candidate model the one deployments use. The one operation here that changes what the equipment does. |
+| **Promotion record** | An immutable, authoritative snapshot of one successful change to a deployment's configured `UsesModel` target. Modelled as `PromotionRecordType`. |
 | **Digest** | A cryptographic hash of an artefact, which is what makes a retrieved artefact verifiable as the one described. |
 | **Conformance unit** | The smallest individually testable requirement of this specification. Grouped into facets rather than claimed one by one. |
 | **Facet** | A named, individually claimable set of conformance units — a building block, not a complete claim. Clause 13.2 defines them. |
@@ -579,9 +581,35 @@ Where a deployment executes somewhere this Server does not control, `State` is n
 
 A `DeploymentType` instance **shall** have **exactly one** `UsesModel` reference, and its target **shall** be a `ModelType` instance.
 
-This is the only defined path from a running deployment to the artefact its results depend on, and §12.1's provenance argument is a walk along it. Zero references breaks the chain; more than one makes "which model produced this?" unanswerable, which is the question the chain exists to answer.
+This is the defined path from a running deployment to the model it is configured to serve now. Zero references leaves the deployment's current model unknown; more than one makes that current configuration ambiguous. It is not a historical record: a client asking which model produced a retained result follows the invocation-time `ModelUsed` identity instead (§8.2.1 and §12.1).
 
 `TrainedOn` links a model to a dataset it was trained or validated on. It is optional and may repeat: a model whose training data cannot be named is a model whose behaviour cannot be explained, but not every installation holds that information.
+
+#### 6.5.1 Promotion history
+
+`PromotionRecordType` (`ns=2;i=1019`) is the authoritative audit record of one successful substitution of a deployment's configured `UsesModel` target. A deployment has an Optional `PromotionRecords` folder containing `PromotionRecordType` instances. The folder is **conditionally required wherever the configured `UsesModel` target can change**, whether by `PromoteModel`, rollback, an automatic administrative policy, or a followed mutable reference. A deployment whose configured target is fixed for its lifetime may omit it.
+
+Each record is immutable and read-only after creation. `RecordId` is unique across the Server. `Deployment` is the deployment's convenience NodeId and `DeploymentId` is its snapshotted identifier. `PreviousModel` and `NewModel` are Mandatory convenience NodeIds; clients **shall not** depend on those nodes remaining present or resolvable. `PreviousModelIdentity` and `NewModelIdentity` are Mandatory `ModelIdentitySnapshotDataType` (`ns=2;i=3057`) values containing `ModelId`, `Version`, `Digest`, `DigestAlgorithm` and `DigestProvenance` as they stood when the change took effect. Those snapshots are self-contained and remain authoritative after either model node or its artefact location disappears.
+
+`DigestProvenance` is part of the identity snapshot because digest bytes without their evidence class are ambiguous. A retained digest declared by a source does not become one computed by this Server merely because the source node disappeared, and a digest verified during staging must not lose that stronger fact. Snapshotting `DigestProvenanceEnum` preserves the trust conclusion of §12.1.1 together with the value it qualifies.
+
+`EvaluationRun` optionally names the gating run. Where it is populated, `EvaluationRunId` **shall** contain the run's `RunId` snapshot; it remains meaningful if the run node is later removed. `ChangedAt`, `ChangedBy` and `ChangeKind` are Mandatory. `ChangedBy` is the authenticated principal that authorized or initiated the action; for an automatic substitution it is the Server's stable system identity. `Reason` is Optional and for a human.
+
+`ModelChangeKindEnum` (`ns=2;i=3016`) classifies the **trigger**, never the apparent ordering of version strings:
+
+| Value | Trigger |
+|---|---|
+| `Promotion` | An approved candidate replaced the serving model |
+| `Rollback` | An operator or policy restored a previously used model |
+| `AutomaticSubstitution` | The Server automatically changed the configured `UsesModel` target |
+| `MutableReferenceRepoint` | A followed mutable reference resolved to another model |
+| `OtherAdministrativeReplacement` | Another administrative action replaced the configured model |
+
+Versions are opaque strings and need not be sortable; a change is not a rollback merely because one version compares lower than another. Implementations **shall** classify by the action that caused the substitution.
+
+The Server **shall create and expose the record atomically with the successful `UsesModel` substitution**. A client shall not be able to observe the new reference without its record, or a record for a substitution that did not take effect. Failed or rejected changes create no successful record. The complete history for a deployment **shall** be retained for at least that deployment's lifetime.
+
+A per-invocation `FallBackTo` response does not change the configured `UsesModel` target. It is represented by the invocation's `ModelUsed` and **shall not** create a promotion record. `AutomaticSubstitution` applies only where the Server actually changes `UsesModel`; it is not a synonym for request routing.
 
 ### 6.6 `AiJobType`
 
@@ -682,7 +710,7 @@ This is why `State` is read rather than inferred from which Methods exist. A cli
 
 ### 7.4 Events (normative)
 
-`ModelPromotedEventType` is raised when a deployment begins serving a different model version.
+`ModelPromotedEventType` is raised when a deployment's configured `UsesModel` target is successfully substituted.
 
 A client can already subscribe to a deployment's `UsesModel` reference and see that it changed. What it cannot see that way is *who* changed it, *which* evaluation justified it, or *what it was before* — and those are precisely the questions asked after a batch has been rejected and someone wants to know what decided it. This event carries them at the moment they are known, rather than leaving them to be reconstructed from whatever logging the Server happens to keep.
 
@@ -692,13 +720,16 @@ A client can already subscribe to a deployment's `UsesModel` reference and see t
 | `NewModel` | NodeId | M | The `ModelType` now being served |
 | `PreviousModel` | NodeId | O | What it was serving, or null where it served none |
 | `EvaluationRun` | NodeId | O | The `EvaluationRunType` that gated the promotion, or null |
-| `PromotedBy` | String | O | The authenticated principal that promoted; empty where the Server initiated it |
+| `PromotedBy` | String | O | The authenticated identity that authorized or initiated the change; the Server's stable system identity for an automatic substitution |
+| `PromotionRecord` | NodeId | O | The authoritative `PromotionRecordType` created with the substitution |
 
-**It is raised on every substitution, not only on `PromoteModel`.** A rollback, a failover that changes which model answers, and any other Server-initiated substitution raise it too. A consumer auditing what decided a verdict cares that the model changed; whether the operator called it a promotion is not a distinction the audit can afford to depend on. `PreviousModel` and `NewModel` together are what distinguish a rollback from a promotion.
+**It is raised on every configured substitution, not only on `PromoteModel`.** A rollback, automatic change of `UsesModel`, mutable-reference repoint, and any other administrative substitution raise it too. A per-invocation fallback that leaves `UsesModel` unchanged does not: `ModelUsed` records that invocation-time choice. `ChangeKind` on the record identifies why the configured target changed; clients shall not infer promotion or rollback by ordering `PreviousModel.Version` and `NewModel.Version`.
 
-**`PromotedBy` exists because `BaseEventType` has no user field.** §12.3 requires promotion to carry an authorization distinct from every other Method on the job, and that requirement is unobservable if the identity that exercised it is not recorded where the act is. A Server **shall** populate it with the principal as it authenticated them, and **shall not** populate it with a service account standing in for a human operator where the human is known.
+**`PromotedBy` exists because `BaseEventType` has no user field.** §12.3 requires promotion to carry an authorization distinct from every other Method on the job, and that requirement is unobservable if the identity that exercised it is not recorded where the act is. A Server **shall** populate it with the principal as it authenticated them, and **shall not** populate it with a service account standing in for a human operator where the human is known. An automatic substitution uses the Server's stable system identity and agrees with the record's `ChangedBy`.
 
 **A null `EvaluationRun` is information, not an omission.** §7.2 says promotion **should** be gated on an `EvaluationRunType` whose `Passed` is true. Where it was not, null here is the observable consequence — which is the fact an audit is looking for, and the reason the field is not simply left off when unused.
+
+**The record is authoritative.** `PromotionRecord` is Optional in the type for compatibility, but a Server claiming **AI-Events shall populate it on every event**. The record is created in the same atomic operation as the successful `UsesModel` substitution; the event is raised only after that operation succeeds. `Deployment`, `PreviousModel`, `NewModel`, `EvaluationRun` and `PromotedBy` remain event fields so existing filters work, and wherever populated they **shall agree** with the corresponding record fields. Failed substitutions produce neither a successful record nor a promotion event.
 
 **Where it is raised.** The well-known `AiModelManagement` object declares `EventNotifier` with the `SubscribeToEvents` bit set and is the target of a `HasNotifier` reference from the Server object, so a client subscribes at either. `SourceNode` **shall** be the `DeploymentType` instance named by `Deployment`. `Severity` **should** be 500 or above: a promotion changes what every downstream verdict means, and a client filtering for things that matter should not have to know this event's name to find it.
 
@@ -753,6 +784,8 @@ A Server **shall** return the model that actually produced the response, which i
 Two mechanisms defined here can move it between the call and the read: a fallback (§9.4) answers from a different deployment entirely, and a `FollowsRef` binding (§9.3) can be repointed at a new version. In both cases the deployment's current model is the *wrong* answer to "what produced this result", and it is wrong in the direction that matters — it names a model that looks plausible.
 
 The provenance chain of §12.1 therefore walks `ModelUsed`, not the deployment.
+
+A consuming specification that persists an inference result **shall** retain this value with the result when historical model identity is part of its contract. *OPC UA for Vision Systems* does so as `VisionResultType.ModelUsed`: its result-to-model path has the same meaning as this Method output and as `InferenceJobType.ModelUsed`.
 
 #### 8.2.2 `FinishReason`
 
@@ -1145,6 +1178,8 @@ A metric without the threshold it was judged against cannot be acted on.
 
 Models carry `EvaluatedBy` references to their runs. It is optional and repeating: the run that gated promotion is not necessarily the most recent one.
 
+Where an evaluation gates a configured model substitution, the resulting `PromotionRecordType` carries both the convenience `EvaluationRun` NodeId and a durable `EvaluationRunId` snapshot. The NodeId supports browsing while the run exists; the identifier preserves the decision evidence after it is retired. Removing an evaluation node **shall not** permit rewriting or deleting the promotion record that cited it.
+
 ### 11.3 Lineage
 
 Lineage is a **chain**, not a field, and the difference is what makes it usable.
@@ -1173,16 +1208,16 @@ Where a safety policy is applied to an inference call, what it produces is a set
 
 Provenance is the point of the digest: without it the other members describe an artefact nobody can confirm they hold.
 
-A published result is traceable to the artefact that produced it by: result → deployment (the consuming specification's `NodeId` Property) → `UsesModel` → `ModelType` → `Digest`.
+A published result is traceable to the artefact that produced it by retaining the invocation's `ModelUsed` NodeId and following `ModelUsed` → `ModelType` → `Digest`. The deployment's `UsesModel` reference identifies the model serving now; it is not a historical record. The deployment's `PromotionRecords` preserve how that current configuration changed, with durable previous and new identity snapshots that do not depend on either `ModelType` node remaining present.
 
-Every link is required for the chain to hold, which is why `UsesModel` is exactly-one (§6.5) and `Digest` is Mandatory (§6.2). A Server **shall** populate `Digest` for every model whose artefact is obtainable through `ArtifactUri`.
+`Digest` is Mandatory because the historical chain cannot identify artefact bytes without it (§6.2). `UsesModel` remains exactly-one so a deployment's current serving configuration is unambiguous (§6.5). A Server **shall** populate `Digest` for every model whose artefact is obtainable through `ArtifactUri`.
 
 `DigestAlgorithm` **shall** name a hash function with **at least 256-bit output and no known collision weakness**; `SHA-256` is the default and is always acceptable. It **shall not** be `MD5`, `SHA-1` or a truncated variant — chosen-prefix collisions against those are practical, so a substituted artefact would pass verification, and a verification that can be passed by the wrong artefact is worse than none because it is believed.
 
 ```mermaid
 flowchart LR
-    R["a published result"] --> D["DeploymentType"]
-    D -->|"ModelUsed<br/><b>not</b> UsesModel"| M["ModelType"]
+    R["a published result"] -->|"ModelUsed"| M["ModelType"]
+    D["DeploymentType"] -->|"UsesModel<br/>serving now"| M
     M -->|Digest + DigestAlgorithm| A["the artefact bytes"]
     M -->|ImportedFrom| CR["catalogue resource<br/>where it came from"]
     M -->|DerivedFrom| B["the model it came from"]
@@ -1214,12 +1249,14 @@ Where such an identifier **locates** the artefact or its provenance record, it b
 
 #### 12.1.2 Broken links
 
-The walk is: result → deployment → `ModelUsed` → `ModelType` → `Digest`, and — where the model was imported — `ImportedFrom` → the catalogue resource it came from.
+The walk is: result → `ModelUsed` → `ModelType` → `Digest`, and — where the model was imported — `ImportedFrom` → the catalogue resource it came from.
 
 Two of those links can be broken by a Server that is otherwise behaving correctly:
 
 - Reading the **deployment's current model** instead of `ModelUsed` gives the wrong answer whenever a fallback served the call or a followed reference moved (§8.2.1). It is wrong silently and plausibly, which is the worst combination.
 - Trusting a **staged artefact whose digest was never checked** breaks it at the point where an artefact enters the system. §10.4 is where that check is required, and it is the only place in this model where a Server **shall** verify a digest rather than merely publish one.
+
+Promotion history closes a different break: deletion of an old `ModelType`. A promotion record's `ModelIdentitySnapshotDataType` copies `ModelId`, `Version`, `Digest`, `DigestAlgorithm` and `DigestProvenance` when the substitution succeeds. Servers **shall not** reconstruct those values later from a mutable source or overwrite them when a target node changes; the snapshot is evidence of what was known at the change boundary, including whether the digest was merely declared, computed by the Server, or verified on stage.
 
 ### 12.2 URI handling
 
@@ -1249,6 +1286,8 @@ A Server **shall** require an authorization for `PromoteModel` distinct from the
 
 Promotion changes behaviour without changing structure. Nothing in the address space looks different afterwards except a version string, so the usual defence — that a significant change is visible — does not apply here.
 
+Every authorized successful substitution **shall** create its immutable `PromotionRecordType` atomically with the `UsesModel` update. The record's `ChangedBy` carries the authenticated identity as the Server knows it; a Server **shall not** replace a known human principal with an intermediary service account. Automatic policies use the Server's stable system identity and `AutomaticSubstitution`. Authorization failure, validation failure, or any other failed substitution creates no successful record.
+
 #### 12.3.1 Followed references
 
 Promotion has a second door, and a control that guards only the first is misleading rather than merely weaker.
@@ -1257,7 +1296,7 @@ Promotion has a second door, and a control that guards only the first is mislead
 
 A Server **shall** treat repointing a followed reference as the same class of act as calling `PromoteModel`, and **shall** subject it to the same distinct authorization. A control that guards the front door while the side door stands open is not a weaker control — it is a misleading one, because the audit trail shows every promotion having been authorized.
 
-For the same reason `AiJobType.RequestedBy` records who started a job. An authorization check that leaves no record answers *was this allowed* but not *who did it*, and only the second question can be asked after the fact.
+For the same reason `AiJobType.RequestedBy` records who started a job, while the promotion record's `ChangedBy` records who authorized or initiated the actual substitution. The two may differ and shall not be collapsed. An authorization check that leaves no record answers *was this allowed* but not *who did it*, and only the second question can be asked after the fact.
 
 #### 12.3.2 Fallback
 
@@ -1266,6 +1305,8 @@ A fallback changes what answers, not who may ask.
 `FallBackTo` (§9.4) routes a call to a different deployment, and therefore a different model, without the caller asking for it.
 
 That is not a privilege escalation — the caller was already entitled to an answer — but it **is** a change in what produced the answer, and §8.2.1 requires it to be visible in `ModelUsed`. A Server **shall not** configure a fallback to a deployment whose `EgressPermitted` or `DataJurisdiction` is more permissive than the deployment falling back to it. Otherwise a network fault silently sends plant data somewhere policy forbids, which is precisely the moment nobody is watching.
+
+Per-invocation fallback does **not** update the original deployment's `UsesModel`, so it creates no `PromotionRecordType` and raises no `ModelPromotedEventType`. If an availability policy instead changes the configured target, that is an `AutomaticSubstitution`, with a record and event on the same terms as every other configured substitution.
 
 ### 12.4 Digest and authorship
 
@@ -1302,12 +1343,12 @@ The split matters more here than in a smaller model, because the plausible Serve
 
 | Facet | Requires |
 |---|---|
-| **AI-Base** (mandatory) | `AiRootType` with `Models` and `Deployments`; at least one `ModelType` with `ModelId`, `Name`, `Version`, `Digest`, `DigestAlgorithm` and `DigestProvenance`; where the Server exposes any deployment, each carries `DeploymentId`, `InferenceLocation` and `State` and satisfies the exactly-one `UsesModel` rule of §6.5; the digest rules of §12.1 |
+| **AI-Base** (mandatory) | `AiRootType` with `Models` and `Deployments`; at least one `ModelType` with `ModelId`, `Name`, `Version`, `Digest`, `DigestAlgorithm` and `DigestProvenance`; where the Server exposes any deployment, each carries `DeploymentId`, `InferenceLocation` and `State` and satisfies the exactly-one `UsesModel` rule of §6.5; where that target can change, the `PromotionRecords` folder, atomic immutable records, complete deployment-lifetime retention and trigger-based `ModelChangeKindEnum` rules of §6.5.1; the digest rules of §12.1 |
 | **AI-Dataset** | `DatasetType` instances with `DatasetId` and `SourceKind`, and `TrainedOn` from at least one model |
 | **AI-OffServer** | A deployment whose `InferenceLocation` is not `OnServer`, and §12.2's requirement that its `EndpointUri` name an authenticated, confidential scheme |
 | **AI-Signatures** | `Inputs` and `Outputs` populated on every model |
 | **AI-Learning** | `LearningJobType`, the §7 state model, every Method that drives a transition in it, and the distinct `PromoteModel` authorization of §12.3 |
-| **AI-Events** | `ModelPromotedEventType` and every rule of §7.4. A Server claiming it **shall** raise the event on **every** change to which model a deployment serves, including a rollback and a Server-initiated failover — a facet under which some substitutions are reported and others are not cannot support the audit it exists for, because a consumer could no longer read silence as "the model did not change". `PromotedBy` **shall** be populated wherever the change was made by an authenticated principal. |
+| **AI-Events** | `ModelPromotedEventType` and every rule of §7.4. A Server claiming it **shall** raise the event on every successful configured `UsesModel` substitution, including rollback, automatic substitution and mutable-reference repoint, and **shall not** raise it merely because a per-invocation fallback answered while `UsesModel` remained unchanged. `PromotionRecord` shall be populated and the legacy filtering fields shall agree with that authoritative record. `PromotedBy` **shall** be populated wherever the change was made by an authenticated principal. |
 | **AI-Invoke** | `DeploymentType.Invoke` with `ModelUsed` and `FinishReason` populated on every response, and `Usage` returned on every response — its `UnitKind` empty where the execution site does not meter, per §8.2.3; the §6.4.2 requirement to publish `ApiDialect` where `Inputs`/`Outputs` do not describe the payload contract; the exactly-one `Payload`/`PayloadUri` rule of §8.6.1; and the §8.3 rule that an unsupported parameter is rejected rather than ignored |
 | **AI-InvokeAsync** | `InvokeAsync` and `InferenceJobType`, answering the same questions as `Invoke` including size (§8.6.1): the exactly-one `Payload`/`PayloadUri` rule, and `TransferRequired` with `Transfer` where a result outgrew the inline bound |
 | **AI-Transfer** | `BeginTransfer` and `InferenceTransferType`, `MaxInlinePayloadSize` on every deployment, and the §8.2.4 rule that `Invoke` reports `TransferRequired` rather than failing a call whose response outgrew the inline bound |
@@ -1395,7 +1436,7 @@ Not normative references, and no dependency. Recorded because this model borrowe
 - **IDTA 02059** *AI Model Management* — the member set of `DeploymentType`, including the inference-location concept.
 - **OPC 30270** — the OPC UA ⇄ Asset Administration Shell bridge, over which the alignments above become a populated AAS.
 - **xRegistry** — [the CNCF specification](https://github.com/xregistry/spec) the OPC UA projection in this repository follows. Its `groups` / `resources` / `versions` structure is what clause 10 extends, and public proxies over model hubs already present exactly the arrangement adopted here: publisher as group, models and datasets as sibling resource types, versions immutable and identified by content, mutable branch and tag names as pointers rather than versions.
-- **OPC UA — Vision** in this repository is the first consuming specification. Its `InferencePipelineType.Deployment` is a `NodeId` Property naming a `DeploymentType` here, per §5.2, and neither NodeSet requires the other.
+- **OPC UA for Vision Systems** in this repository is the first consuming specification. Its `InferencePipelineType.Deployment` is a `NodeId` Property naming a `DeploymentType` here, and its `VisionResultType.ModelUsed` retains the model that actually answered, per §8.2.1. Neither NodeSet requires the other. See the informative [Vision and AI Model Management walkthrough](../vision-ai-walkthrough.md) for the combined browse path and the informative [external result mapping](../vision-ai-external-result-mapping.md) for preserving these identities outside the Server without creating another conformance profile.
 
 ---
 

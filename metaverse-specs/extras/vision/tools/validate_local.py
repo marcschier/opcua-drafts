@@ -32,17 +32,51 @@ Specification invariants (the reason this file is not generic):
     format.
   * ClipEndpointType MUST declare both LatestClip and MaxInlineClipSize, so that the
     size-gated inline delivery facet cannot be half-implemented in the model.
+  * InferencePipelineType retention limits MUST be Optional members appended at
+    i=6216 and i=6217, preserving all previously published NodeIds.
+  * Every symbol/NodeId/NodeClass mapping published before those retention members
+    matches a pinned canonical digest; later append ranges do not affect the digest.
 
 Exit code 0 and "OK" on success; non-zero with an ERRORS list otherwise.
 """
 from __future__ import annotations
 import csv
+import hashlib
 import os
 import re
 import sys
 import xml.etree.ElementTree as ET
 
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
+
+# Published worked-example identities are append-only just like the base model. These
+# digests cover every pre-retention node's numeric NodeId, class, BrowseName and parent,
+# derived from the overlays at HEAD before retention was added. The explicit retention
+# ids then anchor the newly appended tail. A generator insertion anywhere earlier in an
+# example changes the digest instead of silently renumbering the published address space.
+EXAMPLE_NODEID_BASELINES = {
+    "machine-vision/Opc.Ua.Inspection.Vision.NodeSet2.xml": {
+        "max_id": 5113,
+        "count": 113,
+        "sha256": "93f3568123bf41f6af7ebab73ab9666a960b1c526d8d2dd4fa9193a258e96e16",
+        "retention": {"MaxResultAge": 5114, "MaxRetainedResults": 5115},
+    },
+    "robotics/Opc.Ua.Robotics.Vision.NodeSet2.xml": {
+        "max_id": 5183,
+        "count": 183,
+        "sha256": "31dc194f3210b0bb49726c26c8a6b7ab9974f2c6a27f07ce4f8d211f6c86dcf0",
+        "retention": {"MaxResultAge": 5184, "MaxRetainedResults": 5185},
+    },
+}
+
+# Canonical digest of every base-model symbol/NodeId/NodeClass mapping published before
+# the 0.4.1 retention append. Category bounds deliberately include retired gaps (which
+# must never be reused) while excluding 6216/6217 and every future append range. The two
+# retention ids have explicit semantic checks below, so both the frozen baseline and
+# the append-only tail fail with a useful diagnostic if renumbered.
+PUBLISHED_PRE_RETENTION_NODEID_SHA256 = (
+    "5408f557160e418c24896cbb304ada84d16735bfcd0160c1b7fbf49d61e0c59f"
+)
 
 # The AI Model Management model is a separate specification. This validator reads its
 # NodeSet rather than importing its generator, for the same reason it reads Vision's:
@@ -435,6 +469,25 @@ def main():
             err(f"ClipEndpointType is missing '{required}', required by the size-gated "
                 "inline delivery facet")
 
+    retention = {"MaxResultAge": ("ns=1;i=6216", "i=290"),
+                 "MaxRetainedResults": ("ns=1;i=6217", "i=7")}
+    for name, (expected_id, expected_dt) in retention.items():
+        n = by_id.get(expected_id)
+        if n is None or simple_name(n) != name:
+            err(f"InferencePipelineType.{name} must retain append-only NodeId "
+                f"{expected_id}")
+            continue
+        parent = by_id.get(n.get("ParentNodeId"))
+        if parent is None or simple_name(parent) != "InferencePipelineType":
+            err(f"{expected_id} ({name}) is not a member of InferencePipelineType")
+        if norm_dt(n.get("DataType")) != expected_dt:
+            err(f"{expected_id} ({name}) has DataType {n.get('DataType')}, expected "
+                f"{expected_dt}")
+        refs = n.findall(f"{NS}References/{NS}Reference")
+        if not any(r.get("ReferenceType") == "HasModellingRule"
+                   and (r.text or "").strip() == "i=80" for r in refs):
+            err(f"{expected_id} ({name}) must have Optional ModellingRule")
+
     # ---- NodeId CSV <-> NodeSet cross-check --------------------------------
     # Convention shared with the other extension validators (observability-export,
     # schema-registry, xregistry, WoT-Connectivity): the published CSV and the NodeSet
@@ -478,6 +531,32 @@ def main():
         for num in sorted(csv_ids):
             if num not in xml_ids:
                 err(f"csv id {num} ({csv_ids[num][1]}) is not defined in the NodeSet")
+
+        def published_pre_retention(num):
+            return (
+                1001 <= num <= 1033
+                or 3001 <= num <= 3017
+                or 3050 <= num <= 3057
+                or 3901 <= num <= 3917
+                or 4001 <= num <= 4005
+                or 5001 <= num <= 5008
+                or 6001 <= num <= 6215
+                or num == 7001
+            )
+
+        baseline_rows = [
+            (name, str(num), cls)
+            for num, (cls, name) in csv_ids.items()
+            if published_pre_retention(num)
+        ]
+        canonical = "".join(
+            ",".join(row) + "\n" for row in sorted(baseline_rows)
+        ).encode("utf-8")
+        actual_digest = hashlib.sha256(canonical).hexdigest()
+        if actual_digest != PUBLISHED_PRE_RETENTION_NODEID_SHA256:
+            err("the published pre-retention Vision symbol/NodeId/class baseline "
+                "changed; NodeIds are append-only (expected SHA-256 "
+                f"{PUBLISHED_PRE_RETENTION_NODEID_SHA256}, found {actual_digest})")
 
     print(f"nodes: {len(nodes)}")
 
@@ -741,6 +820,35 @@ def main():
                     if e.tag.startswith(NS) and e.tag[len(NS):].startswith("UA")]
         total_overlay_nodes += len(ov_nodes)
         ov_ids = {e.get("NodeId") for e in ov_nodes}
+
+        baseline = EXAMPLE_NODEID_BASELINES.get(label)
+        if baseline:
+            rows = []
+            for e in ov_nodes:
+                nid = e.get("NodeId", "")
+                if not nid.startswith("ns=1;i="):
+                    continue
+                num = int(nid.split("i=")[1])
+                if num <= baseline["max_id"]:
+                    rows.append((num, e.tag[len(NS):], e.get("BrowseName", ""),
+                                 e.get("ParentNodeId", "")))
+            rows.sort()
+            encoded = "".join(
+                f"{num}|{cls}|{browse}|{parent}\n"
+                for num, cls, browse, parent in rows).encode()
+            digest = hashlib.sha256(encoded).hexdigest()
+            if len(rows) != baseline["count"] or digest != baseline["sha256"]:
+                err(f"{label}: published pre-retention symbol-to-NodeId mapping changed "
+                    f"(count {len(rows)}, sha256 {digest}); example NodeIds are "
+                    "append-only")
+            by_browse = {simple_name(e): int(e.get("NodeId").split("i=")[1])
+                         for e in ov_nodes if e.get("NodeId", "").startswith("ns=1;i=")
+                         and simple_name(e) in baseline["retention"]}
+            for name, expected in baseline["retention"].items():
+                if by_browse.get(name) != expected:
+                    err(f"{label}: {name} must retain appended NodeId ns=1;i={expected}; "
+                        f"found {by_browse.get(name)}")
+
         for e in ov_nodes:
             for r in e.findall(f"{NS}References/{NS}Reference"):
                 tgt = (r.text or "").strip()
@@ -850,6 +958,35 @@ def main():
                 if type_of.get(t) != model_td:
                     err(f"{label}: {e.get('NodeId')} UsesModel targets {t}, which is "
                         "not a ModelType instance")
+
+        # Clause 7.1.1: retention limits become mandatory as a pair wherever an
+        # inference-facet example instantiates Results, and at least one must bound it.
+        pipeline_td = type_named("InferencePipelineType")
+        for e in ov_nodes:
+            if type_of.get(e.get("NodeId")) != pipeline_td:
+                continue
+            members = {simple_name(c): c for c in children.get(e.get("NodeId"), [])}
+            if "Results" not in members:
+                continue
+            missing = [n for n in ("MaxResultAge", "MaxRetainedResults")
+                       if n not in members]
+            if missing:
+                err(f"{label}: {e.get('NodeId')} instantiates Results but omits "
+                    f"retention member(s) {missing}")
+                continue
+            values = []
+            for name in ("MaxResultAge", "MaxRetainedResults"):
+                value = members[name].find(f"{NS}Value")
+                text = next((t.strip() for t in value.itertext() if t.strip()), "0")
+                try:
+                    values.append(float(text))
+                except ValueError:
+                    err(f"{label}: {e.get('NodeId')} {name} has non-numeric value "
+                        f"{text!r}")
+                    values.append(0)
+            if not any(v > 0 for v in values):
+                err(f"{label}: {e.get('NodeId')} instantiates Results but both "
+                    "retention limits are zero")
 
         # Clause 11: VIS-Media-Inline is all four members or none.
         clip_td = type_named("ClipEndpointType")

@@ -950,6 +950,35 @@
       },
       {
         "t": "term",
+        "term": "Promotion record",
+        "definition": [
+          {
+            "r": "t",
+            "text": "An immutable, authoritative snapshot of one successful change to a deployment's configured "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " target. Modelled as "
+          },
+          {
+            "r": "code",
+            "text": "PromotionRecordType"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "notes": [],
+        "examples": [],
+        "source": null
+      },
+      {
+        "t": "term",
         "term": "Digest",
         "definition": [
           {
@@ -5625,7 +5654,25 @@
         "runs": [
           {
             "r": "t",
-            "text": "This is the only defined path from a running deployment to the artefact its results depend on, and "
+            "text": "This is the defined path from a running deployment to the model it is configured to serve now. Zero references leaves the deployment's current model unknown; more than one makes that current configuration ambiguous. It is not a historical record: a client asking which model produced a retained result follows the invocation-time "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " identity instead ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-12-2-1",
+            "kind": "clause",
+            "prefix": "6.12.2.1"
+          },
+          {
+            "r": "t",
+            "text": " and "
           },
           {
             "r": "xref",
@@ -5635,7 +5682,7 @@
           },
           {
             "r": "t",
-            "text": "'s provenance argument is a walk along it. Zero references breaks the chain; more than one makes \"which model produced this?\" unanswerable, which is the question the chain exists to answer."
+            "text": ")."
           }
         ],
         "src": {
@@ -5661,6 +5708,619 @@
           "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
           "s": "6.5 `UsesModel` and `TrainedOn`",
           "b": 2
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-9-1",
+        "title": "Promotion history",
+        "level": 3
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "PromotionRecordType"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "ns=2;i=1019"
+          },
+          {
+            "r": "t",
+            "text": ") is the authoritative audit record of one successful substitution of a deployment's configured "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " target. A deployment has an Optional "
+          },
+          {
+            "r": "code",
+            "text": "PromotionRecords"
+          },
+          {
+            "r": "t",
+            "text": " folder containing "
+          },
+          {
+            "r": "code",
+            "text": "PromotionRecordType"
+          },
+          {
+            "r": "t",
+            "text": " instances. The folder is "
+          },
+          {
+            "r": "t",
+            "text": "conditionally required wherever the configured ",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " target can change",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ", whether by "
+          },
+          {
+            "r": "code",
+            "text": "PromoteModel"
+          },
+          {
+            "r": "t",
+            "text": ", rollback, an automatic administrative policy, or a followed mutable reference. A deployment whose configured target is fixed for its lifetime may omit it."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "6.5.1 Promotion history",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Each record is immutable and read-only after creation. "
+          },
+          {
+            "r": "code",
+            "text": "RecordId"
+          },
+          {
+            "r": "t",
+            "text": " is unique across the Server. "
+          },
+          {
+            "r": "code",
+            "text": "Deployment"
+          },
+          {
+            "r": "t",
+            "text": " is the deployment's convenience NodeId and "
+          },
+          {
+            "r": "code",
+            "text": "DeploymentId"
+          },
+          {
+            "r": "t",
+            "text": " is its snapshotted identifier. "
+          },
+          {
+            "r": "code",
+            "text": "PreviousModel"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "NewModel"
+          },
+          {
+            "r": "t",
+            "text": " are Mandatory convenience NodeIds; clients "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " depend on those nodes remaining present or resolvable. "
+          },
+          {
+            "r": "code",
+            "text": "PreviousModelIdentity"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "NewModelIdentity"
+          },
+          {
+            "r": "t",
+            "text": " are Mandatory "
+          },
+          {
+            "r": "code",
+            "text": "ModelIdentitySnapshotDataType"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "ns=2;i=3057"
+          },
+          {
+            "r": "t",
+            "text": ") values containing "
+          },
+          {
+            "r": "code",
+            "text": "ModelId"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Version"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Digest"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "DigestAlgorithm"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "DigestProvenance"
+          },
+          {
+            "r": "t",
+            "text": " as they stood when the change took effect. Those snapshots are self-contained and remain authoritative after either model node or its artefact location disappears."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "6.5.1 Promotion history",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "DigestProvenance"
+          },
+          {
+            "r": "t",
+            "text": " is part of the identity snapshot because digest bytes without their evidence class are ambiguous. A retained digest declared by a source does not become one computed by this Server merely because the source node disappeared, and a digest verified during staging must not lose that stronger fact. Snapshotting "
+          },
+          {
+            "r": "code",
+            "text": "DigestProvenanceEnum"
+          },
+          {
+            "r": "t",
+            "text": " preserves the trust conclusion of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-16-1-1",
+            "kind": "clause",
+            "prefix": "6.16.1.1"
+          },
+          {
+            "r": "t",
+            "text": " together with the value it qualifies."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "6.5.1 Promotion history",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "EvaluationRun"
+          },
+          {
+            "r": "t",
+            "text": " optionally names the gating run. Where it is populated, "
+          },
+          {
+            "r": "code",
+            "text": "EvaluationRunId"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " contain the run's "
+          },
+          {
+            "r": "code",
+            "text": "RunId"
+          },
+          {
+            "r": "t",
+            "text": " snapshot; it remains meaningful if the run node is later removed. "
+          },
+          {
+            "r": "code",
+            "text": "ChangedAt"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ChangedBy"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "ChangeKind"
+          },
+          {
+            "r": "t",
+            "text": " are Mandatory. "
+          },
+          {
+            "r": "code",
+            "text": "ChangedBy"
+          },
+          {
+            "r": "t",
+            "text": " is the authenticated principal that authorized or initiated the action; for an automatic substitution it is the Server's stable system identity. "
+          },
+          {
+            "r": "code",
+            "text": "Reason"
+          },
+          {
+            "r": "t",
+            "text": " is Optional and for a human."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "6.5.1 Promotion history",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "ModelChangeKindEnum"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "ns=2;i=3016"
+          },
+          {
+            "r": "t",
+            "text": ") classifies the "
+          },
+          {
+            "r": "t",
+            "text": "trigger",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ", never the apparent ordering of version strings:"
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "6.5.1 Promotion history",
+          "b": 4
+        }
+      },
+      {
+        "t": "table",
+        "id": "promotion-history-tab1",
+        "caption": "Promotion history",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "t",
+              "text": "Value"
+            }
+          ],
+          [
+            {
+              "r": "t",
+              "text": "Trigger"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "Promotion"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "An approved candidate replaced the serving model"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "Rollback"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "An operator or policy restored a previously used model"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "AutomaticSubstitution"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The Server automatically changed the configured "
+              },
+              {
+                "r": "code",
+                "text": "UsesModel"
+              },
+              {
+                "r": "t",
+                "text": " target"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "MutableReferenceRepoint"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "A followed mutable reference resolved to another model"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "OtherAdministrativeReplacement"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "Another administrative action replaced the configured model"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "6.5.1 Promotion history",
+          "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Versions are opaque strings and need not be sortable; a change is not a rollback merely because one version compares lower than another. Implementations "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " classify by the action that caused the substitution."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "6.5.1 Promotion history",
+          "b": 6
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The Server "
+          },
+          {
+            "r": "t",
+            "text": "shall create and expose the record atomically with the successful ",
+            "b": true
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " substitution",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ". A client shall not be able to observe the new reference without its record, or a record for a substitution that did not take effect. Failed or rejected changes create no successful record. The complete history for a deployment "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be retained for at least that deployment's lifetime."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "6.5.1 Promotion history",
+          "b": 7
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A per-invocation "
+          },
+          {
+            "r": "code",
+            "text": "FallBackTo"
+          },
+          {
+            "r": "t",
+            "text": " response does not change the configured "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " target. It is represented by the invocation's "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " create a promotion record. "
+          },
+          {
+            "r": "code",
+            "text": "AutomaticSubstitution"
+          },
+          {
+            "r": "t",
+            "text": " applies only where the Server actually changes "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": "; it is not a synonym for request routing."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "6.5.1 Promotion history",
+          "b": 8
         }
       },
       {
@@ -7424,7 +8084,15 @@
           },
           {
             "r": "t",
-            "text": " is raised when a deployment begins serving a different model version."
+            "text": " is raised when a deployment's configured "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " target is successfully substituted."
           }
         ],
         "src": {
@@ -7657,7 +8325,41 @@
             [
               {
                 "r": "t",
-                "text": "The authenticated principal that promoted; empty where the Server initiated it"
+                "text": "The authenticated identity that authorized or initiated the change; the Server's stable system identity for an automatic substitution"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "PromotionRecord"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "NodeId"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "O"
+              }
+            ],
+            [
+              {
+                "r": "t",
+                "text": "The authoritative "
+              },
+              {
+                "r": "code",
+                "text": "PromotionRecordType"
+              },
+              {
+                "r": "t",
+                "text": " created with the substitution"
               }
             ]
           ]
@@ -7676,7 +8378,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "It is raised on every substitution, not only on ",
+            "text": "It is raised on every configured substitution, not only on ",
             "b": true
           },
           {
@@ -7690,11 +8392,43 @@
           },
           {
             "r": "t",
-            "text": " A rollback, a failover that changes which model answers, and any other Server-initiated substitution raise it too. A consumer auditing what decided a verdict cares that the model changed; whether the operator called it a promotion is not a distinction the audit can afford to depend on. "
+            "text": " A rollback, automatic change of "
           },
           {
             "r": "code",
-            "text": "PreviousModel"
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": ", mutable-reference repoint, and any other administrative substitution raise it too. A per-invocation fallback that leaves "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " unchanged does not: "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " records that invocation-time choice. "
+          },
+          {
+            "r": "code",
+            "text": "ChangeKind"
+          },
+          {
+            "r": "t",
+            "text": " on the record identifies why the configured target changed; clients shall not infer promotion or rollback by ordering "
+          },
+          {
+            "r": "code",
+            "text": "PreviousModel.Version"
           },
           {
             "r": "t",
@@ -7702,11 +8436,11 @@
           },
           {
             "r": "code",
-            "text": "NewModel"
+            "text": "NewModel.Version"
           },
           {
             "r": "t",
-            "text": " together are what distinguish a rollback from a promotion."
+            "text": "."
           }
         ],
         "src": {
@@ -7767,7 +8501,15 @@
           },
           {
             "r": "t",
-            "text": " populate it with a service account standing in for a human operator where the human is known."
+            "text": " populate it with a service account standing in for a human operator where the human is known. An automatic substitution uses the Server's stable system identity and agrees with the record's "
+          },
+          {
+            "r": "code",
+            "text": "ChangedBy"
+          },
+          {
+            "r": "t",
+            "text": "."
           }
         ],
         "src": {
@@ -7838,6 +8580,100 @@
           "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
           "s": "7.4 Events (normative)",
           "b": 5
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The record is authoritative.",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "code",
+            "text": "PromotionRecord"
+          },
+          {
+            "r": "t",
+            "text": " is Optional in the type for compatibility, but a Server claiming "
+          },
+          {
+            "r": "t",
+            "text": "AI-Events shall populate it on every event",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": ". The record is created in the same atomic operation as the successful "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " substitution; the event is raised only after that operation succeeds. "
+          },
+          {
+            "r": "code",
+            "text": "Deployment"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "PreviousModel"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "NewModel"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "EvaluationRun"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "PromotedBy"
+          },
+          {
+            "r": "t",
+            "text": " remain event fields so existing filters work, and wherever populated they "
+          },
+          {
+            "r": "t",
+            "text": "shall agree",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " with the corresponding record fields. Failed substitutions produce neither a successful record nor a promotion event."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "7.4 Events (normative)",
+          "b": 6
         }
       },
       {
@@ -7939,7 +8775,7 @@
         "src": {
           "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
           "s": "7.4 Events (normative)",
-          "b": 6
+          "b": 7
         }
       },
       {
@@ -8025,7 +8861,7 @@
         "src": {
           "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
           "s": "7.4 Events (normative)",
-          "b": 7
+          "b": 8
         }
       },
       {
@@ -8457,6 +9293,55 @@
           "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
           "s": "8.2.1 `ModelUsed`",
           "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A consuming specification that persists an inference result "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " retain this value with the result when historical model identity is part of its contract. "
+          },
+          {
+            "r": "t",
+            "text": "OPC UA for Vision Systems",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": " does so as "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType.ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": ": its result-to-model path has the same meaning as this Method output and as "
+          },
+          {
+            "r": "code",
+            "text": "InferenceJobType.ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "8.2.1 `ModelUsed`",
+          "b": 3
         }
       },
       {
@@ -14745,6 +15630,54 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Where an evaluation gates a configured model substitution, the resulting "
+          },
+          {
+            "r": "code",
+            "text": "PromotionRecordType"
+          },
+          {
+            "r": "t",
+            "text": " carries both the convenience "
+          },
+          {
+            "r": "code",
+            "text": "EvaluationRun"
+          },
+          {
+            "r": "t",
+            "text": " NodeId and a durable "
+          },
+          {
+            "r": "code",
+            "text": "EvaluationRunId"
+          },
+          {
+            "r": "t",
+            "text": " snapshot. The NodeId supports browsing while the run exists; the identifier preserves the decision evidence after it is retired. Removing an evaluation node "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " permit rewriting or deleting the promotion record that cited it."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "11.2 Evaluation",
+          "b": 6
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-15-3",
         "title": "Lineage",
@@ -15077,19 +16010,19 @@
         "runs": [
           {
             "r": "t",
-            "text": "A published result is traceable to the artefact that produced it by: result → deployment (the consuming specification's "
+            "text": "A published result is traceable to the artefact that produced it by retaining the invocation's "
           },
           {
             "r": "code",
-            "text": "NodeId"
+            "text": "ModelUsed"
           },
           {
             "r": "t",
-            "text": " Property) → "
+            "text": " NodeId and following "
           },
           {
             "r": "code",
-            "text": "UsesModel"
+            "text": "ModelUsed"
           },
           {
             "r": "t",
@@ -15109,7 +16042,31 @@
           },
           {
             "r": "t",
-            "text": "."
+            "text": ". The deployment's "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " reference identifies the model serving now; it is not a historical record. The deployment's "
+          },
+          {
+            "r": "code",
+            "text": "PromotionRecords"
+          },
+          {
+            "r": "t",
+            "text": " preserve how that current configuration changed, with durable previous and new identity snapshots that do not depend on either "
+          },
+          {
+            "r": "code",
+            "text": "ModelType"
+          },
+          {
+            "r": "t",
+            "text": " node remaining present."
           }
         ],
         "src": {
@@ -15123,8 +16080,22 @@
         "style": "PARAGRAPH",
         "runs": [
           {
+            "r": "code",
+            "text": "Digest"
+          },
+          {
             "r": "t",
-            "text": "Every link is required for the chain to hold, which is why "
+            "text": " is Mandatory because the historical chain cannot identify artefact bytes without it ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-6",
+            "kind": "clause",
+            "prefix": "6.6"
+          },
+          {
+            "r": "t",
+            "text": "). "
           },
           {
             "r": "code",
@@ -15132,31 +16103,13 @@
           },
           {
             "r": "t",
-            "text": " is exactly-one ("
+            "text": " remains exactly-one so a deployment's current serving configuration is unambiguous ("
           },
           {
             "r": "xref",
             "target": "c6-9",
             "kind": "clause",
             "prefix": "6.9"
-          },
-          {
-            "r": "t",
-            "text": ") and "
-          },
-          {
-            "r": "code",
-            "text": "Digest"
-          },
-          {
-            "r": "t",
-            "text": " is Mandatory ("
-          },
-          {
-            "r": "xref",
-            "target": "c6-6",
-            "kind": "clause",
-            "prefix": "6.6"
           },
           {
             "r": "t",
@@ -15269,7 +16222,7 @@
         "id": "fig-aim-prov",
         "caption": "Provenance of a trained model",
         "source": "mermaid",
-        "mermaid": "flowchart LR\n    R[\"a published result\"] --> D[\"DeploymentType\"]\n    D -->|\"ModelUsed<br/><b>not</b> UsesModel\"| M[\"ModelType\"]\n    M -->|Digest + DigestAlgorithm| A[\"the artefact bytes\"]\n    M -->|ImportedFrom| CR[\"catalogue resource<br/>where it came from\"]\n    M -->|DerivedFrom| B[\"the model it came from\"]\n    M -->|TrainedOn| DS[\"DatasetType\"]",
+        "mermaid": "flowchart LR\n    R[\"a published result\"] -->|\"ModelUsed\"| M[\"ModelType\"]\n    D[\"DeploymentType\"] -->|\"UsesModel<br/>serving now\"| M\n    M -->|Digest + DigestAlgorithm| A[\"the artefact bytes\"]\n    M -->|ImportedFrom| CR[\"catalogue resource<br/>where it came from\"]\n    M -->|DerivedFrom| B[\"the model it came from\"]\n    M -->|TrainedOn| DS[\"DatasetType\"]",
         "src": {
           "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
           "s": "12.1 Provenance",
@@ -15856,7 +16809,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "The walk is: result → deployment → "
+            "text": "The walk is: result → "
           },
           {
             "r": "code",
@@ -15989,6 +16942,86 @@
           "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
           "s": "12.1.2 Broken links",
           "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Promotion history closes a different break: deletion of an old "
+          },
+          {
+            "r": "code",
+            "text": "ModelType"
+          },
+          {
+            "r": "t",
+            "text": ". A promotion record's "
+          },
+          {
+            "r": "code",
+            "text": "ModelIdentitySnapshotDataType"
+          },
+          {
+            "r": "t",
+            "text": " copies "
+          },
+          {
+            "r": "code",
+            "text": "ModelId"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Version"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "Digest"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "DigestAlgorithm"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "DigestProvenance"
+          },
+          {
+            "r": "t",
+            "text": " when the substitution succeeds. Servers "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " reconstruct those values later from a mutable source or overwrite them when a target node changes; the snapshot is evidence of what was known at the change boundary, including whether the digest was merely declared, computed by the Server, or verified on stage."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "12.1.2 Broken links",
+          "b": 3
         }
       },
       {
@@ -16417,6 +17450,71 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Every authorized successful substitution "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " create its immutable "
+          },
+          {
+            "r": "code",
+            "text": "PromotionRecordType"
+          },
+          {
+            "r": "t",
+            "text": " atomically with the "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " update. The record's "
+          },
+          {
+            "r": "code",
+            "text": "ChangedBy"
+          },
+          {
+            "r": "t",
+            "text": " carries the authenticated identity as the Server knows it; a Server "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " replace a known human principal with an intermediary service account. Automatic policies use the Server's stable system identity and "
+          },
+          {
+            "r": "code",
+            "text": "AutomaticSubstitution"
+          },
+          {
+            "r": "t",
+            "text": ". Authorization failure, validation failure, or any other failed substitution creates no successful record."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "12.3 Promotion authorization",
+          "b": 3
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-16-3-1",
         "title": "Followed references",
@@ -16529,7 +17627,15 @@
           },
           {
             "r": "t",
-            "text": " records who started a job. An authorization check that leaves no record answers "
+            "text": " records who started a job, while the promotion record's "
+          },
+          {
+            "r": "code",
+            "text": "ChangedBy"
+          },
+          {
+            "r": "t",
+            "text": " records who authorized or initiated the actual substitution. The two may differ and shall not be collapsed. An authorization check that leaves no record answers "
           },
           {
             "r": "t",
@@ -16671,6 +17777,62 @@
           "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
           "s": "12.3.2 Fallback",
           "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Per-invocation fallback does "
+          },
+          {
+            "r": "t",
+            "text": "not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " update the original deployment's "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": ", so it creates no "
+          },
+          {
+            "r": "code",
+            "text": "PromotionRecordType"
+          },
+          {
+            "r": "t",
+            "text": " and raises no "
+          },
+          {
+            "r": "code",
+            "text": "ModelPromotedEventType"
+          },
+          {
+            "r": "t",
+            "text": ". If an availability policy instead changes the configured target, that is an "
+          },
+          {
+            "r": "code",
+            "text": "AutomaticSubstitution"
+          },
+          {
+            "r": "t",
+            "text": ", with a record and event on the same terms as every other configured substitution."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md",
+          "s": "12.3.2 Fallback",
+          "b": 3
         }
       },
       {
@@ -17448,7 +18610,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "A deployment began serving a different model version. Raised on promotion, and also on a rollback or any other Server-initiated substitution, because a consumer auditing what decided a verdict cares that the model changed and not why the operator called it a promotion."
+            "text": "A deployment's configured UsesModel target changed. Raised on promotion, and also on a rollback or any other Server-initiated substitution, because a consumer auditing what decided a verdict cares that the model changed and not why the operator called it a promotion."
           }
         ]
       },
@@ -17457,6 +18619,29 @@
         "id": "c7-18-def",
         "caption": "ModelPromotedEventType definition",
         "browseName": "ModelPromotedEventType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c7-19",
+        "title": "PromotionRecordType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Immutable, authoritative record of one successful substitution of a DeploymentType UsesModel target. The record is created atomically with the substitution, is read-only after creation, and remains available for at least the lifetime of the deployment."
+          }
+        ]
+      },
+      {
+        "t": "nodetable",
+        "id": "c7-19-def",
+        "caption": "PromotionRecordType definition",
+        "browseName": "PromotionRecordType",
         "kind": "type"
       }
     ],
@@ -17486,7 +18671,8 @@
       {
         "t": "enumtable",
         "id": "c8-1-items",
-        "browseName": "InferenceLocationEnum"
+        "browseName": "InferenceLocationEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17514,7 +18700,8 @@
       {
         "t": "enumtable",
         "id": "c8-2-items",
-        "browseName": "AcceleratorKindEnum"
+        "browseName": "AcceleratorKindEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17542,7 +18729,8 @@
       {
         "t": "enumtable",
         "id": "c8-3-items",
-        "browseName": "DeploymentStateEnum"
+        "browseName": "DeploymentStateEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17570,7 +18758,8 @@
       {
         "t": "enumtable",
         "id": "c8-4-items",
-        "browseName": "DatasetSourceEnum"
+        "browseName": "DatasetSourceEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17598,7 +18787,8 @@
       {
         "t": "enumtable",
         "id": "c8-5-items",
-        "browseName": "LearningJobStateEnum"
+        "browseName": "LearningJobStateEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17626,7 +18816,8 @@
       {
         "t": "enumtable",
         "id": "c8-6-items",
-        "browseName": "FinishReasonEnum"
+        "browseName": "FinishReasonEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17654,7 +18845,8 @@
       {
         "t": "enumtable",
         "id": "c8-7-items",
-        "browseName": "ApiDialectEnum"
+        "browseName": "ApiDialectEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17682,7 +18874,8 @@
       {
         "t": "enumtable",
         "id": "c8-8-items",
-        "browseName": "AuthenticationKindEnum"
+        "browseName": "AuthenticationKindEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17710,7 +18903,8 @@
       {
         "t": "enumtable",
         "id": "c8-9-items",
-        "browseName": "FallbackPolicyEnum"
+        "browseName": "FallbackPolicyEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17738,7 +18932,8 @@
       {
         "t": "enumtable",
         "id": "c8-10-items",
-        "browseName": "VersionBindingEnum"
+        "browseName": "VersionBindingEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17766,7 +18961,8 @@
       {
         "t": "enumtable",
         "id": "c8-11-items",
-        "browseName": "ImportModeEnum"
+        "browseName": "ImportModeEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17794,7 +18990,8 @@
       {
         "t": "enumtable",
         "id": "c8-12-items",
-        "browseName": "SafetySeverityEnum"
+        "browseName": "SafetySeverityEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17822,7 +19019,8 @@
       {
         "t": "enumtable",
         "id": "c8-13-items",
-        "browseName": "ReachabilityEnum"
+        "browseName": "ReachabilityEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17850,7 +19048,8 @@
       {
         "t": "enumtable",
         "id": "c8-14-items",
-        "browseName": "TransferStateEnum"
+        "browseName": "TransferStateEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17878,7 +19077,8 @@
       {
         "t": "enumtable",
         "id": "c8-15-items",
-        "browseName": "DigestProvenanceEnum"
+        "browseName": "DigestProvenanceEnum",
+        "structureFields": false
       },
       {
         "t": "nodetable",
@@ -17890,6 +19090,35 @@
       {
         "t": "clause",
         "id": "c8-16",
+        "title": "ModelChangeKindEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The trigger that caused a deployment's UsesModel reference to be substituted. Classification is by the administrative trigger, never by comparing model versions: version strings are not necessarily ordered and a rollback can target a version whose spelling sorts later."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c8-16-items",
+        "browseName": "ModelChangeKindEnum",
+        "structureFields": false
+      },
+      {
+        "t": "nodetable",
+        "id": "c8-16-def",
+        "caption": "ModelChangeKindEnum definition",
+        "browseName": "ModelChangeKindEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c8-17",
         "title": "TensorSignatureDataType",
         "level": 2
       },
@@ -17905,19 +19134,20 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-16-items",
-        "browseName": "TensorSignatureDataType"
+        "id": "c8-17-items",
+        "browseName": "TensorSignatureDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
-        "id": "c8-16-def",
+        "id": "c8-17-def",
         "caption": "TensorSignatureDataType definition",
         "browseName": "TensorSignatureDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-17",
+        "id": "c8-18",
         "title": "ModelReferenceDataType",
         "level": 2
       },
@@ -17933,19 +19163,20 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-17-items",
-        "browseName": "ModelReferenceDataType"
+        "id": "c8-18-items",
+        "browseName": "ModelReferenceDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
-        "id": "c8-17-def",
+        "id": "c8-18-def",
         "caption": "ModelReferenceDataType definition",
         "browseName": "ModelReferenceDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-18",
+        "id": "c8-19",
         "title": "UsageDataType",
         "level": 2
       },
@@ -17961,19 +19192,20 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-18-items",
-        "browseName": "UsageDataType"
+        "id": "c8-19-items",
+        "browseName": "UsageDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
-        "id": "c8-18-def",
+        "id": "c8-19-def",
         "caption": "UsageDataType definition",
         "browseName": "UsageDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-19",
+        "id": "c8-20",
         "title": "CapabilityDataType",
         "level": 2
       },
@@ -17989,19 +19221,20 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-19-items",
-        "browseName": "CapabilityDataType"
+        "id": "c8-20-items",
+        "browseName": "CapabilityDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
-        "id": "c8-19-def",
+        "id": "c8-20-def",
         "caption": "CapabilityDataType definition",
         "browseName": "CapabilityDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-20",
+        "id": "c8-21",
         "title": "SafetyAssessmentDataType",
         "level": 2
       },
@@ -18017,19 +19250,20 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-20-items",
-        "browseName": "SafetyAssessmentDataType"
+        "id": "c8-21-items",
+        "browseName": "SafetyAssessmentDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
-        "id": "c8-20-def",
+        "id": "c8-21-def",
         "caption": "SafetyAssessmentDataType definition",
         "browseName": "SafetyAssessmentDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-21",
+        "id": "c8-22",
         "title": "EvaluationMetricDataType",
         "level": 2
       },
@@ -18045,19 +19279,20 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-21-items",
-        "browseName": "EvaluationMetricDataType"
+        "id": "c8-22-items",
+        "browseName": "EvaluationMetricDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
-        "id": "c8-21-def",
+        "id": "c8-22-def",
         "caption": "EvaluationMetricDataType definition",
         "browseName": "EvaluationMetricDataType",
         "kind": "type"
       },
       {
         "t": "clause",
-        "id": "c8-22",
+        "id": "c8-23",
         "title": "RateLimitDataType",
         "level": 2
       },
@@ -18073,14 +19308,44 @@
       },
       {
         "t": "enumtable",
-        "id": "c8-22-items",
-        "browseName": "RateLimitDataType"
+        "id": "c8-23-items",
+        "browseName": "RateLimitDataType",
+        "structureFields": false
       },
       {
         "t": "nodetable",
-        "id": "c8-22-def",
+        "id": "c8-23-def",
         "caption": "RateLimitDataType definition",
         "browseName": "RateLimitDataType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c8-24",
+        "title": "ModelIdentitySnapshotDataType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Durable identity of a model at the instant a deployment's UsesModel reference changed. It is copied into a promotion record rather than resolved through a retained NodeId, so the history remains complete after the ModelType instance or artefact location disappears. Digest trust provenance is retained with the digest so a later reader can tell whether it was declared, computed or verified."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c8-24-items",
+        "browseName": "ModelIdentitySnapshotDataType",
+        "structureFields": false
+      },
+      {
+        "t": "nodetable",
+        "id": "c8-24-def",
+        "caption": "ModelIdentitySnapshotDataType definition",
+        "browseName": "ModelIdentitySnapshotDataType",
         "kind": "type"
       }
     ],
@@ -18103,7 +19368,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Links a Deployment to the Model it executes. Clause 6.5 requires exactly one such reference per deployment; it is the only defined path from a result to the model artefact and its Digest, on which the provenance requirement of clause 12 depends."
+            "text": "Links a Deployment to the Model it executes. Clause 6.5 requires exactly one such reference per deployment so the model serving now is unambiguous. Historical result provenance uses the ModelUsed identity returned by invocation and retained by the consuming specification."
           }
         ]
       },
@@ -18648,6 +19913,32 @@
               },
               {
                 "r": "t",
+                "text": "; where that target can change, the "
+              },
+              {
+                "r": "code",
+                "text": "PromotionRecords"
+              },
+              {
+                "r": "t",
+                "text": " folder, atomic immutable records, complete deployment-lifetime retention and trigger-based "
+              },
+              {
+                "r": "code",
+                "text": "ModelChangeKindEnum"
+              },
+              {
+                "r": "t",
+                "text": " rules of "
+              },
+              {
+                "r": "xref",
+                "target": "c6-9-1",
+                "kind": "clause",
+                "prefix": "6.9.1"
+              },
+              {
+                "r": "t",
                 "text": "; the digest rules of "
               },
               {
@@ -18854,16 +20145,40 @@
               },
               {
                 "r": "t",
-                "text": " raise the event on "
+                "text": " raise the event on every successful configured "
+              },
+              {
+                "r": "code",
+                "text": "UsesModel"
               },
               {
                 "r": "t",
-                "text": "every",
+                "text": " substitution, including rollback, automatic substitution and mutable-reference repoint, and "
+              },
+              {
+                "r": "t",
+                "text": "shall not",
                 "b": true
               },
               {
                 "r": "t",
-                "text": " change to which model a deployment serves, including a rollback and a Server-initiated failover — a facet under which some substitutions are reported and others are not cannot support the audit it exists for, because a consumer could no longer read silence as \"the model did not change\". "
+                "text": " raise it merely because a per-invocation fallback answered while "
+              },
+              {
+                "r": "code",
+                "text": "UsesModel"
+              },
+              {
+                "r": "t",
+                "text": " remained unchanged. "
+              },
+              {
+                "r": "code",
+                "text": "PromotionRecord"
+              },
+              {
+                "r": "t",
+                "text": " shall be populated and the legacy filtering fields shall agree with that authoritative record. "
               },
               {
                 "r": "code",
@@ -20442,7 +21757,7 @@
             [
               {
                 "r": "t",
-                "text": "0.5.0"
+                "text": "0.5.1"
               }
             ]
           ],
@@ -20462,7 +21777,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-08-12"
+                "text": "2026-08-26"
               }
             ]
           ],
@@ -20953,7 +22268,7 @@
           [
             {
               "r": "t",
-              "text": "OPC UA — Vision",
+              "text": "OPC UA for Vision Systems",
               "b": true
             },
             {
@@ -20982,17 +22297,41 @@
             },
             {
               "r": "t",
-              "text": " here, per "
+              "text": " here, and its "
             },
             {
-              "r": "xref",
-              "target": "c6-2",
-              "kind": "clause",
-              "prefix": "6.2"
+              "r": "code",
+              "text": "VisionResultType.ModelUsed"
             },
             {
               "r": "t",
-              "text": ", and neither NodeSet requires the other."
+              "text": " retains the model that actually answered, per "
+            },
+            {
+              "r": "t",
+              "text": "§8.2.1"
+            },
+            {
+              "r": "t",
+              "text": ". Neither NodeSet requires the other. See the informative "
+            },
+            {
+              "r": "link",
+              "text": "Vision and AI Model Management walkthrough",
+              "href": "../vision-ai-walkthrough.md"
+            },
+            {
+              "r": "t",
+              "text": " for the combined browse path and the informative "
+            },
+            {
+              "r": "link",
+              "text": "external result mapping",
+              "href": "../vision-ai-external-result-mapping.md"
+            },
+            {
+              "r": "t",
+              "text": " for preserving these identities outside the Server without creating another conformance profile."
             }
           ]
         ],

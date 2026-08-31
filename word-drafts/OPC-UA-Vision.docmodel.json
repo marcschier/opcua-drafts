@@ -383,7 +383,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Neither list is a statement that the omitted capability is unimportant — only that Release 0.4.0 does not define it, and that a Server is conformant without it."
+            "text": "Neither list is a statement that the omitted capability is unimportant — only that this specification does not define it, and that a Server is conformant without it."
           }
         ],
         "src": {
@@ -404,7 +404,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Release 0.4.0 covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by "
+            "text": "This specification covers sensors, the media they emit, coordinate frames and calibration, inference pipelines, results, and the feedback path back in. The AI models those pipelines run are described by "
           },
           {
             "r": "t",
@@ -3032,7 +3032,7 @@
         "id": "fig-vis-instances",
         "caption": "Instance structure and references",
         "source": "mermaid",
-        "mermaid": "graph TD\n    ROOT[\"Vision : VisionRootType\"]\n    AIROOT[\"AiModelManagement : AiRootType<br/><i>AI Model Management spec, beside this one<br/>under the Server object</i>\"]\n    AIROOT --> FM[\"Models\"]\n    AIROOT --> FJ[\"LearningJobs\"]\n    ROOT --> FS[\"Sensors\"]\n    ROOT --> FP[\"Pipelines\"]\n    ROOT --> FF[\"Frames\"]\n\n    FS --> SENSOR[\"ImageSensorType<br/>SensorId, RealityKind, Modality<br/>Width, Height, PixelFormat\"]\n    SENSOR --> MEDIA[\"Media : VisionMediaManagementType<br/>GetStreamEndpoint, GetClip\"]\n    MEDIA --> SEP[\"StreamEndpoints/<br/>StreamEndpointType<br/>StreamProtocol, ProtocolVersion\"]\n    MEDIA --> CEP[\"ClipEndpoints/<br/>ClipEndpointType<br/>ClipFormat, LatestClip\"]\n    SENSOR --> OPT[\"Optics : OpticsType<br/>FocalLength, Aperture\"]\n    SENSOR --> ILL[\"Illumination : IlluminationType<br/>Wavelength, Intensity\"]\n    SENSOR --> CALS[\"Calibrations/\"]\n    CALS --> ICAL[\"IntrinsicCalibrationType<br/>Intrinsics\"]\n    CALS --> ECAL[\"ExtrinsicCalibrationType<br/>Mount, Transform\"]\n\n    FF --> FRAME[\"CoordinateFrameType<br/>FrameId, Role\"]\n\n    FM --> MODEL[\"ModelType<br/>ModelId, Version, Digest<br/><i>AI Model Management spec</i>\"]\n    FM --> DSET[\"DatasetType<br/>SourceKind<br/><i>AI Model Management spec</i>\"]\n    FM --> DEPL[\"DeploymentType<br/>InferenceLocation, EndpointUri<br/><i>AI Model Management spec</i>\"]\n\n    FP --> PIPE[\"InferencePipelineType<br/>State, Continuous\"]\n    PIPE --> RES[\"Results/<br/>InspectionResultType | DetectionResultType\"]\n    PIPE --> FB[\"Feedback : VisionFeedbackType<br/>SubmitCorrection\"]\n\n    FJ --> JOB[\"LearningJobType<br/>State, SamplesCollected<br/><i>AI Model Management spec</i>\"]\n\n    SENSOR -.HasCalibration.-> ICAL\n    SENSOR -.HasCalibration.-> ECAL\n    SENSOR -.MountedOn.-> FRAME\n    SENSOR -.HasScenePrim.-> PRIM[\"UsdGeomCameraType<br/>(OpenUSD Part 2, Annex D)\"]\n    DEPL -.UsesModel exactly 1.-> MODEL\n    RES -.ProducedBy.-> PIPE\n\n    PIPE -.->|Sensor| SENSOR\n    PIPE -.->|Deployment| DEPL\n    ECAL -.->|SourceFrame / TargetFrame| FRAME\n    FRAME -.->|ParentFrame| FRAME\n    JOB -.->|Dataset| DSET\n    JOB -.->|CandidateModel| MODEL",
+        "mermaid": "graph TD\n    ROOT[\"Vision : VisionRootType\"]\n    AIROOT[\"AiModelManagement : AiRootType<br/><i>AI Model Management spec, beside this one<br/>under the Server object</i>\"]\n    AIROOT --> FM[\"Models\"]\n    AIROOT --> FJ[\"LearningJobs\"]\n    ROOT --> FS[\"Sensors\"]\n    ROOT --> FP[\"Pipelines\"]\n    ROOT --> FF[\"Frames\"]\n\n    FS --> SENSOR[\"ImageSensorType<br/>SensorId, RealityKind, Modality<br/>Width, Height, PixelFormat\"]\n    SENSOR --> MEDIA[\"Media : VisionMediaManagementType<br/>GetStreamEndpoint, GetClip\"]\n    MEDIA --> SEP[\"StreamEndpoints/<br/>StreamEndpointType<br/>StreamProtocol, ProtocolVersion\"]\n    MEDIA --> CEP[\"ClipEndpoints/<br/>ClipEndpointType<br/>ClipFormat, LatestClip\"]\n    SENSOR --> OPT[\"Optics : OpticsType<br/>FocalLength, Aperture\"]\n    SENSOR --> ILL[\"Illumination : IlluminationType<br/>Wavelength, Intensity\"]\n    SENSOR --> CALS[\"Calibrations/\"]\n    CALS --> ICAL[\"IntrinsicCalibrationType<br/>Intrinsics\"]\n    CALS --> ECAL[\"ExtrinsicCalibrationType<br/>Mount, Transform\"]\n\n    FF --> FRAME[\"CoordinateFrameType<br/>FrameId, Role\"]\n\n    FM --> MODEL[\"ModelType<br/>ModelId, Version, Digest<br/><i>AI Model Management spec</i>\"]\n    FM --> DSET[\"DatasetType<br/>SourceKind<br/><i>AI Model Management spec</i>\"]\n    FM --> DEPL[\"DeploymentType<br/>InferenceLocation, EndpointUri<br/><i>AI Model Management spec</i>\"]\n\n    FP --> PIPE[\"InferencePipelineType<br/>State, Continuous<br/>MaxResultAge, MaxRetainedResults\"]\n    PIPE --> RES[\"Results/<br/>InspectionResultType | DetectionResultType\"]\n    PIPE --> FB[\"Feedback : VisionFeedbackType<br/>SubmitCorrection\"]\n\n    FJ --> JOB[\"LearningJobType<br/>State, SamplesCollected<br/><i>AI Model Management spec</i>\"]\n\n    SENSOR -.HasCalibration.-> ICAL\n    SENSOR -.HasCalibration.-> ECAL\n    SENSOR -.MountedOn.-> FRAME\n    SENSOR -.HasScenePrim.-> PRIM[\"UsdGeomCameraType<br/>(OpenUSD Part 2, Annex D)\"]\n    DEPL -.UsesModel exactly 1.-> MODEL\n    RES -.ProducedBy.-> PIPE\n    RES -.->|ModelUsed| MODEL\n\n    PIPE -.->|Sensor| SENSOR\n    PIPE -.->|Deployment| DEPL\n    ECAL -.->|SourceFrame / TargetFrame| FRAME\n    FRAME -.->|ParentFrame| FRAME\n    JOB -.->|Dataset| DSET\n    JOB -.->|CandidateModel| MODEL",
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "5.2 Instance structure and references",
@@ -3223,15 +3223,23 @@
             },
             {
               "r": "t",
-              "text": " — result → "
+              "text": " — a historical result follows "
             },
             {
               "r": "code",
-              "text": "ProducedBy"
+              "text": "ModelUsed"
             },
             {
               "r": "t",
-              "text": " → pipeline → "
+              "text": " → model → "
+            },
+            {
+              "r": "code",
+              "text": "Digest"
+            },
+            {
+              "r": "t",
+              "text": "; the pipeline follows "
             },
             {
               "r": "code",
@@ -3247,15 +3255,17 @@
             },
             {
               "r": "t",
-              "text": " → model → "
+              "text": " → model to discover what is serving now ("
             },
             {
-              "r": "code",
-              "text": "Digest"
+              "r": "xref",
+              "target": "c6-20-1",
+              "kind": "clause",
+              "prefix": "6.20.1"
             },
             {
               "r": "t",
-              "text": " ("
+              "text": ", "
             },
             {
               "r": "xref",
@@ -3265,7 +3275,7 @@
             },
             {
               "r": "t",
-              "text": "). This chain is why "
+              "text": "). "
             },
             {
               "r": "code",
@@ -3273,7 +3283,15 @@
             },
             {
               "r": "t",
-              "text": " has cardinality exactly 1."
+              "text": " has cardinality exactly 1 so the deployment's current state is unambiguous; "
+            },
+            {
+              "r": "code",
+              "text": "ModelUsed"
+            },
+            {
+              "r": "t",
+              "text": " preserves the identity that answered after that state changes."
             }
           ]
         ],
@@ -7374,15 +7392,23 @@
           },
           {
             "r": "t",
-            "text": ", which also states its exactly-one cardinality; "
+            "text": ", which also states its exactly-one cardinality; it identifies the model serving now. Historical provenance instead follows "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType.ModelUsed"
           },
           {
             "r": "t",
-            "text": "§12.6"
+            "text": " to the model that actually answered and its "
+          },
+          {
+            "r": "code",
+            "text": "Digest"
           },
           {
             "r": "t",
-            "text": "'s provenance check walks it, and the "
+            "text": ", and the "
           },
           {
             "r": "t",
@@ -7391,11 +7417,33 @@
           },
           {
             "r": "t",
-            "text": "* facets require that specification for exactly that reason ("
+            "text": "* facets require that specification so both paths have defined targets ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-1",
+            "kind": "clause",
+            "prefix": "6.19.1"
           },
           {
             "r": "t",
-            "text": "§11.2"
+            "text": ", "
+          },
+          {
+            "r": "xref",
+            "target": "c11-2",
+            "kind": "clause",
+            "prefix": "11.2"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "xref",
+            "target": "c6-23-6",
+            "kind": "clause",
+            "prefix": "6.23.6"
           },
           {
             "r": "t",
@@ -8747,6 +8795,14 @@
           {
             "r": "code",
             "text": "Deployment"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
           },
           {
             "r": "t",
@@ -12353,7 +12409,7 @@
               },
               {
                 "r": "t",
-                "text": " does not designate a result produced from "
+                "text": " does not designate a currently retained result produced from "
               },
               {
                 "r": "t",
@@ -12362,7 +12418,7 @@
               },
               {
                 "r": "t",
-                "text": ", or no frame near "
+                "text": ", including an identifier whose result node was evicted; or no frame near "
               },
               {
                 "r": "code",
@@ -12370,7 +12426,7 @@
               },
               {
                 "r": "t",
-                "text": " within retention"
+                "text": " within the frame/clip retention policy"
               }
             ]
           ],
@@ -12435,7 +12491,17 @@
           },
           {
             "r": "t",
-            "text": " is unique Server-wide, but this Method is scoped to one sensor. A Server "
+            "text": " is immutable and unique Server-wide ("
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-1",
+            "kind": "clause",
+            "prefix": "6.19.1"
+          },
+          {
+            "r": "t",
+            "text": "), but this Method is scoped to one sensor. A Server "
           },
           {
             "r": "t",
@@ -12460,7 +12526,7 @@
           },
           {
             "r": "t",
-            "text": " designates a result produced from a different sensor, and "
+            "text": " designates a result produced from a different sensor or a result node that has been evicted, and "
           },
           {
             "r": "t",
@@ -12469,7 +12535,7 @@
           },
           {
             "r": "t",
-            "text": " disclose whether the identifier exists elsewhere in the Server — otherwise the per-sensor authorization of "
+            "text": " disclose whether the identifier exists or previously existed elsewhere in the Server — otherwise the per-sensor authorization of "
           },
           {
             "r": "xref",
@@ -13613,6 +13679,14 @@
           },
           {
             "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": ", "
+          },
+          {
+            "r": "code",
             "text": "ModelVersionUsed"
           },
           {
@@ -13674,6 +13748,514 @@
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "7.1 `VisionResultType` (abstract)",
           "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " is the "
+          },
+          {
+            "r": "code",
+            "text": "NodeId"
+          },
+          {
+            "r": "t",
+            "text": " of the model that actually produced the result. Where the Server also implements "
+          },
+          {
+            "r": "t",
+            "text": "OPC UA — AI Model Management and Inference",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", a non-null value "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " resolve to the "
+          },
+          {
+            "r": "code",
+            "text": "ModelType"
+          },
+          {
+            "r": "t",
+            "text": " returned as "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " by the synchronous invocation or retained on the asynchronous inference job. It may differ from the model reached through the pipeline's current "
+          },
+          {
+            "r": "code",
+            "text": "Deployment → UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " path after a fallback, promotion or "
+          },
+          {
+            "r": "code",
+            "text": "FollowsRef"
+          },
+          {
+            "r": "t",
+            "text": " repointing. Where "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " is non-null and "
+          },
+          {
+            "r": "code",
+            "text": "ModelVersionUsed"
+          },
+          {
+            "r": "t",
+            "text": " is populated, "
+          },
+          {
+            "r": "code",
+            "text": "ModelVersionUsed"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " equal the referenced "
+          },
+          {
+            "r": "code",
+            "text": "ModelType.Version"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.1 `VisionResultType` (abstract)",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " retain a "
+          },
+          {
+            "r": "code",
+            "text": "ModelType"
+          },
+          {
+            "r": "t",
+            "text": " instance referenced by "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " for at least as long as it retains any "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType"
+          },
+          {
+            "r": "t",
+            "text": " instance that names it. Otherwise the Server would publish a non-null NodeId that no longer resolves and the historical decision chain would end before its digest."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.1 `VisionResultType` (abstract)",
+          "b": 3
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
+            "text": "ResultId"
+          },
+          {
+            "r": "t",
+            "text": " is immutable and unique Server-wide. A Server "
+          },
+          {
+            "r": "t",
+            "text": "shall never",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " reuse a "
+          },
+          {
+            "r": "code",
+            "text": "ResultId"
+          },
+          {
+            "r": "t",
+            "text": " for a different result, including after the original result is evicted or after the Server restarts. Persistence of this non-reuse guarantee is part of the identifier contract; eviction frees a result node, not its identity."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.1 `VisionResultType` (abstract)",
+          "b": 4
+        }
+      },
+      {
+        "t": "clause",
+        "id": "c6-19-1-1",
+        "title": "Result-node retention",
+        "level": 4
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Where an "
+          },
+          {
+            "r": "code",
+            "text": "InferencePipelineType"
+          },
+          {
+            "r": "t",
+            "text": " instantiates "
+          },
+          {
+            "r": "code",
+            "text": "Results"
+          },
+          {
+            "r": "t",
+            "text": ", the applicable inference facet requires both "
+          },
+          {
+            "r": "code",
+            "text": "MaxResultAge"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "Duration"
+          },
+          {
+            "r": "t",
+            "text": ") and "
+          },
+          {
+            "r": "code",
+            "text": "MaxRetainedResults"
+          },
+          {
+            "r": "t",
+            "text": " ("
+          },
+          {
+            "r": "code",
+            "text": "UInt32"
+          },
+          {
+            "r": "t",
+            "text": ") to be instantiated. At least one value "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be non-zero. Zero means "
+          },
+          {
+            "r": "t",
+            "text": "no limit in that dimension",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": "; it does not authorize arbitrary eviction. "
+          },
+          {
+            "r": "code",
+            "text": "MaxResultAge"
+          },
+          {
+            "r": "t",
+            "text": " is measured from "
+          },
+          {
+            "r": "code",
+            "text": "CreationTime"
+          },
+          {
+            "r": "t",
+            "text": " in the milliseconds used by "
+          },
+          {
+            "r": "code",
+            "text": "Duration"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.1.1 Result-node retention",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A result "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " remain browsable and readable under "
+          },
+          {
+            "r": "code",
+            "text": "Results"
+          },
+          {
+            "r": "t",
+            "text": " until either its age exceeds the non-zero "
+          },
+          {
+            "r": "code",
+            "text": "MaxResultAge"
+          },
+          {
+            "r": "t",
+            "text": ", or retaining it would exceed the non-zero "
+          },
+          {
+            "r": "code",
+            "text": "MaxRetainedResults"
+          },
+          {
+            "r": "t",
+            "text": ". Under count pressure the Server "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " evict the result with the oldest "
+          },
+          {
+            "r": "code",
+            "text": "CreationTime"
+          },
+          {
+            "r": "t",
+            "text": " first; equal "
+          },
+          {
+            "r": "code",
+            "text": "CreationTime"
+          },
+          {
+            "r": "t",
+            "text": " values are ordered by "
+          },
+          {
+            "r": "code",
+            "text": "ResultId"
+          },
+          {
+            "r": "t",
+            "text": " using ascending Unicode code-point order. Lowering either limit "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " immediately evict results in that order until the retained set is compliant. Raising a limit does not restore evicted nodes."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.1.1 Result-node retention",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "After eviction, Services addressing the old result node "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " return the applicable "
+          },
+          {
+            "r": "code",
+            "text": "Bad_NodeIdUnknown"
+          },
+          {
+            "r": "t",
+            "text": ". Methods that select by "
+          },
+          {
+            "r": "code",
+            "text": "ResultId"
+          },
+          {
+            "r": "t",
+            "text": ", including "
+          },
+          {
+            "r": "code",
+            "text": "GetClip"
+          },
+          {
+            "r": "t",
+            "text": " and the feedback Methods, "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " return "
+          },
+          {
+            "r": "code",
+            "text": "Bad_NotFound"
+          },
+          {
+            "r": "t",
+            "text": " when the result is no longer retained in their scope. The permanent non-reuse rule above prevents either response from later resolving to a different result."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.1.1 Result-node retention",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "These limits govern only "
+          },
+          {
+            "r": "t",
+            "text": "result nodes",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " under "
+          },
+          {
+            "r": "code",
+            "text": "Results"
+          },
+          {
+            "r": "t",
+            "text": ". They do not govern the frame or clip named by "
+          },
+          {
+            "r": "code",
+            "text": "Frame"
+          },
+          {
+            "r": "t",
+            "text": ", an out-of-band explanation or model artefact named by a URI, or evidence retained by an external application. Each has an independent owner and retention policy. Evicting a result therefore neither requires nor implies deleting media, external artefacts or application evidence, whose retention may outlive the Vision node. Conversely, retaining a result does not promise that an external URI remains resolvable unless another applicable policy requires it."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "7.1.1 Result-node retention",
+          "b": 3
         }
       },
       {
@@ -14646,7 +15228,7 @@
           },
           {
             "r": "t",
-            "text": "record",
+            "text": "retained record",
             "b": true
           },
           {
@@ -14660,7 +15242,25 @@
           },
           {
             "r": "t",
-            "text": ". The types above are records: they persist, they are re-readable, and a consumer that arrives late still finds them. That is what a result must be, and it is why they are Objects rather than notifications. But it obliges every consumer to poll and to re-derive, from a changed array, what actually happened — and two consumers polling the same Server can reach different conclusions about when a thing occurred."
+            "text": ". The types above are records: within the explicit limits of "
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-1-1",
+            "kind": "clause",
+            "prefix": "6.19.1.1"
+          },
+          {
+            "r": "t",
+            "text": " they persist and are re-readable, so a late consumer can find them. That is why they are Objects rather than notifications. An event-only pipeline may omit "
+          },
+          {
+            "r": "code",
+            "text": "Results"
+          },
+          {
+            "r": "t",
+            "text": " entirely; it raises occurrences but makes no result-node retention promise. This distinction avoids adding meaningless retention members to such a pipeline."
           }
         ],
         "src": {
@@ -14899,7 +15499,7 @@
             [
               {
                 "r": "t",
-                "text": "Version of the model that decided"
+                "text": "Version of the model that decided; repeated as a filterable value while the result carries the model NodeId"
               }
             ]
           ],
@@ -15150,7 +15750,7 @@
           },
           {
             "r": "t",
-            "text": ", and a consumer that needs the detail reads the "
+            "text": ", and a consumer that needs detail may read the retained "
           },
           {
             "r": "code",
@@ -15158,7 +15758,15 @@
           },
           {
             "r": "t",
-            "text": " it names. Copying result content into the event would create a second copy of a fact that can disagree with the first. Two fields are deliberate exceptions, because they are what a consumer filters on and requiring a read to obtain them would defeat the purpose: the "
+            "text": " it names. That read can return "
+          },
+          {
+            "r": "code",
+            "text": "Bad_NodeIdUnknown"
+          },
+          {
+            "r": "t",
+            "text": " after retention expires; an event is not an extension of the result node's lifetime. Copying result content into the event would create a second copy of a fact that can disagree with the first. Two fields are deliberate exceptions, because they are what a consumer filters on and requiring a read to obtain them would defeat the purpose: the "
           },
           {
             "r": "code",
@@ -16089,17 +16697,39 @@
           },
           {
             "r": "t",
-            "text": " instance and the chain in "
+            "text": " instance. Two related paths are then available: "
           },
           {
-            "r": "xref",
-            "target": "c6-23-6",
-            "kind": "clause",
-            "prefix": "6.23.6"
+            "r": "code",
+            "text": "pipeline.Deployment → DeploymentType → UsesModel → ModelType"
           },
           {
             "r": "t",
-            "text": " — result → deployment → model → digest — is available end to end. Where it does not, "
+            "text": " identifies the model serving now, while "
+          },
+          {
+            "r": "code",
+            "text": "result.ModelUsed → ModelType → Digest"
+          },
+          {
+            "r": "t",
+            "text": " identifies and verifies the model that produced a retained result. The second path is authoritative for historical provenance because fallback, promotion and "
+          },
+          {
+            "r": "code",
+            "text": "FollowsRef"
+          },
+          {
+            "r": "t",
+            "text": " repointing can make the deployment's current model differ from the one that answered. Where the Server does not implement both specifications, the "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " target's semantics are out of scope and "
           },
           {
             "r": "xref",
@@ -16118,7 +16748,7 @@
           },
           {
             "r": "t",
-            "text": "* facets require it ("
+            "text": "* facets require the AI model ("
           },
           {
             "r": "xref",
@@ -16608,7 +17238,7 @@
         "id": "fig-vis-exchange",
         "caption": "The client exchange, identical at every inference location",
         "source": "mermaid",
-        "mermaid": "sequenceDiagram\n    participant C as Client\n    participant S as OPC UA Server\n    C->>S: Call RunInference(Timestamp)\n    S-->>C: ResultId (Good)\n    C->>S: Read Results/<ResultId>\n    S-->>C: InspectionResultType / DetectionResultType\n    C->>S: Browse result -> ProducedBy -> Deployment -> UsesModel\n    S-->>C: ModelType (Version, Digest)",
+        "mermaid": "sequenceDiagram\n    participant C as Client\n    participant S as OPC UA Server\n    C->>S: Call RunInference(Timestamp)\n    S-->>C: ResultId (Good)\n    C->>S: Read Results/<ResultId>\n    S-->>C: InspectionResultType / DetectionResultType\n    C->>S: Read result.ModelUsed\n    S-->>C: ModelType NodeId that produced the result\n    C->>S: Read ModelType (Version, Digest)\n    S-->>C: Historical model identity and integrity\n    C->>S: Browse pipeline.Deployment -> UsesModel\n    S-->>C: ModelType serving now",
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "8.2.1 Usage model",
@@ -16845,7 +17475,7 @@
           },
           {
             "r": "t",
-            "text": ", holds a "
+            "text": ", optionally holds a "
           },
           {
             "r": "code",
@@ -16853,7 +17483,7 @@
           },
           {
             "r": "t",
-            "text": " folder and an optional "
+            "text": " folder and "
           },
           {
             "r": "code",
@@ -16950,6 +17580,59 @@
         "runs": [
           {
             "r": "code",
+            "text": "MaxResultAge"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "MaxRetainedResults"
+          },
+          {
+            "r": "t",
+            "text": " are Optional in the type model because a pipeline that only raises events has no "
+          },
+          {
+            "r": "code",
+            "text": "Results"
+          },
+          {
+            "r": "t",
+            "text": " instance and no result nodes to retain. Where "
+          },
+          {
+            "r": "code",
+            "text": "Results"
+          },
+          {
+            "r": "t",
+            "text": " is instantiated under an inference facet, both limits are required and "
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-1-1",
+            "kind": "clause",
+            "prefix": "6.19.1.1"
+          },
+          {
+            "r": "t",
+            "text": " governs them."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "8.3 `InferencePipelineType`",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "code",
             "text": "LearningJob"
           },
           {
@@ -17010,7 +17693,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "8.3 `InferencePipelineType`",
-          "b": 1
+          "b": 2
         }
       },
       {
@@ -17025,7 +17708,7 @@
         "src": {
           "f": "metaverse-specs/vision/OPC-UA-Vision.md",
           "s": "8.3 `InferencePipelineType`",
-          "b": 2
+          "b": 3
         }
       },
       {
@@ -17095,7 +17778,23 @@
           },
           {
             "r": "t",
-            "text": ", and the result "
+            "text": ", "
+          },
+          {
+            "r": "code",
+            "text": "MaxResultAge"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "MaxRetainedResults"
+          },
+          {
+            "r": "t",
+            "text": "; the result "
           },
           {
             "r": "t",
@@ -17104,11 +17803,29 @@
           },
           {
             "r": "t",
-            "text": " exist and be retrievable under it before the Method returns "
+            "text": " exist and be retrievable under "
+          },
+          {
+            "r": "code",
+            "text": "Results"
+          },
+          {
+            "r": "t",
+            "text": " before the Method returns "
           },
           {
             "r": "code",
             "text": "Good"
+          },
+          {
+            "r": "t",
+            "text": ". Its subsequent lifetime follows "
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-1-1",
+            "kind": "clause",
+            "prefix": "6.19.1.1"
           },
           {
             "r": "t",
@@ -18836,12 +19553,16 @@
               },
               {
                 "r": "t",
-                "text": " is non-empty and does not designate a result of "
+                "text": " is non-empty and does not designate a currently retained result of "
               },
               {
                 "r": "t",
                 "text": "this pipeline",
                 "b": true
+              },
+              {
+                "r": "t",
+                "text": ", including an identifier whose node was evicted"
               }
             ],
             [
@@ -19645,6 +20366,14 @@
             {
               "r": "t",
               "text": " make this distinguishable — by pipeline, by "
+            },
+            {
+              "r": "code",
+              "text": "ModelUsed"
+            },
+            {
+              "r": "t",
+              "text": " and "
             },
             {
               "r": "code",
@@ -21082,6 +21811,57 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Result-node eviction under "
+          },
+          {
+            "r": "xref",
+            "target": "c6-19-1-1",
+            "kind": "clause",
+            "prefix": "6.19.1.1"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be treated as authorization to delete this audit record or evidence retained by an external application. Those records have independent retention obligations defined by their application policies. Conversely, an audit or evidence record that preserves a "
+          },
+          {
+            "r": "code",
+            "text": "ResultId"
+          },
+          {
+            "r": "t",
+            "text": " does not keep the Vision result node alive and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " cause that identifier to be reused or rebound."
+          }
+        ],
+        "src": {
+          "f": "metaverse-specs/vision/OPC-UA-Vision.md",
+          "s": "12.5 Feedback and promotion are writes",
+          "b": 3
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-23-6",
         "title": "Off-server inference crosses a trust boundary",
@@ -21252,7 +22032,40 @@
         "runs": [
           {
             "r": "t",
-            "text": "Digest verification is the terminus of the provenance chain, and "
+            "text": "Digest verification is the terminus of the provenance chain. "
+          },
+          {
+            "r": "code",
+            "text": "VisionResultType.ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " keeps the historical chain intact while the result is retained by recording which "
+          },
+          {
+            "r": "code",
+            "text": "ModelType"
+          },
+          {
+            "r": "t",
+            "text": " answered at inference time. A client auditing a retained result "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " walk "
+          },
+          {
+            "r": "code",
+            "text": "result.ModelUsed → ModelType → Digest"
+          },
+          {
+            "r": "t",
+            "text": ", not the deployment's current "
           },
           {
             "r": "code",
@@ -21260,7 +22073,32 @@
           },
           {
             "r": "t",
-            "text": " is what keeps that chain intact."
+            "text": " reference, which describes what is serving now. If evidence must outlive "
+          },
+          {
+            "r": "code",
+            "text": "MaxResultAge"
+          },
+          {
+            "r": "t",
+            "text": " or "
+          },
+          {
+            "r": "code",
+            "text": "MaxRetainedResults"
+          },
+          {
+            "r": "t",
+            "text": ", the application "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " preserve it under its applicable evidence-retention policy before the Vision result is evicted; this specification does not silently extend either lifetime or prescribe that external policy."
           }
         ],
         "src": {
@@ -24741,7 +25579,67 @@
               },
               {
                 "r": "t",
-                "text": " constraint. Where "
+                "text": " constraint. Every result produced through that deployment populates "
+              },
+              {
+                "r": "code",
+                "text": "ModelUsed"
+              },
+              {
+                "r": "t",
+                "text": " with the "
+              },
+              {
+                "r": "code",
+                "text": "ModelType"
+              },
+              {
+                "r": "t",
+                "text": " that actually answered ("
+              },
+              {
+                "r": "xref",
+                "target": "c6-19-1",
+                "kind": "clause",
+                "prefix": "6.19.1"
+              },
+              {
+                "r": "t",
+                "text": "). Where "
+              },
+              {
+                "r": "code",
+                "text": "Results"
+              },
+              {
+                "r": "t",
+                "text": " is instantiated, both "
+              },
+              {
+                "r": "code",
+                "text": "MaxResultAge"
+              },
+              {
+                "r": "t",
+                "text": " and "
+              },
+              {
+                "r": "code",
+                "text": "MaxRetainedResults"
+              },
+              {
+                "r": "t",
+                "text": ", at least one non-zero, and every rule of "
+              },
+              {
+                "r": "xref",
+                "target": "c6-19-1-1",
+                "kind": "clause",
+                "prefix": "6.19.1.1"
+              },
+              {
+                "r": "t",
+                "text": "; "
               },
               {
                 "r": "code",
@@ -24749,7 +25647,7 @@
               },
               {
                 "r": "t",
-                "text": " is implemented, "
+                "text": " requires "
               },
               {
                 "r": "code",
@@ -24812,7 +25710,15 @@
               },
               {
                 "r": "t",
-                "text": ", plus "
+                "text": ", including the same conditional retention requirements and "
+              },
+              {
+                "r": "code",
+                "text": "ModelUsed"
+              },
+              {
+                "r": "t",
+                "text": " on every result, plus "
               },
               {
                 "r": "code",
@@ -25352,7 +26258,16 @@
           },
           {
             "r": "t",
-            "text": ". This is the only place either specification depends on the other, and it is stated as a facet precondition rather than a "
+            "text": ". "
+          },
+          {
+            "r": "t",
+            "text": "AI-Events",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " is independent: the Vision inference facets do not require promotion events, and a Server claims that AI facet separately when it exposes them. This is the only place either specification depends on the other, and it is stated as a facet precondition rather than a "
           },
           {
             "r": "code",
@@ -25504,7 +26419,7 @@
             [
               {
                 "r": "t",
-                "text": "0.4.0"
+                "text": "0.4.1"
               }
             ]
           ],
@@ -25524,7 +26439,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-08-13"
+                "text": "2026-08-26"
               }
             ]
           ],
@@ -31508,6 +32423,38 @@
                 "text": "grpcs://192.0.2.60:8001/graspposenet"
               }
             ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "MaxResultAge"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "3600000"
+              },
+              {
+                "r": "t",
+                "text": " ms"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "MaxRetainedResults"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "2000"
+              }
+            ]
           ]
         ],
         "widths": null,
@@ -31605,7 +32552,23 @@
           },
           {
             "r": "t",
-            "text": " requires. That reference is the only defined path from a result to the model artefact and its "
+            "text": " requires. That reference says which model is serving now. Each retained result records the model that actually answered in "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": ", so an audit follows "
+          },
+          {
+            "r": "code",
+            "text": "result.ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " to the model and its "
           },
           {
             "r": "code",
@@ -31613,15 +32576,7 @@
           },
           {
             "r": "t",
-            "text": ", so it is what makes the base specification's "
-          },
-          {
-            "r": "t",
-            "text": "§12.6"
-          },
-          {
-            "r": "t",
-            "text": " provenance check possible."
+            "text": " even after a promotion, fallback or followed-reference change."
           }
         ],
         "src": {
@@ -31650,7 +32605,31 @@
           },
           {
             "r": "t",
-            "text": " whose "
+            "text": "; the pipeline retains result nodes for at most one hour and 2,000 results, evicting oldest "
+          },
+          {
+            "r": "code",
+            "text": "CreationTime"
+          },
+          {
+            "r": "t",
+            "text": " first when count pressure applies. Its "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " names "
+          },
+          {
+            "r": "code",
+            "text": "GraspPoseNet"
+          },
+          {
+            "r": "t",
+            "text": ", the model that actually answered, even if the deployment later promotes another model or routes one call through a fallback. Its "
           },
           {
             "r": "code",
@@ -31746,7 +32725,7 @@
           },
           {
             "r": "t",
-            "text": " on the calibration is what tells the consumer how much to trust it."
+            "text": " on the calibration is what tells the consumer how much to trust it. Result-node eviction is independent of frame/clip, external artefact, and application evidence retention."
           }
         ],
         "src": {
@@ -33527,6 +34506,38 @@
                 "text": "Npu"
               }
             ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "MaxResultAge"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "86400000"
+              },
+              {
+                "r": "t",
+                "text": " ms"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "MaxRetainedResults"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "10000"
+              }
+            ]
           ]
         ],
         "widths": null,
@@ -33616,7 +34627,23 @@
           },
           {
             "r": "t",
-            "text": " requires. That reference is the only defined path from a result to the model artefact and its "
+            "text": " requires. That reference says which model is serving now. Each retained result records the model that actually answered in "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": ", so an audit follows "
+          },
+          {
+            "r": "code",
+            "text": "result.ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " to the model and its "
           },
           {
             "r": "code",
@@ -33624,15 +34651,7 @@
           },
           {
             "r": "t",
-            "text": ", so it is what makes the base specification's "
-          },
-          {
-            "r": "t",
-            "text": "§12.6"
-          },
-          {
-            "r": "t",
-            "text": " provenance check possible."
+            "text": " even after a promotion, fallback or followed-reference change."
           }
         ],
         "src": {
@@ -33661,7 +34680,31 @@
           },
           {
             "r": "t",
-            "text": ". "
+            "text": ". The pipeline retains result nodes for at most 24 hours and 10,000 results; whichever bound first requires eviction applies. Its "
+          },
+          {
+            "r": "code",
+            "text": "ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " names "
+          },
+          {
+            "r": "code",
+            "text": "SealDefectNet"
+          },
+          {
+            "r": "t",
+            "text": ", the model that actually answered, while the deployment's "
+          },
+          {
+            "r": "code",
+            "text": "UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " reference says which model is serving now. "
           },
           {
             "r": "code",
@@ -33741,7 +34784,7 @@
           },
           {
             "r": "t",
-            "text": " from the point estimate alone. A verdict recorded this way is reproducible by a third party, and a QIF document can be generated from it without inventing information."
+            "text": " from the point estimate alone. A verdict recorded this way is reproducible by a third party, and a QIF document can be generated from it without inventing information. Evicting the result node does not define the lifetime of its JPEG, external explanation artefact, or application evidence record."
           }
         ],
         "src": {
@@ -36211,7 +37254,15 @@
           },
           {
             "r": "t",
-            "text": " instance a pose came from, the correlation stops being a timing argument: a consumer follows the reference from the completion to the result, and from the result through "
+            "text": " instance a pose came from, the correlation stops being a timing argument: a consumer follows the reference from the completion to the result, and from "
+          },
+          {
+            "r": "code",
+            "text": "result.ModelUsed"
+          },
+          {
+            "r": "t",
+            "text": " to the model and digest. "
           },
           {
             "r": "code",
@@ -36219,7 +37270,15 @@
           },
           {
             "r": "t",
-            "text": " to the pipeline, deployment, model and digest. That is the whole provenance chain in one walk, and it is what the commanding model's Annex E.8 asks a Server implementing both to do."
+            "text": " still identifies the pipeline, whose "
+          },
+          {
+            "r": "code",
+            "text": "Deployment → UsesModel"
+          },
+          {
+            "r": "t",
+            "text": " path shows what is serving now. Together those paths give the historical decision and current configuration without conflating them, and that is what the commanding model's Annex E.8 asks a Server implementing both to do."
           }
         ],
         "src": {

@@ -1,6 +1,6 @@
 # OPC UA Inspection — Vision Addendum
 
-**Implementer annex to *OPC UA for Vision Systems* (Release 0.4.0 — Draft).**
+**Implementer annex to *OPC UA for Vision Systems* (Release 0.4.1 — Draft).**
 
 > A worked example of machine-vision inspection: a fixed camera measures a sealing surface, on-server inference produces a verdict with QIF-shaped characteristics including measurement uncertainty, and each result carries a subscribable JPEG thumbnail through the optional size-gated inline delivery facet. The machine-readable source of truth is [`Inspection.Vision.json`](../../extras/vision/examples/machine-vision/Inspection.Vision.json); this document and `Opc.Ua.Inspection.Vision.NodeSet2.xml` are both generated from it by `build_examples.py`, so prose and model cannot drift. It is also published as Annex G of [`OPC-UA-Vision.md`](../OPC-UA-Vision.md).
 
@@ -12,7 +12,7 @@ This worked example shows the case OPC 40100-1 orchestrates but does not describ
 
 ## 2 Normative references
 
-- *OPC UA for Vision Systems*, Release 0.4.0 (the base specification), `../OPC-UA-Vision.md`.
+- *OPC UA for Vision Systems*, Release 0.4.1 (the base specification), `../OPC-UA-Vision.md`.
 - [OPC 40100-1](https://reference.opcfoundation.org/specs/OPC-40100-1/) — OPC UA for Machine Vision Part 1, whose `ResultContent` this example populates. Not a dependency of this model.
 - ISO 23952:2020 (QIF) — the shape `VisionCharacteristicDataType` mirrors.
 - ISO 14253 — the uncertainty semantics used by `Uncertainty` and `NotDecidable`.
@@ -111,14 +111,16 @@ Each calibration is reachable from the sensor by a `HasCalibration` reference, a
 | `TaskKind` | `Segmentation` |
 | `InferenceLocation` | **`OnServer`** |
 | `AcceleratorKind` | `Npu` |
+| `MaxResultAge` | `86400000` ms |
+| `MaxRetainedResults` | `10000` |
 
 Inference runs **on-server**: `InferenceLocation = OnServer`, on an NPU in the station industrial PC. A client consuming the results cannot distinguish this from the off-server robotics example except by reading that one property — which is the intent of base specification §8.2. Because the pipeline is not continuous, `RunInference` is called per part by the station PLC and returns the `ResultId` it produced.
 
-The deployment carries exactly one `UsesModel` reference to the model above, as *OPC UA — AI Model Management and Inference* requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the base specification's §12.6 provenance check possible.
+The deployment carries exactly one `UsesModel` reference to the model above, as *OPC UA — AI Model Management and Inference* requires. That reference says which model is serving now. Each retained result records the model that actually answered in `ModelUsed`, so an audit follows `result.ModelUsed` to the model and its `Digest` even after a promotion, fallback or followed-reference change.
 
 ## 7 Results
 
-Each part produces an `InspectionResultType`. `Evaluation` uses the OPC 40001-101 value semantics, and the `Characteristics` array carries one `VisionCharacteristicDataType` per measured feature — for example a flatness with `Nominal = 0.0`, `Actual = 0.018`, `UpperTolerance = 0.020`, `Unit = mm` and `Uncertainty = 0.004`. That last field is the point: because the expanded uncertainty spans the tolerance limit, the Server reports `NotDecidable` rather than asserting `Ok` from the point estimate alone. A verdict recorded this way is reproducible by a third party, and a QIF document can be generated from it without inventing information.
+Each part produces an `InspectionResultType`. The pipeline retains result nodes for at most 24 hours and 10,000 results; whichever bound first requires eviction applies. Its `ModelUsed` names `SealDefectNet`, the model that actually answered, while the deployment's `UsesModel` reference says which model is serving now. `Evaluation` uses the OPC 40001-101 value semantics, and the `Characteristics` array carries one `VisionCharacteristicDataType` per measured feature — for example a flatness with `Nominal = 0.0`, `Actual = 0.018`, `UpperTolerance = 0.020`, `Unit = mm` and `Uncertainty = 0.004`. That last field is the point: because the expanded uncertainty spans the tolerance limit, the Server reports `NotDecidable` rather than asserting `Ok` from the point estimate alone. A verdict recorded this way is reproducible by a third party, and a QIF document can be generated from it without inventing information. Evicting the result node does not define the lifetime of its JPEG, external explanation artefact, or application evidence record.
 
 ## 8 Feedback
 

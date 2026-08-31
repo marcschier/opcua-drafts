@@ -182,6 +182,42 @@ holds it. That is the arrangement worth choosing when the link is the thing you 
 trust, because after it the downstream Server can serve with the link down — and it can
 verify the digest itself, having the bytes to verify it against.
 
+## Promotion history
+
+Suppose the downstream deployment follows the upstream `production` reference. The
+upstream reference moves from model `plant/classifier` version `2026.07` to `2026.08`,
+and the downstream Server updates its configured `UsesModel` target. In the same atomic
+operation it appends a `PromotionRecordType` beneath the deployment's `PromotionRecords`:
+
+| Member | Example |
+|---|---|
+| `RecordId` | `urn:site:promotion:8f6c…` (unique across this Server) |
+| `Deployment`, `DeploymentId` | the local deployment NodeId and its snapshotted identifier |
+| `PreviousModel`, `NewModel` | local convenience NodeIds |
+| `PreviousModelIdentity`, `NewModelIdentity` | copied `ModelId`, `Version`, `Digest`, `DigestAlgorithm`, `DigestProvenance` values |
+| `EvaluationRun`, `EvaluationRunId` | the local gating run and its snapshotted `RunId`, or both absent |
+| `ChangedAt` | the instant the local `UsesModel` update took effect |
+| `ChangedBy` | the authenticated automation identity |
+| `ChangeKind` | `MutableReferenceRepoint` |
+| `Reason` | the approved production channel moved |
+
+The identity snapshots are the durable evidence. `DigestProvenance` travels with each
+digest so a forwarded `DeclaredBySource` value cannot later be mistaken for
+`ComputedByServer` or `VerifiedOnStage`. The upstream or mirrored `ModelType` nodes may
+later disappear; the record is not rewritten and still identifies both artefacts.
+`ModelPromotedEventType.PromotionRecord` points at this record, while its
+existing `Deployment`, `PreviousModel`, `NewModel`, `EvaluationRun` and `PromotedBy`
+fields carry matching values for event filters.
+
+This is trigger classification, not version ordering. A channel moving from `build-z`
+to `build-a` is still `MutableReferenceRepoint`; a human restoring a model whose version
+string sorts later is still `Rollback`.
+
+An upstream invocation that falls back for one request is different. The downstream
+Server maps the returned model into its local `ModelUsed`, as described above, but its
+configured `UsesModel` target did not change. It appends no promotion record and raises
+no promotion event.
+
 ## Residency, egress and retention
 
 | Member | Value |

@@ -363,6 +363,7 @@ DT = {
     "UInt32": ("UInt32", v_uint32),
     "UInt64": ("UInt64", v_uint64),
     "Double": ("Double", v_double),
+    "Duration": ("Duration", v_double),
     "Boolean": ("Boolean", v_bool),
     "Int32": ("Int32", v_int32),
     "String": ("String", v_string),
@@ -653,8 +654,8 @@ def build_overlay(d):
         put(ov, deployment, "AcceleratorName", "String", dep["acceleratorName"])
     if "endpointUri" in dep:
         put(ov, deployment, "EndpointUri", "String", dep["endpointUri"])
-    # The AI specification requires exactly one UsesModel per deployment. It is the only path from a
-    # result to the model artefact and its Digest, which §12.6 depends on.
+    # UsesModel identifies the model serving now. A retained result's ModelUsed identifies
+    # the model that actually produced that result.
     ov.ref(deployment, UsesModel, f"ns=1;i={model}")
 
     pl = ai["pipeline"]
@@ -692,6 +693,13 @@ def build_overlay(d):
             put_enum_ai(ov, job, "State", "LearningJobStateEnum",
                      lj.get("state", "Collecting"))
 
+    # Append new instance members only after the complete pre-existing overlay. Adding
+    # them beside Results would renumber Feedback and every node generated afterwards.
+    # The base type still owns these Properties; generation order exists solely to
+    # preserve the examples' published NodeIds.
+    put(ov, pipeline, "MaxResultAge", "Duration", pl["maxResultAge"])
+    put(ov, pipeline, "MaxRetainedResults", "UInt32", pl["maxRetainedResults"])
+
     return ov
 
 
@@ -712,6 +720,7 @@ def emit_addendum(d, annex=None):
     cl = d["clip"]
     ai = d["ai"]
     dep = ai["deployment"]
+    pl = ai["pipeline"]
     up = ".." if annex else "../.."
     rel = f"{up}/extras/vision/examples/{d['folder']}/{d['descriptorFile']}"
     nodeset = f"Opc.Ua.{d['domain']}.Vision.NodeSet2.xml"
@@ -958,13 +967,16 @@ def emit_addendum(d, annex=None):
         A(f"| `AcceleratorKind` | `{dep['acceleratorKind']}` |")
     if "endpointUri" in dep:
         A(f"| `EndpointUri` | `{dep['endpointUri']}` |")
+    A(f"| `MaxResultAge` | `{pl['maxResultAge']}` ms |")
+    A(f"| `MaxRetainedResults` | `{pl['maxRetainedResults']}` |")
     A("")
     A(d["inferenceNote"])
     A("")
     A("The deployment carries exactly one `UsesModel` reference to the model above, as "
-      "*OPC UA — AI Model Management and Inference* requires. That reference is the only defined "
-      "path from a result to the model artefact and its `Digest`, so it is what makes the "
-      "base specification's §12.6 provenance check possible.")
+      "*OPC UA — AI Model Management and Inference* requires. That reference says which "
+      "model is serving now. Each retained result records the model that actually answered "
+      "in `ModelUsed`, so an audit follows `result.ModelUsed` to the model and its `Digest` "
+      "even after a promotion, fallback or followed-reference change.")
     A("")
     head("Results")
     A("")
