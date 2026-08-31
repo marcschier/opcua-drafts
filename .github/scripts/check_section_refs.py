@@ -92,8 +92,29 @@ SKIP_FILES = ('CHANGELOG.md', 'model-reference.md')
 # as advisory notes: a reference whose qualifier sits far from it ("No change to
 # OPC 10000-6 §7.2 is required. … Reverse connect (§7.1.3) …") cannot be classified from
 # a bounded window, and widening the window is what makes the check miss real defects.
-# Opting a tree in is a deliberate act by whoever has verified its references.
-STRICT_PREFIXES = ('metaverse-specs/',)
+# Opting a tree in is a deliberate act by whoever has verified its references. The private
+# repository's spec roots differ from the public draft repository, so set the
+# SECTION_REF_STRICT_PREFIXES repository variable to a space-separated list of roots that
+# should fail the check. If unset, every unresolved reference is advisory.
+_env_strict = os.environ.get('SECTION_REF_STRICT_PREFIXES', '').split()
+
+
+ATTRIBUTE_ANCHOR_RE = re.compile(r'(?m)^#{2,6}\s+.*\{#(?:sec|anx)-')
+
+
+def derives_its_numbers(text):
+    """True if this document is written in the OPC UA specification template's dialect.
+
+    There a heading carries an anchor and no number, because the renderer derives the number --
+    so `§5.1.1` and `Annex B` have nothing in the source to resolve against, and reporting them
+    as unresolved would say the references are broken when what is true is that this check does
+    not apply. They are still printed, as the editorial work of rewriting them as `[](#sec-...)`,
+    which is what the publisher then checks for real.
+    """
+    return bool(ATTRIBUTE_ANCHOR_RE.search(text))
+
+STRICT_PREFIXES = tuple(p.strip().rstrip('/').replace('\\', '/') + '/'
+                        for p in _env_strict if p.strip())
 
 
 def clause_numbers(text):
@@ -249,7 +270,7 @@ def main():
             continue
         checked += 1
         rel = os.path.relpath(path, ROOT).replace('\\', '/')
-        strict = rel.startswith(STRICT_PREFIXES)
+        strict = rel.startswith(STRICT_PREFIXES) and not derives_its_numbers(text)
 
         def resolve(qualifier):
             targets = [path] + siblings
