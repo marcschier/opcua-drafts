@@ -278,7 +278,7 @@
       ]
     },
     "xregistry": {
-      "$comment": "Releasable. The abstract base model is submitted to the OPC Foundation on its own, so the whole folder moves -- tools included, because build_model.py and validate_local.py generate and check the NodeSet that leaves, and a generator whose output is gone is not a public asset. Two files are kept public. xRegistry-OPC-UA-Api.md targets xregistry.org rather than the OPC Foundation, which is the same reason openusd-binding keeps xRegistry-OpenUsd.md. README.md navigates the public tree: it links onward to Schema Registry, which stays, so carrying it into the private repository would take a dangling link with it -- and the folder it describes still holds the kept API document. The public specifications that subtype this model carry the borrowed NodeIds as constants rather than reading its files, so they still build; Schema Registry's validator resolves its base-id cross-check only when the CSV is present and reports it skipped otherwise.",
+      "$comment": "Releasable. The abstract base model is submitted to the OPC Foundation on its own, so the whole model and its tooling move together. README.md stays public as the redirect to the review copy and to the OPC UA protocol binding now maintained upstream by xregistry/spec. Public specifications that subtype the released model use a byte-identical dependency NodeSet under model/dependencies so the specification publisher can resolve the RequiredModel on a clean checkout.",
       "title": "OPC UA — xRegistry",
       "submitted": true,
       "state": "released",
@@ -298,8 +298,7 @@
         "word-drafts/figures/xRegistry-FigGroupType.png"
       ],
       "keepPublic": [
-        "core-specs/xregistry/README.md",
-        "core-specs/xregistry/xRegistry-OPC-UA-Api.md"
+        "core-specs/xregistry/README.md"
       ],
       "closure": [],
       "vendor": [],

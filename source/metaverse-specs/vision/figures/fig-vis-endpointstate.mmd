@@ -1,0 +1,13 @@
+stateDiagram-v2
+    [*] --> Inactive
+    Inactive --> Ready: configured and able to serve
+    Ready --> Active: first session leased / inference begins
+    Active --> Ready: last session released / stopped
+    Active --> Degraded: quality, latency or rate not met
+    Degraded --> Active: recovered
+    Ready --> Inactive: disabled by configuration
+    Ready --> Faulted: failure
+    Active --> Faulted: failure
+    Degraded --> Faulted: failure
+    Faulted --> Ready: fault cleared
+    Faulted --> Inactive: disabled while faulted

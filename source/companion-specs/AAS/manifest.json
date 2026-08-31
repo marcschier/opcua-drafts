@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 1,
+  "sourceOfTruth": "markdown",
+  "identity": {
+    "docNumber": "OPC 30270",
+    "partName": "Asset Administration Shell",
+    "title": "OPC UA for Asset Administration Shell",
+    "shortTitle": "Asset Administration Shell",
+    "shortName": "I4AAS",
+    "organization": "OPC Foundation and the Industrial Digital Twin Association (IDTA)",
+    "capabilityIdentifier": "I4AAS",
+    "namespaceUri": "http://opcfoundation.org/UA/I4AAS/v3/",
+    "version": "3.00-draft4",
+    "publicationDate": "2026-08-31",
+    "releaseType": "Draft",
+    "gitHubTag": "",
+    "mantisUrl": "https://mantis.opcfoundation.org",
+    "license": {
+      "spdxId": "LicenseRef-OPC-Specification-1.15",
+      "copyright": "Copyright (c) 2026, OPC Federation AISBL",
+      "url": "https://opcfoundation.org/license/specifications/1.15/"
+    }
+  },
+  "model": {
+    "nodeset": "model/companion-specs/AAS/Opc.Ua.I4AAS.NodeSet2.xml",
+    "generated": true,
+    "generator": "source/companion-specs/AAS/tools/build_model.py"
+  },
+  "markdown": {
+    "main": "spec.md",
+    "figures": "figures"
+  },
+  "figureGenerators": {
+    ".drawio.svg": "",
+    ".pptx": {
+      "win": "tools/office-to-svg.ps1",
+      "default": "tools/office-to-svg.sh"
+    }
+  },
+  "output": {
+    "sts": "artifacts/OPC-30270.xml",
+    "documentationCsv": "artifacts/OPC-30270-documentation.csv"
+  },
+  "normativeReferences": [
+    {
+      "id": "uapart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "https://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "uapart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "https://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "uapart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "https://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "uapart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "https://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "uapart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "https://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "uapart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings",
+      "url": "https://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "uapart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "https://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "uapart10",
+      "label": "OPC 10000-10",
+      "title": "OPC Unified Architecture - Part 10: Programs",
+      "url": "https://www.opcfoundation.org/documents/10000-10/"
+    },
+    {
+      "id": "uapart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "https://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "uapart20",
+      "label": "OPC 10000-20",
+      "title": "OPC Unified Architecture - Part 20: File Transfer",
+      "url": "https://www.opcfoundation.org/documents/10000-20/"
+    },
+    {
+      "id": "opc20020",
+      "label": "OPC 20020",
+      "title": "OPC UA Companion Specification Template and Rules",
+      "url": "https://opcfoundation.org/Guidelines-And-Templates/"
+    },
+    {
+      "id": "opc30270v1",
+      "label": "OPC 30270, Part 1, version 1.00",
+      "title": "OPC UA for Asset Administration Shell - Part 1: Asset Administration Shell",
+      "url": ""
+    },
+    {
+      "id": "opc30450",
+      "label": "OPC 30450-1",
+      "title": "OPC UA for Digital Product Passport - Part 1: Information Model",
+      "url": ""
+    },
+    {
+      "id": "opcuaxreg",
+      "label": "OPC UA for xRegistry",
+      "title": "Abstract registry information model defining RegistryType, GroupType and ResourceType",
+      "url": ""
+    },
+    {
+      "id": "xreg",
+      "label": "xRegistry specification",
+      "title": "Cloud-native registry core, model and HTTP binding",
+      "url": "https://github.com/xregistry/spec"
+    },
+    {
+      "id": "idta01001",
+      "label": "IDTA-01001",
+      "title": "Specification of the Asset Administration Shell - Part 1: Metamodel, version 3",
+      "url": "https://industrialdigitaltwin.org/en/content-hub/aasspecifications/specification-of-the-asset-administration-shell-part-1-metamodel-idta-number-01001"
+    },
+    {
+      "id": "idta01002",
+      "label": "IDTA-01002",
+      "title": "Specification of the Asset Administration Shell - Part 2: Application Programming Interfaces, version 3",
+      "url": "https://industrialdigitaltwin.org/en/content-hub/aasspecifications/specification-of-the-asset-administration-shell-part-2-application-programming-interfaces-idta-number-01002"
+    },
+    {
+      "id": "idta01005",
+      "label": "IDTA-01005",
+      "title": "Specification of the Asset Administration Shell - Part 5: Package File Format (AASX), version 3",
+      "url": "https://industrialdigitaltwin.org/en/content-hub/aasspecifications/specification-of-the-asset-administration-shell-part-5-package-file-format-aasx-idta-number-01005"
+    },
+    {
+      "id": "iec63278",
+      "label": "IEC 63278-1",
+      "title": "Asset Administration Shell for industrial applications - Part 1: Asset Administration Shell structure",
+      "url": "https://webstore.iec.ch/en/publication/79086"
+    },
+    {
+      "id": "xsd2",
+      "label": "W3C XML Schema Part 2",
+      "title": "XML Schema Part 2: Datatypes Second Edition",
+      "url": "https://www.w3.org/TR/xmlschema-2/"
+    },
+    {
+      "id": "wottd11",
+      "label": "W3C Web of Things Thing Description 1.1",
+      "title": "Web of Things (WoT) Thing Description 1.1",
+      "url": "https://www.w3.org/TR/wot-thing-description11/"
+    },
+    {
+      "id": "wotbinding",
+      "label": "OPC UA - Web of Things Binding",
+      "title": "OPC UA binding for W3C Thing Descriptions and Thing Models",
+      "url": ""
+    },
+    {
+      "id": "wotconnectivity",
+      "label": "OPC UA - WoT Connectivity",
+      "title": "Thing Description registry and derived AddressSpace projection",
+      "url": ""
+    },
+    {
+      "id": "aasjsonld",
+      "label": "AAS JSON-LD mapping",
+      "title": "JSON-LD mapping for the Asset Administration Shell",
+      "url": ""
+    }
+  ],
+  "terms": [],
+  "abbreviations": [
+    [
+      "AAS",
+      "Asset Administration Shell"
+    ],
+    [
+      "AASX",
+      "Asset Administration Shell Package File Format"
+    ],
+    [
+      "API",
+      "Application Programming Interface"
+    ],
+    [
+      "DNS",
+      "Domain Name System"
+    ],
+    [
+      "DPP",
+      "Digital Product Passport"
+    ],
+    [
+      "HTTP",
+      "Hypertext Transfer Protocol"
+    ],
+    [
+      "IDTA",
+      "Industrial Digital Twin Association"
+    ],
+    [
+      "IRI",
+      "Internationalized Resource Identifier"
+    ],
+    [
+      "JSON",
+      "JavaScript Object Notation"
+    ],
+    [
+      "JSON-LD",
+      "JavaScript Object Notation for Linked Data"
+    ],
+    [
+      "OCI",
+      "Open Container Initiative"
+    ],
+    [
+      "OPC UA",
+      "OPC Unified Architecture"
+    ],
+    [
+      "RDF",
+      "Resource Description Framework"
+    ],
+    [
+      "TD",
+      "Thing Description"
+    ],
+    [
+      "URI",
+      "Uniform Resource Identifier"
+    ],
+    [
+      "URL",
+      "Uniform Resource Locator"
+    ],
+    [
+      "UTF-8",
+      "Unicode Transformation Format, 8-bit"
+    ],
+    [
+      "W3C",
+      "World Wide Web Consortium"
+    ],
+    [
+      "WoT",
+      "Web of Things"
+    ],
+    [
+      "XML",
+      "Extensible Markup Language"
+    ],
+    [
+      "xRegistry",
+      "xRegistry"
+    ]
+  ],
+  "namespaces": {
+    "documentNamespaceIndex": 2,
+    "table": [
+      { "uri": "http://opcfoundation.org/UA/", "index": 0, "definedBy": "uapart5", "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0." },
+      { "uri": "http://opcfoundation.org/UA/xRegistry/", "index": 1, "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model. The namespace index is *Server* specific." },
+      { "uri": "http://opcfoundation.org/UA/I4AAS/v3/", "index": 2, "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model." }
+    ]
+  },
+  "profiles": "profiles.json"
+}

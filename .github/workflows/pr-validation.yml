@@ -95,6 +95,17 @@ jobs:
         run: npm install -g @mermaid-js/mermaid-cli
       - run: python .github/scripts/check_mermaid.py
 
+  manifest-model:
+    name: Manifest agrees with its model (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python .github/scripts/check_manifest_model.py
+
   yaml-json:
     name: YAML / JSON well-formedness (advisory)
     runs-on: ubuntu-latest
@@ -144,7 +155,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r core-specs/extras/requirements.txt
-      - run: pip install -r companion-specs/AAS/requirements.txt
+      - run: pip install -r source/companion-specs/AAS/requirements.txt
       # The AddressSpace figure gate re-derives each figure from the NodeSet using the
       # Word pipeline's Mermaid parser, so spec validation needs that parser installed.
       # Without it the gate skips, and a figure that contradicts its model reaches main.

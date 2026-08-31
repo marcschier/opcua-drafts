@@ -1,0 +1,398 @@
+{
+  "conformanceUnits": [
+    {
+      "name": "Vision",
+      "group": "Information model",
+      "category": "Server",
+      "description": "ObjectTypes and their members."
+    },
+    {
+      "name": "Vision DataTypes",
+      "group": "Information model",
+      "category": "Server",
+      "description": "Structures and enumerations."
+    },
+    {
+      "name": "Vision ReferenceTypes",
+      "group": "Information model",
+      "category": "Server",
+      "description": "ReferenceTypes."
+    },
+    {
+      "name": "Vision Events",
+      "group": "Information model",
+      "category": "Server",
+      "description": "EventTypes and their members."
+    },
+    {
+      "name": "VIS-Base",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "The well-known Vision object per §4.2, Sensors, and at least one sensor with SensorId, RealityKind, Modality and Media. Requires VIS-Media-Rtsp and VIS-Media-Jpeg."
+    },
+    {
+      "name": "VIS-Sensor-Params",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "ImageSensorType with Width, Height, PixelFormat"
+    },
+    {
+      "name": "VIS-Optics",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "OpticsType and/or IlluminationType"
+    },
+    {
+      "name": "VIS-Media-Rtsp",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "At least one StreamEndpointType with StreamProtocol = Rtsp, ProtocolVersion and SecureTransport; GetStreamEndpoint, ReleaseStreamEndpoint (§6.5), and the §12.2 credential conditions"
+    },
+    {
+      "name": "VIS-Media-Jpeg",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "At least one ClipEndpointType with ClipFormat = Jpeg and SecureTransport; GetClip (§6.5)"
+    },
+    {
+      "name": "VIS-Media-Inline",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "On the same ClipEndpointType instance: all four of LatestClip, LatestClipMetadata, MaxInlineClipSize, InlineDeliveryEnabled, and all five §6.4 rules. A Server shall not instantiate a proper subset of the four."
+    },
+    {
+      "name": "VIS-Media-DataChannel",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "On at least one MediaEndpointType instance: DataChannelSource non-null and DataChannelContentType non-empty, plus all of §6.7 and the §6.3 no-implicit-selection rule. Requires the Data Channel Media Server Facet of OPC UA — Data Channels, which is a working draft (§2) — this facet is therefore provisional, is not required by VIS-Base, and a Server claiming it shall still satisfy VIS-Media-Rtsp and VIS-Media-Jpeg."
+    },
+    {
+      "name": "VIS-Endpoint-Config",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "ConfigureStreamEndpoint, SelectEndpoint (§6.5)"
+    },
+    {
+      "name": "VIS-Calibration",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "CoordinateFrameType plus IntrinsicCalibrationType and/or ExtrinsicCalibrationType, with the §5.11 reference constraints and the §5.12 frame-precedence rule. A Server claiming this facet shall instantiate Vision/Frames, and it shall contain every CoordinateFrameType instance reachable through MountedOn, SourceFrame or TargetFrame. Frames may additionally appear elsewhere; Frames is the one place a client is entitled to find all of them."
+    },
+    {
+      "name": "VIS-Result-Inspection",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "InspectionResultType with Evaluation and Characteristics, and the §7.2 uncertainty rule including its uniform-reporting requirement"
+    },
+    {
+      "name": "VIS-Result-Detection",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "DetectionResultType with Detections, the §5.12 pose conventions, and the §7.3 FrameId rule"
+    },
+    {
+      "name": "VIS-Events",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "The EventTypes of §7.5 and every rule in that clause. A Server claiming it shall raise ObjectDetectedEventType for every detection it publishes and InspectionCompletedEventType for every inspection it concludes — a facet that permits a Server to raise events for some results and not others tells a client nothing, because silence would then be ambiguous between \"nothing happened\" and \"this one was not reported\". Requires VIS-Result-Detection for the first and VIS-Result-Inspection for the second, whichever the Server publishes; a Server that publishes only one kind of result claims this facet on the strength of that kind alone."
+    },
+    {
+      "name": "VIS-Feedback",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "VisionFeedbackType with at least SubmitImageReference, the §9.3 and §9.5 rules, the §12.3 inbound-URI validation, and the §12.7 feedback-integrity rules. A Server claiming this facet shall accept at least Trigger and Overlay on SubmitImageReference, and on SubmitDetections where that Method is instantiated. Accepting Reconciliation needs no further facet. Accepting GroundTruthLabel on SubmitCorrection requires VIS-Learning in addition."
+    },
+    {
+      "name": "VIS-Inference-OnServer",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "InferencePipelineType with a deployment whose InferenceLocation is OnServer, and the UsesModel constraint. Every result produced through that deployment populates ModelUsed with the ModelType that actually answered (§7.1). Where Results is instantiated, both MaxResultAge and MaxRetainedResults, at least one non-zero, and every rule of §7.1.1; RunInference requires Results (§8.4). ModelType.Digest and DigestAlgorithm per §12.6"
+    },
+    {
+      "name": "VIS-Inference-OffServer",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "As above with any other InferenceLocation, including the same conditional retention requirements and ModelUsed on every result, plus EndpointUri naming an authenticated, confidential scheme (§12.6)"
+    },
+    {
+      "name": "VIS-Simulation",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "IVisionSimulatedType on every sensor whose RealityKind is Simulated or Hybrid (§4.3, §10). Required of any Server that reports either value."
+    },
+    {
+      "name": "VIS-Learning",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "VisionFeedbackType.SubmitCorrection accepting GroundTruthLabel, the §9.5.1 join rules, and the AI-Learning facet of OPC UA — AI Model Management and Inference, which carries LearningJobType, its state model and the distinct PromoteModel authorization this specification also requires in §12.5"
+    },
+    {
+      "name": "VIS-Interop-Scene",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "The numbered requirements of Annex C, which are normative for a Server claiming this facet"
+    },
+    {
+      "name": "VIS-Interop-40100",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "The numbered requirements of Annex D, which are normative for a Server claiming this facet"
+    },
+    {
+      "name": "VIS-Interop-RobotIntent",
+      "group": "Vision facets",
+      "category": "Server",
+      "description": "The numbered requirements of Annex I, which are normative for a Server claiming this facet"
+    }
+  ],
+  "profiles": [
+    {
+      "name": "VIS-Base Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Base",
+      "description": "The well-known Vision object per §4.2, Sensors, and at least one sensor with SensorId, RealityKind, Modality and Media. Requires VIS-Media-Rtsp and VIS-Media-Jpeg.",
+      "includes": [
+        {
+          "name": "VIS-Base",
+          "optional": false
+        },
+        {
+          "name": "VIS-Media-Rtsp",
+          "optional": false
+        },
+        {
+          "name": "VIS-Media-Jpeg",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Sensor-Params Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Sensor-Params",
+      "description": "ImageSensorType with Width, Height, PixelFormat",
+      "includes": [
+        {
+          "name": "VIS-Sensor-Params",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Optics Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Optics",
+      "description": "OpticsType and/or IlluminationType",
+      "includes": [
+        {
+          "name": "VIS-Optics",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Media-Rtsp Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Media-Rtsp",
+      "description": "At least one StreamEndpointType with StreamProtocol = Rtsp, ProtocolVersion and SecureTransport; GetStreamEndpoint, ReleaseStreamEndpoint (§6.5), and the §12.2 credential conditions",
+      "includes": [
+        {
+          "name": "VIS-Media-Rtsp",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Media-Jpeg Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Media-Jpeg",
+      "description": "At least one ClipEndpointType with ClipFormat = Jpeg and SecureTransport; GetClip (§6.5)",
+      "includes": [
+        {
+          "name": "VIS-Media-Jpeg",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Media-Inline Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Media-Inline",
+      "description": "On the same ClipEndpointType instance: all four of LatestClip, LatestClipMetadata, MaxInlineClipSize, InlineDeliveryEnabled, and all five §6.4 rules. A Server shall not instantiate a proper subset of the four.",
+      "includes": [
+        {
+          "name": "VIS-Media-Inline",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Media-DataChannel Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Media-DataChannel",
+      "description": "On at least one MediaEndpointType instance: DataChannelSource non-null and DataChannelContentType non-empty, plus all of §6.7 and the §6.3 no-implicit-selection rule. Requires the Data Channel Media Server Facet of OPC UA — Data Channels, which is a working draft (§2) — this facet is therefore provisional, is not required by VIS-Base, and a Server claiming it shall still satisfy VIS-Media-Rtsp and VIS-Media-Jpeg.",
+      "includes": [
+        {
+          "name": "VIS-Media-DataChannel",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Endpoint-Config Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Endpoint-Config",
+      "description": "ConfigureStreamEndpoint, SelectEndpoint (§6.5)",
+      "includes": [
+        {
+          "name": "VIS-Endpoint-Config",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Calibration Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Calibration",
+      "description": "CoordinateFrameType plus IntrinsicCalibrationType and/or ExtrinsicCalibrationType, with the §5.11 reference constraints and the §5.12 frame-precedence rule. A Server claiming this facet shall instantiate Vision/Frames, and it shall contain every CoordinateFrameType instance reachable through MountedOn, SourceFrame or TargetFrame. Frames may additionally appear elsewhere; Frames is the one place a client is entitled to find all of them.",
+      "includes": [
+        {
+          "name": "VIS-Calibration",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Result-Inspection Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Result-Inspection",
+      "description": "InspectionResultType with Evaluation and Characteristics, and the §7.2 uncertainty rule including its uniform-reporting requirement",
+      "includes": [
+        {
+          "name": "VIS-Result-Inspection",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Result-Detection Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Result-Detection",
+      "description": "DetectionResultType with Detections, the §5.12 pose conventions, and the §7.3 FrameId rule",
+      "includes": [
+        {
+          "name": "VIS-Result-Detection",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Events Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Events",
+      "description": "The EventTypes of §7.5 and every rule in that clause. A Server claiming it shall raise ObjectDetectedEventType for every detection it publishes and InspectionCompletedEventType for every inspection it concludes — a facet that permits a Server to raise events for some results and not others tells a client nothing, because silence would then be ambiguous between \"nothing happened\" and \"this one was not reported\". Requires VIS-Result-Detection for the first and VIS-Result-Inspection for the second, whichever the Server publishes; a Server that publishes only one kind of result claims this facet on the strength of that kind alone.",
+      "includes": [
+        {
+          "name": "VIS-Events",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Feedback Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Feedback",
+      "description": "VisionFeedbackType with at least SubmitImageReference, the §9.3 and §9.5 rules, the §12.3 inbound-URI validation, and the §12.7 feedback-integrity rules. A Server claiming this facet shall accept at least Trigger and Overlay on SubmitImageReference, and on SubmitDetections where that Method is instantiated. Accepting Reconciliation needs no further facet. Accepting GroundTruthLabel on SubmitCorrection requires VIS-Learning in addition.",
+      "includes": [
+        {
+          "name": "VIS-Feedback",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Inference-OnServer Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Inference-OnServer",
+      "description": "InferencePipelineType with a deployment whose InferenceLocation is OnServer, and the UsesModel constraint. Every result produced through that deployment populates ModelUsed with the ModelType that actually answered (§7.1). Where Results is instantiated, both MaxResultAge and MaxRetainedResults, at least one non-zero, and every rule of §7.1.1; RunInference requires Results (§8.4). ModelType.Digest and DigestAlgorithm per §12.6",
+      "includes": [
+        {
+          "name": "VIS-Inference-OnServer",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Inference-OffServer Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Inference-OffServer",
+      "description": "As above with any other InferenceLocation, including the same conditional retention requirements and ModelUsed on every result, plus EndpointUri naming an authenticated, confidential scheme (§12.6)",
+      "includes": [
+        {
+          "name": "VIS-Inference-OffServer",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Simulation Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Simulation",
+      "description": "IVisionSimulatedType on every sensor whose RealityKind is Simulated or Hybrid (§4.3, §10). Required of any Server that reports either value.",
+      "includes": [
+        {
+          "name": "VIS-Simulation",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Learning Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Learning",
+      "description": "VisionFeedbackType.SubmitCorrection accepting GroundTruthLabel, the §9.5.1 join rules, and the AI-Learning facet of OPC UA — AI Model Management and Inference, which carries LearningJobType, its state model and the distinct PromoteModel authorization this specification also requires in §12.5",
+      "includes": [
+        {
+          "name": "VIS-Learning",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Interop-Scene Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Interop-Scene",
+      "description": "The numbered requirements of Annex C, which are normative for a Server claiming this facet",
+      "includes": [
+        {
+          "name": "VIS-Interop-Scene",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Interop-40100 Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Interop-40100",
+      "description": "The numbered requirements of Annex D, which are normative for a Server claiming this facet",
+      "includes": [
+        {
+          "name": "VIS-Interop-40100",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "VIS-Interop-RobotIntent Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA/Vision/Facet/VIS-Interop-RobotIntent",
+      "description": "The numbered requirements of Annex I, which are normative for a Server claiming this facet",
+      "includes": [
+        {
+          "name": "VIS-Interop-RobotIntent",
+          "optional": false
+        }
+      ]
+    }
+  ]
+}

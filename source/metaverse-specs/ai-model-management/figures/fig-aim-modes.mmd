@@ -1,0 +1,12 @@
+flowchart TD
+    A["ModelImportJobType<br/>Source or Registry, ModelReference, Mode"] --> B{Mode}
+    B -->|Federate| F["materialize ModelType<br/>artefact stays at the source"]
+    B -->|Auto| G{"target InferenceLocation<br/>OnServer or EdgeOffServer?"}
+    G -->|no| F
+    G -->|yes| S
+    B -->|Stage| S["fetch artefact<br/>BytesTransferred climbs"]
+    S --> V{"computed Digest ==<br/>catalogue Digest?"}
+    V -->|yes| OK["DigestVerified true<br/>artefact deployable"]
+    V -->|no| NO["DigestVerified false<br/>Halted, LastError set<br/>SHALL NOT deploy"]
+    F --> R["ImportedModel<br/>ImportedFrom the catalogue resource"]
+    OK --> R

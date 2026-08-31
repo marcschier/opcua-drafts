@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "opcfoundation.opc.ua.specificationpublisher": {
+      "version": "1.0.59",
+      "commands": [
+        "Opc.Ua.SpecificationPublisher"
+      ],
+      "rollForward": false
+    },
+    "opcfoundation.opc.ua.specificationvalidator": {
+      "version": "1.0.58",
+      "commands": [
+        "Opc.Ua.SpecificationValidator"
+      ],
+      "rollForward": false
+    }
+  }
+}

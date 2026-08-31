@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant C as Client
+    participant S as OPC UA Server
+    C->>S: Call RunInference(Timestamp)
+    S-->>C: ResultId (Good)
+    C->>S: Read Results/<ResultId>
+    S-->>C: InspectionResultType / DetectionResultType
+    C->>S: Read result.ModelUsed
+    S-->>C: ModelType NodeId that produced the result
+    C->>S: Read ModelType (Version, Digest)
+    S-->>C: Historical model identity and integrity
+    C->>S: Browse pipeline.Deployment -> UsesModel
+    S-->>C: ModelType serving now

@@ -1,7 +1,7 @@
 # Implementing this specification against real systems
 
 Informative. Nothing here is normative, and nothing here introduces a member: every one is
-defined in [the specification](../../../ai-model-management/OPC-UA-AI-Model-Management.md).
+defined in [the specification](../../../../source/metaverse-specs/ai-model-management/spec.md).
 
 The specification is vendor-neutral on purpose. §9.2 names the `ApiDialectEnum` literals
 for what a contract *does* rather than for whoever published it first, because a literal in

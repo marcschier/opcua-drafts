@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "sourceOfTruth": "markdown",
+  "identity": {
+    "docNumber": "OPC 99007-1",
+    "partName": "Generators",
+    "title": "OPC UA for Generators",
+    "shortTitle": "Generators",
+    "shortName": "GEN",
+    "organization": "OPC Foundation and the OPC Foundation Machinery joint working group",
+    "capabilityIdentifier": "GEN",
+    "namespaceUri": "http://opcfoundation.org/UA/Generators/",
+    "version": "1.3.0",
+    "publicationDate": "2026-08-31",
+    "releaseType": "Draft",
+    "gitHubTag": "",
+    "mantisUrl": "https://mantis.opcfoundation.org",
+    "license": {
+      "spdxId": "LicenseRef-OPC-Specification-1.15",
+      "copyright": "Copyright (c) 2026, OPC Federation AISBL",
+      "url": "https://opcfoundation.org/license/specifications/1.15/"
+    }
+  },
+  "model": {
+    "nodeset": "model/companion-specs/Generators/Opc.Ua.Generators.NodeSet2.xml",
+    "generated": true,
+    "generator": "source/companion-specs/Generators/tools/build_model.py"
+  },
+  "markdown": {
+    "main": "spec.md",
+    "figures": "figures"
+  },
+  "figureGenerators": {
+    ".drawio.svg": "",
+    ".pptx": {
+      "win": "tools/office-to-svg.ps1",
+      "default": "tools/office-to-svg.sh"
+    }
+  },
+  "output": {
+    "sts": "artifacts/OPC-99007-1.xml",
+    "documentationCsv": "artifacts/OPC-99007-1-documentation.csv"
+  },
+  "normativeReferences": [
+    {
+      "id": "uapart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "uapart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "uapart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "uapart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "uapart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "uapart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "uapart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "uapart8",
+      "label": "OPC 10000-8",
+      "title": "OPC Unified Architecture - Part 8: Data Access, which defines AnalogUnitType and the engineering-unit Properties every measured value carries.",
+      "url": "http://www.opcfoundation.org/documents/10000-8/"
+    },
+    {
+      "id": "uapart9",
+      "label": "OPC 10000-9",
+      "title": "OPC Unified Architecture - Part 9: Alarms and Conditions",
+      "url": "http://www.opcfoundation.org/documents/10000-9/"
+    },
+    {
+      "id": "uapart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "uapart14",
+      "label": "OPC 10000-14",
+      "title": "OPC Unified Architecture - Part 14: PubSub",
+      "url": "http://www.opcfoundation.org/documents/10000-14/"
+    },
+    {
+      "id": "uapart16",
+      "label": "OPC 10000-16",
+      "title": "OPC Unified Architecture - Part 16: State Machines",
+      "url": "http://www.opcfoundation.org/documents/10000-16/"
+    },
+    {
+      "id": "uapart100",
+      "label": "OPC 10000-100",
+      "title": "OPC Unified Architecture - Part 100: Devices, the DI companion specification whose DeviceType and ComponentType this model derives from.",
+      "url": "http://www.opcfoundation.org/documents/10000-100/"
+    },
+    {
+      "id": "ua40001",
+      "label": "OPC 40001-1",
+      "title": "OPC UA for Machinery - Part 1: Basic Building Blocks, whose Machines folder makes a generator set discoverable.",
+      "url": "http://www.opcfoundation.org/documents/40001-1/"
+    },
+    {
+      "id": "saej1939",
+      "label": "SAE J1939",
+      "title": "Serial control and communications heavy duty vehicle network, the CAN bus protocol the engine interface mirrors.",
+      "url": "https://www.sae.org/standards/content/j1939/"
+    }
+  ],
+  "terms": [
+    {
+      "term": "genSet / Generator set",
+      "definition": "A complete power‑generation unit combining a prime‑mover engine and an alternator with control and support subsystems."
+    },
+    {
+      "term": "prime mover",
+      "definition": "The engine that drives the alternator (diesel, gas, etc.)."
+    },
+    {
+      "term": "alternator",
+      "definition": "The AC generator end that converts mechanical power into electrical power."
+    },
+    {
+      "term": "aTS",
+      "definition": "Automatic Transfer Switch."
+    },
+    {
+      "term": "aVR",
+      "definition": "Automatic Voltage Regulator."
+    },
+    {
+      "term": "dTC",
+      "definition": "Diagnostic Trouble Code (SAE J1939 DM1/DM2)."
+    },
+    {
+      "term": "sPN / FMI",
+      "definition": "Suspect Parameter Number / Failure Mode Identifier (SAE J1939)."
+    },
+    {
+      "term": "eSP / PRP / COP / LTP",
+      "definition": "ISO 8528 ratings: Emergency Standby / Prime / Continuous / Limited‑Time Power."
+    },
+    {
+      "term": "dCC",
+      "definition": "Data‑Center Continuous rating."
+    },
+    {
+      "term": "pMG",
+      "definition": "Permanent Magnet Generator (excitation)."
+    }
+  ],
+  "abbreviations": [
+    [
+      "ATS",
+      "Automatic Transfer Switch"
+    ],
+    [
+      "CAN",
+      "Controller Area Network"
+    ],
+    [
+      "DI",
+      "Devices"
+    ],
+    [
+      "DTC",
+      "Diagnostic Trouble Code"
+    ],
+    [
+      "ECU",
+      "Electronic Control Unit"
+    ],
+    [
+      "HTTP",
+      "Hypertext Transfer Protocol"
+    ],
+    [
+      "JSON",
+      "JavaScript Object Notation"
+    ],
+    [
+      "SAE",
+      "Society of Automotive Engineers"
+    ],
+    [
+      "SPN",
+      "Suspect Parameter Number"
+    ],
+    [
+      "URI",
+      "Uniform Resource Identifier"
+    ],
+    [
+      "UTC",
+      "Coordinated Universal Time"
+    ]
+  ],
+  "namespaces": {
+    "documentNamespaceIndex": 1,
+    "table": [
+      {
+        "uri": "http://opcfoundation.org/UA/",
+        "index": 0,
+        "example": "0:EngineeringUnits",
+        "definedBy": "uapart5",
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0."
+      },
+      {
+        "uri": "http://opcfoundation.org/UA/Generators/",
+        "index": 1,
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model."
+      },
+      {
+        "uri": "http://opcfoundation.org/UA/DI/",
+        "index": 2,
+        "example": "2:DeviceRevision",
+        "definedBy": "uapart100",
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in OPC 10000-100."
+      },
+      {
+        "uri": "http://opcfoundation.org/UA/Machinery/",
+        "index": 3,
+        "example": "3:MachineIdentificationType",
+        "definedBy": "ua40001",
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in OPC 40001-1."
+      },
+      {
+        "uri": "http://opcfoundation.org/UA/IA/",
+        "index": 4,
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in OPC 40080-1. This model does not use it directly; it is declared because OPC 40001-1 borrows from it."
+      }
+    ]
+  },
+  "profiles": "profiles.json"
+}

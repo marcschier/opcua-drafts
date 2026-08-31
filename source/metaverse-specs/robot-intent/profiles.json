@@ -1,0 +1,786 @@
+{
+  "conformanceUnits": [
+    {
+      "name": "RobotIntent",
+      "group": "Information model",
+      "category": "Server",
+      "description": "ObjectTypes and their members."
+    },
+    {
+      "name": "RobotIntent DataTypes",
+      "group": "Information model",
+      "category": "Server",
+      "description": "Structures and enumerations."
+    },
+    {
+      "name": "RobotIntent ReferenceTypes",
+      "group": "Information model",
+      "category": "Server",
+      "description": "ReferenceTypes."
+    },
+    {
+      "name": "RobotIntent Events",
+      "group": "Information model",
+      "category": "Server",
+      "description": "EventTypes and their members."
+    },
+    {
+      "name": "RI-Base",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "RobotIntentRootType; at least one IntentControllerType with Capabilities, Frames, Tools, Locations, Axes and Intents; SubmitIntent, CancelIntent, CancelAll, RequestControl, ReleaseControl; IntentOperationType instances with the state model of §6.3; the refusal rules of §6.2 and clause 10."
+    },
+    {
+      "name": "RI-Motion-Joint",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "JointMoveIntentDataType, with AxisType instances covering 0 to AxisCount − 1."
+    },
+    {
+      "name": "RI-Motion-Linear",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "LinearMoveIntentDataType."
+    },
+    {
+      "name": "RI-Motion-Circular",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "CircularMoveIntentDataType."
+    },
+    {
+      "name": "RI-Trajectory",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "TrajectoryIntentDataType, TrajectorySupported true, and the tolerance rules of §6.8."
+    },
+    {
+      "name": "RI-Path",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "CartesianPathIntentDataType and TrajectorySupported true."
+    },
+    {
+      "name": "RI-Force",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "ForceIntentDataType and ForceControlSupported true — the robot genuinely regulates force."
+    },
+    {
+      "name": "RI-RealTimeChannel",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "RealTimeChannelsSupported true; the RealTimeChannels folder with at least one RealTimeChannelType; OpenRealTimeChannel and CloseRealTimeChannel with the lease rules of §6.9."
+    },
+    {
+      "name": "RI-Safety",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "SafetyState populated from the safety system, and the refusals of §10.4."
+    },
+    {
+      "name": "RI-Events",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "The EventTypes of §6.10 and every rule in that clause. A Server claiming it shall raise IntentCompletedEventType for every intent that reaches a terminal state, including those it refused after admission and those cancelled by another client — a facet under which a Server may report some completions and not others is worth nothing, because silence would then be ambiguous between \"still running\" and \"finished, unreported\". MissionCompletedEventType is additionally required where RI-Mission is claimed. Raising these does not relieve a Server of the Part 10 transition events."
+    },
+    {
+      "name": "RI-Description",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "Description with a KinematicChain covering every axis, ReachRadius, PayloadLimit and MaxCartesianSpeed."
+    },
+    {
+      "name": "RI-Process-ArcWeld",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "ArcWeldIntentDataType."
+    },
+    {
+      "name": "RI-Process-SpotWeld",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "SpotWeldIntentDataType."
+    },
+    {
+      "name": "RI-Process-Dispense",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "DispenseIntentDataType."
+    },
+    {
+      "name": "RI-Process-Fasten",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "FastenIntentDataType. Support for non-null Joint is structural: where an OPC UA joining or tightening model is implemented, Joint resolves into it; where no such model is exposed under the controller, Joint is null and a non-null Joint is refused with CapabilityNotSupported."
+    },
+    {
+      "name": "RI-Process-Palletise",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "PalletiseIntentDataType and at least one LocationType describing a pattern."
+    },
+    {
+      "name": "RI-Process-SurfaceFinish",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "SurfaceFinishIntentDataType and RI-Force."
+    },
+    {
+      "name": "RI-Grasp",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "GraspIntentDataType and ReleaseIntentDataType, and at least one ToolType with a TcpFrame."
+    },
+    {
+      "name": "RI-PickPlace",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "PickIntentDataType, PlaceIntentDataType, and at least one LocationType."
+    },
+    {
+      "name": "RI-ToolChange",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "ToolChangeIntentDataType, and more than one ToolType."
+    },
+    {
+      "name": "RI-Output",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "SetOutputIntentDataType and the Outputs folder."
+    },
+    {
+      "name": "RI-Program",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "CallProgramIntentDataType and the Programs folder."
+    },
+    {
+      "name": "RI-Wait",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "WaitIntentDataType."
+    },
+    {
+      "name": "RI-Queue",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "MaxQueueDepth greater than zero; Buffered accepted; QueuePosition maintained."
+    },
+    {
+      "name": "RI-Blending",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "BlendingSupported true; the four blending buffer modes accepted and honoured; Result.AchievedPose reported at the blend point per §6.4."
+    },
+    {
+      "name": "RI-Pause",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "Pause and Resume."
+    },
+    {
+      "name": "RI-Retry",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "Retry, and Retriable reachable."
+    },
+    {
+      "name": "RI-Mission",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "MissionsSupported true; SubmitMission, CancelMission; MissionType instances."
+    },
+    {
+      "name": "RI-Mission-Horizon",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "RI-Mission, plus MissionHorizonSupported true, UpdateMission, and the base immutability rules of §7.2."
+    },
+    {
+      "name": "RI-Mission-Branching",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "RI-Mission, plus MissionBranchingSupported true, Transitions evaluated per §7.4, and the error policies honoured."
+    },
+    {
+      "name": "RI-Interop-40010",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "Annex B."
+    },
+    {
+      "name": "RI-Interop-Vision",
+      "group": "Robot Intent facets",
+      "category": "Server",
+      "description": "Annex E."
+    }
+  ],
+  "profiles": [
+    {
+      "name": "RI-Base Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Base",
+      "description": "RobotIntentRootType; at least one IntentControllerType with Capabilities, Frames, Tools, Locations, Axes and Intents; SubmitIntent, CancelIntent, CancelAll, RequestControl, ReleaseControl; IntentOperationType instances with the state model of §6.3; the refusal rules of §6.2 and clause 10.",
+      "includes": [
+        {
+          "name": "RI-Base",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Motion-Joint Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Motion-Joint",
+      "description": "JointMoveIntentDataType, with AxisType instances covering 0 to AxisCount − 1.",
+      "includes": [
+        {
+          "name": "RI-Motion-Joint",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Motion-Linear Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Motion-Linear",
+      "description": "LinearMoveIntentDataType.",
+      "includes": [
+        {
+          "name": "RI-Motion-Linear",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Motion-Circular Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Motion-Circular",
+      "description": "CircularMoveIntentDataType.",
+      "includes": [
+        {
+          "name": "RI-Motion-Circular",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Trajectory Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Trajectory",
+      "description": "TrajectoryIntentDataType, TrajectorySupported true, and the tolerance rules of §6.8.",
+      "includes": [
+        {
+          "name": "RI-Trajectory",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Path Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Path",
+      "description": "CartesianPathIntentDataType and TrajectorySupported true.",
+      "includes": [
+        {
+          "name": "RI-Path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Force Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Force",
+      "description": "ForceIntentDataType and ForceControlSupported true — the robot genuinely regulates force.",
+      "includes": [
+        {
+          "name": "RI-Force",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-RealTimeChannel Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/RealTimeChannel",
+      "description": "RealTimeChannelsSupported true; the RealTimeChannels folder with at least one RealTimeChannelType; OpenRealTimeChannel and CloseRealTimeChannel with the lease rules of §6.9.",
+      "includes": [
+        {
+          "name": "RI-RealTimeChannel",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Safety Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Safety",
+      "description": "SafetyState populated from the safety system, and the refusals of §10.4.",
+      "includes": [
+        {
+          "name": "RI-Safety",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Events Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Events",
+      "description": "The EventTypes of §6.10 and every rule in that clause. A Server claiming it shall raise IntentCompletedEventType for every intent that reaches a terminal state, including those it refused after admission and those cancelled by another client — a facet under which a Server may report some completions and not others is worth nothing, because silence would then be ambiguous between \"still running\" and \"finished, unreported\". MissionCompletedEventType is additionally required where RI-Mission is claimed. Raising these does not relieve a Server of the Part 10 transition events.",
+      "includes": [
+        {
+          "name": "RI-Events",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Description Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Description",
+      "description": "Description with a KinematicChain covering every axis, ReachRadius, PayloadLimit and MaxCartesianSpeed.",
+      "includes": [
+        {
+          "name": "RI-Description",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Process-ArcWeld Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Process-ArcWeld",
+      "description": "ArcWeldIntentDataType.",
+      "includes": [
+        {
+          "name": "RI-Process-ArcWeld",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Process-SpotWeld Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Process-SpotWeld",
+      "description": "SpotWeldIntentDataType.",
+      "includes": [
+        {
+          "name": "RI-Process-SpotWeld",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Process-Dispense Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Process-Dispense",
+      "description": "DispenseIntentDataType.",
+      "includes": [
+        {
+          "name": "RI-Process-Dispense",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Process-Fasten Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Process-Fasten",
+      "description": "FastenIntentDataType. Support for non-null Joint is structural: where an OPC UA joining or tightening model is implemented, Joint resolves into it; where no such model is exposed under the controller, Joint is null and a non-null Joint is refused with CapabilityNotSupported.",
+      "includes": [
+        {
+          "name": "RI-Process-Fasten",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Process-Palletise Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Process-Palletise",
+      "description": "PalletiseIntentDataType and at least one LocationType describing a pattern.",
+      "includes": [
+        {
+          "name": "RI-Process-Palletise",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Process-SurfaceFinish Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Process-SurfaceFinish",
+      "description": "SurfaceFinishIntentDataType and RI-Force.",
+      "includes": [
+        {
+          "name": "RI-Process-SurfaceFinish",
+          "optional": false
+        },
+        {
+          "name": "RI-Force",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Grasp Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Grasp",
+      "description": "GraspIntentDataType and ReleaseIntentDataType, and at least one ToolType with a TcpFrame.",
+      "includes": [
+        {
+          "name": "RI-Grasp",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-PickPlace Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/PickPlace",
+      "description": "PickIntentDataType, PlaceIntentDataType, and at least one LocationType.",
+      "includes": [
+        {
+          "name": "RI-PickPlace",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-ToolChange Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/ToolChange",
+      "description": "ToolChangeIntentDataType, and more than one ToolType.",
+      "includes": [
+        {
+          "name": "RI-ToolChange",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Output Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Output",
+      "description": "SetOutputIntentDataType and the Outputs folder.",
+      "includes": [
+        {
+          "name": "RI-Output",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Program Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Program",
+      "description": "CallProgramIntentDataType and the Programs folder.",
+      "includes": [
+        {
+          "name": "RI-Program",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Wait Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Wait",
+      "description": "WaitIntentDataType.",
+      "includes": [
+        {
+          "name": "RI-Wait",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Queue Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Queue",
+      "description": "MaxQueueDepth greater than zero; Buffered accepted; QueuePosition maintained.",
+      "includes": [
+        {
+          "name": "RI-Queue",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Blending Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Blending",
+      "description": "BlendingSupported true; the four blending buffer modes accepted and honoured; Result.AchievedPose reported at the blend point per §6.4.",
+      "includes": [
+        {
+          "name": "RI-Blending",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Pause Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Pause",
+      "description": "Pause and Resume.",
+      "includes": [
+        {
+          "name": "RI-Pause",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Retry Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Retry",
+      "description": "Retry, and Retriable reachable.",
+      "includes": [
+        {
+          "name": "RI-Retry",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Mission Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Mission",
+      "description": "MissionsSupported true; SubmitMission, CancelMission; MissionType instances.",
+      "includes": [
+        {
+          "name": "RI-Mission",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Mission-Horizon Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Mission-Horizon",
+      "description": "RI-Mission, plus MissionHorizonSupported true, UpdateMission, and the base immutability rules of §7.2.",
+      "includes": [
+        {
+          "name": "RI-Mission-Horizon",
+          "optional": false
+        },
+        {
+          "name": "RI-Mission",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Mission-Branching Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Mission-Branching",
+      "description": "RI-Mission, plus MissionBranchingSupported true, Transitions evaluated per §7.4, and the error policies honoured.",
+      "includes": [
+        {
+          "name": "RI-Mission-Branching",
+          "optional": false
+        },
+        {
+          "name": "RI-Mission",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Interop-40010 Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Interop-40010",
+      "description": "Annex B.",
+      "includes": [
+        {
+          "name": "RI-Interop-40010",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "RI-Interop-Vision Facet",
+      "group": "Server Facets",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Facet/Interop-Vision",
+      "description": "Annex E.",
+      "includes": [
+        {
+          "name": "RI-Interop-Vision",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Robot Motion Server Profile",
+      "group": "Server Profiles",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Server/Motion",
+      "description": "The baseline. A robot that can be commanded to a joint configuration or a Cartesian pose, that describes its own kinematics and limits, and that reports what its safety system is enforcing.",
+      "includes": [
+        {
+          "name": "RI-Base",
+          "optional": false
+        },
+        {
+          "name": "RI-Motion-Joint",
+          "optional": false
+        },
+        {
+          "name": "RI-Motion-Linear",
+          "optional": false
+        },
+        {
+          "name": "RI-Description",
+          "optional": false
+        },
+        {
+          "name": "RI-Safety",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Robot Handling Server Profile",
+      "group": "Server Profiles",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Server/Handling",
+      "description": "Material handling. Picking, placing, changing tools and driving the discrete outputs a gripper needs, with a queue so a cell controller can stay ahead of the robot.",
+      "includes": [
+        {
+          "name": "RI-Base",
+          "optional": false
+        },
+        {
+          "name": "RI-Motion-Joint",
+          "optional": false
+        },
+        {
+          "name": "RI-Motion-Linear",
+          "optional": false
+        },
+        {
+          "name": "RI-Description",
+          "optional": false
+        },
+        {
+          "name": "RI-Safety",
+          "optional": false
+        },
+        {
+          "name": "RI-Motion-Circular",
+          "optional": false
+        },
+        {
+          "name": "RI-Grasp",
+          "optional": false
+        },
+        {
+          "name": "RI-PickPlace",
+          "optional": false
+        },
+        {
+          "name": "RI-ToolChange",
+          "optional": false
+        },
+        {
+          "name": "RI-Output",
+          "optional": false
+        },
+        {
+          "name": "RI-Queue",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Robot Path Server Profile",
+      "group": "Server Profiles",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Server/Path",
+      "description": "Continuous-path work. A whole path is handed over once and the robot's own motion kernel runs it, blending between segments rather than stopping at each.",
+      "includes": [
+        {
+          "name": "RI-Base",
+          "optional": false
+        },
+        {
+          "name": "RI-Motion-Joint",
+          "optional": false
+        },
+        {
+          "name": "RI-Motion-Linear",
+          "optional": false
+        },
+        {
+          "name": "RI-Description",
+          "optional": false
+        },
+        {
+          "name": "RI-Safety",
+          "optional": false
+        },
+        {
+          "name": "RI-Trajectory",
+          "optional": false
+        },
+        {
+          "name": "RI-Path",
+          "optional": false
+        },
+        {
+          "name": "RI-Blending",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Robot Mission Server Profile",
+      "group": "Server Profiles",
+      "uri": "http://opcfoundation.org/UA-Profile/RobotIntent/Server/Mission",
+      "description": "Long-running supervised operation. A mission is submitted, watched, paused, retried and cancelled, which is §1.2's fourth use case stated as a claim.",
+      "includes": [
+        {
+          "name": "RI-Base",
+          "optional": false
+        },
+        {
+          "name": "RI-Motion-Joint",
+          "optional": false
+        },
+        {
+          "name": "RI-Motion-Linear",
+          "optional": false
+        },
+        {
+          "name": "RI-Description",
+          "optional": false
+        },
+        {
+          "name": "RI-Safety",
+          "optional": false
+        },
+        {
+          "name": "RI-Mission",
+          "optional": false
+        },
+        {
+          "name": "RI-Program",
+          "optional": false
+        },
+        {
+          "name": "RI-Wait",
+          "optional": false
+        },
+        {
+          "name": "RI-Pause",
+          "optional": false
+        },
+        {
+          "name": "RI-Retry",
+          "optional": false
+        }
+      ]
+    }
+  ]
+}

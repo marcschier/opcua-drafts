@@ -1,7 +1,7 @@
 # Another OPC UA Server
 
 Informative. Every member named here is defined in
-[the specification](../../../ai-model-management/OPC-UA-AI-Model-Management.md); this guide
+[the specification](../../../../source/metaverse-specs/ai-model-management/spec.md); this guide
 introduces none. No vendor facts to date: the contract is this specification.
 
 A `ModelSourceType` whose `ApiDialect` is `OpcUaInference` names **another Server
@@ -302,5 +302,5 @@ rather than from what the far end withholds.
 ## Sources
 
 None. The contract is
-[the specification](../../../ai-model-management/OPC-UA-AI-Model-Management.md) — §8 for
+[the specification](../../../../source/metaverse-specs/ai-model-management/spec.md) — §8 for
 the inference Methods, §9 for federation, §10 for the catalogue, §11 for provenance.

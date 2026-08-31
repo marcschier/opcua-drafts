@@ -1,0 +1,20 @@
+flowchart TD
+  FLD[[FolderType]]:::objecttype
+  ENV[[AASEnvironmentType]]:::objecttype
+  SHELL[&lt;AssetAdministrationShell&gt;]:::object
+  SUBM[&lt;Submodel&gt;]:::object
+  CONC[&lt;ConceptDescription&gt;]:::object
+  AAS[[AASType]]:::objecttype
+  SM[[AASSubmodelType]]:::objecttype
+  CD[[AASConceptDescriptionType]]:::objecttype
+
+  FLD -->|HasSubtype| ENV
+  ENV -->|Organizes| SHELL
+  ENV -->|Organizes| SUBM
+  ENV -->|Organizes| CONC
+  SHELL ==> AAS
+  SUBM ==> SM
+  CONC ==> CD
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px

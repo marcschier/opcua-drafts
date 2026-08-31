@@ -17,7 +17,8 @@ import arrow_codec
 
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-STD = os.path.abspath(os.path.join(ROOT, "..", "..", "arrow-encoding"))
+REPO = os.path.abspath(os.path.join(ROOT, "..", "..", ".."))
+STD = os.path.join(REPO, "source", "core-specs", "arrow-encoding")
 REPO = os.path.abspath(os.path.join(ROOT, "..", "..", ".."))
 SCHEMA_DIR = os.path.join(ROOT, "schemas")
 BASE_SCHEMA_DIR = os.path.join(STD, "schemas")

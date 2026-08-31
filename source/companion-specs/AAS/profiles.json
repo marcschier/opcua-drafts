@@ -1,0 +1,101 @@
+{
+  "conformanceUnits": [
+    {
+      "name": "AAS-Metamodel",
+      "group": "AAS",
+      "category": "Server",
+      "description": "Shells, submodels and concept descriptions as typed nodes."
+    },
+    {
+      "name": "AAS-SubmodelElements",
+      "group": "AAS",
+      "category": "Server",
+      "description": "The submodel element types."
+    },
+    {
+      "name": "AAS-ValueFidelity",
+      "group": "AAS",
+      "category": "Server",
+      "description": "The xsd type assignment of clauses 6.1.2 and 6.3.1."
+    },
+    {
+      "name": "AAS-InstanceMaterialization",
+      "group": "AAS",
+      "category": "Server",
+      "description": "Materialization per clause 6.1.6."
+    },
+    {
+      "name": "AAS-LosslessRoundTrip",
+      "group": "AAS",
+      "category": "Server",
+      "description": "Both directions of clause 6.4."
+    },
+    {
+      "name": "AAS-Registry",
+      "group": "AAS",
+      "category": "Server",
+      "description": "The registry root, groups and submodel documents."
+    },
+    {
+      "name": "AAS-RegistryIdentity",
+      "group": "AAS",
+      "category": "Server",
+      "description": "Source identities and derived identifiers per clause 6.5.3."
+    },
+    {
+      "name": "AAS-RegistryVersioning",
+      "group": "AAS",
+      "category": "Server",
+      "description": "Versions as the lifecycle record, clause 6.5.4."
+    },
+    {
+      "name": "AAS-Discovery",
+      "group": "AAS",
+      "category": "Server",
+      "description": "LookupShellsByAssetLink and GetSubmodel."
+    },
+    {
+      "name": "AAS-OperationInvoke",
+      "group": "AAS",
+      "category": "Server",
+      "description": "AASOperationType.Invoke, clause 6.2.5."
+    },
+    {
+      "name": "AAS-Federation",
+      "group": "AAS",
+      "category": "Server",
+      "description": "External references and the identity rule of clause 6.5.6."
+    },
+    {
+      "name": "AAS-DisclosureTiers",
+      "group": "AAS",
+      "category": "Server",
+      "description": "DisclosureTier and Authorization, clause 6.5.7."
+    },
+    {
+      "name": "AAS-UpdateableRegistry",
+      "group": "AAS",
+      "category": "Server",
+      "description": "Generational materialization from stored documents, clause 6.5.9."
+    },
+    {
+      "name": "AAS-EnvironmentExport",
+      "group": "AAS",
+      "category": "Server",
+      "description": "The materialized environment served as filtered AAS and AASX documents, clause 6.5.10. Required of a Server claiming both AAS-Registry and AAS-InstanceMaterialization."
+    },
+    {
+      "name": "AAS-Packages",
+      "group": "AAS",
+      "category": "Server",
+      "description": "Package stores and package resources; requires AAS-PackageIntegrity."
+    },
+    {
+      "name": "AAS-PackageIntegrity",
+      "group": "AAS",
+      "category": "Server",
+      "description": "Mandatory package-blob digest and algorithm, OCI manifest-to-blob binding, immutable identity and tag rules, referrer separation and verification requirements of clause 6.5.4."
+    }
+  ],
+  "profiles": []
+}

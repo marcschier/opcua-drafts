@@ -24,7 +24,7 @@ Pick Part 1 when you already have an artist-authored USD asset and want to drive
 
 ## The three standalone models
 
-| | [`vision/`](vision/) | [`robot-intent/`](robot-intent/) | [`ai-model-management/`](ai-model-management/) |
+| | [`vision/`](../source/metaverse-specs/vision/) | [`robot-intent/`](../source/metaverse-specs/robot-intent/) | [`ai-model-management/`](../source/metaverse-specs/ai-model-management/) |
 |---|---|---|---|
 | Question | *What does this camera see, and what did it conclude?* | *How do I tell this robot what to do?* | *Which model produced this answer, and can I audit it?* |
 | The gap | OPC 40100-1 leaves result content undefined; OPC 40010-1 has no vision types at all | OPC 40010-1 describes robot topology and defines **no motion verbs** | OPC UA has no way to say what an AI model *is*, where it runs, or what it was trained on |

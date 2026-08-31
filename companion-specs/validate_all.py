@@ -16,19 +16,19 @@ PYTHON = sys.executable
 TEXT_SUFFIXES = {".csv", ".json", ".jsonld", ".md", ".xml"}
 
 COMMANDS = (
-    ("Generators", (PYTHON, "companion-specs/Generators/tools/validate_local.py")),
+    ("Generators", (PYTHON, "source/companion-specs/Generators/tools/validate_local.py")),
     (
         "AAS model",
-        (PYTHON, "companion-specs/AAS/tools/validate_local.py", "--self-contained"),
+        (PYTHON, "source/companion-specs/AAS/tools/validate_local.py", "--self-contained"),
     ),
-    ("AAS round trip", (PYTHON, "companion-specs/AAS/tools/roundtrip_check.py")),
-    ("AAS xRegistry semantics", (PYTHON, "companion-specs/AAS/tools/validate_xregistry_aas.py")),
+    ("AAS round trip", (PYTHON, "source/companion-specs/AAS/tools/roundtrip_check.py")),
+    ("AAS xRegistry semantics", (PYTHON, "source/companion-specs/AAS/tools/validate_xregistry_aas.py")),
     (
         "AAS xRegistry regressions",
-        (PYTHON, "-m", "unittest", "companion-specs.AAS.tools.test_validate_xregistry_aas"),
+        (PYTHON, "source/companion-specs/AAS/tools/test_validate_xregistry_aas.py"),
     ),
-    ("AAS JSON-LD regressions", (PYTHON, "companion-specs/AAS/tools/jsonld/regression_tests.py")),
-    ("AAS final examples", (PYTHON, "companion-specs/AAS/tools/jsonld/validate_examples.py")),
+    ("AAS JSON-LD regressions", (PYTHON, "source/companion-specs/AAS/tools/jsonld/regression_tests.py")),
+    ("AAS final examples", (PYTHON, "source/companion-specs/AAS/tools/jsonld/validate_examples.py")),
 )
 
 
@@ -123,22 +123,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.parse_args(argv)
 
     model_outputs = [
-        ROOT / "companion-specs/AAS/Opc.Ua.I4AAS.NodeSet2.xml",
-        ROOT / "companion-specs/AAS/Opc.Ua.I4AAS.NodeIds.csv",
-        ROOT / "companion-specs/AAS/tools/model-reference.md",
-        ROOT / "companion-specs/AAS/OPC-UA-AAS.md",
+        ROOT / "model/companion-specs/AAS/Opc.Ua.I4AAS.NodeSet2.xml",
+        ROOT / "model/companion-specs/AAS/Opc.Ua.I4AAS.NodeIds.csv",
+        ROOT / "source/companion-specs/AAS/tools/model-reference.md",
     ]
     if run_deterministic(
         "AAS regeneration",
-        (PYTHON, "companion-specs/AAS/tools/build_model.py"),
+        (PYTHON, "source/companion-specs/AAS/tools/build_model.py"),
         model_outputs,
     ):
         return 1
 
     if run_deterministic_tree(
         "AAS example regeneration",
-        (PYTHON, "companion-specs/AAS/tools/jsonld/build_examples.py"),
-        ROOT / "companion-specs/AAS/examples",
+        (PYTHON, "source/companion-specs/AAS/tools/jsonld/build_examples.py"),
+        ROOT / "source/companion-specs/AAS/examples",
         "*.jsonld",
     ):
         return 1

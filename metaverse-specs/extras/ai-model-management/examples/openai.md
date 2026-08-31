@@ -1,7 +1,7 @@
 # OpenAI platform API
 
 Informative. Every member named here is defined in
-[the specification](../../../ai-model-management/OPC-UA-AI-Model-Management.md); this guide
+[the specification](../../../../source/metaverse-specs/ai-model-management/spec.md); this guide
 introduces none. Vendor facts verified 2026-08-05 against the documentation linked at the
 end.
 

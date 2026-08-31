@@ -2,12 +2,15 @@
 """Check internal Markdown links across the repository.
 
 For every tracked `*.md` file, resolve each relative link target on disk and every in-page
-`#anchor` against the target file's headings (GitHub-slugged) and explicit `id="..."` anchors.
-External links (http/https/mailto) and non-file schemes are skipped.
+`#anchor` against the target file's headings (GitHub-slugged), explicit `id="..."` anchors,
+the `{#anchor}` attribute blocks the OPC UA specification template writes on headings and
+table captions, and the `id:` a `{figure}` directive declares. External links (http/https/
+mailto) and non-file schemes are skipped, and so are the files `upgrade` owns.
 
 Usage (from repo root):  python .github/scripts/check_links.py
 Exit code is non-zero if any internal link is broken.
 """
+import json
 import os
 import re
 import sys
@@ -32,13 +35,48 @@ def is_nested_repo(path):
     return os.path.exists(os.path.join(path, ".git"))
 
 
+def tool_owned():
+    """Paths written by `Opc.Ua.SpecificationPublisher upgrade`, which are not ours to fix.
+
+    The scaffold records what it last wrote, and its documentation cites anchors that stand for
+    a real one -- `[](#tbl-x)` in an example of how to cite a table. Reporting those as broken
+    would train a reader to ignore this check. A file listed under `yours` has been edited here
+    and the tool will never refresh it again, so it *is* ours and stays in scope.
+    """
+    try:
+        with open(os.path.join(ROOT, ".config", "spec-scaffold.json"), encoding="utf-8") as f:
+            scaffold = json.load(f)
+    except (OSError, ValueError):
+        return set()
+    mine = set(scaffold.get("yours") or ())
+    return {os.path.join(ROOT, *p.split("/"))
+            for p in (scaffold.get("files") or {}) if p not in mine}
+
+
 LINK_RE = re.compile(r"(?<!\\)\[[^\]]*\]\(([^)]+)\)")
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
 EXPLICIT_ID_RE = re.compile(r'<[a-zA-Z][^>]*?\b(?:id|name)\s*=\s*"([^"]+)"')
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
 
+# The OPC UA specification template writes an anchor as a trailing attribute block rather than
+# as an HTML element, on a heading and on a table caption alike: `## Scope {#sec-scope}` and
+# `*Table - X Definition* {#tbl-x-definition defines=X}`. Both declare the anchor everything
+# else in the document cites.
+ATTR_ID_RE = re.compile(r"\{#([A-Za-z0-9][A-Za-z0-9_.:-]*)")
+ATTR_BLOCK_RE = re.compile(r"\s*\{#[^}]*\}\s*$")
+
+# A figure declares its anchor inside a directive fence, so it is the one anchor that lives
+# where a fence scan would otherwise skip it:
+#
+#     ```{figure}
+#     id: fig-information-model-overview
+#     ```
+DIRECTIVE_FENCE_RE = re.compile(r"^\s*(?:```|~~~)\{(\w+)\}\s*$")
+DIRECTIVE_ID_RE = re.compile(r"^\s*id:\s*(\S+)\s*$")
+
 
 def md_files():
+    owned = tool_owned()
     for dirpath, dirnames, filenames in os.walk(ROOT):
         dirnames[:] = [
             d for d in dirnames
@@ -46,7 +84,9 @@ def md_files():
         ]
         for name in filenames:
             if name.lower().endswith(".md"):
-                yield os.path.join(dirpath, name)
+                path = os.path.join(dirpath, name)
+                if path not in owned:
+                    yield path
 
 
 def slug(text):
@@ -65,19 +105,28 @@ def anchors_of(path):
     ids = set()
     counts = {}
     in_fence = False
+    in_directive = False
     try:
         lines = open(path, encoding="utf-8").read().splitlines()
     except OSError:
         return ids
     for line in lines:
         if FENCE_RE.match(line):
+            if not in_fence:
+                in_directive = bool(DIRECTIVE_FENCE_RE.match(line))
+            else:
+                in_directive = False
             in_fence = not in_fence
             continue
         if in_fence:
+            if in_directive:
+                mid = DIRECTIVE_ID_RE.match(line)
+                if mid:
+                    ids.add(mid.group(1))
             continue
         m = HEADING_RE.match(line)
         if m:
-            s = slug(m.group(2))
+            s = slug(ATTR_BLOCK_RE.sub("", m.group(2)))
             if s in counts:
                 counts[s] += 1
                 ids.add(f"{s}-{counts[s]}")
@@ -86,7 +135,34 @@ def anchors_of(path):
                 ids.add(s)
         for mid in EXPLICIT_ID_RE.finditer(line):
             ids.add(mid.group(1))
+        for mid in ATTR_ID_RE.finditer(line):
+            ids.add(mid.group(1))
     return ids
+
+
+def normative_reference_ids(path):
+    """The `ref-<id>` anchors a specification's manifest defines.
+
+    A citation of another standard resolves against `manifest.json` -> `normativeReferences`,
+    not against a heading: clause 2 is generated from that list, so the anchor exists in the
+    published document and nowhere in the markdown. Every part of one specification shares the
+    one manifest, so the lookup walks up to the directory holding it.
+    """
+    directory = os.path.dirname(os.path.abspath(path))
+    while True:
+        candidate = os.path.join(directory, "manifest.json")
+        if os.path.exists(candidate):
+            try:
+                with open(candidate, encoding="utf-8") as f:
+                    manifest = json.load(f)
+            except (OSError, ValueError):
+                return set()
+            return {"ref-%s" % r["id"] for r in manifest.get("normativeReferences", [])
+                    if isinstance(r, dict) and r.get("id")}
+        parent = os.path.dirname(directory)
+        if parent == directory or len(directory) <= len(ROOT):
+            return set()
+        directory = parent
 
 
 def is_external(target):
@@ -124,7 +200,7 @@ def main():
                 dest = md
             if frag and dest.lower().endswith(".md"):
                 if dest not in anchor_cache:
-                    anchor_cache[dest] = anchors_of(dest)
+                    anchor_cache[dest] = anchors_of(dest) | normative_reference_ids(dest)
                 if slug(frag) not in anchor_cache[dest] and frag not in anchor_cache[dest]:
                     broken.append((md, target, "missing anchor"))
     rel = lambda p: os.path.relpath(p, ROOT).replace(os.sep, "/")

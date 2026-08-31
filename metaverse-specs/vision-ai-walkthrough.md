@@ -1,15 +1,15 @@
 # Vision and AI Model Management Walkthrough
 
 > These are provisional working drafts, not official OPC Foundation
-> specifications. This walkthrough describes Vision 0.4.1 and AI Model
-> Management and Inference 0.5.1.
+> specifications. This walkthrough describes Vision 0.5.0 and AI Model
+> Management and Inference 0.6.0.
 
 The two drafts answer different questions:
 
 | Draft | Main question |
 |---|---|
-| [Vision](vision/OPC-UA-Vision.md) | What produced the image, how can a client obtain it, what interpreted it, and what did the system see? |
-| [AI Model Management](ai-model-management/OPC-UA-AI-Model-Management.md) | Which model and deployment performed inference, where did it run, what artifact answered, and what evidence supports using it? |
+| [Vision](../source/metaverse-specs/vision/spec.md) | What produced the image, how can a client obtain it, what interpreted it, and what did the system see? |
+| [AI Model Management](../source/metaverse-specs/ai-model-management/spec.md) | Which model and deployment performed inference, where did it run, what artifact answered, and what evidence supports using it? |
 
 They can be implemented independently. Vision joins to AI Model Management
 through plain `NodeId` Properties, so its NodeSet does not require the AI

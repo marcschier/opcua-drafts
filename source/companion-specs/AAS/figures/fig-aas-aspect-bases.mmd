@@ -1,0 +1,25 @@
+flowchart TD
+  BOT[[BaseObjectType]]:::objecttype
+  SEM[[AASHasSemanticsType]]:::objecttype,abstract
+  KND[[AASHasKindType]]:::objecttype,abstract
+  DS[[AASHasDataSpecificationType]]:::objecttype,abstract
+  QUA[[AASQualifiableType]]:::objecttype,abstract
+  SID[SemanticId]:::variable
+  SSI[SupplementalSemanticIds]:::variable
+  KIN[Kind]:::variable
+  EDS[EmbeddedDataSpecifications]:::variable
+  QLF[Qualifiers]:::variable
+
+  BOT -->|HasSubtype| SEM
+  BOT -->|HasSubtype| KND
+  BOT -->|HasSubtype| DS
+  BOT -->|HasSubtype| QUA
+  SEM -->|HasProperty| SID
+  SEM -->|HasProperty| SSI
+  KND -->|HasProperty| KIN
+  DS -->|HasProperty| EDS
+  QUA -->|HasProperty| QLF
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

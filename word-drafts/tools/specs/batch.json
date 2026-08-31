@@ -1,64 +1,86 @@
 {
-  "_comment": "The conversion batch. `converted` are the specifications that have a config in this directory and a committed document; `ready` are the ones whose shape the pipeline already handles, so onboarding them is a config file plus the editorial work named in `needs`. Run them with tools/build_all.py.",
-  "converted": [
-    "schema-registry",
-    "generators",
-    "arrow-encoding",
-    "async-services",
-    "vision",
-    "ai-model-management",
-    "robot-intent",
-    "aas"
-  ],
+  "_comment": "Every standalone specification has migrated to Opc.Ua.SpecificationPublisher. Legacy Word configs were removed rather than repointed because they consume numbered headings and hand-generated Annex A content that the publisher now derives from each manifest and NodeSet.",
+  "converted": [],
   "ready": [],
+  "migrated": [
+    {
+      "spec": "schema-registry",
+      "markdown": "source/cloud-specs/schema-registry/spec.md",
+      "docNumber": "OPC 99006-1"
+    },
+    {
+      "spec": "generators",
+      "markdown": "source/companion-specs/Generators/spec.md",
+      "docNumber": "OPC 99007-1"
+    },
+    {
+      "spec": "arrow-encoding",
+      "markdown": "source/core-specs/arrow-encoding/spec.md",
+      "docNumber": "OPC 99001-1"
+    },
+    {
+      "spec": "async-services",
+      "markdown": "source/core-specs/async-services/spec.md",
+      "docNumber": "OPC 99013-1"
+    },
+    {
+      "spec": "vision",
+      "markdown": "source/metaverse-specs/vision/spec.md",
+      "docNumber": "OPC 99011-1"
+    },
+    {
+      "spec": "vision-research",
+      "markdown": "source/metaverse-specs/vision-research/spec.md",
+      "docNumber": "OPC 99012"
+    },
+    {
+      "spec": "ai-model-management",
+      "markdown": "source/metaverse-specs/ai-model-management/spec.md",
+      "docNumber": "OPC 99014-1"
+    },
+    {
+      "spec": "robot-intent",
+      "markdown": "source/metaverse-specs/robot-intent/spec.md",
+      "docNumber": "OPC 99015-1"
+    },
+    {
+      "spec": "aas",
+      "markdown": "source/companion-specs/AAS/spec.md",
+      "docNumber": "OPC 30270"
+    }
+  ],
   "notAFit": [
     {
-      "markdown": "core-specs/data-channels/OPC-UA-Part3-Data-Channel-Model.md",
-      "why": "an amendment to OPC 10000-3, not a companion specification. OPC 20020 is the companion-specification template; rendering a core-part amendment into it would misrepresent what the document is. The same content is carried by OPC-UA-Data-Channels.md, which is a companion specification and is listed as ready."
+      "markdown": "source/core-specs/async-services/OPC-UA-Part4-Async-Service-Execution.md",
+      "why": "an amendment to OPC 10000-4, not a standalone companion specification; its requirements are carried by the migrated combined specification."
     },
     {
-      "markdown": "core-specs/data-channels/OPC-UA-Part4-Data-Channel-Services.md",
-      "why": "an amendment to OPC 10000-4; see above."
-    },
-    {
-      "markdown": "core-specs/data-channels/OPC-UA-Part6-Data-Channel-Transport.md",
-      "why": "an amendment to OPC 10000-6; see above."
+      "markdown": "source/core-specs/async-services/OPC-UA-Part5-Async-Service-Model.md",
+      "why": "an amendment to OPC 10000-5; see above."
     },
     {
       "markdown": "core-specs/extras/performance/OPC-UA-Encoding-Performance-Comparison.md",
       "why": "a measurement report, not a specification."
     },
     {
-      "markdown": "cloud-specs/observability-export/di/OPC-UA-DI-Pumps-Inheritance.md",
-      "why": "an explanatory note about how two addenda compose, not a specification of its own."
+      "markdown": "source/companion-specs/AAS/xRegistry-AAS.md",
+      "why": "an xRegistry domain specification using that body's RFC 2119 style, not an OPC Foundation companion specification."
     },
     {
-      "markdown": "cloud-specs/observability-export/di/OPC-UA-DI-Observability-Export-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex D, so it is published — as what it is."
+      "markdown": "source/companion-specs/AAS/xRegistry-AAS-Packages.md",
+      "why": "an xRegistry domain specification; see above."
     },
     {
-      "markdown": "cloud-specs/observability-export/facets/OPC-UA-Facets-Observability-Export-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex F, so it is published — as what it is."
+      "markdown": "source/companion-specs/AAS/AAS-xRegistry-Study.md",
+      "why": "an exploratory study, not a specification."
     },
     {
-      "markdown": "cloud-specs/observability-export/pumps/OPC-UA-Pumps-Observability-Export-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex G, so it is published — as what it is."
+      "markdown": "source/metaverse-specs/robot-intent/OPC-UA-Robot-Intent-Research.md",
+      "why": "a research and design rationale document, not a companion specification."
     },
     {
-      "markdown": "cloud-specs/observability-export/robotics/OPC-UA-Robotics-Observability-Export-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex H, so it is published — as what it is."
-    },
-    {
-      "markdown": "metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into OpenUSD Binding Part 1, Annex G, so it is published — as what it is."
-    },
-    {
-      "markdown": "metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into OpenUSD Binding Part 1, Annex H, so it is published — as what it is."
-    },
-    {
-      "markdown": "cloud-specs/observability-export/di/OPC-UA-DIDeviceHealth-Observability-Export-Addendum.md",
-      "why": "an implementer annex / worked example of a specification already converted, not a specification of its own: a provisional Examples namespace or an example URN, instances rather than types, and no conformance clause. Its prose is folded into Observability Export, Annex E, so it is published — as what it is."
+      "markdown": "metaverse-specs/openusd-binding/xRegistry-OpenUsd.md",
+      "why": "an xRegistry domain specification under separate review; it is not an OPC Foundation companion specification."
     }
   ]
 }

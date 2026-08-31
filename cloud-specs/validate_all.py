@@ -25,9 +25,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # committed NodeSet and CSV either way — the same arrangement the data-channels validators
 # use in core-specs/extras/validate_all.py.
 SELF_CONTAINED = [
-    # release-spec-validator:ICAgICJleHRyYXMvb2JzZXJ2YWJpbGl0eS1leHBvcnQvdG9vbHMvdmFsaWRhdGVfbG9jYWwucHkiLA==
-    # release-spec-validator:ICAgICJleHRyYXMvb2JzZXJ2YWJpbGl0eS1leHBvcnQvZXhhbXBsZXMvdG9vbHMvdmFsaWRhdGVfZXhhbXBsZXMucHkiLA==
-    "schema-registry/tools/validate_local.py",
+    "../source/cloud-specs/schema-registry/tools/validate_local.py",
 ]
 
 # Validators that additionally need untracked base data (none yet).

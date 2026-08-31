@@ -15,11 +15,16 @@ Thumbs.db
 # committing a private checkout into this public repository.
 node_modules/
 
+# The specification publisher's scratch output. `build` writes the STS and the NodeIds CSV
+# here and `publish` the HTML and Word editions, so nothing in it is a source and nothing in
+# it is reviewed; the committed artifacts are written to artifacts/ with an explicit --out.
+_work/
+
 # The pinned upstream AAS example corpus (~2400 matched JSON/Turtle pairs).
-# Fetched on demand by companion-specs/AAS/tools/jsonld/fetch_corpus.py; the
+# Fetched on demand by source/companion-specs/AAS/tools/jsonld/fetch_corpus.py; the
 # hard cases needed for an offline run are vendored in jsonld/fixtures/ instead.
-companion-specs/AAS/jsonld/.corpus/
+source/companion-specs/AAS/jsonld/.corpus/
 
 # Local cache of the published IDTA submodel templates, read by
-# companion-specs/AAS/tools/jsonld/dpp_inventory.py.
-companion-specs/AAS/jsonld/.templates/
+# source/companion-specs/AAS/tools/jsonld/dpp_inventory.py.
+source/companion-specs/AAS/jsonld/.templates/

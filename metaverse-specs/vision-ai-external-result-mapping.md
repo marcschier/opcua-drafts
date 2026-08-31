@@ -1,7 +1,7 @@
 # External Result Mapping for Vision and AI
 
 > Informative, transport-neutral guidance for mapping externally stored results
-> to OPC UA Vision 0.4.1 and AI Model Management and Inference 0.5.1. This is
+> to OPC UA Vision 0.5.0 and AI Model Management and Inference 0.6.0. This is
 > not a conformance profile and introduces no requirements on either
 > specification.
 
@@ -9,8 +9,8 @@ This document describes a semantic boundary, not a wire envelope. An
 implementation can use a database row, an object-store manifest, an HTTP
 representation, or another application contract. It should preserve the
 distinctions below while using the normative definitions in
-[Vision](vision/OPC-UA-Vision.md) and
-[AI Model Management](ai-model-management/OPC-UA-AI-Model-Management.md).
+[Vision](../source/metaverse-specs/vision/spec.md) and
+[AI Model Management](../source/metaverse-specs/ai-model-management/spec.md).
 Where this guide and a normative clause differ, the normative clause governs.
 
 ## 1. Identity and a live locator

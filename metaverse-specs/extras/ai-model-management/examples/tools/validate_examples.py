@@ -42,10 +42,12 @@ import xml.etree.ElementTree as ET
 HERE = os.path.dirname(os.path.abspath(__file__))
 EXAMPLES = os.path.dirname(HERE)
 EXTRAS = os.path.dirname(EXAMPLES)
-STD = os.path.normpath(os.path.join(EXTRAS, "..", "..", "ai-model-management"))
+REPO = os.path.normpath(os.path.join(HERE, "..", "..", "..", "..", ".."))
+MODEL = os.path.join(REPO, "model", "metaverse-specs", "ai-model-management")
 
-NODESET = os.path.join(STD, "Opc.Ua.AiModelManagement.NodeSet2.xml")
-SPEC = os.path.join(STD, "OPC-UA-AI-Model-Management.md")
+NODESET = os.path.join(MODEL, "Opc.Ua.AiModelManagement.NodeSet2.xml")
+SPEC = os.path.join(
+    REPO, "source", "metaverse-specs", "ai-model-management", "spec.md")
 INDEX = os.path.join(EXAMPLES, "index.md")
 KNOWN_TERMS = os.path.join(HERE, "known-terms.txt")
 
@@ -254,7 +256,7 @@ def check_conformance_units(text_by_guide: dict[str, str]) -> None:
 
 def check_spec_link(text_by_guide: dict[str, str]) -> None:
     for rel, text in text_by_guide.items():
-        if "ai-model-management/OPC-UA-AI-Model-Management.md" not in text:
+        if "source/metaverse-specs/ai-model-management/spec.md" not in text:
             err(
                 f"{rel}: does not cite the specification by relative path, so every "
                 f"section reference in it resolves against nothing"

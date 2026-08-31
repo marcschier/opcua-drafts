@@ -1,0 +1,10 @@
+flowchart LR
+    CAT["ModelRegistryType<br/><i>catalogue</i>"] -->|ModelImportJobType| M
+    M["ModelType"] -->|TrainedOn| D["DatasetType"]
+    P["DeploymentType"] -->|UsesModel| M
+    P -->|Source| S["ModelSourceType<br/><i>somewhere else</i>"]
+    P -.->|FallsBackTo| P2["DeploymentType<br/><i>fallback</i>"]
+    C["Client"] -->|Invoke| P
+    J["LearningJobType"] -.->|CandidateModel| M
+    J -.->|Dataset| D
+    J -.->|PromoteModel updates| P

@@ -1,0 +1,45 @@
+graph TD
+    ROOT["Vision : VisionRootType"]
+    AIROOT["AiModelManagement : AiRootType<br/><i>AI Model Management spec, beside this one<br/>under the Server object</i>"]
+    AIROOT --> FM["Models"]
+    AIROOT --> FJ["LearningJobs"]
+    ROOT --> FS["Sensors"]
+    ROOT --> FP["Pipelines"]
+    ROOT --> FF["Frames"]
+
+    FS --> SENSOR["ImageSensorType<br/>SensorId, RealityKind, Modality<br/>Width, Height, PixelFormat"]
+    SENSOR --> MEDIA["Media : VisionMediaManagementType<br/>GetStreamEndpoint, GetClip"]
+    MEDIA --> SEP["StreamEndpoints/<br/>StreamEndpointType<br/>StreamProtocol, ProtocolVersion"]
+    MEDIA --> CEP["ClipEndpoints/<br/>ClipEndpointType<br/>ClipFormat, LatestClip"]
+    SENSOR --> OPT["Optics : OpticsType<br/>FocalLength, Aperture"]
+    SENSOR --> ILL["Illumination : IlluminationType<br/>Wavelength, Intensity"]
+    SENSOR --> CALS["Calibrations/"]
+    CALS --> ICAL["IntrinsicCalibrationType<br/>Intrinsics"]
+    CALS --> ECAL["ExtrinsicCalibrationType<br/>Mount, Transform"]
+
+    FF --> FRAME["CoordinateFrameType<br/>FrameId, Role"]
+
+    FM --> MODEL["ModelType<br/>ModelId, Version, Digest<br/><i>AI Model Management spec</i>"]
+    FM --> DSET["DatasetType<br/>SourceKind<br/><i>AI Model Management spec</i>"]
+    FM --> DEPL["DeploymentType<br/>InferenceLocation, EndpointUri<br/><i>AI Model Management spec</i>"]
+
+    FP --> PIPE["InferencePipelineType<br/>State, Continuous<br/>MaxResultAge, MaxRetainedResults"]
+    PIPE --> RES["Results/<br/>InspectionResultType | DetectionResultType"]
+    PIPE --> FB["Feedback : VisionFeedbackType<br/>SubmitCorrection"]
+
+    FJ --> JOB["LearningJobType<br/>State, SamplesCollected<br/><i>AI Model Management spec</i>"]
+
+    SENSOR -.HasCalibration.-> ICAL
+    SENSOR -.HasCalibration.-> ECAL
+    SENSOR -.MountedOn.-> FRAME
+    SENSOR -.HasScenePrim.-> PRIM["UsdGeomCameraType<br/>(OpenUSD Part 2, Annex D)"]
+    DEPL -.UsesModel exactly 1.-> MODEL
+    RES -.ProducedBy.-> PIPE
+    RES -.->|ModelUsed| MODEL
+
+    PIPE -.->|Sensor| SENSOR
+    PIPE -.->|Deployment| DEPL
+    ECAL -.->|SourceFrame / TargetFrame| FRAME
+    FRAME -.->|ParentFrame| FRAME
+    JOB -.->|Dataset| DSET
+    JOB -.->|CandidateModel| MODEL

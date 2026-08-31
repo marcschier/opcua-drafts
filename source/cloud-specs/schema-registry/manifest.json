@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "sourceOfTruth": "markdown",
+  "identity": {
+    "docNumber": "OPC 99006-1",
+    "partName": "Schema Registry",
+    "title": "OPC UA for Schema Registry",
+    "shortTitle": "Schema Registry",
+    "shortName": "SREG",
+    "organization": "OPC Foundation and the xRegistry project",
+    "capabilityIdentifier": "SREG",
+    "namespaceUri": "http://opcfoundation.org/UA/SchemaRegistry/",
+    "version": "0.5.0",
+    "publicationDate": "2026-08-31",
+    "releaseType": "Draft",
+    "gitHubTag": "",
+    "mantisUrl": "https://mantis.opcfoundation.org",
+    "license": {
+      "spdxId": "LicenseRef-OPC-Specification-1.15",
+      "copyright": "Copyright (c) 2026, OPC Federation AISBL",
+      "url": "https://opcfoundation.org/license/specifications/1.15/"
+    }
+  },
+  "model": {
+    "nodeset": "model/cloud-specs/schema-registry/Opc.Ua.SchemaRegistry.NodeSet2.xml",
+    "generated": true,
+    "generator": "source/cloud-specs/schema-registry/tools/build_model.py"
+  },
+  "markdown": {
+    "main": "spec.md",
+    "figures": "figures"
+  },
+  "figureGenerators": {
+    ".drawio.svg": "",
+    ".pptx": {
+      "win": "tools/office-to-svg.ps1",
+      "default": "tools/office-to-svg.sh"
+    }
+  },
+  "output": {
+    "sts": "artifacts/OPC-99006-1.xml",
+    "documentationCsv": "artifacts/OPC-99006-1-documentation.csv"
+  },
+  "normativeReferences": [
+    {
+      "id": "uapart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "uapart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "uapart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "uapart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "uapart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "uapart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "uapart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "uapart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "uapart14",
+      "label": "OPC 10000-14",
+      "title": "OPC Unified Architecture - Part 14: PubSub",
+      "url": "http://www.opcfoundation.org/documents/10000-14/"
+    },
+    {
+      "id": "uapart20",
+      "label": "OPC 10000-20",
+      "title": "OPC Unified Architecture - Part 20: File Transfer",
+      "url": "http://www.opcfoundation.org/documents/10000-20/"
+    },
+    {
+      "id": "xreg",
+      "label": "OPC UA for xRegistry",
+      "title": "The abstract registry model of registries, groups and resources that this document extends; declared as a RequiredModel of its NodeSet.",
+      "url": ""
+    },
+    {
+      "id": "xregistryopcua",
+      "label": "xRegistry OPC UA API",
+      "title": "xRegistry OPC UA API — the OPC UA protocol binding for the xRegistry API",
+      "url": "https://github.com/xregistry/spec/blob/main/workingdrafts/bindings/opcua.md"
+    },
+    {
+      "id": "xregschema",
+      "label": "xRegistry Schema Registry Service",
+      "title": "The schemagroups, schemas and versions model this document mirrors in OPC UA.",
+      "url": "https://github.com/xregistry/spec"
+    },
+    {
+      "id": "cloudevents",
+      "label": "CloudEvents",
+      "title": "CloudEvents specification, whose dataschema attribute convention is reused for an optional on-wire schema reference.",
+      "url": "https://github.com/cloudevents/spec"
+    }
+  ],
+  "terms": [
+    {
+      "term": "schema Registry",
+      "definition": "The registry root, a subtype of the xRegistry `RegistryType`, exposed as the well-known `SchemaRegistry` Object under the `Server` object (`i=2253`)."
+    },
+    {
+      "term": "schema document",
+      "definition": "A concrete Avro (`.avsc`), Apache Arrow Schema, or JSON Schema document describing an OPC UA DataType or DataSet in one encoding."
+    },
+    {
+      "term": "schema Group",
+      "definition": "A group folder for one OPC UA namespace URI, a subtype of the xRegistry `GroupType`, keyed by that namespace URI (an OPC UA domain convention; the generic xRegistry schema group imposes no such key)."
+    },
+    {
+      "term": "schema / Schema file",
+      "definition": "One `(DataType or PublishedDataSet, format)` schema document as a resource file, a subtype of the xRegistry `ResourceType`."
+    },
+    {
+      "term": "schema Version / Version",
+      "definition": "One concrete schema document. In the flat projection a schema file exposes its default (latest) version's document and `VersionId`; earlier versions, when kept, are sibling files linked by the xRegistry `Ancestor` attribute and marked by `IsDefault`. For a DataSet in the PubSub profile a version is additionally correlated with a Part 14 `ConfigurationVersion` (Annex C)."
+    },
+    {
+      "term": "compatibility",
+      "definition": "The xRegistry `compatibility` mode a schema's versions adhere to (for example `NONE`, `BACKWARD`, `FORWARD`, `FULL`); a change that breaks the mode starts a new schema rather than a new version."
+    },
+    {
+      "term": "format",
+      "definition": "The xRegistry `format` string identifying the schema language, for example `Avro/1.11`, `ApacheArrow/1.0` or `JsonSchema/2020-12` (xRegistry format naming, e.g. `Avro/1.9`, `Protobuf/3`, `JsonSchema/draft-07`, `XSD/1.1`; applications MAY define extension formats such as `ApacheArrow/1.0`)."
+    },
+    {
+      "term": "content type",
+      "definition": "The media type of a schema document or a message/transport payload. The schema document media type is recorded on the schema file; the message/transport content type selects the format during resolution."
+    },
+    {
+      "term": "schemaId",
+      "definition": "Raw on-wire schema fingerprint bytes. Every registered format has a deterministic per-format fingerprint (Avro: 8-byte CRC-64-AVRO; Arrow and JSON Schema: the first 8 bytes of SHA-256 over the format's canonical form); the algorithm is named by `SchemaIdAlg` and the per-format fingerprint provider is pluggable (registered by dependency injection)."
+    },
+    {
+      "term": "schemaId NodeId",
+      "definition": "An Opaque NodeId in the Schema Registry namespace whose Identifier bytes are exactly the raw SchemaId bytes, addressing the schema document for a one-Read fetch."
+    },
+    {
+      "term": "pubSub DataSet schema profile",
+      "definition": "The optional set of behaviours (Annex C) a Server that also implements Part 14 PubSub applies: DataSet schemas keyed to `ConfigurationVersion`, append-only schema evolution, and integration alongside the Security Key Service. Not required of a schema registry."
+    }
+  ],
+  "abbreviations": [
+    [
+      "API",
+      "Application Programming Interface"
+    ],
+    [
+      "CRC",
+      "Cyclic Redundancy Check"
+    ],
+    [
+      "HTTP",
+      "Hypertext Transfer Protocol"
+    ],
+    [
+      "JSON",
+      "JavaScript Object Notation"
+    ],
+    [
+      "TTL",
+      "Time To Live"
+    ],
+    [
+      "URI",
+      "Uniform Resource Identifier"
+    ],
+    [
+      "URL",
+      "Uniform Resource Locator"
+    ],
+    [
+      "UTC",
+      "Coordinated Universal Time"
+    ]
+  ],
+  "namespaces": {
+    "documentNamespaceIndex": 2,
+    "table": [
+      { "uri": "http://opcfoundation.org/UA/", "index": 0, "definedBy": "uapart5", "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0." },
+      { "uri": "http://opcfoundation.org/UA/xRegistry/", "index": 1, "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model. The namespace index is *Server* specific." },
+      { "uri": "http://opcfoundation.org/UA/SchemaRegistry/", "index": 2, "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model." }
+    ]
+  },
+  "profiles": "profiles.json"
+}

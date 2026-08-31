@@ -43,8 +43,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/RobotIntent/"
-VERSION = "0.3.0"
-PUBDATE = "2026-08-13T00:00:00Z"
+VERSION = "0.4.0"
+PUBDATE = "2026-08-31T00:00:00Z"
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -2153,9 +2153,43 @@ def emit_md():
     return "\n".join(L).rstrip() + "\n"
 
 
+Server_Namespaces = "i=11715"
+NamespaceMetadataType = "i=11616"
+
+
+def namespace_metadata(uri, version, pubdate, is_subset=False):
+    """Declare this model's namespace metadata."""
+    meta = _mid()
+    add(meta, "UAObject", uri, "NamespaceMetadata", display=uri,
+        desc="Metadata for this namespace, as OPC 10000-5 requires a Server to publish it.",
+        parent=Server_Namespaces)
+    ref(meta, HasTypeDefinition, NamespaceMetadataType)
+    ref(meta, HasComponent, Server_Namespaces, forward=False)
+
+    def _prop(name, datatype, xml_type, text):
+        nid = _mid()
+        add(nid, "UAVariable", name, f"NamespaceMetadata_{name}", parent=T(meta),
+            attrs={"DataType": datatype, "ValueRank": "-1"})
+        ref(nid, HasTypeDefinition, PropertyType)
+        ref(nid, HasProperty, T(meta), forward=False)
+        ref(meta, HasProperty, T(nid))
+        NODES[nid].value = (
+            f'<Value><uax:{xml_type}>{sx.escape(text)}</uax:{xml_type}></Value>')
+
+    _prop("NamespaceUri", "i=12", "String", uri)
+    _prop("NamespaceVersion", "i=12", "String", version)
+    _prop("NamespacePublicationDate", "i=13", "DateTime", pubdate)
+    _prop("IsNamespaceSubset", "i=1", "Boolean", "true" if is_subset else "false")
+
+
+namespace_metadata(NAMESPACE, VERSION, PUBDATE)
+
+
 def main():
     here = os.path.dirname(os.path.abspath(__file__))
-    std = os.path.normpath(os.path.join(here, "..", "..", "..", "robot-intent"))
+    std = os.path.normpath(os.path.join(
+        here, "..", "..", "..", "..",
+        "model", "metaverse-specs", "robot-intent"))
     os.makedirs(std, exist_ok=True)
     with open(os.path.join(std, "Opc.Ua.RobotIntent.NodeSet2.xml"), "w",
               encoding="utf-8", newline="\n") as f:

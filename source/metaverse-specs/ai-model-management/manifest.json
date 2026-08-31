@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "sourceOfTruth": "markdown",
+  "identity": {
+    "docNumber": "OPC 99014-1",
+    "partName": "AI Model Management",
+    "title": "OPC UA for AI Model Management",
+    "shortTitle": "AI Model Management",
+    "shortName": "AIM",
+    "organization": "OPC Foundation and the xRegistry project",
+    "capabilityIdentifier": "AIM",
+    "namespaceUri": "http://opcfoundation.org/UA/AI/",
+    "version": "0.6.0",
+    "publicationDate": "2026-08-31",
+    "releaseType": "Draft",
+    "gitHubTag": "",
+    "mantisUrl": "https://mantis.opcfoundation.org",
+    "license": {
+      "spdxId": "LicenseRef-OPC-Specification-1.15",
+      "copyright": "Copyright (c) 2026, OPC Federation AISBL",
+      "url": "https://opcfoundation.org/license/specifications/1.15/"
+    }
+  },
+  "model": {
+    "nodeset": "model/metaverse-specs/ai-model-management/Opc.Ua.AiModelManagement.NodeSet2.xml",
+    "generated": true,
+    "generator": "metaverse-specs/extras/ai-model-management/tools/build_model.py"
+  },
+  "markdown": {
+    "main": "spec.md",
+    "figures": "figures"
+  },
+  "figureGenerators": {
+    ".drawio.svg": "",
+    ".pptx": {
+      "win": "tools/office-to-svg.ps1",
+      "default": "tools/office-to-svg.sh"
+    }
+  },
+  "output": {
+    "sts": "artifacts/OPC-99014-1.xml",
+    "documentationCsv": "artifacts/OPC-99014-1-documentation.csv"
+  },
+  "normativeReferences": [
+    {
+      "id": "uapart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "uapart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "uapart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "uapart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "uapart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "uapart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "uapart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "uapart10",
+      "label": "OPC 10000-10",
+      "title": "OPC Unified Architecture - Part 10: Programs, whose program state machine every job in this model is an instance of.",
+      "url": "http://www.opcfoundation.org/documents/10000-10/"
+    },
+    {
+      "id": "uapart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "uapart16",
+      "label": "OPC 10000-16",
+      "title": "OPC Unified Architecture - Part 16: State Machines",
+      "url": "http://www.opcfoundation.org/documents/10000-16/"
+    }
+  ],
+  "terms": [
+    {
+      "term": "model",
+      "definition": "A trained artefact that maps input to output. Modelled as `ModelType`. Identity, not behaviour: this specification describes the model, it does not run it."
+    },
+    {
+      "term": "dataset",
+      "definition": "The samples a model was trained or validated on. Modelled as `DatasetType`."
+    },
+    {
+      "term": "deployment",
+      "definition": "A model made executable somewhere. Modelled as `DeploymentType`. One model may have several deployments; each names exactly one model."
+    },
+    {
+      "term": "inference location",
+      "definition": "Whether execution happens in the Server, on an edge node, in a cloud service or in a simulator. It changes the trust boundary and the latency, and it changes nothing else."
+    },
+    {
+      "term": "learning job",
+      "definition": "One turn of the capture, label, train and promote loop. Modelled as `LearningJobType`."
+    },
+    {
+      "term": "promotion",
+      "definition": "Making a candidate model the one deployments use. The one operation here that changes what the equipment does."
+    },
+    {
+      "term": "promotion record",
+      "definition": "An immutable, authoritative snapshot of one successful change to a deployment's configured `UsesModel` target. Modelled as `PromotionRecordType`."
+    },
+    {
+      "term": "digest",
+      "definition": "A cryptographic hash of an artefact, which is what makes a retrieved artefact verifiable as the one described."
+    },
+    {
+      "term": "conformance unit",
+      "definition": "The smallest individually testable requirement of this specification. Grouped into facets rather than claimed one by one."
+    },
+    {
+      "term": "facet",
+      "definition": "A named, individually claimable set of conformance units — a building block, not a complete claim. Clause 13.2 defines them."
+    },
+    {
+      "term": "profile",
+      "definition": "A named set of facets describing one plausible Server, claimed by publishing its URI in `Server/ServerCapabilities/ServerProfileArray`. Clause 13.3 defines them. Not to be confused with a *typed profile* (§6.4.1), which is a consuming specification's payload vocabulary and has nothing to do with conformance."
+    }
+  ],
+  "abbreviations": [
+    [
+      "AI",
+      "Artificial Intelligence"
+    ],
+    [
+      "API",
+      "Application Programming Interface"
+    ],
+    [
+      "GPU",
+      "Graphics Processing Unit"
+    ],
+    [
+      "HTTP",
+      "Hypertext Transfer Protocol"
+    ],
+    [
+      "JSON",
+      "JavaScript Object Notation"
+    ],
+    [
+      "ONNX",
+      "Open Neural Network Exchange"
+    ],
+    [
+      "SHA",
+      "Secure Hash Algorithm"
+    ],
+    [
+      "URI",
+      "Uniform Resource Identifier"
+    ],
+    [
+      "UTC",
+      "Coordinated Universal Time"
+    ]
+  ],
+  "namespaces": {
+    "documentNamespaceIndex": 2,
+    "table": [
+      { "uri": "http://opcfoundation.org/UA/", "index": 0, "definedBy": "uapart5", "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0." },
+      { "uri": "http://opcfoundation.org/UA/xRegistry/", "index": 1, "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model. The namespace index is *Server* specific." },
+      { "uri": "http://opcfoundation.org/UA/AI/", "index": 2, "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model." }
+    ]
+  },
+  "profiles": "profiles.json"
+}

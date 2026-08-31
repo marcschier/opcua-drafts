@@ -70,10 +70,11 @@ import sys
 import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-STD = os.path.normpath(os.path.join(HERE, "..", "..", "..", "robot-intent"))
-NODESET = os.path.join(STD, "Opc.Ua.RobotIntent.NodeSet2.xml")
-CSVFILE = os.path.join(STD, "Opc.Ua.RobotIntent.NodeIds.csv")
-SPEC = os.path.join(STD, "OPC-UA-Robot-Intent.md")
+REPO = os.path.normpath(os.path.join(HERE, "..", "..", "..", ".."))
+MODEL = os.path.join(REPO, "model", "metaverse-specs", "robot-intent")
+NODESET = os.path.join(MODEL, "Opc.Ua.RobotIntent.NodeSet2.xml")
+CSVFILE = os.path.join(MODEL, "Opc.Ua.RobotIntent.NodeIds.csv")
+SPEC = os.path.join(REPO, "source", "metaverse-specs", "robot-intent", "spec.md")
 
 NS = {"u": "http://opcfoundation.org/UA/2011/03/UANodeSet.xsd"}
 UAX = {"uax": "http://opcfoundation.org/UA/2008/02/Types.xsd"}
@@ -277,6 +278,20 @@ def check_types(m: Model) -> None:
                 err(f"ReferenceType {m.bname(nid)} ({nid}) has no InverseName")
 
 
+def is_concrete_instance(m: Model, nid: str) -> bool:
+    """Whether the ParentNodeId chain terminates at a node outside this model."""
+    parent = m.nodes[nid].get("ParentNodeId")
+    seen: set[str] = set()
+    while parent and parent not in seen:
+        seen.add(parent)
+        if parent not in m.nodes:
+            return True
+        if m.cls(parent) in ("UAObjectType", "UAVariableType"):
+            return False
+        parent = m.nodes[parent].get("ParentNodeId")
+    return False
+
+
 def check_instance_declarations(m: Model) -> None:
     for nid in m.order:
         el = m.nodes[nid]
@@ -287,8 +302,7 @@ def check_instance_declarations(m: Model) -> None:
         if c in ("UAObject", "UAVariable"):
             if not any(rt == "i=40" for rt, _, _ in m.refs(nid)):
                 err(f"{m.bname(nid)} ({nid}) has no HasTypeDefinition")
-        external_root = parent not in m.nodes
-        if not external_root and not m.modelling_rule(nid):
+        if not is_concrete_instance(m, nid) and not m.modelling_rule(nid):
             # A node parented on a base-UA node (the well-known object under the
             # Server) is a concrete instance, not an instance declaration, so it
             # carries no ModellingRule.
@@ -422,7 +436,8 @@ def check_csv(m: Model) -> None:
             elif not m.by_name(owner):
                 err(f"NodeIds.csv {name!r} ({sid}) names an encoding of {owner!r}, "
                     "which is not a type in the NodeSet")
-        elif name != bn and not name.endswith("_" + bn):
+        elif (not ("://" in bn and name == "NamespaceMetadata")
+              and name != bn and not name.endswith("_" + bn)):
             err(f"NodeIds.csv name {name!r} ({sid}) does not resolve to NodeSet "
                 f"BrowseName {bn!r}")
     for sid, nid in ns_ids.items():

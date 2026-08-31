@@ -1,0 +1,26 @@
+flowchart TD
+  BOT[[BaseObjectType]]:::objecttype,abstract
+  CAPT[[AsyncServiceCapabilitiesType]]:::objecttype
+  SC[ServerCapabilities]:::object
+  CAP[AsyncServiceCapabilities]:::object
+  MAXD[MaxDeferredRequests]:::variable
+  MAXS[MaxDeferredRequestsPerSession]:::variable
+  MAXT[MaxDeferralTime]:::variable
+  DRA[DefaultRetryAfter]:::variable
+  MRA[MinRetryAfter]:::variable
+  DS[DeferrableServices]:::variable
+
+  BOT -->|HasSubtype| CAPT
+  CAPT -->|HasProperty| MAXD
+  CAPT -->|HasProperty| MAXS
+  CAPT -->|HasProperty| MAXT
+  CAPT -->|HasProperty| DRA
+  CAPT -->|HasProperty| MRA
+  CAPT -->|HasProperty| DS
+  SC --> CAP
+  CAP ==> CAPT
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

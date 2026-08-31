@@ -1,0 +1,15 @@
+flowchart TD
+  PSM[[ProgramStateMachineType]]:::objecttype
+  JOB[[AiJobType]]:::objecttype,abstract
+  JOBID[JobId]:::variable
+  IMPORT[[ModelImportJobType]]:::objecttype
+  INFER[[InferenceJobType]]:::objecttype
+
+  PSM -->|HasSubtype| JOB
+  JOB -->|HasProperty| JOBID
+  JOB -->|HasSubtype| IMPORT
+  JOB -->|HasSubtype| INFER
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

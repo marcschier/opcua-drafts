@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import pprint
+import re
 import sys
 from typing import Any
 
@@ -17,8 +18,9 @@ import build_schemas
 
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-STD = os.path.abspath(os.path.join(ROOT, "..", "..", "arrow-encoding"))
-DOC = os.path.join(STD, "OPC-UA-Arrow-Encoding.md")
+REPO = os.path.abspath(os.path.join(ROOT, "..", "..", ".."))
+STD = os.path.join(REPO, "source", "core-specs", "arrow-encoding")
+DOC = os.path.join(STD, "spec.md")
 BEGIN = "<!-- BEGIN GENERATED: type-reference -->"
 END = "<!-- END GENERATED: type-reference -->"
 
@@ -96,8 +98,9 @@ def _section(title: str, ty: t.Type, case: corpus.Case, source: str) -> str:
         raise AssertionError(f"published schema for {title} drifts from canonical codec type")
     schema = pa.schema([pa.field("value", data_type)], metadata={b"opcua-arrow": b"1"})
     schema_bytes = schema.serialize().to_pybytes()
+    anchor = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
     return "\n\n".join([
-        f"### {title}",
+        f"### {title} {{#sec-arrow-reference-{anchor}}}",
         f"Published schema source: `{source}`. SchemaId: `{fingerprint.sha256_id_hex(schema_bytes, build_schemas.ARROW_SCHEMAID_BYTES)}`.",
         _structure_table(data_type),
         "Arrow schema:",

@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "sourceOfTruth": "markdown",
+  "identity": {
+    "docNumber": "OPC 99015-1",
+    "partName": "Robot Intent",
+    "title": "OPC UA for Robot Intent",
+    "shortTitle": "Robot Intent",
+    "shortName": "RI",
+    "organization": "OPC Foundation and the VDMA and the Alliance for OpenUSD",
+    "capabilityIdentifier": "RI",
+    "namespaceUri": "http://opcfoundation.org/UA/RobotIntent/",
+    "version": "0.4.0",
+    "publicationDate": "2026-08-31",
+    "releaseType": "Draft",
+    "gitHubTag": "",
+    "mantisUrl": "https://mantis.opcfoundation.org",
+    "license": {
+      "spdxId": "LicenseRef-OPC-Specification-1.15",
+      "copyright": "Copyright (c) 2026, OPC Federation AISBL",
+      "url": "https://opcfoundation.org/license/specifications/1.15/"
+    }
+  },
+  "model": {
+    "nodeset": "model/metaverse-specs/robot-intent/Opc.Ua.RobotIntent.NodeSet2.xml",
+    "generated": true,
+    "generator": "metaverse-specs/extras/robot-intent/tools/build_model.py"
+  },
+  "markdown": {
+    "main": "spec.md",
+    "figures": "figures"
+  },
+  "figureGenerators": {
+    ".drawio.svg": "",
+    ".pptx": {
+      "win": "tools/office-to-svg.ps1",
+      "default": "tools/office-to-svg.sh"
+    }
+  },
+  "output": {
+    "sts": "artifacts/OPC-99015-1.xml",
+    "documentationCsv": "artifacts/OPC-99015-1-documentation.csv"
+  },
+  "normativeReferences": [
+    {
+      "id": "uapart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "uapart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "uapart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "uapart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "uapart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "uapart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "uapart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "uapart10",
+      "label": "OPC 10000-10",
+      "title": "OPC Unified Architecture - Part 10: Programs",
+      "url": "http://www.opcfoundation.org/documents/10000-10/"
+    },
+    {
+      "id": "uapart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "iso8373",
+      "label": "ISO 8373:2021",
+      "title": "Robotics - Vocabulary",
+      "url": "https://www.iso.org/standard/75539.html"
+    },
+    {
+      "id": "iso9787",
+      "label": "ISO 9787:2013",
+      "title": "Robots and robotic devices - Coordinate systems and motion nomenclatures",
+      "url": "https://www.iso.org/standard/59090.html"
+    },
+    {
+      "id": "iso10218-1",
+      "label": "ISO 10218-1",
+      "title": "Robotics - Safety requirements - Part 1: Industrial robots",
+      "url": "https://www.iso.org/standard/73933.html"
+    },
+    {
+      "id": "iso10218-2",
+      "label": "ISO 10218-2",
+      "title": "Robotics - Safety requirements - Part 2: Industrial robot applications and robot cells",
+      "url": "https://www.iso.org/standard/73934.html"
+    },
+    {
+      "id": "iec60204",
+      "label": "IEC 60204-1",
+      "title": "Safety of machinery - Electrical equipment of machines - Part 1: General requirements",
+      "url": "https://webstore.iec.ch/publication/26037"
+    },
+    {
+      "id": "iec61800",
+      "label": "IEC 61800-5-2",
+      "title": "Adjustable speed electrical power drive systems - Part 5-2: Safety requirements - Functional",
+      "url": "https://webstore.iec.ch/publication/22850"
+    },
+    {
+      "id": "iec61131",
+      "label": "IEC 61131-3",
+      "title": "Programmable controllers - Part 3: Programming languages",
+      "url": "https://webstore.iec.ch/publication/4552"
+    }
+  ],
+  "terms": [
+    {
+      "term": "intent",
+      "definition": "A single task-level request — one motion, one grasp, one pick. Modelled as a subtype of `IntentDataType`. It is what a client submits and what a mission step holds."
+    },
+    {
+      "term": "intent operation",
+      "definition": "One submitted intent, tracked to completion. Modelled as `IntentOperationType`, a Part 10 program instance created per submission."
+    },
+    {
+      "term": "mission",
+      "definition": "An ordered sequence of intents submitted and tracked as a unit. Modelled as `MissionType`."
+    },
+    {
+      "term": "base (of a mission)",
+      "definition": "The prefix of released steps. Committed, possibly already executing, and immutable (§7.2)."
+    },
+    {
+      "term": "horizon (of a mission)",
+      "definition": "The suffix of unreleased steps. Provisional, and revisable by `UpdateMission` (§7.2)."
+    },
+    {
+      "term": "pose",
+      "definition": "A rigid-body placement — three of position and three of orientation — expressed relative to a named frame. Carried by `Pose3DDataType`, whose orientation is a unit quaternion ordered (x, y, z, w) per §5.2."
+    },
+    {
+      "term": "frame",
+      "definition": "A named right-handed Cartesian coordinate system a pose is expressed relative to. Frames form a tree through `HasFrameParent`. Modelled as `CoordinateFrameType`."
+    },
+    {
+      "term": "tool centre point (TCP)",
+      "definition": "The origin of a tool frame; the point a motion intent drives to its target. OPC 40010-1 defines no such concept, so `ToolType.TcpFrame` supplies one."
+    },
+    {
+      "term": "blending",
+      "definition": "Rounding the corner between two motions rather than stopping on the first one's target. Requested by `BlendDataType`, and by the blending values of `BufferModeEnum`."
+    },
+    {
+      "term": "buffer mode",
+      "definition": "How a newly submitted intent relates to the one already executing — abort it, queue behind it, or blend into it. `BufferModeEnum`."
+    },
+    {
+      "term": "blocking mode",
+      "definition": "Whether an intent tolerates motion and other intents alongside it. `BlockingModeEnum`."
+    },
+    {
+      "term": "command authority",
+      "definition": "The exclusive right, held by at most one Session, to submit intents to one controller (clause 8). It is an arbitration mechanism between clients and **not** the single point of control that ISO 10218-2 requires."
+    },
+    {
+      "term": "terminal state",
+      "definition": "An `ExecutionStateEnum` value from which execution does not resume: `Succeeded`, `Failed`, `Cancelled`, or `Retriable`."
+    },
+    {
+      "term": "conformance unit",
+      "definition": "The smallest individually testable requirement of this specification. Grouped into facets rather than claimed one by one."
+    },
+    {
+      "term": "facet",
+      "definition": "A named, individually claimable set of conformance units — a building block, not a complete claim. Clause 12.2 defines them."
+    },
+    {
+      "term": "profile",
+      "definition": "A named set of facets describing one plausible robot Server, claimed by publishing its URI in `Server/ServerCapabilities/ServerProfileArray`. Clause 12.3 defines them."
+    }
+  ],
+  "abbreviations": [
+    [
+      "CSS",
+      "Capability-Skill-Service"
+    ],
+    [
+      "DoF",
+      "Degrees of Freedom"
+    ],
+    [
+      "EGM",
+      "Externally Guided Motion"
+    ],
+    [
+      "FRI",
+      "Fast Research Interface"
+    ],
+    [
+      "HMI",
+      "Human Machine Interface"
+    ],
+    [
+      "IK",
+      "Inverse Kinematics"
+    ],
+    [
+      "RSI",
+      "Robot Sensor Interface"
+    ],
+    [
+      "RTDE",
+      "Real-Time Data Exchange"
+    ],
+    [
+      "TCP",
+      "Tool Centre Point"
+    ]
+  ],
+  "namespaces": {
+    "documentNamespaceIndex": 1,
+    "table": [
+      {
+        "uri": "http://opcfoundation.org/UA/",
+        "index": 0,
+        "definedBy": "uapart5",
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0."
+      },
+      {
+        "uri": "http://opcfoundation.org/UA/RobotIntent/",
+        "index": 1,
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model."
+      }
+    ]
+  },
+  "profiles": "profiles.json"
+}

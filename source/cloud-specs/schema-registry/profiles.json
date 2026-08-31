@@ -1,0 +1,59 @@
+{
+  "conformanceUnits": [
+    {
+      "name": "SREG-SchemaDownload",
+      "group": "Schema Registry",
+      "category": "Server",
+      "description": "Mandatory. The well-known SchemaRegistry under the Server Object, browsing groups and files, reading a schema through the inherited FileType Open/Read/Close, SchemaId-based resolution by Opaque NodeId, and GetSchema (§5.1, §6.4)."
+    },
+    {
+      "name": "SREG-Identity",
+      "group": "Schema Registry",
+      "category": "Server",
+      "description": "Mandatory. Every group carries NamespaceUri, a groupid built from it and a non-empty Name; every schema carries SchemaName, Format, a schemaid built from that pair and a non-empty Name; and no identifier is derived from a document (§6.7, base XREG-Identity)."
+    },
+    {
+      "name": "SREG-SchemaRegistration",
+      "group": "Schema Registry",
+      "category": "Server",
+      "description": "Creating and writing schema resources through the inherited xRegistry create/write surface (§5.2)."
+    },
+    {
+      "name": "SREG-SchemaVersioning",
+      "group": "Schema Registry",
+      "category": "Server",
+      "description": "Compatibility, Ancestor, ModelVersion, ConfigurationVersion and IsDefault, and the compatibility rules that govern them (§7)."
+    },
+    {
+      "name": "SREG-TtlMirror",
+      "group": "Schema Registry",
+      "category": "Server",
+      "description": "Ttl and ExpiryTime, and the mirror and refresh semantics that use them (§9)."
+    },
+    {
+      "name": "SREG-StructureMaterialization",
+      "group": "Schema Registry",
+      "category": "Server",
+      "description": "Auto-bootstrap of the group and file structure from the Server's own schemas (§10.1)."
+    },
+    {
+      "name": "SREG-XRegistryApi",
+      "group": "Schema Registry",
+      "category": "Server",
+      "description": "Serving the xRegistry API and its JSON projection over the same registry (§10.2)."
+    },
+    {
+      "name": "SREG-Federation",
+      "group": "Schema Registry",
+      "category": "Server",
+      "description": "Resolving a schema that another registry holds, with parity between the OPC UA and HTTP paths (Annex B)."
+    },
+    {
+      "name": "SREG-PubSubProfile",
+      "group": "Schema Registry",
+      "category": "Server",
+      "description": "The PubSub DataSet schema profile: ConfigurationVersion-keyed evolution, open unions and the append-only rule (§11, Annex C)."
+    }
+  ],
+  "profiles": []
+}

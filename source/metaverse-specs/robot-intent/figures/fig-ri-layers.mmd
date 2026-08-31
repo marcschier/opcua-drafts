@@ -1,0 +1,12 @@
+flowchart TB
+    A["Planner, cell controller, agent, fleet manager"]
+    B["Robot Intent - this specification<br/>task-level verbs, whole motions"]
+    C["Vendor motion language<br/>URScript, RAPID, KRL, TP, INFORM"]
+    D["Real-time channel<br/>RTDE, EGM, FRI, RSI"]
+    E["Safety-rated controller<br/>independent of this interface"]
+    F["OPC 40010-1 topology<br/>optional binding, Annex B"]
+    A --> B
+    B --> C
+    C --> D
+    F -.-> B
+    E -.-> C

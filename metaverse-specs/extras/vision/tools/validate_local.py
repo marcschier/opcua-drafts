@@ -84,7 +84,9 @@ PUBLISHED_PRE_RETENTION_NODEID_SHA256 = (
 AI_NS = "http://opcfoundation.org/UA/AI/"
 _HERE = os.path.dirname(os.path.abspath(__file__))
 AI_NODESET = os.path.normpath(os.path.join(
-    _HERE, "..", "..", "..", "ai-model-management", "Opc.Ua.AiModelManagement.NodeSet2.xml"))
+    _HERE, "..", "..", "..", "..",
+    "model", "metaverse-specs", "ai-model-management",
+    "Opc.Ua.AiModelManagement.NodeSet2.xml"))
 
 
 def _ai_prefix():
@@ -142,7 +144,7 @@ AI_IDS = _load_ai_ids()
 # Base-UA NodeIds that this model legitimately references (namespace 0).
 KNOWN_BASE = {
     # built-in DataTypes
-    "i=1", "i=6", "i=7", "i=9", "i=11", "i=12", "i=14", "i=15", "i=17", "i=20",
+    "i=1", "i=6", "i=7", "i=9", "i=11", "i=12", "i=13", "i=14", "i=15", "i=17", "i=20",
     "i=21", "i=24", "i=290", "i=294", "i=296", "i=887",
     # abstract bases
     "i=22", "i=29", "i=32",
@@ -157,6 +159,9 @@ KNOWN_BASE = {
     "i=78", "i=80", "i=11508", "i=11510",
     # the Server object, parent of the well-known Vision entry point
     "i=2253",
+    # Server/Namespaces and the type of the metadata Object under it, which OPC 10000-5
+    # requires this model to declare for its own namespace
+    "i=11715", "i=11616",
 }
 HIER = {"i=47", "i=46", "i=35", "i=17603"}  # HasComponent/HasProperty/Organizes/HasInterface
 
@@ -221,22 +226,31 @@ def _name_matches(csv_name: str, browse_name: str) -> bool:
     Owner_Member, and the symbolic form drops the characters that are legal in a
     BrowseName but not in an identifier - the space in "Default Binary" and the angle
     brackets on a placeholder such as <StreamEndpoint>.
+
+    A NamespaceMetadata Object is the exception, and has to be: OPC 10000-5 gives it the
+    namespace URI as its BrowseName, and a URI is not an identifier, so no symbolic name can
+    mirror it. It is named for what it is instead.
     """
+    if browse_name.startswith("//") or "://" in browse_name:
+        return csv_name == "NamespaceMetadata" or csv_name.startswith("NamespaceMetadata_")
     bn = browse_name.replace(" ", "").replace("<", "").replace(">", "")
     return csv_name == bn or csv_name.endswith("_" + bn)
 
 
 def main():
     here = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.normpath(os.path.join(here, "..", "..", "..", "vision",
-                                         "Opc.Ua.Vision.NodeSet2.xml"))
+    vision_dir = os.path.normpath(os.path.join(
+        here, "..", "..", "..", "..",
+        "model", "metaverse-specs", "vision"))
+    path = os.path.join(vision_dir, "Opc.Ua.Vision.NodeSet2.xml")
     try:
         tree = ET.parse(path)
     except ET.ParseError as e:
         print(f"ERRORS: 1\n  XML parse error: {e}")
         sys.exit(1)
-    check_model_figures(path, os.path.normpath(
-        os.path.join(here, "..", "..", "..", "vision", "OPC-UA-Vision.md")))
+    check_model_figures(path, os.path.normpath(os.path.join(
+        here, "..", "..", "..", "..",
+        "source", "metaverse-specs", "vision", "spec.md")))
     root = tree.getroot()
 
     models = root.findall(f"{NS}Models/{NS}Model")
@@ -494,8 +508,7 @@ def main():
     # are two views of one model, so every id must appear in both with the same
     # NodeClass and BrowseName. This is what catches a hand-edited artifact, or one of
     # the pair being regenerated without the other.
-    csv_path = os.path.normpath(os.path.join(here, "..", "..", "..", "vision",
-                                             "Opc.Ua.Vision.NodeIds.csv"))
+    csv_path = os.path.join(vision_dir, "Opc.Ua.Vision.NodeIds.csv")
     if not os.path.exists(csv_path):
         err("Opc.Ua.Vision.NodeIds.csv not found next to the NodeSet")
     else:
@@ -564,10 +577,10 @@ def main():
     # Annexes F and G are spliced into OPC-UA-Vision.md by build_examples.py. If the
     # markers go missing the splice silently stops updating them, so the spec would
     # keep stale worked examples while every other artifact regenerated.
-    spec_path = os.path.normpath(os.path.join(here, "..", "..", "..", "vision",
-                                              "OPC-UA-Vision.md"))
+    spec_path = os.path.normpath(os.path.join(
+        here, "..", "..", "..", "..", "source", "metaverse-specs", "vision", "spec.md"))
     if not os.path.exists(spec_path):
-        err("OPC-UA-Vision.md not found")
+        err("the Vision specification prose was not found")
     else:
         with open(spec_path, encoding="utf-8") as f:
             spec_text = f.read()
@@ -576,13 +589,13 @@ def main():
             begin = f"<!-- BEGIN GENERATED: {marker} -->"
             end = f"<!-- END GENERATED: {marker} -->"
             if begin not in spec_text or end not in spec_text:
-                err(f"OPC-UA-Vision.md is missing the '{marker}' generated-annex "
+                err(f"the Vision specification prose is missing the '{marker}' generated-annex "
                     "markers; build_examples.py cannot splice the annex")
                 continue
             body = spec_text[spec_text.index(begin) + len(begin):
                              spec_text.index(end)]
-            if f"## Annex {letter} " not in body:
-                err(f"OPC-UA-Vision.md '{marker}' region does not contain an "
+            if f"{{#anx-{letter.lower()} " not in body:
+                err(f"the Vision specification prose '{marker}' region does not contain an "
                     f"'Annex {letter}' heading; regenerate with build_examples.py")
 
         # ---- specification <-> model, in both directions -------------------
@@ -662,7 +675,9 @@ def main():
         # Method and enumeration declarations, carry meanings OPC 10000-3 and -5 fix,
         # and are not this document's to define.
         GENERATED_MEMBERS = {"InputArguments", "OutputArguments", "EnumStrings",
-                             "Default Binary", "Default XML", "Default JSON"}
+                             "Default Binary", "Default XML", "Default JSON",
+                             "NamespaceUri", "NamespaceVersion",
+                             "NamespacePublicationDate", "IsNamespaceSubset"}
         for owner, member in sorted(member_of):
             if owner not in declared or member in GENERATED_MEMBERS:
                 continue
@@ -730,15 +745,15 @@ def main():
     # Each overlay instantiates the base model. Verify it is well-formed, declares the
     # Vision namespace as a RequiredModel, and only references type NodeIds that this
     # base NodeSet actually defines - the failure mode a hand-authored overlay has.
-    vision_dir = os.path.normpath(os.path.join(here, "..", "..", "..", "vision"))
-    overlays = []
-    for sub in sorted(os.listdir(vision_dir)):
-        subdir = os.path.join(vision_dir, sub)
-        if not os.path.isdir(subdir):
-            continue
-        for fn in sorted(os.listdir(subdir)):
-            if fn.endswith(".NodeSet2.xml"):
-                overlays.append(os.path.join(subdir, fn))
+    # The example overlays are NodeSets, so they live in the repository's model/ with the
+    # base model they instantiate. They are named for it -- Opc.Ua.<Domain>.Vision.NodeSet2.xml
+    # -- which is what tells them apart from the base model and from the published NodeSets in
+    # dependencies/ that every specification here borrows from.
+    overlays = [
+        os.path.join(vision_dir, fn)
+        for fn in sorted(os.listdir(vision_dir))
+        if fn.endswith(".Vision.NodeSet2.xml") and fn != "Opc.Ua.Vision.NodeSet2.xml"
+    ]
 
     own_ids = {int(k.split("i=")[1]) for k in by_id if k.startswith("ns=1;i=")}
 

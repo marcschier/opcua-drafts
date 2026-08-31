@@ -1,0 +1,28 @@
+flowchart TD
+  CTRLT[[IntentControllerType]]:::objecttype
+  CAPS[Capabilities]:::object
+  FRAMES[Frames]:::object
+  TOOLS[Tools]:::object
+  LOCS[Locations]:::object
+  AXES[Axes]:::object
+  INTENTS[Intents]:::object
+  ACTIVE[ActiveIntent]:::variable
+  REQ(RequestControl):::method
+  SUBMIT(SubmitIntent):::method
+  CANCEL(CancelIntent):::method
+
+  CTRLT --> CAPS
+  CTRLT --> FRAMES
+  CTRLT --> TOOLS
+  CTRLT --> LOCS
+  CTRLT --> AXES
+  CTRLT --> INTENTS
+  CTRLT --> ACTIVE
+  CTRLT --> REQ
+  CTRLT --> SUBMIT
+  CTRLT --> CANCEL
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px

@@ -1,0 +1,35 @@
+{
+  "conformanceUnits": [
+    {
+      "name": "ASE-Execution",
+      "group": "Async Services",
+      "category": "Server",
+      "description": "Complete (§5), the deferral rules of §6 including the opt-in and the retry contract, the lifecycle of §7 excluding §7.7 auditing, the CompleteRequest, CompleteResponse, DeferralRequestHeaderDataType, DeferralResponseHeaderDataType and DeferredRequestState DataTypes (§9.3), and the StatusCodes of §10. Requires ASE-Model."
+    },
+    {
+      "name": "ASE-Model",
+      "group": "Async Services",
+      "category": "Server",
+      "description": "AsyncServiceCapabilitiesType and the well-known AsyncServiceCapabilities Object (§9.1). Requires ASE-Execution."
+    },
+    {
+      "name": "ASE-Diagnostics",
+      "group": "Async Services",
+      "category": "Server",
+      "description": "AsyncServiceDiagnosticsType, the well-known AsyncServiceDiagnostics Object, DeferredRequestDiagnosticsDataType and the two projections of §9.2. Requires ASE-Execution."
+    },
+    {
+      "name": "ASE-CompletionEvents",
+      "group": "Async Services",
+      "category": "Server",
+      "description": "DeferredRequestCompletedEventType and the delivery restriction of §9.4. Requires ASE-Execution."
+    },
+    {
+      "name": "ASE-Auditing",
+      "group": "Async Services",
+      "category": "Server",
+      "description": "AuditDeferredRequestEventType, DeferredRequestTransition, and the obligation to raise an Event on every transition, with the outcomes and the delivery restriction of §7.7. Requires ASE-Execution."
+    }
+  ],
+  "profiles": []
+}

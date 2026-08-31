@@ -51,13 +51,13 @@ Install the prerequisites once, then run the validation gate from the repository
 ```powershell
 # one-time
 pip install -r core-specs/extras/requirements.txt
-pip install -r companion-specs/AAS/requirements.txt
+pip install -r source/companion-specs/AAS/requirements.txt
 
 # validate every extension (each tree drives only its own)
 python core-specs/extras/validate_all.py
 python cloud-specs/validate_all.py
 python metaverse-specs/validate_all.py
-python companion-specs/validate_all.py
+python companion-specs/validate_all.py --self-contained
 
 # or a single extension
 python core-specs/extras/<extension>/tools/validate_local.py
