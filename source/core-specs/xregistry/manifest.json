@@ -106,6 +106,12 @@
       "label": "xRegistry Core specification, v1.0-rc3",
       "title": "The registry / group / resource / version / attribute model, xid, epoch and labels that this model realizes.",
       "url": "https://github.com/xregistry/spec/blob/v1.0-rc3/core/spec.md"
+    },
+    {
+      "id": "xregistryopcua",
+      "label": "xRegistry OPC UA API",
+      "title": "xRegistry OPC UA API — the OPC UA protocol binding for the xRegistry API",
+      "url": "https://github.com/xregistry/spec/blob/main/workingdrafts/bindings/opcua.md"
     }
   ],
   "terms": [

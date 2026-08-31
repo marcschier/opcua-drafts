@@ -65,11 +65,11 @@ it already sits in the Word rendering:
 | `vision/machine-vision/OPC-UA-Inspection-Vision-Addendum.md` | OPC 99011-1 |
 | `vision/robotics/OPC-UA-Robotics-Vision-Addendum.md` | OPC 99011-1 |
 
-**Two documents target xRegistry rather than the OPC Foundation.** `xRegistry-OPC-UA-Api.md` and
-`xRegistry-OpenUsd.md` are xRegistry domain specifications: they use RFC 2119 upper-case normative
-language because that is what the xRegistry specifications use, and they must be submittable to
-that body as they are. Building them into the OPC 20020 template would change what they are. They
-stay markdown, and the `check_links` and `check_yaml_json` gates continue to cover them.
+**One document targets xRegistry rather than the OPC Foundation.** `xRegistry-OpenUsd.md` is an
+xRegistry domain specification: it uses RFC 2119 upper-case normative language because that is
+what the xRegistry specifications use, and it must be submittable to that body as it is. Building
+it into the OPC 20020 template would change what it is. It stays markdown, and the `check_links`
+and `check_yaml_json` gates continue to cover it.
 
 **Explanatory and measurement documents are neither.**
 `observability-export/di/OPC-UA-DI-Pumps-Inheritance.md` explains how two addenda compose, and

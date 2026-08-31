@@ -108,6 +108,12 @@
       "url": ""
     },
     {
+      "id": "xregistryopcua",
+      "label": "xRegistry OPC UA API",
+      "title": "xRegistry OPC UA API — the OPC UA protocol binding for the xRegistry API",
+      "url": "https://github.com/xregistry/spec/blob/main/workingdrafts/bindings/opcua.md"
+    },
+    {
       "id": "xregschema",
       "label": "xRegistry Schema Registry Service",
       "title": "The schemagroups, schemas and versions model this document mirrors in OPC UA.",

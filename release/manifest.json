@@ -202,15 +202,14 @@
       ]
     },
     "xregistry": {
-      "$comment": "Shared base model, not an independently releasable OPC Foundation submission. It stays public because Schema Registry and other public specs subtype it and xRegistry-OPC-UA-Api.md targets xregistry.org. Vendored as a closed set: the two generated artifacts so a released NodeSet's RequiredModel on http://opcfoundation.org/UA/xRegistry/ resolves, plus the two specification documents, which released documents link to and which link only to each other and to external URLs. README.md is deliberately excluded because it links onward to Schema Registry and WoT Connectivity, which stay public, and vendoring it would drag an unbounded set of public prose into the private repository.",
+      "$comment": "Shared base model, not an independently releasable OPC Foundation submission. It stays public because Schema Registry and other public specs subtype it. Vendored as a closed set: the two generated artifacts so a released NodeSet's RequiredModel on http://opcfoundation.org/UA/xRegistry/ resolves, plus the abstract specification that released documents link to. README.md is deliberately excluded because it links onward to Schema Registry and WoT Connectivity, which stay public, and vendoring it would drag an unbounded set of public prose into the private repository.",
       "title": "OPC UA — xRegistry",
       "submitted": false,
       "state": "public",
       "move": [
         "model/Opc.Ua.XRegistry.NodeSet2.xml",
         "model/Opc.Ua.XRegistry.NodeIds.csv",
-        "source/core-specs/xregistry/spec.md",
-        "source/core-specs/xregistry/xRegistry-OPC-UA-Api.md"
+        "source/core-specs/xregistry/spec.md"
       ],
       "keepPublic": [],
       "closure": [],

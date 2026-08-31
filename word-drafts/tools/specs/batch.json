@@ -39,10 +39,6 @@
       "why": "an explanatory note about how two addenda compose, not a specification of its own."
     },
     {
-      "markdown": "source/core-specs/xregistry/xRegistry-OPC-UA-Api.md",
-      "why": "an xRegistry domain specification, submitted to that body in RFC 2119 upper case. Building it into the OPC 20020 template would change what it is. See DOCUMENT-NUMBERS.md."
-    },
-    {
       "markdown": "metaverse-specs/openusd-binding/xRegistry-OpenUsd.md",
       "why": "an xRegistry domain specification; see above."
     }

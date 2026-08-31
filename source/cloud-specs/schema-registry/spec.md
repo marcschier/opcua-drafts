@@ -21,7 +21,7 @@ The model has these goals:
 
 JSON Schema is a first-class registry format, but the OPC UA JSON DataEncoding is self-describing enough that a schema fetch is optional for decoding. For JSON, the registry is used for governance, validation, code generation and documentation rather than as a mandatory decoding dependency.
 
-It is explicitly out of scope to re-specify the Avro, Arrow or JSON encodings themselves, the PubSub message framing, the abstract xRegistry model, or the xRegistry API. The abstract model is defined by [*OPC UA — xRegistry*](../../core-specs/xregistry/spec.md) and the OPC UA API for it by [*xRegistry — OPC UA API*](../../core-specs/xregistry/xRegistry-OPC-UA-Api.md); this specification is a domain profile of them. The HTTP correspondence for readers familiar with the xRegistry HTTP binding is informative and confined to Annex D.
+It is explicitly out of scope to re-specify the Avro, Arrow or JSON encodings themselves, the PubSub message framing, the abstract xRegistry model, or the xRegistry API. The abstract model is defined by [*OPC UA — xRegistry*](../../core-specs/xregistry/spec.md) and its OPC UA protocol binding by the [xRegistry OPC UA API](#ref-xregistryopcua); this specification is a domain profile of them. The HTTP correspondence for readers familiar with the xRegistry HTTP binding is informative and confined to Annex D.
 
 ## Overview {#sec-overview}
 
@@ -45,7 +45,7 @@ Everything the base model provides applies unchanged: the three representations 
 
 ### OPC UA as a first-class binding — federation and access parity with HTTP {#sec-opc-ua-as-a-first-class-binding-federation-and-access-parity-with-http}
 
-The xRegistry model has interchangeable *representations* served by peer *protocol bindings*. [*xRegistry — OPC UA API*](../../core-specs/xregistry/xRegistry-OPC-UA-Api.md) is the OPC UA binding — a first-class binding of the xRegistry API, defined natively over OPC UA Services and FileTransfer, not derived from the HTTP binding. A Schema Registry served over OPC UA is therefore **accessed and federated the same way as one served over HTTP**, and the two are interchangeable endpoints of the same registry:
+The xRegistry model has interchangeable *representations* served by peer *protocol bindings*. The [xRegistry OPC UA API](#ref-xregistryopcua) is the OPC UA binding — a first-class binding of the xRegistry API, defined natively over OPC UA Services and FileTransfer, not derived from the HTTP binding. A Schema Registry served over OPC UA is therefore **accessed and federated the same way as one served over HTTP**, and the two are interchangeable endpoints of the same registry:
 
 - **Access parity.** Every schema-registry operation is available over the OPC UA binding with the same effect as over any other binding: *download* a schema (OPC UA `Open`/`Read`/`Close`, or the SchemaId fast path), *register* a schema (`CreateResource`/`Write`), *list* groups/schemas/versions (Browse), and *read metadata* (Read of the Properties). A consumer needs no OPC-UA-specific knowledge beyond the standard FileTransfer read to download a schema. The operation-by-operation correspondence to the xRegistry HTTP binding is tabulated in the informative Annex D.
 - **Federation parity.** A schema referenced by one registry but hosted by another is resolved uniformly regardless of the hosting binding (base §8). The federation link is an `ExpandedNodeId` (`ExternalReference`) when the host is an OPC UA registry — its `ServerUri` identifies the remote OPC UA server — and/or a URL (`ResourceUrl`) when the host is reached over another protocol, for example an HTTP xRegistry endpoint. A client follows an OPC UA link by resolving the `ServerUri` to an endpoint and browsing/reading, and a URL link by dereferencing it over its own protocol; in both cases the schema's identity (`SchemaId`, `xid`) is stable across registries, so the same schema federated from several endpoints keeps one identity and can be de-duplicated by `SchemaId`. Annex B specifies the resolution algorithm.
@@ -271,7 +271,7 @@ The base auto-bootstrap (base §6.5) is specialized for schemas. When a schema f
 
 ### Serving the xRegistry API and JSON projection {#sec-serving-the-xregistry-api-and-json-projection}
 
-The AddressSpace subtree rooted at `SchemaRegistry` is simultaneously the xRegistry API server and serializes to the xRegistry Schema Registry JSON shape, per the OPC UA API of [*xRegistry — OPC UA API*](../../core-specs/xregistry/xRegistry-OPC-UA-Api.md). The schema-specific projection is:
+The AddressSpace subtree rooted at `SchemaRegistry` is simultaneously the xRegistry API server and serializes to the xRegistry Schema Registry JSON shape, as defined by the [xRegistry OPC UA API](#ref-xregistryopcua). The schema-specific projection is:
 
 | OPC UA node | xRegistry JSON member |
 |---|---|
