@@ -1,0 +1,26 @@
+flowchart TD
+  BREG[[RegistryType]]:::objecttype
+  BRES[[ResourceType]]:::objecttype
+  REG[[AASRegistryType]]:::objecttype
+  SFT[[AASSubmodelFileType]]:::objecttype
+  MAT(Materialize):::method
+  AM[AutoMaterialize]:::variable
+  GEN[MaterializationGeneration]:::variable
+  LS[LoadState]:::variable
+  DV[DesiredVersionId]:::variable
+  AV[ActiveVersionId]:::variable
+  SN[SubmodelNode]:::variable
+
+  BREG -->|HasSubtype| REG
+  BRES -->|HasSubtype| SFT
+  REG -->|HasComponent| MAT
+  REG -->|HasProperty| AM
+  REG -->|HasProperty| GEN
+  SFT -->|HasProperty| LS
+  SFT -->|HasProperty| DV
+  SFT -->|HasProperty| AV
+  SFT -->|HasProperty| SN
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px

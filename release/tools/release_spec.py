@@ -251,11 +251,24 @@ def public_dependency_blockers(manifest, spec_id: str) -> list[str]:
 
 
 def moved_roots(manifest, closure: Iterable[str]) -> list[str]:
+    """The move entries that can be matched by prefix.
+
+    A move entry with a ``keepPublic`` path under it is **not** wholly moved, and using it
+    as a prefix would claim the kept file too — telling a reader to request member access
+    for a document still sitting in this repository. Such an entry is dropped here and its
+    concrete files are matched through the file set instead, which already excludes what
+    stays. Nothing is lost: a link to a path that does not exist would already have failed
+    the link check, so prefix matching only ever has to cover files that are really there.
+    """
     roots: list[str] = []
     for sid in closure:
         spec = manifest.spec(sid)
+        kept = [norm(k) for k in spec.get("keepPublic", [])]
         for value in spec.get("move", []):
-            roots.append(norm(value))
+            value = norm(value)
+            if any(k == value or k.startswith(value.rstrip("/") + "/") for k in kept):
+                continue
+            roots.append(value)
     return sorted(set(roots), key=lambda p: (p.count("/"), p))
 
 
@@ -430,6 +443,105 @@ def repair_markdown_reverse_lines_release(
     return "".join(out), count
 
 
+def private_url(manifest, repo_rel: str) -> str:
+    """A GitHub URL for a file that has moved to the private review repository.
+
+    A relative link would be worse than useless once the file is gone: the submodule is
+    empty for everyone who is not a member, so `check_links.py` would fail for them and
+    the reader would still have nothing to open.
+    """
+    private = getattr(manifest, "privateRepo", None) or "OPCF-Members/spec-drafts"
+    return f"https://github.com/{private}/blob/main/{norm(repo_rel)}"
+
+
+TABLE_CONTRACT = ("status", "documents")
+
+
+def repair_markdown_table_rows_release(
+    text: str,
+    moved_dirs: set[str],
+    path: str,
+    files: set[str],
+    roots: list[str],
+    note: str,
+    manifest,
+) -> tuple[str, int]:
+    """Capsule an inventory table row whose specification is moving.
+
+    The README lists every specification in tables rather than bullets, so the bullet
+    repair below never sees them. A row left alone would keep advertising a document that
+    is no longer here, with links the link repair had already emptied.
+
+    This runs BEFORE the link repair. If it ran after, every row would already hold a
+    capsule around its own links and would be skipped, exactly as the bullet pass skips
+    such lines.
+
+    Only tables whose last two columns are Status and Documents are touched, because those
+    are the two cells whose content the move invalidates; a table of some other shape is
+    left alone rather than rewritten into something this function guessed at. The whole row
+    is encoded so a return restores it unchanged, and the replacement keeps the original
+    cell count -- collapsing four cells into two fails MD056.
+    """
+    count = 0
+    out: list[str] = []
+    contract = False
+    moved_dir_tokens = {token.strip("/").lower() + "/" for token in moved_dirs if token}
+
+    for line in text.splitlines(keepends=True):
+        raw, newline = split_line_ending(line)
+        stripped = raw.strip()
+
+        if not stripped.startswith("|"):
+            contract = False
+            out.append(line)
+            continue
+
+        cells = [c.strip() for c in stripped.strip("|").split("|")]
+        if all(set(c) <= set("-: ") for c in cells) and cells:
+            out.append(line)
+            continue
+        lowered = [c.lower() for c in cells]
+        if len(lowered) >= 3 and tuple(lowered[-2:]) == TABLE_CONTRACT:
+            contract = True
+            out.append(line)
+            continue
+
+        if not contract or f"<!-- {MD_MARKER}:" in raw:
+            out.append(line)
+            continue
+
+        targets: list[str] = []
+        for match in re.finditer(r"\]\((?P<body>[^)\n]+)\)", raw):
+            target = inline_link_destination(match.group("body"))
+            resolved = resolve_link(path, target)
+            if resolved and belongs_to(resolved, files, roots):
+                targets.append(resolved)
+        names_moved_dir = any(
+            f"`{token}`" in raw.lower() or f"`{token.rstrip('/')}`" in raw.lower()
+            for token in moved_dir_tokens
+        )
+        if not targets and not names_moved_dir:
+            out.append(line)
+            continue
+
+        original = stripped[1:-1] if stripped.endswith("|") else stripped[1:]
+        docs = " · ".join(
+            f"[{'Word' if t.lower().endswith('.docx') else 'Specification'}]({private_url(manifest, t)})"
+            for t in targets
+        ) or "—"
+        replacement = " " + " | ".join(cells[:-2] + [note, docs]) + " "
+        count += 1
+        indent = raw[: len(raw) - len(raw.lstrip())]
+        # Both markers sit INSIDE the outer pipes. markdownlint counts cells without
+        # stripping HTML comments, so a closing marker after the final pipe makes the row
+        # end in content and fails MD055 and MD056 together.
+        out.append(
+            f"{indent}|<!-- {MD_MARKER}:{b64(original)} -->{replacement}<!-- /{MD_MARKER} -->|{newline}"
+        )
+
+    return "".join(out), count
+
+
 def validator_base(path: str) -> Path:
     # All repository aggregate validators build their child paths from HERE,
     # where HERE is the directory containing validate_all.py.
@@ -437,7 +549,7 @@ def validator_base(path: str) -> Path:
 
 
 def resolved_validator_path(aggregate: str, validator_rel: str) -> str:
-    return norm((Path(aggregate).parent / Path(*validator_rel.split("/"))).as_posix())
+    return norm(posixpath.normpath(posixpath.join(posixpath.dirname(aggregate), validator_rel)))
 
 
 def repair_validator_release(text: str, aggregate: str, files: set[str], roots: list[str]) -> tuple[str, int]:
@@ -711,11 +823,15 @@ def text_repairs_release(manifest, closure: list[str], files: list[str], roots: 
         if norm(path).endswith(".md")
     }
     moving_spec_ids = {sid.lower() for sid in closure}
+    # Derived from the manifest's move entries rather than from `roots`, because `roots`
+    # deliberately omits an entry that keeps something public — and a directory being
+    # partly kept does not stop prose from naming it in backticks.
     moved_dirs = {
-        Path(root).name
-        for root in roots
-        if Path(root).name.lower() in moving_spec_ids
-        and any(path == root or path.startswith(root.rstrip("/") + "/") for path in moving)
+        Path(entry).name
+        for sid in closure
+        for entry in (norm(v) for v in manifest.spec(sid).get("move", []))
+        if Path(entry).name.lower() in moving_spec_ids
+        and any(path == entry or path.startswith(entry.rstrip("/") + "/") for path in moving)
     }
 
     for aggregate in AGGREGATE_VALIDATORS:
@@ -738,17 +854,21 @@ def text_repairs_release(manifest, closure: list[str], files: list[str], roots: 
         if r in moving or path.suffix.lower() != ".md":
             continue
         old = planned_text(r, changes) if any(c.path == r for c in changes) else read_text(path)
+        row_count = 0
+        if r in markdown_reverse_refs:
+            old, row_count = repair_markdown_table_rows_release(
+                old, moved_dirs, r, moving, roots, review_note(manifest), manifest
+            )
         new, count = repair_markdown_release(old, r, moving, roots)
         line_count = 0
         if r in markdown_reverse_refs:
             new, line_count = repair_markdown_reverse_lines_release(new, moved_dirs, r, moving, roots, review_note(manifest))
-        total = count + line_count
         add_change(
             changes,
             r,
-            old,
+            planned_text(r, changes) if any(c.path == r for c in changes) else read_text(path),
             new,
-            f"neutralize {count} Markdown link(s) and {line_count} reverse-reference line(s) into private specs",
+            f"neutralize {count} Markdown link(s), {row_count} table row(s) and {line_count} reverse-reference line(s) into private specs",
         )
 
     workflow = repo_path(AGENT_TASK)

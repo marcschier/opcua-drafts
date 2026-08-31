@@ -14,22 +14,19 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-# Validators that run on a clean checkout: they need no untracked base data — neither the gitignored
-# **/tools/ref/ tables nor a base NodeSet. `_common` exercises the shared corpus/codec foundation;
-# `xregistry-catalog` validates its committed catalog artifacts without rebuilding; the two
-# `data-channels` validators check a base-namespace errata overlay and its wire tooling, and skip
-# their optional base-UA-id cross-check when the ref table is absent.
+# Validators that run on a clean checkout: they need no untracked base data. `_common` exercises
+# the shared corpus/codec foundation; the xRegistry catalog and Arrow validators use the tracked
+# Observability Export NodeSet fixture under `_common/nodesets`; the two `data-channels` validators
+# check a base-namespace errata overlay and its wire tooling; `async-services` skips its optional
+# base-UA-id cross-check when the ref table is absent.
 SELF_CONTAINED = [
     "_common/validate_local.py",
     "xregistry-catalog/tools/validate_local.py",
-    "../../source/core-specs/data-channels/tools/validate_local.py",
-    "data-channels/tools/validate_local.py",
+    "../../source/core-specs/async-services/tools/validate_local.py",
+    "arrow-encoding/tools/validate_local.py",
 ]
 
-# Validators that additionally need untracked base data — a base NodeSet (e.g.
-# model/cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml, which the encoding
-# generators map) or the gitignored **/tools/ref/ tables — so they only run where that data is
-# present (locally, not on a clean CI checkout).
+# Validators that additionally need untracked base data such as gitignored **/tools/ref/ tables.
 #
 # The observability-export and schema-registry validators used to live here. They moved with
 # their specifications to cloud-specs/, and are driven by cloud-specs/validate_all.py — the
@@ -37,7 +34,6 @@ SELF_CONTAINED = [
 # longer this tree's to validate.
 NEEDS_BASE_DATA = [
     # release-spec-validator:ICAgICJhdnJvLWVuY29kaW5nL3Rvb2xzL3ZhbGlkYXRlX2xvY2FsLnB5Iiw=
-    "arrow-encoding/tools/validate_local.py",
 ]
 
 

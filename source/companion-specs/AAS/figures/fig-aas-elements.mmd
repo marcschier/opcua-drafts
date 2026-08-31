@@ -1,0 +1,36 @@
+flowchart TD
+  REF[[AASReferableType]]:::objecttype,abstract
+  SET[[AASSubmodelElementType]]:::objecttype,abstract
+  PRP[[AASPropertyType]]:::objecttype
+  MLP[[AASMultiLanguagePropertyType]]:::objecttype
+  RNG[[AASRangeType]]:::objecttype
+  BLB[[AASBlobType]]:::objecttype
+  FIL[[AASFileType]]:::objecttype
+  REL[[AASReferenceElementType]]:::objecttype
+  RLE[[AASRelationshipElementType]]:::objecttype
+  ARE[[AASAnnotatedRelationshipElementType]]:::objecttype
+  SEC[[AASSubmodelElementCollectionType]]:::objecttype
+  SEL[[AASSubmodelElementListType]]:::objecttype
+  ENT[[AASEntityType]]:::objecttype
+  BEE[[AASBasicEventElementType]]:::objecttype
+  OPR[[AASOperationType]]:::objecttype
+  CAP[[AASCapabilityType]]:::objecttype
+
+  REF -->|HasSubtype| SET
+  SET -->|HasSubtype| PRP
+  SET -->|HasSubtype| MLP
+  SET -->|HasSubtype| RNG
+  SET -->|HasSubtype| BLB
+  SET -->|HasSubtype| FIL
+  SET -->|HasSubtype| REL
+  SET -->|HasSubtype| RLE
+  RLE -->|HasSubtype| ARE
+  SET -->|HasSubtype| SEC
+  SET -->|HasSubtype| SEL
+  SET -->|HasSubtype| ENT
+  SET -->|HasSubtype| BEE
+  SET -->|HasSubtype| OPR
+  SET -->|HasSubtype| CAP
+
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

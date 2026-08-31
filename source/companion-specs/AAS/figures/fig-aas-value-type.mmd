@@ -1,0 +1,23 @@
+flowchart TD
+  SET[[AASSubmodelElementType]]:::objecttype,abstract
+  PRP[[AASPropertyType]]:::objecttype
+  RNG[[AASRangeType]]:::objecttype
+  VT[ValueType]:::variable
+  VAL[Value]:::variable
+  VID[ValueId]:::variable
+  RVT[ValueType]:::variable
+  MIN[Min]:::variable
+  MAX[Max]:::variable
+
+  SET -->|HasSubtype| PRP
+  SET -->|HasSubtype| RNG
+  PRP -->|HasProperty| VT
+  PRP -->|HasProperty| VAL
+  PRP -->|HasProperty| VID
+  RNG -->|HasProperty| RVT
+  RNG -->|HasProperty| MIN
+  RNG -->|HasProperty| MAX
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

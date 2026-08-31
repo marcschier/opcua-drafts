@@ -1,0 +1,85 @@
+{
+  "submodels": [
+    {
+      "modelType": "Submodel",
+      "id": "https://fabrikam.com/ids/sm/awkward-values",
+      "idShort": "AwkwardValues",
+      "kind": "Instance",
+      "submodelElements": [
+        {
+          "modelType": "Property",
+          "idShort": "ArbitraryPrecision",
+          "valueType": "xs:decimal",
+          "value": "3.14159265358979323846264338327950288419716939937510582097494459"
+        },
+        {
+          "modelType": "Property",
+          "idShort": "UnboundedInteger",
+          "valueType": "xs:integer",
+          "value": "170141183460469231731687303715884105727170141183460469231731687303715884105727"
+        },
+        {
+          "modelType": "Property",
+          "idShort": "TrailingZeros",
+          "valueType": "xs:decimal",
+          "value": "1.500000"
+        },
+        {
+          "modelType": "Property",
+          "idShort": "NegativeZero",
+          "valueType": "xs:double",
+          "value": "-0.0"
+        },
+        {
+          "modelType": "Property",
+          "idShort": "Duration",
+          "valueType": "xs:duration",
+          "value": "P1Y2M3DT4H5M6.789S"
+        },
+        {
+          "modelType": "Property",
+          "idShort": "PartialDate",
+          "valueType": "xs:gYearMonth",
+          "value": "2026-08"
+        },
+        {
+          "modelType": "Property",
+          "idShort": "GDay",
+          "valueType": "xs:gDay",
+          "value": "---07"
+        },
+        {
+          "modelType": "Property",
+          "idShort": "OffsetDateTime",
+          "valueType": "xs:dateTime",
+          "value": "2026-08-07T13:24:23.297+02:00"
+        },
+        {
+          "modelType": "Property",
+          "idShort": "LeadingPlus",
+          "valueType": "xs:int",
+          "value": "+42"
+        },
+        {
+          "modelType": "Property",
+          "idShort": "EmptyString",
+          "valueType": "xs:string",
+          "value": ""
+        },
+        {
+          "modelType": "Range",
+          "idShort": "UnboundedBelow",
+          "valueType": "xs:decimal",
+          "max": "100.0"
+        },
+        {
+          "modelType": "Range",
+          "idShort": "BoundedAtZero",
+          "valueType": "xs:decimal",
+          "min": "0",
+          "max": "100.0"
+        }
+      ]
+    }
+  ]
+}

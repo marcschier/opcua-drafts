@@ -1,0 +1,28 @@
+flowchart TD
+  BREG[[RegistryType]]:::objecttype
+  BGRP[[GroupType]]:::objecttype
+  BRES[[ResourceType]]:::objecttype
+  REG[[SchemaRegistryType]]:::objecttype
+  GRP[[SchemaGroupType]]:::objecttype
+  FILE[[SchemaFileType]]:::objecttype
+  SG[&lt;SchemaGroup&gt;]:::object
+  SCH[&lt;Schema&gt;]:::object
+  NSURI[NamespaceUri]:::variable
+  SID[SchemaId]:::variable
+  GET(GetSchema):::method
+
+  BREG -->|HasSubtype| REG
+  BGRP -->|HasSubtype| GRP
+  BRES -->|HasSubtype| FILE
+  REG --> SG
+  REG --> GET
+  SG ==> GRP
+  GRP -->|HasProperty| NSURI
+  GRP --> SCH
+  SCH ==> FILE
+  FILE -->|HasProperty| SID
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render/parse every fenced ```mermaid block in the repository's Markdown files.
+"""Render/parse every fenced Mermaid block and external `.mmd` graph source.
 
 Each block is extracted (dedented to handle diagrams nested under list items) and compiled with
 the Mermaid CLI (`mmdc`). A block that fails to compile is a syntax error (for example an unquoted
@@ -36,6 +36,17 @@ def md_files():
                 yield os.path.join(dirpath, name)
 
 
+def mmd_files():
+    for dirpath, dirnames, filenames in os.walk(ROOT):
+        dirnames[:] = [
+            d for d in dirnames
+            if d not in SKIP_DIRS and not os.path.exists(os.path.join(dirpath, d, ".git"))
+        ]
+        for name in filenames:
+            if name.lower().endswith(".mmd"):
+                yield os.path.join(dirpath, name)
+
+
 def blocks(path):
     """Yield (start_line, dedented_source) for each mermaid block in a file."""
     lines = open(path, encoding="utf-8").read().splitlines()
@@ -66,7 +77,7 @@ def mmdc_cmd():
         npx = shutil.which("npx")
         if not npx:
             return None
-        cmd = [npx, "-y", "@mermaid-js/mermaid-cli", "mmdc"]
+        cmd = [npx, "-y", "@mermaid-js/mermaid-cli"]
     # On CI (headless Linux) Chromium needs --no-sandbox; supply it via a puppeteer config if present.
     pcfg = os.path.join(ROOT, ".github", "puppeteer-config.json")
     if os.path.exists(pcfg):
@@ -102,6 +113,15 @@ def main():
                     err = (proc.stderr or proc.stdout or "").strip().splitlines()
                     detail = err[0] if err else "unknown error"
                     print(f"  FAIL {rel(md)} block #{n} (line {line}): {detail}")
+        for graph in mmd_files():
+            total += 1
+            out = os.path.join(tmp, f"d{total}.svg")
+            proc = run_mmdc(cmd + ["-i", graph, "-o", out])
+            if proc.returncode != 0 or not os.path.exists(out):
+                failed += 1
+                err = (proc.stderr or proc.stdout or "").strip().splitlines()
+                detail = err[0] if err else "unknown error"
+                print(f"  FAIL {rel(graph)}: {detail}")
     if failed:
         print(f"check_mermaid: {failed} of {total} diagrams failed to compile")
         return 1

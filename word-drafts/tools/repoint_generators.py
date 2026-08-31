@@ -18,6 +18,8 @@ import sys
 OUTDIR = re.compile(r'^(\s*)outdir = (?:os\.path\.dirname\(here\)'
                     r'|os\.path\.abspath\(os\.path\.join\(here, "\.\."\)\))[^\n]*$', re.M)
 # `if inject(os.path.join(outdir, "...")` and its indented body, to the end of the block.
+INJECT_LOOP_HEAD = re.compile(
+    r'^([ \t]*)for [^\n]+:\n(?=\1[ \t]+if inject\()', re.M)
 INJECT = re.compile(r'^([ \t]*)if inject\(.*?\n(?:\1[ \t]+.*\n|[ \t]*\n)*', re.M)
 
 
@@ -31,20 +33,22 @@ def patch(path: pathlib.Path, root: pathlib.Path, write: bool) -> tuple[bool, st
     def replacement(match):
         indent = match.group(1)
         return (
-            f'{indent}# The NodeSet and its CSV belong to the owning specification\\n'
-            f'{indent}# under model/<group>/<spec>/.\\n'
-            f'{indent}outdir = os.path.abspath(os.path.join(\\n'
+            f'{indent}# The NodeSet and its CSV belong to the owning specification\n'
+            f'{indent}# under model/<group>/<spec>/.\n'
+            f'{indent}outdir = os.path.abspath(os.path.join(\n'
             f'{indent}    here, os.pardir, os.pardir, os.pardir, os.pardir, '
-            f'{model_parts}))\\n'
+            f'{model_parts}))\n'
             f'{indent}os.makedirs(outdir, exist_ok=True)')
 
     updated, n = OUTDIR.subn(replacement, text, count=1)
     if n == 0:
         return False, 'outdir is not one of the two known shapes; check by hand'
+    updated, loop = INJECT_LOOP_HEAD.subn('', updated)
     updated, injected = INJECT.subn('', updated)
     if write:
         path.write_text(updated, encoding='utf-8', newline='\n')
-    return True, ('inject() call removed' if injected else 'no inject() call to remove')
+    removed = injected + loop
+    return True, ('inject() call removed' if removed else 'no inject() call to remove')
 
 
 def main(argv: list[str]) -> int:

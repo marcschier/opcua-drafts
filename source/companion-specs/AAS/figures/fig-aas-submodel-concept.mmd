@@ -1,0 +1,28 @@
+flowchart TD
+  IDF[[AASIdentifiableType]]:::objecttype,abstract
+  SM[[AASSubmodelType]]:::objecttype
+  CD[[AASConceptDescriptionType]]:::objecttype
+  SE[&lt;SubmodelElement&gt;]:::object
+  SET[[AASSubmodelElementType]]:::objecttype,abstract
+  KIN[Kind]:::variable
+  SID[SemanticId]:::variable
+  SSI[SupplementalSemanticIds]:::variable
+  QLF[Qualifiers]:::variable
+  EDS[EmbeddedDataSpecifications]:::variable
+  ICO[IsCaseOf]:::variable
+
+  IDF -->|HasSubtype| SM
+  IDF -->|HasSubtype| CD
+  SM -->|HasComponent| SE
+  SE ==> SET
+  SM -->|HasProperty| KIN
+  SM -->|HasProperty| SID
+  SM -->|HasProperty| SSI
+  SM -->|HasProperty| QLF
+  SM -->|HasProperty| EDS
+  CD -->|HasProperty| ICO
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

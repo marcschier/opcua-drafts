@@ -1,0 +1,26 @@
+flowchart TD
+  SET[[AASSubmodelElementType]]:::objecttype,abstract
+  SEL[[AASSubmodelElementListType]]:::objecttype
+  SEC[[AASSubmodelElementCollectionType]]:::objecttype
+  ELM[&lt;Element&gt;]:::object
+  SUB[&lt;SubmodelElement&gt;]:::object
+  TVL[TypeValueListElement]:::variable
+  SIL[SemanticIdListElement]:::variable
+  VTL[ValueTypeListElement]:::variable
+  IDX[Index]:::variable
+
+  SET -->|HasSubtype| SEL
+  SET -->|HasSubtype| SEC
+  SET -->|HasProperty| IDX
+  SEL -->|HasComponent| ELM
+  SEC -->|HasComponent| SUB
+  ELM ==> SET
+  SUB ==> SET
+  SEL -->|HasProperty| TVL
+  SEL -->|HasProperty| SIL
+  SEL -->|HasProperty| VTL
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

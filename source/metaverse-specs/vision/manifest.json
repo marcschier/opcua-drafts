@@ -3,14 +3,14 @@
   "sourceOfTruth": "markdown",
   "identity": {
     "docNumber": "OPC 99011-1",
-    "partName": "Vision",
-    "title": "OPC UA for Vision",
-    "shortTitle": "Vision",
+    "partName": "Vision Systems",
+    "title": "OPC UA for Vision Systems",
+    "shortTitle": "Vision Systems",
     "shortName": "VIS",
-    "organization": "OPC Foundation",
+    "organization": "OPC Foundation and the EMVA and the Alliance for OpenUSD",
     "capabilityIdentifier": "VIS",
     "namespaceUri": "http://opcfoundation.org/UA/Vision/",
-    "version": "0.2.0",
+    "version": "0.5.0",
     "publicationDate": "2026-08-31",
     "releaseType": "Draft",
     "gitHubTag": "",
@@ -23,7 +23,8 @@
   },
   "model": {
     "nodeset": "model/metaverse-specs/vision/Opc.Ua.Vision.NodeSet2.xml",
-    "generated": true
+    "generated": true,
+    "generator": "metaverse-specs/extras/vision/tools/build_model.py"
   },
   "markdown": {
     "main": "spec.md",
@@ -48,6 +49,12 @@
       "url": "http://www.opcfoundation.org/documents/10000-1/"
     },
     {
+      "id": "uapart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
       "id": "uapart3",
       "label": "OPC 10000-3",
       "title": "OPC Unified Architecture - Part 3: Address Space Model",
@@ -66,34 +73,46 @@
       "url": "http://www.opcfoundation.org/documents/10000-5/"
     },
     {
-      "id": "uapart8",
-      "label": "OPC 10000-8",
-      "title": "OPC Unified Architecture - Part 8: Data Access",
-      "url": "http://www.opcfoundation.org/documents/10000-8/"
+      "id": "uapart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
     },
     {
-      "id": "uapart9",
-      "label": "OPC 10000-9",
-      "title": "OPC Unified Architecture - Part 9: Alarms and Conditions",
-      "url": "http://www.opcfoundation.org/documents/10000-9/"
+      "id": "uapart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
     },
     {
-      "id": "uapart14",
-      "label": "OPC 10000-14",
-      "title": "OPC Unified Architecture - Part 14: PubSub",
-      "url": "http://www.opcfoundation.org/documents/10000-14/"
+      "id": "uapart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
     },
     {
-      "id": "uapart100",
-      "label": "OPC 10000-100",
-      "title": "OPC Unified Architecture - Part 100: Devices",
-      "url": "http://www.opcfoundation.org/documents/10000-100/"
+      "id": "iso9787",
+      "label": "ISO 9787:2013",
+      "title": "Robots and robotic devices - Coordinate systems and motion nomenclatures",
+      "url": "https://www.iso.org/standard/59090.html"
     },
     {
-      "id": "ua40100",
-      "label": "OPC 40100-1",
-      "title": "OPC UA for Machine Vision - Part 1: Control, Configuration Management, Recipe Management and Result Management",
-      "url": "http://www.opcfoundation.org/documents/40100-1/"
+      "id": "iso14253",
+      "label": "ISO 14253-1",
+      "title": "Geometrical product specifications (GPS) - Inspection by measurement of workpieces and measuring equipment - Part 1: Decision rules",
+      "url": "https://www.iso.org/standard/70137.html"
+    },
+    {
+      "id": "rfc2326",
+      "label": "IETF RFC 2326",
+      "title": "Real Time Streaming Protocol (RTSP)",
+      "url": "https://www.rfc-editor.org/rfc/rfc2326"
+    },
+    {
+      "id": "iso10918",
+      "label": "ISO/IEC 10918-1",
+      "title": "Digital compression and coding of continuous-tone still images: Requirements and guidelines",
+      "url": "https://www.iso.org/standard/18902.html"
     }
   ],
   "terms": [
@@ -135,7 +154,7 @@
     },
     {
       "term": "on-server / off-server inference",
-      "definition": "Whether the computation happens in the Server's process or elsewhere. Distinguished by `VisionInferenceLocationEnum`, and by nothing else."
+      "definition": "Whether the computation happens in the Server's process or elsewhere. Distinguished by `InferenceLocationEnum`, and by nothing else."
     },
     {
       "term": "sim/real symmetry",
@@ -196,24 +215,44 @@
       "Artificial Intelligence"
     ],
     [
-      "FOV",
-      "Field Of View"
+      "DoF",
+      "Degrees of Freedom"
     ],
     [
-      "HDR",
-      "High Dynamic Range"
+      "GPU",
+      "Graphics Processing Unit"
     ],
     [
-      "ROI",
-      "Region Of Interest"
+      "HMI",
+      "Human Machine Interface"
+    ],
+    [
+      "JPEG",
+      "Joint Photographic Experts Group"
+    ],
+    [
+      "PFNC",
+      "Pixel Format Naming Convention"
+    ],
+    [
+      "RTSP",
+      "Real-Time Streaming Protocol"
+    ],
+    [
+      "SFNC",
+      "Standard Features Naming Convention"
+    ],
+    [
+      "TCP",
+      "Tool Centre Point"
     ],
     [
       "URI",
       "Uniform Resource Identifier"
     ],
     [
-      "UTC",
-      "Coordinated Universal Time"
+      "USD",
+      "Universal Scene Description"
     ]
   ],
   "namespaces": {

@@ -1,0 +1,33 @@
+flowchart TD
+  BGRP[[GroupType]]:::objecttype
+  BRES[[ResourceType]]:::objecttype
+  STG[[AASSubmodelTemplateGroupType]]:::objecttype
+  CDG[[AASConceptDictionaryGroupType]]:::objecttype
+  PSG[[AASPackageStoreGroupType]]:::objecttype
+  CDF[[AASConceptDescriptionFileType]]:::objecttype
+  PFT[[AASPackageFileType]]:::objecttype
+  TN[TemplateNamespace]:::variable
+  DI[DictionaryIdentifier]:::variable
+  SI[StoreIdentifier]:::variable
+  CI[ConceptIdentifier]:::variable
+  PI[PackageIdentifier]:::variable
+  DG[Digest]:::variable
+  DA[DigestAlg]:::variable
+  MD[ManifestDigest]:::variable
+
+  BGRP -->|HasSubtype| STG
+  BGRP -->|HasSubtype| CDG
+  BGRP -->|HasSubtype| PSG
+  BRES -->|HasSubtype| CDF
+  BRES -->|HasSubtype| PFT
+  STG -->|HasProperty| TN
+  CDG -->|HasProperty| DI
+  PSG -->|HasProperty| SI
+  CDF -->|HasProperty| CI
+  PFT -->|HasProperty| PI
+  PFT -->|HasProperty| DG
+  PFT -->|HasProperty| DA
+  PFT -->|HasProperty| MD
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px

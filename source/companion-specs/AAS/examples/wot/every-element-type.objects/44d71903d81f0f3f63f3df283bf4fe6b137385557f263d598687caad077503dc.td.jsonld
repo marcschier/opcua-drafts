@@ -1,0 +1,104 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@included": [
+    {
+      "@graph": [
+        {
+          "@id": "_:aas-occurrence-1",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVNlbGZNYW5hZ2VkRW50aXR5LlBvc2l0aW9u"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Entity/statements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVNlbGZNYW5hZ2VkRW50aXR5"
+          }
+        }
+      ],
+      "@id": "https://w3id.org/aas-jsonld/graph/order"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:Entity",
+    "i4aas:AASEntityType"
+  ],
+  "aas:Entity/entityType": {
+    "@id": "aas:EntityType/SelfManagedEntity"
+  },
+  "aas:Entity/globalAssetId": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "https://contoso.com/asset/motor/SN-9"
+  },
+  "aas:Entity/statements": [
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVNlbGZNYW5hZ2VkRW50aXR5LlBvc2l0aW9u"
+    }
+  ],
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "ASelfManagedEntity"
+  },
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:41:18:https://fabrikam.com/ids/sm/every-elementASelfManagedEntity",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/QVNlbGZNYW5hZ2VkRW50aXR5",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVNlbGZNYW5hZ2VkRW50aXR5",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1032",
+      "rel": "ua:HasTypeDefinition"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2V2ZXJ5LWVsZW1lbnQ/node/QVNlbGZNYW5hZ2VkRW50aXR5LlBvc2l0aW9u",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "Position"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "ASelfManagedEntity",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;ASelfManagedEntity",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:S:41:https://fabrikam.com/ids/sm/every-element"
+  ],
+  "uav:hasComponent": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:27:https://fabrikam.com/ids/sm/every-elementASelfManagedEntity.Position"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:41:18:https://fabrikam.com/ids/sm/every-elementASelfManagedEntity",
+  "uav:modellingRule": "Optional"
+}

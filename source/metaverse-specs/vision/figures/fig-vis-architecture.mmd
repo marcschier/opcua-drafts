@@ -1,0 +1,23 @@
+graph TD
+    SRV["Server Object i=2253"] --> ROOT["Vision : VisionRootType"]
+    ROOT --> SENS["Sensors"]
+    ROOT --> PIPES["Pipelines"]
+    ROOT --> MODELS["Models"]
+    ROOT --> FRAMES["Frames"]
+
+    SENS --> CAM["ImageSensorType"]
+    CAM --> MEDIA["Media : VisionMediaManagementType"]
+    MEDIA --> STREAM["StreamEndpointType (RTSP)"]
+    MEDIA --> CLIP["ClipEndpointType (JPEG)"]
+    CAM --> OPTICS["Optics / Illumination"]
+    CAM --> CAL["Calibrations"]
+
+    PIPES --> PIPE["InferencePipelineType"]
+    PIPE -.NodeId.-> DEPLOY["DeploymentType<br/><i>AI Model Management spec</i>"]
+    DEPLOY --> MODEL["ModelType<br/><i>AI Model Management spec</i>"]
+    PIPE --> RESULT["InspectionResultType / DetectionResultType"]
+    PIPE --> FB["Feedback : VisionFeedbackType"]
+    FB --> LEARN["LearningJobType<br/><i>AI Model Management spec</i>"]
+    LEARN --> DATASET["DatasetType<br/><i>AI Model Management spec</i>"]
+
+    CAM -.HasScenePrim.-> PRIM["UsdGeomCameraType (Part 2)"]

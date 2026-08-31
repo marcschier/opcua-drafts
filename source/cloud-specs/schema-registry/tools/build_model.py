@@ -157,7 +157,8 @@ def instance_method(owner, owner_sym, name, decl_nid, desc, inargs=None, outargs
 def _args(method_nid, method_sym, bname, args, instance=False):
     nid = _mid()
     add(nid, "UAVariable", bname, f"{method_sym}_{bname}", parent=T(method_nid),
-        attrs={"DataType": Argument, "ValueRank": "1", "ArrayDimensions": str(len(args))},
+        attrs={"DataType": Argument, "ValueRank": "1", "ArrayDimensions": str(len(args)),
+               "BrowseNameNamespace": 0},
         category=(CAT_INST if instance else None))
     if not instance:
         ref(nid, HasModellingRule, MR_Mandatory)
@@ -288,24 +289,16 @@ prop_var(62002, SF, "SchemaName", String,
 
 # Emission
 NAMESPACE = "http://opcfoundation.org/UA/SchemaRegistry/"
-VERSION = "0.4.0"
+VERSION = "0.5.0"
 PUBDATE = "2026-08-31T00:00:00Z"
 
-# OPC 10000-5 5.2.4: a Server publishes the version and publication date of every namespace it
-# hosts as a NamespaceMetadataType Object under Server/Namespaces. Without one a Client -- and
-# the specification publisher, which states the same facts in Annex A -- has no way to read them
-# from the model, and has to take them from the file it happens to have been handed.
-#
-# These Nodes are appended last, so adding them cannot renumber anything above.
 Server_Namespaces = "i=11715"
 NamespaceMetadataType = "i=11616"
 
 
 def namespace_metadata(uri, version, pubdate, is_subset=False):
-    """Declare this model's namespace metadata, as OPC 10000-5 requires."""
+    """Declare this model's namespace metadata."""
     meta = _mid()
-    # The BrowseName is the namespace URI in this model's own namespace; the Properties under
-    # it are the base ones, so they keep their namespace-0 BrowseNames.
     add(meta, "UAObject", uri, "NamespaceMetadata", display=uri,
         desc="Metadata for this namespace, as OPC 10000-5 requires a Server to publish it.",
         parent=Server_Namespaces)
@@ -321,17 +314,14 @@ def namespace_metadata(uri, version, pubdate, is_subset=False):
         ref(meta, HasProperty, T(nid))
         NODES[nid].value = (
             f'<Value><uax:{xml_type}>{sx.escape(text)}</uax:{xml_type}></Value>')
-        return nid
 
     _prop("NamespaceUri", "i=12", "String", uri)
     _prop("NamespaceVersion", "i=12", "String", version)
     _prop("NamespacePublicationDate", "i=13", "DateTime", pubdate)
     _prop("IsNamespaceSubset", "i=1", "Boolean", "true" if is_subset else "false")
-    return meta
 
 
 namespace_metadata(NAMESPACE, VERSION, PUBDATE)
-
 ALIASES = [
     ("Boolean", Boolean), ("UInt32", UInt32), ("String", String), ("DateTime", DateTime),
     ("ByteString", ByteString), ("Duration", Duration), ("Argument", Argument),
@@ -353,6 +343,13 @@ def _fmt_datatype(t):
     return DATATYPE_ALIAS.get(t, t)
 
 def _fmt_browse_name(n):
+    # A standard BrowseName defined by the core specifications lives in namespace 0 and
+    # must not be qualified into this model's namespace. InputArguments in particular:
+    # a stack resolves a Method's signature by looking for that Property in namespace 0,
+    # and a prefixed one is not found, so the Method is treated as taking no arguments
+    # and every call is rejected with Bad_TooManyArguments.
+    if n.attrs.get("BrowseNameNamespace") == 0:
+        return sx.escape(n.bname)
     return f"{OWN_NS}:{sx.escape(n.bname)}"
 
 def _emit_node(n):
@@ -405,7 +402,7 @@ def emit_csv():
 
 XREGISTRY_SPEC_URL = (
     "https://github.com/marcschier/opcua-drafts/blob/main/"
-    "core-specs/xregistry/OPC-UA-xRegistry.md"
+    "core-specs/xregistry/README.md"
 )
 
 LINK_MAP = {
@@ -562,9 +559,7 @@ def inject(path, rendered):
 
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
-    # The NodeSet and its CSV belong to the repository, not to this
-    # specification: the publisher reads them from model/, and a sibling
-    # published alongside borrows types from them by ModelUri.
+    # The NodeSet and its CSV belong to the owning specification.
     outdir = os.path.abspath(os.path.join(
         here, os.pardir, os.pardir, os.pardir, os.pardir,
         "model", "cloud-specs", "schema-registry"))

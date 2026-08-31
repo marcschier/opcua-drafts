@@ -142,6 +142,114 @@ def attach_tables(lines: list[str], model, doc_ns_index: int, defined_in: dict):
     return out, findings, renames
 
 
+def attach_methods(lines: list[str], model, doc_ns_index: int):
+    """Add a bound Method subclause below every ObjectType that owns a Method.
+
+    The empty signature and argument table are intentional: SpecificationPublisher `update`
+    fills both from the NodeSet. Keeping the model as the source avoids duplicating argument
+    types or descriptions in the converter.
+    """
+    existing = set()
+    for line in lines:
+        m = HEADING.match(line)
+        if not m or not m.group(3):
+            continue
+        owner = re.search(r'\btype=([^\s}]+)', m.group(3))
+        method = re.search(r'\bmethod=([^\s}]+)', m.group(3))
+        if owner and method:
+            existing.add((owner.group(1), method.group(1)))
+
+    owners = list(nt.object_types(model, doc_ns_index=doc_ns_index))
+    owner_names = set(owners)
+    headings = {}
+    for pos, line in enumerate(lines):
+        m = HEADING.match(line)
+        if not m:
+            continue
+        name = type_named_by(m.group(2), owner_names - set(headings))
+        if name:
+            headings[name] = (pos, len(m.group(1)))
+
+    out = list(lines)
+    added = []
+    for owner in sorted(headings, key=lambda name: -headings[name][0]):
+        methods = [name for name in nt.methods_of(model, owner)
+                   if (owner, name) not in existing]
+        if not methods:
+            continue
+        pos, level = headings[owner]
+        end = pos + 1
+        while end < len(out) and not HEADING.match(out[end]):
+            end += 1
+        clauses = []
+        for method_name in methods:
+            method = model.method_named(method_name, owner=owner)
+            anchor = 'sec-%s-%s' % (ent.anchor(owner), ent.anchor(method_name))
+            if not clauses and end > 0 and out[end - 1]:
+                clauses.append('')
+            clauses += [
+                '%s %s {#%s type=%s method=%s}' % (
+                    '#' * min(level + 1, 6), method_name, anchor, owner, method_name),
+                '',
+            ]
+            if method is not None and (method.description or '').strip():
+                clauses += [method.description.strip(), '']
+            clauses += [
+                '**Signature**',
+                '',
+                '```text',
+                '```',
+                '',
+                '*Table - %s Method Arguments* {#tbl-%s-method-arguments}' % (
+                    method_name, ent.anchor('%s-%s' % (owner, method_name))),
+                '',
+                '| **Argument** | **Description** |',
+                '| --- | --- |',
+                '',
+            ]
+            added.append('%s.%s' % (owner, method_name))
+        out[end:end] = clauses
+
+    return out, ['%d Method clause(s) added from the model: %s' %
+                 (len(added), ', '.join(added))] if added else []
+
+
+def attach_profiles(lines: list[str]):
+    """Place the generated Profiles and Conformance Units clause in existing conformance prose."""
+    if any(line.strip() == 'kind: profiles' for line in lines):
+        return lines, []
+
+    for pos, line in enumerate(lines):
+        m = HEADING.match(line)
+        if not m:
+            continue
+        title = m.group(2).lower()
+        if 'profile' in title or 'conformance' in title:
+            out = list(lines)
+            out[pos + 1:pos + 1] = [
+                '',
+                '```{clause}',
+                'kind: profiles',
+                '```',
+                '',
+            ]
+            return out, ['generated Profiles and Conformance Units clause attached below "%s"' %
+                         m.group(2)]
+
+    out = list(lines)
+    out += [
+        '',
+        '## Profiles and conformance units {#sec-profiles-and-conformance-units}',
+        '',
+        '```{clause}',
+        'kind: profiles',
+        '```',
+        '',
+    ]
+    return out, ['generated Profiles and Conformance Units clause appended because the prose '
+                 'had no profile or conformance heading']
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -189,6 +297,10 @@ def main(argv: list[str]) -> int:
         defined_in = dict(p.split('=', 1) for p in args.defined_in)
         lines, f, renames = attach_tables(lines, model, index, defined_in)
         findings += ['tables: %s' % x for x in f]
+        lines, f = attach_methods(lines, model, index)
+        findings += ['methods: %s' % x for x in f]
+        lines, f = attach_profiles(lines)
+        findings += ['profiles: %s' % x for x in f]
         # The citations that pointed into the annex now point at the clause documenting the
         # type. A `#type-...` left over is one whose type the model does not declare, which is
         # a finding: the document cites something that is not in the model.

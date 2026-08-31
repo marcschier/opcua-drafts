@@ -1,0 +1,65 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:Property",
+    "i4aas:AASPropertyType"
+  ],
+  "aas:Property/value": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "170141183460469231731687303715884105727170141183460469231731687303715884105727"
+  },
+  "aas:Property/valueType": {
+    "@id": "aas:DataTypeDefXsd/Integer"
+  },
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "UnboundedInteger"
+  },
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:42:16:https://fabrikam.com/ids/sm/awkward-valuesUnboundedInteger",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2F3a3dhcmQtdmFsdWVz/VW5ib3VuZGVkSW50ZWdlcg",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2F3a3dhcmQtdmFsdWVz/node/VW5ib3VuZGVkSW50ZWdlcg",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2F3a3dhcmQtdmFsdWVz",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1021",
+      "rel": "ua:HasTypeDefinition"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "UnboundedInteger",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;UnboundedInteger",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:S:42:https://fabrikam.com/ids/sm/awkward-values"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:42:16:https://fabrikam.com/ids/sm/awkward-valuesUnboundedInteger",
+  "uav:modellingRule": "Optional"
+}

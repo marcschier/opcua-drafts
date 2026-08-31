@@ -1,0 +1,30 @@
+flowchart TD
+  IDF[[AASIdentifiableType]]:::objecttype,abstract
+  AAS[[AASType]]:::objecttype
+  AI[AssetInformation]:::object
+  AIT[[AASAssetInformationType]]:::objecttype
+  SMR[SubmodelReferences]:::variable
+  DF[DerivedFrom]:::variable
+  EDS[EmbeddedDataSpecifications]:::variable
+  AK[AssetKind]:::variable
+  GAI[GlobalAssetId]:::variable
+  AT[AssetType]:::variable
+  SAI[SpecificAssetIds]:::variable
+  THU[DefaultThumbnail]:::variable
+
+  IDF -->|HasSubtype| AAS
+  AAS -->|HasComponent| AI
+  AI ==> AIT
+  AAS -->|HasProperty| SMR
+  AAS -->|HasProperty| DF
+  AAS -->|HasProperty| EDS
+  AIT -->|HasProperty| AK
+  AIT -->|HasProperty| GAI
+  AIT -->|HasProperty| AT
+  AIT -->|HasProperty| SAI
+  AIT -->|HasProperty| THU
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

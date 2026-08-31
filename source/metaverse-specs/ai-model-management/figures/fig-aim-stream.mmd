@@ -1,0 +1,6 @@
+flowchart LR
+    C["Client"] -->|"read MaxInlinePayloadSize"| D["DeploymentType"]
+    C -->|BeginTransfer| T["InferenceTransferType"]
+    C -->|"Request: Open/Write/Close"| T
+    C -->|Execute| T
+    T -->|"Response: Open/Read/Close"| C

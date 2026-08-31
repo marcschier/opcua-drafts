@@ -19,23 +19,26 @@ not catch. The reason is given with each one; when a rule and a reason disagree,
 ```powershell
 # one-time
 pip install -r core-specs/extras/requirements.txt
+pip install -r source/companion-specs/AAS/requirements.txt
 
 # validate everything (three separate entrypoints — none covers another's tree)
 python core-specs/extras/validate_all.py
 python cloud-specs/validate_all.py
 python metaverse-specs/validate_all.py
+python companion-specs/validate_all.py --self-contained
 
 # what CI runs — only the checks that need no untracked base data
 python core-specs/extras/validate_all.py --self-contained
 python cloud-specs/validate_all.py --self-contained
 python metaverse-specs/validate_all.py --self-contained
+python companion-specs/validate_all.py
 
 # a single extension (the granular unit — there is no per-test runner)
-python metaverse-specs/extras/openusd-binding/tools/validate_local.py
-python core-specs/xregistry/tools/validate_local.py
+python metaverse-specs/extras/ai-model-management/tools/validate_local.py
+python source/cloud-specs/schema-registry/tools/validate_local.py
 
 # regenerate one model, then confirm the diff is only what you intended
-python metaverse-specs/extras/openusd-binding/tools/build_model.py
+python metaverse-specs/extras/ai-model-management/tools/build_model.py
 
 # the same advisory checks CI runs
 npx markdownlint-cli2 "**/*.md"
@@ -64,45 +67,48 @@ and never blocks a merge — a red job is easy to miss, so read the checks tab a
 
 ## Architecture
 
-Five independent specification trees, plus `skills/` (agent instructions that operate on the drafts):
+Five logical specification groups under `source/`, plus mirrored models and the secondary tooling trees:
 
 | Tree | Contains |
 |---|---|
-| `core-specs/` | Proposed extensions to the base OPC UA namespace (encodings, registries, data channels) |
-| `cloud-specs/` | The cloud-facing surface: schema registry, observability export |
-| `metaverse-specs/` | OPC UA ⇄ OpenUSD (two parts: binding, scene materialization) |
-| `wot-specs/` | W3C Web of Things binding and connectivity |
-| `companion-specs/` | Domain companion specifications |
+| `source/core-specs/` | Proposed extensions to the base OPC UA namespace |
+| `source/cloud-specs/` | The cloud-facing surface |
+| `source/metaverse-specs/` | Perception, AI and robot control |
+| `source/wot-specs/` | W3C Web of Things specifications when public |
+| `source/companion-specs/` | Domain companion specifications |
+| `model/<group>/<spec>/` | Generated repository-owned NodeSets and NodeId CSVs |
+| `model/dependencies/` | External model dependencies, including the released xRegistry model |
 | `word-drafts/` | Submission-ready Word renderings built into the official OPC Foundation template, plus the build that produces them |
 | `templates/` | The official OPC Foundation companion specification template the Word build clones |
 
-**Normative / tooling split.** A spec folder holds only the normative documents and generated
-base artifacts; tooling, descriptors and examples live in a mirrored `extras/` tree — for example
-`metaverse-specs/openusd-binding/` (spec + NodeSet + CSV) against
-`metaverse-specs/extras/openusd-binding/tools/` (generator + validator) and `.../examples/`.
+**Normative / tooling split.** A standalone specification lives under
+`source/<group>/<spec>/`; its generated model lives under `model/<group>/<spec>/`.
+Tooling, descriptors and examples either remain under a mirrored `extras/` tree or move with a
+specification whose generator was already part of its source.
 
 **The split is not applied uniformly**, so locate the generator before assuming where it lives.
-Some sit under the spec folder (`core-specs/xregistry/tools/`, `cloud-specs/schema-registry/tools/`,
-`core-specs/data-channels/tools/`, `wot-specs/WoT-Connectivity/tools/`,
-`companion-specs/Generators/tools/`) and others under `extras/`
-(`cloud-specs/extras/observability-export/tools/`, all of `metaverse-specs/extras/*/tools/`).
+Some sit under the spec folder (`source/cloud-specs/schema-registry/tools/`,
+`source/core-specs/async-services/tools/`, `source/companion-specs/AAS/tools/`,
+`source/companion-specs/Generators/tools/`) and others under `extras/`
+(`core-specs/extras/*/tools/`, `metaverse-specs/extras/*/tools/`).
 
-**Validation is per-extension.** Each extension owns a `validate_local.py`; the three `validate_all.py`
-files just drive lists of them. `wot-specs/` and `companion-specs/` are in **no** aggregate —
-run their validators directly. A tree drives only its own validators: `core-specs/extras/validate_all.py`
+**Validation is per-extension.** Each extension owns a `validate_local.py`; the four `validate_all.py`
+files just drive lists of them. `wot-specs/` is in **no** aggregate — run its validators directly.
+A tree drives only its own validators: `core-specs/extras/validate_all.py`
 stops at `core-specs/`, so a specification that moves trees takes its entry with it or silently
 stops being validated.
 
 **Trees cross-reference, so a move is not just a rename.** The Avro and Arrow generators map
-`model/cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml` as their base model, and
-Schema Registry subtypes `core-specs/xregistry/`. A relative link between trees needs one more `..`
+`core-specs/extras/_common/nodesets/Opc.Ua.ObservabilityExport.NodeSet2.xml`, a byte-identical fixture of the reviewed model, and
+Schema Registry subtypes the released xRegistry model vendored under `model/dependencies/`. A relative link between trees needs one more `..`
 than it looks like it should, and a path built from components (`os.path.join(HERE, "..", …)`) is
 invisible to a search for the path it produces.
 
-**Registry specs layer.** `core-specs/xregistry/` is an abstract base model (`RegistryType` /
-`GroupType` / `ResourceType`); `schema-registry`, the WoT connectivity registry and the OpenUSD
-artifact registry are domain subtypes of it. `ResourceType` is itself an OPC UA Part 5 `FileType`,
-which is why a registry resource can be streamed with `Open`/`Read`/`Close`.
+**Registry specs layer.** The xRegistry abstract base model (`RegistryType` / `GroupType` /
+`ResourceType`) is under review in the private submodule and is vendored publicly as a dependency.
+Schema Registry, the WoT connectivity registry and the OpenUSD artifact registry are domain
+subtypes of it. `ResourceType` is itself an OPC UA Part 5 `FileType`, which is why a registry
+resource can be streamed with `Open`/`Read`/`Close`.
 
 ## Voice and tense
 
@@ -133,6 +139,32 @@ Some phrasing only looks like history and should stay: *"adding a viewer no long
 another bridge"* contrasts with an alternative design, and *"without invalidating previously
 deployed connectors"* is a forward-looking property. Judge by whether the sentence describes the
 model or its past.
+
+**State the decision, not the reasoning that produced it.** A specification says what a Server
+does. It does not narrate what its author analysed, what alternative was rejected, or how
+hard-won the conclusion was, and it does not market its own choices with superlatives.
+
+Avoid: *"This is the one place where this specification does not reproduce its input byte for
+byte, so it states plainly what it does instead"*, *"the reason is a cardinality mismatch rather
+than a modelling preference"*, *"The consequence, stated rather than buried:"*, *"Four rows
+deserve their reasoning stated, because in each the obvious choice is wrong"*, *"Nothing in that
+sequence requires judgement, which is the point"*, *"a negative control, because a check that
+cannot fail is not evidence"*, *"is the honest choice"*, *"a corpus chosen to hurt"*.
+
+Write instead the mechanics: *"A value is compared in the xsd value space, not the lexical
+space"*, *"`ValueType` is Mandatory. The metamodel makes `valueType` mandatory and `value`
+optional, so a Property with no value has no value node to carry the declaration"*, *"No step in
+that sequence is implementation-defined"*.
+
+A short causal clause that a reader needs in order to implement correctly is not narration and
+should stay — *"because Browse is not required to return references in order"* tells an
+implementer why `Index` exists and what breaks without it. Judge by whether removing the clause
+would leave a reader unable to implement the rule, or merely less impressed.
+
+**Exploratory material does not belong in the document.** A clause weighing whether the
+specification should exist, comparing it with an unrelated technology, or recording an avenue
+that was considered and dropped belongs in a study, a `CHANGELOG.md` entry, or a pull request
+discussion. Delete it from the specification.
 
 ## Normative language
 

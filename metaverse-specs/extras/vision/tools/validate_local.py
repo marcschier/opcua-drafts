@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Local structural + modelling-rule validator for the OPC UA — Vision NodeSet.
+Local structural + modelling-rule validator for the OPC UA for Vision Systems NodeSet.
 
 Reproducible in-repo gate (mirrors the openusd-binding validate_local.py convention).
 Checks, against Opc.Ua.Vision.NodeSet2.xml:
@@ -32,16 +32,114 @@ Specification invariants (the reason this file is not generic):
     format.
   * ClipEndpointType MUST declare both LatestClip and MaxInlineClipSize, so that the
     size-gated inline delivery facet cannot be half-implemented in the model.
+  * InferencePipelineType retention limits MUST be Optional members appended at
+    i=6216 and i=6217, preserving all previously published NodeIds.
+  * Every symbol/NodeId/NodeClass mapping published before those retention members
+    matches a pinned canonical digest; later append ranges do not affect the digest.
 
 Exit code 0 and "OK" on success; non-zero with an ERRORS list otherwise.
 """
 from __future__ import annotations
 import csv
+import hashlib
 import os
+import re
 import sys
 import xml.etree.ElementTree as ET
 
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
+
+# Published worked-example identities are append-only just like the base model. These
+# digests cover every pre-retention node's numeric NodeId, class, BrowseName and parent,
+# derived from the overlays at HEAD before retention was added. The explicit retention
+# ids then anchor the newly appended tail. A generator insertion anywhere earlier in an
+# example changes the digest instead of silently renumbering the published address space.
+EXAMPLE_NODEID_BASELINES = {
+    "machine-vision/Opc.Ua.Inspection.Vision.NodeSet2.xml": {
+        "max_id": 5113,
+        "count": 113,
+        "sha256": "93f3568123bf41f6af7ebab73ab9666a960b1c526d8d2dd4fa9193a258e96e16",
+        "retention": {"MaxResultAge": 5114, "MaxRetainedResults": 5115},
+    },
+    "robotics/Opc.Ua.Robotics.Vision.NodeSet2.xml": {
+        "max_id": 5183,
+        "count": 183,
+        "sha256": "31dc194f3210b0bb49726c26c8a6b7ab9974f2c6a27f07ce4f8d211f6c86dcf0",
+        "retention": {"MaxResultAge": 5184, "MaxRetainedResults": 5185},
+    },
+}
+
+# Canonical digest of every base-model symbol/NodeId/NodeClass mapping published before
+# the 0.4.1 retention append. Category bounds deliberately include retired gaps (which
+# must never be reused) while excluding 6216/6217 and every future append range. The two
+# retention ids have explicit semantic checks below, so both the frozen baseline and
+# the append-only tail fail with a useful diagnostic if renumbered.
+PUBLISHED_PRE_RETENTION_NODEID_SHA256 = (
+    "5408f557160e418c24896cbb304ada84d16735bfcd0160c1b7fbf49d61e0c59f"
+)
+
+# The AI Model Management model is a separate specification. This validator reads its
+# NodeSet rather than importing its generator, for the same reason it reads Vision's:
+# a checker that asks the emitter what it emitted validates nothing.
+AI_NS = "http://opcfoundation.org/UA/AI/"
+_HERE = os.path.dirname(os.path.abspath(__file__))
+AI_NODESET = os.path.normpath(os.path.join(
+    _HERE, "..", "..", "..", "..",
+    "model", "metaverse-specs", "ai-model-management",
+    "Opc.Ua.AiModelManagement.NodeSet2.xml"))
+
+
+def _ai_prefix():
+    """The NodeId prefix the AI Model Management model uses for its OWN namespace.
+
+    Not necessarily ns=1: a NodeSet lists its RequiredModel namespaces in
+    NamespaceUris too, so adding a dependency shifts the model's own index. Reading
+    it from the file rather than assuming is the difference between this validator
+    noticing a change and silently resolving nothing, which would pass.
+    """
+    if not os.path.exists(AI_NODESET):
+        return None
+    root = ET.parse(AI_NODESET).getroot()
+    uris = [u.text for u in root.findall(f"{NS}NamespaceUris/{NS}Uri")]
+    if AI_NS not in uris:
+        return None
+    return "ns=%d;i=" % (uris.index(AI_NS) + 1)
+
+
+AI_PREFIX = _ai_prefix()
+
+
+def _load_ai_types():
+    """BrowseName -> numeric id for every type the AI Model Management model declares."""
+    out = {}
+    if not os.path.exists(AI_NODESET) or not AI_PREFIX:
+        return out
+    for el in ET.parse(AI_NODESET).getroot():
+        tag = el.tag[len(NS):] if el.tag.startswith(NS) else ""
+        if tag in ("UAObjectType", "UADataType", "UAReferenceType"):
+            bn = (el.get("BrowseName") or "").split(":", 1)[-1]
+            nid = el.get("NodeId", "")
+            if bn and nid.startswith(AI_PREFIX):
+                out[bn] = int(nid.split("i=")[1])
+    return out
+
+
+AI_TYPE_ID = _load_ai_types()
+
+
+def _load_ai_ids():
+    """Every numeric NodeId the AI Model Management model declares, for reference checking."""
+    out = set()
+    if not os.path.exists(AI_NODESET) or not AI_PREFIX:
+        return out
+    for el in ET.parse(AI_NODESET).getroot():
+        nid = el.get("NodeId", "") if el.tag.startswith(NS) else ""
+        if nid.startswith(AI_PREFIX):
+            out.add(int(nid.split("i=")[1]))
+    return out
+
+
+AI_IDS = _load_ai_ids()
 
 # Base-UA NodeIds that this model legitimately references (namespace 0).
 KNOWN_BASE = {
@@ -52,6 +150,9 @@ KNOWN_BASE = {
     "i=22", "i=29", "i=32",
     # reference types
     "i=35", "i=37", "i=38", "i=40", "i=45", "i=46", "i=47", "i=17603",
+    # event plumbing: HasEventSource, HasNotifier, and the BaseEventType every
+    # EventType in clause 7.5 subtypes
+    "i=36", "i=48", "i=2041",
     # type definitions
     "i=58", "i=61", "i=63", "i=68", "i=76", "i=17602",
     # modelling rules
@@ -88,6 +189,36 @@ def err(m):
     ERR.append(m)
 
 
+def check_model_figures(nodeset_path, spec_path):
+    """AddressSpace figures must agree with the NodeSet they draw.
+
+    A node table is generated from the NodeSet and so cannot drift. A figure is authored,
+    and a wrong arrow looks exactly like a right one, so every Node and Reference a figure
+    claims is re-derived from the model rather than read from the prose beside it.
+    """
+    here = os.path.dirname(os.path.abspath(__file__))
+    repo = os.path.normpath(os.path.join(here, "..", "..", "..", ".."))
+    tools = os.path.join(repo, "word-drafts", "tools")
+    if not os.path.isdir(tools) or not os.path.exists(spec_path):
+        err("model-figure check could not run: word-drafts/tools or the specification "
+            "markdown was not found")
+        return
+    if tools not in sys.path:
+        sys.path.insert(0, tools)
+    try:
+        from opcdocx import nodeset_diagram
+    except ImportError as exc:
+        # The parser lives in the Word tooling, whose dependencies are optional here.
+        # A missing one is a skip, not a wrong figure; CI installs them so the gate runs.
+        print(f"note: model-figure check skipped: {exc}")
+        return
+    try:
+        for message in nodeset_diagram.check_markdown(spec_path, nodeset_path):
+            err(message)
+    except ValueError as exc:
+        err(f"model figure: {exc}")
+
+
 def _name_matches(csv_name: str, browse_name: str) -> bool:
     """True if a CSV symbolic name resolves to a NodeSet BrowseName.
 
@@ -117,6 +248,9 @@ def main():
     except ET.ParseError as e:
         print(f"ERRORS: 1\n  XML parse error: {e}")
         sys.exit(1)
+    check_model_figures(path, os.path.normpath(os.path.join(
+        here, "..", "..", "..", "..",
+        "source", "metaverse-specs", "vision", "spec.md")))
     root = tree.getroot()
 
     models = root.findall(f"{NS}Models/{NS}Model")
@@ -349,6 +483,25 @@ def main():
             err(f"ClipEndpointType is missing '{required}', required by the size-gated "
                 "inline delivery facet")
 
+    retention = {"MaxResultAge": ("ns=1;i=6216", "i=290"),
+                 "MaxRetainedResults": ("ns=1;i=6217", "i=7")}
+    for name, (expected_id, expected_dt) in retention.items():
+        n = by_id.get(expected_id)
+        if n is None or simple_name(n) != name:
+            err(f"InferencePipelineType.{name} must retain append-only NodeId "
+                f"{expected_id}")
+            continue
+        parent = by_id.get(n.get("ParentNodeId"))
+        if parent is None or simple_name(parent) != "InferencePipelineType":
+            err(f"{expected_id} ({name}) is not a member of InferencePipelineType")
+        if norm_dt(n.get("DataType")) != expected_dt:
+            err(f"{expected_id} ({name}) has DataType {n.get('DataType')}, expected "
+                f"{expected_dt}")
+        refs = n.findall(f"{NS}References/{NS}Reference")
+        if not any(r.get("ReferenceType") == "HasModellingRule"
+                   and (r.text or "").strip() == "i=80" for r in refs):
+            err(f"{expected_id} ({name}) must have Optional ModellingRule")
+
     # ---- NodeId CSV <-> NodeSet cross-check --------------------------------
     # Convention shared with the other extension validators (observability-export,
     # schema-registry, xregistry, WoT-Connectivity): the published CSV and the NodeSet
@@ -392,6 +545,32 @@ def main():
             if num not in xml_ids:
                 err(f"csv id {num} ({csv_ids[num][1]}) is not defined in the NodeSet")
 
+        def published_pre_retention(num):
+            return (
+                1001 <= num <= 1033
+                or 3001 <= num <= 3017
+                or 3050 <= num <= 3057
+                or 3901 <= num <= 3917
+                or 4001 <= num <= 4005
+                or 5001 <= num <= 5008
+                or 6001 <= num <= 6215
+                or num == 7001
+            )
+
+        baseline_rows = [
+            (name, str(num), cls)
+            for num, (cls, name) in csv_ids.items()
+            if published_pre_retention(num)
+        ]
+        canonical = "".join(
+            ",".join(row) + "\n" for row in sorted(baseline_rows)
+        ).encode("utf-8")
+        actual_digest = hashlib.sha256(canonical).hexdigest()
+        if actual_digest != PUBLISHED_PRE_RETENTION_NODEID_SHA256:
+            err("the published pre-retention Vision symbol/NodeId/class baseline "
+                "changed; NodeIds are append-only (expected SHA-256 "
+                f"{PUBLISHED_PRE_RETENTION_NODEID_SHA256}, found {actual_digest})")
+
     print(f"nodes: {len(nodes)}")
 
     # ---- generated annexes in the base spec --------------------------------
@@ -418,6 +597,149 @@ def main():
             if f"{{#anx-{letter.lower()} " not in body:
                 err(f"the Vision specification prose '{marker}' region does not contain an "
                     f"'Annex {letter}' heading; regenerate with build_examples.py")
+
+        # ---- specification <-> model, in both directions -------------------
+        # Every type and enumeration literal the model declares must be named in the
+        # prose, and every `SomeType.SomeMember` the prose writes must exist in the
+        # model. Neither direction alone catches drift: the first misses a document
+        # that describes a member no Server can implement, the second misses a member
+        # that ships undocumented. Only qualified member names are checked in the
+        # reverse direction, because a bare backticked word is as likely to be an
+        # enumeration literal or a term of art as it is to be a member.
+        for n in nodes:
+            cls = n.tag[len(NS):]
+            if cls not in ("UAObjectType", "UAVariableType", "UADataType",
+                           "UAReferenceType"):
+                continue
+            bn = simple_name(n)
+            if bn not in spec_text:
+                err(f"model declares {cls[2:]} {bn} but OPC-UA-Vision.md never "
+                    "names it")
+            for f_el in n.findall(f"{NS}Definition/{NS}Field"):
+                fname = f_el.get("Name") or ""
+                if fname and not re.search(rf"\b{re.escape(fname)}\b", spec_text):
+                    err(f"model declares {bn}.{fname} but OPC-UA-Vision.md never "
+                        "names it")
+
+        member_of = set()
+        for n in nodes:
+            owner = simple_name(n)
+            for r in n.findall(f"{NS}References/{NS}Reference"):
+                rt = (r.get("ReferenceType") or "").strip()
+                tgt = (r.text or "").strip()
+                if r.get("IsForward", "true") != "false" and \
+                        rt in ("HasComponent", "HasProperty", "i=47", "i=46") and \
+                        tgt in by_id:
+                    member_of.add((owner, simple_name(by_id[tgt])))
+            # A structure's fields are Definition/Field, not references, but the prose
+            # writes them with the same `Type.Field` notation.
+            for f_el in n.findall(f"{NS}Definition/{NS}Field"):
+                member_of.add((owner, f_el.get("Name") or ""))
+        declared = {simple_name(n) for n in nodes}
+        # AI_TYPE_ID holds every type the AI Model Management model declares. Between the two
+        # sets, a `SomeType.Member` whose owner appears in NEITHER names a type that
+        # exists nowhere - which is how a reference to a renamed or retired type
+        # survives. Skipping it, as the check first did, made exactly that invisible.
+        # Types defined by companion specifications this document cites but does not
+        # load. Listed explicitly rather than pattern-matched, so that adding a
+        # dependency on an outside type is a deliberate edit rather than a silent one.
+        EXTERNAL_TYPES = {
+            "ResultDataType",        # OPC 40100-1
+            "UsdGeomCameraType",     # OPC UA - OpenUSD Scene Materialization
+            "UsdApiSchemaType",      # OPC UA - OpenUSD Scene Materialization
+            "DataChannelSourceType",  # OPC UA - Data Channels (draft)
+            "BaseEventType",         # OPC 10000-5, base of every EventType in 7.5
+            "IntentOperationType",   # OPC UA - Robot Intent, named by Annex I.7
+        }
+        known_elsewhere = set(AI_TYPE_ID) | EXTERNAL_TYPES
+        for owner, member in set(re.findall(
+                r"`([A-Z][A-Za-z0-9]*Type)\.([A-Za-z][A-Za-z0-9]*)`", spec_text)):
+            if owner in declared:
+                if (owner, member) not in member_of:
+                    err(f"OPC-UA-Vision.md names {owner}.{member}, which the model "
+                        "does not declare")
+            elif owner not in known_elsewhere:
+                err(f"OPC-UA-Vision.md names {owner}.{member}, but neither this model "
+                    f"nor the AI Model Management model declares {owner} - a type that "
+                    "exists nowhere resolves to nothing")
+
+        # Every MEMBER the model declares must be named in the prose too. The check
+        # above covers types and enumeration literals only, which is how six members
+        # - CoordinateFrameType.Transform, SegmentationResultType.LabelClasses,
+        # IlluminationType.LampType and LightingMode, InferencePipelineType.LearningJob
+        # - shipped declared in the NodeSet and CSV and described nowhere, leaving an
+        # implementer to guess the semantics or read the XML. A member that no prose
+        # names is a member no two Servers will populate the same way.
+        #
+        # The standard namespace-0 Properties are excluded: they are generated from the
+        # Method and enumeration declarations, carry meanings OPC 10000-3 and -5 fix,
+        # and are not this document's to define.
+        GENERATED_MEMBERS = {"InputArguments", "OutputArguments", "EnumStrings",
+                             "Default Binary", "Default XML", "Default JSON",
+                             "NamespaceUri", "NamespaceVersion",
+                             "NamespacePublicationDate", "IsNamespaceSubset"}
+        for owner, member in sorted(member_of):
+            if owner not in declared or member in GENERATED_MEMBERS:
+                continue
+            # A <Placeholder> is the instance-declaration idiom for "any number of
+            # these live here". The prose names the folder that holds them, which is
+            # the thing a client browses; the placeholder itself has no semantics to
+            # document beyond its ModellingRule.
+            if member.startswith("<"):
+                continue
+            if not re.search(rf"\b{re.escape(member)}\b", spec_text):
+                err(f"model declares {owner}.{member} but OPC-UA-Vision.md never "
+                    "names it - an undocumented member is one every implementer "
+                    "guesses differently")
+
+    # ---- events are wired, not merely declared -----------------------------
+    # An EventType that nothing can subscribe to is a type nobody receives. OPC UA
+    # delivers events from a node whose EventNotifier says it emits them, so a model
+    # that declares EventTypes and sets EventNotifier nowhere has published a
+    # vocabulary with no way to hear it. Both halves are checked because either alone
+    # passes trivially: EventTypes with no notifier is unreachable, and a notifier with
+    # no EventTypes is an attribute doing nothing.
+    all_event_types = [n for n in nodes
+                       if n.tag == f"{NS}UAObjectType"
+                       and simple_name(n).endswith("EventType")]
+    notifiers = [n for n in nodes if (n.get("EventNotifier") or "0") != "0"]
+
+    for n in all_event_types:
+        subtypes = [(r.text or "").strip()
+                    for r in n.findall(f"{NS}References/{NS}Reference")
+                    if r.get("ReferenceType") in ("HasSubtype", "i=45")
+                    and r.get("IsForward") == "false"]
+        if not subtypes:
+            err(f"{simple_name(n)} is named as an EventType but subtypes nothing")
+        elif not any(s == "i=2041" or s in by_id for s in subtypes):
+            err(f"{simple_name(n)} subtypes {subtypes[0]}, which is neither "
+                "BaseEventType nor a type this model declares")
+
+    if all_event_types and not notifiers:
+        err(f"the model declares {len(all_event_types)} EventType(s) and sets "
+            "EventNotifier on no node - nothing can subscribe to them")
+    for n in notifiers:
+        if not any(r.get("ReferenceType") in ("HasNotifier", "i=48")
+                   for r in n.findall(f"{NS}References/{NS}Reference")):
+            err(f"{simple_name(n)} declares EventNotifier but carries no HasNotifier "
+                "reference, so its events do not reach a client subscribing at the "
+                "Server object")
+
+    # ---- standard BrowseNames stay in namespace 0 --------------------------
+    # The repo-wide guard in .github/scripts/check_browsename_namespace.py covers this
+    # for every NodeSet; repeating it here means a single-extension run catches it too,
+    # without the repo-wide job. A Method whose InputArguments is qualified into this
+    # model's namespace is not found by a client resolving the signature, so the Method
+    # appears to take no arguments and every call fails with Bad_TooManyArguments.
+    for n in nodes:
+        bn = n.get("BrowseName") or ""
+        if ":" not in bn:
+            continue
+        local = bn.split(":", 1)[1]
+        if local in ("InputArguments", "OutputArguments", "EnumStrings",
+                     "Default Binary", "Default XML", "Default JSON"):
+            err(f'{n.get("NodeId")} BrowseName="{bn}": {local} is a standard '
+                "namespace-0 BrowseName and must carry no namespace prefix")
 
     # ---- example overlays --------------------------------------------------
     # Each overlay instantiates the base model. Verify it is well-formed, declares the
@@ -497,14 +819,51 @@ def main():
         if len(uris) < 2 or uris[1] != "http://opcfoundation.org/UA/Vision/":
             err(f"{label}: expected the Vision namespace at NamespaceUris index 2 "
                 f"(ns=2); found {uris}")
+        # The worked examples show a camera whose inference runs on a described
+        # deployment, so they instantiate types from BOTH models. The base Vision
+        # NodeSet still requires only base UA; it is the example overlay that composes.
+        if len(uris) < 3 or uris[2] != AI_NS:
+            err(f"{label}: expected the AI Model Management namespace at NamespaceUris "
+                f"index 3 (ns=3); found {uris}")
         req = [r.get("ModelUri")
                for r in ov_root.findall(f"{NS}Models/{NS}Model/{NS}RequiredModel")]
         if "http://opcfoundation.org/UA/Vision/" not in req:
             err(f"{label}: missing <RequiredModel> for the Vision namespace")
+        if AI_NS not in req:
+            err(f"{label}: missing <RequiredModel> for the AI Model Management namespace")
         ov_nodes = [e for e in ov_root
                     if e.tag.startswith(NS) and e.tag[len(NS):].startswith("UA")]
         total_overlay_nodes += len(ov_nodes)
         ov_ids = {e.get("NodeId") for e in ov_nodes}
+
+        baseline = EXAMPLE_NODEID_BASELINES.get(label)
+        if baseline:
+            rows = []
+            for e in ov_nodes:
+                nid = e.get("NodeId", "")
+                if not nid.startswith("ns=1;i="):
+                    continue
+                num = int(nid.split("i=")[1])
+                if num <= baseline["max_id"]:
+                    rows.append((num, e.tag[len(NS):], e.get("BrowseName", ""),
+                                 e.get("ParentNodeId", "")))
+            rows.sort()
+            encoded = "".join(
+                f"{num}|{cls}|{browse}|{parent}\n"
+                for num, cls, browse, parent in rows).encode()
+            digest = hashlib.sha256(encoded).hexdigest()
+            if len(rows) != baseline["count"] or digest != baseline["sha256"]:
+                err(f"{label}: published pre-retention symbol-to-NodeId mapping changed "
+                    f"(count {len(rows)}, sha256 {digest}); example NodeIds are "
+                    "append-only")
+            by_browse = {simple_name(e): int(e.get("NodeId").split("i=")[1])
+                         for e in ov_nodes if e.get("NodeId", "").startswith("ns=1;i=")
+                         and simple_name(e) in baseline["retention"]}
+            for name, expected in baseline["retention"].items():
+                if by_browse.get(name) != expected:
+                    err(f"{label}: {name} must retain appended NodeId ns=1;i={expected}; "
+                        f"found {by_browse.get(name)}")
+
         for e in ov_nodes:
             for r in e.findall(f"{NS}References/{NS}Reference"):
                 tgt = (r.text or "").strip()
@@ -517,6 +876,10 @@ def main():
                     if tgt not in ov_ids:
                         err(f"{label}: {e.get('NodeId')} references {tgt}, which the "
                             "overlay does not define")
+                elif tgt.startswith("ns=3;i="):
+                    if int(tgt.split("i=")[1]) not in AI_IDS:
+                        err(f"{label}: {e.get('NodeId')} references {tgt}, which the "
+                            "AI Model Management model does not define")
                 elif not tgt.startswith("i="):
                     err(f"{label}: {e.get('NodeId')} has malformed reference {tgt}")
             if e.tag[len(NS):] in ("UAObject", "UAVariable"):
@@ -583,11 +946,17 @@ def main():
             tid = own_by_name.get(name)
             return f"ns=2;i={tid}" if tid else None
 
-        # 5.9: an AiDeploymentType instance shall have exactly one UsesModel reference,
-        # and it shall target an AiModelType instance.
-        dep_td = type_named("AiDeploymentType")
-        model_td = type_named("AiModelType")
-        uses_model = type_named("UsesModel")
+        # The deployment-to-model rule moved with the types it constrains, into the
+        # AI Model Management specification. The overlays are still checked against it there,
+        # because they instantiate those types; what this validator keeps is the Vision
+        # side of the seam - that the pipeline names a deployment at all.
+        def ai_type_named(name):
+            tid = AI_TYPE_ID.get(name)
+            return f"ns=3;i={tid}" if tid else None
+
+        dep_td = ai_type_named("DeploymentType")
+        model_td = ai_type_named("ModelType")
+        uses_model = ai_type_named("UsesModel")
         for e in ov_nodes:
             if type_of.get(e.get("NodeId")) != dep_td:
                 continue
@@ -596,13 +965,43 @@ def main():
                        if r.get("ReferenceType") in ("UsesModel", uses_model)
                        and r.get("IsForward", "true") != "false"]
             if len(targets) != 1:
-                err(f"{label}: {e.get('NodeId')} is an AiDeploymentType with "
-                    f"{len(targets)} UsesModel references; clause 5.11 requires exactly "
-                    "one, and clause 12.6 depends on it")
+                err(f"{label}: {e.get('NodeId')} is a DeploymentType with "
+                    f"{len(targets)} UsesModel references; the AI Model Management "
+                    "specification requires exactly one, and its provenance rule "
+                    "depends on it")
             for t in targets:
                 if type_of.get(t) != model_td:
                     err(f"{label}: {e.get('NodeId')} UsesModel targets {t}, which is "
-                        "not an AiModelType instance (clause 5.11)")
+                        "not a ModelType instance")
+
+        # Clause 7.1.1: retention limits become mandatory as a pair wherever an
+        # inference-facet example instantiates Results, and at least one must bound it.
+        pipeline_td = type_named("InferencePipelineType")
+        for e in ov_nodes:
+            if type_of.get(e.get("NodeId")) != pipeline_td:
+                continue
+            members = {simple_name(c): c for c in children.get(e.get("NodeId"), [])}
+            if "Results" not in members:
+                continue
+            missing = [n for n in ("MaxResultAge", "MaxRetainedResults")
+                       if n not in members]
+            if missing:
+                err(f"{label}: {e.get('NodeId')} instantiates Results but omits "
+                    f"retention member(s) {missing}")
+                continue
+            values = []
+            for name in ("MaxResultAge", "MaxRetainedResults"):
+                value = members[name].find(f"{NS}Value")
+                text = next((t.strip() for t in value.itertext() if t.strip()), "0")
+                try:
+                    values.append(float(text))
+                except ValueError:
+                    err(f"{label}: {e.get('NodeId')} {name} has non-numeric value "
+                        f"{text!r}")
+                    values.append(0)
+            if not any(v > 0 for v in values):
+                err(f"{label}: {e.get('NodeId')} instantiates Results but both "
+                    "retention limits are zero")
 
         # Clause 11: VIS-Media-Inline is all four members or none.
         clip_td = type_named("ClipEndpointType")

@@ -1,0 +1,35 @@
+flowchart LR
+  BOT[[BaseObjectType]]:::objecttype,abstract
+  VST[[VisionSensorType]]:::objecttype,abstract
+  IST[[ImageSensorType]]:::objecttype
+  D3D[[Depth3DSensorType]]:::objecttype
+  MET[[MediaEndpointType]]:::objecttype,abstract
+  SET[[StreamEndpointType]]:::objecttype
+  CET[[ClipEndpointType]]:::objecttype
+  VCT[[VisionCalibrationType]]:::objecttype,abstract
+  ICT[[IntrinsicCalibrationType]]:::objecttype
+  ECT[[ExtrinsicCalibrationType]]:::objecttype
+  VRT[[VisionResultType]]:::objecttype,abstract
+  IRT[[InspectionResultType]]:::objecttype
+  DRT[[DetectionResultType]]:::objecttype
+  SRT[[SegmentationResultType]]:::objecttype
+  BIT[[BaseInterfaceType]]:::objecttype,abstract
+  IVS[[IVisionSimulatedType]]:::objecttype,abstract
+
+  BOT -->|HasSubtype| VST
+  VST -->|HasSubtype| IST
+  VST -->|HasSubtype| D3D
+  BOT -->|HasSubtype| MET
+  MET -->|HasSubtype| SET
+  MET -->|HasSubtype| CET
+  BOT -->|HasSubtype| VCT
+  VCT -->|HasSubtype| ICT
+  VCT -->|HasSubtype| ECT
+  BOT -->|HasSubtype| VRT
+  VRT -->|HasSubtype| IRT
+  VRT -->|HasSubtype| DRT
+  VRT -->|HasSubtype| SRT
+  BIT -->|HasSubtype| IVS
+
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

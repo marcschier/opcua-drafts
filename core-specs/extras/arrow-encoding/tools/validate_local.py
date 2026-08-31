@@ -23,7 +23,8 @@ import wire_annotate
 
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-STD = os.path.abspath(os.path.join(ROOT, "..", "..", "arrow-encoding"))
+REPO = os.path.abspath(os.path.join(ROOT, "..", "..", ".."))
+STD = os.path.join(REPO, "source", "core-specs", "arrow-encoding")
 EXAMPLES = os.path.join(ROOT, "examples")
 SUBSET = [
     "bool_true",
@@ -137,7 +138,7 @@ def conformance_gate() -> int:
 
 
 def type_reference_drift_gate() -> int:
-    with open(os.path.join(STD, "OPC-UA-Arrow-Encoding.md"), encoding="utf-8") as f:
+    with open(os.path.join(STD, "spec.md"), encoding="utf-8") as f:
         text = f.read()
     begin = gen_type_reference.BEGIN
     end = gen_type_reference.END

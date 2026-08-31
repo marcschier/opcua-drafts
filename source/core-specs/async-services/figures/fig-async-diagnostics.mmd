@@ -1,0 +1,28 @@
+flowchart TD
+  BOT[[BaseObjectType]]:::objecttype,abstract
+  DIAT[[AsyncServiceDiagnosticsType]]:::objecttype
+  SD[ServerDiagnostics]:::object
+  DIA[AsyncServiceDiagnostics]:::object
+  DRC[DeferredRequestCount]:::variable
+  TDC[TotalDeferredCount]:::variable
+  CC[CompletedCount]:::variable
+  EC[ExpiredCount]:::variable
+  CAC[CancelledCount]:::variable
+  RC[RejectedCount]:::variable
+  DR[DeferredRequests]:::variable
+
+  BOT -->|HasSubtype| DIAT
+  DIAT --> DRC
+  DIAT --> TDC
+  DIAT --> CC
+  DIAT --> EC
+  DIAT --> CAC
+  DIAT --> RC
+  DIAT --> DR
+  SD --> DIA
+  DIA ==> DIAT
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

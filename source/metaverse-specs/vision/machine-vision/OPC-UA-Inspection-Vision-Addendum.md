@@ -1,6 +1,6 @@
 # OPC UA Inspection — Vision Addendum
 
-**Implementer annex to *OPC UA — Vision* (Release 0.2.0 — Draft).**
+**Implementer annex to *OPC UA for Vision Systems* (Release 0.5.0 — Draft).**
 
 > A worked example of machine-vision inspection: a fixed camera measures a sealing surface, on-server inference produces a verdict with QIF-shaped characteristics including measurement uncertainty, and each result carries a subscribable JPEG thumbnail through the optional size-gated inline delivery facet. The machine-readable source of truth is [`Inspection.Vision.json`](../../../../metaverse-specs/extras/vision/examples/machine-vision/Inspection.Vision.json); this document and `Opc.Ua.Inspection.Vision.NodeSet2.xml` are both generated from it by `build_examples.py`, so prose and model cannot drift. It is also published as Annex G of [`OPC-UA-Vision.md`](../spec.md).
 
@@ -12,7 +12,7 @@ This worked example shows the case OPC 40100-1 orchestrates but does not describ
 
 ## 2 Normative references
 
-- *OPC UA — Vision*, Release 0.2.0 (the base specification), `../spec.md`.
+- *OPC UA for Vision Systems*, Release 0.5.0 (the base specification), `../spec.md`.
 - [OPC 40100-1](https://reference.opcfoundation.org/specs/OPC-40100-1/) — OPC UA for Machine Vision Part 1, whose `ResultContent` this example populates. Not a dependency of this model.
 - ISO 23952:2020 (QIF) — the shape `VisionCharacteristicDataType` mirrors.
 - ISO 14253 — the uncertainty semantics used by `Uncertainty` and `NotDecidable`.
@@ -71,10 +71,10 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 |---|---|---|
 | `Fx` | `8310.2` | px |
 | `Fy` | `8309.6` | px |
-| `Cx` | `1295.4` | px, corner-datum per 5.10 |
-| `Cy` | `971.2` | px, corner-datum per 5.10 |
+| `Cx` | `1295.4` | px, corner-datum per §5.12 |
+| `Cy` | `971.2` | px, corner-datum per §5.12 |
 | `Skew` | `0.0` | px |
-| `DistortionModel` | `BrownConrady` | 5.10 ordering: k1, k2, p1, p2, k3 |
+| `DistortionModel` | `BrownConrady` | §5.12 ordering: k1, k2, p1, p2, k3 |
 | `DistortionCoefficients` | `[-0.0021, 0.0004, 0.0, 0.0, 0.0]` | dimensionless; a telecentric lens is close to distortion-free |
 | `Width` | `2592` | px |
 | `Height` | `1944` | px |
@@ -96,10 +96,10 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 
 | Field | Value | Unit / convention |
 |---|---|---|
-| `FrameId` | `station` | equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule |
+| `FrameId` | `station` | equals the TargetFrame's FrameId, per the §5.12 frame-precedence rule |
 | `Position` | `(0.0, 0.0, 0.320)` | metres, ordered (x, y, z) |
 | `Orientation` | `(1.0, 0.0, 0.0, 0.0)` | unit quaternion ordered (x, y, z, w); a 180 degree rotation about x, so the camera looks down at the station |
-| `Covariance` | `empty array` | not reported, per the 5.10 sentinel |
+| `Covariance` | `empty array` | not reported, per the §5.12 sentinel |
 
 Each calibration is reachable from the sensor by a `HasCalibration` reference, as base specification §5.11 requires.
 
@@ -111,14 +111,16 @@ Each calibration is reachable from the sensor by a `HasCalibration` reference, a
 | `TaskKind` | `Segmentation` |
 | `InferenceLocation` | **`OnServer`** |
 | `AcceleratorKind` | `Npu` |
+| `MaxResultAge` | `86400000` ms |
+| `MaxRetainedResults` | `10000` |
 
 Inference runs **on-server**: `InferenceLocation = OnServer`, on an NPU in the station industrial PC. A client consuming the results cannot distinguish this from the off-server robotics example except by reading that one property — which is the intent of base specification §8.2. Because the pipeline is not continuous, `RunInference` is called per part by the station PLC and returns the `ResultId` it produced.
 
-The deployment carries exactly one `UsesModel` reference to the model above, as base specification §5.11 requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the §12.6 provenance check possible.
+The deployment carries exactly one `UsesModel` reference to the model above, as *OPC UA — AI Model Management and Inference* requires. That reference says which model is serving now. Each retained result records the model that actually answered in `ModelUsed`, so an audit follows `result.ModelUsed` to the model and its `Digest` even after a promotion, fallback or followed-reference change.
 
 ## 7 Results
 
-Each part produces an `InspectionResultType`. `Evaluation` uses the OPC 40001-101 value semantics, and the `Characteristics` array carries one `VisionCharacteristicDataType` per measured feature — for example a flatness with `Nominal = 0.0`, `Actual = 0.018`, `UpperTolerance = 0.020`, `Unit = mm` and `Uncertainty = 0.004`. That last field is the point: because the expanded uncertainty spans the tolerance limit, the Server reports `NotDecidable` rather than asserting `Ok` from the point estimate alone. A verdict recorded this way is reproducible by a third party, and a QIF document can be generated from it without inventing information.
+Each part produces an `InspectionResultType`. The pipeline retains result nodes for at most 24 hours and 10,000 results; whichever bound first requires eviction applies. Its `ModelUsed` names `SealDefectNet`, the model that actually answered, while the deployment's `UsesModel` reference says which model is serving now. `Evaluation` uses the OPC 40001-101 value semantics, and the `Characteristics` array carries one `VisionCharacteristicDataType` per measured feature — for example a flatness with `Nominal = 0.0`, `Actual = 0.018`, `UpperTolerance = 0.020`, `Unit = mm` and `Uncertainty = 0.004`. That last field is the point: because the expanded uncertainty spans the tolerance limit, the Server reports `NotDecidable` rather than asserting `Ok` from the point estimate alone. A verdict recorded this way is reproducible by a third party, and a QIF document can be generated from it without inventing information. Evicting the result node does not define the lifetime of its JPEG, external explanation artefact, or application evidence record.
 
 ## 8 Feedback
 

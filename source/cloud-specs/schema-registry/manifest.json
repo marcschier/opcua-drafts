@@ -10,7 +10,7 @@
     "organization": "OPC Foundation and the xRegistry project",
     "capabilityIdentifier": "SREG",
     "namespaceUri": "http://opcfoundation.org/UA/SchemaRegistry/",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "publicationDate": "2026-08-31",
     "releaseType": "Draft",
     "gitHubTag": "",
@@ -23,7 +23,8 @@
   },
   "model": {
     "nodeset": "model/cloud-specs/schema-registry/Opc.Ua.SchemaRegistry.NodeSet2.xml",
-    "generated": true
+    "generated": true,
+    "generator": "source/cloud-specs/schema-registry/tools/build_model.py"
   },
   "markdown": {
     "main": "spec.md",

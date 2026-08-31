@@ -58,9 +58,16 @@
     },
     {
       "name": "FlangeFrame",
-      "description": "Robot flange / tool centre point frame; the camera moves with it.",
+      "description": "Robot mechanical interface — the flange the camera and the gripper are both bolted to. This is what the hand-eye calibration resolves to, and it is deliberately NOT the tool centre point.",
       "frameId": "flange",
       "parentFrame": "robot_base",
+      "role": "MechanicalInterface"
+    },
+    {
+      "name": "GripperTcpFrame",
+      "description": "Tool centre point of the gripper. A pick pose has to reach THIS frame, not the flange, so the example carries the offset between them explicitly rather than leaving a consumer to assume it.",
+      "frameId": "gripper_tcp",
+      "parentFrame": "flange",
       "role": "Tool"
     },
     {
@@ -84,10 +91,10 @@
       "fields": [
         ["Fx", "2140.5", "px"],
         ["Fy", "2139.8", "px"],
-        ["Cx", "1223.1", "px, corner-datum per 5.10"],
-        ["Cy", "1021.7", "px, corner-datum per 5.10"],
+        ["Cx", "1223.1", "px, corner-datum per §5.12"],
+        ["Cy", "1021.7", "px, corner-datum per §5.12"],
         ["Skew", "0.0", "px"],
-        ["DistortionModel", "BrownConrady", "5.10 ordering: k1, k2, p1, p2, k3"],
+        ["DistortionModel", "BrownConrady", "§5.12 ordering: k1, k2, p1, p2, k3"],
         ["DistortionCoefficients", "[-0.1721, 0.0934, 0.0002, -0.0001, -0.0188]", "dimensionless"],
         ["Width", "2448", "px"],
         ["Height", "2048", "px"]
@@ -96,7 +103,7 @@
     {
       "name": "HandEye",
       "type": "ExtrinsicCalibrationType",
-      "description": "Transform from the camera frame to the robot flange frame. Eye-in-hand: the camera moves with the tool.",
+      "description": "Transform from the camera frame to the robot mechanical interface. Eye-in-hand: the camera moves with the flange, so a pick pose is obtained by composing camera → flange → tool centre point.",
       "calibrationId": "hand-eye-cam-eih-01",
       "performedAt": "2026-06-14T10:40:00Z",
       "valid": true,
@@ -106,10 +113,10 @@
       "sourceFrame": "camera_eih",
       "targetFrame": "flange",
       "fields": [
-        ["FrameId", "flange", "equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule"],
+        ["FrameId", "flange", "equals the TargetFrame's FrameId, per the §5.12 frame-precedence rule"],
         ["Position", "(0.062, -0.031, 0.115)", "metres, ordered (x, y, z)"],
         ["Orientation", "(0.0, 0.0, 0.7071, 0.7071)", "unit quaternion ordered (x, y, z, w)"],
-        ["Covariance", "empty array", "not reported, per the 5.10 sentinel"]
+        ["Covariance", "empty array", "not reported, per the §5.12 sentinel"]
       ]
     }
   ],
@@ -235,10 +242,12 @@
       "description": "Runs on every acquired frame while the cell is picking.",
       "pipelineId": "pipe-binpick-01",
       "state": "Active",
-      "continuous": true
+      "continuous": true,
+      "maxResultAge": 3600000,
+      "maxRetainedResults": 2000
     }
   },
-  "inferenceNote": "Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `AiModelType.Digest` lets a consumer confirm which artefact produced a result.",
-  "resultsNote": "Each cycle produces a `DetectionResultType` whose `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain a pose the robot controller can execute. `ResidualError` on the calibration is what tells the consumer how much to trust it.",
+  "inferenceNote": "Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `ModelType.Digest` lets a consumer confirm which artefact produced a result.",
+  "resultsNote": "Each cycle produces a `DetectionResultType`; the pipeline retains result nodes for at most one hour and 2,000 results, evicting oldest `CreationTime` first when count pressure applies. Its `ModelUsed` names `GraspPoseNet`, the model that actually answered, even if the deployment later promotes another model or routes one call through a fallback. Its `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain the pose in robot coordinates, and camera → flange → `gripper_tcp` to obtain what the gripper must actually reach. The two are distinct: the calibration resolves to the mechanical interface, while a grasp is executed at the tool centre point, and the frame tree carries the offset between them rather than leaving it to be assumed. `ResidualError` on the calibration is what tells the consumer how much to trust it. Result-node eviction is independent of frame/clip, external artefact, and application evidence retention.",
   "feedbackNote": "Two feedback paths are exercised. During commissioning, the HMI calls `SubmitDetections` with `Purpose = Overlay` so the operator sees candidate grasps drawn on the RTSP stream. In production, a failed pick calls `SubmitCorrection` with `Purpose = GroundTruthLabel`, and the corrected pose is retained by the `LearningJobType` as a labelled sample — so the cases the model gets wrong are exactly the cases the next dataset contains. Feedback images are passed by reference through `SubmitImageReference`; this example does not enable inline feedback images."
 }

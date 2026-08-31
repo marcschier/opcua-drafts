@@ -1,0 +1,37 @@
+flowchart TD
+  BREG[[RegistryType]]:::objecttype
+  BGRP[[GroupType]]:::objecttype
+  BRES[[ResourceType]]:::objecttype
+  REG[[AASRegistryType]]:::objecttype
+  SGT[[AASShellGroupType]]:::objecttype
+  SFT[[AASSubmodelFileType]]:::objecttype
+  EFT[[AASEnvironmentFileType]]:::objecttype
+  SG[&lt;ShellGroup&gt;]:::object
+  SM[&lt;Submodel&gt;]:::object
+  ENV[&lt;Environment&gt;]:::object
+  LOOK(LookupShellsByAssetLink):::method
+  GET(GetSubmodel):::method
+  AID[AasIdentifier]:::variable
+  SID[SubmodelIdentifier]:::variable
+  AK[AssetKind]:::variable
+
+  BREG -->|HasSubtype| REG
+  BGRP -->|HasSubtype| SGT
+  BRES -->|HasSubtype| SFT
+  BRES -->|HasSubtype| EFT
+  REG -->|Organizes| SG
+  REG -->|Organizes| ENV
+  REG -->|HasComponent| LOOK
+  REG -->|HasComponent| GET
+  SG ==> SGT
+  SGT -->|Organizes| SM
+  SM ==> SFT
+  ENV ==> EFT
+  SGT -->|HasProperty| AID
+  SGT -->|HasProperty| AK
+  SFT -->|HasProperty| SID
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef method fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px

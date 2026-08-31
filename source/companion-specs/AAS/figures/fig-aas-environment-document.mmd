@@ -1,0 +1,23 @@
+flowchart TD
+  BREG[[RegistryType]]:::objecttype
+  BRES[[ResourceType]]:::objecttype
+  REG[[AASRegistryType]]:::objecttype
+  EFT[[AASEnvironmentFileType]]:::objecttype
+  ENV[&lt;Environment&gt;]:::object
+  EID[EnvironmentIdentifier]:::variable
+  FMT[Format]:::variable
+  EN[EnvironmentNode]:::variable
+  FLT[Filtered]:::variable
+
+  BREG -->|HasSubtype| REG
+  BRES -->|HasSubtype| EFT
+  REG -->|Organizes| ENV
+  ENV ==> EFT
+  EFT -->|HasProperty| EID
+  EFT -->|HasProperty| FMT
+  EFT -->|HasProperty| EN
+  EFT -->|HasProperty| FLT
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px

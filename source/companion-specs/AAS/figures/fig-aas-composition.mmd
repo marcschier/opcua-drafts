@@ -1,0 +1,36 @@
+flowchart TD
+  SET[[AASSubmodelElementType]]:::objecttype,abstract
+  ENT[[AASEntityType]]:::objecttype
+  OPR[[AASOperationType]]:::objecttype
+  BEE[[AASBasicEventElementType]]:::objecttype
+  STM[&lt;Statement&gt;]:::object
+  VAR[&lt;Variable&gt;]:::object
+  ETY[EntityType]:::variable
+  GAI[GlobalAssetId]:::variable
+  SAI[SpecificAssetIds]:::variable
+  IN[InputVariables]:::variable
+  OUT[OutputVariables]:::variable
+  INO[InoutputVariables]:::variable
+  OBS[Observed]:::variable
+  DIR[Direction]:::variable
+  STA[State]:::variable
+
+  SET -->|HasSubtype| ENT
+  SET -->|HasSubtype| OPR
+  SET -->|HasSubtype| BEE
+  ENT -->|HasComponent| STM
+  OPR -->|HasComponent| VAR
+  ENT -->|HasProperty| ETY
+  ENT -->|HasProperty| GAI
+  ENT -->|HasProperty| SAI
+  OPR -->|HasProperty| IN
+  OPR -->|HasProperty| OUT
+  OPR -->|HasProperty| INO
+  BEE -->|HasProperty| OBS
+  BEE -->|HasProperty| DIR
+  BEE -->|HasProperty| STA
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

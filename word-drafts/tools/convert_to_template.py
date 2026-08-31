@@ -237,6 +237,11 @@ def strip_generated(lines: list[str], has_model: bool = True) -> tuple[list[str]
             if skipping is not None and level <= skipping[0]:
                 skipping = None
             if skipping is None:
+                if slug in ('sec-contents', 'sec-table-of-contents'):
+                    skipping = (level, None)
+                    findings.append('the authored table of contents was removed; the publisher '
+                                    'generates navigation from the document structure')
+                    continue
                 if slug == 'sec-normative-references':
                     skipping = (level, None)
                     findings.append('clause 2 removed; it is generated from '
@@ -412,8 +417,14 @@ def convert_prose(lines: list[str], has_model: bool = True) -> tuple[list[str], 
             # old in-document links used. Both forms occur -- a numbered heading was cited by
             # its slug and an unnumbered one by the slug of its whole title -- so the original
             # text is what has to be slugged, before the annex label is taken off it.
-            renames.setdefault(anchor(heading.group(3) if heading.re is NUMBERED_HEADING
-                                      else heading.group(2)), new)
+            if heading.re is NUMBERED_HEADING:
+                title = heading.group(3)
+                renames.setdefault(anchor(title), new)
+                # GitHub includes the authored clause number in the implicit slug
+                # (`## 6.5.1 Promotion history` -> `#651-promotion-history`).
+                renames.setdefault(anchor(f"{heading.group(2)} {title}"), new)
+            else:
+                renames.setdefault(anchor(heading.group(2)), new)
             out.append('%s %s {#%s%s}' % (hashes, text.strip(), new, attrs))
             continue
 

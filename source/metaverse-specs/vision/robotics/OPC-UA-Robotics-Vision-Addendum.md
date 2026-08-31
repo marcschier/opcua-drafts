@@ -1,6 +1,6 @@
 # OPC UA Robotics — Vision Addendum
 
-**Implementer annex to *OPC UA — Vision* (Release 0.2.0 — Draft).**
+**Implementer annex to *OPC UA for Vision Systems* (Release 0.5.0 — Draft).**
 
 > A worked example of vision-guided robotics: an eye-in-hand 3D camera on a robot flange detects parts in a bin and publishes 6-DoF pick poses, with inference running off-server on an edge GPU and a simulated twin sensor rendering the same cell in NVIDIA Isaac Sim. The machine-readable source of truth is [`Robotics.Vision.json`](../../../../metaverse-specs/extras/vision/examples/robotics/Robotics.Vision.json); this document and `Opc.Ua.Robotics.Vision.NodeSet2.xml` are both generated from it by `build_examples.py`, so prose and model cannot drift. It is also published as Annex F of [`OPC-UA-Vision.md`](../spec.md).
 
@@ -12,7 +12,7 @@ This worked example binds one eye-in-hand camera to a robot flange frame and sho
 
 ## 2 Normative references
 
-- *OPC UA — Vision*, Release 0.2.0 (the base specification), `../spec.md`.
+- *OPC UA for Vision Systems*, Release 0.5.0 (the base specification), `../spec.md`.
 - [OPC 40010-1](https://reference.opcfoundation.org/specs/OPC-40010-1/) — OPC UA for Robotics, whose `MotionDeviceSystemType` describes the robot this camera is mounted on. Not a dependency of this model.
 - ISO 9787:2013 — coordinate systems, the source of the frame roles used here.
 - ROS 2 `vision_msgs` — the convention `VisionDetectionDataType` field naming follows.
@@ -65,7 +65,8 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 |---|---|---|---|
 | `WorldFrame` | `world` | `World` | none (tree root) |
 | `RobotBaseFrame` | `robot_base` | `Base` | `world` |
-| `FlangeFrame` | `flange` | `Tool` | `robot_base` |
+| `FlangeFrame` | `flange` | `MechanicalInterface` | `robot_base` |
+| `GripperTcpFrame` | `gripper_tcp` | `Tool` | `flange` |
 | `CameraFrame` | `camera_eih` | `Camera` | `flange` |
 
 **`Intrinsics2448x2048`** (`IntrinsicCalibrationType`) — Pinhole intrinsics with Brown-Conrady distortion at full resolution.
@@ -84,15 +85,15 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 |---|---|---|
 | `Fx` | `2140.5` | px |
 | `Fy` | `2139.8` | px |
-| `Cx` | `1223.1` | px, corner-datum per 5.10 |
-| `Cy` | `1021.7` | px, corner-datum per 5.10 |
+| `Cx` | `1223.1` | px, corner-datum per §5.12 |
+| `Cy` | `1021.7` | px, corner-datum per §5.12 |
 | `Skew` | `0.0` | px |
-| `DistortionModel` | `BrownConrady` | 5.10 ordering: k1, k2, p1, p2, k3 |
+| `DistortionModel` | `BrownConrady` | §5.12 ordering: k1, k2, p1, p2, k3 |
 | `DistortionCoefficients` | `[-0.1721, 0.0934, 0.0002, -0.0001, -0.0188]` | dimensionless |
 | `Width` | `2448` | px |
 | `Height` | `2048` | px |
 
-**`HandEye`** (`ExtrinsicCalibrationType`) — Transform from the camera frame to the robot flange frame. Eye-in-hand: the camera moves with the tool.
+**`HandEye`** (`ExtrinsicCalibrationType`) — Transform from the camera frame to the robot mechanical interface. Eye-in-hand: the camera moves with the flange, so a pick pose is obtained by composing camera → flange → tool centre point.
 
 | Member | Value |
 |---|---|
@@ -109,10 +110,10 @@ The frame tree. `ParentFrame` is what makes it composable: a client walks from t
 
 | Field | Value | Unit / convention |
 |---|---|---|
-| `FrameId` | `flange` | equals the TargetFrame's FrameId, per the 5.10 frame-precedence rule |
+| `FrameId` | `flange` | equals the TargetFrame's FrameId, per the §5.12 frame-precedence rule |
 | `Position` | `(0.062, -0.031, 0.115)` | metres, ordered (x, y, z) |
 | `Orientation` | `(0.0, 0.0, 0.7071, 0.7071)` | unit quaternion ordered (x, y, z, w) |
-| `Covariance` | `empty array` | not reported, per the 5.10 sentinel |
+| `Covariance` | `empty array` | not reported, per the §5.12 sentinel |
 
 Each calibration is reachable from the sensor by a `HasCalibration` reference, as base specification §5.11 requires.
 
@@ -149,14 +150,16 @@ The twin additionally implements `IVisionSimulatedType`:
 | `InferenceLocation` | **`EdgeOffServer`** |
 | `AcceleratorKind` | `Gpu` |
 | `EndpointUri` | `grpcs://192.0.2.60:8001/graspposenet` |
+| `MaxResultAge` | `3600000` ms |
+| `MaxRetainedResults` | `2000` |
 
-Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `AiModelType.Digest` lets a consumer confirm which artefact produced a result.
+Inference runs **off-server** on a cell-side GPU appliance. The Server publishes results it did not compute. Nothing else in the model changes: a client reads `DetectionResultType` exactly as it would if `InferenceLocation` were `OnServer`, and consults that property only if it cares about the latency or trust boundary. Because the deployment is remote, base specification §12.6 applies: the channel to the inference service is authenticated and integrity-protected, and `ModelType.Digest` lets a consumer confirm which artefact produced a result.
 
-The deployment carries exactly one `UsesModel` reference to the model above, as base specification §5.11 requires. That reference is the only defined path from a result to the model artefact and its `Digest`, so it is what makes the §12.6 provenance check possible.
+The deployment carries exactly one `UsesModel` reference to the model above, as *OPC UA — AI Model Management and Inference* requires. That reference says which model is serving now. Each retained result records the model that actually answered in `ModelUsed`, so an audit follows `result.ModelUsed` to the model and its `Digest` even after a promotion, fallback or followed-reference change.
 
 ## 8 Results
 
-Each cycle produces a `DetectionResultType` whose `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain a pose the robot controller can execute. `ResidualError` on the calibration is what tells the consumer how much to trust it.
+Each cycle produces a `DetectionResultType`; the pipeline retains result nodes for at most one hour and 2,000 results, evicting oldest `CreationTime` first when count pressure applies. Its `ModelUsed` names `GraspPoseNet`, the model that actually answered, even if the deployment later promotes another model or routes one call through a fallback. Its `Detections` carry `ClassLabel`, `Confidence`, a `BoundingBox2D`, a `BoundingBox3D` and — the member that makes the result actionable — a 6-DoF `Pose`. Every pose names its `FrameId` (`camera_eih`), which is only meaningful because the `HandEye` calibration above relates that frame to the flange. A consumer composes camera → flange → base through the `CoordinateFrameType` tree to obtain the pose in robot coordinates, and camera → flange → `gripper_tcp` to obtain what the gripper must actually reach. The two are distinct: the calibration resolves to the mechanical interface, while a grasp is executed at the tool centre point, and the frame tree carries the offset between them rather than leaving it to be assumed. `ResidualError` on the calibration is what tells the consumer how much to trust it. Result-node eviction is independent of frame/clip, external artefact, and application evidence retention.
 
 ## 9 Feedback
 

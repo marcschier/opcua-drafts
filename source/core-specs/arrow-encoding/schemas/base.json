@@ -49987,7 +49987,7 @@
       }
     ]
   },
-  "pyarrow": "24.0.0",
+  "pyarrow": "25.0.0",
   "schema": "opcua-arrow-reference-schemas",
   "schemaExchange": {
     "ArrowSchemaAnnouncement": {

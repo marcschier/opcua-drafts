@@ -1,0 +1,19 @@
+flowchart TD
+  BET[[BaseEventType]]:::objecttype,abstract
+  EVT[[DeferredRequestCompletedEventType]]:::objecttype
+  RH[RequestHandle]:::variable
+  SI[ServiceId]:::variable
+  SR[ServiceResult]:::variable
+  CT[CompletionTime]:::variable
+  ET[ExpiryTime]:::variable
+
+  BET -->|HasSubtype| EVT
+  EVT -->|HasProperty| RH
+  EVT -->|HasProperty| SI
+  EVT -->|HasProperty| SR
+  EVT -->|HasProperty| CT
+  EVT -->|HasProperty| ET
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

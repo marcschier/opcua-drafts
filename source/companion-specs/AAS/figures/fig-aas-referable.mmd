@@ -1,0 +1,23 @@
+flowchart TD
+  BOT[[BaseObjectType]]:::objecttype
+  REF[[AASReferableType]]:::objecttype,abstract
+  IDF[[AASIdentifiableType]]:::objecttype,abstract
+  IDS[IdShort]:::variable
+  CAT[Category]:::variable
+  DSP[DisplayNameSet]:::variable
+  DSC[DescriptionSet]:::variable
+  EXT[Extensions]:::variable
+  MT[ModelType]:::variable
+
+  BOT -->|HasSubtype| REF
+  REF -->|HasSubtype| IDF
+  REF -->|HasProperty| IDS
+  REF -->|HasProperty| CAT
+  REF -->|HasProperty| DSP
+  REF -->|HasProperty| DSC
+  REF -->|HasProperty| EXT
+  REF -->|HasProperty| MT
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

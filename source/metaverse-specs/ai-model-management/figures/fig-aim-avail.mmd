@@ -1,0 +1,17 @@
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant P as Primary DeploymentType
+    participant S as Fallback DeploymentType
+    C->>P: Invoke
+    P--xP: execution site does not answer
+    P->>P: Reachability Unreachable, ConsecutiveFailures++
+    alt FallbackPolicy = FallBackTo
+        P->>S: route the call
+        S-->>P: result from a DIFFERENT model
+        P-->>C: response, ModelUsed = the fallback's model
+    else FallbackPolicy = Fail
+        P-->>C: failure, nothing produced
+    else FallbackPolicy = HoldLast
+        P-->>C: last successful result, LastSuccessAt shows its age
+    end

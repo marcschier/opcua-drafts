@@ -1,0 +1,17 @@
+flowchart TD
+  ASE[[AuditSessionEventType]]:::objecttype,abstract
+  AUD[[AuditDeferredRequestEventType]]:::objecttype
+  RH[RequestHandle]:::variable
+  SI[ServiceId]:::variable
+  TR[Transition]:::variable
+  OC[Outcome]:::variable
+
+  ASE -->|HasSubtype| AUD
+  AUD -->|HasProperty| RH
+  AUD -->|HasProperty| SI
+  AUD -->|HasProperty| TR
+  AUD -->|HasProperty| OC
+
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px
+  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic

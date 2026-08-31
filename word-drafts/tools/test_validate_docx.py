@@ -144,7 +144,83 @@ def _corrupt_cell(owner, row_marker, was, now):
     return apply
 
 
-def derived_mutations(document_xml, rels_xml, model, doc_ns_index):
+def _find_items_row(text, type_name, field_name, marker):
+    bounds = _find_items_table(text, type_name)
+    if bounds is None:
+        return None
+    table_start, table_end = bounds
+    pattern = re.compile(
+        r'<w:tr[^>]*>(?:(?!</w:tr>).)*?' + re.escape(field_name)
+        + r'(?:(?!</w:tr>).)*?' + re.escape(marker)
+        + r'(?:(?!</w:tr>).)*?</w:tr>', re.S)
+    return pattern.search(text, table_start, table_end)
+
+
+def _find_items_table(text, type_name):
+    needle = type_name + ' Items'
+    start = 0
+    while True:
+        anchor = text.find(needle, start)
+        if anchor < 0:
+            return None
+        para_start = text.rfind('<w:p', 0, anchor)
+        para_end = text.find('</w:p>', anchor)
+        if para_start >= 0 and para_end >= 0:
+            caption = text[para_start:para_end]
+            if 'w:pStyle w:val="TABLE-title"' in caption:
+                table_start = text.find('<w:tbl', para_end)
+                table_end = text.find('</w:tbl>', table_start)
+                if table_start >= 0 and table_end >= 0:
+                    return table_start, table_end + len('</w:tbl>')
+                return None
+        start = anchor + len(needle)
+
+
+def _corrupt_items_cell(type_name, field_name, was, now):
+    def apply(text):
+        m = _find_items_row(text, type_name, field_name, was)
+        if not m:
+            return text
+        return text[:m.start()] + m.group(0).replace(was, now, 1) + text[m.end():]
+    return apply
+
+
+def _swap_first_structure_rows(type_name):
+    def apply(text):
+        bounds = _find_items_table(text, type_name)
+        if bounds is None:
+            return text
+        start, end = bounds
+        table = text[start:end]
+        rows = list(re.finditer(r'<w:tr[^>]*>.*?</w:tr>', table, re.S))
+        if len(rows) < 3:
+            return text
+        first, second = rows[1], rows[2]
+        swapped = (table[:first.start()] + second.group(0)
+                   + table[first.end():second.start()] + first.group(0)
+                   + table[second.end():])
+        return text[:start] + swapped + text[end:]
+    return apply
+
+
+def _duplicate_first_structure_row(type_name):
+    def apply(text):
+        bounds = _find_items_table(text, type_name)
+        if bounds is None:
+            return text
+        start, end = bounds
+        table = text[start:end]
+        rows = list(re.finditer(r'<w:tr[^>]*>.*?</w:tr>', table, re.S))
+        if len(rows) < 2:
+            return text
+        at = rows[1].end()
+        duplicated = table[:at] + rows[1].group(0) + table[at:]
+        return text[:start] + duplicated + text[end:]
+    return apply
+
+
+def derived_mutations(
+        document_xml, rels_xml, model, doc_ns_index, structure_fields=False):
     """Mutations built from the document under test, plus the reason for any it skips."""
     out, skipped = [], []
 
@@ -166,6 +242,25 @@ def derived_mutations(document_xml, rels_xml, model, doc_ns_index):
                     _corrupt_cell(owner, member, data_type, other)))
     else:
         skipped.append('node-tables: the document defines no type members')
+
+    structure_field = _a_structure_field(
+        document_xml, model, doc_ns_index, structure_fields)
+    if structure_field:
+        type_name, field_name, data_type, cardinality = structure_field
+        other = '0:Int32' if data_type != '0:Int32' else '0:Boolean'
+        out.append(('a Structure field DataType disagrees with the NodeSet',
+                    'data-type-items',
+                    _corrupt_items_cell(type_name, field_name, data_type, other)))
+        if cardinality == '0..1':
+            out.append(('an optional Structure field is printed as mandatory',
+                        'data-type-items',
+                        _corrupt_items_cell(type_name, field_name, cardinality, '1')))
+        out.append(('Structure fields are reordered',
+                    'data-type-items', _swap_first_structure_rows(type_name)))
+        out.append(('a Structure Items table contains a duplicate field',
+                    'data-type-items', _duplicate_first_structure_row(type_name)))
+    else:
+        skipped.append('data-type-items: the document defines no Structure fields')
 
     unit = _a_conformance_unit(document_xml, model)
     if unit:
@@ -209,6 +304,32 @@ def _a_conformance_unit(document_xml, model):
     return None
 
 
+def _a_structure_field(
+        document_xml, model, doc_ns_index, structure_fields=False):
+    """A rendered Structure field, preferring one whose cardinality is optional."""
+    if not structure_fields:
+        return None
+    from opcdocx import nodeset_tables
+    candidates = []
+    for node in model.nodes.values():
+        if node.tag != 'UADataType' or not node.definition:
+            continue
+        if (node.name + ' Items') not in document_xml:
+            continue
+        spec = nodeset_tables.enum_table(
+            model, node.name, doc_ns_index=doc_ns_index,
+            structure_fields=structure_fields)
+        if spec['kind'] != 'structure':
+            continue
+        for field in spec['fields']:
+            if _find_items_row(
+                    document_xml, node.name, field['name'], field['type']):
+                candidates.append((node.name, field['name'], field['type'],
+                                   field['cardinality']))
+    return next((c for c in candidates if c[3] == '0..1'),
+                candidates[0] if candidates else None)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('config')
@@ -235,7 +356,9 @@ def main(argv=None):
             rels_xml = z.read('word/_rels/document.xml.rels').decode('utf-8')
         model = _model_for(cfg)
         derived, skipped = derived_mutations(
-            document_xml, rels_xml, model, cfg['identity']['namespaceIndexInDocument'])
+            document_xml, rels_xml, model,
+            cfg['identity']['namespaceIndexInDocument'],
+            cfg.get('structureFieldTables', False))
         for reason in skipped:
             print('skip  %s' % reason)
 

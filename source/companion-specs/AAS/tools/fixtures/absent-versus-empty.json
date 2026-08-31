@@ -1,0 +1,65 @@
+{
+  "submodels": [
+    {
+      "modelType": "Submodel",
+      "id": "https://fabrikam.com/ids/sm/absent-vs-empty",
+      "idShort": "AbsentVersusEmpty",
+      "kind": "Instance",
+      "submodelElements": [
+        {
+          "modelType": "SubmodelElementCollection",
+          "idShort": "EmptyCollection",
+          "value": []
+        },
+        {
+          "modelType": "SubmodelElementCollection",
+          "idShort": "AbsentCollection"
+        },
+        {
+          "modelType": "SubmodelElementList",
+          "idShort": "EmptyList",
+          "orderRelevant": true,
+          "typeValueListElement": "Property",
+          "value": []
+        },
+        {
+          "modelType": "SubmodelElementList",
+          "idShort": "AbsentList",
+          "orderRelevant": true,
+          "typeValueListElement": "Property"
+        },
+        {
+          "modelType": "Entity",
+          "idShort": "EmptyStatements",
+          "entityType": "CoManagedEntity",
+          "statements": []
+        },
+        {
+          "modelType": "Entity",
+          "idShort": "AbsentStatements",
+          "entityType": "CoManagedEntity"
+        },
+        {
+          "modelType": "Property",
+          "idShort": "PresentButEmptyValue",
+          "valueType": "xs:string",
+          "value": ""
+        },
+        {
+          "modelType": "Property",
+          "idShort": "AbsentValue",
+          "valueType": "xs:string"
+        },
+        {
+          "modelType": "MultiLanguageProperty",
+          "idShort": "EmptyLangStrings",
+          "value": []
+        },
+        {
+          "modelType": "MultiLanguageProperty",
+          "idShort": "AbsentLangStrings"
+        }
+      ]
+    }
+  ]
+}

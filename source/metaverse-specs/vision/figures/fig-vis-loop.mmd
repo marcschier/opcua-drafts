@@ -1,0 +1,10 @@
+graph LR
+    R["Result published"] --> OP["Operator or downstream<br/>disagrees"]
+    OP --> C["SubmitCorrection<br/>Purpose = GroundTruthLabel"]
+    C --> D["DatasetType<br/>SamplesCollected++"]
+    D --> T["TriggerTraining"]
+    T --> CM["CandidateModel"]
+    CM --> V["Validating"]
+    V --> P["PromoteModel"]
+    P --> DEP["DeploymentType<br/>now serving new version"]
+    DEP --> R

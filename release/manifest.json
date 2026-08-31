@@ -1,5 +1,5 @@
 {
-  "$comment": "Release manifest for moving OPC Foundation review drafts from marcschier/opcua-drafts to OPCF-Members/spec-drafts. Dependency closure is derived from RequiredModel declarations, validator/tool path reads, cross-tree markdown links, aggregate validators, and Word clause-map sources. Avro tooling maps model/cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml as a sample base model; observability-export is listed with submitted false so it can be vendored into private exports while remaining public. A submitted spec moves its committed Word rendering and the figures its clause map declares, because Word is the review format and the .docx is the artifact under review; vendored specs do not, because they are not reviewed.",
+  "$comment": "Release manifest for moving OPC Foundation review drafts from marcschier/opcua-drafts to OPCF-Members/spec-drafts. Dependency closure is derived from RequiredModel declarations, validator/tool path reads, cross-tree markdown links, aggregate validators, and Word clause-map sources. Public tools that require a released specification's NodeSet consume a byte-identical fixture under shared tooling, so public CI remains self-contained without exposing private review content. A submitted spec moves its committed Word rendering and the figures its clause map declares, because Word is the review format and the .docx is the artifact under review; vendored specs do not, because they are not reviewed.",
   "publicRepo": "marcschier/opcua-drafts",
   "privateRepo": "OPCF-Members/spec-drafts",
   "accessInfo": "https://github.com/OPCF-Members/Help",
@@ -8,7 +8,7 @@
   ],
   "specs": {
     "avro-encoding": {
-      "$comment": "Releasable. Tooling imports shared _common and validate_local.py invokes build_schemas.py with no arguments, so the default Observability Export NodeSet is a private-side runtime dependency. Observability Export is vendored, not closed over: it is copied to the private export but remains public.",
+      "$comment": "Releasable. Tooling imports shared _common and validate_local.py invokes build_schemas.py with no arguments, so the default Observability Export NodeSet is a runtime dependency. The public Arrow tooling consumes the byte-identical fixture under shared _common; private Avro consumes the reviewed model in spec-drafts.",
       "title": "OPC UA — Apache Avro DataEncoding",
       "submitted": true,
       "state": "released",
@@ -28,32 +28,110 @@
       ],
       "keepPublic": [],
       "closure": [],
-      "vendor": [
-        "observability-export"
-      ],
+      "vendor": [],
       "wordSpecs": [
         "word-drafts/tools/specs/avro-encoding.json"
       ],
       "validateAll": "core-specs/extras/validate_all.py",
       "reverseRefs": [
         "README.md",
-        "source/cloud-specs/schema-registry/spec.md",
+        "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
         "core-specs/extras/performance/OPC-UA-Encoding-Performance-Comparison.md",
         "word-drafts/tools/specs/batch.json"
       ]
     },
-    "observability-export": {
-      "$comment": "Shared sample/base model for the Avro and Arrow schema generators, not an independently releasable OPC Foundation review submission. Its model directory is vendored as a unit so the base NodeSet, NodeIds CSV and generated domain overlays cannot drift apart. The specification prose stays public.",
-      "title": "OPC UA — Observability Export",
-      "submitted": false,
-      "state": "public",
+    "data-channels": {
+      "$comment": "Releasable base-namespace errata package. The combined specification, the insertion-ready Part 3, Part 4 and Part 6 errata, the generated model, the wire tooling, and the linked informative throughput report form one review unit. Both validators are self-contained and the draft has no RequiredModel dependency, so it needs neither closure nor vendored specifications.",
+      "title": "OPC UA — Data Channels",
+      "submitted": true,
+      "state": "released",
       "move": [
-        "model/cloud-specs/observability-export"
+        "core-specs/data-channels",
+        "core-specs/extras/data-channels",
+        "core-specs/extras/performance/OPC-UA-Data-Channel-Throughput.md",
+        "word-drafts/tools/specs/data-channels.json",
+        "word-drafts/OPC-UA-Data-Channels.docx",
+        "word-drafts/OPC-UA-Data-Channels.docmodel.json",
+        "word-drafts/OPC-UA-Data-Channels.provenance.json",
+        "word-drafts/figures/DataChannels-Fig1-Session.pptx",
+        "word-drafts/figures/DataChannels-Fig1-Session.png",
+        "word-drafts/figures/DataChannels-FigNotation.pptx",
+        "word-drafts/figures/DataChannels-FigNotation.png",
+        "word-drafts/figures/DataChannels-FigTypes.pptx",
+        "word-drafts/figures/DataChannels-FigTypes.png"
       ],
       "keepPublic": [],
       "closure": [],
       "vendor": [],
-      "wordSpecs": [],
+      "wordSpecs": [
+        "word-drafts/tools/specs/data-channels.json"
+      ],
+      "validateAll": "core-specs/extras/validate_all.py",
+      "reverseRefs": [
+        "README.md",
+        "core-specs/extras/validate_all.py",
+        "word-drafts/README.md",
+        "word-drafts/tools/specs/batch.json"
+      ]
+    },
+    "observability-export": {
+      "$comment": "Releasable Observability Export companion specification. Its normative NodeSet has one authoritative review copy; the public repository carries a byte-identical fixture under shared tooling for self-contained generator validation.",
+      "title": "OPC UA — Observability Export",
+      "submitted": true,
+      "state": "released",
+      "move": [
+        "cloud-specs/observability-export/OPC-UA-Observability-Export.md",
+        "cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeIds.csv",
+        "cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml",
+        "cloud-specs/observability-export/README.md",
+        "cloud-specs/observability-export/di",
+        "cloud-specs/observability-export/facets",
+        "cloud-specs/observability-export/pumps",
+        "cloud-specs/observability-export/robotics",
+        "cloud-specs/extras/observability-export",
+        "word-drafts/tools/specs/observability-export.json",
+        "word-drafts/OPC-UA-Observability-Export.docx",
+        "word-drafts/OPC-UA-Observability-Export.docmodel.json",
+        "word-drafts/OPC-UA-Observability-Export.provenance.json",
+        "word-drafts/figures/Observability-Fig1-Landscape.pptx",
+        "word-drafts/figures/Observability-Fig1-Landscape.png",
+        "word-drafts/figures/Observability-Fig2-AddressSpace.pptx",
+        "word-drafts/figures/Observability-Fig2-AddressSpace.png",
+        "word-drafts/figures/Observability-Fig3-BoundItem.pptx",
+        "word-drafts/figures/Observability-Fig3-BoundItem.png",
+        "word-drafts/figures/Observability-Fig4-ClassicSequence.pptx",
+        "word-drafts/figures/Observability-Fig4-ClassicSequence.png",
+        "word-drafts/figures/Observability-Fig5-PubSubSequence.pptx",
+        "word-drafts/figures/Observability-Fig5-PubSubSequence.png",
+        "word-drafts/figures/Observability-Fig6-DI-Tree.pptx",
+        "word-drafts/figures/Observability-Fig6-DI-Tree.png",
+        "word-drafts/figures/Observability-Fig7-DI-DataSet.pptx",
+        "word-drafts/figures/Observability-Fig7-DI-DataSet.png",
+        "word-drafts/figures/Observability-Fig8-Health-Tree.pptx",
+        "word-drafts/figures/Observability-Fig8-Health-Tree.png",
+        "word-drafts/figures/Observability-Fig9-Health-DataSet.pptx",
+        "word-drafts/figures/Observability-Fig9-Health-DataSet.png",
+        "word-drafts/figures/Observability-Fig10-Facets.pptx",
+        "word-drafts/figures/Observability-Fig10-Facets.png",
+        "word-drafts/figures/Observability-Fig11-Pumps-Tree.pptx",
+        "word-drafts/figures/Observability-Fig11-Pumps-Tree.png",
+        "word-drafts/figures/Observability-Fig12-Pumps-DataSet.pptx",
+        "word-drafts/figures/Observability-Fig12-Pumps-DataSet.png",
+        "word-drafts/figures/Observability-Fig13-Robotics-Tree.pptx",
+        "word-drafts/figures/Observability-Fig13-Robotics-Tree.png",
+        "word-drafts/figures/Observability-Fig14-Robotics-DataSet.pptx",
+        "word-drafts/figures/Observability-Fig14-Robotics-DataSet.png",
+        "word-drafts/figures/Observability-FigBindingTypes.pptx",
+        "word-drafts/figures/Observability-FigBindingTypes.png",
+        "word-drafts/figures/Observability-FigNotation.pptx",
+        "word-drafts/figures/Observability-FigNotation.png"
+      ],
+      "keepPublic": [],
+      "closure": [],
+      "vendor": [],
+      "wordSpecs": [
+        "word-drafts/tools/specs/observability-export.json"
+      ],
       "validateAll": "cloud-specs/validate_all.py",
       "reverseRefs": [
         "README.md",
@@ -96,7 +174,7 @@
       "validateAll": "metaverse-specs/validate_all.py",
       "reverseRefs": [
         "README.md",
-        "source/core-specs/xregistry/README.md",
+        "core-specs/xregistry/README.md",
         "metaverse-specs/README.md",
         "metaverse-specs/openusd-scene/OPC-UA-OpenUSD-Scene-Materialization.md",
         "word-drafts/tools/specs/batch.json"
@@ -127,8 +205,8 @@
       "reverseRefs": [
         "README.md",
         "metaverse-specs/README.md",
-        "source/metaverse-specs/openusd-binding/spec.md",
-        "source/metaverse-specs/openusd-binding/README.md",
+        "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+        "metaverse-specs/openusd-binding/README.md",
         "word-drafts/tools/specs/batch.json",
         "word-drafts/tools/specs/openusd-binding.json"
       ]
@@ -193,30 +271,47 @@
       "validateAll": null,
       "reverseRefs": [
         "README.md",
-        "source/core-specs/xregistry/README.md",
+        "core-specs/xregistry/README.md",
         "wot-specs/WoT-Binding/OPC-UA-WoT-Binding.md",
         "word-drafts/tools/specs/batch.json",
         "word-drafts/tools/specs/wot-binding.json"
       ]
     },
     "xregistry": {
-      "$comment": "Shared base model, not an independently releasable OPC Foundation submission. It stays public because Schema Registry and other public specs subtype it. Vendored as a closed set: the model directory so a released NodeSet's RequiredModel on http://opcfoundation.org/UA/xRegistry/ resolves, plus the abstract specification that released documents link to. README.md is deliberately excluded because it links onward to Schema Registry and WoT Connectivity, which stay public, and vendoring it would drag an unbounded set of public prose into the private repository.",
+      "$comment": "Releasable. The abstract base model is submitted to the OPC Foundation on its own, so the whole model and its tooling move together. README.md stays public as the redirect to the review copy and to the OPC UA protocol binding now maintained upstream by xregistry/spec. Public specifications that subtype the released model use a byte-identical dependency NodeSet under model/dependencies so the specification publisher can resolve the RequiredModel on a clean checkout.",
       "title": "OPC UA — xRegistry",
-      "submitted": false,
-      "state": "public",
+      "submitted": true,
+      "state": "released",
       "move": [
-        "model/core-specs/xregistry",
-        "source/core-specs/xregistry/spec.md"
+        "core-specs/xregistry",
+        "word-drafts/tools/specs/xregistry.json",
+        "word-drafts/OPC-UA-xRegistry.docx",
+        "word-drafts/OPC-UA-xRegistry.docmodel.json",
+        "word-drafts/OPC-UA-xRegistry.provenance.json",
+        "word-drafts/figures/xRegistry-Fig1-RegistryShape.pptx",
+        "word-drafts/figures/xRegistry-Fig1-RegistryShape.png",
+        "word-drafts/figures/xRegistry-FigNotation.pptx",
+        "word-drafts/figures/xRegistry-FigNotation.png",
+        "word-drafts/figures/xRegistry-FigRegistryType.pptx",
+        "word-drafts/figures/xRegistry-FigRegistryType.png",
+        "word-drafts/figures/xRegistry-FigGroupType.pptx",
+        "word-drafts/figures/xRegistry-FigGroupType.png"
       ],
-      "keepPublic": [],
+      "keepPublic": [
+        "core-specs/xregistry/README.md"
+      ],
       "closure": [],
       "vendor": [],
-      "wordSpecs": [],
-      "validateAll": null,
+      "wordSpecs": [
+        "word-drafts/tools/specs/xregistry.json"
+      ],
+      "validateAll": "core-specs/extras/validate_all.py",
       "reverseRefs": [
         "README.md",
-        "source/cloud-specs/schema-registry/spec.md",
-        "source/cloud-specs/schema-registry/README.md",
+        "cloud-specs/schema-registry/OPC-UA-Schema-Registry.md",
+        "cloud-specs/schema-registry/README.md",
+        "metaverse-specs/openusd-binding/OPC-UA-OpenUSD-Bindings.md",
+        "metaverse-specs/openusd-binding/README.md",
         "wot-specs/WoT-Connectivity/OPC-UA-WoT-Connectivity.md",
         "wot-specs/WoT-Connectivity/README.md",
         "word-drafts/tools/specs/batch.json"

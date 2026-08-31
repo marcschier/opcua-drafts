@@ -2,7 +2,7 @@
 
 Schema-based encodings such as Apache Avro and Apache Arrow require a decoder to obtain the concrete schema document that matches the received payload. Unlike the OPC UA Binary, XML and JSON DataEncodings, which are either self-describing or resolved through the server AddressSpace, a schema-based payload that has left the server in a PubSub message, a file, a data lake, an MQTT/AMQP/Kafka stream or a historian/ADBC stream must be accompanied by a reference or identifier that lets the consumer retrieve the schema.
 
-This specification defines a **Schema Registry**: a concrete xRegistry whose resources are schema documents. It is a **domain extension** of the abstract [*OPC UA — xRegistry*](../../core-specs/xregistry/spec.md) base model — its registry, group and resource types are subtypes of the base `RegistryType`, `GroupType` and `ResourceType` — so it inherits, unchanged, the base model's three interchangeable representations (the AddressSpace as a folder tree of files, the OPC UA API server, and the serialized xRegistry document), its label configuration (the `Labels` container's `AddAttribute`/`RemoveAttribute`), its auto-bootstrap behaviour, and its federation via `ExpandedNodeId`. Because the base OPC UA API is a first-class xRegistry binding, an OPC UA Schema Registry is **discovered, downloaded, registered, browsed and federated the same way as an HTTP xRegistry Schema Registry** (§4.3): the two are peer bindings of the same registry model. This specification adds only what is specific to *schemas*.
+This specification defines a **Schema Registry**: a concrete xRegistry whose resources are schema documents. It is a **domain extension** of the abstract <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKC4uLy4uL2NvcmUtc3BlY3MveHJlZ2lzdHJ5L09QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link --> base model — its registry, group and resource types are subtypes of the base `RegistryType`, `GroupType` and `ResourceType` — so it inherits, unchanged, the base model's three interchangeable representations (the AddressSpace as a folder tree of files, the OPC UA API server, and the serialized xRegistry document), its label configuration (the `Labels` container's `AddAttribute`/`RemoveAttribute`), its auto-bootstrap behaviour, and its federation via `ExpandedNodeId`. Because the base OPC UA API is a first-class xRegistry binding, an OPC UA Schema Registry is **discovered, downloaded, registered, browsed and federated the same way as an HTTP xRegistry Schema Registry** (§4.3): the two are peer bindings of the same registry model. This specification adds only what is specific to *schemas*.
 
 The registry is a **stand-alone server capability**, decoupled from PubSub. It is exposed as a well-known object under the **Server** object (§6.1), so any Server — whether or not it implements Part 14 PubSub — can host, serve and federate schemas. PubSub is one *consumer* of the registry, not a prerequisite: a Server that does support PubSub **may** additionally reference the registry from its `PublishSubscribe` object, and the optional PubSub-specific behaviour (DataSet schemas keyed to `ConfigurationVersion`, and the append-only schema evolution) is isolated in the **PubSub DataSet schema profile** of Annex C.
 
@@ -21,22 +21,16 @@ The model has these goals:
 
 JSON Schema is a first-class registry format, but the OPC UA JSON DataEncoding is self-describing enough that a schema fetch is optional for decoding. For JSON, the registry is used for governance, validation, code generation and documentation rather than as a mandatory decoding dependency.
 
-It is explicitly out of scope to re-specify the Avro, Arrow or JSON encodings themselves, the PubSub message framing, the abstract xRegistry model, or the xRegistry API. The abstract model is defined by [*OPC UA — xRegistry*](../../core-specs/xregistry/spec.md) and its OPC UA protocol binding by the [xRegistry OPC UA API](#ref-xregistryopcua); this specification is a domain profile of them. The HTTP correspondence for readers familiar with the xRegistry HTTP binding is informative and confined to Annex D.
+It is explicitly out of scope to re-specify the Avro, Arrow or JSON encodings themselves, the PubSub message framing, the abstract xRegistry model, or the xRegistry API. The abstract model is defined by <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKC4uLy4uL2NvcmUtc3BlY3MveHJlZ2lzdHJ5L09QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link --> and its OPC UA protocol binding by the [xRegistry OPC UA API](#ref-xregistryopcua); this specification is a domain profile of them. The HTTP correspondence for readers familiar with the xRegistry HTTP binding is informative and confined to Annex D.
 
 ## Overview {#sec-overview}
 
-A Schema Registry is an xRegistry (per [*OPC UA — xRegistry*](../../core-specs/xregistry/spec.md)) whose groups are OPC UA namespaces and whose resources are schema documents. Because groups are folders and each schema document is a `FileType` file, the registry *is* a browsable folder tree of files:
+A Schema Registry is an xRegistry (per <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKC4uLy4uL2NvcmUtc3BlY3MveHJlZ2lzdHJ5L09QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link -->) whose groups are OPC UA namespaces and whose resources are schema documents. Because groups are folders and each schema document is a `FileType` file, the registry *is* a browsable folder tree of files:
 
-```mermaid
-graph TD
-  SVR[Server i=2253] -->|HasComponent| SR[SchemaRegistry : SchemaRegistryType : RegistryType]
-  PS[PublishSubscribe i=14443] -.optional reference.-> SR
-  SR -->|Organizes| G1["SchemaGroup (NamespaceUri = ...UA/) : SchemaGroupType : GroupType"]
-  SR -->|Organizes| G2["SchemaGroup (NamespaceUri = ...UA/Pumps/) : SchemaGroupType : GroupType"]
-  G2 -->|Organizes| S1["PumpDataType:avro : SchemaFileType : ResourceType"]
-  G2 -->|Organizes| S2["PumpDataType:arrow : SchemaFileType : ResourceType"]
-  S1 -.Open/Read.-> DOC[(.avsc document bytes)]
-  S1 -.Opaque SchemaId NodeId / GetSchema.-> DOC
+```{figure}
+id: fig-sreg-shape
+caption: The schema registry in the address space
+source: figures/SchemaRegistry-Fig1-Shape.png
 ```
 
 A Server, Publisher or offline tool generates schema documents from its model and registers them as files. On the wire, schema-based messages carry a compact SchemaId (the encoding's SchemaId handshake) or an explicit schema reference. A consumer resolves the schema — by the SchemaId fast path or by reading the schema file — and decodes. For JSON, the schema reference is informative unless the consumer chooses to validate. The registry hangs off the `Server` object and is present whether or not the Server implements PubSub; a PubSub-capable Server may add the dashed optional reference from `PublishSubscribe` so PubSub clients discover it in the familiar place.
@@ -76,6 +70,24 @@ On `Close` the server **auto-bootstraps** the schema-specific metadata in additi
 
 The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft numeric NodeIds use the provisional `62000+` block; final NodeIds are assigned by the OPC Foundation. The three schema types subtype the abstract xRegistry base types (namespace `http://opcfoundation.org/UA/xRegistry/`, declared as a `<RequiredModel>`). The types and their members are the normative node reference in Annex A; this clause describes the schema-specific additions.
 
+The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in *italics*, and a Node whose BrowseName is a placeholder is written in angle brackets. A `HasTypeDefinition` reference carries a solid arrowhead; a `HasComponent` reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow. A figure shows the part of the model its clause describes, never the whole of it.
+
+```{figure}
+id: fig-sreg-notation
+caption: Graphical notation used by the AddressSpace figures
+source: figures/SchemaRegistry-FigNotation.png
+```
+
+The three types narrow the xRegistry base to schemas: a registry of groups, a group keyed by an OPC UA namespace, and a schema file identified by its `SchemaId`.
+
+<!-- model-figure: root=ns=2;i=62000 require=mandatory external=RegistryType,GroupType,ResourceType  graph=figures/fig-sreg-types.mmd -->
+
+```{figure}
+id: fig-sreg-types
+caption: The three schema types and the xRegistry bases they narrow
+source: figures/SchemaRegistry-FigTypes.png
+```
+
 ### SchemaRegistryType {#sec-schemaregistrytype}
 
 `SchemaRegistryType` is a subtype of the base `RegistryType` (itself a `FolderType`). It is exposed as one well-known `SchemaRegistry` Object as a `HasComponent` of the `Server` Object (`i=2253`), so **any** Client that can reach the standard `Server` object discovers schema resolution, independent of whether the Server implements PubSub. A Server that also implements Part 14 PubSub **may** additionally add a reference from its `PublishSubscribe` Object to the same `SchemaRegistry` Object so PubSub clients find it in the familiar place, parallel to the Security Key Service (Annex C); that reference is optional and adds no dependency. Its `<SchemaGroup>` OptionalPlaceholder constrains the base `<Group>` to `SchemaGroupType`. It adds the `GetSchema` Method (§6.4) as the method form of the SchemaId fast path. The well-known `SchemaRegistry` Object **materializes** its `GetSchema` Method as a concrete Method node (as the Part 14 `PublishSubscribe` Object declares its methods), so the generated NodeSet yields a callable registry; a Server binds the Method handler and the Opaque-`SchemaId`-NodeId resolution to its schema store. Registration uses the base `CreateResource` Method and `Write` (§5.2); no bespoke register Method is required.
@@ -98,6 +110,29 @@ The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft 
 | SREG-SchemaDownload |  |  |  |  |  |
 | SREG-StructureMaterialization |  |  |  |  |  |
 | SREG-XRegistryApi |  |  |  |  |  |
+
+#### GetSchema {#sec-schemaregistrytype-getschema type=SchemaRegistryType method=GetSchema}
+
+Return the schema document and metadata for a raw on-wire SchemaId fingerprint (the method form of the Opaque SchemaId NodeId fast path). An unresolved SchemaId returns the Method Call StatusCode Bad_NotFound rather than an empty result.
+
+**Signature**
+
+```text
+GetSchema (
+  [in]  0:ByteString SchemaId,
+  [out] 0:ByteString Document,
+  [out] 0:String     Format,
+  [out] 0:String     ContentType);
+```
+
+*Table - GetSchema Method Arguments* {#tbl-getschema-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+| SchemaId | Raw on-wire SchemaId fingerprint bytes. |
+| Document | Schema document bytes. |
+| Format | xRegistry format string. |
+| ContentType | Schema document media type. |
 
 ### SchemaGroupType {#sec-schemagrouptype}
 
@@ -305,7 +340,11 @@ None of this is required of a schema registry. This is a companion specification
 
 ## Conformance {#sec-conformance}
 
-An implementation conforms if it exposes the in-server Schema Registry as a subtype of the [*OPC UA — xRegistry*](../../core-specs/xregistry/spec.md) base model — a `SchemaRegistryType` root as a well-known component of the `Server` object (`i=2253`) with `SchemaGroupType` groups and `SchemaFileType` files — supports the **mandatory** download of a schema (§5.1) for at least one schema-based format, and preserves reversibility end-to-end: a value encoded per a registered schema and decoded through the resolved schema equals the original (the acceptance corpus of the encoding additions). Conformance does **not** require Part 14 PubSub; a Server without PubSub is a fully conformant schema registry.
+```{clause}
+kind: profiles
+```
+
+An implementation conforms if it exposes the in-server Schema Registry as a subtype of the <!-- release-spec-link:WypPUEMgVUEg4oCUIHhSZWdpc3RyeSpdKC4uLy4uL2NvcmUtc3BlY3MveHJlZ2lzdHJ5L09QQy1VQS14UmVnaXN0cnkubWQp -->*OPC UA — xRegistry*<!-- /release-spec-link --> base model — a `SchemaRegistryType` root as a well-known component of the `Server` object (`i=2253`) with `SchemaGroupType` groups and `SchemaFileType` files — supports the **mandatory** download of a schema (§5.1) for at least one schema-based format, and preserves reversibility end-to-end: a value encoded per a registered schema and decoded through the resolved schema equals the original (the acceptance corpus of the encoding additions). Conformance does **not** require Part 14 PubSub; a Server without PubSub is a fully conformant schema registry.
 
 Registration (§5.2), structure materialization (§10.1), the xRegistry API/JSON projection (§10.2), TTL/mirror (§9), federation (Annex B) and the PubSub DataSet schema profile (Annex C) are optional and independently conformant. A conformant registry exposes ObjectTypes and Properties compatible with §6 and Annex A, including a per-format `SchemaId` (defined for every registered format — including JSON Schema through its injected fingerprint provider, §6.6) and SchemaId-based resolution by Opaque NodeId; `GetSchema` may additionally be exposed as the method form.
 
@@ -337,7 +376,7 @@ The NodeSet, CSV and Annex A are generated from `tools/build_model.py`. The loca
 kind: annex-a
 ```
 
-## Federation and OPC UA / HTTP resolution parity (informative) {#anx-b annex=normative}
+## Federation and OPC UA / HTTP resolution parity (informative) {#anx-b annex=informative}
 
 A Schema Registry inherits the base model's federation (base §8). A schema hosted by another registry is represented locally by a proxy `SchemaFileType` whose `ExternalReference` Property (an `ExpandedNodeId`) points to the remote schema file — its `ServerUri` names the remote OPC UA server (an application URI, resolved to a concrete endpoint through the local server's `ServerArray`/discovery or a GDS), and its `NamespaceUri` + `Identifier` are the remote schema node's identity — and/or whose `ResourceUrl` carries the same link in string form (an `opc.tcp` endpoint plus the remote node, or an HTTP URL for a non-OPC-UA registry). A consumer resolves such a proxy by resolving the `ServerUri` to an endpoint, mapping the `NamespaceUri` to the remote server's `NamespaceArray` index to form the remote NodeId, and reading that schema file with the FileType Methods (or calling the remote `GetSchema`). Because a schema's identity (its `SchemaId` and `xid`) is stable across registries while the endpoint authority is not, the same schema federated from several registries keeps one identity and can be de-duplicated by `SchemaId`.
 
@@ -391,7 +430,7 @@ A DataSet has one Variant field. At `ConfigurationVersion 3.0` the field has onl
 
 An executable reference demonstration of append-only Variant and ExtensionObject growth — latest-minor-decodes-older, distinct per-minor SchemaIds, and opaque-body fallbacks appended append-only at a non-reserved ordinal — is provided at `../../core-specs/extras/avro-encoding/tools/evolution_demo.py`.
 
-## HTTP binding correspondence (informative) {#anx-d annex=normative}
+## HTTP binding correspondence (informative) {#anx-d annex=informative}
 
 This annex maps the OPC UA schema-registry operations to the equivalent requests of the [xRegistry HTTP binding](https://github.com/xregistry/spec/blob/v1.0-rc3/core/http.md) and the xRegistry Schema Registry Service, for readers familiar with that binding. It is informative: the OPC UA binding is complete and native (§1–§13); no HTTP is required to use an OPC UA Schema Registry. Paths are relative to the registry root; `<SG>` is a `schemagroupid`, `<S>` a `schemaid`, `<V>` a `versionid`.
 

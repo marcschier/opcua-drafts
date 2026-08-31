@@ -1,0 +1,65 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../../aas.context.jsonld",
+    "../../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:SubmodelElementList",
+    "i4aas:AASSubmodelElementListType"
+  ],
+  "aas:Referable/idShort": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "AbsentList"
+  },
+  "aas:SubmodelElementList/orderRelevant": {
+    "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value": "true"
+  },
+  "aas:SubmodelElementList/typeValueListElement": {
+    "@id": "aas:AasSubmodelElements/Property"
+  },
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:E:43:10:https://fabrikam.com/ids/sm/absent-vs-emptyAbsentList",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/node/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2Fic2VudC12cy1lbXB0eQ/QWJzZW50TGlzdA",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2Fic2VudC12cy1lbXB0eQ/node/QWJzZW50TGlzdA",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/aHR0cHM6Ly9mYWJyaWthbS5jb20vaWRzL3NtL2Fic2VudC12cy1lbXB0eQ",
+      "rel": "uav:componentOf",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1031",
+      "rel": "ua:HasTypeDefinition"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "AbsentList",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;AbsentList",
+  "uav:componentOf": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:S:43:https://fabrikam.com/ids/sm/absent-vs-empty"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:E:43:10:https://fabrikam.com/ids/sm/absent-vs-emptyAbsentList",
+  "uav:modellingRule": "Optional"
+}

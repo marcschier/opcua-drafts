@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generator for the OPC UA — Vision companion specification (WG draft).
+Generator for the OPC UA for Vision Systems companion specification (WG draft).
 
 Emits, from a single in-code source of truth:
   * ../../../vision/Opc.Ua.Vision.NodeSet2.xml  - the information model (UANodeSet)
@@ -40,9 +40,8 @@ import re
 import xml.sax.saxutils as sx
 
 NAMESPACE = "http://opcfoundation.org/UA/Vision/"
-VERSION = "0.2.0"
+VERSION = "0.5.0"
 PUBDATE = "2026-08-31T00:00:00Z"
-
 BASE_UA_VERSION = "1.05.04"
 BASE_UA_PUBDATE = "2023-12-15T00:00:00Z"
 
@@ -55,6 +54,15 @@ HasTypeDefinition = "i=40"
 HasModellingRule = "i=37"
 HasInterface = "i=17603"
 HasEncoding = "i=38"
+# Event plumbing. HasNotifier and HasEventSource build the notifier hierarchy a client
+# walks to find what it can subscribe to; without them an EventType is declared but
+# unreachable, because a Subscription is created against a node whose EventNotifier
+# says it emits events (OPC 10000-3 clause 5.4, OPC 10000-4 clause 5.12).
+HasNotifier = "i=48"
+HasEventSource = "i=36"
+# EventNotifier bit 0 (SubscribeToEvents). Bits 2 and 3 add history read and write,
+# which this model does not require of an event source.
+EVENTNOTIFIER_SUBSCRIBE = "1"
 
 MR_Mandatory = "i=78"
 MR_Optional = "i=80"
@@ -62,6 +70,7 @@ MR_OptionalPlaceholder = "i=11508"
 MR_MandatoryPlaceholder = "i=11510"
 
 BaseObjectType = "i=58"
+BaseEventType = "i=2041"
 FolderType = "i=61"
 PropertyType = "i=68"
 BaseDataVariableType = "i=63"
@@ -100,6 +109,7 @@ ALIASES = [
     ("HasSubtype", HasSubtype), ("Organizes", Organizes),
     ("HasTypeDefinition", HasTypeDefinition), ("HasModellingRule", HasModellingRule),
     ("HasInterface", HasInterface), ("HasEncoding", HasEncoding),
+    ("HasNotifier", HasNotifier), ("HasEventSource", HasEventSource),
     ("Mandatory", MR_Mandatory), ("Optional", MR_Optional),
     ("OptionalPlaceholder", MR_OptionalPlaceholder),
     ("MandatoryPlaceholder", MR_MandatoryPlaceholder),
@@ -145,6 +155,31 @@ def _mid():
     return v
 
 
+def _reserve_encoding_through(last):
+    """Same append-only rule as _reserve_through, for the encoding id counter.
+
+    Encoding ids are auto-assigned inside struct_type(), so deleting a structure
+    silently frees its id for the next structure added - a renumbering that is harder
+    to notice than a member one because no CSV row names the encoding directly.
+    """
+    assert _next_encoding[0] <= last + 1, (
+        f"encoding reservation {last} already passed at {_next_encoding[0]}")
+    _next_encoding[0] = last + 1
+
+
+def _reserve_through(last):
+    """Burn member ids up to and including `last`, so no surviving member moves.
+
+    The AI cluster was factored out into OPC UA - AI Model Management and Inference. Its
+    member ids are NOT reclaimed: reusing them would renumber every member declared
+    after them, which is exactly the churn the append-only rule exists to prevent.
+    A hole in the id space costs nothing and keeps the CSV diff at zero moved.
+    """
+    assert _next_member[0] <= last + 1, (
+        f"reservation {last} already passed at {_next_member[0]}")
+    _next_member[0] = last + 1
+
+
 def T(nid):
     """Own-namespace NodeId (ns=1)."""
     return f"ns=1;i={nid}"
@@ -171,6 +206,15 @@ def object_type(nid, name, base, desc, abstract=False):
 
 def interface_type(nid, name, base, desc):
     add(nid, "UAObjectType", name, name, desc=desc, category=CAT, abstract=True)
+    ref(nid, HasSubtype, base, forward=False)
+    return nid
+
+
+def event_type(nid, name, base, desc, abstract=False):
+    """An EventType. Its members are Properties, exactly as OPC 10000-5 declares the
+    fields of BaseEventType, so a client selects them with a SimpleAttributeOperand and
+    the Server can filter on them before it sends anything."""
+    add(nid, "UAObjectType", name, name, desc=desc, category=CAT_EV, abstract=abstract)
     ref(nid, HasSubtype, base, forward=False)
     return nid
 
@@ -228,11 +272,20 @@ def obj_member(owner, owner_sym, name, typedef, desc, rule=MR_Optional,
 
 
 def _args(method_nid, method_sym, bname, args):
-    """Emit an InputArguments / OutputArguments Property for a Method."""
+    """Emit an InputArguments / OutputArguments Property for a Method.
+
+    BrowseNameNamespace 0: InputArguments and OutputArguments are standard Properties
+    defined by OPC 10000-3 / 10000-5 and live in namespace 0. A stack resolves a
+    Method's signature by looking for the child Property named InputArguments IN
+    NAMESPACE 0; qualified into the model namespace it is not found, the Method is
+    treated as taking zero arguments, and every real call is rejected with
+    Bad_TooManyArguments. Setting the flag here fixes every Method of this model,
+    including ones added later.
+    """
     nid = _mid()
     add(nid, "UAVariable", bname, f"{method_sym}_{bname}", parent=T(method_nid),
         attrs={"DataType": Argument, "ValueRank": "1",
-               "ArrayDimensions": str(len(args))})
+               "ArrayDimensions": str(len(args)), "BrowseNameNamespace": 0})
     ref(nid, HasModellingRule, MR_Mandatory)
     ref(nid, HasTypeDefinition, PropertyType)
     ref(nid, HasProperty, T(method_nid), forward=False)
@@ -292,9 +345,11 @@ def enum_type(nid, name, desc, fields):
     NODES[nid].definition = "".join(dparts)
     es = nid + 900
     ref(nid, HasProperty, T(es))
+    # EnumStrings is a standard Property of an enumeration DataType (OPC 10000-3) and
+    # lives in namespace 0, exactly like the Method argument Properties above.
     add(es, "UAVariable", "EnumStrings", f"{name}_EnumStrings", parent=T(nid),
         attrs={"DataType": LocalizedText, "ValueRank": "1",
-               "ArrayDimensions": str(len(fields))})
+               "ArrayDimensions": str(len(fields)), "BrowseNameNamespace": 0})
     ref(es, HasModellingRule, MR_Mandatory)
     ref(es, HasTypeDefinition, PropertyType)
     ref(es, HasProperty, T(nid), forward=False)
@@ -338,16 +393,24 @@ def struct_type(nid, name, desc, fields):
     _next_encoding[0] += 1
     ref(nid, HasEncoding, T(enc))
     add(enc, "UAObject", "Default Binary", f"{name}_Encoding_DefaultBinary",
-        desc="Default Binary encoding of the structure.")
+        desc="Default Binary encoding of the structure.",
+        attrs={"BrowseNameNamespace": 0, "SymbolicName": "DefaultBinary"})
     ref(enc, HasTypeDefinition, DataTypeEncodingType)
     ref(enc, HasEncoding, T(nid), forward=False)
     return nid
 
 
-def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent):
-    add(nid, "UAObject", name, name, desc=desc, parent=parent_nodeid)
+def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent,
+               event_notifier=None):
+    attrs = {"EventNotifier": event_notifier} if event_notifier else None
+    add(nid, "UAObject", name, name, desc=desc, parent=parent_nodeid, attrs=attrs)
     ref(nid, HasTypeDefinition, typedef)
     ref(nid, reftype, parent_nodeid, forward=False)
+    if event_notifier:
+        # Server HasNotifier this object. The Server object is where a client subscribes
+        # for everything, so without this edge the events raised here reach nobody who
+        # did not already know to subscribe to this node specifically.
+        ref(nid, HasNotifier, parent_nodeid, forward=False)
     return nid
 
 
@@ -357,6 +420,7 @@ def well_known(nid, name, typedef, parent_nodeid, desc, reftype=HasComponent):
 CAT = "Vision"
 CAT_DT = "Vision DataTypes"
 CAT_RT = "Vision ReferenceTypes"
+CAT_EV = "Vision Events"
 
 # ---------------------------------------------------------------------------
 # Enumerations (3001+)
@@ -424,20 +488,6 @@ enum_type(3006, "VisionEndpointAuthenticationEnum",
                         "GetStreamEndpoint or GetClip."),
            ("MutualTls", 4, "Client certificate.")])
 
-enum_type(3007, "VisionInferenceLocationEnum",
-          "Where inference executes. The result contract is identical in every case; this "
-          "property exists so a client can reason about latency, availability and trust "
-          "boundary without changing how it reads results.",
-          [("OnServer", 0, "In the OPC UA Server process or on its host."),
-           ("EdgeOffServer", 1, "On a separate edge node reached over the network."),
-           ("Cloud", 2, "In a remote or cloud service."),
-           ("InSimulator", 3, "Inside the simulator that also renders the sensor.")])
-
-enum_type(3008, "VisionAcceleratorKindEnum",
-          "Compute device executing the model.",
-          [("Cpu", 0, None), ("Gpu", 1, None), ("Npu", 2, None), ("Fpga", 3, None),
-           ("Tpu", 4, None), ("Other", 5, None)])
-
 enum_type(3009, "VisionResultEvaluationEnum",
           "Overall verdict of a result. Value semantics are aligned with the "
           "ResultEvaluationEnum of OPC 40001-101 so that a client already consuming "
@@ -469,10 +519,19 @@ enum_type(3012, "VisionCalibrationMountEnum",
            ("Unknown", 3, None)])
 
 enum_type(3013, "VisionFrameRoleEnum",
-          "Role of a coordinate frame, following the ISO 9787 frame vocabulary.",
+          "Role of a coordinate frame, following the ISO 9787 frame vocabulary. The "
+          "mechanical interface and the tool are DISTINCT roles: a camera on a robot "
+          "flange is calibrated to the mechanical interface, while a pick pose has to "
+          "reach the tool centre point, and a model that cannot tell them apart cannot "
+          "express the offset between them.",
           [("World", 0, None), ("Base", 1, None),
-           ("Tool", 2, "Tool / tool centre point (TCP) frame."),
-           ("Camera", 3, None), ("Object", 4, None), ("Other", 5, None)])
+           ("MechanicalInterface", 2,
+            "The flange at the end of the last link, to which an end effector is "
+            "fitted. This is what an eye-in-hand extrinsic calibration resolves to."),
+           ("Tool", 3, "A tool frame, whose origin is a tool centre point."),
+           ("Object", 4, None), ("Other", 5, None),
+           ("Camera", 6, "A camera frame. Numbered after the ISO 9787 roles because "
+                         "it is not one of them.")])
 
 enum_type(3014, "VisionDistortionModelEnum",
           "Lens distortion model the coefficients belong to.",
@@ -489,18 +548,32 @@ enum_type(3015, "VisionSensorModalityEnum",
            ("Thermal", 3, None), ("Multispectral", 4, None),
            ("Event", 5, "Event / neuromorphic camera."), ("Other", 6, None)])
 
-enum_type(3016, "VisionLearningJobStateEnum",
-          "State of a dataset-capture, retraining and promotion cycle.",
-          [("Idle", 0, None), ("Collecting", 1, None), ("Labelling", 2, None),
-           ("Training", 3, None), ("Validating", 4, None),
-           ("Ready", 5, "A candidate model is available for promotion."),
-           ("Promoted", 6, None), ("Failed", 7, None)])
+# OPC 40100-2 types the corresponding members as an open String and an unconstrained
+# UInt32, and gives its permitted values only as prose examples. An open value space is
+# the failure clause 5.7 exists to prevent, so these close it over the values 40100-2
+# names and keep Other as the escape. Annex D gives the conversion in both directions.
+enum_type(3016, "VisionLampTypeEnum",
+          "Emitter technology of a light source. The named values are those OPC 40100-2 "
+          "gives as examples for ILampType.LampType, which is a free String there.",
+          [("Led", 0, "Light-emitting diode. The default because it is what the "
+                      "overwhelming majority of machine-vision illuminators use."),
+           ("Fluorescent", 1, None),
+           ("Laser", 2, "Includes the line and pattern projectors of laser-triangulation "
+                        "and structured-light sensors."),
+           ("Xenon", 3, None),
+           ("Halogen", 4, None),
+           ("Other", 5, "An emitter technology none of the above names.")])
 
-enum_type(3017, "VisionDatasetSourceEnum",
-          "Provenance of the samples in a dataset.",
-          [("Real", 0, "Captured from physical sensors."),
-           ("Synthetic", 1, "Rendered by a simulator."),
-           ("Mixed", 2, "Both, e.g. synthetic pre-training with real fine-tuning.")])
+enum_type(3017, "VisionLightingModeEnum",
+          "How a light source is being driven. The named values are those OPC 40100-2 "
+          "gives as examples for ILightingControllerType.LightingMode, which is an "
+          "unconstrained UInt32 there.",
+          [("Continuous", 0, "Constant output, not synchronised to acquisition."),
+           ("Strobe", 1, "Pulsed in synchronisation with acquisition, which is what "
+                         "makes a short exposure viable on a moving part."),
+           ("Modulated", 2, "Driven at a carrier frequency, so the contribution of the "
+                            "illuminator can be separated from ambient light."),
+           ("Other", 3, "A drive mode none of the above names.")])
 
 VisionRealityKindEnum = T(3001)
 VisionStreamProtocolEnum = T(3002)
@@ -508,8 +581,6 @@ VisionClipFormatEnum = T(3003)
 VisionVideoCodecEnum = T(3004)
 VisionEndpointStateEnum = T(3005)
 VisionEndpointAuthenticationEnum = T(3006)
-VisionInferenceLocationEnum = T(3007)
-VisionAcceleratorKindEnum = T(3008)
 VisionResultEvaluationEnum = T(3009)
 VisionToleranceStatusEnum = T(3010)
 VisionFeedbackPurposeEnum = T(3011)
@@ -517,8 +588,8 @@ VisionCalibrationMountEnum = T(3012)
 VisionFrameRoleEnum = T(3013)
 VisionDistortionModelEnum = T(3014)
 VisionSensorModalityEnum = T(3015)
-VisionLearningJobStateEnum = T(3016)
-VisionDatasetSourceEnum = T(3017)
+VisionLampTypeEnum = T(3016)
+VisionLightingModeEnum = T(3017)
 
 # ---------------------------------------------------------------------------
 # Structured DataTypes (3050+)
@@ -629,13 +700,10 @@ struct_type(3057, "VisionStreamSessionDataType",
              ("ExpiresAt", UtcTime, "Expiry after which the Uri is no longer valid.")])
 VisionStreamSessionDataType = T(3057)
 
-struct_type(3058, "VisionTensorSignatureDataType",
-            "Shape and element type of one model input or output tensor.",
-            [("Name", String, "Tensor name as declared by the model."),
-             ("ElementType", String, "Element type, for example float32, uint8 or int64."),
-             ("Shape", Int32, "Dimensions; -1 marks a dynamic axis.", 1),
-             ("Layout", String, "Optional axis layout hint, for example NCHW or NHWC.")])
-VisionTensorSignatureDataType = T(3058)
+# Retired: encoding 5009 belonged to VisionTensorSignatureDataType, which moved to
+# OPC UA - AI Model Management and Inference. Not reclaimed, for the same reason member
+# ids are not.
+_reserve_encoding_through(5009)
 
 # ---------------------------------------------------------------------------
 # ReferenceTypes (4001+)
@@ -650,11 +718,6 @@ reference_type(4003, "HasScenePrim", "IsScenePrimOf",
                "Server also implements OPC UA - OpenUSD Scene Materialization. The target "
                "is expected to be a UsdGeomCameraType instance. Optional: PrimPath remains "
                "the portable descriptor.")
-reference_type(4004, "UsesModel", "IsUsedByDeployment",
-               "Links an AiDeploymentType instance to the AiModelType instance it "
-               "executes. Clause 5.11 requires exactly one such reference per deployment; "
-               "it is the only defined path from a result to the model artefact and its "
-               "Digest, on which clause 12.6 depends.")
 reference_type(4005, "ProducedBy", "Produces",
                "Links a result to the inference pipeline that produced it.")
 
@@ -686,14 +749,14 @@ object_type(1006, "IlluminationType", BaseObjectType,
             "A controlled light source associated with a sensor. Member names align with "
             "the ILampType and ILightingControllerType of OPC 40100-2.")
 IL = 1006
-prop_var(IL, "IlluminationType", "LampType", String,
-         "Emitter technology, for example LED, Laser, Xenon or Fluorescent.")
+prop_var(IL, "IlluminationType", "LampType", VisionLampTypeEnum,
+         "Emitter technology of this light source.")
 prop_var(IL, "IlluminationType", "Wavelength", Double,
          "Dominant emission wavelength in nanometres.")
 prop_var(IL, "IlluminationType", "RelativeIntensity", Double,
          "Current output as a percentage of full capability.")
-prop_var(IL, "IlluminationType", "LightingMode", String,
-         "Operating mode, for example Continuous, Strobe or Modulated.")
+prop_var(IL, "IlluminationType", "LightingMode", VisionLightingModeEnum,
+         "How this light source is currently being driven.")
 prop_var(IL, "IlluminationType", "Quality", Double,
          "Remaining emitter quality as a percentage; 100 is new.")
 
@@ -723,8 +786,12 @@ prop_var(ME, "MediaEndpointType", "SecureTransport", Boolean,
          "SignAndEncrypt. A client SHALL treat false as meaning the media transport "
          "offers no confidentiality, whatever Authentication states.",
          MR_Mandatory)
-prop_var(ME, "MediaEndpointType", "ProfileName", String,
-         "Vendor profile label, for example main or sub.")
+prop_var(ME, "MediaEndpointType", "DefaultProfileName", String,
+         "Name of the profile this endpoint uses when GetStreamEndpoint is called with "
+         "an empty ProfileName. A profile is a Server-local named configuration and has "
+         "no node of its own, so this is the one profile name a client can rely on "
+         "without prior knowledge of the Server. Empty means the endpoint has a single "
+         "configuration and takes no profile name at all. See clause 6.3.")
 
 object_type(1008, "StreamEndpointType", T(ME),
             "A continuous media stream. A conformant Server SHALL expose at least one "
@@ -937,9 +1004,15 @@ prop_var(VS, "VisionSensorType", "RealityKind", VisionRealityKindEnum,
          "Whether this sensor is physical, simulated or hybrid.", MR_Mandatory)
 prop_var(VS, "VisionSensorType", "Modality", VisionSensorModalityEnum,
          "What the sensor measures.", MR_Mandatory)
-prop_var(VS, "VisionSensorType", "Manufacturer", LocalizedText, "Device manufacturer.")
-prop_var(VS, "VisionSensorType", "Model", LocalizedText, "Device model designation.")
-prop_var(VS, "VisionSensorType", "SerialNumber", String, "Device serial number.")
+prop_var(VS, "VisionSensorType", "Manufacturer", LocalizedText,
+         "Portable manufacturer projection. Where DI or OPC 40100 exposes an "
+         "authoritative nameplate for the same physical sensor, this value shall match it.")
+prop_var(VS, "VisionSensorType", "Model", LocalizedText,
+         "Portable model-designation projection. Where DI or OPC 40100 exposes an "
+         "authoritative nameplate for the same physical sensor, this value shall match it.")
+prop_var(VS, "VisionSensorType", "SerialNumber", String,
+         "Portable serial-number projection. Where DI or OPC 40100 exposes an "
+         "authoritative nameplate for the same physical sensor, this value shall match it.")
 prop_var(VS, "VisionSensorType", "DeviceUri", String,
          "Transport-level device identifier, for example a GigE Vision or USB3 Vision "
          "device id. Lets a client correlate this sensor with the GenICam layer that "
@@ -1029,92 +1102,6 @@ prop_var(SIM, "IVisionSimulatedType", "RandomizationSeed", UInt64,
          "Seed of the active domain-randomization run, so a dataset can be reproduced.")
 
 # ---- AI: model, dataset, deployment ----------------------------------------
-object_type(1015, "AiModelType", BaseObjectType,
-            "Nameplate of a trained model. The member set is deliberately aligned with "
-            "the IDTA 02060 AI Model Nameplate submodel template, which is currently the "
-            "only standardised description of an industrial AI model, so an Asset "
-            "Administration Shell can be populated from this node without loss.")
-AM = 1015
-prop_var(AM, "AiModelType", "ModelId", String, "Identifier of the model.", MR_Mandatory)
-prop_var(AM, "AiModelType", "Name", LocalizedText, "Human-readable model name.",
-         MR_Mandatory)
-prop_var(AM, "AiModelType", "Version", String, "Model version.", MR_Mandatory)
-prop_var(AM, "AiModelType", "Framework", String,
-         "Producing framework, for example PyTorch, TensorFlow or scikit-learn.")
-prop_var(AM, "AiModelType", "Format", String,
-         "Serialization format, for example ONNX, TensorRT or OpenVINO IR.")
-prop_var(AM, "AiModelType", "TaskKind", String,
-         "What the model does, for example Detection2D, Detection3D, Classification, "
-         "Segmentation, PoseEstimation or AnomalyDetection.")
-prop_var(AM, "AiModelType", "Digest", ByteString,
-         "Cryptographic digest of the model artefact, for provenance and integrity. "
-         "Mandatory: clause 12.6 requires it for every model whose artefact is "
-         "obtainable through ArtifactUri, and it is the terminus of the provenance "
-         "chain that UsesModel keeps intact.",
-         MR_Mandatory)
-prop_var(AM, "AiModelType", "DigestAlgorithm", String,
-         "Hash function used for Digest. SHALL name a function with at least 256-bit "
-         "output and no known collision weakness; SHA-256 is the default and is always "
-         "acceptable. SHALL NOT be MD5, SHA-1 or a truncated variant - chosen-prefix "
-         "collisions against those are practical, so a substituted artefact would pass "
-         "verification. SHALL be non-empty where Digest is non-empty. See clause 12.6.",
-         MR_Mandatory)
-prop_var(AM, "AiModelType", "ArtifactUri", String,
-         "Where the model artefact can be obtained. Treated as untrusted input.")
-prop_var(AM, "AiModelType", "ProvenanceUri", String,
-         "Training provenance or model card location.")
-prop_var(AM, "AiModelType", "LabelClasses", String,
-         "Ordered class label set; the index corresponds to "
-         "VisionDetectionDataType.ClassId.", MR_Optional, valuerank="1")
-data_var(AM, "AiModelType", "Inputs", VisionTensorSignatureDataType,
-         "Input tensor signatures.", MR_Optional, valuerank="1")
-data_var(AM, "AiModelType", "Outputs", VisionTensorSignatureDataType,
-         "Output tensor signatures.", MR_Optional, valuerank="1")
-
-object_type(1016, "AiDatasetType", BaseObjectType,
-            "A dataset used to train or validate a model. Aligned with the IDTA 02058 AI "
-            "Dataset submodel template. SourceKind distinguishes real capture from "
-            "simulator output, which is the provenance a reviewer needs when synthetic "
-            "data is involved.")
-AD = 1016
-prop_var(AD, "AiDatasetType", "DatasetId", String, "Identifier of the dataset.",
-         MR_Mandatory)
-prop_var(AD, "AiDatasetType", "Name", LocalizedText, "Human-readable dataset name.")
-prop_var(AD, "AiDatasetType", "Version", String, "Dataset version.")
-prop_var(AD, "AiDatasetType", "SourceKind", VisionDatasetSourceEnum,
-         "Whether samples are real, synthetic or mixed.", MR_Mandatory)
-prop_var(AD, "AiDatasetType", "SampleCount", UInt64, "Number of samples.")
-prop_var(AD, "AiDatasetType", "LabelClasses", String, "Class labels present.",
-         MR_Optional, valuerank="1")
-prop_var(AD, "AiDatasetType", "CreatedAt", UtcTime, "Creation time.")
-prop_var(AD, "AiDatasetType", "ArtifactUri", String,
-         "Where the dataset can be obtained.")
-prop_var(AD, "AiDatasetType", "Digest", ByteString, "Digest of the dataset artefact.")
-
-object_type(1017, "AiDeploymentType", BaseObjectType,
-            "A model made executable somewhere. Aligned with the IDTA 02059 AI Deployment "
-            "submodel template. InferenceLocation is the on-server versus off-server "
-            "switch: it changes where the computation happens and therefore the trust "
-            "boundary, but it does NOT change the result contract.")
-AY = 1017
-prop_var(AY, "AiDeploymentType", "DeploymentId", String,
-         "Identifier of the deployment.", MR_Mandatory)
-prop_var(AY, "AiDeploymentType", "InferenceLocation", VisionInferenceLocationEnum,
-         "Where inference executes.", MR_Mandatory)
-prop_var(AY, "AiDeploymentType", "AcceleratorKind", VisionAcceleratorKindEnum,
-         "Compute device executing the model.")
-prop_var(AY, "AiDeploymentType", "AcceleratorName", String,
-         "Free-text accelerator identification, for example an NPU or GPU part name.")
-prop_var(AY, "AiDeploymentType", "EndpointUri", String,
-         "Inference endpoint when InferenceLocation is not OnServer. Treated as "
-         "untrusted input and subject to the resolver policy of the security clause.")
-prop_var(AY, "AiDeploymentType", "LatencyBudget", Duration,
-         "Latency the deployment is expected to meet, so a client can detect regression.")
-prop_var(AY, "AiDeploymentType", "BatchSize", UInt32,
-         "Configured inference batch size.")
-prop_var(AY, "AiDeploymentType", "State", VisionEndpointStateEnum,
-         "Runtime state of the deployment.")
-
 # ---- Results ---------------------------------------------------------------
 object_type(1020, "VisionResultType", BaseObjectType,
             "Abstract base for a vision result. Unlike OPC 40100-1, whose ResultContent "
@@ -1124,8 +1111,14 @@ object_type(1020, "VisionResultType", BaseObjectType,
             "explanation lives.",
             abstract=True)
 VR = 1020
+# Retired: 6107..6136 held AiModelType, AiDatasetType and AiDeploymentType before they
+# moved to OPC UA - AI Model Management and Inference. See _reserve_through.
+_reserve_through(6136)
+
 prop_var(VR, "VisionResultType", "ResultId", String,
-         "Identifier of the result, unique within the Server.", MR_Mandatory)
+         "Immutable identifier of the result, unique within the Server and never reused "
+         "for a different result, including after eviction or Server restart.",
+         MR_Mandatory)
 prop_var(VR, "VisionResultType", "CreationTime", UtcTime,
          "When the result was produced.", MR_Mandatory)
 prop_var(VR, "VisionResultType", "Sensor", NodeId_, "Sensor the frame came from.")
@@ -1205,7 +1198,14 @@ method(FB, "VisionFeedbackType", "SubmitDetections",
                 "Frame the detections belong to."),
                ("InlineImage", ByteString,
                 "Optional annotated image, accepted only within "
-                "MaxInlineFeedbackImageSize; otherwise use SubmitImageReference.")])
+                "MaxInlineFeedbackImageSize; otherwise use SubmitImageReference."),
+               ("SceneIsEmpty", Boolean,
+                "True asserts that the frame was examined and contains nothing to "
+                "report, which is a deliberate observation and not a failed one. It is "
+                "the only way Detections may be empty: an empty array with this false "
+                "is rejected, so a call that lost its payload is still caught. False "
+                "with a non-empty Detections is the ordinary case. Last in the list "
+                "because argument order is part of the wire contract. See clause 9.5.")])
 method(FB, "VisionFeedbackType", "SubmitInspectionResult",
        "Record a downstream inspection verdict against a result, for reconciliation with "
        "what the vision system originally reported.",
@@ -1227,7 +1227,15 @@ method(FB, "VisionFeedbackType", "SubmitCorrection",
                ("Reason", LocalizedText, "Why the correction was made."),
                ("InlineImage", ByteString,
                 "Optional corrected or annotated image, accepted only within "
-                "MaxInlineFeedbackImageSize; otherwise use SubmitImageReference.")])
+                "MaxInlineFeedbackImageSize; otherwise use SubmitImageReference."),
+               ("RetractAll", Boolean,
+                "True asserts that the corrected result should contain nothing at all - "
+                "every detection or characteristic it reported was a false positive and "
+                "nothing replaces it. It is the only way both corrected arrays may be "
+                "empty. This is the most valuable correction shape for a learning loop, "
+                "because a false positive is the error an operator is most able to "
+                "label with confidence. Last in the list because argument order is part "
+                "of the wire contract. See clause 9.5.")])
 method(FB, "VisionFeedbackType", "SubmitImageReference",
        "The default way to hand an image back: by reference. Used whenever the image "
        "exceeds MaxInlineFeedbackImageSize, and preferred in all cases.",
@@ -1241,14 +1249,21 @@ object_type(1018, "InferencePipelineType", BaseObjectType,
             "Binds a sensor to a deployment and publishes the results. The same type "
             "serves on-server and off-server inference: when the deployment is remote "
             "the Server publishes results it did not compute, and the only observable "
-            "difference is AiDeployment.InferenceLocation.")
+            "difference is DeploymentType.InferenceLocation.")
 IP = 1018
 prop_var(IP, "InferencePipelineType", "PipelineId", String,
          "Identifier of the pipeline.", MR_Mandatory)
 prop_var(IP, "InferencePipelineType", "Sensor", NodeId_,
          "Sensor supplying frames.", MR_Mandatory)
 prop_var(IP, "InferencePipelineType", "Deployment", NodeId_,
-         "Deployment executing inference.", MR_Mandatory)
+         "The deployment executing inference. This is a NodeId, not a reference, and "
+         "the node it names is NOT defined by this specification - see clause 8.2. "
+         "Where the Server also implements OPC UA - AI Model Management and Inference it names "
+         "a DeploymentType instance there, which is what clause 8's provenance argument "
+         "assumes; a Server that describes its deployment some other way names that "
+         "node instead. Nothing in this NodeSet references the other model's "
+         "identifiers, so adopting or ignoring it changes nothing about loading this "
+         "one.", MR_Mandatory)
 prop_var(IP, "InferencePipelineType", "State", VisionEndpointStateEnum,
          "Runtime state of the pipeline.", MR_Mandatory)
 prop_var(IP, "InferencePipelineType", "Continuous", Boolean,
@@ -1270,61 +1285,32 @@ method(IP, "InferencePipelineType", "Stop",
        "Stop continuous inference.", MR_Optional)
 
 # ---- Learning --------------------------------------------------------------
-object_type(1019, "LearningJobType", BaseObjectType,
-            "One turn of the capture, label, train and promote loop. It exists so that "
-            "corrections arriving through VisionFeedbackType have somewhere to accumulate "
-            "and a defined path into a new model version. A Server may implement only the "
-            "capture stages and leave training to an external MLOps system - the state "
-            "machine is the same either way.")
-LJ = 1019
-prop_var(LJ, "LearningJobType", "JobId", String, "Identifier of the job.", MR_Mandatory)
-prop_var(LJ, "LearningJobType", "State", VisionLearningJobStateEnum,
-         "Current stage of the loop.", MR_Mandatory)
-prop_var(LJ, "LearningJobType", "Dataset", NodeId_,
-         "Dataset being accumulated or used.")
-prop_var(LJ, "LearningJobType", "BaseModel", NodeId_, "Model the job starts from.")
-prop_var(LJ, "LearningJobType", "CandidateModel", NodeId_,
-         "Model produced by the job, awaiting promotion.")
-prop_var(LJ, "LearningJobType", "SamplesCollected", UInt64,
-         "Samples accumulated so far, including corrections fed back.")
-prop_var(LJ, "LearningJobType", "LastError", LocalizedText,
-         "Diagnostic for the Failed state.")
-method(LJ, "LearningJobType", "StartCollection",
-       "Begin accumulating samples and corrections into the dataset.", MR_Optional)
-method(LJ, "LearningJobType", "StopCollection",
-       "Stop accumulating samples.", MR_Optional)
-method(LJ, "LearningJobType", "TriggerTraining",
-       "Request that a candidate model be trained from the collected dataset.",
-       MR_Optional,
-       outargs=[("Accepted", Boolean, "True when the request was queued.")])
-method(LJ, "LearningJobType", "PromoteModel",
-       "Promote the candidate model so that deployments begin using it. A Server SHOULD "
-       "require a distinct authorization for this Method.",
-       MR_Optional,
-       inargs=[("Deployment", NodeId_, "Deployment to update, or null for all.")],
-       outargs=[("PromotedModel", NodeId_, "The model now in use.")])
-
 # ---- Root ------------------------------------------------------------------
 object_type(1001, "VisionRootType", BaseObjectType,
             "The single well-known entry point for everything in this model. A client "
             "starts here, enumerates Sensors, and follows references outward. Mirrors "
             "the discovery pattern of OPC UA - OpenUSD Bindings.")
 VRT = 1001
+# Retired: 6177..6190 held LearningJobType.
+_reserve_through(6190)
+
 folder_member(VRT, "VisionRootType", "Sensors",
               "VisionSensorType instances known to this Server.", MR_Mandatory)
 folder_member(VRT, "VisionRootType", "Pipelines",
               "InferencePipelineType instances.", MR_Optional)
-folder_member(VRT, "VisionRootType", "Models",
-              "AiModelType, AiDatasetType and AiDeploymentType instances.", MR_Optional)
+# Retired: 6193 held VisionRootType.Models.
+_reserve_through(6193)
 folder_member(VRT, "VisionRootType", "Frames",
               "CoordinateFrameType instances.", MR_Optional)
-folder_member(VRT, "VisionRootType", "LearningJobs",
-              "LearningJobType instances.", MR_Optional)
 
 # ---- Well-known instance ----------------------------------------------------
 well_known(7001, "Vision", T(VRT), Server,
            "The well-known Vision entry point, a component of the Server object. A "
-           "conformant Server exposes exactly one.")
+           "conformant Server exposes exactly one. It carries EventNotifier because it "
+           "is the notifier for every Vision event in the Server (clause 7.5): a client "
+           "subscribes here, or at the Server object above it, and does not have to find "
+           "each pipeline first.",
+           event_notifier=EVENTNOTIFIER_SUBSCRIBE)
 
 # ---------------------------------------------------------------------------
 # Appended members
@@ -1339,6 +1325,8 @@ well_known(7001, "Vision", T(VRT), Server,
 # proposal, and this model deliberately takes NO dependency on it: nothing here
 # references its provisional NodeIds, so the Vision NodeSet loads unchanged on a Server
 # that has never heard of it.
+# Retired: 6195 held VisionRootType.LearningJobs.
+_reserve_through(6195)
 prop_var(ME, "MediaEndpointType", "DataChannelSource", NodeId_,
          "NodeId of the Object through which this endpoint's bytes can also be obtained "
          "on an OPC UA data channel, per the OPC UA - Data Channels errata proposal. "
@@ -1353,6 +1341,149 @@ prop_var(ME, "MediaEndpointType", "DataChannelContentType", String,
          "image/jpeg. Mirrors IDataChannelSourceType.ContentType so a client can learn "
          "the payload type from this model alone, without the Data Channels model being "
          "present. Meaningful only where DataChannelSource is non-null.")
+
+# Appended in the AI split. It belongs to InferencePipelineType, but its id is
+# allocated HERE because member ids are append-only: declaring it beside its type
+# renumbered InferencePipelineType.Stop.
+prop_var(IP, "InferencePipelineType", "LearningJob", NodeId_,
+         "LearningJobType instance that consumes GroundTruthLabel corrections "
+         "submitted through this pipeline's Feedback object, or null where the Server "
+         "retains none. A NodeId and not a reference, for the same reason Deployment "
+         "is: this model takes no dependency on the model that defines the job. "
+         "Section 9.5.1 requires this to be non-null wherever such a correction is "
+         "retained - without it a client cannot establish whether its label reached a "
+         "learning loop at all.")
+
+# Appended for the same reason: declaring these beside the other Depth3DSensorType
+# members would renumber every member declared after them.
+prop_var(D3, "Depth3DSensorType", "DepthWidth", UInt32,
+         "Width in pixels of the sensor's native depth image. Present on a device whose "
+         "depth output is an ordered image - structured-light, time-of-flight and stereo "
+         "sensors - and absent on one whose output is an unordered point cloud, where "
+         "there is no image to have a shape. PointsPerFrame is a nominal count and is "
+         "not a substitute: it cannot be used to reproject a depth pixel, nor to size a "
+         "decoder. See clause 5.6.")
+prop_var(D3, "Depth3DSensorType", "DepthHeight", UInt32,
+         "Height in pixels of the sensor's native depth image, under the same condition "
+         "as DepthWidth. The two are present or absent together.")
+
+# ---------------------------------------------------------------------------
+# Event types (1031+)
+# ---------------------------------------------------------------------------
+# A result is a record and an event is an occurrence. The result types above stay
+# exactly as they are - re-readable, subscribable, retained - and these say that
+# something happened, naming the result that substantiates it rather than copying its
+# content. A consumer that needs the detail reads the result; one that only needs to
+# react does not have to poll for it.
+VE = 1031
+event_type(VE, "VisionEventType", BaseEventType,
+           "Abstract base of every event this model raises. It adds to BaseEventType "
+           "the provenance a vision event needs to be actionable: which result "
+           "substantiates it, which sensor and pipeline produced it, which model "
+           "version decided, and how far the answer can be trusted. Time is inherited "
+           "from BaseEventType and clause 7.5 fixes what it means here.",
+           abstract=True)
+prop_var(VE, "VisionEventType", "ResultId", String,
+         "ResultId of the VisionResultType instance that substantiates this event. The "
+         "event carries no result content: a consumer that needs the detail reads the "
+         "result, and one that only needs to react does not.", MR_Mandatory)
+prop_var(VE, "VisionEventType", "Sensor", NodeId_,
+         "The VisionSensorType instance the observation was made with.", MR_Mandatory)
+prop_var(VE, "VisionEventType", "GroundTruth", Boolean,
+         "True where this is simulator ground truth rather than a prediction, mirroring "
+         "IVisionSimulatedType.GroundTruthAvailable on the sensor. Mandatory because a "
+         "consumer shall never have to infer whether a value was measured or guessed; "
+         "clause 10 already forbids the two being indistinguishable.", MR_Mandatory)
+prop_var(VE, "VisionEventType", "Pipeline", NodeId_,
+         "The InferencePipelineType instance that produced the result, where one did.")
+prop_var(VE, "VisionEventType", "ModelVersionUsed", String,
+         "Version of the model that decided, copied from the result. It is repeated on "
+         "the event so a notification alone answers which model caused an action, which "
+         "is what an audit of an automated decision has to establish.")
+prop_var(VE, "VisionEventType", "Confidence", Double,
+         "Confidence of the underlying result, 0.0 to 1.0. Absent where the producing "
+         "step does not report one; absent is not zero.")
+prop_var(VE, "VisionEventType", "InferenceEndTime", UtcTime,
+         "When inference finished. Time is when the frame was acquired (clause 7.5), so "
+         "the difference between the two is the inference latency of this observation - "
+         "the only place this model exposes it per result rather than per deployment.")
+
+OD = 1032
+event_type(OD, "ObjectDetectedEventType", T(VE),
+           "One detected instance, raised once per entry in a DetectionResultType's "
+           "Detections. One event per detection rather than one per result is what makes "
+           "the class and the confidence available to an EventFilter, so a client asks "
+           "for the two classes it cares about above a confidence it chooses and the "
+           "Server sends nothing else. A per-result event would move that filtering to "
+           "the client and give up most of the reason to use events at all.")
+data_var(OD, "ObjectDetectedEventType", "Detection", VisionDetectionDataType,
+         "The detection this event reports, as it appears in the result's Detections. "
+         "Where several detections share a result they share its ResultId and differ "
+         "here.", MR_Mandatory)
+
+IC = 1033
+event_type(IC, "InspectionCompletedEventType", T(VE),
+           "An inspection reached a verdict. Raised once per InspectionResultType, "
+           "because an inspection concludes once - unlike detection, where a single "
+           "frame yields many independent findings.")
+prop_var(IC, "InspectionCompletedEventType", "Evaluation", VisionResultEvaluationEnum,
+         "The verdict, copied from the result. It is the field a line controller "
+         "filters on, so it is Mandatory and is the one piece of result content this "
+         "model does repeat.", MR_Mandatory)
+prop_var(IC, "InspectionCompletedEventType", "PartId", String,
+         "Identifier of the inspected part, where the result names one.")
+prop_var(IC, "InspectionCompletedEventType", "RecipeId", String,
+         "Identifier of the recipe the inspection ran, where the result names one.")
+data_var(IC, "InspectionCompletedEventType", "FailedCharacteristics",
+         VisionCharacteristicDataType,
+         "The characteristics whose Status is not InTolerance, and only those. A passing "
+         "inspection carries an empty array. Repeating every characteristic here would "
+         "duplicate the result for the common case where none failed; repeating the "
+         "failing ones lets a consumer act on why it failed without a read.",
+         MR_Optional, valuerank="1")
+
+# ---------------------------------------------------------------------------
+# The time base events are correlated on
+# ---------------------------------------------------------------------------
+# Annex I.7 tells a consumer to correlate an event raised here with one raised by a
+# commanding model using the Time of each. Those are two Servers, and nothing said
+# their clocks agreed - so the rule rested on an assumption a consumer could neither
+# see nor check. This makes it checkable without requiring anything most cells cannot
+# provide: a Server states whether it is synchronised and to what, and a consumer that
+# needs tighter correlation than free-running clocks allow can tell before relying on
+# it rather than after a misattributed frame.
+prop_var(VRT, "VisionRootType", "ClockSynchronised", Boolean,
+         "True where this Server's clock is disciplined to an external time reference "
+         "shared with the systems its events are correlated against. False, or absent, "
+         "means the clock is free-running and a consumer shall not assume sub-second "
+         "agreement with another Server. See clause 7.5.")
+prop_var(VRT, "VisionRootType", "TimeSyncSource", String,
+         "What the clock is disciplined to when ClockSynchronised is true - for example "
+         "IEEE1588, NTP or GPS - as free text, because the set of answers is open and a "
+         "consumer uses it to judge the order of accuracy rather than to parse. Empty "
+         "or absent where the Server does not state one.")
+
+# A result must retain the model that actually answered. This is appended here rather
+# than beside ModelVersionUsed so every previously published member NodeId stays fixed.
+prop_var(VR, "VisionResultType", "ModelUsed", NodeId_,
+         "NodeId of the ModelType instance that actually produced this result. Where "
+         "the pipeline names an OPC UA - AI Model Management and Inference deployment, "
+         "this is the ModelUsed returned by that invocation, not necessarily the model "
+         "the deployment names when the result is read.")
+
+# Retention limits are appended after ModelUsed so all previously published member
+# NodeIds remain stable. They are Optional in the type model because an event-only
+# pipeline has no Results folder and therefore has no result nodes to retain. The
+# inference facets make both limits mandatory wherever Results is instantiated.
+prop_var(IP, "InferencePipelineType", "MaxResultAge", Duration,
+         "Maximum age of result nodes retained under Results, in milliseconds. Zero "
+         "means no age limit. Where Results is instantiated this member is required "
+         "under an inference facet and at least one retention limit is non-zero.")
+prop_var(IP, "InferencePipelineType", "MaxRetainedResults", UInt32,
+         "Maximum number of result nodes retained under Results. Zero means no count "
+         "limit. Count pressure evicts the oldest CreationTime first, with ResultId as "
+         "the deterministic tie-break. Where Results is instantiated this member is "
+         "required under an inference facet and at least one retention limit is non-zero.")
 
 
 # ===========================================================================
@@ -1371,10 +1502,17 @@ def _fmt_reftype(t):
 
 def _emit_node(n):
     tag = n.cls
-    a = [f'{tag} NodeId="{T(n.nid)}"', f'BrowseName="1:{sx.escape(n.bname)}"']
+    # A DataTypeEncoding browses as "Default Binary" in namespace 0: the BrowseName is
+    # standard, not model-defined. Emitting it as 1:Default Binary is what every real
+    # companion NodeSet avoids, and tooling that resolves encodings by BrowseName - the
+    # UA-.NETStandard model source generator among it - cannot find it.
+    prefix = "" if n.attrs.get("BrowseNameNamespace") == 0 else "1:"
+    a = [f'{tag} NodeId="{T(n.nid)}"', f'BrowseName="{prefix}{sx.escape(n.bname)}"']
+    if "SymbolicName" in n.attrs:
+        a.append(f'SymbolicName="{sx.escape(n.attrs["SymbolicName"])}"')
     if n.parent is not None:
         a.append(f'ParentNodeId="{n.parent}"')
-    for k in ("DataType", "ValueRank", "ArrayDimensions"):
+    for k in ("DataType", "ValueRank", "ArrayDimensions", "EventNotifier"):
         if k in n.attrs:
             v = n.attrs[k]
             if k == "DataType":
@@ -1524,7 +1662,7 @@ def emit_md():
     data_types = [n for n in ORDER if NODES[n].cls == "UADataType"]
     ref_types = [n for n in ORDER if NODES[n].cls == "UAReferenceType"]
 
-    L = ["# OPC UA — Vision — Annex A: Information model (generated)",
+    L = ["# OPC UA for Vision Systems — Annex A: Information model (generated)",
          "",
          "> Generated by `build_model.py`. Do not edit by hand. Namespace "
          f"`{NAMESPACE}` (index 1). NodeIds are provisional.",

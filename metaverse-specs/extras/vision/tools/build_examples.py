@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generator for the OPC UA — Vision worked examples.
+Generator for the OPC UA for Vision Systems worked examples.
 
 Reads a JSON descriptor and emits, deterministically:
   * model/metaverse-specs/vision/Opc.Ua.<Domain>.Vision.NodeSet2.xml
@@ -29,8 +29,19 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import build_model as vm  # noqa: E402  (path set above)
 
+# The AI Model Management model is a separate specification in a sibling extras tree. It is
+# loaded by path rather than imported as a package so that neither generator depends on
+# the other's location, and so a reader can see exactly which file is being read.
+import importlib.util as _ilu  # noqa: E402
+_AI_GEN = os.path.normpath(
+    os.path.join(HERE, "..", "..", "ai-model-management", "tools", "build_model.py"))
+_spec = _ilu.spec_from_file_location("ai_build_model", _AI_GEN)
+am = _ilu.module_from_spec(_spec)
+_spec.loader.exec_module(am)
+
 VISION_NS = vm.NAMESPACE
-EXAMPLE_VERSION = "0.2.0"
+EXAMPLE_VERSION = "0.3.0"
+AI_NS = am.NAMESPACE
 
 # Base-UA NodeIds used by the overlays. Emitted through an <Aliases> block, as the
 # base NodeSets in this repository do, so the XML stays readable.
@@ -90,11 +101,38 @@ TYPE_ID = {n.bname: n.nid for n in vm.NODES.values()
            if n.cls in ("UAObjectType", "UADataType", "UAReferenceType")}
 
 # The Vision ReferenceTypes the overlays use, aliased so the XML stays readable.
-for _rt in ("HasCalibration", "MountedOn", "UsesModel"):
+for _rt in ("HasCalibration", "MountedOn"):
     ALIASES.append((_rt, f"ns=2;i={TYPE_ID[_rt]}"))
 HasCalibration = "HasCalibration"
 MountedOn = "MountedOn"
 UsesModel = "UsesModel"
+
+# Type BrowseName -> NodeId in the AI Model Management namespace, taken from that model.
+AI_TYPE_ID = {n.bname: n.nid for n in am.NODES.values()
+              if n.cls in ("UAObjectType", "UADataType", "UAReferenceType")}
+ALIASES.append((UsesModel, f"ns=3;i={AI_TYPE_ID[UsesModel]}"))
+
+
+def aitype(name):
+    """Type NodeId in the AI Model Management namespace (index 3)."""
+    if name not in AI_TYPE_ID:
+        raise SystemExit(f"unknown AI type '{name}' - check ai build_model.py")
+    return f"ns=3;i={AI_TYPE_ID[name]}"
+
+
+def put_enum_ai(ov, parent, name, enum_name, literal, desc=None):
+    """An enum Property whose DataType is declared by the AI Model Management model."""
+    val = am_enum_value(enum_name, literal)
+    return ov.prop(name, aitype(enum_name), v_int32(val), parent, desc)
+
+
+def am_enum_value(enum_name, literal):
+    for n in am.NODES.values():
+        if n.bname == enum_name and n.definition:
+            m = re.search(rf'<Field Name="{literal}" Value="(\d+)"', n.definition)
+            if m:
+                return int(m.group(1))
+    raise SystemExit(f"unknown AI enum literal {enum_name}.{literal}")
 
 
 def vtype(name):
@@ -187,17 +225,17 @@ class Overlay:
                                refs=refs, attrs={"DataType": datatype}, value=None))
         return nid
 
-    def folder(self, browse, parent, desc=None):
-        return self.obj(browse, FolderType, parent, desc=desc)
+    def folder(self, browse, parent, desc=None, browse_ns=1):
+        return self.obj(browse, FolderType, parent, desc=desc, browse_ns=browse_ns)
 
     def prop(self, browse, datatype, value, parent, desc=None,
-             typedef=PropertyType, reftype=HasProperty):
+             typedef=PropertyType, reftype=HasProperty, browse_ns=1):
         nid = self._nid()
         refs = [(HasTypeDefinition, typedef, True),
                 (reftype, f"ns=1;i={parent}", False)]
         self._add_forward(parent, reftype, nid)
         self.nodes.append(dict(cls="UAVariable", nid=nid, browse=browse, desc=desc,
-                               parent=f"ns=1;i={parent}",
+                               parent=f"ns=1;i={parent}", browse_ns=browse_ns,
                                refs=refs, attrs={"DataType": datatype},
                                value=value))
         return nid
@@ -224,6 +262,7 @@ class Overlay:
                '  <NamespaceUris>',
                f'    <Uri>{sx.escape(self.example_uri)}</Uri>',
                f'    <Uri>{sx.escape(VISION_NS)}</Uri>',
+               f'    <Uri>{sx.escape(AI_NS)}</Uri>',
                '  </NamespaceUris>',
                '  <Models>',
                f'    <Model ModelUri={sx.quoteattr(self.example_uri)} '
@@ -235,6 +274,9 @@ class Overlay:
                f'      <RequiredModel ModelUri={sx.quoteattr(VISION_NS)} '
                f'Version="{vm.VERSION}" '
                f'PublicationDate="{vm.PUBDATE}" />',
+               f'      <RequiredModel ModelUri={sx.quoteattr(AI_NS)} '
+               f'Version="{am.VERSION}" '
+               f'PublicationDate="{am.PUBDATE}" />',
                '    </Model>',
                '  </Models>',
                '  <Aliases>']
@@ -322,6 +364,7 @@ DT = {
     "UInt32": ("UInt32", v_uint32),
     "UInt64": ("UInt64", v_uint64),
     "Double": ("Double", v_double),
+    "Duration": ("Duration", v_double),
     "Boolean": ("Boolean", v_bool),
     "Int32": ("Int32", v_int32),
     "String": ("String", v_string),
@@ -492,10 +535,25 @@ def build_overlay(d):
                   desc="Well-known Vision entry point for this example (§4.2).")
     f_sensors = ov.folder("Sensors", root)
     f_pipelines = ov.folder("Pipelines", root)
-    f_models = ov.folder("Models", root)
     f_frames = ov.folder("Frames", root)
-    f_jobs = ov.folder("LearningJobs", root)
+
+    # Models, datasets, deployments and learning jobs belong to OPC UA - AI Model Management
+    # and Learning, whose own well-known object sits BESIDE the Vision one under the
+    # Server Object. Hanging them under the Vision root would put them in folders
+    # VisionRootType does not declare, and would leave the example unable to satisfy
+    # the AI-Base facet that the VIS-Inference-* and VIS-Learning facets require.
+    airoot = ov.obj("AiModelManagement", aitype("AiRootType"), external_parent=SERVER_OBJECT,
+                    browse_ns=3,
+                    desc="Well-known AI Model Management entry point for this example.")
+    ov.prop("SpecificationVersion", "String", v_string(am.VERSION), airoot,
+            "Release of the AI Model Management specification this example is built against.",
+            browse_ns=3)
+    f_models = ov.folder("Models", airoot, browse_ns=3)
+    f_datasets = ov.folder("Datasets", airoot, browse_ns=3)
+    f_deployments = ov.folder("Deployments", airoot, browse_ns=3)
+    f_jobs = ov.folder("LearningJobs", airoot, browse_ns=3)
     ov.roots = dict(sensors=f_sensors, pipelines=f_pipelines, models=f_models,
+                    datasets=f_datasets, deployments=f_deployments,
                     frames=f_frames, jobs=f_jobs)
 
     sim = d.get("simulation") if s.get("realityKind") in ("Simulated", "Hybrid") else None
@@ -569,7 +627,7 @@ def build_overlay(d):
 
     # --- AI -----------------------------------------------------------------
     ai = d["ai"]
-    model = ov.obj(ai["model"]["name"], vtype("AiModelType"), ov.roots["models"],
+    model = ov.obj(ai["model"]["name"], aitype("ModelType"), ov.roots["models"],
                    reftype=Organizes, desc=ai["model"].get("description"))
     m = ai["model"]
     put(ov, model, "ModelId", "String", m["modelId"])
@@ -581,24 +639,24 @@ def build_overlay(d):
             put(ov, model, name, "String", m[key])
     # §12.6 requires both for any model reachable through ArtifactUri.
     put(ov, model, "Digest", "ByteString", m["digest"],
-        desc="SHA-256 of the model artefact at ArtifactUri (base specification §12.6).")
+        desc="SHA-256 of the model artefact at ArtifactUri.")
     put(ov, model, "DigestAlgorithm", "String", m.get("digestAlgorithm", "SHA-256"))
 
     dep = ai["deployment"]
-    deployment = ov.obj(dep["name"], vtype("AiDeploymentType"), ov.roots["models"],
+    deployment = ov.obj(dep["name"], aitype("DeploymentType"), ov.roots["models"],
                         reftype=Organizes, desc=dep.get("description"))
     put(ov, deployment, "DeploymentId", "String", dep["deploymentId"])
-    put_enum(ov, deployment, "InferenceLocation", "VisionInferenceLocationEnum",
+    put_enum_ai(ov, deployment, "InferenceLocation", "InferenceLocationEnum",
              dep["inferenceLocation"])
     if "acceleratorKind" in dep:
-        put_enum(ov, deployment, "AcceleratorKind", "VisionAcceleratorKindEnum",
+        put_enum_ai(ov, deployment, "AcceleratorKind", "AcceleratorKindEnum",
                  dep["acceleratorKind"])
     if "acceleratorName" in dep:
         put(ov, deployment, "AcceleratorName", "String", dep["acceleratorName"])
     if "endpointUri" in dep:
         put(ov, deployment, "EndpointUri", "String", dep["endpointUri"])
-    # §5.11 requires exactly one UsesModel per deployment. It is the only path from a
-    # result to the model artefact and its Digest, which §12.6 depends on.
+    # UsesModel identifies the model serving now. A retained result's ModelUsed identifies
+    # the model that actually produced that result.
     ov.ref(deployment, UsesModel, f"ns=1;i={model}")
 
     pl = ai["pipeline"]
@@ -624,17 +682,24 @@ def build_overlay(d):
         build_media(ov, twin, tw["stream"], tw["clip"])
         if "learningJob" in tw:
             lj = tw["learningJob"]
-            dataset = ov.obj(lj["datasetName"], vtype("AiDatasetType"),
+            dataset = ov.obj(lj["datasetName"], aitype("DatasetType"),
                              ov.roots["models"], reftype=Organizes,
                              desc="Synthetic dataset produced from the twin.")
             put(ov, dataset, "DatasetId", "String", lj["datasetId"])
-            put_enum(ov, dataset, "SourceKind", "VisionDatasetSourceEnum",
+            put_enum_ai(ov, dataset, "SourceKind", "DatasetSourceEnum",
                      lj.get("sourceKind", "Synthetic"))
-            job = ov.obj(lj["name"], vtype("LearningJobType"), ov.roots["jobs"],
+            job = ov.obj(lj["name"], aitype("LearningJobType"), ov.roots["jobs"],
                          reftype=Organizes, desc=lj.get("description"))
             put(ov, job, "JobId", "String", lj["jobId"])
-            put_enum(ov, job, "State", "VisionLearningJobStateEnum",
+            put_enum_ai(ov, job, "State", "LearningJobStateEnum",
                      lj.get("state", "Collecting"))
+
+    # Append new instance members only after the complete pre-existing overlay. Adding
+    # them beside Results would renumber Feedback and every node generated afterwards.
+    # The base type still owns these Properties; generation order exists solely to
+    # preserve the examples' published NodeIds.
+    put(ov, pipeline, "MaxResultAge", "Duration", pl["maxResultAge"])
+    put(ov, pipeline, "MaxRetainedResults", "UInt32", pl["maxRetainedResults"])
 
     return ov
 
@@ -656,6 +721,7 @@ def emit_addendum(d, annex=None):
     cl = d["clip"]
     ai = d["ai"]
     dep = ai["deployment"]
+    pl = ai["pipeline"]
     source_root = "../../.." if annex else "../../../.."
     rel = (f"{source_root}/metaverse-specs/extras/vision/examples/"
            f"{d['folder']}/{d['descriptorFile']}")
@@ -690,7 +756,7 @@ def emit_addendum(d, annex=None):
     else:
         A(f"# OPC UA {d['domain']} — Vision Addendum")
         A("")
-        A(f"**Implementer annex to *OPC UA — Vision* (Release {vm.VERSION} — "
+        A(f"**Implementer annex to *OPC UA for Vision Systems* (Release {vm.VERSION} — "
           "Draft).**")
         A("")
         A(f"> {d['summary']} The machine-readable source of truth is "
@@ -709,7 +775,8 @@ def emit_addendum(d, annex=None):
     head("Normative references")
     A("")
     if not annex:
-        A("- *OPC UA — Vision*, Release " + vm.VERSION + " (the base specification), "
+        A("- *OPC UA for Vision Systems*, Release " + vm.VERSION
+          + " (the base specification), "
           "`../spec.md`.")
     for r in d.get("references", []):
         if annex:
@@ -916,13 +983,16 @@ def emit_addendum(d, annex=None):
         A(f"| `AcceleratorKind` | `{dep['acceleratorKind']}` |")
     if "endpointUri" in dep:
         A(f"| `EndpointUri` | `{dep['endpointUri']}` |")
+    A(f"| `MaxResultAge` | `{pl['maxResultAge']}` ms |")
+    A(f"| `MaxRetainedResults` | `{pl['maxRetainedResults']}` |")
     A("")
     A(d["inferenceNote"])
     A("")
     A("The deployment carries exactly one `UsesModel` reference to the model above, as "
-      "base specification §5.11 requires. That reference is the only defined path from a "
-      "result to the model artefact and its `Digest`, so it is what makes the §12.6 "
-      "provenance check possible.")
+      "*OPC UA — AI Model Management and Inference* requires. That reference says which "
+      "model is serving now. Each retained result records the model that actually answered "
+      "in `ModelUsed`, so an audit follows `result.ModelUsed` to the model and its `Digest` "
+      "even after a promotion, fallback or followed-reference change.")
     A("")
     head("Results")
     A("")

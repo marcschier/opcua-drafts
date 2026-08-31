@@ -147,14 +147,15 @@ class Build:
         """
         anchors = md_parse.foreign_anchor_re(self.cfg.get('foreignAnchors', []))
         out = []
-        pattern = r'(?:\u00a7\s*|\bSections?\s+)([0-9]+(?:\.[0-9]+)*)'
+        pattern = (r'(?:\u00a7\s*|\b(?:Sections?|clauses?)\s+)'
+                   r'([0-9]+(?:\.[0-9]+)*)(?![A-Za-z])')
         texts = [self.md_text]
         for key, path in (self.cfg.get('additionalMarkdown') or {}).items():
             with open(os.path.join(REPO, path), encoding='utf-8') as f:
                 texts.append(f.read())
         for text in texts:
             for m in re.finditer(pattern, text):
-                if md_parse._is_foreign(text, m.start(), anchors):
+                if md_parse._is_foreign(text, m.start(), anchors, m.end()):
                     continue
                 if self.resolve_xref(m.group(1)) is None:
                     out.append(m.group(1))
@@ -545,7 +546,9 @@ class Build:
                 out.append(dm.text_para(node.description))
             if node.definition and node_class == 'UADataType':
                 out.append({'t': 'enumtable', 'id': clause_id(number) + '-items',
-                            'browseName': name})
+                            'browseName': name,
+                            'structureFields': self.cfg.get(
+                                'structureFieldTables', False)})
             out.append(dm.nodetable(clause_id(number) + '-def',
                                     '%s definition' % name, name))
             out.extend(self._method_clauses(number, name))
@@ -661,7 +664,9 @@ class Build:
                 'identifiers. A Node in the AddressSpace is unambiguously identified by '
                 'its NodeId; a BrowseName is not unique and is used to build a browse '
                 'path or to name a standard Property.'),
-            dm.table(None, 'Namespaces used in an OpenUSD Server',
+            dm.table(None, self.identity.get(
+                         'namespaceTableCaption',
+                         'Namespaces used in an OpenUSD Server'),
                      [[dm.t('NamespaceURI')], [dm.t('Description')]], server_rows,
                      widths=[3400, 5526]),
             dm.text_para(

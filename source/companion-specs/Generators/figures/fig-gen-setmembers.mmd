@@ -1,0 +1,23 @@
+flowchart TD
+  DEV[[DeviceType]]:::objecttype
+  GS[[GeneratorSetType]]:::objecttype
+  IDENT[Identification]:::object
+  STATE[OperatingState]:::object
+  MODE[OperatingMode]:::variable
+  ENGINE[Engine]:::object
+  ALT[Alternator]:::object
+  CTRL[Controller]:::object
+  RATINGS[Ratings]:::object
+
+  DEV -->|HasSubtype| GS
+  GS -->|HasAddIn| IDENT
+  GS --> STATE
+  GS --> MODE
+  GS --> ENGINE
+  GS --> ALT
+  GS --> CTRL
+  GS --> RATINGS
+
+  classDef object fill:#eef3fa,stroke:#444
+  classDef variable fill:#eef3fa,stroke:#444
+  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px

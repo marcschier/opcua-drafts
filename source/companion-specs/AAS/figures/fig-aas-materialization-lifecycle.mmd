@@ -1,0 +1,10 @@
+stateDiagram-v2
+  [*] --> Unloaded
+  Unloaded --> Loading: prepare shadow generation
+  Loading --> Active: atomic switch, MaterializationGeneration++
+  Loading --> Failed: validation or closure error
+  Active --> Superseded: a newer generation switched in
+  Superseded --> Retiring: graceful retirement
+  Superseded --> Retired: immediate retirement, BadNodeIdUnknown
+  Retiring --> Retired: retained work drained
+  Failed --> Loading: corrected document re-materialized

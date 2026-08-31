@@ -1296,6 +1296,8 @@
       <Reference ReferenceType="HasComponent">ns=1;i=6100</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6101</Reference>
       <Reference ReferenceType="HasComponent">ns=1;i=6102</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6402</Reference>
+      <Reference ReferenceType="HasComponent">ns=1;i=6403</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6091" BrowseName="1:ProtocolName" ParentNodeId="ns=1;i=1010" DataType="String" ValueRank="-1">
@@ -3305,7 +3307,7 @@
   </UAVariable>
   <UAObjectType NodeId="ns=1;i=1017" BrowseName="1:GeneratorProtectionAlarmType">
     <DisplayName>GeneratorProtectionAlarmType</DisplayName>
-    <Description>Alarm raised by a generator protection/shutdown function. Extends OffNormalAlarmType with the protection function, severity and J1939 origin.</Description>
+    <Description>Alarm raised by a generator protection/shutdown function. Extends OffNormalAlarmType with the protection function, automatic protection action and J1939 origin. The inherited Severity field is the sole event urgency.</Description>
     <Category>GEN-Alarms</Category>
     <References>
       <Reference ReferenceType="HasSubtype" IsForward="false">i=10637</Reference>
@@ -3315,6 +3317,7 @@
       <Reference ReferenceType="HasProperty">ns=1;i=6288</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6289</Reference>
       <Reference ReferenceType="HasProperty">ns=1;i=6290</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6404</Reference>
     </References>
   </UAObjectType>
   <UAVariable NodeId="ns=1;i=6285" BrowseName="1:ProtectionFunction" ParentNodeId="ns=1;i=1017" DataType="ns=1;i=3014" ValueRank="-1">
@@ -3337,7 +3340,7 @@
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6287" BrowseName="1:IsShutdown" ParentNodeId="ns=1;i=1017" DataType="Boolean" ValueRank="-1">
     <DisplayName>IsShutdown</DisplayName>
-    <Description>TRUE if the condition caused an engine shutdown.</Description>
+    <Description>TRUE if the engine is actually shut down. This reports the outcome and is not inferred from ProtectionAction.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
@@ -3437,7 +3440,7 @@
   </UAObject>
   <UAObject NodeId="ns=1;i=6294" BrowseName="3:MachineryOperationMode" ParentNodeId="ns=1;i=6292">
     <DisplayName>MachineryOperationMode</DisplayName>
-    <Description>Generic Machinery operation-mode state machine (interoperability).</Description>
+    <Description>Derived Machinery operation-mode state machine for interoperability. OperatingMode is authoritative and the specification defines the deterministic mapping to this state machine.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=80</Reference>
       <Reference ReferenceType="HasTypeDefinition">ns=3;i=1008</Reference>
@@ -3455,7 +3458,7 @@
   </UAObject>
   <UAVariable NodeId="ns=1;i=6296" BrowseName="1:OperatingMode" ParentNodeId="ns=1;i=1001" DataType="ns=1;i=3001" ValueRank="-1">
     <DisplayName>OperatingMode</DisplayName>
-    <Description>Selector mode of the control panel (Off/Manual/Auto/Test/...).</Description>
+    <Description>Authoritative selector mode of the control panel (Off/Manual/Auto/Test/...). Where MachineryOperationMode is present, its CurrentState is derived from this value.</Description>
     <References>
       <Reference ReferenceType="HasModellingRule">i=78</Reference>
       <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
@@ -4491,47 +4494,117 @@
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1015</Reference>
     </References>
   </UAVariable>
-  <UAObject NodeId="ns=1;i=6400" BrowseName="1:http://opcfoundation.org/UA/Generators/" ParentNodeId="i=11715">
+  <UADataType NodeId="ns=1;i=3018" BrowseName="1:GeneratorProtectionActionEnum">
+    <DisplayName>GeneratorProtectionActionEnum</DisplayName>
+    <Description>Automatic response requested by a generator protection function. This is independent of the standard Part 9 event Severity.</Description>
+    <Category>GEN-GeneratorSet</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=29</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=3918</Reference>
+    </References>
+    <Definition Name="1:GeneratorProtectionActionEnum"><Field Name="NoAutomaticAction" Value="0"><Description>No automatic response is requested.</Description></Field><Field Name="Warning" Value="1"><Description>Notify an operator without changing generator operation.</Description></Field><Field Name="Derate" Value="2"><Description>Continue to run at reduced output.</Description></Field><Field Name="Shutdown" Value="3"><Description>Shut down the prime mover.</Description></Field><Field Name="ElectricalTrip" Value="4"><Description>Trip the generator breaker.</Description></Field><Field Name="Lockout" Value="5"><Description>Prevent restart until a manual reset.</Description></Field><Field Name="EmergencyStop" Value="6"><Description>Perform an immediate emergency stop.</Description></Field></Definition>
+  </UADataType>
+  <UAVariable NodeId="ns=1;i=3918" BrowseName="EnumStrings" ParentNodeId="ns=1;i=3018" DataType="LocalizedText" ValueRank="1" ArrayDimensions="7">
+    <DisplayName>EnumStrings</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=3018</Reference>
+    </References>
+    <Value><ListOfLocalizedText xmlns="http://opcfoundation.org/UA/2008/02/Types.xsd"><LocalizedText><Text>NoAutomaticAction</Text></LocalizedText><LocalizedText><Text>Warning</Text></LocalizedText><LocalizedText><Text>Derate</Text></LocalizedText><LocalizedText><Text>Shutdown</Text></LocalizedText><LocalizedText><Text>ElectricalTrip</Text></LocalizedText><LocalizedText><Text>Lockout</Text></LocalizedText><LocalizedText><Text>EmergencyStop</Text></LocalizedText></ListOfLocalizedText></Value>
+  </UAVariable>
+  <UADataType NodeId="ns=1;i=3051" BrowseName="1:DiagnosticTroubleCodeDataType">
+    <DisplayName>DiagnosticTroubleCodeDataType</DisplayName>
+    <Description>A SAE J1939 diagnostic trouble code (DTC) reported by an engine ECU.</Description>
+    <Category>GEN-GeneratorSet</Category>
+    <References>
+      <Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+      <Reference ReferenceType="HasEncoding">ns=1;i=6400</Reference>
+      <Reference ReferenceType="HasEncoding">ns=1;i=6401</Reference>
+    </References>
+    <Definition Name="1:DiagnosticTroubleCodeDataType"><Field Name="Spn" DataType="i=7"><Description>Suspect Parameter Number identifying the faulty subsystem.</Description></Field><Field Name="Fmi" DataType="i=3"><Description>Failure Mode Identifier describing the type of failure.</Description></Field><Field Name="OccurrenceCount" DataType="i=3"><Description>Number of times the fault has become active.</Description></Field><Field Name="ConversionMethod" DataType="i=1"><Description>J1939 SPN conversion method flag.</Description></Field><Field Name="Active" DataType="i=1"><Description>TRUE while the fault is currently active (DM1).</Description></Field><Field Name="SourceAddress" DataType="i=3"><Description>J1939 source address of the ECU that reported the code.</Description></Field><Field Name="SourceName" DataType="i=12"><Description>Name of the ECU/controller that reported the code.</Description></Field><Field Name="ProtectionAction" DataType="ns=1;i=3018" IsOptional="true"><Description>Automatic generator response associated with the fault, when known. Event urgency is carried by the standard Part 9 Severity field when the DTC raises an alarm.</Description></Field><Field Name="Description" DataType="i=12"><Description>Human-readable description of the fault.</Description></Field></Definition>
+  </UADataType>
+  <UAObject NodeId="ns=1;i=6400" BrowseName="Default Binary" ParentNodeId="ns=1;i=3051">
+    <DisplayName>Default Binary</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=3051</Reference>
+    </References>
+  </UAObject>
+  <UAObject NodeId="ns=1;i=6401" BrowseName="Default XML" ParentNodeId="ns=1;i=3051">
+    <DisplayName>Default XML</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+      <Reference ReferenceType="HasEncoding" IsForward="false">ns=1;i=3051</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=6402" BrowseName="1:ActiveDiagnosticTroubleCodeDetails" ParentNodeId="ns=1;i=1010" DataType="ns=1;i=3051" ValueRank="1">
+    <DisplayName>ActiveDiagnosticTroubleCodeDetails</DisplayName>
+    <Description>Currently active DTCs (J1939 DM1) using the current DataType.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1010</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6403" BrowseName="1:PreviouslyActiveDiagnosticTroubleCodeDetails" ParentNodeId="ns=1;i=1010" DataType="ns=1;i=3051" ValueRank="1">
+    <DisplayName>PreviouslyActiveDiagnosticTroubleCodeDetails</DisplayName>
+    <Description>Previously active DTCs (J1939 DM2) using the current DataType.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=63</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1010</Reference>
+    </References>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=6404" BrowseName="1:ProtectionAction" ParentNodeId="ns=1;i=1017" DataType="ns=1;i=3018" ValueRank="-1">
+    <DisplayName>ProtectionAction</DisplayName>
+    <Description>Automatic response requested by the protection function. This classification does not replace or determine the inherited Part 9 Severity.</Description>
+    <References>
+      <Reference ReferenceType="HasModellingRule">i=80</Reference>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1017</Reference>
+    </References>
+  </UAVariable>
+  <UAObject NodeId="ns=1;i=6405" BrowseName="1:http://opcfoundation.org/UA/Generators/" ParentNodeId="i=11715">
     <DisplayName>http://opcfoundation.org/UA/Generators/</DisplayName>
     <Description>Metadata for this namespace, as OPC 10000-5 requires a Server to publish it.</Description>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=11616</Reference>
       <Reference ReferenceType="HasComponent" IsForward="false">i=11715</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6401</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6402</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6403</Reference>
-      <Reference ReferenceType="HasProperty">ns=1;i=6404</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6406</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6407</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6408</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=6409</Reference>
     </References>
   </UAObject>
-  <UAVariable NodeId="ns=1;i=6401" BrowseName="1:NamespaceUri" ParentNodeId="ns=1;i=6400" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6406" BrowseName="1:NamespaceUri" ParentNodeId="ns=1;i=6405" DataType="String" ValueRank="-1">
     <DisplayName>NamespaceUri</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6400</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6405</Reference>
     </References>
     <Value><uax:String>http://opcfoundation.org/UA/Generators/</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6402" BrowseName="1:NamespaceVersion" ParentNodeId="ns=1;i=6400" DataType="String" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6407" BrowseName="1:NamespaceVersion" ParentNodeId="ns=1;i=6405" DataType="String" ValueRank="-1">
     <DisplayName>NamespaceVersion</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6400</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6405</Reference>
     </References>
     <Value><uax:String>1.3.0</uax:String></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6403" BrowseName="1:NamespacePublicationDate" ParentNodeId="ns=1;i=6400" DataType="DateTime" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6408" BrowseName="1:NamespacePublicationDate" ParentNodeId="ns=1;i=6405" DataType="DateTime" ValueRank="-1">
     <DisplayName>NamespacePublicationDate</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6400</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6405</Reference>
     </References>
     <Value><uax:DateTime>2026-08-31T00:00:00Z</uax:DateTime></Value>
   </UAVariable>
-  <UAVariable NodeId="ns=1;i=6404" BrowseName="1:IsNamespaceSubset" ParentNodeId="ns=1;i=6400" DataType="Boolean" ValueRank="-1">
+  <UAVariable NodeId="ns=1;i=6409" BrowseName="1:IsNamespaceSubset" ParentNodeId="ns=1;i=6405" DataType="Boolean" ValueRank="-1">
     <DisplayName>IsNamespaceSubset</DisplayName>
     <References>
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
-      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6400</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6405</Reference>
     </References>
     <Value><uax:Boolean>false</uax:Boolean></Value>
   </UAVariable>

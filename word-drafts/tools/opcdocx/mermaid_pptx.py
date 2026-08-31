@@ -9,6 +9,7 @@ Only the flowchart subset the drafts use is understood; an unrecognised construc
 rather than being dropped.
 """
 
+import html
 import re
 
 from PIL import Image, ImageDraw, ImageFont
@@ -21,9 +22,19 @@ from pptx.util import Emu, Pt
 
 EMU_PER_PX = 9525
 
+# The OPC UA graphical notation draws a type with a drop shadow and an abstract type in
+# italics, so the renderer has to know which NodeClass a box stands for. Mermaid carries
+# that as `:::class`, which is standard syntax and renders on GitHub through `classDef`.
+TYPE_CLASSES = {'objecttype', 'variabletype', 'referencetype', 'datatype', 'eventtype'}
+INSTANCE_CLASSES = {'object', 'variable', 'view', 'method'}
+NODE_CLASSES = TYPE_CLASSES | INSTANCE_CLASSES | {'abstract', 'placeholder'}
+
+CLASS_SUFFIX = r'(?::::(?P<cls>[A-Za-z0-9_]+(?:,[A-Za-z0-9_]+)*))?'
 NODE_RE = re.compile(r'^(?P<id>[A-Za-z0-9_]+)\s*(?P<open>\[\[|\[|\(\(|\(|\{)'
                      r'(?P<label>.*?)'
-                     r'(?P<close>\]\]|\]|\)\)|\)|\})\s*$')
+                     r'(?P<close>\]\]|\]|\)\)|\)|\})' + CLASS_SUFFIX + r'\s*$')
+# A node may also be referenced by bare id with a class attached, e.g. `A:::object --> B`.
+BARE_ID_RE = re.compile(r'^(?P<id>[A-Za-z0-9_]+)' + CLASS_SUFFIX + r'\s*$')
 # Mermaid edge tokens. The labelled forms must precede the plain ones: `-->` would
 # otherwise match the head of `-->|label|` and leave `|label| B` looking like a node.
 # The `A -- text --> B` form needs its own alternative for the same reason — without it
@@ -44,10 +55,14 @@ SUBGRAPH_RE = re.compile(r'^subgraph\s+(?P<id>[A-Za-z0-9_]+)\s*(?:\["?(?P<label>
 
 
 class Node:
-    def __init__(self, nid, label, shape='box'):
+    def __init__(self, nid, label, shape='box', cls=()):
         self.id = nid
         self.label = label
         self.shape = shape
+        # Mermaid `:::name` classes. They carry the OPC UA NodeClass of the Node the box
+        # stands for, which decides whether it is drawn as a plain rectangle, a rounded
+        # one, or a type box with a drop shadow.
+        self.cls = tuple(cls)
         self.subgraph = None
         self.layer = 0
         self.x = 0
@@ -55,13 +70,25 @@ class Node:
         self.w = 0
         self.h = 0
 
+    @property
+    def is_type(self):
+        return bool(TYPE_CLASSES & set(self.cls))
+
+    @property
+    def is_abstract(self):
+        return 'abstract' in self.cls
+
 
 class Edge:
-    def __init__(self, src, dst, label=None, dashed=False):
+    def __init__(self, src, dst, label=None, dashed=False, thick=False):
         self.src = src
         self.dst = dst
         self.label = label
         self.dashed = dashed
+        # `==>` is HasTypeDefinition, which OPC UA draws with a solid head. Without
+        # recording it the thick form parsed identically to `-->` and the two references
+        # were indistinguishable in the rendering.
+        self.thick = thick
         # Filled in by `_place_edge_labels` once the nodes have positions.
         self.lx = self.ly = self.lw = 0
 
@@ -76,20 +103,37 @@ class Graph:
         self.subgraph_parent = {}
         self.order = []
 
-    def node(self, nid, label=None, shape='box'):
+    def node(self, nid, label=None, shape='box', cls=()):
         n = self.nodes.get(nid)
         if n is None:
-            n = Node(nid, label if label is not None else nid, shape)
+            n = Node(nid, label if label is not None else nid, shape, cls)
             self.nodes[nid] = n
             self.order.append(nid)
-        elif label is not None and n.label == n.id:
-            n.label = label
+        else:
+            if label is not None and n.label == n.id:
+                n.label = label
+            if cls and not n.cls:
+                n.cls = tuple(cls)
         return n
+
+    @property
+    def opcua(self):
+        """Whether this diagram uses the OPC UA notation.
+
+        The notation is opt-in, decided by any node carrying a `:::` NodeClass. Without
+        this every existing architecture and sequence figure would silently change
+        appearance the moment the renderer learned the notation, and that churn would be
+        indistinguishable from an intended edit in review.
+        """
+        return any(n.cls for n in self.nodes.values())
 
 
 def _clean(label):
     label = label.strip().strip('"')
-    return label.replace('<br/>', '\n').replace('<br>', '\n')
+    label = label.replace('<br/>', '\n').replace('<br>', '\n')
+    # Mermaid needs `<` and `>` escaped, but a placeholder BrowseName such as
+    # `<WoTAssetName>` has to reach the figure as the model spells it, not as `&lt;...`.
+    return html.unescape(label)
 
 
 def parse(source):
@@ -221,6 +265,11 @@ def parse_flowchart(source):
             continue
         if line.startswith(('flowchart', 'graph', 'direction')):
             continue
+        # `classDef` and `class` style the diagram for GitHub's renderer. The shapes here
+        # are driven by the `:::` classes on the nodes themselves, so the style lines are
+        # carried by the markdown but are not part of the model this renderer draws.
+        if line.startswith(('classDef', 'class ', 'linkStyle', 'style ')):
+            continue
         if line == 'end':
             if stack:
                 stack.pop()
@@ -238,7 +287,7 @@ def parse_flowchart(source):
         m = NODE_RE.match(line)
         if m:
             n = g.node(m.group('id'), _clean(m.group('label')),
-                       _shape_for(m.group('open')))
+                       _shape_for(m.group('open')), _classes_of(m))
             if stack and n.subgraph is None:
                 n.subgraph = stack[-1]
             continue
@@ -280,6 +329,22 @@ def _shape_for(opener):
             '{': 'diamond'}.get(opener, 'box')
 
 
+def _classes_of(match):
+    raw = match.groupdict().get('cls')
+    if not raw:
+        return ()
+    # Mermaid allows one `:::` per node, with several classes separated by commas.
+    # Chaining `:::a:::b` is a parse error in Mermaid itself, so it cannot be accepted
+    # here either — the figure has to render on GitHub as well as in the Word build.
+    names = tuple(p for p in raw.split(',') if p)
+    unknown = [p for p in names if p.lower() not in NODE_CLASSES]
+    if unknown:
+        # An unknown class is almost always a typo in a NodeClass name, and ignoring it
+        # would draw an instance box where a type box belongs.
+        raise ValueError('unknown mermaid node class: %s' % ', '.join(unknown))
+    return tuple(p.lower() for p in names)
+
+
 def _parse_edge_chain(g, line, subgraph):
     parts = EDGE_SPLIT_RE.split(line)
     endpoints = parts[0::2]
@@ -289,20 +354,23 @@ def _parse_edge_chain(g, line, subgraph):
         token = token.strip()
         m = NODE_RE.match(token)
         if m:
-            n = g.node(m.group('id'), _clean(m.group('label')), _shape_for(m.group('open')))
+            n = g.node(m.group('id'), _clean(m.group('label')),
+                       _shape_for(m.group('open')), _classes_of(m))
         else:
             # Without this an edge form the splitter does not know silently becomes a
             # node whose id is the unparsed text, and the diagram renders as nonsense
             # instead of failing the build.
-            if not EDGE_ID_RE.match(token):
+            bare = BARE_ID_RE.match(token)
+            if not bare:
                 raise ValueError('unsupported mermaid edge endpoint: %r' % token)
-            n = g.node(token)
+            n = g.node(bare.group('id'), cls=_classes_of(bare))
         if subgraph and n.subgraph is None:
             n.subgraph = subgraph
         ids.append(n.id)
     for i, conn in enumerate(connectors):
         label = None
         dashed = conn.startswith('-.')
+        thick = conn.startswith('=')
         lm = re.search(r'\|([^|]*)\|', conn)
         if lm:
             label = _clean(lm.group(1))
@@ -312,7 +380,7 @@ def _parse_edge_chain(g, line, subgraph):
         mid = EDGE_MID_LABEL_RE.match(conn)
         if mid:
             label = _clean(mid.group('label'))
-        g.edges.append(Edge(ids[i], ids[i + 1], label, dashed))
+        g.edges.append(Edge(ids[i], ids[i + 1], label, dashed, thick))
 
 
 # --------------------------------------------------------------------------- layout
@@ -633,6 +701,59 @@ BORDER = RGBColor(0x44, 0x44, 0x44)
 FILL = RGBColor(0xEE, 0xF3, 0xFA)
 SUBGRAPH_FILL = RGBColor(0xF7, 0xF7, 0xF7)
 TEXT = RGBColor(0x11, 0x11, 0x11)
+# The OPC UA notation draws a type as a box standing on a grey offset block.
+TYPE_SHADOW = 'BFBFBF'
+
+_A = 'http://schemas.openxmlformats.org/drawingml/2006/main'
+
+# Measured from the template's own figure (`Microsoft_PowerPoint_Slide.sldx` inside
+# OPC 20020): every text run is Arial, the boxes are plain `rect`, and the connectors are
+# a mix of `straightConnector1` and `bentConnector3`. Matching the typeface and the
+# orthogonal routing is what makes a figure look like the published specifications; the
+# container format does not, because Word shows the preview bitmap unless Visio or
+# PowerPoint is installed.
+NOTATION_FONT = 'Arial'
+
+
+def _sub_element(parent, tag, **attrs):
+    el = parent.makeelement('{%s}%s' % (_A, tag), {k: str(v) for k, v in attrs.items()})
+    parent.append(el)
+    return el
+
+
+def _apply_node_style(shape, node):
+    """Give a type box the drop shadow the OPC UA notation uses.
+
+    PowerPoint has no 'type box' primitive, so the shadow is an effect on the shape
+    itself. It has to be real DrawingML rather than a second grey rectangle, or an editor
+    moving the box would leave the shadow behind.
+    """
+    if not node.is_type:
+        return
+    sp_pr = shape.fill._xPr
+    for existing in sp_pr.findall('{%s}effectLst' % _A):
+        sp_pr.remove(existing)
+    effect = _sub_element(sp_pr, 'effectLst')
+    shadow = _sub_element(effect, 'outerShdw', blurRad=0, dist=38100, dir=2700000,
+                          algn='tl', rotWithShape=0)
+    _sub_element(shadow, 'srgbClr', val=TYPE_SHADOW)
+
+
+def _apply_edge_head(connector, edge):
+    """Distinguish the reference types the way the notation does.
+
+    HasTypeDefinition is drawn with a large solid head, hierarchical references with the
+    ordinary open one. PowerPoint has no double-arrowhead line end, so the distinction is
+    carried by head shape and size and stated in the notation legend, rather than being
+    approximated with a free-floating second triangle that an editor would detach.
+    """
+    ln = connector.line._get_or_add_ln()
+    for existing in ln.findall('{%s}tailEnd' % _A):
+        ln.remove(existing)
+    if edge.thick:
+        _sub_element(ln, 'tailEnd', type='triangle', w='lg', len='lg')
+    else:
+        _sub_element(ln, 'tailEnd', type='stealth', w='med', len='med')
 
 
 def write_pptx(diagram, path):
@@ -701,12 +822,16 @@ def write_flowchart_pptx(g, path):
         p.runs[0].font.bold = True
         p.runs[0].font.color.rgb = TEXT
 
+    notation = g.opcua
     shapes = {}
     for nid in g.order:
         n = g.nodes[nid]
         shape_kind = {'round': MSO_SHAPE.ROUNDED_RECTANGLE,
                       'circle': MSO_SHAPE.OVAL,
-                      'diamond': MSO_SHAPE.DIAMOND}.get(n.shape, MSO_SHAPE.RECTANGLE)
+                      'diamond': MSO_SHAPE.DIAMOND,
+                      # `subroutine` was parsed but missing here, so `[[ ]]` drew the same
+                      # rectangle as `[ ]` and a type was indistinguishable from a Node.
+                      'subroutine': MSO_SHAPE.RECTANGLE}.get(n.shape, MSO_SHAPE.RECTANGLE)
         sp = slide.shapes.add_shape(shape_kind,
                                     Emu(int(n.x * EMU_PER_PX)), Emu(int(n.y * EMU_PER_PX)),
                                     Emu(int(n.w * EMU_PER_PX)), Emu(int(n.h * EMU_PER_PX)))
@@ -714,6 +839,7 @@ def write_flowchart_pptx(g, path):
         sp.fill.fore_color.rgb = FILL
         sp.line.color.rgb = BORDER
         sp.line.width = Pt(1)
+        _apply_node_style(sp, n)
         tf = sp.text_frame
         tf.word_wrap = True
         tf.text = n.label
@@ -722,18 +848,30 @@ def write_flowchart_pptx(g, path):
             for r in para.runs:
                 r.font.size = Pt(9)
                 r.font.color.rgb = TEXT
+                if notation:
+                    r.font.name = NOTATION_FONT
+                # Only touched when it carries meaning. Assigning False writes an
+                # explicit i="0" into every run, which changed the bytes of diagrams
+                # this feature does not apply to at all.
+                if n.is_abstract:
+                    r.font.italic = True
         shapes[nid] = sp
 
     for e in g.edges:
         a, b = g.nodes[e.src], g.nodes[e.dst]
         conn = slide.shapes.add_connector(
-            MSO_CONNECTOR.STRAIGHT,
+            # The published figures route with elbows, not diagonals. It is also what
+            # keeps a wide figure readable: straight lines between distant boxes cross
+            # every row between them.
+            MSO_CONNECTOR.ELBOW if notation else MSO_CONNECTOR.STRAIGHT,
             Emu(int((a.x + a.w / 2) * EMU_PER_PX)), Emu(int((a.y + a.h) * EMU_PER_PX)),
             Emu(int((b.x + b.w / 2) * EMU_PER_PX)), Emu(int(b.y * EMU_PER_PX)))
         conn.line.color.rgb = BORDER
         conn.line.width = Pt(1)
         if e.dashed:
             conn.line.dash_style = MSO_LINE_DASH_STYLE.DASH
+        if notation:
+            _apply_edge_head(conn, e)
         try:
             conn.begin_connect(shapes[e.src], 2)
             conn.end_connect(shapes[e.dst], 0)
@@ -774,6 +912,7 @@ def write_flowchart_preview(g, path, scale=2):
     d = ImageDraw.Draw(img)
     font = _font(9 * scale)
     title_font = _font(10 * scale, bold=True)
+    notation = g.opcua
 
     for sid, (x0, y0, x1, y1) in subgraph_bounds(g).items():
         d.rounded_rectangle([x0 * scale, y0 * scale, x1 * scale, y1 * scale],
@@ -786,19 +925,50 @@ def write_flowchart_preview(g, path, scale=2):
         a, b = g.nodes[e.src], g.nodes[e.dst]
         x1, y1 = (a.x + a.w / 2) * scale, (a.y + a.h) * scale
         x2, y2 = (b.x + b.w / 2) * scale, b.y * scale
-        _line(d, x1, y1, x2, y2, scale, e.dashed)
-        _arrow(d, x1, y1, x2, y2, scale)
+        if notation and abs(x2 - x1) > 1:
+            # The same elbow the PowerPoint draws: down to the midpoint between the rows,
+            # across, then down into the target. Drawn here too because the preview is
+            # what a reviewer looks at.
+            mid = (y1 + y2) / 2
+            _line(d, x1, y1, x1, mid, scale, e.dashed)
+            _line(d, x1, mid, x2, mid, scale, e.dashed)
+            _line(d, x2, mid, x2, y2, scale, e.dashed)
+            _arrow(d, x2, mid, x2, y2, scale, e.thick)
+        else:
+            _line(d, x1, y1, x2, y2, scale, e.dashed)
+            _arrow(d, x1, y1, x2, y2, scale, notation and e.thick)
         if e.label:
             d.text((e.lx * scale, e.ly * scale), e.label,
                    fill=(0x44, 0x44, 0x44), font=_font(8 * scale))
 
     for nid in g.order:
         n = g.nodes[nid]
-        d.rounded_rectangle([n.x * scale, n.y * scale,
-                             (n.x + n.w) * scale, (n.y + n.h) * scale],
-                            radius=3 * scale, outline=(0x44, 0x44, 0x44),
-                            fill=(0xEE, 0xF3, 0xFA), width=max(1, scale // 2))
-        _centred_text(d, n, font, scale)
+        box = [n.x * scale, n.y * scale, (n.x + n.w) * scale, (n.y + n.h) * scale]
+        outline, fill = (0x44, 0x44, 0x44), (0xEE, 0xF3, 0xFA)
+        width = max(1, scale // 2)
+        if not notation:
+            d.rounded_rectangle(box, radius=3 * scale, outline=outline,
+                                fill=fill, width=width)
+            _centred_text(d, n, font, scale)
+            continue
+        if n.is_type:
+            # The grey offset block behind a type box, matching the drop shadow the
+            # PowerPoint carries. Drawn first so the box sits on it.
+            off = 4 * scale
+            d.rectangle([box[0] + off, box[1] + off, box[2] + off, box[3] + off],
+                        fill=(0xBF, 0xBF, 0xBF))
+        if n.shape == 'round':
+            d.rounded_rectangle(box, radius=min(n.h, 22) * scale // 2, outline=outline,
+                                fill=fill, width=width)
+        elif n.shape == 'circle':
+            d.ellipse(box, outline=outline, fill=fill, width=width)
+        elif n.shape == 'diamond':
+            cx, cy = (box[0] + box[2]) / 2, (box[1] + box[3]) / 2
+            d.polygon([(cx, box[1]), (box[2], cy), (cx, box[3]), (box[0], cy)],
+                      outline=outline, fill=fill)
+        else:
+            d.rectangle(box, outline=outline, fill=fill, width=width)
+        _centred_text(d, n, _font(9 * scale, italic=n.is_abstract, arial=True), scale)
 
     img.save(path, 'PNG')
     return img.size
@@ -829,10 +999,17 @@ def _line(d, x1, y1, x2, y2, scale, dashed):
         pos = end + gap
 
 
-def _arrow(d, x1, y1, x2, y2, scale):
+def _arrow(d, x1, y1, x2, y2, scale, thick=False):
     import math
     ang = math.atan2(y2 - y1, x2 - x1)
-    size = 6 * scale
+    size = (9 if thick else 6) * scale
+    if thick:
+        # HasTypeDefinition gets the large solid head the notation uses, so the preview
+        # reports the same reference kind as the embedded object.
+        p1 = (x2 + size * math.cos(ang + 2.6), y2 + size * math.sin(ang + 2.6))
+        p2 = (x2 + size * math.cos(ang - 2.6), y2 + size * math.sin(ang - 2.6))
+        d.polygon([(x2, y2), p1, p2], fill=(0x44, 0x44, 0x44))
+        return
     for delta in (2.6, -2.6):
         d.line([x2, y2,
                 x2 + size * math.cos(ang + delta),
@@ -875,8 +1052,21 @@ def _wrap(d, text, font, max_px):
     return [x for x in out if x]
 
 
-def _font(size, bold=False):
-    for name in (('seguisb.ttf', 'segoeuib.ttf') if bold else ('segoeui.ttf', 'arial.ttf')):
+def _font(size, bold=False, italic=False, arial=False):
+    if arial:
+        # The notation figures use Arial to match the published specifications, so the
+        # preview has to as well or it disagrees with the object it previews.
+        names = (('arialbd.ttf',) if bold else
+                 ('ariali.ttf',) if italic else ('arial.ttf',)) + ('segoeui.ttf',)
+    elif bold:
+        names = ('seguisb.ttf', 'segoeuib.ttf')
+    elif italic:
+        # An abstract type is italic in the OPC UA notation, so the preview needs the
+        # italic face or it disagrees with the embedded PowerPoint.
+        names = ('segoeuii.ttf', 'ariali.ttf', 'segoeui.ttf')
+    else:
+        names = ('segoeui.ttf', 'arial.ttf')
+    for name in names:
         try:
             f = ImageFont.truetype(name, int(size))
             f.size = int(size)

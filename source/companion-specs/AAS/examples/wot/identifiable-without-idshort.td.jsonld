@@ -1,0 +1,88 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "../../aas.context.jsonld",
+    "../../tools/jsonld/vendor/opc-ua-wot-binding.context.jsonld",
+    {
+      "i4aas": "http://opcfoundation.org/UA/I4AAS/v3/",
+      "id": "@id"
+    }
+  ],
+  "@included": [
+    {
+      "@graph": [
+        {
+          "@id": "_:aas-occurrence-1",
+          "@type": "https://w3id.org/aas-jsonld/Occurrence",
+          "https://w3id.org/aas-jsonld/index": {
+            "@type": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+            "@value": "0"
+          },
+          "https://w3id.org/aas-jsonld/member": {
+            "@id": "https://w3id.org/aas-jsonld/node/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l/VmFsdWU"
+          },
+          "https://w3id.org/aas-jsonld/property": {
+            "@id": "https://admin-shell.io/aas/3/0/Submodel/submodelElements"
+          },
+          "https://w3id.org/aas-jsonld/subject": {
+            "@id": "https://w3id.org/aas-jsonld/subject/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l"
+          }
+        }
+      ],
+      "@id": "https://w3id.org/aas-jsonld/graph/order"
+    }
+  ],
+  "@type": [
+    "Thing",
+    "uav:object",
+    "aas:Submodel",
+    "i4aas:AASSubmodelType"
+  ],
+  "aas:Identifiable/id": {
+    "@type": "http://www.w3.org/2001/XMLSchema#string",
+    "@value": "urn:example:submodel\nwith-newline"
+  },
+  "aas:Submodel/submodelElements": [
+    {
+      "@id": "https://w3id.org/aas-jsonld/node/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l/VmFsdWU"
+    }
+  ],
+  "forms": [
+    {
+      "contentType": "application/octet-stream",
+      "href": "opc.tcp://example.com:4840/?id=nsu=https://example.com/aas/instances/;s=i4aas3:S:35:urn:example:submodel%250Awith-newline",
+      "op": "readallproperties"
+    }
+  ],
+  "id": "https://w3id.org/aas-jsonld/subject/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l",
+  "links": [
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l",
+      "rel": "self",
+      "type": "application/td+json"
+    },
+    {
+      "href": "nsu=http://opcfoundation.org/UA/I4AAS/v3/;i=1013",
+      "rel": "ua:HasTypeDefinition"
+    },
+    {
+      "href": "https://w3id.org/aas-jsonld/td/v1/dXJuOmV4YW1wbGU6c3VibW9kZWwKd2l0aC1uZXdsaW5l/node/VmFsdWU",
+      "rel": "ua:HasComponent",
+      "type": "application/td+json",
+      "uav:refId": "i=47",
+      "uav:refName": "Value"
+    }
+  ],
+  "security": "nosec_sc",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "title": "Submodel_509cf87951fc7699a2636bac0959b14b72fcfeb22ee50d692647de82a75ed724",
+  "uav:browseName": "nsu=https://example.com/aas/instances/;Submodel_509cf87951fc7699a2636bac0959b14b72fcfeb22ee50d692647de82a75ed724",
+  "uav:hasComponent": [
+    "nsu=https://example.com/aas/instances/;s=i4aas3:E:35:5:urn:example:submodel%0Awith-newlineValue"
+  ],
+  "uav:id": "nsu=https://example.com/aas/instances/;s=i4aas3:S:35:urn:example:submodel%0Awith-newline"
+}

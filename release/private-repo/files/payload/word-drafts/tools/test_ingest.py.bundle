@@ -14,6 +14,7 @@ removed.
 """
 
 import os
+import json
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -157,6 +158,67 @@ def test_an_edit_that_no_longer_applies_is_an_error():
     except ingest.IngestError:
         return
     raise AssertionError('a stale edit was applied silently')
+
+
+def test_current_provenance_wins_when_historical_mapping_is_stale():
+    current = {'sourceDigest': '0123456789abcdef', 'paragraphs': {'NEW': {}}}
+    historical = {'sourceDigest': 'fedcba9876543210', 'paragraphs': {'OLD': {}}}
+    selected = ingest.select_provenance(
+        '0123456789abcdef',
+        [('current', json.dumps(current)), ('historical', json.dumps(historical))])
+    assert selected == current, selected
+
+
+def test_provenance_without_the_document_digest_is_rejected():
+    try:
+        ingest.select_provenance(
+            None, [('current', json.dumps({'sourceDigest': '0123456789abcdef'}))])
+    except ingest.IngestError:
+        return
+    raise AssertionError('provenance without a document digest was accepted')
+
+
+def test_artifact_history_can_supply_an_outstanding_review_sidecar():
+    historical = {'sourceDigest': '0123456789abcdef', 'paragraphs': {'OLD': {}}}
+    selected = ingest.select_provenance(
+        '0123456789abcdef',
+        [('current', json.dumps({'sourceDigest': 'fedcba9876543210'})),
+         ('artifact history', json.dumps(historical))])
+    assert selected == historical, selected
+
+
+def test_same_source_digest_uses_the_matching_paragraph_map():
+    current = {
+        'sourceDigest': '0123456789abcdef',
+        'paragraphs': {'SHARED': {}, 'NEW-WORD-ID': {}},
+    }
+    historical = {
+        'sourceDigest': '0123456789abcdef',
+        'paragraphs': {'SHARED': {}, 'OLD-WORD-ID': {}},
+    }
+    selected = ingest.select_provenance(
+        '0123456789abcdef',
+        [('current', json.dumps(current)),
+         ('artifact history', json.dumps(historical))],
+        document_ids={'SHARED', 'OLD-WORD-ID', 'REVIEWER-INSERTED'})
+    assert selected == historical, selected
+
+
+def test_most_complete_matching_paragraph_map_wins():
+    prefinalized = {
+        'sourceDigest': '0123456789abcdef',
+        'paragraphs': {'SHARED': {}},
+    }
+    finalized = {
+        'sourceDigest': '0123456789abcdef',
+        'paragraphs': {'SHARED': {}, 'WORD-ADDED': {}},
+    }
+    selected = ingest.select_provenance(
+        '0123456789abcdef',
+        [('prefinalized', json.dumps(prefinalized)),
+         ('finalized', json.dumps(finalized))],
+        document_ids={'SHARED', 'WORD-ADDED', 'REVIEWER-INSERTED'})
+    assert selected == finalized, selected
 
 
 def test_ownership_routes_away_from_the_markdown():

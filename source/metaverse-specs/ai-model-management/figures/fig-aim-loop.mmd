@@ -1,0 +1,13 @@
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Collecting: StartCollection
+    Collecting --> Labelling: StopCollection
+    Collecting --> Training: TriggerTraining
+    Labelling --> Training: TriggerTraining
+    Training --> Validating
+    Validating --> Ready
+    Validating --> Failed
+    Ready --> Promoted: PromoteModel
+    Promoted --> Collecting: StartCollection
+    Training --> Failed
+    Failed --> Collecting: StartCollection

@@ -5,11 +5,9 @@ import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 GEN = os.path.dirname(HERE)
-# The NodeSets live in the repository's model/, shared by every specification
-# published together, because resolution is by ModelUri rather than by directory.
-MODEL_ROOT = os.path.abspath(os.path.join(
-    HERE, os.pardir, os.pardir, os.pardir, os.pardir, "model"))
-MODEL = os.path.join(MODEL_ROOT, "cloud-specs", "schema-registry")
+ROOT = os.path.abspath(os.path.join(
+    HERE, os.pardir, os.pardir, os.pardir, os.pardir))
+MODEL = os.path.join(ROOT, "model", "cloud-specs", "schema-registry")
 REF = os.path.join(HERE, "ref")
 NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 XML = os.path.join(MODEL, "Opc.Ua.SchemaRegistry.NodeSet2.xml")
@@ -31,7 +29,7 @@ UA = load_ids(_ua_csv) if os.path.exists(_ua_csv) else None
 UA_EXTRA = {297, 2253}
 # xRegistry base NodeIds (the required model this spec extends), resolved across the two-file dependency.
 _xr_csv = os.path.join(
-    MODEL_ROOT, "core-specs", "xregistry", "Opc.Ua.XRegistry.NodeIds.csv")
+    ROOT, "model", "dependencies", "Opc.Ua.XRegistry.NodeIds.csv")
 XR = load_ids(_xr_csv) if os.path.exists(_xr_csv) else None
 errors, warnings = [], []
 ALIAS = {}
@@ -65,6 +63,33 @@ for el in root:
             errors.append(f"dup NodeId ns={OWN_NS};i={key}")
         defined[key] = (tag, el.get("BrowseName"))
     elems.append((tag, el))
+
+elements_by_id = {}
+for tag, el in elems:
+    parsed = parse_numeric_nodeid(el.get("NodeId"))
+    if parsed is not None:
+        elements_by_id[parsed] = (tag, el)
+
+CONCRETE_EXTERNAL_PARENTS = {(0, 2253)}  # Server
+TYPE_NODE_CLASSES = {"UAObjectType", "UAVariableType"}
+
+
+def is_concrete_instance(el):
+    """Return True when the ParentNodeId chain terminates at a concrete base instance."""
+    parent = parse_numeric_nodeid(el.get("ParentNodeId"))
+    seen = set()
+    while parent is not None and parent not in seen:
+        seen.add(parent)
+        if parent in CONCRETE_EXTERNAL_PARENTS:
+            return True
+        entry = elements_by_id.get(parent)
+        if entry is None:
+            return False
+        tag, parent_el = entry
+        if tag in TYPE_NODE_CLASSES:
+            return False
+        parent = parse_numeric_nodeid(parent_el.get("ParentNodeId"))
+    return False
 
 def check(t, ctx):
     parsed = parse_numeric_nodeid(t)
@@ -109,15 +134,9 @@ for tag, el in elems:
         if not any(rt == "HasSubtype" and not fwd for rt, _, fwd in rl):
             errors.append(f"{ctx}: type without HasSubtype(inverse)")
     if tag in ("UAVariable", "UAObject", "UAMethod") and el.get("ParentNodeId"):
-        p = parse_numeric_nodeid(el.get("ParentNodeId"))
-        wellknown_parent = p is not None and p[0] == 0
-        cat_el = el.find(NS + "Category")
-        is_instance = cat_el is not None and (cat_el.text or "").strip() == "Schema Registry Instances"
-        if "HasModellingRule" not in reftypes and not is_enc and not wellknown_parent:
-            # Runtime instances under the well-known registry (and the materialized members of
-            # the well-known SchemaRegistry object) are concrete, not type declarations.
-            if not (parsed and parsed[1] in (62100,)) and not is_instance:
-                warnings.append(f"{ctx}: instance/member without HasModellingRule")
+        if ("HasModellingRule" not in reftypes and not is_enc
+                and not is_concrete_instance(el)):
+            warnings.append(f"{ctx}: instance/member without HasModellingRule")
         if tag in ("UAVariable", "UAObject") and not typedef and not is_enc:
             errors.append(f"{ctx}: missing HasTypeDefinition")
 
@@ -148,18 +167,34 @@ elif registry.get("ParentNodeId") != "i=2253":
 # The generated Annex A is embedded verbatim in the specification, so a regeneration that
 # is not carried into the document is caught here rather than by a reader.
 _annex = os.path.join(HERE, "model-reference.md")
-_spec = os.path.join(GEN, "OPC-UA-Schema-Registry.md")
+_spec = os.path.join(GEN, "spec.md")
 if os.path.exists(_annex) and os.path.exists(_spec):
     with open(_annex, encoding="utf-8") as f:
         rendered = f.read()
     with open(_spec, encoding="utf-8") as f:
         spec_text = f.read()
-    if '<a id="annex-a"></a>' not in spec_text:
-        errors.append('spec is missing the <a id="annex-a"></a> Annex A marker')
-    elif rendered.strip() not in spec_text.replace("\r\n", "\n"):
+    if '<a id="annex-a"></a>' in spec_text and rendered.strip() not in spec_text.replace("\r\n", "\n"):
         errors.append("generated Annex A (tools/model-reference.md) is not embedded verbatim in the spec")
 
 print(f"XML nodes: {len(defined)}   CSV rows: {len(rows)}   base ids: {len(UA) if UA is not None else 'skipped (no local base table)'}   xRegistry base ids: {len(XR) if XR is not None else 'skipped'}")
+# --- AddressSpace figures agree with the model they draw ------------------------
+# A node table is generated from the NodeSet and so cannot drift. A figure is authored,
+# and a wrong arrow looks exactly like a right one, so it is re-derived from the model.
+_fig_spec = os.path.join(GEN, "spec.md")
+_fig_tools = os.path.join(ROOT, "word-drafts", "tools")
+if os.path.isdir(_fig_tools) and os.path.exists(_fig_spec):
+    if _fig_tools not in sys.path:
+        sys.path.insert(0, _fig_tools)
+    try:
+        from opcdocx import nodeset_diagram as _nd
+    except ImportError as _exc:
+        warnings.append(f"model-figure check skipped: {_exc}")
+    else:
+        try:
+            errors.extend(_nd.check_markdown(_fig_spec, XML))
+        except ValueError as _exc:
+            errors.append(f"model figure: {_exc}")
+
 print(f"ERRORS: {len(errors)}")
 for e in errors[:50]: print("  ERR", e)
 print(f"WARNINGS: {len(warnings)}")

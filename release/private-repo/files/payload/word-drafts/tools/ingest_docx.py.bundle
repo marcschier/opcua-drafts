@@ -49,6 +49,7 @@ class IngestError(Exception):
 
 
 COMMIT_RE = re.compile(r'[0-9a-f]{7,40}')
+DIGEST_RE = re.compile(r'[0-9a-f]{16}')
 
 
 def git_show(commit, path):
@@ -66,6 +67,68 @@ def git_show(commit, path):
     except (OSError, subprocess.CalledProcessError):
         return None
     return out.stdout.decode('utf-8')
+
+
+def select_provenance(expected_digest, candidates, document_ids=None):
+    """Choose the sidecar that describes the reviewed document's exact sources."""
+    if not DIGEST_RE.fullmatch(expected_digest or ''):
+        raise IngestError(
+            'the document records no valid SourceDigest, so no provenance sidecar can '
+            'be selected safely. Rebuild and re-review the document.')
+    found = []
+    matches = []
+    for label, raw in candidates:
+        if raw is None:
+            continue
+        try:
+            provenance = json.loads(raw)
+        except (TypeError, json.JSONDecodeError) as exc:
+            raise IngestError('invalid %s provenance sidecar: %s' % (label, exc))
+        digest = provenance.get('sourceDigest')
+        found.append('%s=%s' % (label, digest or 'missing'))
+        if digest == expected_digest:
+            matches.append((label, provenance))
+    if document_ids is not None and matches:
+        viable = []
+        for label, provenance in matches:
+            sidecar_ids = set(provenance.get('paragraphs') or {})
+            missing = sidecar_ids - document_ids
+            found.append('%s-missing-paragraphs=%d' % (label, len(missing)))
+            if not missing:
+                viable.append((len(sidecar_ids), provenance))
+        if viable:
+            return max(viable, key=lambda item: item[0])[1]
+    elif matches:
+        return matches[0][1]
+    raise IngestError(
+        'no provenance sidecar matches the document SourceDigest %s (%s). '
+        'Without an exact match, paragraph ids may be routed to stale sources.'
+        % (expected_digest or 'missing', ', '.join(found) or 'no sidecars found'))
+
+
+def provenance_history(path, expected_digest):
+    """Committed sidecars whose digest matches an outstanding review, newest first."""
+    try:
+        commits = subprocess.run(
+            ['git', '-C', REPO, 'log', '--format=%H', '--', path],
+            capture_output=True, text=True, check=True).stdout.splitlines()
+    except (OSError, subprocess.CalledProcessError):
+        return []
+    found = []
+    seen = set()
+    for commit in commits:
+        raw = git_show(commit, path)
+        if raw is None:
+            continue
+        try:
+            if json.loads(raw).get('sourceDigest') == expected_digest:
+                key = raw
+                if key not in seen:
+                    found.append(('artifact history at ' + commit[:12], raw))
+                    seen.add(key)
+        except json.JSONDecodeError:
+            continue
+    return found
 
 
 class Sources:
@@ -407,6 +470,11 @@ class Ingest:
         self.config['_specId'] = self.spec_id
 
         self.commit = props.get('SourceCommit') or 'unknown'
+        self.source_digest = props.get('SourceDigest')
+        if not DIGEST_RE.fullmatch(self.source_digest or ''):
+            raise IngestError(
+                'the document records no valid SourceDigest. It was probably built before '
+                'digest-stamped provenance; rebuild and re-review.')
         self.provenance = self._load_provenance()
         self.sources = Sources(self.commit, self.provenance.get('sources') or [])
         self.addresses = {pid: Address(pid, raw)
@@ -421,17 +489,21 @@ class Ingest:
     def _load_provenance(self):
         rel = os.path.splitext(self.config['output']['docmodel'])[0]
         rel = rel.replace('.docmodel', '') + '.provenance.json'
-        raw = git_show(self.commit, rel) if self.commit != 'unknown' else None
-        if raw is None:
-            full = os.path.join(REPO, rel)
-            if not os.path.exists(full):
-                raise IngestError(
-                    'no provenance sidecar for this document, at %s or at commit %s. '
-                    'Without it a mark cannot be traced to its source.'
-                    % (rel, self.commit[:12]))
+        full = os.path.join(REPO, rel)
+        current = None
+        if os.path.exists(full):
             with open(full, encoding='utf-8') as f:
-                raw = f.read()
-        return json.loads(raw)
+                current = f.read()
+        historical = git_show(
+            self.commit, rel) if self.commit != 'unknown' else None
+        artifact_history = provenance_history(rel, self.source_digest)
+        document_ids = set(self.doc.by_id)
+        return select_provenance(
+            self.source_digest,
+            [('current', current),
+             ('historical at source commit ' + self.commit[:12], historical)]
+            + artifact_history,
+            document_ids=document_ids)
 
     # ------------------------------------------------------------------ the work
 

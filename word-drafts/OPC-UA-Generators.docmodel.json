@@ -2126,7 +2126,7 @@
               },
               {
                 "r": "code",
-                "text": "GeneratorAlarmSeverity"
+                "text": "ProtectionAction"
               },
               {
                 "r": "t",
@@ -2170,7 +2170,23 @@
               },
               {
                 "r": "t",
-                "text": " fields"
+                "text": " fields, including the authoritative Part 9 "
+              },
+              {
+                "r": "code",
+                "text": "Severity"
+              },
+              {
+                "r": "t",
+                "text": "; "
+              },
+              {
+                "r": "code",
+                "text": "GeneratorAlarmSeverity"
+              },
+              {
+                "r": "t",
+                "text": " is a compatibility projection only"
               }
             ],
             [
@@ -3013,6 +3029,58 @@
         "level": 2
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The AddressSpace figures in this document use the OPC UA graphical notation of OPC 10000-3. A Node of an instance NodeClass — Object, Variable or View — is a plain rectangle, a Method is a rounded rectangle, and a type — ObjectType, VariableType, ReferenceType or DataType — is a rectangle standing on a shadow. An abstract type is set in "
+          },
+          {
+            "r": "t",
+            "text": "italics",
+            "i": true
+          },
+          {
+            "r": "t",
+            "text": ", and a Node whose BrowseName is a placeholder is written in angle brackets. A "
+          },
+          {
+            "r": "code",
+            "text": "HasTypeDefinition"
+          },
+          {
+            "r": "t",
+            "text": " reference carries a solid arrowhead; a "
+          },
+          {
+            "r": "code",
+            "text": "HasComponent"
+          },
+          {
+            "r": "t",
+            "text": " reference is the plain unlabelled arrow; every other ReferenceType is drawn with its BrowseName on the arrow. A figure shows the part of the model its clause describes, never the whole of it."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "5 Information‑model architecture",
+          "b": 0
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-gen-notation",
+        "caption": "Graphical notation used by the AddressSpace figures",
+        "source": "mermaid",
+        "mermaid": "flowchart LR\n  OBJ[Object, Variable or View]:::object\n  MTH(Method):::method\n  TYP[[ObjectType or VariableType]]:::objecttype\n  ABS[[abstract type]]:::objecttype,abstract\n  PH[&lt;Placeholder&gt;]:::object\n  TYP ==> ABS\n  OBJ --> MTH\n  OBJ -->|Organizes| PH\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef method fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px\n  classDef abstract fill:#eef3fa,stroke:#444,stroke-width:2px,font-style:italic",
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "5 Information‑model architecture",
+          "b": 1
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-5",
         "title": "Composition of a generator set",
@@ -3606,6 +3674,48 @@
         }
       },
       {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The figure shows the Mandatory content — what a conforming generator set always has. The optional subsystems, signals and Methods listed above are omitted; Annex A carries the full member list."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.1 [GeneratorSetType](#type-GeneratorSetType)",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "<!-- model-figure: root=ns=1;i=1001 require=mandatory external=DeviceType -->"
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.1 [GeneratorSetType](#type-GeneratorSetType)",
+          "b": 2
+        }
+      },
+      {
+        "t": "figure",
+        "id": "fig-gen-setmembers",
+        "caption": "The Mandatory content of a generator set",
+        "source": "mermaid",
+        "mermaid": "flowchart TD\n  DEV[[DeviceType]]:::objecttype\n  GS[[GeneratorSetType]]:::objecttype\n  IDENT[Identification]:::object\n  STATE[OperatingState]:::object\n  MODE[OperatingMode]:::variable\n  ENGINE[Engine]:::object\n  ALT[Alternator]:::object\n  CTRL[Controller]:::object\n  RATINGS[Ratings]:::object\n\n  DEV -->|HasSubtype| GS\n  GS -->|HasAddIn| IDENT\n  GS --> STATE\n  GS --> MODE\n  GS --> ENGINE\n  GS --> ALT\n  GS --> CTRL\n  GS --> RATINGS\n\n  classDef object fill:#eef3fa,stroke:#444\n  classDef variable fill:#eef3fa,stroke:#444\n  classDef objecttype fill:#eef3fa,stroke:#444,stroke-width:2px",
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.1 [GeneratorSetType](#type-GeneratorSetType)",
+          "b": 3
+        }
+      },
+      {
         "t": "clause",
         "id": "c6-9",
         "title": "The engine and the CAN bus interface",
@@ -3776,7 +3886,7 @@
           },
           {
             "r": "code",
-            "text": "ActiveDiagnosticTroubleCodes"
+            "text": "ActiveDiagnosticTroubleCodeDetails"
           },
           {
             "r": "t",
@@ -3784,7 +3894,7 @@
           },
           {
             "r": "code",
-            "text": "PreviouslyActiveDiagnosticTroubleCodes"
+            "text": "PreviouslyActiveDiagnosticTroubleCodeDetails"
           },
           {
             "r": "t",
@@ -3792,7 +3902,7 @@
           },
           {
             "r": "code",
-            "text": "DiagnosticTroubleCodeType"
+            "text": "DiagnosticTroubleCodeDataType"
           },
           {
             "r": "t",
@@ -3836,11 +3946,11 @@
           },
           {
             "r": "t",
-            "text": " (so faults from multiple ECUs on the bus remain distinguishable) and a "
+            "text": " (so faults from multiple ECUs on the bus remain distinguishable) and an optional "
           },
           {
             "r": "code",
-            "text": "Severity"
+            "text": "ProtectionAction"
           },
           {
             "r": "t",
@@ -3859,6 +3969,96 @@
           "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
           "s": "6.2 [EngineType](#type-EngineType) and the CAN bus / SAE J1939 interface",
           "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The legacy "
+          },
+          {
+            "r": "code",
+            "text": "ActiveDiagnosticTroubleCodes"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "PreviouslyActiveDiagnosticTroubleCodes"
+          },
+          {
+            "r": "t",
+            "text": " arrays of "
+          },
+          {
+            "r": "code",
+            "text": "DiagnosticTroubleCodeType"
+          },
+          {
+            "r": "t",
+            "text": " remain for compatibility. A new Server "
+          },
+          {
+            "r": "t",
+            "text": "should",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " expose the "
+          },
+          {
+            "r": "code",
+            "text": "*Details"
+          },
+          {
+            "r": "t",
+            "text": " members. Where both forms are present, they "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " describe the same DTCs in the same order. The legacy "
+          },
+          {
+            "r": "code",
+            "text": "Severity"
+          },
+          {
+            "r": "t",
+            "text": " field keeps its published semantics and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be derived mechanically from "
+          },
+          {
+            "r": "code",
+            "text": "ProtectionAction"
+          },
+          {
+            "r": "t",
+            "text": "; a Server populates it only when its legacy classification is true for the reported DTC."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.2 [EngineType](#type-EngineType) and the CAN bus / SAE J1939 interface",
+          "b": 2
         }
       },
       {
@@ -4286,7 +4486,7 @@
           },
           {
             "r": "t",
-            "text": " value) reflects the control‑panel selector: "
+            "text": " value) is the authoritative control-panel selector: "
           },
           {
             "r": "code",
@@ -4350,7 +4550,24 @@
           },
           {
             "r": "t",
-            "text": ". For Machinery‑ecosystem interoperability the generic "
+            "text": ". "
+          },
+          {
+            "r": "code",
+            "text": "SetOperatingMode"
+          },
+          {
+            "r": "t",
+            "text": " changes this value; a Server "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " accept an independent command that changes the optional Machinery "
           },
           {
             "r": "code",
@@ -4358,7 +4575,30 @@
           },
           {
             "r": "t",
-            "text": " state machine is also present under "
+            "text": " state machine."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.8 Operating modes",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Where "
+          },
+          {
+            "r": "code",
+            "text": "MachineryOperationMode"
+          },
+          {
+            "r": "t",
+            "text": " is present under "
           },
           {
             "r": "code",
@@ -4366,13 +4606,202 @@
           },
           {
             "r": "t",
-            "text": "."
+            "text": ", it is a derived interoperability projection. Its "
+          },
+          {
+            "r": "code",
+            "text": "CurrentState"
+          },
+          {
+            "r": "t",
+            "text": " "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " equal the row below for the authoritative "
+          },
+          {
+            "r": "code",
+            "text": "OperatingMode"
+          },
+          {
+            "r": "t",
+            "text": " value:"
           }
         ],
         "src": {
           "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
           "s": "6.8 Operating modes",
-          "b": 0
+          "b": 1
+        }
+      },
+      {
+        "t": "table",
+        "id": "operating-modes-tab1",
+        "caption": "Operating modes",
+        "kind": "generic",
+        "headers": [
+          [
+            {
+              "r": "code",
+              "text": "OperatingMode"
+            }
+          ],
+          [
+            {
+              "r": "code",
+              "text": "MachineryOperationMode.CurrentState"
+            }
+          ]
+        ],
+        "rows": [
+          [
+            [
+              {
+                "r": "code",
+                "text": "Maintenance"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Maintenance"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "Test"
+              },
+              {
+                "r": "t",
+                "text": " or "
+              },
+              {
+                "r": "code",
+                "text": "Exercise"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Setup"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "Manual"
+              },
+              {
+                "r": "t",
+                "text": ", "
+              },
+              {
+                "r": "code",
+                "text": "Auto"
+              },
+              {
+                "r": "t",
+                "text": " or "
+              },
+              {
+                "r": "code",
+                "text": "RemoteStart"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "Processing"
+              }
+            ]
+          ],
+          [
+            [
+              {
+                "r": "code",
+                "text": "Off"
+              },
+              {
+                "r": "t",
+                "text": " or "
+              },
+              {
+                "r": "code",
+                "text": "Lockout"
+              }
+            ],
+            [
+              {
+                "r": "code",
+                "text": "None"
+              }
+            ]
+          ]
+        ],
+        "widths": null,
+        "note": null,
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.8 Operating modes",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The projection does not create a second source of truth. "
+          },
+          {
+            "r": "code",
+            "text": "OperatingState"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "MachineryItemState"
+          },
+          {
+            "r": "t",
+            "text": " separately report whether the selected mode is executing, idle, unavailable or faulted. If the two operation-mode representations disagree, "
+          },
+          {
+            "r": "code",
+            "text": "OperatingMode"
+          },
+          {
+            "r": "t",
+            "text": " decides and the "
+          },
+          {
+            "r": "code",
+            "text": "MachineryOperationMode"
+          },
+          {
+            "r": "t",
+            "text": " state is incorrect."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.8 Operating modes",
+          "b": 3
         }
       },
       {
@@ -4415,15 +4844,55 @@
           },
           {
             "r": "t",
-            "text": " with 64 values — low oil pressure, high coolant temperature, overspeed, overcrank, over/under voltage and frequency, overload, reverse power, ground fault, emergency stop, aftertreatment faults, ATS/breaker failures, …) identifies the condition; "
+            "text": " with 64 values — low oil pressure, high coolant temperature, overspeed, overcrank, over/under voltage and frequency, overload, reverse power, ground fault, emergency stop, aftertreatment faults, ATS/breaker failures, …) identifies the condition. "
           },
           {
             "r": "code",
-            "text": "GeneratorAlarmSeverity"
+            "text": "ProtectionAction"
           },
           {
             "r": "t",
-            "text": ", "
+            "text": " classifies the automatic response requested by that function: no automatic action, warning, derate, shutdown, electrical trip, lockout or emergency stop."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.9 Protections and alarms",
+          "b": 0
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The inherited Part 9 "
+          },
+          {
+            "r": "code",
+            "text": "Severity"
+          },
+          {
+            "r": "t",
+            "text": " field is the sole authority for event urgency and "
+          },
+          {
+            "r": "t",
+            "text": "shall",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be populated independently of "
+          },
+          {
+            "r": "code",
+            "text": "ProtectionAction"
+          },
+          {
+            "r": "t",
+            "text": ". "
           },
           {
             "r": "code",
@@ -4431,7 +4900,40 @@
           },
           {
             "r": "t",
-            "text": ", "
+            "text": " reports the actual engine outcome and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be inferred from "
+          },
+          {
+            "r": "code",
+            "text": "ProtectionAction"
+          },
+          {
+            "r": "t",
+            "text": ": for example, an alarm may request "
+          },
+          {
+            "r": "code",
+            "text": "Shutdown"
+          },
+          {
+            "r": "t",
+            "text": " while "
+          },
+          {
+            "r": "code",
+            "text": "IsShutdown"
+          },
+          {
+            "r": "t",
+            "text": " remains false until shutdown completes or if the action fails. "
           },
           {
             "r": "code",
@@ -4455,7 +4957,103 @@
           },
           {
             "r": "t",
-            "text": " add context. Because the type is an "
+            "text": " add origin context."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.9 Protections and alarms",
+          "b": 1
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "The legacy "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorAlarmSeverity"
+          },
+          {
+            "r": "t",
+            "text": " property remains for compatibility. A new Server "
+          },
+          {
+            "r": "t",
+            "text": "should",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " expose "
+          },
+          {
+            "r": "code",
+            "text": "ProtectionAction"
+          },
+          {
+            "r": "t",
+            "text": " instead. "
+          },
+          {
+            "r": "code",
+            "text": "GeneratorAlarmSeverity"
+          },
+          {
+            "r": "t",
+            "text": " keeps its published semantics and "
+          },
+          {
+            "r": "t",
+            "text": "shall not",
+            "b": true
+          },
+          {
+            "r": "t",
+            "text": " be derived mechanically from "
+          },
+          {
+            "r": "code",
+            "text": "ProtectionAction"
+          },
+          {
+            "r": "t",
+            "text": "; for example, legacy "
+          },
+          {
+            "r": "code",
+            "text": "Shutdown"
+          },
+          {
+            "r": "t",
+            "text": " is valid only when the engine is shut down, not merely when shutdown was requested. Neither property changes the meaning or authority of inherited "
+          },
+          {
+            "r": "code",
+            "text": "Severity"
+          },
+          {
+            "r": "t",
+            "text": "."
+          }
+        ],
+        "src": {
+          "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
+          "s": "6.9 Protections and alarms",
+          "b": 2
+        }
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Because the type is an "
           },
           {
             "r": "code",
@@ -4518,7 +5116,7 @@
         "src": {
           "f": "companion-specs/Generators/OPC-UA-Companion-Specification-for-Generators.md",
           "s": "6.9 Protections and alarms",
-          "b": 0
+          "b": 3
         }
       },
       {
@@ -4851,7 +5449,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Seventeen enumerations and one structure are defined; see "
+            "text": "Eighteen enumerations and two structures are defined; see "
           },
           {
             "r": "link",
@@ -4876,11 +5474,11 @@
           },
           {
             "r": "t",
-            "text": " member where appropriate) and cover fuel types, application/duty ratings, electrical connection, excitation, cooling method, aspiration, emissions standard, CAN bus state, J1939 lamp status, transfer‑switch position/transition/state, alarm severity, the 64‑value protection‑function list, paralleling‑system state and aftertreatment state. The "
+            "text": " member where appropriate) and cover fuel types, application/duty ratings, electrical connection, excitation, cooling method, aspiration, emissions standard, CAN bus state, J1939 lamp status, transfer-switch position/transition/state, generator protection action, the 64-value protection-function list, paralleling-system state and aftertreatment state. The "
           },
           {
             "r": "code",
-            "text": "DiagnosticTroubleCodeType"
+            "text": "DiagnosticTroubleCodeDataType"
           },
           {
             "r": "t",
@@ -4940,11 +5538,11 @@
           },
           {
             "r": "t",
-            "text": ", "
+            "text": ", optional "
           },
           {
             "r": "code",
-            "text": "Severity"
+            "text": "ProtectionAction"
           },
           {
             "r": "t",
@@ -4956,7 +5554,23 @@
           },
           {
             "r": "t",
-            "text": ")."
+            "text": "). "
+          },
+          {
+            "r": "code",
+            "text": "DiagnosticTroubleCodeType"
+          },
+          {
+            "r": "t",
+            "text": " and "
+          },
+          {
+            "r": "code",
+            "text": "AlarmSeverityEnum"
+          },
+          {
+            "r": "t",
+            "text": " are retained only as compatibility types."
           }
         ],
         "src": {
@@ -5983,7 +6597,7 @@
         "runs": [
           {
             "r": "t",
-            "text": "Alarm raised by a generator protection/shutdown function. Extends OffNormalAlarmType with the protection function, severity and J1939 origin."
+            "text": "Alarm raised by a generator protection/shutdown function. Extends OffNormalAlarmType with the protection function, automatic protection action and J1939 origin. The inherited Severity field is the sole event urgency."
           }
         ]
       },
@@ -6021,7 +6635,8 @@
       {
         "t": "enumtable",
         "id": "c9-1-items",
-        "browseName": "GeneratorOperatingModeEnum"
+        "browseName": "GeneratorOperatingModeEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6049,7 +6664,8 @@
       {
         "t": "enumtable",
         "id": "c9-2-items",
-        "browseName": "FuelTypeEnum"
+        "browseName": "FuelTypeEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6077,7 +6693,8 @@
       {
         "t": "enumtable",
         "id": "c9-3-items",
-        "browseName": "GeneratorApplicationRatingEnum"
+        "browseName": "GeneratorApplicationRatingEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6105,7 +6722,8 @@
       {
         "t": "enumtable",
         "id": "c9-4-items",
-        "browseName": "ElectricalConnectionEnum"
+        "browseName": "ElectricalConnectionEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6133,7 +6751,8 @@
       {
         "t": "enumtable",
         "id": "c9-5-items",
-        "browseName": "ExcitationTypeEnum"
+        "browseName": "ExcitationTypeEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6161,7 +6780,8 @@
       {
         "t": "enumtable",
         "id": "c9-6-items",
-        "browseName": "CoolingMethodEnum"
+        "browseName": "CoolingMethodEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6189,7 +6809,8 @@
       {
         "t": "enumtable",
         "id": "c9-7-items",
-        "browseName": "AspirationEnum"
+        "browseName": "AspirationEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6217,7 +6838,8 @@
       {
         "t": "enumtable",
         "id": "c9-8-items",
-        "browseName": "EmissionsStandardEnum"
+        "browseName": "EmissionsStandardEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6245,7 +6867,8 @@
       {
         "t": "enumtable",
         "id": "c9-9-items",
-        "browseName": "CanBusStateEnum"
+        "browseName": "CanBusStateEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6273,7 +6896,8 @@
       {
         "t": "enumtable",
         "id": "c9-10-items",
-        "browseName": "TransferSwitchPositionEnum"
+        "browseName": "TransferSwitchPositionEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6301,7 +6925,8 @@
       {
         "t": "enumtable",
         "id": "c9-11-items",
-        "browseName": "TransferTransitionTypeEnum"
+        "browseName": "TransferTransitionTypeEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6329,7 +6954,8 @@
       {
         "t": "enumtable",
         "id": "c9-12-items",
-        "browseName": "AtsOperatingStateEnum"
+        "browseName": "AtsOperatingStateEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6357,7 +6983,8 @@
       {
         "t": "enumtable",
         "id": "c9-13-items",
-        "browseName": "AlarmSeverityEnum"
+        "browseName": "AlarmSeverityEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6385,7 +7012,8 @@
       {
         "t": "enumtable",
         "id": "c9-14-items",
-        "browseName": "GeneratorProtectionFunctionEnum"
+        "browseName": "GeneratorProtectionFunctionEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6413,7 +7041,8 @@
       {
         "t": "enumtable",
         "id": "c9-15-items",
-        "browseName": "ParallelingSystemStateEnum"
+        "browseName": "ParallelingSystemStateEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6441,7 +7070,8 @@
       {
         "t": "enumtable",
         "id": "c9-16-items",
-        "browseName": "AftertreatmentStateEnum"
+        "browseName": "AftertreatmentStateEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6469,7 +7099,8 @@
       {
         "t": "enumtable",
         "id": "c9-17-items",
-        "browseName": "J1939LampStatusEnum"
+        "browseName": "J1939LampStatusEnum",
+        "structureFields": true
       },
       {
         "t": "nodetable",
@@ -6497,13 +7128,72 @@
       {
         "t": "enumtable",
         "id": "c9-18-items",
-        "browseName": "DiagnosticTroubleCodeType"
+        "browseName": "DiagnosticTroubleCodeType",
+        "structureFields": true
       },
       {
         "t": "nodetable",
         "id": "c9-18-def",
         "caption": "DiagnosticTroubleCodeType definition",
         "browseName": "DiagnosticTroubleCodeType",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-19",
+        "title": "GeneratorProtectionActionEnum",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "Automatic response requested by a generator protection function. This is independent of the standard Part 9 event Severity."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-19-items",
+        "browseName": "GeneratorProtectionActionEnum",
+        "structureFields": true
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-19-def",
+        "caption": "GeneratorProtectionActionEnum definition",
+        "browseName": "GeneratorProtectionActionEnum",
+        "kind": "type"
+      },
+      {
+        "t": "clause",
+        "id": "c9-20",
+        "title": "DiagnosticTroubleCodeDataType",
+        "level": 2
+      },
+      {
+        "t": "para",
+        "style": "PARAGRAPH",
+        "runs": [
+          {
+            "r": "t",
+            "text": "A SAE J1939 diagnostic trouble code (DTC) reported by an engine ECU."
+          }
+        ]
+      },
+      {
+        "t": "enumtable",
+        "id": "c9-20-items",
+        "browseName": "DiagnosticTroubleCodeDataType",
+        "structureFields": true
+      },
+      {
+        "t": "nodetable",
+        "id": "c9-20-def",
+        "caption": "DiagnosticTroubleCodeDataType definition",
+        "browseName": "DiagnosticTroubleCodeDataType",
         "kind": "type"
       }
     ],
@@ -7266,7 +7956,7 @@
             [
               {
                 "r": "t",
-                "text": "1.1.0"
+                "text": "1.2.0"
               }
             ]
           ],
@@ -7286,7 +7976,7 @@
             [
               {
                 "r": "t",
-                "text": "2026-07-01"
+                "text": "2026-08-11"
               }
             ]
           ],
@@ -7346,7 +8036,7 @@
             [
               {
                 "r": "t",
-                "text": "1001:6399"
+                "text": "1001:6404"
               }
             ]
           ],

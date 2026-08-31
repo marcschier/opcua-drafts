@@ -14,7 +14,12 @@ import os
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-SKIP_DIRS = {".git", "node_modules", "__pycache__"}
+SKIP_DIRS = {".git", "node_modules", "__pycache__",
+             # Local, gitignored cache of the pinned upstream AAS example corpus.
+             # Fetched by companion-specs/AAS/jsonld/tools/fetch_corpus.py.
+             ".corpus",
+             # Local cache of the published IDTA submodel templates.
+             ".templates"}
 
 try:
     import yaml  # type: ignore

@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "sourceOfTruth": "markdown",
+  "identity": {
+    "docNumber": "OPC 99013-1",
+    "partName": "Asynchronous Service Execution",
+    "title": "OPC UA for Asynchronous Service Execution",
+    "shortTitle": "Asynchronous Service Execution",
+    "shortName": "ASE",
+    "organization": "OPC Foundation and the OPC Foundation Security working group",
+    "capabilityIdentifier": "ASE",
+    "namespaceUri": "http://opcfoundation.org/UA/",
+    "version": "0.1.0",
+    "publicationDate": "2026-08-03",
+    "releaseType": "Draft",
+    "gitHubTag": "",
+    "mantisUrl": "https://mantis.opcfoundation.org",
+    "license": {
+      "spdxId": "LicenseRef-OPC-Specification-1.15",
+      "copyright": "Copyright (c) 2026, OPC Federation AISBL",
+      "url": "https://opcfoundation.org/license/specifications/1.15/"
+    }
+  },
+  "model": {
+    "nodeset": "model/core-specs/async-services/Opc.Ua.AsyncServices.NodeSet2.xml",
+    "generated": true,
+    "generator": "source/core-specs/async-services/tools/build_model.py"
+  },
+  "markdown": {
+    "main": "spec.md",
+    "figures": "figures"
+  },
+  "figureGenerators": {
+    ".drawio.svg": "",
+    ".pptx": {
+      "win": "tools/office-to-svg.ps1",
+      "default": "tools/office-to-svg.sh"
+    }
+  },
+  "output": {
+    "sts": "artifacts/OPC-99013-1.xml",
+    "documentationCsv": "artifacts/OPC-99013-1-documentation.csv"
+  },
+  "normativeReferences": [
+    {
+      "id": "uapart1",
+      "label": "OPC 10000-1",
+      "title": "OPC Unified Architecture - Part 1: Overview and Concepts",
+      "url": "http://www.opcfoundation.org/documents/10000-1/"
+    },
+    {
+      "id": "uapart2",
+      "label": "OPC 10000-2",
+      "title": "OPC Unified Architecture - Part 2: Security Model",
+      "url": "http://www.opcfoundation.org/documents/10000-2/"
+    },
+    {
+      "id": "uapart3",
+      "label": "OPC 10000-3",
+      "title": "OPC Unified Architecture - Part 3: Address Space Model",
+      "url": "http://www.opcfoundation.org/documents/10000-3/"
+    },
+    {
+      "id": "uapart4",
+      "label": "OPC 10000-4",
+      "title": "OPC Unified Architecture - Part 4: Services, which this document proposes to extend with the Continue Service.",
+      "url": "http://www.opcfoundation.org/documents/10000-4/"
+    },
+    {
+      "id": "uapart5",
+      "label": "OPC 10000-5",
+      "title": "OPC Unified Architecture - Part 5: Information Model, which this document proposes to extend with the asynchronous Service execution capabilities, diagnostics and Events.",
+      "url": "http://www.opcfoundation.org/documents/10000-5/"
+    },
+    {
+      "id": "uapart6",
+      "label": "OPC 10000-6",
+      "title": "OPC Unified Architecture - Part 6: Mappings",
+      "url": "http://www.opcfoundation.org/documents/10000-6/"
+    },
+    {
+      "id": "uapart7",
+      "label": "OPC 10000-7",
+      "title": "OPC Unified Architecture - Part 7: Profiles",
+      "url": "http://www.opcfoundation.org/documents/10000-7/"
+    },
+    {
+      "id": "uapart12",
+      "label": "OPC 10000-12",
+      "title": "OPC Unified Architecture - Part 12: Discovery and Global Services",
+      "url": "http://www.opcfoundation.org/documents/10000-12/"
+    },
+    {
+      "id": "uapart14",
+      "label": "OPC 10000-14",
+      "title": "OPC Unified Architecture - Part 14: PubSub",
+      "url": "http://www.opcfoundation.org/documents/10000-14/"
+    }
+  ],
+  "terms": [
+    {
+      "term": "deferral",
+      "definition": "A Server's decision to answer a request later than the request itself, by parking it."
+    },
+    {
+      "term": "parked request",
+      "definition": "A request the Server has accepted and is still working on, or has finished and is holding an answer for."
+    },
+    {
+      "term": "parked response",
+      "definition": "The response of a parked request, held by the Server until a Client collects it, the Client abandons it, or it expires."
+    },
+    {
+      "term": "issuing Session",
+      "definition": "The Session on which the parked request arrived, and the only Session that can collect the response."
+    },
+    {
+      "term": "deferrable Service",
+      "definition": "A Service the Server is willing to defer, as listed in `AsyncServiceCapabilities.DeferrableServices`."
+    }
+  ],
+  "abbreviations": [
+    [
+      "API",
+      "Application Programming Interface"
+    ],
+    [
+      "GDS",
+      "Global Discovery Server"
+    ],
+    [
+      "RPC",
+      "Remote Procedure Call"
+    ],
+    [
+      "URI",
+      "Uniform Resource Identifier"
+    ]
+  ],
+  "namespaces": {
+    "documentNamespaceIndex": 0,
+    "table": [
+      {
+        "uri": "http://opcfoundation.org/UA/",
+        "index": 0,
+        "definedBy": "uapart5",
+        "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0."
+      }
+    ]
+  },
+  "profiles": "profiles.json"
+}
