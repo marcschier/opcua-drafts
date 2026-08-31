@@ -150,9 +150,9 @@ Because sibling groups are contained by the same instance, an instance **shall n
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:FolderType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | CompanionSpecificationUri | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | ModelNamespaceUris | 0:String[] | 0:PropertyType | M |
-| 0:HasComponent | Object | <ObservabilityBinding> |  | ObservabilityBindingType | OP |
+| 0:HasProperty | Variable | 1:CompanionSpecificationUri | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:ModelNamespaceUris | 0:String[] | 0:PropertyType | M |
+| 0:HasComponent | Object | 1:<ObservabilityBinding> |  | 1:ObservabilityBindingType | OP |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -176,30 +176,30 @@ The bound items are exposed **both** as browsable `<BoundItem>` objects **and** 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | SignalKind | ObservabilitySignalKindEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | ConfigurationVersion | 0:ConfigurationVersionDataType | 0:PropertyType | O |
-| 0:HasProperty | Variable | DataSetClassId | 0:Guid | 0:PropertyType | M |
-| 0:HasProperty | Variable | BaseDataSetClassIds | 0:Guid[] | 0:PropertyType | O |
-| 0:HasProperty | Variable | DataSetCardinalityPath | 0:RelativePath | 0:PropertyType | O |
-| 0:HasProperty | Variable | DataSetMetaData | 0:DataSetMetaDataType | 0:PropertyType | O |
-| 0:HasProperty | Variable | EventSourcePath | 0:RelativePath | 0:PropertyType | O |
-| 0:HasProperty | Variable | Filter | 0:ContentFilter | 0:PropertyType | O |
-| 0:HasProperty | Variable | LogTemplate | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | LogSeverityFieldName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | LogBodyFieldName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | LogTimestampFieldName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | SpanNameTemplate | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | SpanNameFieldName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | TraceIdFieldName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | SpanIdFieldName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | ParentSpanIdFieldName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | SpanStartTimeFieldName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | SpanEndTimeFieldName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | SpanStatusFieldName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | SpanKind | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | SpanCorrelationFieldName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | BoundItems | BoundItemDataType[] | 0:PropertyType | O |
-| 0:HasComponent | Object | <BoundItem> |  | BoundItemType | OP |
+| 0:HasProperty | Variable | 1:SignalKind | 1:ObservabilitySignalKindEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:ConfigurationVersion | 0:ConfigurationVersionDataType | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:DataSetClassId | 0:Guid | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:BaseDataSetClassIds | 0:Guid[] | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:DataSetCardinalityPath | 0:RelativePath | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:DataSetMetaData | 0:DataSetMetaDataType | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:EventSourcePath | 0:RelativePath | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Filter | 0:ContentFilter | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:LogTemplate | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:LogSeverityFieldName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:LogBodyFieldName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:LogTimestampFieldName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SpanNameTemplate | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SpanNameFieldName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:TraceIdFieldName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SpanIdFieldName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:ParentSpanIdFieldName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SpanStartTimeFieldName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SpanEndTimeFieldName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SpanStatusFieldName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SpanKind | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SpanCorrelationFieldName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:BoundItems | 1:BoundItemDataType[] | 0:PropertyType | O |
+| 0:HasComponent | Object | 1:<BoundItem> |  | 1:BoundItemType | OP |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -287,21 +287,21 @@ classDiagram
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | FieldName | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | Kind | BoundItemKindEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | AttributeId | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | BrowsePath | 0:RelativePath | 0:PropertyType | O |
-| 0:HasProperty | Variable | StartingNode | 0:NodeId | 0:PropertyType | O |
-| 0:HasProperty | Variable | SourceNodeId | 0:NodeId | 0:PropertyType | O |
-| 0:HasProperty | Variable | SamplingIntervalHint | 0:Duration | 0:PropertyType | O |
-| 0:HasProperty | Variable | IndexRange | 0:NumericRange | 0:PropertyType | O |
-| 0:HasProperty | Variable | SourceTypeDefinition | 0:NodeId | 0:PropertyType | O |
-| 0:HasProperty | Variable | SourceBrowseName | 0:QualifiedName | 0:PropertyType | O |
-| 0:HasProperty | Variable | ModelNamespaceUri | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | DataSetFieldId | 0:Guid | 0:PropertyType | O |
-| 0:HasProperty | Variable | SourceBindingClassId | 0:Guid | 0:PropertyType | O |
-| 0:HasProperty | Variable | SemanticReferenceUri | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | DimensionConstantValue | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:FieldName | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Kind | 1:BoundItemKindEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:AttributeId | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:BrowsePath | 0:RelativePath | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:StartingNode | 0:NodeId | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SourceNodeId | 0:NodeId | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SamplingIntervalHint | 0:Duration | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:IndexRange | 0:NumericRange | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SourceTypeDefinition | 0:NodeId | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SourceBrowseName | 0:QualifiedName | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:ModelNamespaceUri | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:DataSetFieldId | 0:Guid | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SourceBindingClassId | 0:Guid | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SemanticReferenceUri | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:DimensionConstantValue | 0:String | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -388,7 +388,7 @@ An Interface a model may apply (via `HasInterface`) to advertise that it exports
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseInterfaceType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasComponent | Object | <ObservabilityBindingGroup> |  | ObservabilityBindingGroupType | OP |
+| 0:HasComponent | Object | 1:<ObservabilityBindingGroup> |  | 1:ObservabilityBindingGroupType | OP |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -635,12 +635,12 @@ A bound Variable exposed as a PubSub DataSet field.
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the BoundItemType |  |  |  |  |  |
-| 0:HasProperty | Variable | MetricInstrumentType | MetricInstrumentTypeEnum | 0:PropertyType | O |
-| 0:HasProperty | Variable | Unit | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | ExplicitBucketBoundaries | 0:Double[] | 0:PropertyType | O |
-| 0:HasProperty | Variable | MetricTemporality | MetricTemporalityEnum | 0:PropertyType | O |
-| 0:HasProperty | Variable | Monotonic | 0:Boolean | 0:PropertyType | O |
+| Subtype of the 1:BoundItemType defined in [](#sec-bounditemtype-and-its-subtypes) |  |  |  |  |  |
+| 0:HasProperty | Variable | 1:MetricInstrumentType | 1:MetricInstrumentTypeEnum | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Unit | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:ExplicitBucketBoundaries | 0:Double[] | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:MetricTemporality | 1:MetricTemporalityEnum | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Monotonic | 0:Boolean | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -659,8 +659,8 @@ A bound event field of a log or trace (event-sourced) binding, selected by a Par
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the BoundItemType |  |  |  |  |  |
-| 0:HasProperty | Variable | EventFieldOperand | 0:SimpleAttributeOperand | 0:PropertyType | O |
+| Subtype of the 1:BoundItemType defined in [](#sec-bounditemtype-and-its-subtypes) |  |  |  |  |  |
+| 0:HasProperty | Variable | 1:EventFieldOperand | 0:SimpleAttributeOperand | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -681,7 +681,7 @@ Generic role of a bound item for routing/bridging to an observability backend. I
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[8] | 0:PropertyType |  |
+| 0:HasProperty | Variable | 0:EnumStrings | 0:LocalizedText[8] | 0:PropertyType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -701,7 +701,7 @@ The OpenTelemetry-style metric instrument a bound value maps to. Lets a bridge e
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[7] | 0:PropertyType |  |
+| 0:HasProperty | Variable | 0:EnumStrings | 0:LocalizedText[7] | 0:PropertyType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -721,7 +721,7 @@ Aggregation temporality of a metric value, so a bridge accumulates or reports it
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[2] | 0:PropertyType |  |
+| 0:HasProperty | Variable | 0:EnumStrings | 0:LocalizedText[2] | 0:PropertyType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -741,7 +741,7 @@ The OTEL signal an observability binding exposes: metrics (a Part 14 data DataSe
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[3] | 0:PropertyType |  |
+| 0:HasProperty | Variable | 0:EnumStrings | 0:LocalizedText[3] | 0:PropertyType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -761,8 +761,6 @@ Machine-readable descriptor of a single bound item: how to LOCATE it (BrowsePath
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasEncoding | Object | Default Binary |  | 0:DataTypeEncodingType |  |
-| 0:HasEncoding | Object | Default XML |  | 0:DataTypeEncodingType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -778,12 +776,10 @@ Links a BoundItem to the companion-specification Variable, event source or Progr
 | --- | --- | --- | --- | --- | --- |
 | BrowseName | 1:BindsToNode |  |  |  |  |
 | IsAbstract | False |  |  |  |  |
-| InverseName | IsBoundBy |  |  |  |  |
-| Symmetric | False |  |  |  |  |
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the 0:NonHierarchicalReferences |  |  |  |  |  |
+| Subtype of the 0:NonHierarchicalReferences defined in [](#ref-uapart5) |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -799,12 +795,10 @@ Links an ObservabilityBinding to the optional OPC UA Part 14 PubSub node(s) that
 | --- | --- | --- | --- | --- | --- |
 | BrowseName | 1:ExportedBy |  |  |  |  |
 | IsAbstract | False |  |  |  |  |
-| InverseName | Exports |  |  |  |  |
-| Symmetric | False |  |  |  |  |
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the 0:NonHierarchicalReferences |  |  |  |  |  |
+| Subtype of the 0:NonHierarchicalReferences defined in [](#ref-uapart5) |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -820,12 +814,10 @@ Links a derived or composing ObservabilityBinding to a base ObservabilityBinding
 | --- | --- | --- | --- | --- | --- |
 | BrowseName | 1:HasBaseBinding |  |  |  |  |
 | IsAbstract | False |  |  |  |  |
-| InverseName | IsBaseBindingOf |  |  |  |  |
-| Symmetric | False |  |  |  |  |
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the 0:NonHierarchicalReferences |  |  |  |  |  |
+| Subtype of the 0:NonHierarchicalReferences defined in [](#ref-uapart5) |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -841,12 +833,10 @@ Links the server-wide Observability registry to the ObservabilityBindingGroups i
 | --- | --- | --- | --- | --- | --- |
 | BrowseName | 1:Collects |  |  |  |  |
 | IsAbstract | False |  |  |  |  |
-| InverseName | CollectedBy |  |  |  |  |
-| Symmetric | False |  |  |  |  |
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the 0:NonHierarchicalReferences |  |  |  |  |  |
+| Subtype of the 0:NonHierarchicalReferences defined in [](#ref-uapart5) |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |

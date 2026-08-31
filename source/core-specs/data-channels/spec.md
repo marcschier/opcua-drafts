@@ -1086,16 +1086,16 @@ Interface implemented by any Object or Variable that can act as one end of a dat
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the BaseInterfaceType defined in OPC 10000-5 |  |  |  |  |  |
-| HasProperty | Variable | Direction | DataChannelDirection | PropertyType | M |
-| HasProperty | Variable | SupportedDeliveryModes | DataChannelDeliveryMode[] | PropertyType | M |
-| HasProperty | Variable | ContentType | String | PropertyType | M |
-| HasProperty | Variable | ContentParameters | KeyValuePair[] | PropertyType | O |
-| HasProperty | Variable | MaxFrameSize | UInt32 | PropertyType | O |
-| HasProperty | Variable | MaxBitrate | UInt32 | PropertyType | O |
-| HasProperty | Variable | Priority | Byte | PropertyType | O |
-| HasProperty | Variable | MaxChannels | UInt16 | PropertyType | O |
-| HasComponent | Variable | ActiveChannelCount | UInt16 | BaseDataVariableType | O |
+| Subtype of the 0:BaseInterfaceType defined in OPC 10000-5 |  |  |  |  |  |
+| 0:HasProperty | Variable | 0:Direction | 0:DataChannelDirection | 0:PropertyType | M |
+| 0:HasProperty | Variable | 0:SupportedDeliveryModes | 0:DataChannelDeliveryMode[] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 0:ContentType | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 0:ContentParameters | 0:KeyValuePair[] | 0:PropertyType | O |
+| 0:HasProperty | Variable | 0:MaxFrameSize | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 0:MaxBitrate | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 0:Priority | 0:Byte | 0:PropertyType | O |
+| 0:HasProperty | Variable | 0:MaxChannels | 0:UInt16 | 0:PropertyType | O |
+| 0:HasComponent | Variable | 0:ActiveChannelCount | 0:UInt16 | 0:BaseDataVariableType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1114,10 +1114,9 @@ The plain, concrete realization of IDataChannelSourceType: a stand-alone Object 
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| HasInterface | ObjectType | IDataChannelSourceType |  |  |  |
-| HasComponent | Variable | Channels | DataChannelStatusDataType[] | BaseDataVariableType | O |
-| HasComponent | Variable | Diagnostics | DataChannelDiagnosticsDataType[] | BaseDataVariableType | O |
+| Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
+| 0:HasComponent | Variable | 0:Channels | 0:DataChannelStatusDataType[] | 0:BaseDataVariableType | O |
+| 0:HasComponent | Variable | 0:Diagnostics | 0:DataChannelDiagnosticsDataType[] | 0:BaseDataVariableType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1136,16 +1135,16 @@ Server-wide data channel limits and capabilities, exposed as the DataChannelCapa
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| HasProperty | Variable | MaxDataChannels | UInt16 | PropertyType | M |
-| HasProperty | Variable | MaxFrameSize | UInt32 | PropertyType | M |
-| HasProperty | Variable | SupportedDeliveryModes | DataChannelDeliveryMode[] | PropertyType | M |
-| HasProperty | Variable | SupportedTransportProfileUris | String[] | PropertyType | M |
-| HasProperty | Variable | MaxTotalBitrate | UInt32 | PropertyType | O |
-| HasProperty | Variable | MaxCreditPerChannel | UInt32 | PropertyType | M |
-| HasProperty | Variable | SupportsUnreliableDatagrams | Boolean | PropertyType | O |
-| HasProperty | Variable | AllowInsecureDataChannels | Boolean | PropertyType | O |
-| HasComponent | Variable | ActiveChannelCount | UInt16 | BaseDataVariableType | O |
+| Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
+| 0:HasProperty | Variable | 0:MaxDataChannels | 0:UInt16 | 0:PropertyType | M |
+| 0:HasProperty | Variable | 0:MaxFrameSize | 0:UInt32 | 0:PropertyType | M |
+| 0:HasProperty | Variable | 0:SupportedDeliveryModes | 0:DataChannelDeliveryMode[] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 0:SupportedTransportProfileUris | 0:String[] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 0:MaxTotalBitrate | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 0:MaxCreditPerChannel | 0:UInt32 | 0:PropertyType | M |
+| 0:HasProperty | Variable | 0:SupportsUnreliableDatagrams | 0:Boolean | 0:PropertyType | O |
+| 0:HasProperty | Variable | 0:AllowInsecureDataChannels | 0:Boolean | 0:PropertyType | O |
+| 0:HasComponent | Variable | 0:ActiveChannelCount | 0:UInt16 | 0:BaseDataVariableType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1165,8 +1164,8 @@ Raised when the Server wants to open a data channel towards a Client. OPC UA Ser
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the BaseEventType defined in OPC 10000-5 |  |  |  |  |  |
-| HasProperty | Variable | Offer | DataChannelOfferDataType | PropertyType | M |
+| Subtype of the 0:BaseEventType defined in OPC 10000-5 |  |  |  |  |  |
+| 0:HasProperty | Variable | 0:Offer | 0:DataChannelOfferDataType | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1186,10 +1185,10 @@ Raised whenever a data channel changes state, including the transition to Faulte
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the BaseEventType defined in OPC 10000-5 |  |  |  |  |  |
-| HasProperty | Variable | ChannelId | UInt32 | PropertyType | M |
-| HasProperty | Variable | State | DataChannelState | PropertyType | M |
-| HasProperty | Variable | Status | StatusCode | PropertyType | O |
+| Subtype of the 0:BaseEventType defined in OPC 10000-5 |  |  |  |  |  |
+| 0:HasProperty | Variable | 0:ChannelId | 0:UInt32 | 0:PropertyType | M |
+| 0:HasProperty | Variable | 0:State | 0:DataChannelState | 0:PropertyType | M |
+| 0:HasProperty | Variable | 0:Status | 0:StatusCode | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1208,10 +1207,10 @@ Audit event for a successful or rejected OpenDataChannel. A data channel carries
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the AuditSessionEventType defined in OPC 10000-5 |  |  |  |  |  |
-| HasProperty | Variable | DataChannelSourceNodeId | NodeId | PropertyType | M |
-| HasProperty | Variable | Parameters | DataChannelParametersDataType | PropertyType | M |
-| HasProperty | Variable | ChannelId | UInt32 | PropertyType | O |
+| Subtype of the 0:AuditSessionEventType defined in OPC 10000-5 |  |  |  |  |  |
+| 0:HasProperty | Variable | 0:DataChannelSourceNodeId | 0:NodeId | 0:PropertyType | M |
+| 0:HasProperty | Variable | 0:Parameters | 0:DataChannelParametersDataType | 0:PropertyType | M |
+| 0:HasProperty | Variable | 0:ChannelId | 0:UInt32 | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1231,8 +1230,8 @@ The direction in which a data channel carries payload. Directions are named from
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| HasProperty | Variable | EnumStrings | LocalizedText[3] | PropertyType |  |
+| Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
+| 0:HasProperty | Variable | 0:EnumStrings | 0:LocalizedText[3] | 0:PropertyType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1251,8 +1250,8 @@ The delivery guarantee requested for a data channel. What a mode can actually de
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| HasProperty | Variable | EnumStrings | LocalizedText[4] | PropertyType |  |
+| Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
+| 0:HasProperty | Variable | 0:EnumStrings | 0:LocalizedText[4] | 0:PropertyType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1272,8 +1271,8 @@ The lifecycle state of a data channel. The normative state transition table - wh
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| HasProperty | Variable | EnumStrings | LocalizedText[6] | PropertyType |  |
+| Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
+| 0:HasProperty | Variable | 0:EnumStrings | 0:LocalizedText[6] | 0:PropertyType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1292,10 +1291,7 @@ The negotiated properties of one data channel. The same structure carries the cl
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the Structure defined in OPC 10000-3 |  |  |  |  |  |
-| HasEncoding | Object | Default Binary |  | DataTypeEncodingType |  |
-| HasEncoding | Object | Default XML |  | DataTypeEncodingType |  |
-| HasEncoding | Object | Default JSON |  | DataTypeEncodingType |  |
+| Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1315,10 +1311,7 @@ The runtime state of one open data channel, as published by its endpoint.
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the Structure defined in OPC 10000-3 |  |  |  |  |  |
-| HasEncoding | Object | Default Binary |  | DataTypeEncodingType |  |
-| HasEncoding | Object | Default XML |  | DataTypeEncodingType |  |
-| HasEncoding | Object | Default JSON |  | DataTypeEncodingType |  |
+| Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1338,10 +1331,7 @@ A server-initiated offer to open a data channel, carried by DataChannelOfferedEv
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the Structure defined in OPC 10000-3 |  |  |  |  |  |
-| HasEncoding | Object | Default Binary |  | DataTypeEncodingType |  |
-| HasEncoding | Object | Default XML |  | DataTypeEncodingType |  |
-| HasEncoding | Object | Default JSON |  | DataTypeEncodingType |  |
+| Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1360,10 +1350,7 @@ Per-channel counters. FramesDiscarded and CreditStalls are the two that matter i
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the Structure defined in OPC 10000-3 |  |  |  |  |  |
-| HasEncoding | Object | Default Binary |  | DataTypeEncodingType |  |
-| HasEncoding | Object | Default XML |  | DataTypeEncodingType |  |
-| HasEncoding | Object | Default JSON |  | DataTypeEncodingType |  |
+| Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1379,12 +1366,10 @@ Links a functional Object or Variable to the DataChannelSource endpoint through 
 | --- | --- | --- | --- | --- | --- |
 | BrowseName | 0:HasDataChannel |  |  |  |  |
 | IsAbstract | False |  |  |  |  |
-| InverseName | DataChannelOf |  |  |  |  |
-| Symmetric | False |  |  |  |  |
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the NonHierarchicalReferences |  |  |  |  |  |
+| Subtype of the 0:NonHierarchicalReferences defined in OPC 10000-5 |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |

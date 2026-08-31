@@ -261,7 +261,7 @@
         "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0."
       },
       {
-        "uri": "http://opcfoundation.org/UA/Observability/",
+        "uri": "http://opcfoundation.org/UA/ObservabilityExport/",
         "index": 1,
         "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model."
       }

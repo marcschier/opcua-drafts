@@ -135,6 +135,31 @@ def anchors_of(path):
     return ids
 
 
+def normative_reference_ids(path):
+    """The `ref-<id>` anchors a specification's manifest defines.
+
+    A citation of another standard resolves against `manifest.json` -> `normativeReferences`,
+    not against a heading: clause 2 is generated from that list, so the anchor exists in the
+    published document and nowhere in the markdown. Every part of one specification shares the
+    one manifest, so the lookup walks up to the directory holding it.
+    """
+    directory = os.path.dirname(os.path.abspath(path))
+    while True:
+        candidate = os.path.join(directory, "manifest.json")
+        if os.path.exists(candidate):
+            try:
+                with open(candidate, encoding="utf-8") as f:
+                    manifest = json.load(f)
+            except (OSError, ValueError):
+                return set()
+            return {"ref-%s" % r["id"] for r in manifest.get("normativeReferences", [])
+                    if isinstance(r, dict) and r.get("id")}
+        parent = os.path.dirname(directory)
+        if parent == directory or len(directory) <= len(ROOT):
+            return set()
+        directory = parent
+
+
 def is_external(target):
     return bool(re.match(r"^[a-zA-Z][a-zA-Z0-9+.\-]*:", target)) or target.startswith("//")
 
@@ -170,7 +195,7 @@ def main():
                 dest = md
             if frag and dest.lower().endswith(".md"):
                 if dest not in anchor_cache:
-                    anchor_cache[dest] = anchors_of(dest)
+                    anchor_cache[dest] = anchors_of(dest) | normative_reference_ids(dest)
                 if slug(frag) not in anchor_cache[dest] and frag not in anchor_cache[dest]:
                     broken.append((md, target, "missing anchor"))
     rel = lambda p: os.path.relpath(p, ROOT).replace(os.sep, "/")

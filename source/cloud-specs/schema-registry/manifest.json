@@ -203,17 +203,9 @@
   "namespaces": {
     "documentNamespaceIndex": 2,
     "table": [
-      {
-        "uri": "http://opcfoundation.org/UA/",
-        "index": 0,
-        "definedBy": "uapart5",
-        "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0."
-      },
-      {
-        "uri": "http://opcfoundation.org/UA/SchemaRegistry/",
-        "index": 2,
-        "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model."
-      }
+      { "uri": "http://opcfoundation.org/UA/", "index": 0, "definedBy": "uapart5", "description": "Namespace for *NodeIds* and *BrowseNames* defined in the OPC UA specification. This namespace shall have namespace index 0." },
+      { "uri": "http://opcfoundation.org/UA/xRegistry/", "index": 1, "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model. The namespace index is *Server* specific." },
+      { "uri": "http://opcfoundation.org/UA/SchemaRegistry/", "index": 2, "description": "Namespace for *NodeIds* and *BrowseNames* defined in this model." }
     ]
   },
   "profiles": "profiles.json"

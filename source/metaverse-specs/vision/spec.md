@@ -228,11 +228,11 @@ This type exists because discovery has to be deterministic. Without a well-known
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasComponent | Object | Sensors |  | 0:FolderType | M |
-| 0:HasComponent | Object | Pipelines |  | 0:FolderType | O |
-| 0:HasComponent | Object | Models |  | 0:FolderType | O |
-| 0:HasComponent | Object | Frames |  | 0:FolderType | O |
-| 0:HasComponent | Object | LearningJobs |  | 0:FolderType | O |
+| 0:HasComponent | Object | 1:Sensors |  | 0:FolderType | M |
+| 0:HasComponent | Object | 1:Pipelines |  | 0:FolderType | O |
+| 0:HasComponent | Object | 1:Models |  | 0:FolderType | O |
+| 0:HasComponent | Object | 1:Frames |  | 0:FolderType | O |
+| 0:HasComponent | Object | 1:LearningJobs |  | 0:FolderType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -271,18 +271,18 @@ A Server never instantiates it directly. It instantiates `ImageSensorType`, `Dep
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | SensorId | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | RealityKind | VisionRealityKindEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | Modality | VisionSensorModalityEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | Manufacturer | 0:LocalizedText | 0:PropertyType | O |
-| 0:HasProperty | Variable | Model | 0:LocalizedText | 0:PropertyType | O |
-| 0:HasProperty | Variable | SerialNumber | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | DeviceUri | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | FrameId | 0:String | 0:PropertyType | O |
-| 0:HasComponent | Object | Media |  | VisionMediaManagementType | M |
-| 0:HasComponent | Object | Optics |  | OpticsType | O |
-| 0:HasComponent | Object | Illumination |  | IlluminationType | O |
-| 0:HasComponent | Object | Calibrations |  | 0:FolderType | O |
+| 0:HasProperty | Variable | 1:SensorId | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:RealityKind | 1:VisionRealityKindEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Modality | 1:VisionSensorModalityEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Manufacturer | 0:LocalizedText | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Model | 0:LocalizedText | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SerialNumber | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:DeviceUri | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:FrameId | 0:String | 0:PropertyType | O |
+| 0:HasComponent | Object | 1:Media |  | 1:VisionMediaManagementType | M |
+| 0:HasComponent | Object | 1:Optics |  | 1:OpticsType | O |
+| 0:HasComponent | Object | 1:Illumination |  | 1:IlluminationType | O |
+| 0:HasComponent | Object | 1:Calibrations |  | 0:FolderType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -309,22 +309,22 @@ A client uses it for three things. It sizes buffers and picks a decoder from `Wi
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the VisionSensorType |  |  |  |  |  |
-| 0:HasProperty | Variable | Width | 0:UInt32 | 0:PropertyType | M |
-| 0:HasProperty | Variable | Height | 0:UInt32 | 0:PropertyType | M |
-| 0:HasProperty | Variable | PixelFormat | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | ExposureTime | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | Gain | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | AcquisitionFrameRate | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | TriggerMode | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | TriggerSource | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | OffsetX | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | OffsetY | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | BinningHorizontal | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | BinningVertical | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | ReverseX | 0:Boolean | 0:PropertyType | O |
-| 0:HasProperty | Variable | ReverseY | 0:Boolean | 0:PropertyType | O |
-| 0:HasComponent | Variable | Intrinsics | VisionIntrinsicsDataType | 0:BaseDataVariableType | O |
+| Subtype of the 1:VisionSensorType defined in [](#sec-visionsensortype-baseobjecttype-abstract) |  |  |  |  |  |
+| 0:HasProperty | Variable | 1:Width | 0:UInt32 | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Height | 0:UInt32 | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:PixelFormat | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:ExposureTime | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Gain | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:AcquisitionFrameRate | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:TriggerMode | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:TriggerSource | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:OffsetX | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:OffsetY | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:BinningHorizontal | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:BinningVertical | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:ReverseX | 0:Boolean | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:ReverseY | 0:Boolean | 0:PropertyType | O |
+| 0:HasComponent | Variable | 1:Intrinsics | 1:VisionIntrinsicsDataType | 0:BaseDataVariableType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -351,12 +351,12 @@ Point clouds are obtained through a media endpoint and are never read as an OPC 
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the VisionSensorType |  |  |  |  |  |
-| 0:HasProperty | Variable | MinDepth | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | MaxDepth | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | DepthScale | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | Baseline | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | PointsPerFrame | 0:UInt32 | 0:PropertyType | O |
+| Subtype of the 1:VisionSensorType defined in [](#sec-visionsensortype-baseobjecttype-abstract) |  |  |  |  |  |
+| 0:HasProperty | Variable | 1:MinDepth | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:MaxDepth | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:DepthScale | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Baseline | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:PointsPerFrame | 0:UInt32 | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -409,11 +409,11 @@ A training-data pipeline uses `RandomizationSeed` to reproduce a run exactly. A 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseInterfaceType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | SimulatorUri | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | StageIdentifier | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | PrimPath | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | GroundTruthAvailable | 0:Boolean | 0:PropertyType | O |
-| 0:HasProperty | Variable | RandomizationSeed | 0:UInt64 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SimulatorUri | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:StageIdentifier | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:PrimPath | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:GroundTruthAvailable | 0:Boolean | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:RandomizationSeed | 0:UInt64 | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -725,14 +725,14 @@ The trust members are not decoration. Where a deployment falls under a high-risk
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | ResultId | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | CreationTime | 0:UtcTime | 0:PropertyType | M |
-| 0:HasProperty | Variable | Sensor | 0:NodeId | 0:PropertyType | O |
-| 0:HasProperty | Variable | Pipeline | 0:NodeId | 0:PropertyType | O |
-| 0:HasProperty | Variable | ModelVersionUsed | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | Confidence | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | ExplanationUri | 0:String | 0:PropertyType | O |
-| 0:HasComponent | Variable | Frame | VisionImageReferenceDataType | 0:BaseDataVariableType | O |
+| 0:HasProperty | Variable | 1:ResultId | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:CreationTime | 0:UtcTime | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Sensor | 0:NodeId | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Pipeline | 0:NodeId | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:ModelVersionUsed | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Confidence | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:ExplanationUri | 0:String | 0:PropertyType | O |
+| 0:HasComponent | Variable | 1:Frame | 1:VisionImageReferenceDataType | 0:BaseDataVariableType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -759,11 +759,11 @@ Because §5.12 fixes the coverage factor at k = 2, two Servers that both evaluat
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the VisionResultType |  |  |  |  |  |
-| 0:HasProperty | Variable | Evaluation | VisionResultEvaluationEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | PartId | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | RecipeId | 0:String | 0:PropertyType | O |
-| 0:HasComponent | Variable | Characteristics | VisionCharacteristicDataType[] | 0:BaseDataVariableType | M |
+| Subtype of the 1:VisionResultType defined in [](#sec-visionresulttype-abstract) |  |  |  |  |  |
+| 0:HasProperty | Variable | 1:Evaluation | 1:VisionResultEvaluationEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:PartId | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:RecipeId | 0:String | 0:PropertyType | O |
+| 0:HasComponent | Variable | 1:Characteristics | 1:VisionCharacteristicDataType[] | 0:BaseDataVariableType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -786,9 +786,9 @@ A pose is only actionable if its frame is known, which is why `VisionPose3DDataT
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the VisionResultType |  |  |  |  |  |
-| 0:HasComponent | Variable | Detections | VisionDetectionDataType[] | 0:BaseDataVariableType | M |
-| 0:HasProperty | Variable | FrameId | 0:String | 0:PropertyType | O |
+| Subtype of the 1:VisionResultType defined in [](#sec-visionresulttype-abstract) |  |  |  |  |  |
+| 0:HasComponent | Variable | 1:Detections | 1:VisionDetectionDataType[] | 0:BaseDataVariableType | M |
+| 0:HasProperty | Variable | 1:FrameId | 0:String | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -809,9 +809,9 @@ Mandatory `Mask`, a `VisionImageReferenceDataType`. Masks are images and follow 
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the VisionResultType |  |  |  |  |  |
-| 0:HasProperty | Variable | LabelClasses | 0:String[] | 0:PropertyType | O |
-| 0:HasComponent | Variable | Mask | VisionImageReferenceDataType | 0:BaseDataVariableType | M |
+| Subtype of the 1:VisionResultType defined in [](#sec-visionresulttype-abstract) |  |  |  |  |  |
+| 0:HasProperty | Variable | 1:LabelClasses | 0:String[] | 0:PropertyType | O |
+| 0:HasComponent | Variable | 1:Mask | 1:VisionImageReferenceDataType | 0:BaseDataVariableType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -940,16 +940,16 @@ A Server whose inference is entirely off-server and continuously running may imp
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | PipelineId | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | Sensor | 0:NodeId | 0:PropertyType | M |
-| 0:HasProperty | Variable | Deployment | 0:NodeId | 0:PropertyType | M |
-| 0:HasProperty | Variable | State | VisionEndpointStateEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | Continuous | 0:Boolean | 0:PropertyType | O |
-| 0:HasComponent | Object | Results |  | 0:FolderType | O |
-| 0:HasComponent | Object | Feedback |  | VisionFeedbackType | O |
-| 0:HasComponent | Method | RunInference |  |  | O |
-| 0:HasComponent | Method | StartContinuous |  |  | O |
-| 0:HasComponent | Method | Stop |  |  | O |
+| 0:HasProperty | Variable | 1:PipelineId | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Sensor | 0:NodeId | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Deployment | 0:NodeId | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:State | 1:VisionEndpointStateEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Continuous | 0:Boolean | 0:PropertyType | O |
+| 0:HasComponent | Object | 1:Results |  | 0:FolderType | O |
+| 0:HasComponent | Object | 1:Feedback |  | 1:VisionFeedbackType | O |
+| 0:HasComponent | Method | 1:RunInference |  |  | O |
+| 0:HasComponent | Method | 1:StartContinuous |  |  | O |
+| 0:HasComponent | Method | 1:Stop |  |  | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1897,14 +1897,14 @@ The lens in front of a sensor. Member names are deliberately aligned with the IL
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | FocalLength | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | Aperture | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | WorkingDistance | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | MinimumWorkingDistance | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | Magnification | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | OpticalFormat | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | MountType | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | LensType | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:FocalLength | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Aperture | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:WorkingDistance | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:MinimumWorkingDistance | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Magnification | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:OpticalFormat | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:MountType | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:LensType | 0:String | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1924,11 +1924,11 @@ A controlled light source associated with a sensor. Member names align with the 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | LampType | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | Wavelength | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | RelativeIntensity | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | LightingMode | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | Quality | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:LampType | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Wavelength | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:RelativeIntensity | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:LightingMode | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Quality | 0:Double | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1948,14 +1948,14 @@ Abstract base for a media access point. The endpoint DESCRIBES where media can b
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | EndpointId | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | EndpointUri | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | State | VisionEndpointStateEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | Authentication | VisionEndpointAuthenticationEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | SecureTransport | 0:Boolean | 0:PropertyType | M |
-| 0:HasProperty | Variable | ProfileName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | DataChannelSource | 0:NodeId | 0:PropertyType | O |
-| 0:HasProperty | Variable | DataChannelContentType | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:EndpointId | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EndpointUri | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:State | 1:VisionEndpointStateEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Authentication | 1:VisionEndpointAuthenticationEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:SecureTransport | 0:Boolean | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:ProfileName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:DataChannelSource | 0:NodeId | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:DataChannelContentType | 0:String | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -1974,16 +1974,16 @@ A continuous media stream. A conformant Server SHALL expose at least one instanc
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the MediaEndpointType |  |  |  |  |  |
-| 0:HasProperty | Variable | StreamProtocol | VisionStreamProtocolEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | ProtocolVersion | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | Codec | VisionVideoCodecEnum | 0:PropertyType | O |
-| 0:HasProperty | Variable | Width | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | Height | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | FrameRate | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | Bitrate | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | MaxSessions | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | ActiveSessions | 0:UInt32 | 0:PropertyType | O |
+| Subtype of the 1:MediaEndpointType defined in [](#sec-mediaendpointtype) |  |  |  |  |  |
+| 0:HasProperty | Variable | 1:StreamProtocol | 1:VisionStreamProtocolEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:ProtocolVersion | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Codec | 1:VisionVideoCodecEnum | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Width | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Height | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:FrameRate | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Bitrate | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:MaxSessions | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:ActiveSessions | 0:UInt32 | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2002,16 +2002,16 @@ A still-image access point. A conformant Server SHALL expose at least one instan
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the MediaEndpointType |  |  |  |  |  |
-| 0:HasProperty | Variable | ClipFormat | VisionClipFormatEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | Quality | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | Width | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | Height | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | Retention | 0:Duration | 0:PropertyType | O |
-| 0:HasProperty | Variable | InlineDeliveryEnabled | 0:Boolean | 0:PropertyType | O |
-| 0:HasProperty | Variable | MaxInlineClipSize | 0:UInt32 | 0:PropertyType | O |
-| 0:HasComponent | Variable | LatestClip | 0:ByteString | 0:BaseDataVariableType | O |
-| 0:HasComponent | Variable | LatestClipMetadata | VisionImageReferenceDataType | 0:BaseDataVariableType | O |
+| Subtype of the 1:MediaEndpointType defined in [](#sec-mediaendpointtype) |  |  |  |  |  |
+| 0:HasProperty | Variable | 1:ClipFormat | 1:VisionClipFormatEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Quality | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Width | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Height | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Retention | 0:Duration | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:InlineDeliveryEnabled | 0:Boolean | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:MaxInlineClipSize | 0:UInt32 | 0:PropertyType | O |
+| 0:HasComponent | Variable | 1:LatestClip | 0:ByteString | 0:BaseDataVariableType | O |
+| 0:HasComponent | Variable | 1:LatestClipMetadata | 1:VisionImageReferenceDataType | 0:BaseDataVariableType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2031,15 +2031,15 @@ Container and control surface for a sensor's media endpoints. Holds the endpoint
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasComponent | Object | StreamEndpoints |  | 0:FolderType | M |
-| 0:HasComponent | Object | ClipEndpoints |  | 0:FolderType | M |
-| 0:HasProperty | Variable | PreferredStreamEndpoint | 0:NodeId | 0:PropertyType | O |
-| 0:HasProperty | Variable | PreferredClipEndpoint | 0:NodeId | 0:PropertyType | O |
-| 0:HasComponent | Method | GetStreamEndpoint |  |  | M |
-| 0:HasComponent | Method | ReleaseStreamEndpoint |  |  | M |
-| 0:HasComponent | Method | ConfigureStreamEndpoint |  |  | O |
-| 0:HasComponent | Method | SelectEndpoint |  |  | O |
-| 0:HasComponent | Method | GetClip |  |  | M |
+| 0:HasComponent | Object | 1:StreamEndpoints |  | 0:FolderType | M |
+| 0:HasComponent | Object | 1:ClipEndpoints |  | 0:FolderType | M |
+| 0:HasProperty | Variable | 1:PreferredStreamEndpoint | 0:NodeId | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:PreferredClipEndpoint | 0:NodeId | 0:PropertyType | O |
+| 0:HasComponent | Method | 1:GetStreamEndpoint |  |  | M |
+| 0:HasComponent | Method | 1:ReleaseStreamEndpoint |  |  | M |
+| 0:HasComponent | Method | 1:ConfigureStreamEndpoint |  |  | O |
+| 0:HasComponent | Method | 1:SelectEndpoint |  |  | O |
+| 0:HasComponent | Method | 1:GetClip |  |  | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2059,10 +2059,10 @@ A named coordinate frame. Frames form a tree through ParentFrame, so a client ca
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | FrameId | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | Role | VisionFrameRoleEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | ParentFrame | 0:NodeId | 0:PropertyType | O |
-| 0:HasComponent | Variable | Transform | VisionPose3DDataType | 0:BaseDataVariableType | O |
+| 0:HasProperty | Variable | 1:FrameId | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Role | 1:VisionFrameRoleEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:ParentFrame | 0:NodeId | 0:PropertyType | O |
+| 0:HasComponent | Variable | 1:Transform | 1:VisionPose3DDataType | 0:BaseDataVariableType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2082,11 +2082,11 @@ Abstract base for a calibration result, carrying the provenance a client needs i
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | CalibrationId | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | PerformedAt | 0:UtcTime | 0:PropertyType | M |
-| 0:HasProperty | Variable | Valid | 0:Boolean | 0:PropertyType | M |
-| 0:HasProperty | Variable | ResidualError | 0:Double | 0:PropertyType | O |
-| 0:HasProperty | Variable | Method | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:CalibrationId | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:PerformedAt | 0:UtcTime | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Valid | 0:Boolean | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:ResidualError | 0:Double | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Method | 0:String | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2105,8 +2105,8 @@ Camera intrinsics and lens distortion for a specific image size.
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the VisionCalibrationType |  |  |  |  |  |
-| 0:HasComponent | Variable | Intrinsics | VisionIntrinsicsDataType | 0:BaseDataVariableType | M |
+| Subtype of the 1:VisionCalibrationType defined in [](#sec-visioncalibrationtype) |  |  |  |  |  |
+| 0:HasComponent | Variable | 1:Intrinsics | 1:VisionIntrinsicsDataType | 0:BaseDataVariableType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2125,11 +2125,11 @@ The rigid transform between two frames. For a robot cell this is the hand-eye ca
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the VisionCalibrationType |  |  |  |  |  |
-| 0:HasProperty | Variable | Mount | VisionCalibrationMountEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | SourceFrame | 0:NodeId | 0:PropertyType | M |
-| 0:HasProperty | Variable | TargetFrame | 0:NodeId | 0:PropertyType | M |
-| 0:HasComponent | Variable | Transform | VisionPose3DDataType | 0:BaseDataVariableType | M |
+| Subtype of the 1:VisionCalibrationType defined in [](#sec-visioncalibrationtype) |  |  |  |  |  |
+| 0:HasProperty | Variable | 1:Mount | 1:VisionCalibrationMountEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:SourceFrame | 0:NodeId | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:TargetFrame | 0:NodeId | 0:PropertyType | M |
+| 0:HasComponent | Variable | 1:Transform | 1:VisionPose3DDataType | 0:BaseDataVariableType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2149,19 +2149,19 @@ Nameplate of a trained model. The member set is deliberately aligned with the ID
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | ModelId | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | Name | 0:LocalizedText | 0:PropertyType | M |
-| 0:HasProperty | Variable | Version | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | Framework | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | Format | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | TaskKind | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | Digest | 0:ByteString | 0:PropertyType | M |
-| 0:HasProperty | Variable | DigestAlgorithm | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | ArtifactUri | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | ProvenanceUri | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | LabelClasses | 0:String[] | 0:PropertyType | O |
-| 0:HasComponent | Variable | Inputs | VisionTensorSignatureDataType[] | 0:BaseDataVariableType | O |
-| 0:HasComponent | Variable | Outputs | VisionTensorSignatureDataType[] | 0:BaseDataVariableType | O |
+| 0:HasProperty | Variable | 1:ModelId | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Name | 0:LocalizedText | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Version | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Framework | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Format | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:TaskKind | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Digest | 0:ByteString | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:DigestAlgorithm | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:ArtifactUri | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:ProvenanceUri | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:LabelClasses | 0:String[] | 0:PropertyType | O |
+| 0:HasComponent | Variable | 1:Inputs | 1:VisionTensorSignatureDataType[] | 0:BaseDataVariableType | O |
+| 0:HasComponent | Variable | 1:Outputs | 1:VisionTensorSignatureDataType[] | 0:BaseDataVariableType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2181,15 +2181,15 @@ A dataset used to train or validate a model. Aligned with the IDTA 02058 AI Data
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | DatasetId | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | Name | 0:LocalizedText | 0:PropertyType | O |
-| 0:HasProperty | Variable | Version | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | SourceKind | VisionDatasetSourceEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | SampleCount | 0:UInt64 | 0:PropertyType | O |
-| 0:HasProperty | Variable | LabelClasses | 0:String[] | 0:PropertyType | O |
-| 0:HasProperty | Variable | CreatedAt | 0:UtcTime | 0:PropertyType | O |
-| 0:HasProperty | Variable | ArtifactUri | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | Digest | 0:ByteString | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:DatasetId | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Name | 0:LocalizedText | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Version | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SourceKind | 1:VisionDatasetSourceEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:SampleCount | 0:UInt64 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:LabelClasses | 0:String[] | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:CreatedAt | 0:UtcTime | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:ArtifactUri | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:Digest | 0:ByteString | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2209,14 +2209,14 @@ A model made executable somewhere. Aligned with the IDTA 02059 AI Deployment sub
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | DeploymentId | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | InferenceLocation | VisionInferenceLocationEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | AcceleratorKind | VisionAcceleratorKindEnum | 0:PropertyType | O |
-| 0:HasProperty | Variable | AcceleratorName | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | EndpointUri | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | LatencyBudget | 0:Duration | 0:PropertyType | O |
-| 0:HasProperty | Variable | BatchSize | 0:UInt32 | 0:PropertyType | O |
-| 0:HasProperty | Variable | State | VisionEndpointStateEnum | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:DeploymentId | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:InferenceLocation | 1:VisionInferenceLocationEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:AcceleratorKind | 1:VisionAcceleratorKindEnum | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:AcceleratorName | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:EndpointUri | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:LatencyBudget | 0:Duration | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:BatchSize | 0:UInt32 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:State | 1:VisionEndpointStateEnum | 0:PropertyType | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2236,14 +2236,14 @@ The return path into the vision system. It serves three purposes at once: drawin
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | OverlayEnabled | 0:Boolean | 0:PropertyType | O |
-| 0:HasProperty | Variable | OverlayStyle | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | OverlayTtl | 0:Duration | 0:PropertyType | O |
-| 0:HasProperty | Variable | MaxInlineFeedbackImageSize | 0:UInt32 | 0:PropertyType | O |
-| 0:HasComponent | Method | SubmitDetections |  |  | O |
-| 0:HasComponent | Method | SubmitInspectionResult |  |  | O |
-| 0:HasComponent | Method | SubmitCorrection |  |  | O |
-| 0:HasComponent | Method | SubmitImageReference |  |  | O |
+| 0:HasProperty | Variable | 1:OverlayEnabled | 0:Boolean | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:OverlayStyle | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:OverlayTtl | 0:Duration | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:MaxInlineFeedbackImageSize | 0:UInt32 | 0:PropertyType | O |
+| 0:HasComponent | Method | 1:SubmitDetections |  |  | O |
+| 0:HasComponent | Method | 1:SubmitInspectionResult |  |  | O |
+| 0:HasComponent | Method | 1:SubmitCorrection |  |  | O |
+| 0:HasComponent | Method | 1:SubmitImageReference |  |  | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2263,17 +2263,17 @@ One turn of the capture, label, train and promote loop. It exists so that correc
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:BaseObjectType defined in OPC 10000-5 |  |  |  |  |  |
-| 0:HasProperty | Variable | JobId | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | State | VisionLearningJobStateEnum | 0:PropertyType | M |
-| 0:HasProperty | Variable | Dataset | 0:NodeId | 0:PropertyType | O |
-| 0:HasProperty | Variable | BaseModel | 0:NodeId | 0:PropertyType | O |
-| 0:HasProperty | Variable | CandidateModel | 0:NodeId | 0:PropertyType | O |
-| 0:HasProperty | Variable | SamplesCollected | 0:UInt64 | 0:PropertyType | O |
-| 0:HasProperty | Variable | LastError | 0:LocalizedText | 0:PropertyType | O |
-| 0:HasComponent | Method | StartCollection |  |  | O |
-| 0:HasComponent | Method | StopCollection |  |  | O |
-| 0:HasComponent | Method | TriggerTraining |  |  | O |
-| 0:HasComponent | Method | PromoteModel |  |  | O |
+| 0:HasProperty | Variable | 1:JobId | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:State | 1:VisionLearningJobStateEnum | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:Dataset | 0:NodeId | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:BaseModel | 0:NodeId | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:CandidateModel | 0:NodeId | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:SamplesCollected | 0:UInt64 | 0:PropertyType | O |
+| 0:HasProperty | Variable | 1:LastError | 0:LocalizedText | 0:PropertyType | O |
+| 0:HasComponent | Method | 1:StartCollection |  |  | O |
+| 0:HasComponent | Method | 1:StopCollection |  |  | O |
+| 0:HasComponent | Method | 1:TriggerTraining |  |  | O |
+| 0:HasComponent | Method | 1:PromoteModel |  |  | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2293,7 +2293,7 @@ Whether the sensor observes the physical world, a simulation, or both. This is t
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[3] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[3] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2313,7 +2313,7 @@ Wire protocol of a continuous media stream. Rtsp is the mandatory default: a con
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[9] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[9] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2333,7 +2333,7 @@ Encoding of a still clip. Jpeg is the mandatory default: a conformant Server exp
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[7] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[7] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2353,7 +2353,7 @@ Codec carried by a stream endpoint.
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[6] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[6] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2373,7 +2373,7 @@ Runtime lifecycle state of a media endpoint or deployment.
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[5] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[5] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2393,7 +2393,7 @@ Authentication a client must present to the media endpoint. This is the media-pl
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[5] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[5] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2413,7 +2413,7 @@ Where inference executes. The result contract is identical in every case; this p
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[4] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[4] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2433,7 +2433,7 @@ Compute device executing the model.
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[6] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[6] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2453,7 +2453,7 @@ Overall verdict of a result. Value semantics are aligned with the ResultEvaluati
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[4] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[4] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2473,7 +2473,7 @@ Per-characteristic tolerance outcome.
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[3] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[3] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2493,7 +2493,7 @@ Why a client is pushing information back into the vision system.
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[4] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[4] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2513,7 +2513,7 @@ Physical relationship between a camera and the kinematic chain it is calibrated 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[4] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[4] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2533,7 +2533,7 @@ Role of a coordinate frame, following the ISO 9787 frame vocabulary.
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[6] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[6] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2553,7 +2553,7 @@ Lens distortion model the coefficients belong to.
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[5] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[5] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2573,7 +2573,7 @@ What the sensor measures.
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[7] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[7] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2593,7 +2593,7 @@ State of a dataset-capture, retraining and promotion cycle.
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[8] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[8] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2613,7 +2613,7 @@ Provenance of the samples in a dataset.
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Enumeration defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasProperty | Variable | EnumStrings | 0:LocalizedText[3] | 0:PropertyType | M |
+| 0:HasProperty | Variable | 1:EnumStrings | 0:LocalizedText[3] | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2633,7 +2633,6 @@ A rigid-body pose expressed in a named coordinate frame. Position is metres; Ori
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasEncoding | Object | Default Binary |  | 0:DataTypeEncodingType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2653,7 +2652,6 @@ A box in image space. The origin is the top-left pixel; Rotation is degrees cloc
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasEncoding | Object | Default Binary |  | 0:DataTypeEncodingType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2673,7 +2671,6 @@ An oriented box in three-dimensional space, given by a centre pose and an extent
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasEncoding | Object | Default Binary |  | 0:DataTypeEncodingType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2693,7 +2690,6 @@ A reference to image bytes that are NOT carried in the OPC UA payload. This is t
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasEncoding | Object | Default Binary |  | 0:DataTypeEncodingType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2713,7 +2709,6 @@ Pinhole intrinsics plus a distortion model, in pixel units, valid for the stated
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasEncoding | Object | Default Binary |  | 0:DataTypeEncodingType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2733,7 +2728,6 @@ One detected instance. This is the robotics-vision payload: a class, a score, an
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasEncoding | Object | Default Binary |  | 0:DataTypeEncodingType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2753,7 +2747,6 @@ One measured characteristic of an inspected part. This is the machine-vision pay
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasEncoding | Object | Default Binary |  | 0:DataTypeEncodingType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2773,7 +2766,6 @@ A leased media session. The Uri may embed a single-use or time-limited credentia
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasEncoding | Object | Default Binary |  | 0:DataTypeEncodingType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2793,7 +2785,6 @@ Shape and element type of one model input or output tensor.
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 0:Structure defined in OPC 10000-3 |  |  |  |  |  |
-| 0:HasEncoding | Object | Default Binary |  | 0:DataTypeEncodingType |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2809,12 +2800,10 @@ Links a sensor to a calibration currently valid for it.
 | --- | --- | --- | --- | --- | --- |
 | BrowseName | 1:HasCalibration |  |  |  |  |
 | IsAbstract | False |  |  |  |  |
-| InverseName | IsCalibrationOf |  |  |  |  |
-| Symmetric | False |  |  |  |  |
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the 0:NonHierarchicalReferences |  |  |  |  |  |
+| Subtype of the 0:NonHierarchicalReferences defined in [](#ref-uapart5) |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2830,12 +2819,10 @@ Links a sensor to the CoordinateFrame it is rigidly mounted on, for example a ro
 | --- | --- | --- | --- | --- | --- |
 | BrowseName | 1:MountedOn |  |  |  |  |
 | IsAbstract | False |  |  |  |  |
-| InverseName | HasMounted |  |  |  |  |
-| Symmetric | False |  |  |  |  |
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the 0:NonHierarchicalReferences |  |  |  |  |  |
+| Subtype of the 0:NonHierarchicalReferences defined in [](#ref-uapart5) |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2851,12 +2838,10 @@ Links a sensor to the materialized USD prim representing it, when the Server als
 | --- | --- | --- | --- | --- | --- |
 | BrowseName | 1:HasScenePrim |  |  |  |  |
 | IsAbstract | False |  |  |  |  |
-| InverseName | IsScenePrimOf |  |  |  |  |
-| Symmetric | False |  |  |  |  |
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the 0:NonHierarchicalReferences |  |  |  |  |  |
+| Subtype of the 0:NonHierarchicalReferences defined in [](#ref-uapart5) |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2872,12 +2857,10 @@ Links an AiDeploymentType instance to the AiModelType instance it executes. Clau
 | --- | --- | --- | --- | --- | --- |
 | BrowseName | 1:UsesModel |  |  |  |  |
 | IsAbstract | False |  |  |  |  |
-| InverseName | IsUsedByDeployment |  |  |  |  |
-| Symmetric | False |  |  |  |  |
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the 0:NonHierarchicalReferences |  |  |  |  |  |
+| Subtype of the 0:NonHierarchicalReferences defined in [](#ref-uapart5) |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -2893,12 +2876,10 @@ Links a result to the inference pipeline that produced it.
 | --- | --- | --- | --- | --- | --- |
 | BrowseName | 1:ProducedBy |  |  |  |  |
 | IsAbstract | False |  |  |  |  |
-| InverseName | Produces |  |  |  |  |
-| Symmetric | False |  |  |  |  |
 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
-| Subtype of the 0:NonHierarchicalReferences |  |  |  |  |  |
+| Subtype of the 0:NonHierarchicalReferences defined in [](#ref-uapart5) |  |  |  |  |  |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |

@@ -90,8 +90,8 @@ The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 1:RegistryType defined in OPC 99004-1 |  |  |  |  |  |
-| 0:HasComponent | Object | <SchemaGroup> |  | SchemaGroupType | OP |
-| 0:HasComponent | Method | GetSchema |  |  | O |
+| 0:HasComponent | Object | 2:<SchemaGroup> |  | 2:SchemaGroupType | OP |
+| 0:HasComponent | Method | 2:GetSchema |  |  | O |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -113,8 +113,8 @@ The companion namespace is `http://opcfoundation.org/UA/SchemaRegistry/`. Draft 
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 1:GroupType defined in OPC 99004-1 |  |  |  |  |  |
-| 0:HasProperty | Variable | NamespaceUri | 0:String | 0:PropertyType | M |
-| 0:HasComponent | Object | <Schema> |  | SchemaFileType | OP |
+| 0:HasProperty | Variable | 2:NamespaceUri | 0:String | 0:PropertyType | M |
+| 0:HasComponent | Object | 2:<Schema> |  | 2:SchemaFileType | OP |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
@@ -149,17 +149,17 @@ The inherited `Labels` container (an `AttributesType`, base §6.6) and its `AddA
 | **References** | **Node Class** | **BrowseName** | **DataType** | **TypeDefinition** | **Other** |
 | --- | --- | --- | --- | --- | --- |
 | Subtype of the 1:ResourceType defined in OPC 99004-1 |  |  |  |  |  |
-| 0:HasProperty | Variable | SchemaId | 0:ByteString | 0:PropertyType | M |
-| 0:HasProperty | Variable | SchemaIdAlg | 0:String | 0:PropertyType | M |
-| 0:HasProperty | Variable | DataTypeEncoding | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | Compatibility | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | IsDefault | 0:Boolean | 0:PropertyType | O |
-| 0:HasProperty | Variable | Ancestor | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | ModelVersion | 0:String | 0:PropertyType | O |
-| 0:HasProperty | Variable | ConfigurationVersion | 0:ConfigurationVersionDataType | 0:PropertyType | O |
-| 0:HasProperty | Variable | ExpiryTime | 0:DateTime | 0:PropertyType | O |
-| 0:HasProperty | Variable | Ttl | 0:Duration | 0:PropertyType | O |
-| 0:HasProperty | Variable | SchemaName | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 2:SchemaId | 0:ByteString | 0:PropertyType | M |
+| 0:HasProperty | Variable | 2:SchemaIdAlg | 0:String | 0:PropertyType | M |
+| 0:HasProperty | Variable | 2:DataTypeEncoding | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 2:Compatibility | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 2:IsDefault | 0:Boolean | 0:PropertyType | O |
+| 0:HasProperty | Variable | 2:Ancestor | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 2:ModelVersion | 0:String | 0:PropertyType | O |
+| 0:HasProperty | Variable | 2:ConfigurationVersion | 0:ConfigurationVersionDataType | 0:PropertyType | O |
+| 0:HasProperty | Variable | 2:ExpiryTime | 0:DateTime | 0:PropertyType | O |
+| 0:HasProperty | Variable | 2:Ttl | 0:Duration | 0:PropertyType | O |
+| 0:HasProperty | Variable | 2:SchemaName | 0:String | 0:PropertyType | M |
 
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
