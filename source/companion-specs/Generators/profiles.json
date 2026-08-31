@@ -82,7 +82,11 @@
       "uri": "http://opcfoundation.org/UA-Profile/Generators/Server/GeneratorSetDiagnosticsServerFacet",
       "description": "This Facet adds the protection and alarm conditions and the CAN bus diagnostic interface to a generator set.",
       "includes": [
-        { "name": "Generator Set Server Facet", "optional": false },
+        { "name": "GEN-GeneratorSet", "optional": false },
+        { "name": "GEN-Components", "optional": false },
+        { "name": "GEN-Identification", "optional": false },
+        { "name": "GEN-StateMachine", "optional": false },
+        { "name": "GEN-Rating", "optional": false },
         { "name": "GEN-Alarms", "optional": false },
         { "name": "GEN-CANbus", "optional": false }
       ]
@@ -93,7 +97,13 @@
       "uri": "http://opcfoundation.org/UA-Profile/Generators/Server/GeneratorPlantServerFacet",
       "description": "This Facet defines support for a plant of several generator sets: the transfer switches that connect them to a load, the paralleling controller that shares load between them, and the system that aggregates them.",
       "includes": [
-        { "name": "Generator Set Diagnostics Server Facet", "optional": false },
+        { "name": "GEN-GeneratorSet", "optional": false },
+        { "name": "GEN-Components", "optional": false },
+        { "name": "GEN-Identification", "optional": false },
+        { "name": "GEN-StateMachine", "optional": false },
+        { "name": "GEN-Rating", "optional": false },
+        { "name": "GEN-Alarms", "optional": false },
+        { "name": "GEN-CANbus", "optional": false },
         { "name": "GEN-TransferSwitch", "optional": false },
         { "name": "GEN-Paralleling", "optional": false },
         { "name": "GEN-System", "optional": false }

@@ -38,26 +38,52 @@ The field table under each DataType is bound with `datatype=` instead, and *is* 
 `update --write` fills it from the `DataTypeDefinition` and keeps it in step. Its caption is
 written with no table under it on purpose.
 
-## A known build failure
+## Model dependencies
 
-**The build reports a missing dependency, and the cause is in the publisher rather than in this
-specification.**
+`model/dependencies/` holds DI 1.04.0, IA 1.01.2 and Machinery 1.04.1. The Generators model uses
+DI and Machinery directly; Machinery in turn uses the `Stacklight` types defined by IA.
+
+The model therefore declares the complete dependency closure in load order:
 
 ```text
-missing dependency: http://opcfoundation.org/UA/IA/ - types borrowed from it cannot be resolved
+UA -> DI -> IA -> Machinery
 ```
 
-This model requires OPC 40001-1, which borrows one Object, `Stacklight`, from OPC 40080-1. The
-publisher does not register a namespace it reaches only through a dependency, so it cannot
-resolve that Object even when the file defining it is present — and a hard error on one
-specification stops the whole run, while a missing dependency does not. `model/dependencies/`
-therefore ships DI and Machinery but not IA.
+Order matters. The NodeSet loader processes `RequiredModel` entries sequentially, so IA has to
+be available before Machinery is loaded. This is the same pattern used by the published
+OPC 40700 Surface Technology models.
 
-`model/dependencies/` holds the exactly consistent set: DI 1.04.0, Machinery 1.04.1 and IA 1.01.2,
-each the version the one above it declares. Five explanations were tested and eliminated — a
-missing file, a version mismatch, a namespace absent from the manifest table, an undeclared
-`RequiredModel`, and an inconsistent dependency set. Removing the two `Stacklight` Nodes from a
-local copy of Machinery builds the specification cleanly, which is what identifies the cause.
+`.github/scripts/check_manifest_model.py` verifies this for every model: each dependency's own
+prerequisites have to be declared by the top-level model and have to occur before it. This keeps
+a missing transitive dependency from surviving until a publisher build.
 
-The requirement on OPC 40001-1 is correct and stays as it is: changing the model to avoid a
-defect in a tool would leave the model wrong once the tool is fixed.
+The two PowerPoint figures are the editable sources. `tools/office-to-svg.ps1` renders the SVG
+files committed beside them, and the specification cites those SVGs so the HTML and Word
+editions embed the same rendering.
+
+## Word proof
+
+The publisher's Word edition has been built, opened and finalized by Microsoft Word:
+
+```text
+pages: 56, words: 9700, tables: 87, fields: 589
+OK - all fields resolved
+```
+
+Both figures are embedded as SVG, with the PNG fallbacks Word uses for compatibility. The
+specification validator reports:
+
+```text
+0 error(s), 0 warning(s)
+All 37 Type(s) in the NodeSet are documented.
+```
+
+All fourteen Method signatures and argument tables match the NodeSet, and Namespace Metadata
+validates with no errors. The remaining notices are informational: the draft Profiles are not
+registered in the Foundation's profile database yet, and no Profile Group was supplied for the
+audit.
+
+The publisher edition has fewer tables than the committed `word-drafts/OPC-UA-Generators.docx`
+because the former hand-generated Annex A repeated inherited members. The template edition keeps
+the definition table beside each type and generates the NodeId reference annex instead. The
+committed review document is retained until replacing review artifacts is approved separately.

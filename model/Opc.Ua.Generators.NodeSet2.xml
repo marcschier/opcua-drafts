@@ -7,9 +7,10 @@
     <Uri>http://opcfoundation.org/UA/Machinery/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/Generators/" Version="1.2.0" PublicationDate="2026-08-31T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/Generators/" Version="1.3.0" PublicationDate="2026-08-31T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/" Version="1.04.0" PublicationDate="2022-11-03T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/IA/" Version="1.01.2" PublicationDate="2024-02-28T00:00:00Z" />
       <RequiredModel ModelUri="http://opcfoundation.org/UA/Machinery/" Version="1.04.1" PublicationDate="2026-01-01T00:00:00Z" />
     </Model>
   </Models>
@@ -4516,7 +4517,7 @@
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=6400</Reference>
     </References>
-    <Value><uax:String>1.2.0</uax:String></Value>
+    <Value><uax:String>1.3.0</uax:String></Value>
   </UAVariable>
   <UAVariable NodeId="ns=1;i=6403" BrowseName="1:NamespacePublicationDate" ParentNodeId="ns=1;i=6400" DataType="DateTime" ValueRank="-1">
     <DisplayName>NamespacePublicationDate</DisplayName>

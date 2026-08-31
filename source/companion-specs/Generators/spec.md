@@ -51,7 +51,7 @@ The composition of a generator set is shown in [](#fig-generator-set-composition
 ```{figure}
 id: fig-generator-set-composition
 caption: Composition of a generator set
-source: figures/generator-set-composition.pptx
+source: figures/generator-set-composition.svg
 freeform: true
 ```
 

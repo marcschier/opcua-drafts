@@ -47,6 +47,102 @@ The Methods are `Start`, which starts the set in its current mode, `Stop`, `Emer
 | --- | --- | --- | --- | --- | --- |
 | GEN-GeneratorSet |  |  |  |  |  |
 
+#### Start {#sec-start type=GeneratorSetType method=Start}
+
+Commands the generator set to start in its current operating mode.
+
+**Signature**
+
+```text
+Start ();
+```
+
+*Table - Start Method Arguments* {#tbl-start-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+
+#### Stop {#sec-stop type=GeneratorSetType method=Stop}
+
+Commands a normal stop, including the configured cooldown.
+
+**Signature**
+
+```text
+Stop ();
+```
+
+*Table - Stop Method Arguments* {#tbl-stop-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+
+#### EmergencyStop {#sec-emergencystop type=GeneratorSetType method=EmergencyStop}
+
+Commands an immediate emergency stop.
+
+**Signature**
+
+```text
+EmergencyStop ();
+```
+
+*Table - EmergencyStop Method Arguments* {#tbl-emergencystop-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+
+#### ResetFaults {#sec-resetfaults type=GeneratorSetType method=ResetFaults}
+
+Resets latched faults and lockout.
+
+**Signature**
+
+```text
+ResetFaults ();
+```
+
+*Table - ResetFaults Method Arguments* {#tbl-resetfaults-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+
+#### SetOperatingMode {#sec-setoperatingmode type=GeneratorSetType method=SetOperatingMode}
+
+Sets the control-panel selector mode.
+
+**Signature**
+
+```text
+SetOperatingMode (
+  [in]  1:GeneratorOperatingModeEnum Mode);
+```
+
+*Table - SetOperatingMode Method Arguments* {#tbl-setoperatingmode-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+| Mode | The requested operating mode. |
+
+#### StartTest {#sec-starttest type=GeneratorSetType method=StartTest}
+
+Starts a test run for a specified duration.
+
+**Signature**
+
+```text
+StartTest (
+  [in]  0:UInt32  DurationMinutes,
+  [in]  0:Boolean WithLoad);
+```
+
+*Table - StartTest Method Arguments* {#tbl-starttest-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+| DurationMinutes | Test duration in minutes. |
+| WithLoad | TRUE to run the test with load. |
+
 ### GeneratorIdentificationType {#sec-generatoridentificationtype}
 
 `GeneratorIdentificationType` specialises the `MachineIdentificationType` of OPC 40001-1 with the nameplate fields a generator set has beyond those of a machine in general: the engine and alternator models, the rated power, and the emissions standard the set is certified to.
@@ -153,6 +249,21 @@ Each diagnostic trouble code carries an `Spn`, an `Fmi`, an `OccurrenceCount`, a
 | --- | --- | --- | --- | --- | --- |
 | GEN-CANbus |  |  |  |  |  |
 
+#### ClearPreviouslyActiveDtcs {#sec-clearpreviouslyactivedtcs type=J1939DiagnosticInterfaceType method=ClearPreviouslyActiveDtcs}
+
+Clears previously active diagnostic trouble codes.
+
+**Signature**
+
+```text
+ClearPreviouslyActiveDtcs ();
+```
+
+*Table - ClearPreviouslyActiveDtcs Method Arguments* {#tbl-clearpreviouslyactivedtcs-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+
 ### ExhaustAftertreatmentType {#sec-exhaustaftertreatmenttype}
 
 `ExhaustAftertreatmentType` models the exhaust aftertreatment a set needs to meet the stricter emissions standards: the state of the aftertreatment system, the level of diesel exhaust fluid, and the soot load of the particulate filter.
@@ -182,6 +293,38 @@ Each diagnostic trouble code carries an `Spn`, an `Fmi`, an `OccurrenceCount`, a
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
 | GEN-Components |  |  |  |  |  |
+
+#### InitiateRegeneration {#sec-initiateregeneration type=ExhaustAftertreatmentType method=InitiateRegeneration}
+
+Requests a manual particulate-filter regeneration.
+
+**Signature**
+
+```text
+InitiateRegeneration ();
+```
+
+*Table - InitiateRegeneration Method Arguments* {#tbl-initiateregeneration-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+
+#### InhibitRegeneration {#sec-inhibitregeneration type=ExhaustAftertreatmentType method=InhibitRegeneration}
+
+Enables or disables the inhibit of automatic regeneration.
+
+**Signature**
+
+```text
+InhibitRegeneration (
+  [in]  0:Boolean Inhibit);
+```
+
+*Table - InhibitRegeneration Method Arguments* {#tbl-inhibitregeneration-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+| Inhibit | TRUE to inhibit regeneration. |
 
 ### AlternatorType {#sec-alternatortype}
 
@@ -420,7 +563,7 @@ A set is usually certified for several duties, so ratings are modelled as a list
 ```{figure}
 id: fig-generator-operating-state-machine
 caption: The generator operating state machine
-source: figures/generator-operating-state-machine.pptx
+source: figures/generator-operating-state-machine.svg
 freeform: true
 ```
 
@@ -544,6 +687,53 @@ Because the type is an `OffNormalAlarmType`, the normal state is the healthy, un
 | --- | --- | --- | --- | --- | --- |
 | GEN-TransferSwitch |  |  |  |  |  |
 
+#### Transfer {#sec-transfer type=AutomaticTransferSwitchType method=Transfer}
+
+Commands a transfer to the emergency source.
+
+**Signature**
+
+```text
+Transfer ();
+```
+
+*Table - Transfer Method Arguments* {#tbl-transfer-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+
+#### Retransfer {#sec-retransfer type=AutomaticTransferSwitchType method=Retransfer}
+
+Commands a retransfer to the normal source.
+
+**Signature**
+
+```text
+Retransfer ();
+```
+
+*Table - Retransfer Method Arguments* {#tbl-retransfer-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+
+#### InhibitTransfer {#sec-inhibittransfer type=AutomaticTransferSwitchType method=InhibitTransfer}
+
+Enables or disables the transfer inhibit.
+
+**Signature**
+
+```text
+InhibitTransfer (
+  [in]  0:Boolean Inhibit);
+```
+
+*Table - InhibitTransfer Method Arguments* {#tbl-inhibittransfer-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+| Inhibit | TRUE to inhibit transfer. |
+
 ### TransferSwitchSourceType {#sec-transferswitchsourcetype}
 
 `TransferSwitchSourceType` describes one source of an automatic transfer switch: whether it is `Available` and `Acceptable`, and its `Voltage`, `Frequency` and `PhaseRotation`.
@@ -606,6 +796,36 @@ Because the type is an `OffNormalAlarmType`, the normal state is the healthy, un
 | **Conformance Units** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
 | GEN-Paralleling |  |  |  |  |  |
+
+#### ConnectToBus {#sec-connecttobus type=ParallelingControllerType method=ConnectToBus}
+
+Synchronizes and closes onto the common bus.
+
+**Signature**
+
+```text
+ConnectToBus ();
+```
+
+*Table - ConnectToBus Method Arguments* {#tbl-connecttobus-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
+
+#### DisconnectFromBus {#sec-disconnectfrombus type=ParallelingControllerType method=DisconnectFromBus}
+
+Soft-unloads and opens from the common bus.
+
+**Signature**
+
+```text
+DisconnectFromBus ();
+```
+
+*Table - DisconnectFromBus Method Arguments* {#tbl-disconnectfrombus-method-arguments}
+
+| **Argument** | **Description** |
+| --- | --- |
 
 ### GeneratorSystemType {#sec-generatorsystemtype}
 

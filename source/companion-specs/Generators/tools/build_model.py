@@ -1109,7 +1109,7 @@ def units_of(n):
 # ==============================  EMISSION  =================================
 # ===========================================================================
 NAMESPACE = "http://opcfoundation.org/UA/Generators/"
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 PUBDATE = "2026-08-31T00:00:00Z"
 
 # OPC 10000-5 5.2.4: a Server publishes the version and publication date of every namespace it
@@ -1235,6 +1235,7 @@ def emit():
            f'    <Model ModelUri="{NAMESPACE}" Version="{VERSION}" PublicationDate="{PUBDATE}">',
            '      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2023-12-15T00:00:00Z" />',
            '      <RequiredModel ModelUri="http://opcfoundation.org/UA/DI/" Version="1.04.0" PublicationDate="2022-11-03T00:00:00Z" />',
+           '      <RequiredModel ModelUri="http://opcfoundation.org/UA/IA/" Version="1.01.2" PublicationDate="2024-02-28T00:00:00Z" />',
            '      <RequiredModel ModelUri="http://opcfoundation.org/UA/Machinery/" Version="1.04.1" PublicationDate="2026-01-01T00:00:00Z" />',
            '    </Model>',
            '  </Models>',
@@ -2461,4 +2462,3 @@ if __name__ == "__main__":
     n_types = sum(1 for k in NODES if NODES[k].cls in ("UAObjectType", "UADataType"))
     print(f"Nodes: {len(NODES)}  (ObjectTypes+DataTypes: {n_types})")
     print(f"Member id range: 6001..{_next_member[0] - 1}")
-
