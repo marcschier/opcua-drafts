@@ -64,3 +64,8 @@ ResourceType_CreatedAt,63557,Variable
 ResourceType_ModifiedAt,63558,Variable
 ResourceType_Delete,63559,Method
 ResourceType_Delete_InputArguments,63560,Variable
+NamespaceMetadata,63561,Object
+NamespaceMetadata_NamespaceUri,63562,Variable
+NamespaceMetadata_NamespaceVersion,63563,Variable
+NamespaceMetadata_NamespacePublicationDate,63564,Variable
+NamespaceMetadata_IsNamespaceSubset,63565,Variable

@@ -278,3 +278,8 @@ VisionRootType_LearningJobs,6195,Object
 Vision,7001,Object
 MediaEndpointType_DataChannelSource,6196,Variable
 MediaEndpointType_DataChannelContentType,6197,Variable
+NamespaceMetadata,6198,Object
+NamespaceMetadata_NamespaceUri,6199,Variable
+NamespaceMetadata_NamespaceVersion,6200,Variable
+NamespaceMetadata_NamespacePublicationDate,6201,Variable
+NamespaceMetadata_IsNamespaceSubset,6202,Variable

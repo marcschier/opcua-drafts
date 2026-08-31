@@ -70,3 +70,8 @@ ObservabilityFolderType,60010,ObjectType
 IObservableType,60016,ObjectType
 IObservableType_ObservabilityBindingGroup,60550,Object
 Observability,60101,Object
+NamespaceMetadata,60551,Object
+NamespaceMetadata_NamespaceUri,60552,Variable
+NamespaceMetadata_NamespaceVersion,60553,Variable
+NamespaceMetadata_NamespacePublicationDate,60554,Variable
+NamespaceMetadata_IsNamespaceSubset,60555,Variable

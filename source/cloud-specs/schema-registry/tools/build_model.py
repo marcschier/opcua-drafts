@@ -288,8 +288,50 @@ prop_var(62002, SF, "SchemaName", String,
 
 # Emission
 NAMESPACE = "http://opcfoundation.org/UA/SchemaRegistry/"
-VERSION = "0.3.0"
-PUBDATE = "2026-07-31T00:00:00Z"
+VERSION = "0.4.0"
+PUBDATE = "2026-08-31T00:00:00Z"
+
+# OPC 10000-5 5.2.4: a Server publishes the version and publication date of every namespace it
+# hosts as a NamespaceMetadataType Object under Server/Namespaces. Without one a Client -- and
+# the specification publisher, which states the same facts in Annex A -- has no way to read them
+# from the model, and has to take them from the file it happens to have been handed.
+#
+# These Nodes are appended last, so adding them cannot renumber anything above.
+Server_Namespaces = "i=11715"
+NamespaceMetadataType = "i=11616"
+
+
+def namespace_metadata(uri, version, pubdate, is_subset=False):
+    """Declare this model's namespace metadata, as OPC 10000-5 requires."""
+    meta = _mid()
+    # The BrowseName is the namespace URI in this model's own namespace; the Properties under
+    # it are the base ones, so they keep their namespace-0 BrowseNames.
+    add(meta, "UAObject", uri, "NamespaceMetadata", display=uri,
+        desc="Metadata for this namespace, as OPC 10000-5 requires a Server to publish it.",
+        parent=Server_Namespaces)
+    ref(meta, HasTypeDefinition, NamespaceMetadataType)
+    ref(meta, HasComponent, Server_Namespaces, forward=False)
+
+    def _prop(name, datatype, xml_type, text):
+        nid = _mid()
+        add(nid, "UAVariable", name, f"NamespaceMetadata_{name}", parent=T(meta),
+            attrs={"DataType": datatype, "ValueRank": "-1"})
+        ref(nid, HasTypeDefinition, PropertyType)
+        ref(nid, HasProperty, T(meta), forward=False)
+        ref(meta, HasProperty, T(nid))
+        NODES[nid].value = (
+            f'<Value><uax:{xml_type}>{sx.escape(text)}</uax:{xml_type}></Value>')
+        return nid
+
+    _prop("NamespaceUri", "i=12", "String", uri)
+    _prop("NamespaceVersion", "i=12", "String", version)
+    _prop("NamespacePublicationDate", "i=13", "DateTime", pubdate)
+    _prop("IsNamespaceSubset", "i=1", "Boolean", "true" if is_subset else "false")
+    return meta
+
+
+namespace_metadata(NAMESPACE, VERSION, PUBDATE)
+
 ALIASES = [
     ("Boolean", Boolean), ("UInt32", UInt32), ("String", String), ("DateTime", DateTime),
     ("ByteString", ByteString), ("Duration", Duration), ("Argument", Argument),
@@ -348,7 +390,7 @@ def emit():
            '  <NamespaceUris>', '    <Uri>http://opcfoundation.org/UA/xRegistry/</Uri>', f'    <Uri>{NAMESPACE}</Uri>', '  </NamespaceUris>',
            '  <Models>', f'    <Model ModelUri="{NAMESPACE}" Version="{VERSION}" PublicationDate="{PUBDATE}">',
            '      <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2024-05-01T00:00:00Z" />',
-           '      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z" />',
+           '      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.4.0" PublicationDate="2026-08-31T00:00:00Z" />',
            '    </Model>', '  </Models>', '  <Aliases>']
     for name, val in ALIASES:
         out.append(f'    <Alias Alias="{name}">{val}</Alias>')

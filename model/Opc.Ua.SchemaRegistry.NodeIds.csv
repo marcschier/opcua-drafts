@@ -22,3 +22,8 @@ SchemaRegistry_GetSchema,62516,Method
 SchemaRegistry_GetSchema_InputArguments,62517,Variable
 SchemaRegistry_GetSchema_OutputArguments,62518,Variable
 SchemaFileType_SchemaName,62519,Variable
+NamespaceMetadata,62520,Object
+NamespaceMetadata_NamespaceUri,62521,Variable
+NamespaceMetadata_NamespaceVersion,62522,Variable
+NamespaceMetadata_NamespacePublicationDate,62523,Variable
+NamespaceMetadata_IsNamespaceSubset,62524,Variable

@@ -141,3 +141,4 @@ The typed form of the xRegistry capabilities document (xRegistry /capabilities),
 | GetOrCreateResource | [GroupType](#type-GroupType) | ResourceId, VersionId, RequestFileOpen | ResourceNodeId, AssignedVersionId, FileHandle, Created |
 | Delete | [GroupType](#type-GroupType) | ExpectedEpoch | (none) |
 | Delete | [ResourceType](#type-ResourceType) | ExpectedEpoch | (none) |
+

@@ -6,9 +6,9 @@
     <Uri>http://opcfoundation.org/UA/SchemaRegistry/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/SchemaRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/SchemaRegistry/" Version="0.4.0" PublicationDate="2026-08-31T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2024-05-01T00:00:00Z" />
-      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.3.0" PublicationDate="2026-07-31T00:00:00Z" />
+      <RequiredModel ModelUri="http://opcfoundation.org/UA/xRegistry/" Version="0.4.0" PublicationDate="2026-08-31T00:00:00Z" />
     </Model>
   </Models>
   <Aliases>
@@ -263,5 +263,49 @@
       <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
       <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62002</Reference>
     </References>
+  </UAVariable>
+  <UAObject NodeId="ns=2;i=62520" BrowseName="2:http://opcfoundation.org/UA/SchemaRegistry/" ParentNodeId="i=11715">
+    <DisplayName>http://opcfoundation.org/UA/SchemaRegistry/</DisplayName>
+    <Description>Metadata for this namespace, as OPC 10000-5 requires a Server to publish it.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=11616</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=11715</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=62521</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=62522</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=62523</Reference>
+      <Reference ReferenceType="HasProperty">ns=2;i=62524</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=2;i=62521" BrowseName="2:NamespaceUri" ParentNodeId="ns=2;i=62520" DataType="String" ValueRank="-1">
+    <DisplayName>NamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62520</Reference>
+    </References>
+    <Value><uax:String>http://opcfoundation.org/UA/SchemaRegistry/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=62522" BrowseName="2:NamespaceVersion" ParentNodeId="ns=2;i=62520" DataType="String" ValueRank="-1">
+    <DisplayName>NamespaceVersion</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62520</Reference>
+    </References>
+    <Value><uax:String>0.4.0</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=62523" BrowseName="2:NamespacePublicationDate" ParentNodeId="ns=2;i=62520" DataType="DateTime" ValueRank="-1">
+    <DisplayName>NamespacePublicationDate</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62520</Reference>
+    </References>
+    <Value><uax:DateTime>2026-08-31T00:00:00Z</uax:DateTime></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=2;i=62524" BrowseName="2:IsNamespaceSubset" ParentNodeId="ns=2;i=62520" DataType="Boolean" ValueRank="-1">
+    <DisplayName>IsNamespaceSubset</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=2;i=62520</Reference>
+    </References>
+    <Value><uax:Boolean>false</uax:Boolean></Value>
   </UAVariable>
 </UANodeSet>

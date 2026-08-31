@@ -1,7 +1,6 @@
 {
   "schemaVersion": 1,
   "sourceOfTruth": "markdown",
-
   "identity": {
     "docNumber": "OPC 99007-1",
     "partName": "Generators",
@@ -11,8 +10,8 @@
     "organization": "OPC Foundation",
     "capabilityIdentifier": "GEN",
     "namespaceUri": "http://opcfoundation.org/UA/Generators/",
-    "version": "1.1.0",
-    "publicationDate": "2026-07-30",
+    "version": "1.2.0",
+    "publicationDate": "2026-08-31",
     "releaseType": "Draft",
     "gitHubTag": "",
     "mantisUrl": "https://mantis.opcfoundation.org",
@@ -22,30 +21,28 @@
       "url": "https://opcfoundation.org/license/specifications/1.15/"
     }
   },
-
   "model": {
     "nodeset": "model/Opc.Ua.Generators.NodeSet2.xml",
     "generated": true,
     "generator": "source/companion-specs/Generators/tools/build_model.py"
   },
-
   "markdown": {
     "main": "spec.md",
     "objecttypes": "object-types.md",
     "datatypes": "data-types.md",
     "figures": "figures"
   },
-
   "figureGenerators": {
     ".drawio.svg": "",
-    ".pptx": { "win": "tools/office-to-svg.ps1", "default": "tools/office-to-svg.sh" }
+    ".pptx": {
+      "win": "tools/office-to-svg.ps1",
+      "default": "tools/office-to-svg.sh"
+    }
   },
-
   "output": {
     "sts": "artifacts/OPC-99007-1.xml",
     "documentationCsv": "artifacts/OPC-99007-1-documentation.csv"
   },
-
   "normativeReferences": [
     {
       "id": "uapart1",
@@ -156,7 +153,6 @@
       "url": "https://www.nfpa.org/codes-and-standards/nfpa-110-standard-development/110"
     }
   ],
-
   "terms": [
     {
       "term": "alternator",
@@ -187,29 +183,84 @@
       "source": "ISO 8528"
     }
   ],
-
   "abbreviations": [
-    ["ATS", "Automatic Transfer Switch"],
-    ["AVR", "Automatic Voltage Regulator"],
-    ["CAN", "Controller Area Network"],
-    ["COP", "Continuous Power"],
-    ["DCC", "Data-Centre Continuous"],
-    ["DI", "Devices"],
-    ["DTC", "Diagnostic Trouble Code"],
-    ["ECU", "Electronic Control Unit"],
-    ["ESP", "Emergency Standby Power"],
-    ["FMI", "Failure Mode Identifier"],
-    ["HTTP", "Hypertext Transfer Protocol"],
-    ["JSON", "JavaScript Object Notation"],
-    ["LTP", "Limited-Time Power"],
-    ["PMG", "Permanent Magnet Generator"],
-    ["PRP", "Prime Power"],
-    ["SAE", "Society of Automotive Engineers"],
-    ["SPN", "Suspect Parameter Number"],
-    ["URI", "Uniform Resource Identifier"],
-    ["UTC", "Coordinated Universal Time"]
+    [
+      "ATS",
+      "Automatic Transfer Switch"
+    ],
+    [
+      "AVR",
+      "Automatic Voltage Regulator"
+    ],
+    [
+      "CAN",
+      "Controller Area Network"
+    ],
+    [
+      "COP",
+      "Continuous Power"
+    ],
+    [
+      "DCC",
+      "Data-Centre Continuous"
+    ],
+    [
+      "DI",
+      "Devices"
+    ],
+    [
+      "DTC",
+      "Diagnostic Trouble Code"
+    ],
+    [
+      "ECU",
+      "Electronic Control Unit"
+    ],
+    [
+      "ESP",
+      "Emergency Standby Power"
+    ],
+    [
+      "FMI",
+      "Failure Mode Identifier"
+    ],
+    [
+      "HTTP",
+      "Hypertext Transfer Protocol"
+    ],
+    [
+      "JSON",
+      "JavaScript Object Notation"
+    ],
+    [
+      "LTP",
+      "Limited-Time Power"
+    ],
+    [
+      "PMG",
+      "Permanent Magnet Generator"
+    ],
+    [
+      "PRP",
+      "Prime Power"
+    ],
+    [
+      "SAE",
+      "Society of Automotive Engineers"
+    ],
+    [
+      "SPN",
+      "Suspect Parameter Number"
+    ],
+    [
+      "URI",
+      "Uniform Resource Identifier"
+    ],
+    [
+      "UTC",
+      "Coordinated Universal Time"
+    ]
   ],
-
   "namespaces": {
     "documentNamespaceIndex": 1,
     "table": [

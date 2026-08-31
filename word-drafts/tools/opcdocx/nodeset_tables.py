@@ -403,6 +403,87 @@ def other_cell(model, node):
     return ', '.join(parts)
 
 
+# Where the base OPC UA types a companion specification usually derives from are defined.
+# A namespace maps to one document only for a companion namespace; namespace 0 is spread
+# across the core parts, so a blanket map for it names the wrong part -- which is what the
+# Word writer does today, printing "defined in OPC 10000-5" for every supertype including
+# DeviceType, which is OPC 10000-100.
+NS0_DEFINING_PART = {
+    'BaseObjectType': 'OPC 10000-5',
+    'BaseVariableType': 'OPC 10000-5',
+    'BaseDataVariableType': 'OPC 10000-5',
+    'PropertyType': 'OPC 10000-5',
+    'FolderType': 'OPC 10000-5',
+    'BaseEventType': 'OPC 10000-5',
+    'BaseObjectState': 'OPC 10000-5',
+    'FileType': 'OPC 10000-5',
+    'FileDirectoryType': 'OPC 10000-5',
+    'ServerType': 'OPC 10000-5',
+    'ServerCapabilitiesType': 'OPC 10000-5',
+    'NamespaceMetadataType': 'OPC 10000-5',
+    'BaseInterfaceType': 'OPC 10000-5',
+    'AuditEventType': 'OPC 10000-5',
+    'AuditSessionEventType': 'OPC 10000-5',
+    'AuditUpdateMethodEventType': 'OPC 10000-5',
+    'HasComponent': 'OPC 10000-5',
+    'NonHierarchicalReferences': 'OPC 10000-5',
+    'HierarchicalReferences': 'OPC 10000-5',
+    'References': 'OPC 10000-5',
+    'Aggregates': 'OPC 10000-5',
+    'Boolean': 'OPC 10000-3',
+    'String': 'OPC 10000-3',
+    'Double': 'OPC 10000-3',
+    'Float': 'OPC 10000-3',
+    'Int32': 'OPC 10000-3',
+    'UInt32': 'OPC 10000-3',
+    'DateTime': 'OPC 10000-3',
+    'ByteString': 'OPC 10000-3',
+    'BaseDataType': 'OPC 10000-3',
+    'Enumeration': 'OPC 10000-3',
+    'Structure': 'OPC 10000-3',
+    'Union': 'OPC 10000-3',
+    'OptionSet': 'OPC 10000-3',
+    'StateMachineType': 'OPC 10000-16',
+    'FiniteStateMachineType': 'OPC 10000-16',
+    'StateType': 'OPC 10000-16',
+    'InitialStateType': 'OPC 10000-16',
+    'TransitionType': 'OPC 10000-16',
+    'ConditionType': 'OPC 10000-9',
+    'AlarmConditionType': 'OPC 10000-9',
+    'OffNormalAlarmType': 'OPC 10000-9',
+    'DiscreteAlarmType': 'OPC 10000-9',
+    'AnalogUnitType': 'OPC 10000-8',
+    'AnalogItemType': 'OPC 10000-8',
+    'DataItemType': 'OPC 10000-8',
+}
+
+def subtype_phrase(supertype: str, defined_in, doc_ns_index: int, unnamed: list,
+                   own: set | None = None) -> str:
+    """`Subtype of the X defined in OPC N`, naming the document that actually defines X.
+
+    A supertype has to name the specification that defines it, because the reader cannot
+    otherwise look it up. Namespace 0 is not one document -- FiniteStateMachineType is
+    OPC 10000-16 and OffNormalAlarmType is OPC 10000-9 -- so it is resolved per type and
+    anything unrecognised is reported rather than attributed to a part at random.
+
+    A name with no prefix is this document's own when the model declares it. That is not the
+    same as namespace 0: a specification that adds to the base namespace has a document index
+    of 0 and prints its own types unprefixed, and so does one whose supertype happens to be
+    printed without an index.
+    """
+    cell = (supertype or '').strip()
+    prefix, _, plain = cell.rpartition(':')
+    if prefix == str(doc_ns_index):
+        return cell
+    if not prefix and own and plain in own:
+        return cell
+    document = NS0_DEFINING_PART.get(plain) if prefix in ('', '0') else defined_in.get(prefix)
+    if not document:
+        unnamed.append(cell)
+        return cell
+    return '%s defined in %s' % (cell, document)
+
+
 def type_table(model, type_name, *, doc_ns_index):
     """Build the Table 2 structure for one type.
 

@@ -5,7 +5,7 @@
     <Uri>http://opcfoundation.org/UA/ObservabilityExport/</Uri>
   </NamespaceUris>
   <Models>
-    <Model ModelUri="http://opcfoundation.org/UA/ObservabilityExport/" Version="0.1.0" PublicationDate="2026-07-01T00:00:00Z">
+    <Model ModelUri="http://opcfoundation.org/UA/ObservabilityExport/" Version="0.2.0" PublicationDate="2026-08-31T00:00:00Z">
       <RequiredModel ModelUri="http://opcfoundation.org/UA/" Version="1.05.04" PublicationDate="2024-05-01T00:00:00Z" />
     </Model>
   </Models>
@@ -730,4 +730,48 @@
       <Reference ReferenceType="HasComponent" IsForward="false">i=2253</Reference>
     </References>
   </UAObject>
+  <UAObject NodeId="ns=1;i=60551" BrowseName="1:http://opcfoundation.org/UA/ObservabilityExport/" ParentNodeId="i=11715">
+    <DisplayName>http://opcfoundation.org/UA/ObservabilityExport/</DisplayName>
+    <Description>Metadata for this namespace, as OPC 10000-5 requires a Server to publish it.</Description>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=11616</Reference>
+      <Reference ReferenceType="HasComponent" IsForward="false">i=11715</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=60552</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=60553</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=60554</Reference>
+      <Reference ReferenceType="HasProperty">ns=1;i=60555</Reference>
+    </References>
+  </UAObject>
+  <UAVariable NodeId="ns=1;i=60552" BrowseName="1:NamespaceUri" ParentNodeId="ns=1;i=60551" DataType="String" ValueRank="-1">
+    <DisplayName>NamespaceUri</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=60551</Reference>
+    </References>
+    <Value><uax:String>http://opcfoundation.org/UA/ObservabilityExport/</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=60553" BrowseName="1:NamespaceVersion" ParentNodeId="ns=1;i=60551" DataType="String" ValueRank="-1">
+    <DisplayName>NamespaceVersion</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=60551</Reference>
+    </References>
+    <Value><uax:String>0.2.0</uax:String></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=60554" BrowseName="1:NamespacePublicationDate" ParentNodeId="ns=1;i=60551" DataType="i=13" ValueRank="-1">
+    <DisplayName>NamespacePublicationDate</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=60551</Reference>
+    </References>
+    <Value><uax:DateTime>2026-08-31T00:00:00Z</uax:DateTime></Value>
+  </UAVariable>
+  <UAVariable NodeId="ns=1;i=60555" BrowseName="1:IsNamespaceSubset" ParentNodeId="ns=1;i=60551" DataType="Boolean" ValueRank="-1">
+    <DisplayName>IsNamespaceSubset</DisplayName>
+    <References>
+      <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+      <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=60551</Reference>
+    </References>
+    <Value><uax:Boolean>false</uax:Boolean></Value>
+  </UAVariable>
 </UANodeSet>

@@ -46,7 +46,7 @@ NS = "{http://opcfoundation.org/UA/2011/03/UANodeSet.xsd}"
 # Base-UA NodeIds that this model legitimately references (namespace 0).
 KNOWN_BASE = {
     # built-in DataTypes
-    "i=1", "i=6", "i=7", "i=9", "i=11", "i=12", "i=14", "i=15", "i=17", "i=20",
+    "i=1", "i=6", "i=7", "i=9", "i=11", "i=12", "i=13", "i=14", "i=15", "i=17", "i=20",
     "i=21", "i=24", "i=290", "i=294", "i=296", "i=887",
     # abstract bases
     "i=22", "i=29", "i=32",
@@ -58,6 +58,9 @@ KNOWN_BASE = {
     "i=78", "i=80", "i=11508", "i=11510",
     # the Server object, parent of the well-known Vision entry point
     "i=2253",
+    # Server/Namespaces and the type of the metadata Object under it, which OPC 10000-5
+    # requires this model to declare for its own namespace
+    "i=11715", "i=11616",
 }
 HIER = {"i=47", "i=46", "i=35", "i=17603"}  # HasComponent/HasProperty/Organizes/HasInterface
 
@@ -92,7 +95,13 @@ def _name_matches(csv_name: str, browse_name: str) -> bool:
     Owner_Member, and the symbolic form drops the characters that are legal in a
     BrowseName but not in an identifier - the space in "Default Binary" and the angle
     brackets on a placeholder such as <StreamEndpoint>.
+
+    A NamespaceMetadata Object is the exception, and has to be: OPC 10000-5 gives it the
+    namespace URI as its BrowseName, and a URI is not an identifier, so no symbolic name can
+    mirror it. It is named for what it is instead.
     """
+    if browse_name.startswith("//") or "://" in browse_name:
+        return csv_name == "NamespaceMetadata" or csv_name.startswith("NamespaceMetadata_")
     bn = browse_name.replace(" ", "").replace("<", "").replace(">", "")
     return csv_name == bn or csv_name.endswith("_" + bn)
 
