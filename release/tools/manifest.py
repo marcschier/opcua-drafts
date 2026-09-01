@@ -123,6 +123,16 @@ class Manifest:
     def closure(self, spec_id: str) -> list[str]:
         return self._relation_closure(spec_id, "closure", include_self=True)
 
+    def _release_group_members(self, spec_id: str) -> list[str]:
+        group = self.spec(spec_id).get("releaseGroup")
+        if not isinstance(group, str) or not group:
+            return []
+        return [
+            current
+            for current in self.spec_ids()
+            if current != spec_id and self.spec(current).get("releaseGroup") == group
+        ]
+
     def vendor(self, spec_id: str) -> list[str]:
         vendors: list[str] = []
         seen: set[str] = set()
@@ -144,6 +154,9 @@ class Manifest:
             seen.add(current)
             if include_self or current != spec_id:
                 result.append(current)
+            if relation == "closure":
+                for peer in self._release_group_members(current):
+                    visit(peer)
             for dep in sorted(self.spec(current).get(relation, [])):
                 visit(dep)
 
@@ -192,6 +205,7 @@ class Manifest:
 
         problems.extend(self._validate_paths())
         problems.extend(self._validate_relations())
+        problems.extend(self._validate_publisher_specs())
         problems.extend(self._validate_overlaps())
         problems.extend(self._validate_shared_tooling())
         problems.extend(self._validate_closure_complete())
@@ -235,7 +249,9 @@ class Manifest:
             "keepPublic",
             "closure",
             "vendor",
+            "releaseGroup",
             "wordSpecs",
+            "publisherSpecs",
             "validateAll",
             "reverseRefs",
         }
@@ -252,9 +268,32 @@ class Manifest:
                 problems.append(f"{spec_id}: submitted must be true or false")
             if spec.get("submitted") is False and spec.get("state") == "released":
                 problems.append(f"{spec_id}: submitted false spec cannot have state 'released'")
-            for key in ("move", "keepPublic", "closure", "vendor", "wordSpecs", "reverseRefs"):
+            release_group = spec.get("releaseGroup")
+            if release_group is not None and (
+                not isinstance(release_group, str) or not release_group.strip()
+            ):
+                problems.append(f"{spec_id}: releaseGroup must be a non-empty string or null")
+            for key in (
+                "move",
+                "keepPublic",
+                "closure",
+                "vendor",
+                "wordSpecs",
+                "publisherSpecs",
+                "reverseRefs",
+            ):
                 if key in spec and not isinstance(spec[key], list):
                     problems.append(f"{spec_id}: {key} must be a list")
+            for index, entry in enumerate(spec.get("publisherSpecs", [])):
+                if not isinstance(entry, dict):
+                    problems.append(f"{spec_id}: publisherSpecs[{index}] must be an object")
+                    continue
+                for key in ("spec", "markdown", "docNumber"):
+                    value = entry.get(key)
+                    if not isinstance(value, str) or not value.strip():
+                        problems.append(
+                            f"{spec_id}: publisherSpecs[{index}].{key} must be a non-empty string"
+                        )
             validate_all = spec.get("validateAll")
             if validate_all is not None and not isinstance(validate_all, str):
                 problems.append(f"{spec_id}: validateAll must be a string or null")
@@ -289,6 +328,22 @@ class Manifest:
                     if key == "reverseRefs" and any(_is_under(path, root) for root in released_roots):
                         continue
                     problems.append(f"{spec_id}: {key} path does not exist: {_norm(path)}")
+            for index, entry in enumerate(spec.get("publisherSpecs", [])):
+                if not isinstance(entry, dict):
+                    continue
+                markdown = entry.get("markdown")
+                if not isinstance(markdown, str):
+                    continue
+                if not _path_exists(markdown):
+                    problems.append(
+                        f"{spec_id}: publisherSpecs[{index}].markdown path does not exist: "
+                        f"{_norm(markdown)}"
+                    )
+                elif not any(_is_under(markdown, move) for move in spec.get("move", [])):
+                    problems.append(
+                        f"{spec_id}: publisherSpecs[{index}].markdown is not inside a move entry: "
+                        f"{_norm(markdown)}"
+                    )
             validate_all = spec.get("validateAll")
             if validate_all is not None and not _path_exists(validate_all):
                 problems.append(f"{spec_id}: validateAll path does not exist: {_norm(validate_all)}")
@@ -297,10 +352,43 @@ class Manifest:
                     problems.append(f"{spec_id}: keepPublic path is not inside a move entry: {_norm(keep)}")
         return problems
 
+    def _validate_publisher_specs(self) -> list[str]:
+        problems: list[str] = []
+        owners: dict[str, str] = {}
+        markdown_owners: dict[str, str] = {}
+        for spec_id in self.spec_ids():
+            for entry in self.spec(spec_id).get("publisherSpecs", []):
+                if not isinstance(entry, dict):
+                    continue
+                published_id = entry.get("spec")
+                markdown = entry.get("markdown")
+                if isinstance(published_id, str) and published_id:
+                    previous = owners.get(published_id)
+                    if previous and previous != spec_id:
+                        problems.append(
+                            f"publisher spec id {published_id!r} is declared by both "
+                            f"{previous} and {spec_id}"
+                        )
+                    owners[published_id] = spec_id
+                if isinstance(markdown, str) and markdown:
+                    normalized = _norm(markdown)
+                    previous = markdown_owners.get(normalized)
+                    if previous and previous != spec_id:
+                        problems.append(
+                            f"publisher markdown {normalized!r} is declared by both "
+                            f"{previous} and {spec_id}"
+                        )
+                    markdown_owners[normalized] = spec_id
+        return problems
+
     def _validate_relations(self) -> list[str]:
         problems: list[str] = []
         known = set(self.spec_ids())
+        release_groups: dict[str, list[str]] = {}
         for spec_id in self.spec_ids():
+            release_group = self.spec(spec_id).get("releaseGroup")
+            if isinstance(release_group, str) and release_group:
+                release_groups.setdefault(release_group, []).append(spec_id)
             closure = set(self.spec(spec_id).get("closure", []))
             vendor = set(self.spec(spec_id).get("vendor", []))
             for relation, deps in (("closure", closure), ("vendor", vendor)):
@@ -310,6 +398,24 @@ class Manifest:
             both = sorted(closure & vendor)
             if both:
                 problems.append(f"{spec_id}: closure and vendor overlap: {', '.join(both)}")
+
+        for group, members in sorted(release_groups.items()):
+            if len(members) < 2:
+                problems.append(f"releaseGroup {group!r} has fewer than two members")
+            states = {self.spec(member).get("state") for member in members}
+            if len(states) > 1:
+                problems.append(
+                    f"releaseGroup {group!r} mixes states: "
+                    + ", ".join(f"{member}={self.spec(member).get('state')}" for member in members)
+                )
+            not_submitted = [
+                member for member in members if self.spec(member).get("submitted") is not True
+            ]
+            if not_submitted:
+                problems.append(
+                    f"releaseGroup {group!r} contains non-submitted members: "
+                    + ", ".join(not_submitted)
+                )
 
         for spec_id in self.spec_ids():
             closure = set(self.closure(spec_id))

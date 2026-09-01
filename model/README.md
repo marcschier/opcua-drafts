@@ -2,7 +2,7 @@
 
 Repository-owned model artifacts mirror their specification under
 `model/<group>/<spec>/`. For example, the model for
-`source/cloud-specs/schema-registry/` is in `model/cloud-specs/schema-registry/`.
+`source/companion-specs/Generators/` is in `model/companion-specs/Generators/`.
 
 `model/dependencies/` remains flat because the specification publisher uses that
 directory for external dependencies. The released xRegistry model is kept there because

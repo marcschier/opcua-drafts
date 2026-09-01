@@ -34,11 +34,11 @@ python extras/metaverse-specs/validate_all.py --self-contained
 python extras/companion-specs/validate_all.py
 
 # a single extension (the granular unit — there is no per-test runner)
-python extras/metaverse-specs/ai-model-management/tools/validate_local.py
-python source/cloud-specs/schema-registry/tools/validate_local.py
+python source/companion-specs/AAS/tools/validate_local.py
+python source/companion-specs/Generators/tools/validate_local.py
 
 # regenerate one model, then confirm the diff is only what you intended
-python extras/metaverse-specs/ai-model-management/tools/build_model.py
+python source/companion-specs/Generators/tools/build_model.py
 
 # the same advisory checks CI runs
 npx markdownlint-cli2 "**/*.md"
@@ -88,10 +88,10 @@ Tooling, descriptors and examples either live under `extras/<group>/<spec>/` or 
 specification whose generator was already part of its source.
 
 **The split is not applied uniformly**, so locate the generator before assuming where it lives.
-Some sit under the spec folder (`source/cloud-specs/schema-registry/tools/`,
-`source/core-specs/async-services/tools/`, `source/companion-specs/AAS/tools/`,
+Some sit under the spec folder (`source/core-specs/async-services/tools/`,
+`source/companion-specs/AAS/tools/`,
 `source/companion-specs/Generators/tools/`) and others under `extras/`
-(`extras/core-specs/*/tools/`, `extras/metaverse-specs/*/tools/`).
+(`extras/core-specs/*/tools/`).
 
 **Validation is per-extension.** Each extension owns a `validate_local.py`; the
 `extras/<group>/validate_all.py` files just drive lists of them. A group aggregate drives only its
@@ -100,7 +100,7 @@ stops being validated.
 
 **Trees cross-reference, so a move is not just a rename.** The Avro and Arrow generators map
 `extras/core-specs/_common/nodesets/Opc.Ua.ObservabilityExport.NodeSet2.xml`, a byte-identical fixture of the reviewed model, and
-Schema Registry subtypes the released xRegistry model vendored under `model/dependencies/`. A relative link between trees needs one more `..`
+the reviewed Schema Registry subtypes the released xRegistry model vendored under `model/dependencies/`. A relative link between trees needs one more `..`
 than it looks like it should, and a path built from components (`os.path.join(HERE, "..", …)`) is
 invisible to a search for the path it produces.
 

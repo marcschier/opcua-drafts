@@ -29,7 +29,15 @@
         "source/cloud-specs/schema-registry/spec.md",
         "extras/core-specs/performance/OPC-UA-Encoding-Performance-Comparison.md",
         "word-drafts/tools/specs/batch.json"
-      ]
+      ],
+      "publisherSpecs": [
+        {
+          "spec": "avro-encoding",
+          "markdown": "source/core-specs/avro-encoding/spec.md",
+          "docNumber": "OPC 99002-1"
+        }
+      ],
+      "releaseGroup": null
     },
     "data-channels": {
       "$comment": "Releasable base-namespace errata package. The combined specification, the insertion-ready Part 3, Part 4 and Part 6 errata, the generated model, the wire tooling, and the linked informative throughput report form one review unit. Both validators are self-contained and the draft has no RequiredModel dependency, so it needs neither closure nor vendored specifications.",
@@ -55,7 +63,15 @@
         "extras/core-specs/validate_all.py",
         "word-drafts/README.md",
         "word-drafts/tools/specs/batch.json"
-      ]
+      ],
+      "publisherSpecs": [
+        {
+          "spec": "data-channels",
+          "markdown": "source/core-specs/data-channels/spec.md",
+          "docNumber": "OPC 99003-1"
+        }
+      ],
+      "releaseGroup": null
     },
     "observability-export": {
       "$comment": "Releasable Observability Export companion specification. Its normative NodeSet has one authoritative review copy; the public repository carries a byte-identical fixture under shared tooling for self-contained generator validation.",
@@ -79,7 +95,15 @@
         "README.md",
         "extras/core-specs/validate_all.py",
         "word-drafts/tools/specs/batch.json"
-      ]
+      ],
+      "publisherSpecs": [
+        {
+          "spec": "observability-export",
+          "markdown": "source/cloud-specs/observability-export/spec.md",
+          "docNumber": "OPC 99005-1"
+        }
+      ],
+      "releaseGroup": null
     },
     "openusd-binding": {
       "$comment": "Releasable OpenUSD Part 1. xRegistry is vendored because the private OPC UA model requires it. The independent OpenUSD Artifact Registry domain specification and model are maintained upstream by xregistry/spec and are referenced there rather than duplicated in either draft repository.",
@@ -107,7 +131,15 @@
         "core-specs/xregistry/README.md",
         "metaverse-specs/README.md",
         "word-drafts/tools/specs/batch.json"
-      ]
+      ],
+      "publisherSpecs": [
+        {
+          "spec": "openusd-binding",
+          "markdown": "source/metaverse-specs/openusd-binding/spec.md",
+          "docNumber": "OPC 99008-1"
+        }
+      ],
+      "releaseGroup": null
     },
     "openusd-scene": {
       "$comment": "Releasable OpenUSD Part 2. Its NodeSet is self-contained on base OPC UA, but its example regeneration and round-trip tooling read Part 1 example USDA assets, so Part 1 is in the release closure.",
@@ -133,7 +165,15 @@
         "README.md",
         "metaverse-specs/README.md",
         "word-drafts/tools/specs/batch.json"
-      ]
+      ],
+      "publisherSpecs": [
+        {
+          "spec": "openusd-scene",
+          "markdown": "source/metaverse-specs/openusd-scene/spec.md",
+          "docNumber": "OPC 99008-2"
+        }
+      ],
+      "releaseGroup": null
     },
     "wot-binding": {
       "$comment": "Releasable WoT vocabulary/binding specification. It has no NodeSet RequiredModel and its validator is local to wot-specs/WoT-Binding. extras/wot-specs/WoT-Binding holds the informative crosswalk that supports this draft and links into it, so it travels with the specification like every other extras mirror.",
@@ -156,7 +196,15 @@
       "reverseRefs": [
         "README.md",
         "word-drafts/tools/specs/batch.json"
-      ]
+      ],
+      "publisherSpecs": [
+        {
+          "spec": "wot-binding",
+          "markdown": "source/wot-specs/WoT-Binding/spec.md",
+          "docNumber": "OPC 99009-1"
+        }
+      ],
+      "releaseGroup": null
     },
     "wot-connectivity": {
       "$comment": "Releasable WoT Connectivity revision. WoT Binding is in closure because it is part of the OPC Foundation WoT submission. xRegistry is vendored, not closed over: the private export needs the base NodeSet/CSV and word spec so RequiredModel and validators resolve, but xRegistry stays public because it is a shared base for other public specs and has a public xregistry.org proposal.",
@@ -183,7 +231,15 @@
         "README.md",
         "core-specs/xregistry/README.md",
         "word-drafts/tools/specs/batch.json"
-      ]
+      ],
+      "publisherSpecs": [
+        {
+          "spec": "wot-connectivity",
+          "markdown": "source/wot-specs/WoT-Connectivity/spec.md",
+          "docNumber": "OPC 99010-1"
+        }
+      ],
+      "releaseGroup": null
     },
     "xregistry": {
       "$comment": "Releasable abstract registry base model. The public redirect README is outside the moved source/model/extras paths and remains public automatically. Public specifications consume the released NodeSet from model/dependencies.",
@@ -209,7 +265,152 @@
         "source/cloud-specs/schema-registry/README.md",
         "source/cloud-specs/schema-registry/spec.md",
         "word-drafts/tools/specs/batch.json"
-      ]
+      ],
+      "publisherSpecs": [
+        {
+          "spec": "xregistry",
+          "markdown": "source/core-specs/xregistry/spec.md",
+          "docNumber": "OPC 99004-1"
+        }
+      ],
+      "releaseGroup": null
+    },
+    "schema-registry": {
+      "$comment": "Schema Registry extends the released xRegistry base model. xRegistry is recorded as a vendor dependency so the private review copy resolves the RequiredModel without moving or duplicating the public dependency fixture.",
+      "title": "OPC UA for Schema Registry",
+      "submitted": true,
+      "state": "public",
+      "move": [
+        "source/cloud-specs/schema-registry",
+        "model/cloud-specs/schema-registry",
+        "word-drafts/OPC-UA-Schema-Registry.docx",
+        "word-drafts/OPC-UA-Schema-Registry.docmodel.json",
+        "word-drafts/OPC-UA-Schema-Registry.provenance.json"
+      ],
+      "keepPublic": [],
+      "closure": [],
+      "vendor": [
+        "xregistry"
+      ],
+      "wordSpecs": [],
+      "publisherSpecs": [
+        {
+          "spec": "schema-registry",
+          "markdown": "source/cloud-specs/schema-registry/spec.md",
+          "docNumber": "OPC 99006-1"
+        }
+      ],
+      "validateAll": "extras/cloud-specs/validate_all.py",
+      "reverseRefs": [
+        "README.md",
+        "core-specs/xregistry/README.md",
+        "source/core-specs/arrow-encoding/README.md",
+        "source/core-specs/arrow-encoding/spec.md",
+        "word-drafts/tools/specs/batch.json"
+      ],
+      "releaseGroup": null
+    },
+    "ai-model-management": {
+      "$comment": "AI Model Management extends the released xRegistry base model and shares releaseGroup vision-ai with Vision because their joint guidance and Vision overlays form one review unit. xRegistry remains a vendor dependency.",
+      "title": "OPC UA for AI Model Management",
+      "submitted": true,
+      "state": "public",
+      "move": [
+        "source/metaverse-specs/ai-model-management",
+        "model/metaverse-specs/ai-model-management",
+        "extras/metaverse-specs/ai-model-management",
+        "word-drafts/OPC-UA-AI-Model-Management.docx",
+        "word-drafts/OPC-UA-AI-Model-Management.docmodel.json",
+        "word-drafts/OPC-UA-AI-Model-Management.provenance.json"
+      ],
+      "keepPublic": [],
+      "closure": [],
+      "vendor": [
+        "xregistry"
+      ],
+      "wordSpecs": [],
+      "publisherSpecs": [
+        {
+          "spec": "ai-model-management",
+          "markdown": "source/metaverse-specs/ai-model-management/spec.md",
+          "docNumber": "OPC 99014-1"
+        }
+      ],
+      "validateAll": "extras/metaverse-specs/validate_all.py",
+      "reverseRefs": [
+        "README.md",
+        "metaverse-specs/README.md",
+        "source/metaverse-specs/vision-ai-walkthrough.md",
+        "source/metaverse-specs/vision-ai-external-result-mapping.md",
+        "word-drafts/tools/specs/batch.json"
+      ],
+      "releaseGroup": "vision-ai"
+    },
+    "vision": {
+      "$comment": "Vision and AI Model Management form releaseGroup vision-ai because Vision example overlays require AI and their supporting guides link both models. The release group is a symmetric co-release relation, not a false one-way model dependency.",
+      "title": "OPC UA for Vision Systems",
+      "submitted": true,
+      "state": "public",
+      "move": [
+        "source/metaverse-specs/vision",
+        "model/metaverse-specs/vision",
+        "extras/metaverse-specs/vision",
+        "source/metaverse-specs/vision-ai-external-result-mapping.md",
+        "source/metaverse-specs/vision-ai-walkthrough.md",
+        "word-drafts/OPC-UA-Vision.docx",
+        "word-drafts/OPC-UA-Vision.docmodel.json",
+        "word-drafts/OPC-UA-Vision.provenance.json"
+      ],
+      "keepPublic": [],
+      "closure": [],
+      "vendor": [],
+      "wordSpecs": [],
+      "publisherSpecs": [
+        {
+          "spec": "vision",
+          "markdown": "source/metaverse-specs/vision/spec.md",
+          "docNumber": "OPC 99011-1"
+        }
+      ],
+      "validateAll": "extras/metaverse-specs/validate_all.py",
+      "reverseRefs": [
+        "README.md",
+        "metaverse-specs/README.md",
+        "word-drafts/tools/specs/batch.json"
+      ],
+      "releaseGroup": "vision-ai"
+    },
+    "robot-intent": {
+      "$comment": "Robot Intent is an independent submitted companion model with no RequiredModel beyond base OPC UA.",
+      "title": "OPC UA for Robot Intent",
+      "submitted": true,
+      "state": "public",
+      "move": [
+        "source/metaverse-specs/robot-intent",
+        "model/metaverse-specs/robot-intent",
+        "extras/metaverse-specs/robot-intent",
+        "word-drafts/OPC-UA-Robot-Intent.docx",
+        "word-drafts/OPC-UA-Robot-Intent.docmodel.json",
+        "word-drafts/OPC-UA-Robot-Intent.provenance.json"
+      ],
+      "keepPublic": [],
+      "closure": [],
+      "vendor": [],
+      "wordSpecs": [],
+      "publisherSpecs": [
+        {
+          "spec": "robot-intent",
+          "markdown": "source/metaverse-specs/robot-intent/spec.md",
+          "docNumber": "OPC 99015-1"
+        }
+      ],
+      "validateAll": "extras/metaverse-specs/validate_all.py",
+      "reverseRefs": [
+        "README.md",
+        "metaverse-specs/README.md",
+        "word-drafts/tools/specs/batch.json"
+      ],
+      "releaseGroup": null
     }
   }
 }

@@ -67,6 +67,7 @@ env:
 
 
 def transform_pr_validation(text: str) -> str:
+    text = text.replace("      - run: python release/tools/test_release_spec.py\n", "")
     text = text.replace("""# Only checks that run on a clean checkout are wired here. Full spec validation and the determinism
 # gate additionally need untracked base data (companion NodeSets under **/tools/ref/ and the base
 # PubSubBinding NodeSet), so they run their self-contained subset / skip cleanly in CI and remain a

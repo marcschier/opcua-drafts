@@ -27,9 +27,13 @@ def load_ids(p):
 _ua_csv = os.path.join(REF, "UA.NodeIds.csv")
 UA = load_ids(_ua_csv) if os.path.exists(_ua_csv) else None
 UA_EXTRA = {297, 2253}
-# xRegistry base NodeIds (the required model this spec extends), resolved across the two-file dependency.
-_xr_csv = os.path.join(
-    ROOT, "model", "dependencies", "Opc.Ua.XRegistry.NodeIds.csv")
+# Prefer the owning model in the private review repository; public drafts retain a
+# dependency copy because the owning specification is private there.
+_xr_candidates = [
+    os.path.join(ROOT, "model", "core-specs", "xregistry", "Opc.Ua.XRegistry.NodeIds.csv"),
+    os.path.join(ROOT, "model", "dependencies", "Opc.Ua.XRegistry.NodeIds.csv"),
+]
+_xr_csv = next((path for path in _xr_candidates if os.path.exists(path)), _xr_candidates[-1])
 XR = load_ids(_xr_csv) if os.path.exists(_xr_csv) else None
 errors, warnings = [], []
 ALIAS = {}

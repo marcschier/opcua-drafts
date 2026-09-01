@@ -117,6 +117,7 @@ jobs:
           python-version: "3.12"
       - run: pip install pyyaml
       - run: python .github/scripts/check_yaml_json.py
+      - run: python release/tools/test_release_spec.py
 
   workflows:
     name: Workflow syntax (advisory)
