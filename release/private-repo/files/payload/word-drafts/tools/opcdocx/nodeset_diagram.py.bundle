@@ -91,7 +91,7 @@ def _is_placeholder_label(label):
 
 
 def extract_figures(md_path):
-    """Every mermaid block preceded by a model-figure directive."""
+    """Every model figure, from an inline Mermaid block or a checked graph file."""
     with open(md_path, encoding='utf-8') as fh:
         lines = fh.read().splitlines()
     figures = []
@@ -102,6 +102,17 @@ def extract_figures(md_path):
         m = DIRECTIVE_RE.search(line)
         if m:
             pending = _parse_directive(m.group('body'))
+            graph = pending.get('graph')
+            if graph:
+                spec_dir = os.path.abspath(os.path.dirname(md_path))
+                graph_path = os.path.abspath(os.path.join(spec_dir, graph))
+                if os.path.commonpath((spec_dir, graph_path)) != spec_dir:
+                    raise ValueError('model-figure graph escapes the specification directory')
+                if not os.path.isfile(graph_path):
+                    raise ValueError('model-figure graph does not exist: %s' % graph)
+                with open(graph_path, encoding='utf-8') as source:
+                    figures.append(Figure(pending, source.read(), i + 1))
+                pending = None
             i += 1
             continue
         if FENCE_RE.match(line):

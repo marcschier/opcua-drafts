@@ -37,10 +37,14 @@ def para_id(key):
 class Writer:
     """Turns docmodel blocks into body elements and keeps the bookmark bookkeeping."""
 
-    def __init__(self, bookmarks, *, model=None, doc_ns_index=2, reserved_ids=()):
+    def __init__(self, bookmarks, *, model=None, doc_ns_index=2, reserved_ids=(),
+                 defined_in=None):
         self.bm = bookmarks
         self.model = model
         self.doc_ns_index = doc_ns_index
+        # Namespace prefix -> the document defining it, for the supertype phrase. Namespace 0
+        # is resolved per type, because it is not one document.
+        self.defined_in = defined_in or {}
         self.table_seq = 0
         self.figure_seq = 0
         self.targets = {}          # docmodel id -> bookmark name
@@ -352,6 +356,7 @@ class Writer:
         return out
 
     def type_definition_table(self, ident, caption, spec):
+        from . import nodeset_tables as nt
         """The Table 2 shape: Attribute/Value rows, a References block, ConformanceUnits."""
         g = contract.TYPE_TABLE_GRID
         total = sum(g)
@@ -377,9 +382,15 @@ class Writer:
                              top='double', bottom='double')
                         for i, h in enumerate(headers)]))
         if spec['subtypeOf']:
+            # Which document defines a supertype is a fact about that type, not a constant.
+            # Naming OPC 10000-5 for every one of them printed that of DeviceType, which is
+            # OPC 10000-100, and of OffNormalAlarmType, which is OPC 10000-9.
+            phrase = nt.subtype_phrase(
+                spec['subtypeOf'], self.defined_in, self.doc_ns_index, [],
+                set(self.model.by_name) if self.model is not None else None)
             tbl.append(row([cell(total, [cell_paragraph(
-                'Subtype of the %s defined in OPC 10000-5, i.e. inheriting the '
-                'InstanceDeclarations of that Node.' % spec['subtypeOf'])],
+                'Subtype of the %s, i.e. inheriting the InstanceDeclarations of that Node.'
+                % phrase)],
                 span=6, top='double')]))
         for m in spec['members']:
             tbl.append(row([

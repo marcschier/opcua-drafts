@@ -59,7 +59,7 @@ integration. It is **read-only**: it never invokes Methods, writes setpoints, or
 ## Outputs
 
 Per companion spec — descriptor sources and tooling live under
-`spec-drafts/cloud-specs/extras/observability-export/examples/<spec>/`; the standardized addendum + overlay outputs
+`spec-drafts/extras/cloud-specs/observability-export/examples/<spec>/`; the standardized addendum + overlay outputs
 land under `spec-drafts/cloud-specs/observability-export/<spec>/`:
 
 - `<Domain>.ObservabilityExport.json` — the machine-readable **binding descriptor (JSON)**
@@ -73,14 +73,14 @@ land under `spec-drafts/cloud-specs/observability-export/<spec>/`:
   per-signal annex tables, and diagrams showing where the bindings live on the theoretical instance.
 
 **Reference implementation (use it, don't reinvent):**
-`spec-drafts/cloud-specs/extras/observability-export/examples/tools/build_bindings.py` (+ `nodeset_util.py`) is a
+`spec-drafts/extras/cloud-specs/observability-export/examples/tools/build_bindings.py` (+ `nodeset_util.py`) is a
 deterministic generator that reads the descriptor, **resolves and validates every `BrowsePath`
 against the published companion NodeSet**, synthesises the instance overlay, and emits the addendum
 (annex tables + two mermaid diagrams) into `spec-drafts/cloud-specs/observability-export/<spec>/`. Author the
-descriptor, then run it (from `spec-drafts/cloud-specs/extras/observability-export/examples/`):
+descriptor, then run it (from `spec-drafts/extras/cloud-specs/observability-export/examples/`):
 `python tools/build_bindings.py <domain>/<Domain>.ObservabilityExport.json tools/ref`. The base
 companion NodeSets live (gitignored) under
-`spec-drafts/cloud-specs/extras/observability-export/examples/tools/ref/`. Worked example descriptors:
+`spec-drafts/extras/cloud-specs/observability-export/examples/tools/ref/`. Worked example descriptors:
 `.../examples/pumps/` (from the official `Pumps/instanceexample.xml`) and `.../examples/robotics/`
 (synthesised `MotionDeviceSystem`).
 
@@ -435,7 +435,7 @@ Field notes:
   `contentKind` — those concepts are removed.
 - `appliesToType` is the plain BrowseName of the binding target: an `ObjectType`, Interface, or
   AddInType. The generator locates it in `baseNodeSets`.
-- `baseNodeSets` are filenames under `spec-drafts/cloud-specs/extras/observability-export/examples/tools/ref/`
+- `baseNodeSets` are filenames under `spec-drafts/extras/cloud-specs/observability-export/examples/tools/ref/`
   (gitignored); `requiredModels` are the namespace URIs emitted as `<RequiredModel>` (order sets the
   ns indices).
 - `fieldName` defaults to the last `browsePath` segment; make it unique within a binding.

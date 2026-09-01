@@ -1,0 +1,5 @@
+# Python tooling for the core-specs encoding extensions.
+# Install with:  pip install -r extras/core-specs/requirements.txt
+fastavro>=1.9
+pyarrow>=15
+jsonschema>=4.20

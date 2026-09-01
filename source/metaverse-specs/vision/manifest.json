@@ -24,7 +24,7 @@
   "model": {
     "nodeset": "model/metaverse-specs/vision/Opc.Ua.Vision.NodeSet2.xml",
     "generated": true,
-    "generator": "metaverse-specs/extras/vision/tools/build_model.py"
+    "generator": "extras/metaverse-specs/vision/tools/build_model.py"
   },
   "markdown": {
     "main": "spec.md",

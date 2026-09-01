@@ -51,7 +51,7 @@ Decide these values first; they are security boundaries, not cosmetics.
 
 1. **Default branch**: use `main` unless OPCF-Members has a conflicting policy. The workflows assume `main` in triggers and PR bases.
 2. **Specification roots**: choose the top-level directories the private repo will actually contain. Do not copy the public list blindly.
-3. **Agent allowlist** (`AGENT_ALLOWED_PATHS`): set this to the exact space-separated roots the coding agent may change, plus `word-drafts/tools` if the agent may fix Word tooling. Keep workflow/configuration paths and generated Word outputs out of this list.
+3. **Agent allowlist** (`AGENT_ALLOWED_PATHS`): set this to the exact space-separated `source/` and `extras/` roots the coding agent may change, plus `model` and `word-drafts/tools` where appropriate. Keep workflow/configuration paths and generated Word outputs out of this list.
 4. **Strict section-reference roots** (`SECTION_REF_STRICT_PREFIXES`): set this to the roots whose unresolved `§` references should fail the advisory check. Usually this is the same spec-source list, excluding tooling-only roots.
 5. **Validation requirements** (`VALIDATION_REQUIREMENTS`): space-separated requirement files to install before aggregate spec validation. Leave unset until there is a real requirements file.
 6. **Word specs**: add private `word-drafts/tools/specs/<spec-id>.json` configs and list committed renderings in `word-drafts/tools/specs/batch.json`. The public configs are intentionally not bundled because they name public repo paths.
@@ -73,7 +73,7 @@ In GitHub UI or with `gh`, set:
 Suggested variables:
 
 ```powershell
-gh variable set AGENT_ALLOWED_PATHS --repo OPCF-Members/spec-drafts --body "<spec-root-1> <spec-root-2> word-drafts/tools"
+gh variable set AGENT_ALLOWED_PATHS --repo OPCF-Members/spec-drafts --body "<source-root-1> <extras-group-1> model word-drafts/tools"
 gh variable set SECTION_REF_STRICT_PREFIXES --repo OPCF-Members/spec-drafts --body "<spec-root-1> <spec-root-2>"
 # Only once a real requirements file exists:
 gh variable set VALIDATION_REQUIREMENTS --repo OPCF-Members/spec-drafts --body "<path/to/requirements.txt>"

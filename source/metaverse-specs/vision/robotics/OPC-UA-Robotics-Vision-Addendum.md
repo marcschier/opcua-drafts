@@ -2,7 +2,7 @@
 
 **Implementer annex to *OPC UA for Vision Systems* (Release 0.5.0 — Draft).**
 
-> A worked example of vision-guided robotics: an eye-in-hand 3D camera on a robot flange detects parts in a bin and publishes 6-DoF pick poses, with inference running off-server on an edge GPU and a simulated twin sensor rendering the same cell in NVIDIA Isaac Sim. The machine-readable source of truth is [`Robotics.Vision.json`](../../../../metaverse-specs/extras/vision/examples/robotics/Robotics.Vision.json); this document and `Opc.Ua.Robotics.Vision.NodeSet2.xml` are both generated from it by `build_examples.py`, so prose and model cannot drift. It is also published as Annex F of [`OPC-UA-Vision.md`](../spec.md).
+> A worked example of vision-guided robotics: an eye-in-hand 3D camera on a robot flange detects parts in a bin and publishes 6-DoF pick poses, with inference running off-server on an edge GPU and a simulated twin sensor rendering the same cell in NVIDIA Isaac Sim. The machine-readable source of truth is [`Robotics.Vision.json`](../../../../extras/metaverse-specs/vision/examples/robotics/Robotics.Vision.json); this document and `Opc.Ua.Robotics.Vision.NodeSet2.xml` are both generated from it by `build_examples.py`, so prose and model cannot drift. It is also published as Annex F of [`OPC-UA-Vision.md`](../spec.md).
 
 ---
 
@@ -169,7 +169,7 @@ Two feedback paths are exercised. During commissioning, the HMI calls `SubmitDet
 
 | File | Content |
 |---|---|
-| [`Robotics.Vision.json`](../../../../metaverse-specs/extras/vision/examples/robotics/Robotics.Vision.json) | Machine-readable descriptor (single source). |
+| [`Robotics.Vision.json`](../../../../extras/metaverse-specs/vision/examples/robotics/Robotics.Vision.json) | Machine-readable descriptor (single source). |
 | [`Opc.Ua.Robotics.Vision.NodeSet2.xml`](../../../../model/metaverse-specs/vision/Opc.Ua.Robotics.Vision.NodeSet2.xml) | The generated instance overlay. |
 
-Regenerate from the repository root with `python metaverse-specs/extras/vision/tools/build_examples.py`.
+Regenerate from the repository root with `python extras/metaverse-specs/vision/tools/build_examples.py`.

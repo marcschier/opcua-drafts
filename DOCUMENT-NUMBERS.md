@@ -38,7 +38,7 @@ document is not.
 | OPC 99009 | OPC UA for WoT Binding | -1 | JSON-LD vocabulary and NodeSet2 mapping | private |
 | OPC 99010 | OPC UA for WoT Connectivity | -1 | Thing Description registry and projection | private |
 | OPC 99011 | OPC UA for Vision Systems | -1 | Machine and robotics vision systems | public |
-| OPC 99012 | OPC UA for Vision Systems | — | Research whitepaper; not a companion specification | public |
+| OPC 99012 | OPC UA for Vision Systems | — | Retired standalone allocation; research is supporting material under OPC 99011-1 | reserved |
 | OPC 99013 | OPC UA for Asynchronous Service Execution | -1 | Deferring and continuing a Service request | public |
 | OPC 99014 | OPC UA for AI Model Management | -1 | Models, deployments, inference and the learning loop | public |
 | OPC 99015 | OPC UA for Robot Intent | -1 | Task-level commanding, missions and safety awareness | public |
@@ -69,15 +69,16 @@ it already sits in the Word rendering:
 | `vision/machine-vision/OPC-UA-Inspection-Vision-Addendum.md` | OPC 99011-1 |
 | `vision/robotics/OPC-UA-Robotics-Vision-Addendum.md` | OPC 99011-1 |
 
-**One document targets xRegistry rather than the OPC Foundation.** `xRegistry-OpenUsd.md` is an
-xRegistry domain specification: it uses RFC 2119 upper-case normative language because that is
-what the xRegistry specifications use, and it must be submittable to that body as it is. Building
-it into the OPC 20020 template would change what it is. It stays markdown, and the `check_links`
-and `check_yaml_json` gates continue to cover it.
+**The OpenUSD xRegistry domain specification is maintained upstream.** The
+[OpenUSD Artifact Registry Service](https://github.com/xregistry/spec/blob/main/workingdrafts/models/openusd/spec.md)
+and its [model](https://github.com/xregistry/spec/blob/main/workingdrafts/models/openusd/model.json)
+target xRegistry rather than the OPC Foundation. They use RFC 2119 upper-case normative language
+and are not built into the OPC 20020 template. The OPC UA OpenUSD specifications remain under
+OPC Foundation review.
 
 **Explanatory and measurement documents are neither.**
 `observability-export/di/OPC-UA-DI-Pumps-Inheritance.md` explains how two addenda compose, and
-`core-specs/extras/performance/OPC-UA-Encoding-Performance-Comparison.md` reports measurements.
+`extras/core-specs/performance/OPC-UA-Encoding-Performance-Comparison.md` reports measurements.
 Both are read alongside a specification rather than published as one.
 
 Generated files — `tools/model-reference.md`, `*.NodeSet2.xml`, `*.NodeIds.csv` — are artifacts of

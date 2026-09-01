@@ -92,11 +92,9 @@ on:
 # Paths the agent is allowed to change. `.github/` is absent on purpose: a workflow or CI
 # script the agent wrote would run on the next event with more rights than the agent had,
 # which turns one bad prompt into a permanent foothold.
-#
 # Private repositories do not necessarily use the public draft repository's tree layout.
-# Set the AGENT_ALLOWED_PATHS repository variable to the exact space-separated source
-# roots for this private repository, plus `word-drafts/tools` if the agent may adjust the
-# Word pipeline. The default is intentionally narrow and safe.
+# Set the AGENT_ALLOWED_PATHS repository variable to the exact space-separated source,
+# model and extras roots for this private repository. The default is intentionally narrow.
 env:
   ALLOWED_PATHS: ${{ vars.AGENT_ALLOWED_PATHS || 'word-drafts/tools' }}
 

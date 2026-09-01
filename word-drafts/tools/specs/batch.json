@@ -29,11 +29,6 @@
       "docNumber": "OPC 99011-1"
     },
     {
-      "spec": "vision-research",
-      "markdown": "source/metaverse-specs/vision-research/spec.md",
-      "docNumber": "OPC 99012"
-    },
-    {
       "spec": "ai-model-management",
       "markdown": "source/metaverse-specs/ai-model-management/spec.md",
       "docNumber": "OPC 99014-1"
@@ -59,7 +54,7 @@
       "why": "an amendment to OPC 10000-5; see above."
     },
     {
-      "markdown": "core-specs/extras/performance/OPC-UA-Encoding-Performance-Comparison.md",
+      "markdown": "extras/core-specs/performance/OPC-UA-Encoding-Performance-Comparison.md",
       "why": "a measurement report, not a specification."
     },
     {
@@ -77,10 +72,6 @@
     {
       "markdown": "source/metaverse-specs/robot-intent/OPC-UA-Robot-Intent-Research.md",
       "why": "a research and design rationale document, not a companion specification."
-    },
-    {
-      "markdown": "metaverse-specs/openusd-binding/xRegistry-OpenUsd.md",
-      "why": "an xRegistry domain specification under separate review; it is not an OPC Foundation companion specification."
     }
   ]
 }

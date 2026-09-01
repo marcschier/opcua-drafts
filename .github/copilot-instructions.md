@@ -18,27 +18,27 @@ not catch. The reason is given with each one; when a rule and a reason disagree,
 
 ```powershell
 # one-time
-pip install -r core-specs/extras/requirements.txt
+pip install -r extras/core-specs/requirements.txt
 pip install -r source/companion-specs/AAS/requirements.txt
 
-# validate everything (three separate entrypoints — none covers another's tree)
-python core-specs/extras/validate_all.py
-python cloud-specs/validate_all.py
-python metaverse-specs/validate_all.py
-python companion-specs/validate_all.py --self-contained
+# validate everything (four separate entrypoints — none covers another's group)
+python extras/core-specs/validate_all.py
+python extras/cloud-specs/validate_all.py
+python extras/metaverse-specs/validate_all.py
+python extras/companion-specs/validate_all.py --self-contained
 
 # what CI runs — only the checks that need no untracked base data
-python core-specs/extras/validate_all.py --self-contained
-python cloud-specs/validate_all.py --self-contained
-python metaverse-specs/validate_all.py --self-contained
-python companion-specs/validate_all.py
+python extras/core-specs/validate_all.py --self-contained
+python extras/cloud-specs/validate_all.py --self-contained
+python extras/metaverse-specs/validate_all.py --self-contained
+python extras/companion-specs/validate_all.py
 
 # a single extension (the granular unit — there is no per-test runner)
-python metaverse-specs/extras/ai-model-management/tools/validate_local.py
+python extras/metaverse-specs/ai-model-management/tools/validate_local.py
 python source/cloud-specs/schema-registry/tools/validate_local.py
 
 # regenerate one model, then confirm the diff is only what you intended
-python metaverse-specs/extras/ai-model-management/tools/build_model.py
+python extras/metaverse-specs/ai-model-management/tools/build_model.py
 
 # the same advisory checks CI runs
 npx markdownlint-cli2 "**/*.md"
@@ -78,28 +78,28 @@ Five logical specification groups under `source/`, plus mirrored models and the 
 | `source/companion-specs/` | Domain companion specifications |
 | `model/<group>/<spec>/` | Generated repository-owned NodeSets and NodeId CSVs |
 | `model/dependencies/` | External model dependencies, including the released xRegistry model |
+| `extras/<group>/<spec>/` | Secondary tooling, validators, descriptors and examples |
 | `word-drafts/` | Submission-ready Word renderings built into the official OPC Foundation template, plus the build that produces them |
 | `templates/` | The official OPC Foundation companion specification template the Word build clones |
 
 **Normative / tooling split.** A standalone specification lives under
 `source/<group>/<spec>/`; its generated model lives under `model/<group>/<spec>/`.
-Tooling, descriptors and examples either remain under a mirrored `extras/` tree or move with a
+Tooling, descriptors and examples either live under `extras/<group>/<spec>/` or move with a
 specification whose generator was already part of its source.
 
 **The split is not applied uniformly**, so locate the generator before assuming where it lives.
 Some sit under the spec folder (`source/cloud-specs/schema-registry/tools/`,
 `source/core-specs/async-services/tools/`, `source/companion-specs/AAS/tools/`,
 `source/companion-specs/Generators/tools/`) and others under `extras/`
-(`core-specs/extras/*/tools/`, `metaverse-specs/extras/*/tools/`).
+(`extras/core-specs/*/tools/`, `extras/metaverse-specs/*/tools/`).
 
-**Validation is per-extension.** Each extension owns a `validate_local.py`; the four `validate_all.py`
-files just drive lists of them. `wot-specs/` is in **no** aggregate — run its validators directly.
-A tree drives only its own validators: `core-specs/extras/validate_all.py`
-stops at `core-specs/`, so a specification that moves trees takes its entry with it or silently
+**Validation is per-extension.** Each extension owns a `validate_local.py`; the
+`extras/<group>/validate_all.py` files just drive lists of them. A group aggregate drives only its
+own validators, so a specification that moves groups takes its entry with it or silently
 stops being validated.
 
 **Trees cross-reference, so a move is not just a rename.** The Avro and Arrow generators map
-`core-specs/extras/_common/nodesets/Opc.Ua.ObservabilityExport.NodeSet2.xml`, a byte-identical fixture of the reviewed model, and
+`extras/core-specs/_common/nodesets/Opc.Ua.ObservabilityExport.NodeSet2.xml`, a byte-identical fixture of the reviewed model, and
 Schema Registry subtypes the released xRegistry model vendored under `model/dependencies/`. A relative link between trees needs one more `..`
 than it looks like it should, and a path built from components (`os.path.join(HERE, "..", …)`) is
 invisible to a search for the path it produces.

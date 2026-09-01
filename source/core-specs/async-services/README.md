@@ -40,7 +40,7 @@ python core-specs\async-services\tools\build_model.py
 python core-specs\async-services\tools\validate_local.py
 ```
 
-`build_model.py` writes the NodeSet, the CSV and `tools/model-reference.md`, and injects Annex A into the Part 5 errata and the combined spec. It is deterministic and uses no clock or randomness, so regenerating without a source change produces byte-identical output. The validator needs no untracked base data, so it runs in CI through `python core-specs\extras\validate_all.py --self-contained`.
+`build_model.py` writes the NodeSet, the CSV and `tools/model-reference.md`, and injects Annex A into the Part 5 errata and the combined spec. It is deterministic and uses no clock or randomness, so regenerating without a source change produces byte-identical output. The validator needs no untracked base data, so it runs in CI through `python extras\core-specs\validate_all.py --self-contained`.
 
 ## Provisional identifiers
 

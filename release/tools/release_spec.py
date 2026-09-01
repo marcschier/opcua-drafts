@@ -36,13 +36,18 @@ except ImportError as exc:  # pragma: no cover - exercised when the parallel tas
 VALIDATOR_MARKER = "release-spec-validator"
 MD_MARKER = "release-spec-link"
 AGGREGATE_VALIDATORS = (
-    "core-specs/extras/validate_all.py",
-    "cloud-specs/validate_all.py",
-    "metaverse-specs/validate_all.py",
+    "extras/core-specs/validate_all.py",
+    "extras/cloud-specs/validate_all.py",
+    "extras/metaverse-specs/validate_all.py",
+    "extras/companion-specs/validate_all.py",
+    "extras/wot-specs/validate_all.py",
 )
 WORD_BATCH = "word-drafts/tools/specs/batch.json"
 AGENT_TASK = ".github/workflows/agent-task.yml"
 CANONICAL_ALLOWED_PATHS = [
+    "source",
+    "model",
+    "extras",
     "core-specs",
     "cloud-specs",
     "metaverse-specs",
@@ -63,6 +68,8 @@ CANONICAL_WORD_ORDER = [
     "avro-encoding",
     "arrow-encoding",
 ]
+IGNORED_GENERATED_DIRS = {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+IGNORED_GENERATED_SUFFIXES = {".pyc", ".pyo"}
 
 
 def rel(path: Path) -> str:
@@ -123,6 +130,12 @@ def is_probably_text(path: Path) -> bool:
         ".ps1",
         ".toml",
         ".csv",
+        ".xml",
+        ".jsonld",
+        ".ttl",
+        ".avsc",
+        ".usda",
+        ".svg",
     }
 
 
@@ -182,6 +195,8 @@ def _own_file_set_from_dir(base: Path, spec: dict) -> set[str]:
                 norm((Path(move) / path.relative_to(root)).as_posix())
                 for path in root.rglob("*")
                 if path.is_file()
+                and not any(part in IGNORED_GENERATED_DIRS for part in path.relative_to(root).parts)
+                and path.suffix.lower() not in IGNORED_GENERATED_SUFFIXES
             ]
         else:
             candidates = []
@@ -549,6 +564,8 @@ def validator_base(path: str) -> Path:
 
 
 def resolved_validator_path(aggregate: str, validator_rel: str) -> str:
+    if validator_rel.startswith(("source/", "extras/", "model/")):
+        return norm(validator_rel)
     return norm(posixpath.normpath(posixpath.join(posixpath.dirname(aggregate), validator_rel)))
 
 
@@ -603,7 +620,6 @@ def capsule_belongs_to(original: str, source: str, files: set[str], roots: list[
 def repair_validator_return(text: str, aggregate: str, files: set[str], roots: list[str]) -> tuple[str, int]:
     count = 0
     out: list[str] = []
-    base = posixpath.dirname(aggregate)
     marker_re = re.compile(rf"^(\s*)# {re.escape(VALIDATOR_MARKER)}:([A-Za-z0-9+/=]+)$")
     for line in text.splitlines(keepends=True):
         raw, newline = split_line_ending(line)
@@ -613,7 +629,7 @@ def repair_validator_return(text: str, aggregate: str, files: set[str], roots: l
             continue
         original = unb64(match.group(2))
         entry = re.search(r"[\"'](?P<target>[^\"']+)[\"']", original)
-        target = norm(posixpath.join(base, entry.group("target"))) if entry else None
+        target = resolved_validator_path(aggregate, entry.group("target")) if entry else None
         if target is None or belongs_to(target, files, roots):
             out.append(original + newline)
             count += 1
@@ -953,7 +969,11 @@ def manual_steps_return_vendors(vendor_files: list[str], import_dir: Path | None
         else:
             manual.append(f"{path}: vendored file is missing from the public tree; cannot compare it")
             continue
-        if public_bytes != private.read_bytes():
+        private_bytes = private.read_bytes()
+        if is_probably_text(public):
+            public_bytes = public_bytes.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+            private_bytes = private_bytes.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+        if public_bytes != private_bytes:
             manual.append(
                 f"{path}: vendored dependency differs between private import and public tree; "
                 "review manually rather than overwriting the public copy"

@@ -175,17 +175,23 @@ Set `submitted` to `false` only for a shared dependency that appears in the mani
 An unsubmitted dependency can be copied into the private repository, but it cannot be the target of a release.
 
 List every path that moves in `move`.
-Include the specification folder, its `extras/` mirror if it has one, the clause map, **and the committed Word rendering** — the `.docx`, its `.docmodel.json` and `.provenance.json`, and each figure declared by the clause map's `figures` array, both the `.pptx` source and the generated `.png`.
+Include `source/<group>/<spec>/`, `model/<group>/<spec>/` where a model exists,
+`extras/<group>/<spec>/` where secondary tooling exists, and **the committed Word rendering** —
+the `.docx`, its `.docmodel.json` and `.provenance.json`.
 Word is the review format, so the `.docx` is the artifact under review; leaving it behind would keep the reviewed document publicly downloadable while only its markdown source went private.
-Take the figure list from the clause map rather than from a filename prefix: the clause map is the declared source of truth, and a prefix is a guess that silently drags a sibling specification's figures along with it.
+Template-shaped figure sources and renderings live below the specification's source directory and
+move with it. For a specification that still uses the legacy Word pipeline, also list its active
+clause-map descriptor and any external figure files that descriptor owns; never infer them from a
+filename prefix.
 A vendored specification contributes no Word rendering, because it is not under review.
 List public holdbacks in `keepPublic`, especially documents that are targeted at xregistry.org even though they sit inside a folder that moves.
 List every submitted specification that must travel with this one in `closure`; include only specification ids from the same manifest.
 Use `closure` when the dependency was itself submitted for Foundation review and must become private at the same time.
 Use `vendor` when the dependency is needed by the private copy but must stay public here.
 The test is the submission boundary, not whether the model has a `RequiredModel` edge: a submitted Part 2 belongs in `closure`, while a public base model belongs in `vendor`.
-List Word clause-map descriptors in `wordSpecs`.
-Set `validateAll` to the aggregate validator path that must be repaired, or `null` if there is no aggregate.
+List only active legacy Word clause-map descriptors in `wordSpecs`; migrated
+SpecificationPublisher documents use an empty list.
+Set `validateAll` to `extras/<group>/validate_all.py`.
 List public files that reverse-reference this specification in `reverseRefs` so the mover can repair or report them.
 A reverse reference is a path, relative link, validator entry or Word batch entry that breaks when the target moves.
 A citation by name or label is not a reverse reference, and a file's own location is never a reference to itself.

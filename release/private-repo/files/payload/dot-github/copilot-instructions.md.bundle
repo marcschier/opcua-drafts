@@ -7,7 +7,8 @@ Most specifications are generated from a single source of truth, so the prose, t
 ## Commands
 
 ```powershell
-# one-time Word-tooling setup
+# one-time
+pip install -r extras/core-specs/requirements.txt
 pip install -r word-drafts/tools/requirements.txt
 
 # advisory checks used by PR validation
@@ -38,9 +39,9 @@ The active specification roots are a repository-specific allowlist. Keep these i
 
 `word-drafts/` holds submission-ready Word documents built into the official OPC Foundation companion specification template. `templates/` holds the template cloned by the Word build. `skills/` holds agent instructions that operate on the drafts.
 
-**Normative / tooling split.** A spec folder holds only the normative documents and generated base artifacts; tooling, descriptors and examples live either beside the spec or in a mirrored `extras/` tree. Locate the generator before assuming where it lives.
+**Normative / tooling split.** A spec folder holds only the normative documents and generated base artifacts; secondary tooling, descriptors and examples live under `extras/<group>/<spec>/`, unless the specification already owns them under `source/`. Shared core helpers live under `extras/core-specs/_common/`, and group aggregate validators live at `extras/<group>/validate_all.py`.
 
-**Validation is per-extension.** Each extension owns a validator. Aggregate `validate_all.py` files are convenience entrypoints and must not be assumed to cover other trees.
+**Validation is per-extension.** Each extension owns a validator. Aggregate `validate_all.py` files cover one group each; `.github/scripts/run_self_contained_validators.py` discovers all of them.
 
 ## Voice and tense
 

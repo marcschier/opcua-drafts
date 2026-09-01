@@ -28,13 +28,13 @@ This model supplies the verbs, and nothing else, so the two compose rather than 
 | `Opc.Ua.RobotIntent.NodeSet2.xml` | The information model — **generated** |
 | `Opc.Ua.RobotIntent.NodeIds.csv` | The NodeId assignments — **generated** |
 
-Tooling lives in [`metaverse-specs/extras/robot-intent/tools/`](../../../metaverse-specs/extras/robot-intent/tools/): `build_model.py` is the single source of truth for all three generated artifacts, `validate_local.py` is the gate, and `model-reference.md` is the generated Annex A.
+Tooling lives in [`extras/metaverse-specs/robot-intent/tools/`](../../../extras/metaverse-specs/robot-intent/tools/): `build_model.py` is the single source of truth for all three generated artifacts, `validate_local.py` is the gate, and `model-reference.md` is the generated Annex A.
 
 ## Build and validate
 
 ```powershell
-python metaverse-specs\extras\robot-intent\tools\build_model.py
-python metaverse-specs\extras\robot-intent\tools\validate_local.py
+python extras\metaverse-specs\robot-intent\tools\build_model.py
+python extras\metaverse-specs\robot-intent\tools\validate_local.py
 ```
 
 The generator is **deterministic**: rebuilding reproduces the committed NodeSet byte for byte. Edit the generator, never the generated NodeSet, CSV or Annex A.

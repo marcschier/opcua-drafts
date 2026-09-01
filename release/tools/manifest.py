@@ -407,9 +407,8 @@ class Manifest:
         problems: list[str] = []
         spec_files = {spec_id: sorted(self._own_file_set(spec_id)) for spec_id in self.spec_ids()}
         tool_paths = sorted(
-            list((REPO_ROOT / "core-specs" / "extras").glob("**/tools/*.py"))
-            + list((REPO_ROOT / "metaverse-specs" / "extras").glob("**/tools/*.py"))
-            + list((REPO_ROOT / "wot-specs").glob("**/tools/*.py"))
+            list((REPO_ROOT / "extras").glob("*-specs/**/*.py"))
+            + list((REPO_ROOT / "source").glob("*-specs/**/tools/*.py"))
         )
         for spec_id in self.spec_ids():
             if self.spec(spec_id).get("submitted") is False:

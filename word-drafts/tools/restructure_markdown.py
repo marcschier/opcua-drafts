@@ -473,9 +473,9 @@ DEFAULT_SIBLINGS = [
     'metaverse-specs/openusd-scene/README.md',
     'metaverse-specs/openusd-binding/pumps/OPC-UA-Pumps-OpenUSD-Bindings-Addendum.md',
     'metaverse-specs/openusd-binding/robotics/OPC-UA-Robotics-OpenUSD-Bindings-Addendum.md',
-    'metaverse-specs/extras/openusd-binding/examples/pumps/E2E-GUIDE.md',
-    'metaverse-specs/extras/openusd-binding/examples/robotics/E2E-GUIDE.md',
-    'metaverse-specs/extras/openusd-artifacts/README.md',
+    'extras/metaverse-specs/openusd-binding/examples/pumps/E2E-GUIDE.md',
+    'extras/metaverse-specs/openusd-binding/examples/robotics/E2E-GUIDE.md',
+    'extras/metaverse-specs/openusd-artifacts/README.md',
     'metaverse-specs/README.md',
 ]
 
