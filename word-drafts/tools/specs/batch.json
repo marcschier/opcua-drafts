@@ -4,11 +4,6 @@
   "ready": [],
   "migrated": [
     {
-      "spec": "schema-registry",
-      "markdown": "source/cloud-specs/schema-registry/spec.md",
-      "docNumber": "OPC 99006-1"
-    },
-    {
       "spec": "generators",
       "markdown": "source/companion-specs/Generators/spec.md",
       "docNumber": "OPC 99007-1"
@@ -22,21 +17,6 @@
       "spec": "async-services",
       "markdown": "source/core-specs/async-services/spec.md",
       "docNumber": "OPC 99013-1"
-    },
-    {
-      "spec": "vision",
-      "markdown": "source/metaverse-specs/vision/spec.md",
-      "docNumber": "OPC 99011-1"
-    },
-    {
-      "spec": "ai-model-management",
-      "markdown": "source/metaverse-specs/ai-model-management/spec.md",
-      "docNumber": "OPC 99014-1"
-    },
-    {
-      "spec": "robot-intent",
-      "markdown": "source/metaverse-specs/robot-intent/spec.md",
-      "docNumber": "OPC 99015-1"
     },
     {
       "spec": "aas",

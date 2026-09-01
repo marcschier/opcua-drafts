@@ -279,7 +279,7 @@
       "$comment": "Schema Registry extends the released xRegistry base model. xRegistry is recorded as a vendor dependency so the private review copy resolves the RequiredModel without moving or duplicating the public dependency fixture.",
       "title": "OPC UA for Schema Registry",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "source/cloud-specs/schema-registry",
         "model/cloud-specs/schema-registry",
@@ -314,7 +314,7 @@
       "$comment": "AI Model Management extends the released xRegistry base model and shares releaseGroup vision-ai with Vision because their joint guidance and Vision overlays form one review unit. xRegistry remains a vendor dependency.",
       "title": "OPC UA for AI Model Management",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "source/metaverse-specs/ai-model-management",
         "model/metaverse-specs/ai-model-management",
@@ -350,7 +350,7 @@
       "$comment": "Vision and AI Model Management form releaseGroup vision-ai because Vision example overlays require AI and their supporting guides link both models. The release group is a symmetric co-release relation, not a false one-way model dependency.",
       "title": "OPC UA for Vision Systems",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "source/metaverse-specs/vision",
         "model/metaverse-specs/vision",
@@ -384,7 +384,7 @@
       "$comment": "Robot Intent is an independent submitted companion model with no RequiredModel beyond base OPC UA.",
       "title": "OPC UA for Robot Intent",
       "submitted": true,
-      "state": "public",
+      "state": "released",
       "move": [
         "source/metaverse-specs/robot-intent",
         "model/metaverse-specs/robot-intent",

@@ -438,20 +438,8 @@ def repair_markdown_reverse_lines_release(
         haystack = raw.lower()
         item = re.match(r"^(?P<prefix>[ \t]*[-*][ \t]+)(?P<content>.*)$", raw)
         is_list_item = stripped.startswith(("- ", "* "))
-        # Only a link that points at something being moved exempts the line, because the
-        # link-level repair will handle that one. A link to a target that stays public leaves
-        # the line describing a specification that is no longer here.
-        has_link_into_moved = False
-        for match in re.finditer(r"\]\((?P<body>[^)\n]+)\)", raw):
-            resolved = resolve_link(path, inline_link_destination(match.group("body")))
-            if resolved and belongs_to(resolved, files, roots):
-                has_link_into_moved = True
-                break
-        names_moved_dir = any(
-            f"`{token}`" in haystack or f"`{token.rstrip('/')}`" in haystack
-            for token in moved_dir_tokens
-        )
-        if is_list_item and item and names_moved_dir and not has_link_into_moved:
+        names_moved_dir = any(token in haystack for token in moved_dir_tokens)
+        if is_list_item and item and names_moved_dir:
             count += 1
             # Keep the bullet and its indentation outside the capsule, so the list structure
             # survives. Replacing the whole line leaves the surrounding items looking
@@ -476,6 +464,37 @@ def private_url(manifest, repo_rel: str) -> str:
 
 
 TABLE_CONTRACT = ("status", "documents")
+
+
+def private_document_label(path: str) -> str:
+    lowered = path.lower()
+    if lowered.endswith(".docx"):
+        return "Word"
+    if "/examples/" in lowered and lowered.endswith(("/index.md", "/readme.md")):
+        return "Guides"
+    if lowered.endswith("/spec.md"):
+        return "Specification"
+    if lowered.endswith(("/readme.md", ".md")):
+        return "Document"
+    return "Artifact"
+
+
+def rewrite_private_row_links(
+    cell: str,
+    path: str,
+    files: set[str],
+    roots: list[str],
+    manifest,
+) -> str:
+    """Point links retained in a public inventory row at the private review copy."""
+    def replace(match: re.Match[str]) -> str:
+        target = inline_link_destination(match.group("body"))
+        resolved = resolve_link(path, target)
+        if not resolved or not belongs_to(resolved, files, roots):
+            return match.group(0)
+        return f"]({private_url(manifest, resolved)})"
+
+    return re.sub(r"\]\((?P<body>[^)\n]+)\)", replace, cell)
 
 
 def repair_markdown_table_rows_release(
@@ -547,10 +566,14 @@ def repair_markdown_table_rows_release(
 
         original = stripped[1:-1] if stripped.endswith("|") else stripped[1:]
         docs = " · ".join(
-            f"[{'Word' if t.lower().endswith('.docx') else 'Specification'}]({private_url(manifest, t)})"
+            f"[{private_document_label(t)}]({private_url(manifest, t)})"
             for t in targets
         ) or "—"
-        replacement = " " + " | ".join(cells[:-2] + [note, docs]) + " "
+        retained = [
+            rewrite_private_row_links(cell, path, files, roots, manifest)
+            for cell in cells[:-2]
+        ]
+        replacement = " " + " | ".join(retained + [note, docs]) + " "
         count += 1
         indent = raw[: len(raw) - len(raw.lstrip())]
         # Both markers sit INSIDE the outer pipes. markdownlint counts cells without
@@ -962,10 +985,12 @@ def text_repairs_release(manifest, closure: list[str], files: list[str], roots: 
             old, row_count = repair_markdown_table_rows_release(
                 old, moved_dirs, r, moving, roots, review_note(manifest), manifest
             )
+            old, line_count = repair_markdown_reverse_lines_release(
+                old, moved_dirs, r, moving, roots, review_note(manifest)
+            )
+        else:
+            line_count = 0
         new, count = repair_markdown_release(old, r, moving, roots)
-        line_count = 0
-        if r in markdown_reverse_refs:
-            new, line_count = repair_markdown_reverse_lines_release(new, moved_dirs, r, moving, roots, review_note(manifest))
         add_change(
             changes,
             r,

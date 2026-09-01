@@ -26,7 +26,7 @@ REPO = os.path.dirname(os.path.dirname(HERE))
 # committed NodeSet and CSV either way — the same arrangement the data-channels validators
 # use in extras/core-specs/validate_all.py.
 SELF_CONTAINED = [
-    "../../source/cloud-specs/schema-registry/tools/validate_local.py",
+    # release-spec-validator:ICAgICIuLi8uLi9zb3VyY2UvY2xvdWQtc3BlY3Mvc2NoZW1hLXJlZ2lzdHJ5L3Rvb2xzL3ZhbGlkYXRlX2xvY2FsLnB5Iiw=
 ]
 
 # Validators that additionally need untracked base data (none yet).

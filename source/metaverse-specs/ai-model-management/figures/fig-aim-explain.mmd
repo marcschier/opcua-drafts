@@ -1,8 +1,0 @@
-flowchart LR
-    R["a published result"] --> D["DeploymentType"]
-    D -->|"ModelUsed"| M["ModelType"]
-    M -->|Digest| A["the artefact"]
-    M -->|ImportedFrom| CR["catalogue entry"]
-    M -->|DerivedFrom| B["the model it came from"]
-    M -->|EvaluatedBy| E["EvaluationRunType"]
-    M -->|Card| K["ModelCardType"]

@@ -1,7 +1,0 @@
-flowchart LR
-    CAT["ModelRegistryType<br/>publisher / name / version"] -->|Registry| J["ModelImportJobType"]
-    J -->|Federate| FD["ModelType<br/>artefact stays at source"]
-    J -->|Stage| ST["fetch + verify Digest"]
-    ST --> LD["ModelType<br/>artefact local"]
-    FD --> DEP["DeploymentType"]
-    LD --> DEP

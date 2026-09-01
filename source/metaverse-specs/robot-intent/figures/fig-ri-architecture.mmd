@@ -1,8 +1,0 @@
-flowchart LR
-    S["Server"] --> R["RobotIntent<br/>well-known entry point"]
-    R --> CTL["IntentController<br/>one per robot"]
-    CTL --> CAP["Capabilities"]
-    CTL --> REF["Frames, Tools, Locations,<br/>Axes, Outputs, Programs"]
-    CTL --> OPS["Intents<br/>IntentOperation per submission"]
-    CTL --> MIS["Missions<br/>Mission per submission"]
-    MIS --> OPS

@@ -19,9 +19,12 @@ import release_spec  # noqa: E402
 class ReleaseSpecTests(unittest.TestCase):
     def setUp(self):
         self.manifest = manifest_module.load()
-        self.batch_text = (
+        current_batch = (
             REPO / "word-drafts/tools/specs/batch.json"
         ).read_text(encoding="utf-8")
+        self.batch_text, _ = release_spec.repair_word_batch_return(
+            current_batch, self.manifest, self.manifest.spec_ids()
+        )
 
     def test_vision_and_ai_are_one_symmetric_release_group(self):
         self.assertEqual(
@@ -65,6 +68,72 @@ class ReleaseSpecTests(unittest.TestCase):
         after = {entry["spec"] for entry in json.loads(released)["migrated"]}
         self.assertEqual(removed, 1)
         self.assertEqual(before - after, {"schema-registry"})
+
+    def test_private_document_labels_distinguish_guides(self):
+        self.assertEqual(
+            release_spec.private_document_label(
+                "extras/metaverse-specs/ai-model-management/examples/index.md"
+            ),
+            "Guides",
+        )
+        self.assertEqual(
+            release_spec.private_document_label(
+                "source/metaverse-specs/ai-model-management/spec.md"
+            ),
+            "Specification",
+        )
+
+    def test_private_inventory_row_rewrites_retained_guide_link(self):
+        text = (
+            "| Specification | Why | Version | Status | Documents |\n"
+            "|---|---|---|---|---|\n"
+            "| AI | Eleven [implementation guides]"
+            "(extras/metaverse-specs/ai-model-management/examples/index.md) | "
+            "0.6.0 | public | [Specification]"
+            "(source/metaverse-specs/ai-model-management/spec.md) |\n"
+        )
+        released, count = release_spec.repair_markdown_table_rows_release(
+            text,
+            {"extras/metaverse-specs/ai-model-management/"},
+            "README.md",
+            {
+                "extras/metaverse-specs/ai-model-management/examples/index.md",
+                "source/metaverse-specs/ai-model-management/spec.md",
+            },
+            [
+                "extras/metaverse-specs/ai-model-management",
+                "source/metaverse-specs/ai-model-management",
+            ],
+            "UNDER REVIEW",
+            self.manifest,
+        )
+        self.assertEqual(count, 1)
+        self.assertNotIn(
+            "](extras/metaverse-specs/ai-model-management/examples/index.md)",
+            released,
+        )
+        self.assertIn(
+            "OPCF-Members/spec-drafts/blob/main/"
+            "extras/metaverse-specs/ai-model-management/examples/index.md",
+            released,
+        )
+
+    def test_reverse_reference_list_item_is_capsuled_before_link_repair(self):
+        text = (
+            "- [`source/metaverse-specs/vision/`](../source/metaverse-specs/vision/) "
+            "— Vision tooling and prose.\n"
+        )
+        released, count = release_spec.repair_markdown_reverse_lines_release(
+            text,
+            {"vision"},
+            "metaverse-specs/README.md",
+            {"source/metaverse-specs/vision/spec.md"},
+            ["source/metaverse-specs/vision"],
+            "UNDER REVIEW",
+        )
+        self.assertEqual(count, 1)
+        self.assertIn("UNDER REVIEW", released)
+        self.assertIn("release-spec-link:", released)
 
     def test_duplicate_publisher_ids_are_rejected(self):
         data = json.loads(Path(manifest_module.DEFAULT_MANIFEST).read_text(encoding="utf-8"))
