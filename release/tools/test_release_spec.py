@@ -42,6 +42,23 @@ class ReleaseSpecTests(unittest.TestCase):
             release_spec.public_dependency_blockers(self.manifest, "ai-model-management"), []
         )
 
+    def test_vision_review_readme_moves_but_external_mapping_stays_public(self):
+        vision = self.manifest.spec("vision")
+        moved = {release_spec.norm(path) for path in vision["move"]}
+        self.assertIn("source/metaverse-specs/README.md", moved)
+        self.assertNotIn(
+            "source/metaverse-specs/vision-ai-external-result-mapping.md",
+            moved,
+        )
+        self.assertIn(
+            "source/metaverse-specs/vision-ai-external-result-mapping.md",
+            vision["reverseRefs"],
+        )
+        self.assertIn(
+            "source/metaverse-specs/vision-ai-external-result-mapping.md",
+            self.manifest.spec("ai-model-management")["reverseRefs"],
+        )
+
     def test_release_and_return_restore_migrated_batch(self):
         closure = self.manifest.closure("vision")
         released, removed = release_spec.repair_word_batch_release(

@@ -340,7 +340,7 @@
       "reverseRefs": [
         "README.md",
         "metaverse-specs/README.md",
-        "source/metaverse-specs/vision-ai-walkthrough.md",
+        "source/metaverse-specs/README.md",
         "source/metaverse-specs/vision-ai-external-result-mapping.md",
         "word-drafts/tools/specs/batch.json"
       ],
@@ -355,8 +355,7 @@
         "source/metaverse-specs/vision",
         "model/metaverse-specs/vision",
         "extras/metaverse-specs/vision",
-        "source/metaverse-specs/vision-ai-external-result-mapping.md",
-        "source/metaverse-specs/vision-ai-walkthrough.md",
+        "source/metaverse-specs/README.md",
         "word-drafts/OPC-UA-Vision.docx",
         "word-drafts/OPC-UA-Vision.docmodel.json",
         "word-drafts/OPC-UA-Vision.provenance.json"
@@ -376,6 +375,7 @@
       "reverseRefs": [
         "README.md",
         "metaverse-specs/README.md",
+        "source/metaverse-specs/vision-ai-external-result-mapping.md",
         "word-drafts/tools/specs/batch.json"
       ],
       "releaseGroup": "vision-ai"
