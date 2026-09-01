@@ -11,7 +11,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(REPO / ".github/scripts"))
 
+import check_section_refs  # noqa: E402
 import manifest as manifest_module  # noqa: E402
 import release_spec  # noqa: E402
 
@@ -144,6 +146,48 @@ class ReleaseSpecTests(unittest.TestCase):
             any("publisher spec id 'vision'" in problem for problem in problems),
             problems,
         )
+
+    def test_duplicate_publisher_fields_are_rejected_within_one_release(self):
+        data = json.loads(Path(manifest_module.DEFAULT_MANIFEST).read_text(encoding="utf-8"))
+        broken = copy.deepcopy(data)
+        broken["specs"]["vision"]["publisherSpecs"].append(
+            copy.deepcopy(broken["specs"]["vision"]["publisherSpecs"][0])
+        )
+        problems = manifest_module.Manifest(broken, manifest_module.DEFAULT_MANIFEST).validate()
+        self.assertTrue(
+            any("publisher spec id 'vision'" in problem for problem in problems),
+            problems,
+        )
+        self.assertTrue(
+            any("publisher markdown" in problem for problem in problems),
+            problems,
+        )
+        self.assertTrue(
+            any("publisher document number 'OPC 99011-1'" in problem for problem in problems),
+            problems,
+        )
+
+    def test_publisher_heading_numbers_follow_template_insertions(self):
+        text = """\
+## Scope {#sec-scope}
+### Scope detail {#sec-scope-detail}
+## Overview {#sec-overview}
+### Overview detail {#sec-overview-detail}
+## Information model {#sec-information-model}
+## Information model reference {#anx-a annex=normative}
+### Annex detail {#sec-annex-detail}
+"""
+        numbers = check_section_refs.clause_numbers(text)
+        self.assertEqual(
+            numbers,
+            {"1", "1.1", "4", "4.1", "5", "A", "A.1"},
+        )
+        mutated = text.replace(
+            "### Overview detail {#sec-overview-detail}",
+            "#### Overview detail {#sec-overview-detail}",
+        )
+        self.assertNotIn("4.1", check_section_refs.clause_numbers(mutated))
+        self.assertEqual(check_section_refs.annex_letters(text), {"A"})
 
 
 if __name__ == "__main__":

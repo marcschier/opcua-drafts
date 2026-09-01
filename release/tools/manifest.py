@@ -356,29 +356,45 @@ class Manifest:
         problems: list[str] = []
         owners: dict[str, str] = {}
         markdown_owners: dict[str, str] = {}
+        document_number_owners: dict[str, str] = {}
         for spec_id in self.spec_ids():
-            for entry in self.spec(spec_id).get("publisherSpecs", []):
+            for index, entry in enumerate(self.spec(spec_id).get("publisherSpecs", [])):
                 if not isinstance(entry, dict):
                     continue
                 published_id = entry.get("spec")
                 markdown = entry.get("markdown")
+                document_number = entry.get("docNumber")
+                location = f"{spec_id}.publisherSpecs[{index}]"
                 if isinstance(published_id, str) and published_id:
-                    previous = owners.get(published_id)
-                    if previous and previous != spec_id:
+                    normalized = published_id.strip()
+                    previous = owners.get(normalized)
+                    if previous:
                         problems.append(
-                            f"publisher spec id {published_id!r} is declared by both "
-                            f"{previous} and {spec_id}"
+                            f"publisher spec id {normalized!r} is declared by both "
+                            f"{previous} and {location}"
                         )
-                    owners[published_id] = spec_id
+                    else:
+                        owners[normalized] = location
                 if isinstance(markdown, str) and markdown:
-                    normalized = _norm(markdown)
+                    normalized = _norm(markdown.strip())
                     previous = markdown_owners.get(normalized)
-                    if previous and previous != spec_id:
+                    if previous:
                         problems.append(
                             f"publisher markdown {normalized!r} is declared by both "
-                            f"{previous} and {spec_id}"
+                            f"{previous} and {location}"
                         )
-                    markdown_owners[normalized] = spec_id
+                    else:
+                        markdown_owners[normalized] = location
+                if isinstance(document_number, str) and document_number:
+                    normalized = document_number.strip()
+                    previous = document_number_owners.get(normalized)
+                    if previous:
+                        problems.append(
+                            f"publisher document number {normalized!r} is declared by both "
+                            f"{previous} and {location}"
+                        )
+                    else:
+                        document_number_owners[normalized] = location
         return problems
 
     def _validate_relations(self) -> list[str]:
