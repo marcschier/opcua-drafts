@@ -19,6 +19,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -51,28 +52,16 @@ def _normalise(rel: str, data: bytes) -> bytes:
 
 
 def transform_agent_task(text: str) -> str:
-    text = text.replace("""# Paths the agent is allowed to change. `.github/` is absent on purpose: a workflow or CI
-# script the agent wrote would run on the next event with more rights than the agent had,
-# which turns one bad prompt into a permanent foothold.
-env:
-  ALLOWED_PATHS: >-
-    core-specs
-    cloud-specs
-    metaverse-specs
-    wot-specs
-    companion-specs
-    word-drafts/tools
-""", """# Paths the agent is allowed to change. `.github/` is absent on purpose: a workflow or CI
-# script the agent wrote would run on the next event with more rights than the agent had,
-# which turns one bad prompt into a permanent foothold.
-#
-# Private repositories do not necessarily use the public draft repository's tree layout.
-# Set the AGENT_ALLOWED_PATHS repository variable to the exact space-separated source
-# roots for this private repository, plus `word-drafts/tools` if the agent may adjust the
-# Word pipeline. The default is intentionally narrow and safe.
+    pattern = re.compile(r"(?m)^env:\n  ALLOWED_PATHS: >-\n(?:    [^\n]+\n)+")
+    replacement = """# Private repositories do not necessarily use the public draft repository's tree layout.
+# Set the AGENT_ALLOWED_PATHS repository variable to the exact space-separated source,
+# model and extras roots for this private repository. The default is intentionally narrow.
 env:
   ALLOWED_PATHS: ${{ vars.AGENT_ALLOWED_PATHS || 'word-drafts/tools' }}
-""")
+"""
+    text, count = pattern.subn(replacement, text, count=1)
+    if count != 1:
+        raise ValueError("public agent-task.yml has no recognized ALLOWED_PATHS block")
     text = text.replace('the specification trees and `word-drafts/tools/`', 'the paths listed in `AGENT_ALLOWED_PATHS`')
     return text
 
@@ -92,16 +81,16 @@ def transform_pr_validation(text: str) -> str:
         env:
           SECTION_REF_STRICT_PREFIXES: ${{ vars.SECTION_REF_STRICT_PREFIXES }}
 """)
-    text = text.replace("""      - run: pip install -r core-specs/extras/requirements.txt
-      - run: pip install -r companion-specs/AAS/requirements.txt
+    text = text.replace("""      - run: pip install -r extras/core-specs/requirements.txt
+      - run: pip install -r source/companion-specs/AAS/requirements.txt
       # The AddressSpace figure gate re-derives each figure from the NodeSet using the
       # Word pipeline's Mermaid parser, so spec validation needs that parser installed.
       # Without it the gate skips, and a figure that contradicts its model reaches main.
       - run: pip install -r word-drafts/tools/requirements.txt
-      - run: python core-specs/extras/validate_all.py --self-contained
-      - run: python cloud-specs/validate_all.py --self-contained
-      - run: python metaverse-specs/validate_all.py --self-contained
-      - run: python companion-specs/validate_all.py --self-contained
+      - run: python extras/core-specs/validate_all.py --self-contained
+      - run: python extras/cloud-specs/validate_all.py --self-contained
+      - run: python extras/metaverse-specs/validate_all.py --self-contained
+      - run: python extras/companion-specs/validate_all.py --self-contained
 """, """      - name: Install validation requirements if present
         env:
           VALIDATION_REQUIREMENTS: ${{ vars.VALIDATION_REQUIREMENTS || '' }}
@@ -116,7 +105,7 @@ def transform_pr_validation(text: str) -> str:
       - run: pip install -r word-drafts/tools/requirements.txt
       - run: python .github/scripts/run_self_contained_validators.py
 """)
-    text = text.replace("""      - run: pip install -r core-specs/extras/requirements.txt
+    text = text.replace("""      - run: pip install -r extras/core-specs/requirements.txt
       - run: python .github/scripts/check_determinism.py
 """, """      - name: Install determinism requirements if present
         env:
@@ -160,7 +149,7 @@ def transform_word_review(text: str) -> str:
 
 
 def transform_pr_template(text: str) -> str:
-    return text.replace('the `validate_all.py` for that tree — `core-specs/extras/`, `cloud-specs/` or `metaverse-specs/` — and/or the extension\'s `validate_local.py`', 'the discovered self-contained validators with `.github/scripts/run_self_contained_validators.py` and/or the extension\'s `validate_local.py`')
+    return text
 
 
 def transform_check_section_refs(text: str) -> str:
@@ -197,7 +186,8 @@ Most specifications are generated from a single source of truth, so the prose, t
 ## Commands
 
 ```powershell
-# one-time Word-tooling setup
+# one-time
+pip install -r extras/core-specs/requirements.txt
 pip install -r word-drafts/tools/requirements.txt
 
 # advisory checks used by PR validation
@@ -228,9 +218,9 @@ The active specification roots are a repository-specific allowlist. Keep these i
 
 `word-drafts/` holds submission-ready Word documents built into the official OPC Foundation companion specification template. `templates/` holds the template cloned by the Word build. `skills/` holds agent instructions that operate on the drafts.
 
-**Normative / tooling split.** A spec folder holds only the normative documents and generated base artifacts; tooling, descriptors and examples live either beside the spec or in a mirrored `extras/` tree. Locate the generator before assuming where it lives.
+**Normative / tooling split.** A spec folder holds only the normative documents and generated base artifacts; secondary tooling, descriptors and examples live under `extras/<group>/<spec>/`, unless the specification already owns them under `source/`. Shared core helpers live under `extras/core-specs/_common/`, and group aggregate validators live at `extras/<group>/validate_all.py`.
 
-**Validation is per-extension.** Each extension owns a validator. Aggregate `validate_all.py` files are convenience entrypoints and must not be assumed to cover other trees.
+**Validation is per-extension.** Each extension owns a validator. Aggregate `validate_all.py` files cover one group each; `.github/scripts/run_self_contained_validators.py` discovers all of them.
 
 """
     return head + tail
@@ -244,23 +234,19 @@ public draft repository. This script avoids hard-coding that set: it walks the r
 for aggregate ``validate_all.py`` entrypoints and runs each with ``--self-contained``.
 Per-extension ``validate_local.py`` checks remain local, targeted commands.
 """
-import os
 import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SKIP_DIRS = {'.git', 'node_modules', '__pycache__', 'word-drafts', 'templates', 'skills'}
+EXTRAS = ROOT / "extras"
 
 
 def validators():
-    found = []
-    for dirpath, dirnames, filenames in os.walk(ROOT):
-        rel_dir = Path(dirpath).relative_to(ROOT)
-        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
-        if 'validate_all.py' in filenames:
-            found.append(rel_dir / 'validate_all.py')
-    return sorted(found, key=lambda p: p.as_posix())
+    return sorted(
+        (path.relative_to(ROOT) for path in EXTRAS.glob("*-specs/validate_all.py")),
+        key=lambda path: path.as_posix(),
+    )
 
 
 def main():
@@ -268,6 +254,18 @@ def main():
     if not found:
         print('run_self_contained_validators: SKIP - no validate_all.py entrypoints found')
         return 0
+    expected = {
+        Path("extras/core-specs/validate_all.py"),
+        Path("extras/cloud-specs/validate_all.py"),
+        Path("extras/metaverse-specs/validate_all.py"),
+        Path("extras/wot-specs/validate_all.py"),
+    }
+    missing = expected - set(found)
+    if missing:
+        print("run_self_contained_validators: ERROR - missing aggregate validators:")
+        for rel in sorted(missing, key=lambda path: path.as_posix()):
+            print(f"  {rel.as_posix()}")
+        return 1
     failed = []
     for rel in found:
         print(f'=== {rel.as_posix()} --self-contained ===')
@@ -284,6 +282,59 @@ def main():
 
 
 if __name__ == '__main__':
+    raise SystemExit(main())
+'''
+
+PRIVATE_DETERMINISM = r'''#!/usr/bin/env python3
+"""Determinism / "generated files are up to date" check.
+
+Regenerates the deterministic encoding artifacts and fails if that produces any change under
+version control — i.e. a generated file was hand-edited or a source change was not regenerated.
+
+The private repository regenerates the submitted Avro schemas and the OpenUSD artifact
+catalog. Both inputs are available in a clean checkout; the OpenUSD domain model is fetched
+from its commit-pinned, hash-verified upstream URL.
+
+Usage (from repo root):  python .github/scripts/check_determinism.py
+Exit code: 0 = clean or skipped, 1 = generated files drifted, 2 = a generator errored.
+"""
+import os
+import subprocess
+import sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_NODESET = os.path.join(
+    ROOT, "model", "cloud-specs", "observability-export",
+    "Opc.Ua.ObservabilityExport.NodeSet2.xml")
+
+GENERATORS = [
+    "extras/core-specs/avro-encoding/tools/build_schemas.py",
+    "extras/metaverse-specs/openusd-artifacts/tools/build_catalog.py",
+]
+
+
+def main():
+    if not os.path.exists(BASE_NODESET):
+        print("check_determinism: SKIP - base NodeSet not present "
+              "(model/cloud-specs/observability-export/"
+              "Opc.Ua.ObservabilityExport.NodeSet2.xml)")
+        return 0
+    for rel in GENERATORS:
+        print(f"=== regenerate {rel} ===")
+        proc = subprocess.run([sys.executable, os.path.join(ROOT, *rel.split("/"))], cwd=ROOT)
+        if proc.returncode != 0:
+            print(f"check_determinism: ERROR - generator failed: {rel}")
+            return 2
+    diff = subprocess.run(["git", "diff", "--stat", "--exit-code"], cwd=ROOT)
+    if diff.returncode != 0:
+        print("check_determinism: generated files drifted - regenerate and commit "
+              "(do not hand-edit generated artifacts)")
+        return 1
+    print("check_determinism: OK (regeneration produced no changes)")
+    return 0
+
+
+if __name__ == "__main__":
     raise SystemExit(main())
 '''
 
@@ -444,6 +495,8 @@ def desired_files() -> dict[Path, bytes]:
         key = rel.as_posix()
         if key == '.github/scripts/check_section_refs.py':
             add(key, transform_check_section_refs(_read(key)))
+        elif key == '.github/scripts/check_determinism.py':
+            add(key, PRIVATE_DETERMINISM)
         else:
             add(key)
     add('.github/scripts/run_self_contained_validators.py', RUN_VALIDATORS)

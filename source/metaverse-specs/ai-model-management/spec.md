@@ -1443,20 +1443,20 @@ These URIs are **provisional**, on the same terms as the namespace URI and the N
 | This specification | `metaverse-specs/ai-model-management/OPC-UA-AI-Model-Management.md` |
 | Information model | `metaverse-specs/ai-model-management/Opc.Ua.AiModelManagement.NodeSet2.xml` |
 | NodeId assignments | `metaverse-specs/ai-model-management/Opc.Ua.AiModelManagement.NodeIds.csv` |
-| Generator | `metaverse-specs/extras/ai-model-management/tools/build_model.py` |
-| Validator | `metaverse-specs/extras/ai-model-management/tools/validate_local.py` |
-| Annex A (generated) | `metaverse-specs/extras/ai-model-management/tools/model-reference.md` |
-| Implementation guides (informative) | `metaverse-specs/extras/ai-model-management/examples/` |
-| Guide validator | `metaverse-specs/extras/ai-model-management/examples/tools/validate_examples.py` |
+| Generator | `extras/metaverse-specs/ai-model-management/tools/build_model.py` |
+| Validator | `extras/metaverse-specs/ai-model-management/tools/validate_local.py` |
+| Annex A (generated) | `extras/metaverse-specs/ai-model-management/tools/model-reference.md` |
+| Implementation guides (informative) | `extras/metaverse-specs/ai-model-management/examples/` |
+| Guide validator | `extras/metaverse-specs/ai-model-management/examples/tools/validate_examples.py` |
 
 The NodeSet, the CSV and Annex A are generated from a single in-code source of truth and are **deterministic**. The generator is edited; the generated files are not.
 
-The [implementation guides](../../../metaverse-specs/extras/ai-model-management/examples/index.md) are informative and introduce nothing. They map this model onto the systems an implementer is likely to be integrating — Azure AI Foundry, OpenAI, Amazon Bedrock and SageMaker, NVIDIA NIM and Triton, Google Vertex AI, Hugging Face, KServe, embedded runtimes, and another Server implementing this specification. Naming products there rather than here is what lets clause 9.2 name dialects for what they do: the normative document stays neutral and the informative folder beside it does not have to. Every literal of `ApiDialectEnum` and `AuthenticationKindEnum` is exercised by at least one guide, and `validate_examples.py` fails if a guide cites a member this model does not declare.
+The [implementation guides](../../../extras/metaverse-specs/ai-model-management/examples/index.md) are informative and introduce nothing. They map this model onto the systems an implementer is likely to be integrating — Azure AI Foundry, OpenAI, Amazon Bedrock and SageMaker, NVIDIA NIM and Triton, Google Vertex AI, Hugging Face, KServe, embedded runtimes, and another Server implementing this specification. Naming products there rather than here is what lets clause 9.2 name dialects for what they do: the normative document stays neutral and the informative folder beside it does not have to. Every literal of `ApiDialectEnum` and `AuthenticationKindEnum` is exercised by at least one guide, and `validate_examples.py` fails if a guide cites a member this model does not declare.
 
 ```powershell
-python metaverse-specs\extras\ai-model-management\tools\build_model.py
-python metaverse-specs\extras\ai-model-management\tools\validate_local.py
-python metaverse-specs\extras\ai-model-management\examples\tools\validate_examples.py
+python extras\metaverse-specs\ai-model-management\tools\build_model.py
+python extras\metaverse-specs\ai-model-management\tools\validate_local.py
+python extras\metaverse-specs\ai-model-management\examples\tools\validate_examples.py
 ```
 
 ---
@@ -1476,7 +1476,7 @@ Not normative references, and no dependency. Recorded because this model borrowe
 - **IDTA 02059** *AI Model Management* — the member set of `DeploymentType`, including the inference-location concept.
 - **OPC 30270** — the OPC UA ⇄ Asset Administration Shell bridge, over which the alignments above become a populated AAS.
 - **xRegistry** — [the CNCF specification](https://github.com/xregistry/spec) the OPC UA projection in this repository follows. Its `groups` / `resources` / `versions` structure is what clause 10 extends, and public proxies over model hubs already present exactly the arrangement adopted here: publisher as group, models and datasets as sibling resource types, versions immutable and identified by content, mutable branch and tag names as pointers rather than versions.
-- **OPC UA for Vision Systems** in this repository is the first consuming specification. Its `InferencePipelineType.Deployment` is a `NodeId` Property naming a `DeploymentType` here, and its `VisionResultType.ModelUsed` retains the model that actually answered, per §8.2.1. Neither NodeSet requires the other. See the informative [Vision and AI Model Management walkthrough](../../../metaverse-specs/vision-ai-walkthrough.md) for the combined browse path and the informative [external result mapping](../../../metaverse-specs/vision-ai-external-result-mapping.md) for preserving these identities outside the Server without creating another conformance profile.
+- **OPC UA for Vision Systems** in this repository is the first consuming specification. Its `InferencePipelineType.Deployment` is a `NodeId` Property naming a `DeploymentType` here, and its `VisionResultType.ModelUsed` retains the model that actually answered, per §8.2.1. Neither NodeSet requires the other. See the informative [Vision and AI Model Management walkthrough](../vision-ai-walkthrough.md) for the combined browse path and the informative [external result mapping](../vision-ai-external-result-mapping.md) for preserving these identities outside the Server without creating another conformance profile.
 
 ---
 

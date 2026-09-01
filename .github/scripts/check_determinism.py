@@ -20,9 +20,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 BASE_NODESET = os.path.join(ROOT, "core-specs", "pubsub-binding", "Opc.Ua.PubSubBinding.NodeSet2.xml")
 
 GENERATORS = [
-    "core-specs/extras/avro-encoding/tools/build_schemas.py",
-    "core-specs/extras/arrow-encoding/tools/build_schemas.py",
-    "core-specs/extras/xregistry-catalog/tools/build_catalog.py",
+    "extras/core-specs/avro-encoding/tools/build_schemas.py",
+    "extras/core-specs/arrow-encoding/tools/build_schemas.py",
+    "extras/core-specs/xregistry-catalog/tools/build_catalog.py",
 ]
 
 

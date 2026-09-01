@@ -4,13 +4,13 @@ Draft specifications connecting **OPC UA** to the systems that visualize, percei
 
 Nothing here is normative, official, or endorsed by the OPC Foundation, the Alliance for OpenUSD, VDMA or any manufacturer. Namespace URIs and NodeIds are **provisional** and for prototyping only.
 
-> **Both OpenUSD parts are under OPC Foundation review** and are maintained in [`OPCF-Members/spec-drafts`](https://github.com/OPCF-Members/spec-drafts) until it completes. OPC Foundation members can [request access](https://github.com/OPCF-Members/Help); see [*Specifications under OPC Foundation review*](../README.md#specifications-under-opc-foundation-review). What remains here is the tooling, the examples, and the [xRegistry OpenUSD domain specification](openusd-binding/xRegistry-OpenUsd.md), which is proposed to xregistry.org rather than to the OPC Foundation.
+> **Both OpenUSD parts are under OPC Foundation review** and are maintained in [`OPCF-Members/spec-drafts`](https://github.com/OPCF-Members/spec-drafts) until it completes. OPC Foundation members can [request access](https://github.com/OPCF-Members/Help); see [*Specifications under OPC Foundation review*](../README.md#specifications-under-opc-foundation-review). Their secondary tooling and examples are under [`extras/metaverse-specs/`](../extras/metaverse-specs/). The independent [OpenUSD Artifact Registry working draft](https://github.com/xregistry/spec/blob/main/workingdrafts/models/openusd/spec.md) is maintained by the xRegistry project.
 
 ## The OpenUSD pair: two parts, two directions
 
 The two specifications approach the same problem from opposite ends and are deliberately independent:
 
-| | <!-- release-spec-link:W2BvcGVudXNkLWJpbmRpbmcvYF0ob3BlbnVzZC1iaW5kaW5nLyk= -->`openusd-binding/`<!-- /release-spec-link --> — **Part 1** | <!-- release-spec-link:W2BvcGVudXNkLXNjZW5lL2BdKG9wZW51c2Qtc2NlbmUvKQ== -->`openusd-scene/`<!-- /release-spec-link --> — **Part 2** |
+| | <!-- release-spec-link:W2BvcGVudXNkLWJpbmRpbmcvYF0oLi4vc291cmNlL21ldGF2ZXJzZS1zcGVjcy9vcGVudXNkLWJpbmRpbmcvKQ== -->`openusd-binding/`<!-- /release-spec-link --> — **Part 1** | <!-- release-spec-link:W2BvcGVudXNkLXNjZW5lL2BdKG9wZW51c2Qtc2NlbmUvKQ== -->`openusd-scene/`<!-- /release-spec-link --> — **Part 2** |
 |---|---|---|
 | Question | *Which USD prim represents this OPC UA Object, and which Variables drive its attributes?* | *What if the USD scene graph simply **were** an OPC UA address space?* |
 | The scene lives | outside OPC UA, in `.usd` files a connector renders | inside OPC UA, as first-class browsable nodes |
@@ -35,23 +35,23 @@ Vision and Robot Intent are self-contained on base OPC UA. AI Model Management a
 
 **They compose without coupling.** Vision's `InferencePipelineType.Deployment` and `VisionResultType.ModelUsed` are plain `NodeId` Properties, so a Server can publish cameras and verdicts with no AI model at all. Where it implements both models, `Deployment → UsesModel` identifies the model serving now, while `result.ModelUsed → ModelType → Digest` identifies the model that produced a retained result. Vision and Robot Intent share a frame vocabulary with identical literals and numbering. In every case the join is a **facet precondition**, never a `RequiredModel` — which is what lets a domain adopt one model without inheriting the others.
 
-For a short browse-oriented introduction to the two models and their ownership boundary, see [Vision and AI Model Management walkthrough](vision-ai-walkthrough.md). For transport-neutral guidance on retaining Vision results outside an OPC UA Server, see [External Result Mapping for Vision and AI](vision-ai-external-result-mapping.md).
+For a short browse-oriented introduction to the two models and their ownership boundary, see [Vision and AI Model Management walkthrough](../source/metaverse-specs/vision-ai-walkthrough.md). For transport-neutral guidance on retaining Vision results outside an OPC UA Server, see [External Result Mapping for Vision and AI](../source/metaverse-specs/vision-ai-external-result-mapping.md).
 
 ## Layout
 
-- <!-- release-spec-link:YG9wZW51c2QtYmluZGluZy9gIOKAlCBQYXJ0IDEgc3BlY2lmaWNhdGlvbiwgTm9kZVNldCwgQ1NWLCBpbXBsZW1lbnRlciBhZGRlbmRhIGZvciBgcHVtcHMvYCBhbmQgYHJvYm90aWNzL2AsIGFuZCB0aGUgc3RhbmRhbG9uZSAqKnhSZWdpc3RyeSBkb21haW4gc3BlY2lmaWNhdGlvbioqIGZvciB0aGUgYXJ0aWZhY3QgcmVnaXN0cnkgKGB4UmVnaXN0cnktT3BlblVzZC5tZGApLCB3aGljaCBkZWZpbmVzIHRoZSBzYW1lIHJlZ2lzdHJ5IGluZGVwZW5kZW50bHkgb2YgT1BDIFVBIHNvIHRoZSB0d28gcHJvamVjdGlvbnMgZmVkZXJhdGUu -->*Under OPC Foundation review — moved to [OPCF-Members/spec-drafts](https://github.com/OPCF-Members/spec-drafts); OPC Foundation members can [request access](https://github.com/OPCF-Members/Help).*<!-- /release-spec-link -->
+- <!-- release-spec-link:YG9wZW51c2QtYmluZGluZy9gIOKAlCBQYXJ0IDEgc3BlY2lmaWNhdGlvbiwgTm9kZVNldCwgQ1NWLCBpbXBsZW1lbnRlciBhZGRlbmRhIGZvciBgcHVtcHMvYCBhbmQgYHJvYm90aWNzL2AsIHdpdGggdGhlIGluZGVwZW5kZW50IFtPcGVuVVNEIEFydGlmYWN0IFJlZ2lzdHJ5IHdvcmtpbmcgZHJhZnRdKGh0dHBzOi8vZ2l0aHViLmNvbS94cmVnaXN0cnkvc3BlYy9ibG9iL21haW4vd29ya2luZ2RyYWZ0cy9tb2RlbHMvb3BlbnVzZC9zcGVjLm1kKSBtYWludGFpbmVkIGJ5IHRoZSB4UmVnaXN0cnkgcHJvamVjdC4= -->*Under OPC Foundation review — moved to [OPCF-Members/spec-drafts](https://github.com/OPCF-Members/spec-drafts); OPC Foundation members can [request access](https://github.com/OPCF-Members/Help).*<!-- /release-spec-link -->
 - <!-- release-spec-link:YG9wZW51c2Qtc2NlbmUvYCDigJQgUGFydCAyIHNwZWNpZmljYXRpb24sIE5vZGVTZXQsIENTViwgYW5kIG1hdGVyaWFsaXplZCBleGFtcGxlIG92ZXJsYXlzLg== -->*Under OPC Foundation review — moved to [OPCF-Members/spec-drafts](https://github.com/OPCF-Members/spec-drafts); OPC Foundation members can [request access](https://github.com/OPCF-Members/Help).*<!-- /release-spec-link -->
-- `vision/` — **OPC UA — Vision**: sensors, the media they emit, the AI that interprets them, the results they produce, and the feedback path back in. Standalone on base OPC UA, with worked addenda for `robotics/` and `machine-vision/`.
-- `robot-intent/` — **OPC UA — Robot Intent**: task-level verbs for commanding a robot, with a Part 10 lifecycle. OPC 40010-1 describes robot topology and defines no motion verbs; this supplies the verbs and nothing else. Standalone on base OPC UA.
-- `ai-model-management/` — **OPC UA — AI Model Management and Inference**: what a model is, how to call it, how to call one hosted somewhere else, and how to get one from a catalogue onto the machine. Deliberately **domain-neutral** — it names no camera, no robot and no sensor — so any domain can build on it. The invocation surface does not change with where inference runs; what changes is the trust boundary, and clauses 8 and 10 are about saying so out loud: what happens when the link drops, and whether calling a model sends plant data off site.
-- `extras/` — everything secondary to standardization, mirroring the folders above:
+- [`source/metaverse-specs/vision/`](../source/metaverse-specs/vision/) — **OPC UA — Vision**: sensors, the media they emit, the AI that interprets them, the results they produce, and the feedback path back in. Standalone on base OPC UA, with worked addenda for `robotics/` and `machine-vision/`.
+- [`source/metaverse-specs/robot-intent/`](../source/metaverse-specs/robot-intent/) — **OPC UA — Robot Intent**: task-level verbs for commanding a robot, with a Part 10 lifecycle. OPC 40010-1 describes robot topology and defines no motion verbs; this supplies the verbs and nothing else. Standalone on base OPC UA.
+- [`source/metaverse-specs/ai-model-management/`](../source/metaverse-specs/ai-model-management/) — **OPC UA — AI Model Management and Inference**: what a model is, how to call it, how to call one hosted somewhere else, and how to get one from a catalogue onto the machine. Deliberately **domain-neutral** — it names no camera, no robot and no sensor — so any domain can build on it. The invocation surface does not change with where inference runs; what changes is the trust boundary, and clauses 8 and 10 are about saying so out loud: what happens when the link drops, and whether calling a model sends plant data off site.
+- [`extras/metaverse-specs/`](../extras/metaverse-specs/) — everything secondary to standardization, grouped by specification:
   - `openusd-binding/tools/` — the model generator and validator; `examples/` — the pumps and robotics USD assets, binding descriptors, writers, renderers and end-to-end guides.
   - `openusd-scene/tools/` — the model generator, the `.usd` ↔ NodeSet converters, and the round-trip checker.
   - `openusd-artifacts/` — the emitted xRegistry **artifact registry** for the examples (see Part 1 §7.11).
   - `vision/tools/` — the model generator, the example builder and the validator.
   - `robot-intent/tools/` — the model generator and the validator.
   - `ai-model-management/tools/` — the model generator and the validator, including the domain-neutrality check that fails the build if a type name acquires a domain term.
-- `validate_all.py` — validates every extension in this tree.
+- [`extras/metaverse-specs/validate_all.py`](../extras/metaverse-specs/validate_all.py) — validates every active metaverse extension.
 
 ## Validate
 

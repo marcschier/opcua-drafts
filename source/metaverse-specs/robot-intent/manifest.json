@@ -24,7 +24,7 @@
   "model": {
     "nodeset": "model/metaverse-specs/robot-intent/Opc.Ua.RobotIntent.NodeSet2.xml",
     "generated": true,
-    "generator": "metaverse-specs/extras/robot-intent/tools/build_model.py"
+    "generator": "extras/metaverse-specs/robot-intent/tools/build_model.py"
   },
   "markdown": {
     "main": "spec.md",

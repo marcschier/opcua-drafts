@@ -6,23 +6,19 @@ public draft repository. This script avoids hard-coding that set: it walks the r
 for aggregate ``validate_all.py`` entrypoints and runs each with ``--self-contained``.
 Per-extension ``validate_local.py`` checks remain local, targeted commands.
 """
-import os
 import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SKIP_DIRS = {'.git', 'node_modules', '__pycache__', 'word-drafts', 'templates', 'skills'}
+EXTRAS = ROOT / "extras"
 
 
 def validators():
-    found = []
-    for dirpath, dirnames, filenames in os.walk(ROOT):
-        rel_dir = Path(dirpath).relative_to(ROOT)
-        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
-        if 'validate_all.py' in filenames:
-            found.append(rel_dir / 'validate_all.py')
-    return sorted(found, key=lambda p: p.as_posix())
+    return sorted(
+        (path.relative_to(ROOT) for path in EXTRAS.glob("*-specs/validate_all.py")),
+        key=lambda path: path.as_posix(),
+    )
 
 
 def main():
@@ -30,6 +26,18 @@ def main():
     if not found:
         print('run_self_contained_validators: SKIP - no validate_all.py entrypoints found')
         return 0
+    expected = {
+        Path("extras/core-specs/validate_all.py"),
+        Path("extras/cloud-specs/validate_all.py"),
+        Path("extras/metaverse-specs/validate_all.py"),
+        Path("extras/wot-specs/validate_all.py"),
+    }
+    missing = expected - set(found)
+    if missing:
+        print("run_self_contained_validators: ERROR - missing aggregate validators:")
+        for rel in sorted(missing, key=lambda path: path.as_posix()):
+            print(f"  {rel.as_posix()}")
+        return 1
     failed = []
     for rel in found:
         print(f'=== {rel.as_posix()} --self-contained ===')

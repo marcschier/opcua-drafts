@@ -640,8 +640,8 @@ OPC 40010-1 *without* taking it as a `RequiredModel`, which is the right precede
 spec standalone.
 
 Conventions to follow: `<spec>/OPC-UA-<Name>.md` + `Opc.Ua.<Name>.NodeSet2.xml` + `.NodeIds.csv`;
-generator at `metaverse-specs/extras/<spec>/tools/build_model.py`; validator registered in
-`metaverse-specs/validate_all.py`; NodeId ranges by kind (ObjectTypes 1001+, DataTypes 3001+/3050+,
+generator at `extras/metaverse-specs/<spec>/tools/build_model.py`; validator registered in
+`extras/metaverse-specs/validate_all.py`; NodeId ranges by kind (ObjectTypes 1001+, DataTypes 3001+/3050+,
 ReferenceTypes 4001+, encodings 5001+, Variables 6001+, entry-point Object 7001).
 
 ---

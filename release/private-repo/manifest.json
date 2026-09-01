@@ -9,12 +9,12 @@
     {
       "stored": "payload/dot-github/copilot-instructions.md.bundle",
       "destination": ".github/copilot-instructions.md",
-      "sha256": "9065a5c07d365eafdddf27291a055e3f427cf1f8650aa0c5b55a78fdf1429c80"
+      "sha256": "f6d77d9b4f07e27b8ab2e7f7c7d7ebd531bc1bf8fea7fbe5cb8a21ae52ac5dfd"
     },
     {
       "stored": "payload/dot-github/pull_request_template.md.bundle",
       "destination": ".github/pull_request_template.md",
-      "sha256": "adfded114d43ec73f1a871e7439b3a4d566a47a048d8c6524a41d0a1ee1c6df4"
+      "sha256": "601b748e0d0ad8b66e90c5b9c3c0b552e240192ad2a90cedddcb49837c611499"
     },
     {
       "stored": "payload/dot-github/puppeteer-config.json.bundle",
@@ -29,22 +29,27 @@
     {
       "stored": "payload/dot-github/scripts/check_determinism.py.bundle",
       "destination": ".github/scripts/check_determinism.py",
-      "sha256": "5fecdf5e58ca1ffa99da53133724a28f209dcdffe1dfff1c942fa370f744e777"
+      "sha256": "f4a5cd7ac977e11bf3090b887509ecfff03263454ac0435e333c98b64aa3dca0"
     },
     {
       "stored": "payload/dot-github/scripts/check_links.py.bundle",
       "destination": ".github/scripts/check_links.py",
-      "sha256": "87f0832ecfd57238cb9c5c81ccc23c3ffb3be5977bc65a507abb307146f473da"
+      "sha256": "26faf2b13a79b847bdae0d588dc35a17842c53d553f5487c2ac45e5dd2eeb2a3"
+    },
+    {
+      "stored": "payload/dot-github/scripts/check_manifest_model.py.bundle",
+      "destination": ".github/scripts/check_manifest_model.py",
+      "sha256": "47aebf79fd73f75f8c953dfc07b51e5d95812703892d0bb3668b7ae7058e2c26"
     },
     {
       "stored": "payload/dot-github/scripts/check_mermaid.py.bundle",
       "destination": ".github/scripts/check_mermaid.py",
-      "sha256": "ca0f34e92064ca8e7506a86d0d575da9bfd0bb9de551bd1e036a8ae605fb1eb8"
+      "sha256": "ced16fbb7a7bcc7241f11f9eb50fcb2367986299e756e44c456537416daf27d1"
     },
     {
       "stored": "payload/dot-github/scripts/check_section_refs.py.bundle",
       "destination": ".github/scripts/check_section_refs.py",
-      "sha256": "50b51ed0da582421216f2048d9ccf3890bbcb9bf75f2aafda267e4a21b22ca37"
+      "sha256": "f0a52cb3f06d488ee2742d2b710b299d8d792ef0e6a84b9ccdea09c749e34d71"
     },
     {
       "stored": "payload/dot-github/scripts/check_yaml_json.py.bundle",
@@ -54,12 +59,12 @@
     {
       "stored": "payload/dot-github/scripts/run_self_contained_validators.py.bundle",
       "destination": ".github/scripts/run_self_contained_validators.py",
-      "sha256": "01834ba395fd9b2b46374ac6f0e4431365d7a1337b095361e6e03d7b1db63b82"
+      "sha256": "cabdc67667eb5133e35f2ec41455078c35ad5efa356a1fd788ba73c9e7f886c7"
     },
     {
       "stored": "payload/dot-github/workflows/agent-task.yml.bundle",
       "destination": ".github/workflows/agent-task.yml",
-      "sha256": "f9f96d03c6e65d1544cb79bd7e444efc741e699a6fcab5132ee13e5f75332eb7"
+      "sha256": "bfcff3af5778e6f085c8954bb871cd90c4338973bfb488c7c4fe9a1c72c6ed6b"
     },
     {
       "stored": "payload/dot-github/workflows/needs-pr.yml.bundle",
@@ -69,7 +74,7 @@
     {
       "stored": "payload/dot-github/workflows/pr-validation.yml.bundle",
       "destination": ".github/workflows/pr-validation.yml",
-      "sha256": "e14954cbcc780b80b6bf3dfc62f19fb43d7f8dc550f59e40a17e98779ccf765d"
+      "sha256": "d02579d4bd0abef0c87e051832c13b6984b39200d4bc75cbc895c2a084529809"
     },
     {
       "stored": "payload/dot-github/workflows/word-drafts-refresh.yml.bundle",
@@ -89,12 +94,17 @@
     {
       "stored": "payload/dot-markdownlint-cli2.yaml.bundle",
       "destination": ".markdownlint-cli2.yaml",
-      "sha256": "7cba3164421f3119fda027246b8e8c1f5ba784f3684dee8367f979dbef385d2f"
+      "sha256": "a8c573ec974d775bb646a1346bc29d313244609e3e1394b277e8fe85ecc3f086"
+    },
+    {
+      "stored": "payload/skills/opcua-companion-spec/SKILL.md.bundle",
+      "destination": "skills/opcua-companion-spec/SKILL.md",
+      "sha256": "890b4e0192348fe16649d4ef23c69429f5904e5a8efbae538c5f514f88e10d80"
     },
     {
       "stored": "payload/skills/opcua-observability-export/SKILL.md.bundle",
       "destination": "skills/opcua-observability-export/SKILL.md",
-      "sha256": "3d37568e6a6de00041cff52c59491ec641de01ab5ff991d98751e44ee7c73bcb"
+      "sha256": "5c309c43bc52ba63c795432fdac17cc62eabae0bd1628782030868bef64a12c1"
     },
     {
       "stored": "payload/skills/opcua-spec-to-word/SKILL.md.bundle",
@@ -122,6 +132,11 @@
       "sha256": "247b09d35bf1c1f623ada1e19206cdecab22d83a80e063b4a389fcc1785404be"
     },
     {
+      "stored": "payload/skills/opcua-word-to-markdown/SKILL.md.bundle",
+      "destination": "skills/opcua-word-to-markdown/SKILL.md",
+      "sha256": "eeacf49ff3cc4a8db85c6e1308f8db48747ecd064ffe2a1c687f342b7903e89f"
+    },
+    {
       "stored": "payload/templates/OPC 20020 - UA Companion Specification Template v1.01.19.docx.bundle",
       "destination": "templates/OPC 20020 - UA Companion Specification Template v1.01.19.docx",
       "sha256": "08e6ec2fd62db577b19e5ea23a0458a76d4487793e05146abec57226cef63a52"
@@ -130,6 +145,11 @@
       "stored": "payload/word-drafts/README.md.bundle",
       "destination": "word-drafts/README.md",
       "sha256": "7938d89b635ac79c49bcb3baa2845650638444d0022dee8c6e5ace1ba07d4d29"
+    },
+    {
+      "stored": "payload/word-drafts/tools/add_namespace_metadata.py.bundle",
+      "destination": "word-drafts/tools/add_namespace_metadata.py",
+      "sha256": "17142662f335f2958ae087047b07256b46ea7cee2477b61a79a227b493fe453c"
     },
     {
       "stored": "payload/word-drafts/tools/arm_track_changes.py.bundle",
@@ -147,6 +167,21 @@
       "sha256": "91962f594f38cbddcec45843dc7c9617f5101bd1e2a2975298627d8e77881c2d"
     },
     {
+      "stored": "payload/word-drafts/tools/convert_spec.py.bundle",
+      "destination": "word-drafts/tools/convert_spec.py",
+      "sha256": "8aca5f669e0151bbcf4006f7f011d823ec185a3e83316b3042a26b345f54ffa3"
+    },
+    {
+      "stored": "payload/word-drafts/tools/convert_to_template.py.bundle",
+      "destination": "word-drafts/tools/convert_to_template.py",
+      "sha256": "cf7bec25eaaaa24a9035388a7dd17717ee541f56d8a62f117fdc40c962483294"
+    },
+    {
+      "stored": "payload/word-drafts/tools/emit_node_tables.py.bundle",
+      "destination": "word-drafts/tools/emit_node_tables.py",
+      "sha256": "f474268dde2c55a6362df9231f9fb7e63b69fd02587dfeb21f8546970e681cc7"
+    },
+    {
       "stored": "payload/word-drafts/tools/finalize_all.ps1.bundle",
       "destination": "word-drafts/tools/finalize_all.ps1",
       "sha256": "6106ce5781b89ace0778522a7ca82bce11b022bac47ce13dab5e6ae43744c215"
@@ -157,6 +192,11 @@
       "sha256": "efd88b7553318dacccd9f0aea9f710817833d2a678f393e857a873696d7b9ae8"
     },
     {
+      "stored": "payload/word-drafts/tools/fix_links.py.bundle",
+      "destination": "word-drafts/tools/fix_links.py",
+      "sha256": "1b48ee71fac4ea1c1a1a718413e0c54b9063a285924d10b01240dd1e7f173054"
+    },
+    {
       "stored": "payload/word-drafts/tools/ingest_docx.py.bundle",
       "destination": "word-drafts/tools/ingest_docx.py",
       "sha256": "f0e58abd01333f1f26c47e1db5ba4d804e12f12a60f60ee0da81a091cfa4f275"
@@ -165,6 +205,11 @@
       "stored": "payload/word-drafts/tools/make_review_fixture.ps1.bundle",
       "destination": "word-drafts/tools/make_review_fixture.ps1",
       "sha256": "8ea699e02756e694a3bc18f916b9091a9f2558255d473156797cd73d1e5e1a52"
+    },
+    {
+      "stored": "payload/word-drafts/tools/move_spec.py.bundle",
+      "destination": "word-drafts/tools/move_spec.py",
+      "sha256": "401a099b56498a35969d3b0cd0a74c490094605c4b93daecaba149a6f6b8f732"
     },
     {
       "stored": "payload/word-drafts/tools/opcdocx/__init__.py.bundle",
@@ -199,12 +244,12 @@
     {
       "stored": "payload/word-drafts/tools/opcdocx/nodeset_diagram.py.bundle",
       "destination": "word-drafts/tools/opcdocx/nodeset_diagram.py",
-      "sha256": "92a6d2a064dfcea8bf92aaabe87932c3621de4fca4ce1bd0ae35d32676bba65a"
+      "sha256": "9d87bd0e26f42a592fce8456eeb1bdff1289fc03b9d44bc0938c779d39b39fc2"
     },
     {
       "stored": "payload/word-drafts/tools/opcdocx/nodeset_tables.py.bundle",
       "destination": "word-drafts/tools/opcdocx/nodeset_tables.py",
-      "sha256": "34620e03f735fd6637d4e97b3811fa35f23c457d74e6dda752cb5508c4edc316"
+      "sha256": "e50096d991ccbdba29287a731aec1051e4fd7ccf991eb07645c1d49003d71750"
     },
     {
       "stored": "payload/word-drafts/tools/opcdocx/ole_embed.py.bundle",
@@ -229,12 +274,22 @@
     {
       "stored": "payload/word-drafts/tools/opcdocx/writer.py.bundle",
       "destination": "word-drafts/tools/opcdocx/writer.py",
-      "sha256": "7e18c1ef3319253db207baa8848a222add88f11feebd4d4b8b93cdd2e5beb3fa"
+      "sha256": "9631f7b4a32587e6346deca37cdb59ecc94d26575248465f8c6721620857d97b"
     },
     {
       "stored": "payload/word-drafts/tools/render_docx.py.bundle",
       "destination": "word-drafts/tools/render_docx.py",
       "sha256": "a616390eec78b0d6f8ec05838c319a6086eab6aba1728a1927a7e21f7630117e"
+    },
+    {
+      "stored": "payload/word-drafts/tools/repoint_generators.py.bundle",
+      "destination": "word-drafts/tools/repoint_generators.py",
+      "sha256": "450abc36b82416ff004a42e25feb1344d6ec8eda031ca322853510254a6cdf52"
+    },
+    {
+      "stored": "payload/word-drafts/tools/repoint_model_paths.py.bundle",
+      "destination": "word-drafts/tools/repoint_model_paths.py",
+      "sha256": "51b32c28af20241e114a53004b3d447ba58a63c6f24bcd088605d551faa58eac"
     },
     {
       "stored": "payload/word-drafts/tools/requirements.txt.bundle",
@@ -244,7 +299,7 @@
     {
       "stored": "payload/word-drafts/tools/restructure_markdown.py.bundle",
       "destination": "word-drafts/tools/restructure_markdown.py",
-      "sha256": "ccaedfa2c3cea6dca028251bc30491712735a1cbcb2fa456ac4f0ae57f803e47"
+      "sha256": "e5963a5d6db2330894ad48338e494d3ab543ea00e8cf17cc11b0fe14030df23c"
     },
     {
       "stored": "payload/word-drafts/tools/specs/batch.json.bundle",
@@ -270,6 +325,11 @@
       "stored": "payload/word-drafts/tools/test_validate_docx.py.bundle",
       "destination": "word-drafts/tools/test_validate_docx.py",
       "sha256": "e1f4ccbfa83f9abcb3e083c0dd9db028b0deb3851e5dec278d2af61af905a56c"
+    },
+    {
+      "stored": "payload/word-drafts/tools/tidy_converted.py.bundle",
+      "destination": "word-drafts/tools/tidy_converted.py",
+      "sha256": "bbb968b3341a338c13f7a206072ddb0b92065e1393099579306af4d6a0c038e9"
     },
     {
       "stored": "payload/word-drafts/tools/validate_docx.py.bundle",

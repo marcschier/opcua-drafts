@@ -973,15 +973,15 @@ These URIs are **provisional**, on the same terms as the namespace URI and the N
 | Research report | `metaverse-specs/robot-intent/OPC-UA-Robot-Intent-Research.md` |
 | Information model | `metaverse-specs/robot-intent/Opc.Ua.RobotIntent.NodeSet2.xml` |
 | NodeId assignments | `metaverse-specs/robot-intent/Opc.Ua.RobotIntent.NodeIds.csv` |
-| Generator | `metaverse-specs/extras/robot-intent/tools/build_model.py` |
-| Validator | `metaverse-specs/extras/robot-intent/tools/validate_local.py` |
-| Annex A (generated) | `metaverse-specs/extras/robot-intent/tools/model-reference.md` |
+| Generator | `extras/metaverse-specs/robot-intent/tools/build_model.py` |
+| Validator | `extras/metaverse-specs/robot-intent/tools/validate_local.py` |
+| Annex A (generated) | `extras/metaverse-specs/robot-intent/tools/model-reference.md` |
 
 The NodeSet, the CSV and Annex A are generated from a single in-code source of truth and are **deterministic**: regenerating reproduces them byte for byte. The generator is edited; the generated files are not.
 
 ```powershell
-python metaverse-specs\extras\robot-intent\tools\build_model.py
-python metaverse-specs\extras\robot-intent\tools\validate_local.py
+python extras\metaverse-specs\robot-intent\tools\build_model.py
+python extras\metaverse-specs\robot-intent\tools\validate_local.py
 ```
 
 ---

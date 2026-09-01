@@ -281,7 +281,7 @@ The SchemaId shall be placed as follows.
 
 Within an Arrow IPC stream, the IPC Schema message is the schema announcement. It shall be sent once at the start of each IPC stream before any RecordBatch. A receiver that obtains the IPC Schema message has the serialized Arrow Schema bytes needed to verify the SchemaId and decode subsequent RecordBatches in that stream.
 
-For non-IPC transports that publish a bare RecordBatch, for registry publication flows, or for out-of-band repair, the announcement shall use the descriptor `ArrowSchemaAnnouncement`. The generated reference descriptors are published as `../extras/arrow-encoding/schemas/struct-ArrowSchemaAnnouncement.json` and, for the request, `../extras/arrow-encoding/schemas/struct-ArrowSchemaRequest.json`:
+For non-IPC transports that publish a bare RecordBatch, for registry publication flows, or for out-of-band repair, the announcement shall use the descriptor `ArrowSchemaAnnouncement`. The generated reference descriptors are published as `extras/core-specs/arrow-encoding/schemas/struct-ArrowSchemaAnnouncement.json` and, for the request, `extras/core-specs/arrow-encoding/schemas/struct-ArrowSchemaRequest.json`:
 
 ```text
 ArrowSchemaAnnouncement {
@@ -295,7 +295,7 @@ ArrowSchemaAnnouncement {
 
 Reception of an IPC Schema message or an `ArrowSchemaAnnouncement` shall insert `{SchemaId, Arrow Schema}` into `cache: SchemaId -> schema` after verifying that the recomputed SchemaId equals the announced SchemaId. A publisher may also publish the same pair to xRegistry with label `opcua.schemaid`.
 
-The reference descriptor is published as `core-specs\extras\arrow-encoding\schemas\struct-ArrowSchemaAnnouncement.json`. The reference example stream is `core-specs\extras\arrow-encoding\examples\arrow_schema_announcement.arrow`, with readable metadata in `core-specs\extras\arrow-encoding\examples\schema_exchange_index.json`.
+The reference descriptor is published as `extras\core-specs\arrow-encoding\schemas\struct-ArrowSchemaAnnouncement.json`. The reference example stream is `extras\core-specs\arrow-encoding\examples\arrow_schema_announcement.arrow`, with readable metadata in `extras\core-specs\arrow-encoding\examples\schema_exchange_index.json`.
 
 ##### SchemaRequest {#sec-schemarequest}
 
@@ -310,7 +310,7 @@ ArrowSchemaRequest {
 
 `RequesterId` is diagnostic and may identify a receiver, session or bridge. `SchemaIds` shall contain one or more raw 8-byte SchemaIds requested by the decoder. A publisher that receives a request for an active SchemaId shall answer by opening or replaying an IPC stream whose Schema message announces the schema, or by sending an `ArrowSchemaAnnouncement` carrying the same `{SchemaId, Arrow Schema}` pair. If policy permits, publishers should periodically re-announce active schemas on lossy transports or when late joiners are expected.
 
-The reference descriptor is published as `core-specs\extras\arrow-encoding\schemas\struct-ArrowSchemaRequest.json`. The reference example stream is `core-specs\extras\arrow-encoding\examples\arrow_schema_request.arrow`.
+The reference descriptor is published as `extras\core-specs\arrow-encoding\schemas\struct-ArrowSchemaRequest.json`. The reference example stream is `extras\core-specs\arrow-encoding\examples\arrow_schema_request.arrow`.
 
 ##### Encoder change tracking {#sec-encoder-change-tracking}
 
@@ -327,7 +327,7 @@ A decoder shall maintain `cache: SchemaId -> schema`. Once cached, each received
 1. Await the Arrow IPC Schema message in the current stream or an `ArrowSchemaAnnouncement` on the configured announcement channel, then verify the recomputed 8-byte SchemaId and insert the schema into the cache.
 2. Send `ArrowSchemaRequest` listing the unknown SchemaId when the transport supports request/response or a control side channel, then process the returned IPC Schema message or `ArrowSchemaAnnouncement`.
 3. Resolve the schema from an external (federated) xRegistry that the local registry references, as defined by *OPC UA — Schema Registry* (`../../cloud-specs/schema-registry/OPC-UA-Schema-Registry.md`) §8.
-4. Read the in-server AddressSpace Schema Registry by a SchemaId-NodeId. The companion NodeSet authored in `cloud-specs\schema-registry\` uses namespace `http://opcfoundation.org/UA/SchemaRegistry/` and exposes each schema at an Opaque NodeId whose Identifier is the raw 8-byte SchemaId. A decoder may perform a single `Read` on that NodeId without browsing or recomputing candidate NodeIds. Servers may additionally expose `GetSchema(SchemaId)` for clients that prefer a Method call over direct NodeId construction.
+4. Read the in-server AddressSpace Schema Registry by a SchemaId-NodeId. The companion NodeSet authored in `source\cloud-specs\schema-registry\` uses namespace `http://opcfoundation.org/UA/SchemaRegistry/` and exposes each schema at an Opaque NodeId whose Identifier is the raw 8-byte SchemaId. A decoder may perform a single `Read` on that NodeId without browsing or recomputing candidate NodeIds. Servers may additionally expose `GetSchema(SchemaId)` for clients that prefer a Method call over direct NodeId construction.
 5. Re-derive the Arrow Schema from the AddressSpace DataTypeDefinition using the Part 6 Arrow schema-generation algorithm, compute the 8-byte SchemaId over the serialized Arrow Schema, and verify that it equals the referenced SchemaId.
 
 If all configured resolution paths fail, the decoder shall treat the payload as undecodable rather than guessing a schema. The cache key is SchemaId only and is independent of `ConfigurationVersion`, PublisherId, WriterGroupId and DataSetWriterId.
@@ -497,7 +497,7 @@ This Arrow mapping does not map OPC UA Actions, invoke requests, or invoke respo
 ## Generated per-type reference {#anx-a annex=normative}
 
 <!-- BEGIN GENERATED: type-reference -->
-This annex is generated by `../extras/arrow-encoding/tools/gen_type_reference.py`. Do not edit between the markers.
+This annex is generated by `extras/core-specs/arrow-encoding/tools/gen_type_reference.py`. Do not edit between the markers.
 
 ### Built-in Boolean {#sec-arrow-reference-built-in-boolean}
 
@@ -2797,7 +2797,7 @@ Matrix(dimensions=(2, 2), values=[1.0, nan, -inf, -0.0])
 
 ### Composite plain Structure Point {#sec-arrow-reference-composite-plain-structure-point}
 
-Published schema source: `../extras/arrow-encoding/schemas/struct-Point.json`. SchemaId: `beb88baa5c498682`.
+Published schema source: `extras/core-specs/arrow-encoding/schemas/struct-Point.json`. SchemaId: `beb88baa5c498682`.
 
 | Field | Arrow DataType | Nullable/validity | Notes |
 |---|---|---|---|
@@ -2823,7 +2823,7 @@ StructValue(fields={'X': 1.25, 'Y': -3.5}, type_name='Point')
 
 ### Composite StructureWithOptionalFields Person {#sec-arrow-reference-composite-structurewithoptionalfields-person}
 
-Published schema source: `../extras/arrow-encoding/schemas/struct-Person.json`. SchemaId: `38e92bc671144ea6`.
+Published schema source: `extras/core-specs/arrow-encoding/schemas/struct-Person.json`. SchemaId: `38e92bc671144ea6`.
 
 | Field | Arrow DataType | Nullable/validity | Notes |
 |---|---|---|---|
@@ -2861,7 +2861,7 @@ StructValue(fields={'Name': 'Zed', 'Age': 9, 'Email': None}, type_name='Person')
 
 ### Composite dense Union Measurement {#sec-arrow-reference-composite-dense-union-measurement}
 
-Published schema source: `../extras/arrow-encoding/schemas/struct-Measurement.json`. SchemaId: `916f95c2e1d7e908`.
+Published schema source: `extras/core-specs/arrow-encoding/schemas/struct-Measurement.json`. SchemaId: `916f95c2e1d7e908`.
 
 | Field | Arrow DataType | Nullable/validity | Notes |
 |---|---|---|---|
@@ -2901,7 +2901,7 @@ UnionValue(field_name='AsText', value=None)
 
 ### Worked structured DataType Envelope {#sec-arrow-reference-worked-structured-datatype-envelope}
 
-Published schema source: `../extras/arrow-encoding/schemas/struct-Envelope.json`. SchemaId: `2a2a532233026d37`.
+Published schema source: `extras/core-specs/arrow-encoding/schemas/struct-Envelope.json`. SchemaId: `2a2a532233026d37`.
 
 | Field | Arrow DataType | Nullable/validity | Notes |
 |---|---|---|---|

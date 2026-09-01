@@ -24,7 +24,7 @@
   "model": {
     "nodeset": "model/metaverse-specs/ai-model-management/Opc.Ua.AiModelManagement.NodeSet2.xml",
     "generated": true,
-    "generator": "metaverse-specs/extras/ai-model-management/tools/build_model.py"
+    "generator": "extras/metaverse-specs/ai-model-management/tools/build_model.py"
   },
   "markdown": {
     "main": "spec.md",
