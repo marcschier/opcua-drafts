@@ -67,6 +67,11 @@ CANONICAL_WORD_ORDER = [
     "data-channels",
     "avro-encoding",
     "arrow-encoding",
+    "async-services",
+    "vision",
+    "ai-model-management",
+    "robot-intent",
+    "aas",
 ]
 IGNORED_GENERATED_DIRS = {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
 IGNORED_GENERATED_SUFFIXES = {".pyc", ".pyo"}
@@ -258,10 +263,11 @@ def dependent_specs(manifest, spec_id: str) -> list[str]:
 
 
 def public_dependency_blockers(manifest, spec_id: str) -> list[str]:
+    moving = set(moving_specs(manifest, spec_id))
     return [
         sid
         for sid in dependent_specs(manifest, spec_id)
-        if submitted(manifest, sid) and public_state(manifest, sid)
+        if sid not in moving and submitted(manifest, sid) and public_state(manifest, sid)
     ]
 
 
@@ -432,20 +438,8 @@ def repair_markdown_reverse_lines_release(
         haystack = raw.lower()
         item = re.match(r"^(?P<prefix>[ \t]*[-*][ \t]+)(?P<content>.*)$", raw)
         is_list_item = stripped.startswith(("- ", "* "))
-        # Only a link that points at something being moved exempts the line, because the
-        # link-level repair will handle that one. A link to a target that stays public leaves
-        # the line describing a specification that is no longer here.
-        has_link_into_moved = False
-        for match in re.finditer(r"\]\((?P<body>[^)\n]+)\)", raw):
-            resolved = resolve_link(path, inline_link_destination(match.group("body")))
-            if resolved and belongs_to(resolved, files, roots):
-                has_link_into_moved = True
-                break
-        names_moved_dir = any(
-            f"`{token}`" in haystack or f"`{token.rstrip('/')}`" in haystack
-            for token in moved_dir_tokens
-        )
-        if is_list_item and item and names_moved_dir and not has_link_into_moved:
+        names_moved_dir = any(token in haystack for token in moved_dir_tokens)
+        if is_list_item and item and names_moved_dir:
             count += 1
             # Keep the bullet and its indentation outside the capsule, so the list structure
             # survives. Replacing the whole line leaves the surrounding items looking
@@ -470,6 +464,37 @@ def private_url(manifest, repo_rel: str) -> str:
 
 
 TABLE_CONTRACT = ("status", "documents")
+
+
+def private_document_label(path: str) -> str:
+    lowered = path.lower()
+    if lowered.endswith(".docx"):
+        return "Word"
+    if "/examples/" in lowered and lowered.endswith(("/index.md", "/readme.md")):
+        return "Guides"
+    if lowered.endswith("/spec.md"):
+        return "Specification"
+    if lowered.endswith(("/readme.md", ".md")):
+        return "Document"
+    return "Artifact"
+
+
+def rewrite_private_row_links(
+    cell: str,
+    path: str,
+    files: set[str],
+    roots: list[str],
+    manifest,
+) -> str:
+    """Point links retained in a public inventory row at the private review copy."""
+    def replace(match: re.Match[str]) -> str:
+        target = inline_link_destination(match.group("body"))
+        resolved = resolve_link(path, target)
+        if not resolved or not belongs_to(resolved, files, roots):
+            return match.group(0)
+        return f"]({private_url(manifest, resolved)})"
+
+    return re.sub(r"\]\((?P<body>[^)\n]+)\)", replace, cell)
 
 
 def repair_markdown_table_rows_release(
@@ -541,10 +566,14 @@ def repair_markdown_table_rows_release(
 
         original = stripped[1:-1] if stripped.endswith("|") else stripped[1:]
         docs = " · ".join(
-            f"[{'Word' if t.lower().endswith('.docx') else 'Specification'}]({private_url(manifest, t)})"
+            f"[{private_document_label(t)}]({private_url(manifest, t)})"
             for t in targets
         ) or "—"
-        replacement = " " + " | ".join(cells[:-2] + [note, docs]) + " "
+        retained = [
+            rewrite_private_row_links(cell, path, files, roots, manifest)
+            for cell in cells[:-2]
+        ]
+        replacement = " " + " | ".join(retained + [note, docs]) + " "
         count += 1
         indent = raw[: len(raw) - len(raw.lstrip())]
         # Both markers sit INSIDE the outer pipes. markdownlint counts cells without
@@ -646,6 +675,23 @@ def word_spec_ids(manifest, spec_ids: Iterable[str]) -> list[str]:
     return ids
 
 
+def publisher_spec_entries(manifest, spec_ids: Iterable[str]) -> list[dict]:
+    entries: list[dict] = []
+    for sid in spec_ids:
+        for entry in manifest.spec(sid).get("publisherSpecs", []):
+            if isinstance(entry, dict):
+                entries.append(dict(entry))
+    return entries
+
+
+def publisher_spec_ids(manifest, spec_ids: Iterable[str]) -> list[str]:
+    return [
+        str(entry["spec"])
+        for entry in publisher_spec_entries(manifest, spec_ids)
+        if isinstance(entry.get("spec"), str)
+    ]
+
+
 def reverse_reference_tokens(manifest, spec_ids: Iterable[str], roots: Iterable[str]) -> set[str]:
     tokens = {norm(sid) for sid in spec_ids}
     tokens.update(Path(root).name for root in roots)
@@ -671,6 +717,13 @@ def reverse_reference_tokens(manifest, spec_ids: Iterable[str], roots: Iterable[
                     if isinstance(value, str) and value:
                         tokens.add(value)
             for value in data.get("citedAs", []):
+                if isinstance(value, str) and value:
+                    tokens.add(value)
+        for entry in spec.get("publisherSpecs", []):
+            if not isinstance(entry, dict):
+                continue
+            for key in ("spec", "markdown", "docNumber"):
+                value = entry.get(key)
                 if isinstance(value, str) and value:
                     tokens.add(value)
     return tokens
@@ -722,14 +775,23 @@ def all_manifest_word_order(manifest) -> list[str]:
     private_batch = private_batch_path()
     if private_batch is not None:
         try:
-            converted = json.loads(read_text(private_batch)).get("converted", [])
+            batch = json.loads(read_text(private_batch))
+            converted = batch.get("converted", [])
             if isinstance(converted, list):
                 extend_unique(str(item) for item in converted)
+            migrated = batch.get("migrated", [])
+            if isinstance(migrated, list):
+                extend_unique(
+                    str(item["spec"])
+                    for item in migrated
+                    if isinstance(item, dict) and isinstance(item.get("spec"), str)
+                )
         except (OSError, json.JSONDecodeError) as exc:
             print(f"warning: cannot parse the bundled private batch.json: {exc}", file=sys.stderr)
     extend_unique(CANONICAL_WORD_ORDER)
     for sid in manifest.spec_ids():
         extend_unique(word_spec_ids(manifest, [sid]))
+        extend_unique(publisher_spec_ids(manifest, [sid]))
     return order
 
 
@@ -737,29 +799,78 @@ def dump_json_like_repo(data) -> str:
     return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
 
 
-def repair_word_batch_release(text: str, departing_word_ids: set[str]) -> tuple[str, int]:
+def repair_word_batch_release(text: str, manifest, departing_spec_ids: list[str]) -> tuple[str, int]:
     data = json.loads(text)
-    converted = data.get("converted", [])
+    departing_word_ids = set(word_spec_ids(manifest, departing_spec_ids))
+    departing_publisher_ids = set(publisher_spec_ids(manifest, departing_spec_ids))
+    converted = list(data.get("converted", []))
     new_converted = [item for item in converted if item not in departing_word_ids]
-    if new_converted == converted:
+    migrated = list(data.get("migrated", []))
+    new_migrated = [
+        item
+        for item in migrated
+        if not (
+            isinstance(item, dict)
+            and isinstance(item.get("spec"), str)
+            and item["spec"] in departing_publisher_ids
+        )
+    ]
+    if new_converted == converted and new_migrated == migrated:
         return text, 0
     data["converted"] = new_converted
-    return match_eol(dump_json_like_repo(data), text), len(converted) - len(new_converted)
+    if "migrated" in data or new_migrated:
+        data["migrated"] = new_migrated
+    removed = (len(converted) - len(new_converted)) + (len(migrated) - len(new_migrated))
+    return match_eol(dump_json_like_repo(data), text), removed
 
 
 def repair_word_batch_return(text: str, manifest, returning_spec_ids: list[str]) -> tuple[str, int]:
     data = json.loads(text)
     converted = list(data.get("converted", []))
-    additions = [item for item in word_spec_ids(manifest, returning_spec_ids) if item not in converted]
-    present = set(converted) | set(additions)
+    converted_additions = [
+        item for item in word_spec_ids(manifest, returning_spec_ids) if item not in converted
+    ]
+    present = set(converted) | set(converted_additions)
     desired = all_manifest_word_order(manifest)
     ordered = [item for item in desired if item in present]
     ordered.extend(item for item in converted if item in present and item not in ordered)
-    ordered.extend(item for item in additions if item not in ordered)
-    if ordered == converted and not additions:
+    ordered.extend(item for item in converted_additions if item not in ordered)
+
+    expected_entries = {
+        entry["spec"]: entry
+        for entry in publisher_spec_entries(manifest, returning_spec_ids)
+        if isinstance(entry.get("spec"), str)
+    }
+    migrated = list(data.get("migrated", []))
+    migrated_by_id: dict[str, dict] = {}
+    migrated_other: list[object] = []
+    changed_entries = 0
+    for item in migrated:
+        if not isinstance(item, dict) or not isinstance(item.get("spec"), str):
+            migrated_other.append(item)
+            continue
+        spec_id = item["spec"]
+        replacement = expected_entries.get(spec_id, item)
+        if replacement != item:
+            changed_entries += 1
+        migrated_by_id[spec_id] = replacement
+    for spec_id, entry in expected_entries.items():
+        if spec_id not in migrated_by_id:
+            migrated_by_id[spec_id] = entry
+            changed_entries += 1
+    migrated_order = [item for item in desired if item in migrated_by_id]
+    migrated_order.extend(item for item in migrated_by_id if item not in migrated_order)
+    new_migrated = [migrated_by_id[item] for item in migrated_order] + migrated_other
+
+    if ordered == converted and new_migrated == migrated:
         return text, 0
     data["converted"] = ordered
-    return match_eol(dump_json_like_repo(data), text), len(additions)
+    if "migrated" in data or new_migrated:
+        data["migrated"] = new_migrated
+    return (
+        match_eol(dump_json_like_repo(data), text),
+        len(converted_additions) + changed_entries,
+    )
 
 
 def parse_allowed_paths(text: str) -> list[str]:
@@ -861,8 +972,7 @@ def text_repairs_release(manifest, closure: list[str], files: list[str], roots: 
     batch = repo_path(WORD_BATCH)
     if batch.exists() and WORD_BATCH not in moving:
         old = read_text(batch)
-        departing = set(word_spec_ids(manifest, closure))
-        new, count = repair_word_batch_release(old, departing)
+        new, count = repair_word_batch_release(old, manifest, closure)
         add_change(changes, WORD_BATCH, old, new, f"remove {count} Word conversion batch entrie(s)")
 
     for path in iter_repo_files():
@@ -875,10 +985,12 @@ def text_repairs_release(manifest, closure: list[str], files: list[str], roots: 
             old, row_count = repair_markdown_table_rows_release(
                 old, moved_dirs, r, moving, roots, review_note(manifest), manifest
             )
+            old, line_count = repair_markdown_reverse_lines_release(
+                old, moved_dirs, r, moving, roots, review_note(manifest)
+            )
+        else:
+            line_count = 0
         new, count = repair_markdown_release(old, r, moving, roots)
-        line_count = 0
-        if r in markdown_reverse_refs:
-            new, line_count = repair_markdown_reverse_lines_release(new, moved_dirs, r, moving, roots, review_note(manifest))
         add_change(
             changes,
             r,

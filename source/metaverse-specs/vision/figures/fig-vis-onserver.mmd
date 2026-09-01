@@ -1,9 +1,0 @@
-sequenceDiagram
-    participant C as Client
-    participant S as OPC UA Server
-    participant M as Model in-process
-    C->>S: RunInference
-    S->>M: execute
-    M-->>S: detections / characteristics
-    S-->>C: ResultId (Good)
-    Note over S: Bad_InvalidState if State is Inactive or Faulted

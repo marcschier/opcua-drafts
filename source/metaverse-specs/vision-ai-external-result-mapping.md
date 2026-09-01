@@ -9,8 +9,8 @@ This document describes a semantic boundary, not a wire envelope. An
 implementation can use a database row, an object-store manifest, an HTTP
 representation, or another application contract. It should preserve the
 distinctions below while using the normative definitions in
-[Vision](vision/spec.md) and
-[AI Model Management](ai-model-management/spec.md).
+<!-- release-spec-link:W1Zpc2lvbl0odmlzaW9uL3NwZWMubWQp -->[Vision](https://github.com/OPCF-Members/spec-drafts/blob/main/source/metaverse-specs/vision/spec.md)<!-- /release-spec-link --> and
+<!-- release-spec-link:W0FJIE1vZGVsIE1hbmFnZW1lbnRdKGFpLW1vZGVsLW1hbmFnZW1lbnQvc3BlYy5tZCk= -->[AI Model Management](https://github.com/OPCF-Members/spec-drafts/blob/main/source/metaverse-specs/ai-model-management/spec.md)<!-- /release-spec-link -->.
 Where this guide and a normative clause differ, the normative clause governs.
 
 ## 1. Identity and a live locator

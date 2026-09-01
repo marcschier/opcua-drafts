@@ -17,6 +17,11 @@ A release moves the requested specification with its `closure`.
 For example, `openusd-scene` closes over `openusd-binding`, and `wot-connectivity` closes over `wot-binding`.
 Moving one part without the other would leave the public part full of broken references to the private part.
 
+A `releaseGroup` is a symmetric co-release unit for submitted documents whose review material
+points both ways. Every member moves and returns together regardless of which member is requested.
+Use it only where a one-way closure would be false or cyclic; Vision and AI Model Management share
+one because Vision's overlays require AI while their joint supporting guides link both models.
+
 A release also exports its `vendor` dependencies to the private repository, but those dependencies stay public here.
 `vendor` means "copy into the private export": the private repository needs the base model so `RequiredModel` resolves and validators can read its NodeIds CSV, while public specifications still need the same base.
 For example, OpenUSD and WoT vendor `xregistry`.
@@ -25,8 +30,8 @@ Vendoring is the same design as shared tooling: duplicate and keep in step becau
 `submitted: false` marks a shared dependency that exists in the manifest only to be vendored and cannot be released on its own.
 Its files can appear in a private export, but they do not leave the public repository.
 
-The natural release units are Avro, OpenUSD and WoT.
-That is not a separate grouping field; it falls out of `closure`.
+The natural release units are Avro, OpenUSD, WoT, and the Vision/AI release group.
+Most fall out of `closure`; a symmetric `releaseGroup` is explicit.
 If a submitted specification that is still public closes over the requested one, the mover refuses the narrower release and names the enclosing operation instead.
 `release openusd-binding` is refused in favour of `release openusd-scene`, and `release wot-binding` is refused in favour of `release wot-connectivity`.
 Without that refusal, releasing Part 1 alone would gut Part 2's references while leaving Part 2 public.
@@ -187,10 +192,13 @@ A vendored specification contributes no Word rendering, because it is not under 
 List public holdbacks in `keepPublic`, especially documents that are targeted at xregistry.org even though they sit inside a folder that moves.
 List every submitted specification that must travel with this one in `closure`; include only specification ids from the same manifest.
 Use `closure` when the dependency was itself submitted for Foundation review and must become private at the same time.
+Set the same non-empty `releaseGroup` on every member of a symmetric co-release unit.
 Use `vendor` when the dependency is needed by the private copy but must stay public here.
 The test is the submission boundary, not whether the model has a `RequiredModel` edge: a submitted Part 2 belongs in `closure`, while a public base model belongs in `vendor`.
 List only active legacy Word clause-map descriptors in `wordSpecs`; migrated
 SpecificationPublisher documents use an empty list.
+List each migrated document in `publisherSpecs` with its batch `spec`, source `markdown`, and
+`docNumber`; release and return use that data to remove and restore the `migrated` inventory.
 Set `validateAll` to `extras/<group>/validate_all.py`.
 List public files that reverse-reference this specification in `reverseRefs` so the mover can repair or report them.
 A reverse reference is a path, relative link, validator entry or Word batch entry that breaks when the target moves.

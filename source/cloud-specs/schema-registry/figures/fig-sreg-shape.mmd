@@ -1,9 +1,0 @@
-graph TD
-  SVR[Server i=2253] -->|HasComponent| SR[SchemaRegistry : SchemaRegistryType : RegistryType]
-  PS[PublishSubscribe i=14443] -.optional reference.-> SR
-  SR -->|Organizes| G1["SchemaGroup (NamespaceUri = ...UA/) : SchemaGroupType : GroupType"]
-  SR -->|Organizes| G2["SchemaGroup (NamespaceUri = ...UA/Pumps/) : SchemaGroupType : GroupType"]
-  G2 -->|Organizes| S1["PumpDataType:avro : SchemaFileType : ResourceType"]
-  G2 -->|Organizes| S2["PumpDataType:arrow : SchemaFileType : ResourceType"]
-  S1 -.Open/Read.-> DOC[(.avsc document bytes)]
-  S1 -.Opaque SchemaId NodeId / GetSchema.-> DOC

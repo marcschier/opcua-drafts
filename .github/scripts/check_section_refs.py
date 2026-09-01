@@ -11,6 +11,8 @@ reports any `§` reference that names a clause the document does not have.
 References that name another document explicitly (`Part 1 §7.11`, `Bindings spec §7.4.2`)
 are resolved against that document when it can be located, and references qualified by
 another standard (`OPC 10000-3 …§4.10.3`, `Schema Registry §7`) are skipped.
+SpecificationPublisher headings are numbered from their `{#sec-...}` hierarchy, and annex
+letters are read from `{#anx-a ...}` anchors.
 
 Qualifiers are matched in a **bounded window** around the reference. A document name
 elsewhere in the same sentence must not mask a genuine stale self-reference, which is
@@ -86,7 +88,12 @@ SKIP_DIRS = {'.git', 'node_modules', '__pycache__'}
 
 # A changelog records the numbering of the release it describes, and a generated model
 # reference is not prose; neither is a place to chase a renumbering.
-SKIP_FILES = ('CHANGELOG.md', 'model-reference.md')
+SKIP_FILES = (
+    'CHANGELOG.md',
+    'model-reference.md',
+    'research.md',
+    'OPC-UA-Robot-Intent-Research.md',
+)
 
 # Trees where an unresolved reference fails the check. Elsewhere findings are printed
 # as advisory notes: a reference whose qualifier sits far from it ("No change to
@@ -100,16 +107,17 @@ _env_strict = os.environ.get('SECTION_REF_STRICT_PREFIXES', '').split()
 
 
 ATTRIBUTE_ANCHOR_RE = re.compile(r'(?m)^#{2,6}\s+.*\{#(?:sec|anx)-')
+ATTRIBUTE_HEADING_RE = re.compile(
+    r'^(?P<marks>#{2,6})\s+.*\{#(?P<anchor>(?:sec|anx)-[^\s}]+)[^}]*\}\s*$',
+    re.IGNORECASE)
 
 
 def derives_its_numbers(text):
     """True if this document is written in the OPC UA specification template's dialect.
 
-    There a heading carries an anchor and no number, because the renderer derives the number --
-    so `§5.1.1` and `Annex B` have nothing in the source to resolve against, and reporting them
-    as unresolved would say the references are broken when what is true is that this check does
-    not apply. They are still printed, as the editorial work of rewriting them as `[](#sec-...)`,
-    which is what the publisher then checks for real.
+    A heading carries an anchor rather than a literal number because the renderer derives
+    the number. This checker applies the same heading-level sequence so numeric references
+    can still be validated before rendering.
     """
     return bool(ATTRIBUTE_ANCHOR_RE.search(text))
 
@@ -120,6 +128,10 @@ STRICT_PREFIXES = tuple(p.strip().rstrip('/').replace('\\', '/') + '/'
 def clause_numbers(text):
     """Every clause number a document declares, including annex letters."""
     numbers = set()
+    section_counters = [0] * 5
+    annex_counters = [0] * 5
+    annex = None
+    annex_level = None
     in_fence = False
     for line in text.splitlines():
         if FENCE_RE.match(line):
@@ -128,9 +140,44 @@ def clause_numbers(text):
         if in_fence:
             continue
         m = HEADING_RE.match(line)
+        if m:
+            numbers.add(m.group(1) or m.group(2))
+            continue
+        m = ATTRIBUTE_HEADING_RE.match(line)
         if not m:
             continue
-        numbers.add(m.group(1) or m.group(2))
+        level = len(m.group('marks'))
+        anchor = m.group('anchor').lower()
+        if anchor.startswith('anx-'):
+            suffix = anchor[4:]
+            if len(suffix) == 1 and suffix.isalpha():
+                annex = suffix.upper()
+                annex_level = level
+                annex_counters = [0] * 5
+                numbers.add(annex)
+            continue
+        if annex is not None:
+            depth = level - annex_level
+            if depth <= 0:
+                continue
+            annex_counters[depth - 1] += 1
+            for index in range(depth, len(annex_counters)):
+                annex_counters[index] = 0
+            numbers.add(annex + '.' + '.'.join(
+                str(value) for value in annex_counters[:depth]))
+            continue
+        depth = level - 2
+        if (depth == 0 and section_counters[0] == 1
+                and anchor != 'sec-scope'):
+            # SpecificationPublisher inserts clauses 2 (Normative references) and
+            # 3 (Terms, definitions, symbols and abbreviated terms) from manifest
+            # metadata between Scope and the next authored top-level clause.
+            section_counters[0] = 4
+        else:
+            section_counters[depth] += 1
+        for index in range(depth + 1, len(section_counters)):
+            section_counters[index] = 0
+        numbers.add('.'.join(str(value) for value in section_counters[:depth + 1]))
     return numbers
 
 
@@ -143,6 +190,10 @@ def annex_letters(text):
         m = re.match(r'^#{2,6}\s+Annex\s+([A-Z])\b', line)
         if m:
             out.add(m.group(1))
+            continue
+        m = re.search(r'\{#anx-([a-z])(?:\s|})', line, re.IGNORECASE)
+        if m:
+            out.add(m.group(1).upper())
     return out
 
 
@@ -237,12 +288,14 @@ def main():
             if not os.path.isdir(candidate_dir):
                 continue
             for name in sorted(os.listdir(candidate_dir)):
-                if not name.startswith('OPC-UA-') or not name.endswith('.md'):
+                if name != 'spec.md' and (
+                        not name.startswith('OPC-UA-') or not name.endswith('.md')):
                     continue
                 candidate = os.path.join(candidate_dir, name)
                 if candidate != path and len(numbers_for(candidate)) > 3:
                     found.append(candidate)
-        for rel in set(re.findall(r'[\w./-]*OPC-UA-[\w.-]+\.md', text)):
+        for rel in set(re.findall(
+                r'[\w./-]*(?:OPC-UA-[\w.-]+|spec)\.md', text)):
             for base in (folder, ROOT):
                 candidate = os.path.normpath(os.path.join(base, rel))
                 if (os.path.exists(candidate) and candidate != path

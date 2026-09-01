@@ -49,7 +49,7 @@
     {
       "stored": "payload/dot-github/scripts/check_section_refs.py.bundle",
       "destination": ".github/scripts/check_section_refs.py",
-      "sha256": "f0a52cb3f06d488ee2742d2b710b299d8d792ef0e6a84b9ccdea09c749e34d71"
+      "sha256": "5bcedccafa1b5c18dec3c6d02460f79ecf140aca1bfd6e1493451f00f1dcf2fa"
     },
     {
       "stored": "payload/dot-github/scripts/check_yaml_json.py.bundle",

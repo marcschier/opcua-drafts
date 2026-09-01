@@ -1,9 +1,0 @@
-flowchart TD
-    C["Client"] -->|Invoke| P["Primary deployment<br/>Cloud or EdgeOffServer"]
-    P --> Q{"reachable?"}
-    Q -->|yes| OK["response<br/>ModelUsed = primary model"]
-    Q -->|no| F{"FallbackPolicy"}
-    F -->|FallBackTo| S["Secondary deployment<br/>OnServer"]
-    S --> R2["response<br/><b>ModelUsed = secondary model</b>"]
-    F -->|HoldLast| H["last result<br/>LastSuccessAt shows its age"]
-    F -->|Fail| X["failure<br/>nothing produced"]

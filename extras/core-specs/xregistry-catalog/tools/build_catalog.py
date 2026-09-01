@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Build an xRegistry Schema Registry catalog document from an OPC UA NodeSet.
 
-Maps namespaces -> schemagroups and DataTypes -> schema Resources per §5 of
-cloud-specs/schema-registry/OPC-UA-Schema-Registry.md. The JSON Schema documents are generated
-here (jsonschema_gen); the Avro/Arrow documents are embedded from the
+Maps namespaces -> schemagroups and DataTypes -> schema Resources per the
+OPC UA for Schema Registry draft under OPC Foundation review. The JSON Schema documents are
+generated here (jsonschema_gen); the Avro/Arrow documents are embedded from the
 sibling encoding folders' ``schemas/`` when present, otherwise referenced by
 ``schemaurl``.
 

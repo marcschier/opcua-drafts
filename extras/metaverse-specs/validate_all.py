@@ -21,10 +21,10 @@ SELF_CONTAINED = [
     # release-spec-validator:ICAgICJvcGVudXNkLXNjZW5lL3Rvb2xzL3ZhbGlkYXRlX2xvY2FsLnB5Iiw=
     # release-spec-validator:ICAgICJvcGVudXNkLXNjZW5lL3Rvb2xzL3ZhbGlkYXRlX2V4YW1wbGVzLnB5Iiw=
     # release-spec-validator:ICAgICJvcGVudXNkLWFydGlmYWN0cy90b29scy92YWxpZGF0ZV9sb2NhbC5weSIs
-    "vision/tools/validate_local.py",
-    "robot-intent/tools/validate_local.py",
-    "ai-model-management/tools/validate_local.py",
-    "ai-model-management/examples/tools/validate_examples.py",
+    # release-spec-validator:ICAgICJ2aXNpb24vdG9vbHMvdmFsaWRhdGVfbG9jYWwucHkiLA==
+    # release-spec-validator:ICAgICJyb2JvdC1pbnRlbnQvdG9vbHMvdmFsaWRhdGVfbG9jYWwucHkiLA==
+    # release-spec-validator:ICAgICJhaS1tb2RlbC1tYW5hZ2VtZW50L3Rvb2xzL3ZhbGlkYXRlX2xvY2FsLnB5Iiw=
+    # release-spec-validator:ICAgICJhaS1tb2RlbC1tYW5hZ2VtZW50L2V4YW1wbGVzL3Rvb2xzL3ZhbGlkYXRlX2V4YW1wbGVzLnB5Iiw=
     # openusd-scene added in the Scene Materialization (Part 2) work.
     # openusd-artifacts moves with the private OpenUSD review material.
     # vision added in the OPC UA - Vision work.

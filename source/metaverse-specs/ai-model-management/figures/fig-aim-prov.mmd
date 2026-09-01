@@ -1,7 +1,0 @@
-flowchart LR
-    R["a published result"] -->|"ModelUsed"| M["ModelType"]
-    D["DeploymentType"] -->|"UsesModel<br/>serving now"| M
-    M -->|Digest + DigestAlgorithm| A["the artefact bytes"]
-    M -->|ImportedFrom| CR["catalogue resource<br/>where it came from"]
-    M -->|DerivedFrom| B["the model it came from"]
-    M -->|TrainedOn| DS["DatasetType"]

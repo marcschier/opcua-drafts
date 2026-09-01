@@ -1,5 +1,0 @@
-flowchart LR
-    C["Client"] -->|"Invoke"| D["DeploymentType<br/>InferenceLocation OnServer"]
-    D -->|UsesModel| M["ModelType"]
-    M -->|Digest| A["local artefact"]
-    D -->|"response + ModelUsed"| C
