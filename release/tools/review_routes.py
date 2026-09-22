@@ -225,19 +225,24 @@ def cleanup_file_map(manifest, spec_id: str, root: Path) -> dict[str, str]:
         except ET.ParseError as error:
             raise ValueError(f"cannot verify cleanup dependencies: malformed {relative}") from error
         models = tree.findall(namespace + "Models/" + namespace + "Model")
+        normalized = path.read_bytes().replace(b"\r\n", b"\n")
         if relative in removing:
             for model in models:
-                removed_models[model.get("ModelUri")] = relative
+                removed_models[model.get("ModelUri")] = (relative, normalized)
         else:
-            remaining.extend((relative, model) for model in models)
-    available = {model.get("ModelUri") for _, model in remaining}
-    for relative, model in remaining:
+            remaining.extend((relative, model, normalized) for model in models)
+    for relative, model, _payload in remaining:
         for requirement in model.findall(namespace + "RequiredModel"):
             uri = requirement.get("ModelUri")
-            if uri in removed_models and uri not in available:
+            if uri not in removed_models:
+                continue
+            original, payload = removed_models[uri]
+            retained = any(candidate.get("ModelUri") == uri and content == payload
+                           for _path, candidate, content in remaining)
+            if not retained:
                 raise ValueError(
-                    f"cleanup would remove {removed_models[uri]} still required by {relative}; "
-                    "retain a pinned dependency before removing its owning specification")
+                    f"cleanup would remove {original} still required by {relative}; "
+                    "retain a byte-identical pinned dependency before removing its owning specification")
     return files
 
 

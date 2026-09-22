@@ -208,6 +208,11 @@ class ReviewRouteTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "still required"):
                 cleanup_file_map(self.manifest, "xregistry", root)
             (model / "dependencies").mkdir()
+            (model / "dependencies" / "xregistry.xml").write_text(
+                registry.replace('ModelUri="urn:xreg"', 'ModelUri="urn:xreg" Version="old"'),
+                encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "byte-identical"):
+                cleanup_file_map(self.manifest, "xregistry", root)
             (model / "dependencies" / "xregistry.xml").write_text(registry, encoding="utf-8")
             files = cleanup_file_map(self.manifest, "xregistry", root)
             self.assertEqual(list(files.values()), ["model/Opc.Ua.XRegistry.NodeSet2.xml"])
