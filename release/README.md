@@ -1,11 +1,24 @@
 # Specification release workflow
 
 This directory describes the lifecycle for a specification that has been submitted to the OPC Foundation for review.
-While the review is active the submitted draft moves from the public repository, `marcschier/opcua-drafts`, to the private member repository, `OPCF-Members/spec-drafts`.
-The move protects the review comments and the reviewed text while the Foundation process is running.
-When the review is complete, the specification returns here and the private copy is removed.
+**Migration status:** the executable mover still targets `OPCF-Members/spec-drafts` and its legacy layout. Per-working-group release/return routing is not implemented yet. Do not run this workflow for the WG reconciliation or against a new WG repository: its bootstrap path would overwrite Foundation-owned infrastructure.
 
-The source of truth is `release/manifest.json`.
+Core WG drafts remain in `OPCF-Members/spec-drafts`. Specifications owned by the WoT, Metaverse, and CloudIntegration working groups are maintained in their own repositories; the current reconciliation uses dedicated receipt PRs:
+
+| Working group | Repository | Migration route |
+|---|---|---|
+| WoT | `OPCF-Members/OPC10100-WoT` | Dedicated reconciliation PR in that repository |
+| Metaverse | `OPCF-Members/OPC12000-Metaverse` | Dedicated reconciliation PR in that repository |
+| CloudIntegration | `OPCF-Members/OPC30450-CloudInitiative` | Dedicated reconciliation PR in that repository |
+
+The repository name contains `CloudInitiative` for historical reasons; use **CloudIntegration**
+when describing its working group or content ownership.
+The move protects the review comments and the reviewed text while the Foundation process is running.
+When the Core review is complete, the specification returns here and the private Core copy is
+removed. A working-group specification remains in its working-group repository; it is not
+returned to this public tree by this workflow.
+
+The source of truth for the existing mover is `release/manifest.json`. Its per-WG repository routing and reversible path mappings still need to be updated before release/return automation can operate on the split repositories. Working-group reconciliation provenance is recorded in the receipt PRs.
 It names the public and private repositories, the shared tooling that is duplicated into the private repository, and each specification's moved paths, public holdbacks, moving closure, vendored dependencies, submission status, Word clause maps, validators and reverse references.
 Do not infer a release by scanning directories.
 The manifest records the decision that the workflow must apply.
@@ -111,7 +124,9 @@ python release/tools/release_spec.py release <spec-id> --export node_modules\spe
 The export directory preserves repository-relative paths.
 The export contains the moving `file_set()`, the vendored `export_set()` additions and shared tooling.
 The workflow copies that export into a branch in `OPCF-Members/spec-drafts`, verifies that files were exported, commits the private branch and opens or updates the private pull request.
-Only after the private pull request exists does it push the public branch and open or update the public pull request that removes the submitted draft and applies the repairs.
+Only after the private Core pull request exists does it push the public branch and open or update
+the public pull request that removes the submitted draft and applies the repairs. Do not use this
+workflow to remove content owned by one of the working-group repositories.
 Merge the private pull request first, then merge the public removal pull request.
 
 Before either pull request is opened, the workflow runs the repair gates that can execute in CI: internal links, section references, YAML/JSON parsing and every discovered `validate_all.py --self-contained`.

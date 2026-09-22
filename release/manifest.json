@@ -1,5 +1,5 @@
 {
-  "$comment": "Release manifest for moving OPC Foundation review drafts between marcschier/opcua-drafts and OPCF-Members/spec-drafts. Each release unit names its current source/, model/, extras/, and retained Word artifacts; closure, vendoring, aggregate validators, public holdbacks, and reverse references are explicit rather than inferred from directory scans.",
+  "$comment": "Legacy release manifest for moves between marcschier/opcua-drafts and OPCF-Members/spec-drafts. Per-working-group routing and reversible path mappings are still pending; do not use this mover for the WG reconciliation. The destination receipt PRs preserve their own official infrastructure and do not use the private-repository bootstrap bundle.",
   "publicRepo": "marcschier/opcua-drafts",
   "privateRepo": "OPCF-Members/spec-drafts",
   "accessInfo": "https://github.com/OPCF-Members/Help",

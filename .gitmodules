@@ -1,3 +1,12 @@
 [submodule "spec-drafts"]
 	path = spec-drafts
 	url = https://github.com/OPCF-Members/spec-drafts.git
+[submodule "OPC10100-WoT"]
+	path = OPC10100-WoT
+	url = https://github.com/OPCF-Members/OPC10100-WoT.git
+[submodule "OPC12000-Metaverse"]
+	path = OPC12000-Metaverse
+	url = https://github.com/OPCF-Members/OPC12000-Metaverse.git
+[submodule "OPC30450-CloudIntegration"]
+	path = OPC30450-CloudIntegration
+	url = https://github.com/OPCF-Members/OPC30450-CloudInitiative.git
