@@ -7,6 +7,7 @@ import argparse
 from pathlib import Path
 
 from manifest import load as load_manifest
+from review_routes import checked_path, cleanup_file_map, require_review_repository
 
 
 def remove_empty_parents(path: Path, root: Path) -> None:
@@ -31,10 +32,13 @@ def main() -> int:
     removed: list[str] = []
     missing: list[str] = []
 
-    for rel in manifest.file_set(args.spec_id):
-        target = (root / Path(*rel.split("/"))).resolve()
-        if not target.is_relative_to(root):
-            raise SystemExit(f"manifest path escapes private checkout: {rel}")
+    try:
+        require_review_repository(root, manifest.review_route(args.spec_id).repository)
+        files = cleanup_file_map(manifest, args.spec_id, root)
+    except (KeyError, OSError, ValueError) as error:
+        raise SystemExit(f"cleanup inventory failed: {error}") from error
+    for rel in sorted(set(files.values())):
+        target = checked_path(root, rel)
         if target.exists():
             removed.append(rel)
             if not args.dry_run:

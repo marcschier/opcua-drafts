@@ -1,7 +1,6 @@
 {
-  "$comment": "Legacy release manifest for moves between marcschier/opcua-drafts and OPCF-Members/spec-drafts. Per-working-group routing and reversible path mappings are still pending; do not use this mover for the WG reconciliation. The destination receipt PRs preserve their own official infrastructure and do not use the private-repository bootstrap bundle.",
+  "$comment": "Release/return ownership and reversible content mappings. Working-group repositories retain their official infrastructure; only explicit specification content is transferred. Legacy Word material is excluded from WG transfers. Destination-only edits require reconciliation.",
   "publicRepo": "marcschier/opcua-drafts",
-  "privateRepo": "OPCF-Members/spec-drafts",
   "accessInfo": "https://github.com/OPCF-Members/Help",
   "sharedTooling": [
     "extras/core-specs/_common"
@@ -34,10 +33,31 @@
         {
           "spec": "avro-encoding",
           "markdown": "source/core-specs/avro-encoding/spec.md",
-          "docNumber": "OPC 99002-1"
+          "docNumber": "OPC 30454"
         }
       ],
-      "releaseGroup": null
+      "releaseGroup": null,
+      "reviewRepository": "cloudintegration",
+      "reviewPaths": [
+        {
+          "public": "source/core-specs/avro-encoding",
+          "review": "source/avro-encoding",
+          "directory": true
+        },
+        {
+          "public": "extras/core-specs/avro-encoding",
+          "review": "extras/avro-encoding",
+          "directory": true
+        },
+        {
+          "public": "source/core-specs/avro-encoding/README.md",
+          "review": "extras/avro-encoding/README.md",
+          "directory": false
+        }
+      ],
+      "reviewExclude": [
+        "word-drafts"
+      ]
     },
     "data-channels": {
       "$comment": "Releasable base-namespace errata package. The combined specification, the insertion-ready Part 3, Part 4 and Part 6 errata, the generated model, the wire tooling, and the linked informative throughput report form one review unit. Both validators are self-contained and the draft has no RequiredModel dependency, so it needs neither closure nor vendored specifications.",
@@ -71,7 +91,8 @@
           "docNumber": "OPC 99003-1"
         }
       ],
-      "releaseGroup": null
+      "releaseGroup": null,
+      "reviewRepository": "core"
     },
     "observability-export": {
       "$comment": "Releasable Observability Export companion specification. Its normative NodeSet has one authoritative review copy; the public repository carries a byte-identical fixture under shared tooling for self-contained generator validation.",
@@ -100,10 +121,71 @@
         {
           "spec": "observability-export",
           "markdown": "source/cloud-specs/observability-export/spec.md",
-          "docNumber": "OPC 99005-1"
+          "docNumber": "OPC 30453"
         }
       ],
-      "releaseGroup": null
+      "releaseGroup": null,
+      "reviewRepository": "cloudintegration",
+      "reviewPaths": [
+        {
+          "public": "source/cloud-specs/observability-export",
+          "review": "source/observability-export",
+          "directory": true
+        },
+        {
+          "public": "extras/cloud-specs/observability-export",
+          "review": "extras/observability-export",
+          "directory": true
+        },
+        {
+          "public": "source/cloud-specs/observability-export/README.md",
+          "review": "extras/observability-export/README.md",
+          "directory": false
+        },
+        {
+          "public": "model/cloud-specs/observability-export/Opc.Ua.DI.ObservabilityExport.NodeSet2.xml",
+          "review": "model/Opc.Ua.DI.ObservabilityExport.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "model/cloud-specs/observability-export/Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml",
+          "review": "model/Opc.Ua.DIDeviceHealth.ObservabilityExport.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "model/cloud-specs/observability-export/Opc.Ua.Facets.ObservabilityExport.NodeSet2.xml",
+          "review": "model/Opc.Ua.Facets.ObservabilityExport.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "model/cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeIds.csv",
+          "review": "model/Opc.Ua.ObservabilityExport.NodeIds.csv",
+          "directory": false
+        },
+        {
+          "public": "model/cloud-specs/observability-export/Opc.Ua.ObservabilityExport.NodeSet2.xml",
+          "review": "model/Opc.Ua.ObservabilityExport.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "model/cloud-specs/observability-export/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml",
+          "review": "model/Opc.Ua.Pumps.ObservabilityExport.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "model/cloud-specs/observability-export/Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml",
+          "review": "model/Opc.Ua.Robotics.ObservabilityExport.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "source/cloud-specs/observability-export/di/OPC-UA-DI-Pumps-Inheritance.md",
+          "review": "extras/observability-export/OPC-UA-DI-Pumps-Inheritance.md",
+          "directory": false
+        }
+      ],
+      "reviewExclude": [
+        "word-drafts"
+      ]
     },
     "openusd-binding": {
       "$comment": "Releasable OpenUSD Part 1. xRegistry is vendored because the private OPC UA model requires it. The independent OpenUSD Artifact Registry domain specification and model are maintained upstream by xregistry/spec and are referenced there rather than duplicated in either draft repository.",
@@ -136,10 +218,61 @@
         {
           "spec": "openusd-binding",
           "markdown": "source/metaverse-specs/openusd-binding/spec.md",
-          "docNumber": "OPC 99008-1"
+          "docNumber": "OPC 12001-1"
         }
       ],
-      "releaseGroup": null
+      "releaseGroup": null,
+      "reviewRepository": "metaverse",
+      "reviewPaths": [
+        {
+          "public": "source/metaverse-specs/openusd-binding",
+          "review": "source/openusd-binding",
+          "directory": true
+        },
+        {
+          "public": "extras/metaverse-specs/openusd-binding",
+          "review": "extras/openusd-binding",
+          "directory": true
+        },
+        {
+          "public": "extras/metaverse-specs/openusd-artifacts",
+          "review": "extras/openusd-artifacts",
+          "directory": true
+        },
+        {
+          "public": "source/metaverse-specs/openusd-binding/pumps.md",
+          "review": "extras/openusd-binding/pumps.md",
+          "directory": false
+        },
+        {
+          "public": "source/metaverse-specs/openusd-binding/robotics.md",
+          "review": "extras/openusd-binding/robotics.md",
+          "directory": false
+        },
+        {
+          "public": "model/metaverse-specs/openusd-binding/Opc.Ua.OpenUsd.NodeIds.csv",
+          "review": "model/Opc.Ua.OpenUsd.NodeIds.csv",
+          "directory": false
+        },
+        {
+          "public": "model/metaverse-specs/openusd-binding/Opc.Ua.OpenUsd.NodeSet2.xml",
+          "review": "model/Opc.Ua.OpenUsd.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "model/metaverse-specs/openusd-binding/Opc.Ua.Pumps.OpenUsd.NodeSet2.xml",
+          "review": "model/dependencies/Opc.Ua.Pumps.OpenUsd.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "model/metaverse-specs/openusd-binding/Opc.Ua.Robotics.OpenUsd.NodeSet2.xml",
+          "review": "model/dependencies/Opc.Ua.Robotics.OpenUsd.NodeSet2.xml",
+          "directory": false
+        }
+      ],
+      "reviewExclude": [
+        "word-drafts"
+      ]
     },
     "openusd-scene": {
       "$comment": "Releasable OpenUSD Part 2. Its NodeSet is self-contained on base OPC UA, but its example regeneration and round-trip tooling read Part 1 example USDA assets, so Part 1 is in the release closure.",
@@ -170,10 +303,46 @@
         {
           "spec": "openusd-scene",
           "markdown": "source/metaverse-specs/openusd-scene/spec.md",
-          "docNumber": "OPC 99008-2"
+          "docNumber": "OPC 12001-2"
         }
       ],
-      "releaseGroup": null
+      "releaseGroup": null,
+      "reviewRepository": "metaverse",
+      "reviewPaths": [
+        {
+          "public": "source/metaverse-specs/openusd-scene",
+          "review": "source/openusd-scene",
+          "directory": true
+        },
+        {
+          "public": "extras/metaverse-specs/openusd-scene",
+          "review": "extras/openusd-scene",
+          "directory": true
+        },
+        {
+          "public": "model/metaverse-specs/openusd-scene/Opc.Ua.OpenUsdScene.NodeIds.csv",
+          "review": "model/Opc.Ua.OpenUsdScene.NodeIds.csv",
+          "directory": false
+        },
+        {
+          "public": "model/metaverse-specs/openusd-scene/Opc.Ua.OpenUsdScene.NodeSet2.xml",
+          "review": "model/Opc.Ua.OpenUsdScene.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "model/metaverse-specs/openusd-scene/Opc.Ua.Pumps.OpenUsdScene.NodeSet2.xml",
+          "review": "model/Opc.Ua.Pumps.OpenUsdScene.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "model/metaverse-specs/openusd-scene/Opc.Ua.Robotics.OpenUsdScene.NodeSet2.xml",
+          "review": "model/Opc.Ua.Robotics.OpenUsdScene.NodeSet2.xml",
+          "directory": false
+        }
+      ],
+      "reviewExclude": [
+        "word-drafts"
+      ]
     },
     "wot-binding": {
       "$comment": "Releasable WoT vocabulary/binding specification. It has no NodeSet RequiredModel and its validator is local to wot-specs/WoT-Binding. extras/wot-specs/WoT-Binding holds the informative crosswalk that supports this draft and links into it, so it travels with the specification like every other extras mirror.",
@@ -201,10 +370,37 @@
         {
           "spec": "wot-binding",
           "markdown": "source/wot-specs/WoT-Binding/spec.md",
-          "docNumber": "OPC 99009-1"
+          "docNumber": "OPC 10101"
         }
       ],
-      "releaseGroup": null
+      "releaseGroup": null,
+      "reviewRepository": "wot",
+      "reviewPaths": [
+        {
+          "public": "source/wot-specs/WoT-Binding",
+          "review": "source/WoT-Binding",
+          "directory": true
+        },
+        {
+          "public": "extras/wot-specs/WoT-Binding",
+          "review": "extras/WoT-Binding",
+          "directory": true
+        },
+        {
+          "public": "source/wot-specs/WoT-Binding/tools",
+          "review": "extras/WoT-Binding/tools",
+          "directory": true
+        },
+        {
+          "public": "source/wot-specs/WoT-Binding/README.md",
+          "review": "extras/WoT-Binding/README.md",
+          "directory": false
+        }
+      ],
+      "reviewExclude": [
+        "word-drafts",
+        "extras/wot-specs/validate_all.py"
+      ]
     },
     "wot-connectivity": {
       "$comment": "Releasable WoT Connectivity revision. WoT Binding is in closure because it is part of the OPC Foundation WoT submission. xRegistry is vendored, not closed over: the private export needs the base NodeSet/CSV and word spec so RequiredModel and validators resolve, but xRegistry stays public because it is a shared base for other public specs and has a public xregistry.org proposal.",
@@ -236,10 +432,46 @@
         {
           "spec": "wot-connectivity",
           "markdown": "source/wot-specs/WoT-Connectivity/spec.md",
-          "docNumber": "OPC 99010-1"
+          "docNumber": "OPC 10100-1"
         }
       ],
-      "releaseGroup": null
+      "releaseGroup": null,
+      "reviewRepository": "wot",
+      "reviewPaths": [
+        {
+          "public": "source/wot-specs/WoT-Connectivity",
+          "review": "source/WoT-Connectivity",
+          "directory": true
+        },
+        {
+          "public": "extras/wot-specs/WoT-Connectivity",
+          "review": "extras/WoT-Connectivity",
+          "directory": true
+        },
+        {
+          "public": "source/wot-specs/WoT-Connectivity/tools",
+          "review": "extras/WoT-Connectivity/tools",
+          "directory": true
+        },
+        {
+          "public": "source/wot-specs/WoT-Connectivity/README.md",
+          "review": "extras/WoT-Connectivity/README.md",
+          "directory": false
+        },
+        {
+          "public": "model/wot-specs/WoT-Connectivity/Opc.Ua.WoTCon.NodeIds.csv",
+          "review": "model/Opc.Ua.WoTCon.NodeIds.csv",
+          "directory": false
+        },
+        {
+          "public": "model/wot-specs/WoT-Connectivity/Opc.Ua.WoTCon.NodeSet2.xml",
+          "review": "model/Opc.Ua.WoTCon.NodeSet2.xml",
+          "directory": false
+        }
+      ],
+      "reviewExclude": [
+        "word-drafts"
+      ]
     },
     "xregistry": {
       "$comment": "Releasable abstract registry base model. The public redirect README is outside the moved source/model/extras paths and remains public automatically. Public specifications consume the released NodeSet from model/dependencies.",
@@ -270,10 +502,52 @@
         {
           "spec": "xregistry",
           "markdown": "source/core-specs/xregistry/spec.md",
-          "docNumber": "OPC 99004-1"
+          "docNumber": "OPC 30452"
         }
       ],
-      "releaseGroup": null
+      "releaseGroup": null,
+      "reviewRepository": "cloudintegration",
+      "reviewPaths": [
+        {
+          "public": "source/core-specs/xregistry",
+          "review": "source/xregistry",
+          "directory": true
+        },
+        {
+          "public": "extras/core-specs/xregistry",
+          "review": "extras/xregistry",
+          "directory": true
+        },
+        {
+          "public": "source/core-specs/xregistry/tools",
+          "review": "extras/xregistry/tools",
+          "directory": true
+        },
+        {
+          "public": "source/core-specs/xregistry/README.md",
+          "review": "extras/xregistry/README.md",
+          "directory": false
+        },
+        {
+          "public": "source/core-specs/xregistry/examples",
+          "review": "extras/xregistry/examples",
+          "directory": true
+        },
+        {
+          "public": "model/core-specs/xregistry/Opc.Ua.XRegistry.NodeIds.csv",
+          "review": "model/Opc.Ua.XRegistry.NodeIds.csv",
+          "directory": false
+        },
+        {
+          "public": "model/core-specs/xregistry/Opc.Ua.XRegistry.NodeSet2.xml",
+          "review": "model/Opc.Ua.XRegistry.NodeSet2.xml",
+          "directory": false
+        }
+      ],
+      "reviewExclude": [
+        "word-drafts",
+        "extras/core-specs/xregistry/tools/validate_local.py"
+      ]
     },
     "schema-registry": {
       "$comment": "Schema Registry extends the released xRegistry base model. xRegistry is recorded as a vendor dependency so the private review copy resolves the RequiredModel without moving or duplicating the public dependency fixture.",
@@ -297,7 +571,7 @@
         {
           "spec": "schema-registry",
           "markdown": "source/cloud-specs/schema-registry/spec.md",
-          "docNumber": "OPC 99006-1"
+          "docNumber": "OPC 30451"
         }
       ],
       "validateAll": "extras/cloud-specs/validate_all.py",
@@ -308,7 +582,43 @@
         "source/core-specs/arrow-encoding/spec.md",
         "word-drafts/tools/specs/batch.json"
       ],
-      "releaseGroup": null
+      "releaseGroup": null,
+      "reviewRepository": "cloudintegration",
+      "reviewPaths": [
+        {
+          "public": "source/cloud-specs/schema-registry",
+          "review": "source/schema-registry",
+          "directory": true
+        },
+        {
+          "public": "extras/cloud-specs/schema-registry",
+          "review": "extras/schema-registry",
+          "directory": true
+        },
+        {
+          "public": "source/cloud-specs/schema-registry/tools",
+          "review": "extras/schema-registry/tools",
+          "directory": true
+        },
+        {
+          "public": "source/cloud-specs/schema-registry/README.md",
+          "review": "extras/schema-registry/README.md",
+          "directory": false
+        },
+        {
+          "public": "model/cloud-specs/schema-registry/Opc.Ua.SchemaRegistry.NodeIds.csv",
+          "review": "model/Opc.Ua.SchemaRegistry.NodeIds.csv",
+          "directory": false
+        },
+        {
+          "public": "model/cloud-specs/schema-registry/Opc.Ua.SchemaRegistry.NodeSet2.xml",
+          "review": "model/Opc.Ua.SchemaRegistry.NodeSet2.xml",
+          "directory": false
+        }
+      ],
+      "reviewExclude": [
+        "word-drafts"
+      ]
     },
     "ai-model-management": {
       "$comment": "AI Model Management extends the released xRegistry base model and shares releaseGroup vision-ai with Vision because their joint guidance and Vision overlays form one review unit. xRegistry remains a vendor dependency.",
@@ -333,7 +643,7 @@
         {
           "spec": "ai-model-management",
           "markdown": "source/metaverse-specs/ai-model-management/spec.md",
-          "docNumber": "OPC 99014-1"
+          "docNumber": "OPC 12001-5"
         }
       ],
       "validateAll": "extras/metaverse-specs/validate_all.py",
@@ -344,7 +654,33 @@
         "source/metaverse-specs/vision-ai-external-result-mapping.md",
         "word-drafts/tools/specs/batch.json"
       ],
-      "releaseGroup": "vision-ai"
+      "releaseGroup": "vision-ai",
+      "reviewRepository": "metaverse",
+      "reviewPaths": [
+        {
+          "public": "source/metaverse-specs/ai-model-management",
+          "review": "source/ai-model-management",
+          "directory": true
+        },
+        {
+          "public": "extras/metaverse-specs/ai-model-management",
+          "review": "extras/ai-model-management",
+          "directory": true
+        },
+        {
+          "public": "model/metaverse-specs/ai-model-management/Opc.Ua.AiModelManagement.NodeIds.csv",
+          "review": "model/Opc.Ua.AiModelManagement.NodeIds.csv",
+          "directory": false
+        },
+        {
+          "public": "model/metaverse-specs/ai-model-management/Opc.Ua.AiModelManagement.NodeSet2.xml",
+          "review": "model/Opc.Ua.AiModelManagement.NodeSet2.xml",
+          "directory": false
+        }
+      ],
+      "reviewExclude": [
+        "word-drafts"
+      ]
     },
     "vision": {
       "$comment": "Vision and AI Model Management form releaseGroup vision-ai because Vision example overlays require AI and their supporting guides link both models. The release group is a symmetric co-release relation, not a false one-way model dependency.",
@@ -368,7 +704,7 @@
         {
           "spec": "vision",
           "markdown": "source/metaverse-specs/vision/spec.md",
-          "docNumber": "OPC 99011-1"
+          "docNumber": "OPC 12001-4"
         }
       ],
       "validateAll": "extras/metaverse-specs/validate_all.py",
@@ -378,7 +714,53 @@
         "source/metaverse-specs/vision-ai-external-result-mapping.md",
         "word-drafts/tools/specs/batch.json"
       ],
-      "releaseGroup": "vision-ai"
+      "releaseGroup": "vision-ai",
+      "reviewRepository": "metaverse",
+      "reviewPaths": [
+        {
+          "public": "source/metaverse-specs/vision",
+          "review": "source/vision",
+          "directory": true
+        },
+        {
+          "public": "extras/metaverse-specs/vision",
+          "review": "extras/vision",
+          "directory": true
+        },
+        {
+          "public": "model/metaverse-specs/vision/Opc.Ua.Inspection.Vision.NodeSet2.xml",
+          "review": "model/Opc.Ua.Inspection.Vision.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "model/metaverse-specs/vision/Opc.Ua.Robotics.Vision.NodeSet2.xml",
+          "review": "model/Opc.Ua.Robotics.Vision.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "model/metaverse-specs/vision/Opc.Ua.Vision.NodeIds.csv",
+          "review": "model/Opc.Ua.Vision.NodeIds.csv",
+          "directory": false
+        },
+        {
+          "public": "model/metaverse-specs/vision/Opc.Ua.Vision.NodeSet2.xml",
+          "review": "model/Opc.Ua.Vision.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "source/metaverse-specs/vision/research.md",
+          "review": "extras/vision/research.md",
+          "directory": false
+        },
+        {
+          "public": "source/metaverse-specs/README.md",
+          "review": "extras/walkthroughs.md",
+          "directory": false
+        }
+      ],
+      "reviewExclude": [
+        "word-drafts"
+      ]
     },
     "robot-intent": {
       "$comment": "Robot Intent is an independent submitted companion model with no RequiredModel beyond base OPC UA.",
@@ -401,7 +783,7 @@
         {
           "spec": "robot-intent",
           "markdown": "source/metaverse-specs/robot-intent/spec.md",
-          "docNumber": "OPC 99015-1"
+          "docNumber": "OPC 12001-3"
         }
       ],
       "validateAll": "extras/metaverse-specs/validate_all.py",
@@ -410,7 +792,60 @@
         "metaverse-specs/README.md",
         "word-drafts/tools/specs/batch.json"
       ],
-      "releaseGroup": null
+      "releaseGroup": null,
+      "reviewRepository": "metaverse",
+      "reviewPaths": [
+        {
+          "public": "source/metaverse-specs/robot-intent",
+          "review": "source/robot-intent",
+          "directory": true
+        },
+        {
+          "public": "extras/metaverse-specs/robot-intent",
+          "review": "extras/robot-intent",
+          "directory": true
+        },
+        {
+          "public": "model/metaverse-specs/robot-intent/Opc.Ua.RobotIntent.NodeIds.csv",
+          "review": "model/Opc.Ua.RobotIntent.NodeIds.csv",
+          "directory": false
+        },
+        {
+          "public": "model/metaverse-specs/robot-intent/Opc.Ua.RobotIntent.NodeSet2.xml",
+          "review": "model/Opc.Ua.RobotIntent.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "source/metaverse-specs/robot-intent/OPC-UA-Robot-Intent-Research.md",
+          "review": "extras/robot-intent/OPC-UA-Robot-Intent-Research.md",
+          "directory": false
+        }
+      ],
+      "reviewExclude": [
+        "word-drafts"
+      ]
+    }
+  },
+  "reviewRepositories": {
+    "core": {
+      "repository": "OPCF-Members/spec-drafts",
+      "submodule": "spec-drafts",
+      "group": "Core"
+    },
+    "wot": {
+      "repository": "OPCF-Members/OPC10100-WoT",
+      "submodule": "OPC10100-WoT",
+      "group": "WoT"
+    },
+    "metaverse": {
+      "repository": "OPCF-Members/OPC12000-Metaverse",
+      "submodule": "OPC12000-Metaverse",
+      "group": "Metaverse"
+    },
+    "cloudintegration": {
+      "repository": "OPCF-Members/OPC30450-CloudInitiative",
+      "submodule": "OPC30450-CloudIntegration",
+      "group": "CloudIntegration"
     }
   }
 }
