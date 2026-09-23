@@ -57,11 +57,89 @@ class ReviewRouteTests(unittest.TestCase):
                 self.assertEqual(route.translate(public), review)
                 self.assertEqual(route.translate(review, reverse=True), public)
 
-    def test_core_layout_remains_unchanged(self):
+    def test_core_layout_flattens_the_review_group_only(self):
         route = route_for(self.manifest, "data-channels")
         path = "source/core-specs/data-channels/spec.md"
-        self.assertEqual(route.translate(path), path)
-        self.assertEqual(translated_content(self.manifest, "data-channels", path, path, b"unchanged"), b"unchanged")
+        self.assertEqual(route.translate(path), "source/data-channels/spec.md")
+        self.assertEqual(route.translate("source/data-channels/spec.md", reverse=True), path)
+        self.assertFalse(route.identity_layout)
+        self.assertEqual(translated_content(self.manifest, "data-channels", path,
+                         "source/data-channels/spec.md", b"unchanged"), b"unchanged")
+
+    def test_core_review_retains_legacy_assets_but_cleanup_excludes_shared_helpers(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for relative in ("source/data-channels/spec.md", "extras/_common/shared.py",
+                             "word-drafts/OPC-UA-Data-Channels.docx"):
+                path = root.joinpath(*relative.split("/"))
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b"retained")
+            files = review_file_map(self.manifest, "data-channels", root)
+            self.assertEqual(files, {
+                "source/core-specs/data-channels/spec.md": "source/data-channels/spec.md",
+                "word-drafts/OPC-UA-Data-Channels.docx": "word-drafts/OPC-UA-Data-Channels.docx",
+            })
+            exported = public_file_map(self.manifest, "data-channels", [
+                "source/core-specs/data-channels/spec.md",
+                "extras/core-specs/_common/shared.py",
+                "word-drafts/OPC-UA-Data-Channels.docx",
+            ])
+            self.assertEqual(exported["extras/core-specs/_common/shared.py"], "extras/_common/shared.py")
+            self.assertIn("word-drafts/OPC-UA-Data-Channels.docx", exported)
+
+    def test_core_manifest_maps_model_and_generator_paths_without_model_identity_changes(self):
+        original = {
+            "identity": {"docNumber": "OPC 99003-1", "namespaceUri": "http://opcfoundation.org/UA/", "version": "0.1.1"},
+            "model": {
+                "nodeset": "model/core-specs/data-channels/Opc.Ua.DataChannels.NodeSet2.xml",
+                "generator": "source/core-specs/data-channels/tools/build_model.py",
+            },
+        }
+        rendered = json.loads(translated_content(
+            self.manifest, "data-channels", "source/core-specs/data-channels/manifest.json",
+            "source/data-channels/manifest.json", json.dumps(original).encode()))
+        self.assertEqual(rendered["identity"], original["identity"])
+        self.assertEqual(rendered["model"], {
+            "nodeset": "model/data-channels/Opc.Ua.DataChannels.NodeSet2.xml",
+            "generator": "source/data-channels/tools/build_model.py",
+        })
+        returned = json.loads(translated_content(
+            self.manifest, "data-channels", "source/data-channels/manifest.json",
+            "source/core-specs/data-channels/manifest.json", json.dumps(rendered).encode(), reverse=True))
+        self.assertEqual(returned, original)
+
+    def test_prepare_core_uses_flat_paths_for_content_and_shared_helpers(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, export = Path(directory) / "review", Path(directory) / "export"
+            root.mkdir()
+            for relative in ("source/core-specs/data-channels/spec.md", "extras/core-specs/_common/shared.py"):
+                path = export.joinpath(*relative.split("/"))
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b"content")
+            targets = prepare_private_release.prepare("data-channels", root, export, self.manifest)
+            self.assertEqual(targets, ["extras/_common/shared.py", "source/data-channels/spec.md"])
+            self.assertEqual((root / "source" / "data-channels" / "spec.md").read_bytes(), b"content")
+            self.assertEqual((root / "extras" / "_common" / "shared.py").read_bytes(), b"content")
+            self.assertFalse((root / "source" / "core-specs").exists())
+
+    def test_core_shared_helper_comparison_uses_the_review_mapping(self):
+        with tempfile.TemporaryDirectory() as directory:
+            public, review = Path(directory) / "public", Path(directory) / "review"
+            source = "extras/core-specs/_common/helper.py"
+            target = "extras/_common/helper.py"
+            public_file = public.joinpath(*source.split("/"))
+            review_file = review.joinpath(*target.split("/"))
+            for path in (public_file, review_file):
+                path.parent.mkdir(parents=True)
+                path.write_bytes(b"same\n")
+            with patch.object(release_spec, "REPO", public):
+                self.assertEqual(release_spec.manual_steps_return_vendors(
+                    [source], review, [], {source: target}), [])
+                review_file.write_bytes(b"different\n")
+                problems = release_spec.manual_steps_return_vendors([source], review, [], {source: target})
+                self.assertEqual(len(problems), 1)
+                self.assertIn("differs", problems[0])
+                self.assertNotIn("missing", problems[0])
 
     def test_cross_working_group_closure_is_rejected(self):
         data = copy.deepcopy(self.manifest._data)
