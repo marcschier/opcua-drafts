@@ -1078,14 +1078,16 @@ def manual_steps_release(manifest, closure: list[str], changes: list[TextChange]
     return sorted(set(manual))
 
 
-def manual_steps_return_vendors(vendor_files: list[str], import_dir: Path | None, changes: list[TextChange]) -> list[str]:
+def manual_steps_return_vendors(vendor_files: list[str], import_dir: Path | None,
+                               changes: list[TextChange], mapped: dict[str, str] | None = None) -> list[str]:
     if import_dir is None:
         return []
     planned = {change.path: change.new.encode("utf-8") for change in changes}
     manual: list[str] = []
     for path in vendor_files:
         public = repo_path(path)
-        private = import_dir / Path(*path.split("/"))
+        private_path = (mapped or {}).get(path, path)
+        private = import_dir / Path(*private_path.split("/"))
         if not private.exists():
             manual.append(f"{path}: vendored file is missing from the private import; cannot compare it")
             continue
@@ -1152,7 +1154,8 @@ def build_plan(manifest, action: str, spec_id: str, export_dir: str | None, impo
             Path(export_dir).resolve() if export_dir else None,
         )
     changes = text_repairs_return(manifest, closure, files, import_path, roots)
-    manual = manual_steps_return_vendors(vendor_files, import_path, changes)
+    vendor_paths = {path: manifest.review_route(spec_id).translate(path) for path in vendor_files}
+    manual = manual_steps_return_vendors(vendor_files, import_path, changes, vendor_paths)
     plan = Plan(action, spec_id, closure, files, export_files, vendor_files, changes, manual, None, import_path)
     if import_path is not None:
         plan.import_files = review_file_map(manifest, spec_id, import_path)
@@ -1375,7 +1378,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"invalid review route: {error}", file=sys.stderr)
             return 2
         print(json.dumps({"repository": route.repository, "submodule": route.submodule,
-                          "group": route.group, "legacyLayout": route.legacy_layout}))
+                          "group": route.group, "legacyLayout": route.identity_layout}))
         return 0
 
     problems = manifest.validate()

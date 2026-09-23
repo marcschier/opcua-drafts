@@ -240,7 +240,7 @@ jobs:
           files = sorted(source.relative_to(export).as_posix()
                          for source in export.rglob("*") if source.is_file())
           mapping = ({path: path for path in files}
-                     if manifest.review_route(spec_id).legacy_layout
+                     if manifest.review_route(spec_id).identity_layout
                      else public_file_map(manifest, spec_id, files))
           for source in export.rglob("*"):
               if source.is_file():

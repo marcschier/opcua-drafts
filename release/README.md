@@ -21,7 +21,7 @@ python release\tools\release_spec.py route xregistry
 
 `route` returns JSON containing the repository, submodule, working-group name and layout mode. The release workflow uses this output for its checkout, permission preflight and PR target rather than hard-coding `spec-drafts`.
 
-Core retains its existing grouped layout. WG specifications use the destination's `source/<spec>`, flat `model` files, and `extras/<spec>` support layout. More specific mappings cover generators formerly under `source`, informative research, example overlays, and allocation ledgers. Reverse mappings enumerate the actual review checkout, so destination-only additions are included even when the public source directory no longer exists.
+The Core review repository uses `source/<spec>`, `model/<spec>`, and `extras/<spec>` without a working-group directory. The other WG repositories use `source/<spec>`, flat `model` files, and `extras/<spec>`. More specific mappings cover generators formerly under `source`, informative research, example overlays, and allocation ledgers. Reverse mappings enumerate the actual review checkout, so destination-only additions are included even when the public source directory no longer exists. Public draft paths retain their own group directories.
 
 ## Safety boundaries
 

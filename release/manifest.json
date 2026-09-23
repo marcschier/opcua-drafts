@@ -92,7 +92,49 @@
         }
       ],
       "releaseGroup": null,
-      "reviewRepository": "core"
+      "reviewRepository": "core",
+      "reviewPaths": [
+        {
+          "public": "source/core-specs/data-channels",
+          "review": "source/data-channels",
+          "directory": true
+        },
+        {
+          "public": "model/core-specs/data-channels",
+          "review": "model/data-channels",
+          "directory": true
+        },
+        {
+          "public": "extras/core-specs/data-channels",
+          "review": "extras/data-channels",
+          "directory": true
+        },
+        {
+          "public": "extras/core-specs/performance/OPC-UA-Data-Channel-Throughput.md",
+          "review": "extras/performance/OPC-UA-Data-Channel-Throughput.md",
+          "directory": false
+        },
+        {
+          "public": "extras/core-specs/_common",
+          "review": "extras/_common",
+          "directory": true
+        },
+        {
+          "public": "word-drafts/OPC-UA-Data-Channels.docx",
+          "review": "word-drafts/OPC-UA-Data-Channels.docx",
+          "directory": false
+        },
+        {
+          "public": "word-drafts/OPC-UA-Data-Channels.docmodel.json",
+          "review": "word-drafts/OPC-UA-Data-Channels.docmodel.json",
+          "directory": false
+        },
+        {
+          "public": "word-drafts/OPC-UA-Data-Channels.provenance.json",
+          "review": "word-drafts/OPC-UA-Data-Channels.provenance.json",
+          "directory": false
+        }
+      ]
     },
     "observability-export": {
       "$comment": "Releasable Observability Export companion specification. Its normative NodeSet has one authoritative review copy; the public repository carries a byte-identical fixture under shared tooling for self-contained generator validation.",

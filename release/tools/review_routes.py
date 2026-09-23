@@ -83,9 +83,13 @@ class Route:
     excluded: tuple[str, ...] = ()
     legacy_layout: bool = False
 
+    @property
+    def identity_layout(self) -> bool:
+        return self.legacy_layout and not self.mappings
+
     def translate(self, path: str, reverse: bool = False) -> str:
         path = relative_path(path)
-        if self.legacy_layout:
+        if self.identity_layout:
             return path
         order = sorted(self.mappings, key=lambda item: len(item.review if reverse else item.public), reverse=True)
         for mapping in order:
@@ -186,7 +190,7 @@ def review_file_map(manifest, spec_id: str, root: Path) -> dict[str, str]:
     result = {}
     for key, route in routes.items():
         mappings = route.mappings
-        if route.legacy_layout:
+        if route.identity_layout:
             mappings = tuple(Mapping(p, p, "." not in PurePosixPath(p).name)
                              for p in manifest.spec(key)["move"])
         candidates = set()
@@ -202,6 +206,9 @@ def review_file_map(manifest, spec_id: str, root: Path) -> dict[str, str]:
             checked_path(root, relative)
             route.require_content(relative)
             public = route.translate(relative, reverse=True)
+            if route.legacy_layout and not any(under(public, prefix) for prefix in manifest.spec(key)["move"]):
+                # Core shared helpers are exported, not owned by a returning spec.
+                continue
             if route.excludes(public) or any(under(public, p) for p in manifest.spec(key).get("keepPublic", [])):
                 continue
             if public in result and result[public] != relative:
@@ -250,7 +257,7 @@ def translated_content(manifest, spec_id: str, source: str, destination: str,
                        payload: bytes, *, reverse: bool = False) -> bytes:
     """Translate publication paths, never model identities or arbitrary source code."""
     route = route_for(manifest, spec_id)
-    if route.legacy_layout:
+    if route.identity_layout:
         return payload
     suffix = PurePosixPath(source).suffix.lower()
     if suffix not in {".md", ".json"}:

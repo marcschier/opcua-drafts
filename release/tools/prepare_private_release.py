@@ -26,7 +26,8 @@ def prepare(spec_id: str, root: Path, export: Path, manifest=None) -> list[str]:
         unexpected = [path for path in files if not any(under(path, prefix) for prefix in allowed)]
         if unexpected:
             raise RuntimeError("unapproved export content: " + ", ".join(unexpected))
-        mapping = {path: path for path in files}
+        mapping = ({path: path for path in files} if route.identity_layout
+                   else public_file_map(manifest, spec_id, files))
     else:
         mapping = public_file_map(manifest, spec_id, files)
     if not mapping:
