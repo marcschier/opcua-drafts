@@ -1,235 +1,115 @@
-# Specification release workflow
+# Specification release and return routing
 
-This directory describes the lifecycle for a specification that has been submitted to the OPC Foundation for review.
-While the review is active the submitted draft moves from the public repository, `marcschier/opcua-drafts`, to the private member repository, `OPCF-Members/spec-drafts`.
-The move protects the review comments and the reviewed text while the Foundation process is running.
-When the review is complete, the specification returns here and the private copy is removed.
+`release/manifest.json` records each specification's review owner, release closure, public holdbacks, publication identity and reversible content-path mappings. The mover never infers ownership from a directory scan.
 
-The source of truth is `release/manifest.json`.
-It names the public and private repositories, the shared tooling that is duplicated into the private repository, and each specification's moved paths, public holdbacks, moving closure, vendored dependencies, submission status, Word clause maps, validators and reverse references.
-Do not infer a release by scanning directories.
-The manifest records the decision that the workflow must apply.
+| Working group | Review repository | Local submodule |
+| --- | --- | --- |
+| Core | `OPCF-Members/spec-drafts` | `spec-drafts` |
+| WoT | `OPCF-Members/OPC10100-WoT` | `OPC10100-WoT` |
+| Metaverse | `OPCF-Members/OPC12000-Metaverse` | `OPC12000-Metaverse` |
+| CloudIntegration | `OPCF-Members/OPC30450-CloudInitiative` | `OPC30450-CloudIntegration` |
 
-## Design decisions
+The CloudIntegration working group owns xRegistry. The repository URL retains its existing `CloudInitiative` spelling; this is not a request to rename the repository.
 
-A release moves the requested specification with its `closure`.
-`closure` means "moves with this one": both specifications were submitted for Foundation review, and both must be private while that review is active.
-For example, `openusd-scene` closes over `openusd-binding`, and `wot-connectivity` closes over `wot-binding`.
-Moving one part without the other would leave the public part full of broken references to the private part.
+## Inspecting a route
 
-A `releaseGroup` is a symmetric co-release unit for submitted documents whose review material
-points both ways. Every member moves and returns together regardless of which member is requested.
-Use it only where a one-way closure would be false or cyclic; Vision and AI Model Management share
-one because Vision's overlays require AI while their joint supporting guides link both models.
+```powershell
+python release\tools\release_spec.py status
+python release\tools\release_spec.py route wot-connectivity
+python release\tools\release_spec.py route xregistry
+```
 
-A release also exports its `vendor` dependencies to the private repository, but those dependencies stay public here.
-`vendor` means "copy into the private export": the private repository needs the base model so `RequiredModel` resolves and validators can read its NodeIds CSV, while public specifications still need the same base.
-For example, OpenUSD and WoT vendor `xregistry`.
-Vendoring is the same design as shared tooling: duplicate and keep in step because moving the dependency would break one side.
+`route` returns JSON containing the repository, submodule, working-group name and layout mode. The release workflow uses this output for its checkout, permission preflight and PR target rather than hard-coding `spec-drafts`.
 
-`submitted: false` marks a shared dependency that exists in the manifest only to be vendored and cannot be released on its own.
-Its files can appear in a private export, but they do not leave the public repository.
+Core retains its existing grouped layout. WG specifications use the destination's `source/<spec>`, flat `model` files, and `extras/<spec>` support layout. More specific mappings cover generators formerly under `source`, informative research, example overlays, and allocation ledgers. Reverse mappings enumerate the actual review checkout, so destination-only additions are included even when the public source directory no longer exists.
 
-The natural release units are Avro, OpenUSD, WoT, and the Vision/AI release group.
-Most fall out of `closure`; a symmetric `releaseGroup` is explicit.
-If a submitted specification that is still public closes over the requested one, the mover refuses the narrower release and names the enclosing operation instead.
-`release openusd-binding` is refused in favour of `release openusd-scene`, and `release wot-binding` is refused in favour of `release wot-connectivity`.
-Without that refusal, releasing Part 1 alone would gut Part 2's references while leaving Part 2 public.
+## Safety boundaries
 
-`file_set()` is what leaves the public repository.
-`export_set()` is what the private repository receives.
-They differ by the vendored files, and that difference is the point: vendored files must be present privately for validation, but remain public because other public drafts depend on them.
+Only explicitly mapped content may enter a WG repository. Existing official workflows, tool pins, legal/authoring files, shared front matter, installer scripts, templates and other infrastructure are protected. The mover does not invoke `expand_bundle.py`, install the old Word infrastructure, or modify repository settings.
 
-Shared tooling is duplicated and kept in step rather than moved.
-The public repository still needs the generators, validators and Word build for specifications that are not under review, and the private repository needs the same tooling to validate the submitted draft.
-Moving the tools would break one side every time a specification changes state.
+Legacy `word-drafts` content is excluded from WG transfers. The official Publisher generates the review repository's Word, HTML and STS outputs. An allocation CSV in `model` is not interchangeable with a documentation CSV in `artifacts`.
 
-Documents targeted at xregistry.org stay public even when they live inside a folder that otherwise moves.
-Those documents have their own publication target and should not disappear just because a related OPC UA draft is under Foundation review.
-List them in `keepPublic` so the mover knows they are deliberate public holdbacks, not a missed file.
+Every transfer is preflighted before writing. If a target file contains different bytes, preparation fails and names the conflict; it does not overwrite the destination's edits or choose a merge side. Reconcile those differences on the topic branch using the source/import baseline and current destination, then regenerate and validate. The same protection applies to differing public files during a return.
 
-Public git history is accepted as-is.
-This process removes the active public copy while review is in progress; it does not rewrite old commits.
-Rewriting history would be more disruptive than the remaining historical visibility and would not protect review comments added after submission.
+Publication manifests and relative Markdown links are translated with the content paths; assigned document numbers and model namespace/version identities are preserved. Executable generators and normative decisions are not rewritten by a generic text replacement. Their destination validators must pass before the workflow opens the receipt PR; layout-sensitive code needs an explicit reviewed adaptation.
+
+Review and cleanup commands verify the checkout's `origin` against the selected repository. Absolute paths, traversal, linked paths escaping the checkout, collisions and cross-WG release closures are rejected.
+
+## Closures and dependencies
+
+`closure` means specifications that move together. OpenUSD Scene closes over OpenUSD Binding; WoT Connectivity closes over WoT Binding. A symmetric `releaseGroup`, such as Vision/AI, moves together regardless of the requested member.
+
+A closure must have one review owner. A cross-WG relationship is a dependency, not permission to move the other WG's specification.
+
+WG repositories maintain their own explicit, pinned dependency snapshots. A WG export does not copy an entire vendored specification or overwrite shared tooling merely because the public manifest lists a dependency. Core's existing shared-tooling export behavior is retained. Required inputs are checked by the destination validators; missing or incompatible inputs must be resolved before publication.
+
+Public holdbacks (`keepPublic`) are excluded from removal. Cleanup inventories include only the selected mapped content, never sibling specifications, global CI/tooling, or unrelated dependency snapshots.
 
 ## Credentials
 
-The workflow uses the built-in `GITHUB_TOKEN` for the public repository only.
-That token is scoped to `marcschier/opcua-drafts`, so it cannot read, push to, or open pull requests in `OPCF-Members/spec-drafts`.
+The public workflow token is scoped to `marcschier/opcua-drafts`; it cannot access the member repositories.
 
-Create an Actions repository secret named `SPEC_DRAFTS_TOKEN` in `marcschier/opcua-drafts`.
-Use a fine-grained PAT or GitHub App installation token with access only to `OPCF-Members/spec-drafts`.
-Grant the private repository permissions `Contents: Read and write` and `Pull requests: Read and write`; `Metadata: Read` is implicit.
-Do not use a broad classic PAT unless there is no other option, because the workflow only needs to clone the private repository, push a branch and open or update a pull request there.
+The existing `SPEC_DRAFTS_TOKEN` secret is used for the selected review repository. Its historical name does not determine the destination. A maintainer must provision access to the intended repository with only the necessary Contents and Pull requests permissions. The workflow verifies repository access before preparing changes. It does not broaden permissions, read or print secrets, or alter Foundation repository settings.
 
-The private repository also needs its bootstrap files and maintainer instructions.
-Set it up from `release/private-repo/` and follow `release/private-repo/INSTRUCTIONS.md`.
-That bundle is referenced here but is maintained separately.
-
-The workflow stages the private checkout and export under `node_modules/spec-release-work`.
-`node_modules/` is ignored deliberately.
-The workflow still excludes that path when staging the public pull request, but the ignore rule is a second barrier against committing a private checkout into the public repository.
+Scratch exports and checkouts live under the gitignored `node_modules/spec-release-work` directory. Repository scans exclude scratch directories and nested Git repositories, preventing private export contents from being treated as public files to repair or commit.
 
 ## Dry runs
 
-Dry-run is the default and should be the first run for every release or return.
-It runs the mover with `--dry-run` and opens no pull requests.
+Dry-run is the workflow default and opens no PRs.
 
-From the GitHub CLI:
+```powershell
+python release\tools\release_spec.py release <spec-id> --dry-run
+python release\tools\release_spec.py return schema-registry --import OPC30450-CloudIntegration --dry-run
+python release\tools\release_spec.py return openusd-scene --import OPC12000-Metaverse --dry-run
+```
+
+Use `route <spec-id>` to obtain the correct import submodule. Fetch and inspect the chosen review revision before a real return; do not update or reset a dirty checkout.
 
 ```powershell
 gh workflow run spec-release.yml --repo marcschier/opcua-drafts --ref main -f spec-id=<spec-id> -f direction=release -f dry-run=true
-gh workflow run spec-release.yml --repo marcschier/opcua-drafts --ref main -f spec-id=<spec-id> -f direction=return -f dry-run=true
 ```
 
-The equivalent local checks are:
+## Release for review
+
+The real release exports the selected public content, repairs public references, and prepares the routed private checkout:
 
 ```powershell
-python release/tools/release_spec.py status
-python release/tools/release_spec.py release <spec-id> --dry-run
-python release/tools/release_spec.py return <spec-id> --dry-run
+python release\tools\release_spec.py release <spec-id> --export node_modules\spec-release-work\export
+python release\tools\prepare_private_release.py <spec-id> --root node_modules\spec-release-work\private --export node_modules\spec-release-work\export
 ```
 
-## Releasing a specification for review
+The export retains public-relative paths; preparation applies the explicit review mappings. It neither bootstraps the repository nor replaces reviewed content.
 
-Run the dry run first.
-Read the log and fix every reported repair that needs a human.
-The mover exits non-zero when it cannot safely repair the public tree, and the workflow treats that as a hard stop.
+The workflow validates the repaired public tree and the relocated private validators, opens the private receipt PR first, and then opens the public removal PR. Merge the green, reviewed receipt before the public removal. A failure leaves the authoritative remote source in place; do not force an incomplete handoff through.
 
-When the dry run is clean, start the real release:
+## Return after review
+
+A real return must explicitly name the correct checkout:
 
 ```powershell
-gh workflow run spec-release.yml --repo marcschier/opcua-drafts --ref main -f spec-id=<spec-id> -f direction=release -f dry-run=false
+python release\tools\release_spec.py return <spec-id> --import <review-submodule>
 ```
 
-For a real release, the mover command is equivalent to:
+The mover maps the review file inventory back to the public layout, including new destination-authored files, and repairs public navigation and publication inventories. It refuses to overwrite differing public files.
+
+The public return PR is opened first. The separate private cleanup PR removes the returned file inventory from the routed repository:
 
 ```powershell
-python release/tools/release_spec.py release <spec-id> --export node_modules\spec-release-work\export
+python release\tools\private_cleanup.py <spec-id> --root <review-submodule> --dry-run
 ```
 
-The export directory preserves repository-relative paths.
-The export contains the moving `file_set()`, the vendored `export_set()` additions and shared tooling.
-The workflow copies that export into a branch in `OPCF-Members/spec-drafts`, verifies that files were exported, commits the private branch and opens or updates the private pull request.
-Only after the private pull request exists does it push the public branch and open or update the public pull request that removes the submitted draft and applies the repairs.
-Merge the private pull request first, then merge the public removal pull request.
+Review the exact removal list and merge the public return before the private cleanup. Infrastructure and dependencies not owned by the return stay in the review repository.
 
-Before either pull request is opened, the workflow runs the repair gates that can execute in CI: internal links, section references, YAML/JSON parsing and every discovered `validate_all.py --self-contained`.
-These are blocking here because a half-repaired release is worse than a red advisory check on an ordinary draft pull request.
+## The WG split is a separate handoff
 
-This order prevents the dangerous half-completed release: the public side should never remove a specification before the private side has received it.
-If the workflow fails before the private pull request is opened, no repository has been changed.
-If it fails after the private pull request is opened but before the public pull request is opened, either fix the public-side error and rerun the workflow, or close the private pull request and delete its branch.
-Do not merge the public removal unless the private pull request exists and contains the exported file set.
+Do not use a release or return operation to delete the migrated material from `spec-drafts` during the WG split. That cleanup requires all WG receipts and parent integration to pass CI and merge, followed by fresh explicit user confirmation of the file-exact deletion inventory.
 
-## Returning a specification after review
-
-Run the dry run first:
+## Regression checks
 
 ```powershell
-gh workflow run spec-release.yml --repo marcschier/opcua-drafts --ref main -f spec-id=<spec-id> -f direction=return -f dry-run=true
+python -m unittest discover -s release\tools -p "test_*.py"
+python .github\scripts\check_yaml_json.py
+python .github\scripts\check_links.py
 ```
 
-When it is clean, start the real return:
-
-```powershell
-gh workflow run spec-release.yml --repo marcschier/opcua-drafts --ref main -f spec-id=<spec-id> -f direction=return -f dry-run=false
-```
-
-For a real return, the workflow checks out `OPCF-Members/spec-drafts` and uses that checkout as the import directory.
-The mover command is equivalent to:
-
-```powershell
-python release/tools/release_spec.py return <spec-id> --import node_modules\spec-release-work\private
-```
-
-Locally, the `spec-drafts/` submodule is already a checkout of the private repository, so it can be the import source directly — update it first so it is not importing a stale commit:
-
-```powershell
-git submodule update --remote spec-drafts
-python release/tools/release_spec.py return <spec-id> --import spec-drafts --dry-run
-```
-
-The mover skips any directory carrying its own `.git`, so the submodule is never scanned for references to repair and a release can never rewrite files inside it.
-
-The public return pull request is opened first, because it restores the reviewed text to the public repository.
-After that pull request exists, the workflow opens a private cleanup pull request that removes the returned specification's manifest file set from `OPCF-Members/spec-drafts`:
-
-```powershell
-python release/tools/private_cleanup.py <spec-id> --root node_modules\spec-release-work\private
-```
-
-The cleanup tool calls `manifest.file_set()` instead of re-reading `release/manifest.json`.
-That matters for two reasons.
-First, vendored files are in the private export but do not leave the public repository, so cleanup must remove only the files that actually moved.
-Second, a moved directory can have public holdback files, so cleanup must remove exactly the files the manifest API says were moved, not a directory approximation that can delete files which never left the public side.
-Merge the public return pull request first, then merge the private cleanup pull request.
-
-If the workflow fails before the public return pull request is opened, no public change exists and the private copy remains authoritative.
-If it fails after the public return pull request is opened but before the private cleanup pull request is opened, rerun the workflow after fixing the error or remove the private copy manually in a reviewed private pull request.
-That failure leaves a duplicate copy, not a lost one, so it is safer than the release-side failure.
-
-## Adding a newly submitted specification
-
-Add the specification to `release/manifest.json`.
-Use a stable `<spec-id>`; the workflow uses it in branch names and commands.
-
-Set `title` to the human-readable document title and `state` to `public` before the first release.
-Set `submitted` to `true` for a specification that was submitted for Foundation review.
-Set `submitted` to `false` only for a shared dependency that appears in the manifest so other submitted specifications can vendor it.
-An unsubmitted dependency can be copied into the private repository, but it cannot be the target of a release.
-
-List every path that moves in `move`.
-Include `source/<group>/<spec>/`, `model/<group>/<spec>/` where a model exists,
-`extras/<group>/<spec>/` where secondary tooling exists, and **the committed Word rendering** —
-the `.docx`, its `.docmodel.json` and `.provenance.json`.
-Word is the review format, so the `.docx` is the artifact under review; leaving it behind would keep the reviewed document publicly downloadable while only its markdown source went private.
-Template-shaped figure sources and renderings live below the specification's source directory and
-move with it. For a specification that still uses the legacy Word pipeline, also list its active
-clause-map descriptor and any external figure files that descriptor owns; never infer them from a
-filename prefix.
-A vendored specification contributes no Word rendering, because it is not under review.
-List public holdbacks in `keepPublic`, especially documents that are targeted at xregistry.org even though they sit inside a folder that moves.
-List every submitted specification that must travel with this one in `closure`; include only specification ids from the same manifest.
-Use `closure` when the dependency was itself submitted for Foundation review and must become private at the same time.
-Set the same non-empty `releaseGroup` on every member of a symmetric co-release unit.
-Use `vendor` when the dependency is needed by the private copy but must stay public here.
-The test is the submission boundary, not whether the model has a `RequiredModel` edge: a submitted Part 2 belongs in `closure`, while a public base model belongs in `vendor`.
-List only active legacy Word clause-map descriptors in `wordSpecs`; migrated
-SpecificationPublisher documents use an empty list.
-List each migrated document in `publisherSpecs` with its batch `spec`, source `markdown`, and
-`docNumber`; release and return use that data to remove and restore the `migrated` inventory.
-Set `validateAll` to `extras/<group>/validate_all.py`.
-List public files that reverse-reference this specification in `reverseRefs` so the mover can repair or report them.
-A reverse reference is a path, relative link, validator entry or Word batch entry that breaks when the target moves.
-A citation by name or label is not a reverse reference, and a file's own location is never a reference to itself.
-Do not list a holdback merely because it lives under a moving directory, and do not list a bibliography entry or `foreignAnchors` entry that intentionally names an external document.
-
-Run:
-
-```powershell
-python release/tools/release_spec.py status
-python release/tools/release_spec.py release <spec-id> --dry-run
-python .github/scripts/check_yaml_json.py
-```
-
-The dry run must be clean before the real release.
-If the mover says a repair needs a human, fix the manifest or the source text; do not work around the failure in the workflow.
-
-## Recovery rules
-
-Never push directly to `main` in either repository as a recovery shortcut.
-Open or update pull requests so a maintainer can compare the public and private sides before anything merges.
-
-For a failed release, check which pull requests exist.
-If the private PR does not exist, rerun after fixing the failure.
-If the private PR exists but the public PR does not, either rerun to create the public PR or close the private PR and delete its branch.
-If both exist, merge the private PR first.
-
-For a failed return, check which pull requests exist.
-If the public PR does not exist, rerun after fixing the failure.
-If the public PR exists but the private cleanup PR does not, rerun to create the cleanup PR or open an equivalent private PR by hand.
-If both exist, merge the public PR first.
-
-The workflow's own YAML/JSON check is blocking.
-The repository's ordinary PR checks remain advisory after the pull requests are opened, because that is how this repository reviews draft changes, but this workflow must stop before publishing a half-repaired move.
+The routing tests cover every review owner, both layout directions, actual-checkout inventories, closure boundaries, retained destination/public edits, publication identities, path escapes, infrastructure exclusions and legacy Word exclusions. They use isolated fixtures and perform no live release, return or cleanup.

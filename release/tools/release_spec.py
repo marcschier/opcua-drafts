@@ -16,7 +16,7 @@ import posixpath
 import re
 import shutil
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
@@ -145,7 +145,7 @@ def is_probably_text(path: Path) -> bool:
 
 
 def iter_repo_files() -> Iterable[Path]:
-    ignored_dirs = {".git", ".release-spec-work"}
+    ignored_dirs = {".git", ".release-spec-work", "node_modules", "_work", "__pycache__"}
     for root, dirs, files in os.walk(REPO):
         # A directory carrying its own .git is a submodule or nested clone. The private review
         # repository is available to members as one, and rewriting references inside it would
@@ -178,6 +178,7 @@ class Plan:
     manual_steps: list[str]
     export_dir: Path | None = None
     import_dir: Path | None = None
+    import_files: dict[str, str] = field(default_factory=dict)
 
 
 def moving_specs(manifest, spec_id: str) -> list[str]:
@@ -212,6 +213,9 @@ def _own_file_set_from_dir(base: Path, spec: dict) -> set[str]:
 
 
 def spec_file_set(manifest, spec_id: str, import_dir: Path | None = None) -> list[str]:
+    if import_dir is not None and hasattr(manifest, "review_route"):
+        from review_routes import review_file_map
+        return sorted(review_file_map(manifest, spec_id, import_dir))
     files = sorted(norm(p) for p in manifest.file_set(spec_id))
     if files or import_dir is None:
         return files
@@ -404,7 +408,7 @@ def repair_markdown_return(text: str, path: str, files: set[str], roots: list[st
     return pattern.sub(restore, text), count
 
 
-def review_note(manifest) -> str:
+def review_note(manifest, spec_id: str | None = None) -> str:
     """The visible text left where a released specification used to be described.
 
     A reader of the public repository should be able to find the document rather than
@@ -412,7 +416,8 @@ def review_note(manifest) -> str:
     obtains access. It sits outside the capsule's encoded original, so changing it does not
     affect what a return restores.
     """
-    private = getattr(manifest, "privateRepo", None) or "OPCF-Members/spec-drafts"
+    private = (manifest.review_route(spec_id).repository if spec_id and hasattr(manifest, "review_route")
+               else getattr(manifest, "privateRepo", None) or "OPCF-Members/spec-drafts")
     access = getattr(manifest, "accessInfo", None) or "https://github.com/OPCF-Members/Help"
     return (
         f"*Under OPC Foundation review — moved to "
@@ -459,6 +464,16 @@ def private_url(manifest, repo_rel: str) -> str:
     empty for everyone who is not a member, so `check_links.py` would fail for them and
     the reader would still have nothing to open.
     """
+    if hasattr(manifest, "review_route"):
+        from review_routes import owner_for_public
+        path, marker, fragment = repo_rel.partition("#")
+        owner, route = owner_for_public(manifest, norm(path))
+        if path.startswith("word-drafts/") and not route.legacy_layout:
+            number = manifest.spec(owner)["publisherSpecs"][0]["docNumber"]
+            mapped = "artifacts/" + number.replace(" ", "-") + ".docx"
+        else:
+            mapped = route.translate(norm(path))
+        return f"https://github.com/{route.repository}/blob/main/{mapped}" + (marker + fragment if marker else "")
     private = getattr(manifest, "privateRepo", None) or "OPCF-Members/spec-drafts"
     return f"https://github.com/{private}/blob/main/{norm(repo_rel)}"
 
@@ -983,10 +998,10 @@ def text_repairs_release(manifest, closure: list[str], files: list[str], roots: 
         row_count = 0
         if r in markdown_reverse_refs:
             old, row_count = repair_markdown_table_rows_release(
-                old, moved_dirs, r, moving, roots, review_note(manifest), manifest
+                old, moved_dirs, r, moving, roots, review_note(manifest, closure[0]), manifest
             )
             old, line_count = repair_markdown_reverse_lines_release(
-                old, moved_dirs, r, moving, roots, review_note(manifest)
+                old, moved_dirs, r, moving, roots, review_note(manifest, closure[0])
             )
         else:
             line_count = 0
@@ -1107,8 +1122,12 @@ def relevant_manifest_problems(action: str, problems: list[str], files: list[str
 
 
 def build_plan(manifest, action: str, spec_id: str, export_dir: str | None, import_dir: str | None) -> Plan:
+    from review_routes import closure_routes, require_review_repository, review_file_map
+    closure_routes(manifest, spec_id)
     closure = moving_specs(manifest, spec_id)
     import_path = Path(import_dir).resolve() if import_dir else None
+    if import_path is not None:
+        require_review_repository(import_path, manifest.review_route(spec_id).repository)
     files = spec_file_set(manifest, spec_id, import_path if action == "return" else None)
     export_files = spec_export_set(manifest, spec_id)
     vendor_files = sorted(set(export_files) - set(files))
@@ -1134,7 +1153,10 @@ def build_plan(manifest, action: str, spec_id: str, export_dir: str | None, impo
         )
     changes = text_repairs_return(manifest, closure, files, import_path, roots)
     manual = manual_steps_return_vendors(vendor_files, import_path, changes)
-    return Plan(action, spec_id, closure, files, export_files, vendor_files, changes, manual, None, import_path)
+    plan = Plan(action, spec_id, closure, files, export_files, vendor_files, changes, manual, None, import_path)
+    if import_path is not None:
+        plan.import_files = review_file_map(manifest, spec_id, import_path)
+    return plan
 
 
 def print_status(manifest) -> int:
@@ -1210,15 +1232,28 @@ def copy_to_export(files: list[str], export_dir: Path) -> None:
         shutil.copy2(src, dest)
 
 
-def copy_from_import(files: list[str], import_dir: Path) -> None:
-    missing = [path for path in files if not (import_dir / Path(*path.split("/"))).exists()]
+def copy_from_import(files: list[str], import_dir: Path, mapped: dict[str, str] | None = None,
+                     manifest=None, spec_id: str | None = None) -> None:
+    from review_routes import checked_path, translated_content
+    mapped = mapped or {path: path for path in files}
+    missing = [path for path in files if not checked_path(import_dir, mapped[path]).is_file()]
     if missing:
         raise FileNotFoundError("import directory is missing: " + ", ".join(missing))
+    contents = {}
     for path in files:
-        src = import_dir / Path(*path.split("/"))
-        dest = repo_path(path)
+        src = checked_path(import_dir, mapped[path])
+        dest = checked_path(REPO, path)
+        content = src.read_bytes()
+        if manifest is not None and spec_id is not None:
+            content = translated_content(manifest, spec_id, mapped[path], path, content, reverse=True)
+        contents[path] = content
+        if dest.exists() and dest.read_bytes() != content:
+            raise RuntimeError(f"return would overwrite a different public file: {path}; reconcile it first")
+    for path in files:
+        src = checked_path(import_dir, mapped[path])
+        dest = checked_path(REPO, path)
         dest.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, dest)
+        dest.write_bytes(contents[path])
 
 
 def prune_empty_dirs(start: Path) -> None:
@@ -1293,7 +1328,7 @@ def apply_plan(plan: Plan) -> int:
             set_spec_states(plan.closure, "released")
         else:
             assert plan.import_dir is not None
-            copy_from_import(plan.files, plan.import_dir)
+            copy_from_import(plan.files, plan.import_dir, plan.import_files, load_manifest(), plan.spec_id)
             backups = apply_text_changes(plan.text_changes)
             set_spec_states(plan.closure, "public")
     except Exception as exc:  # noqa: BLE001 - rollback must catch filesystem failures.
@@ -1316,6 +1351,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("status")
+    route_parser = sub.add_parser("route")
+    route_parser.add_argument("spec_id")
     for name in ("release", "return"):
         p = sub.add_parser(name)
         p.add_argument("spec_id")
@@ -1329,6 +1366,17 @@ def main(argv: list[str] | None = None) -> int:
     manifest = load_manifest()
     if args.command == "status":
         return print_status(manifest)
+    if args.command == "route":
+        from review_routes import closure_routes
+        try:
+            routes = closure_routes(manifest, args.spec_id)
+            route = routes[args.spec_id]
+        except (KeyError, ValueError) as error:
+            print(f"invalid review route: {error}", file=sys.stderr)
+            return 2
+        print(json.dumps({"repository": route.repository, "submodule": route.submodule,
+                          "group": route.group, "legacyLayout": route.legacy_layout}))
+        return 0
 
     problems = manifest.validate()
 
@@ -1345,7 +1393,7 @@ def main(argv: list[str] | None = None) -> int:
     except KeyError as exc:
         print(f"unknown spec id: {args.spec_id}", file=sys.stderr)
         return 2
-    except RuntimeError as exc:
+    except (RuntimeError, ValueError) as exc:
         print(str(exc), file=sys.stderr)
         return 2
 

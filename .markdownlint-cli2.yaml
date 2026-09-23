@@ -39,6 +39,10 @@ globs:
   - "**/*.md"
 
 ignores:
+  - "spec-drafts/**"
+  - "OPC10100-WoT/**"
+  - "OPC12000-Metaverse/**"
+  - "OPC30450-CloudIntegration/**"
   - "node_modules"
   - "**/node_modules/**"
   - "**/tools/ref/**"

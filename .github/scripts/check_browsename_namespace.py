@@ -55,11 +55,7 @@ STANDARD_NAMES = {
     'InstanceDeclaration',
 }
 
-SKIP_DIRS = {'.git', 'node_modules', '__pycache__', 'ref',
-             # Vendored as a submodule: a separate repository with its own copy of this
-             # check and its own CI. Scanning it here would report findings this repo
-             # cannot fix and would go red on a submodule bump.
-             'spec-drafts'}
+SKIP_DIRS = {'.git', 'node_modules', '__pycache__', 'ref'}
 
 # A prefixed BrowseName: "<index>:<name>". An unprefixed one is already namespace 0.
 PREFIXED_RE = re.compile(r'^(\d+):(.+)$')
@@ -67,7 +63,11 @@ PREFIXED_RE = re.compile(r'^(\d+):(.+)$')
 
 def nodesets():
     for dirpath, dirnames, filenames in os.walk(ROOT):
-        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+        dirnames[:] = [
+            d for d in dirnames
+            if d not in SKIP_DIRS
+            and not os.path.exists(os.path.join(dirpath, d, '.git'))
+        ]
         for fn in sorted(filenames):
             if fn.endswith('.NodeSet2.xml'):
                 yield os.path.join(dirpath, fn)

@@ -2,10 +2,10 @@
 # OPC Foundation review repository.
 #
 # The built-in GITHUB_TOKEN is intentionally scoped to this repository. It can open the
-# public pull request, but it cannot read or write OPCF-Members/spec-drafts. Create a
+# public pull request, but it cannot read or write the member review repositories. Create a
 # repository secret named SPEC_DRAFTS_TOKEN in marcschier/opcua-drafts. Use a
 # fine-grained PAT or GitHub App installation token with access only to
-# OPCF-Members/spec-drafts and these repository permissions: Contents read/write and
+# the selected repository in release/manifest.json and these permissions: Contents read/write and
 # Pull requests read/write. Metadata read is implicit.
 #
 # Unlike the normal PR validation workflow, the checks in this workflow are blocking.
@@ -46,7 +46,7 @@ concurrency:
 
 env:
   PUBLIC_REPO: marcschier/opcua-drafts
-  PRIVATE_REPO: OPCF-Members/spec-drafts
+  # PRIVATE_REPO is resolved from release/manifest.json for the selected specification.
   # The repository YAML/JSON checker walks the whole workspace and skips node_modules.
   # Put scratch checkouts there so the private repository's bootstrap files are not
   # mistaken for files that belong to this public repository.
@@ -88,6 +88,18 @@ jobs:
       - name: Show manifest status
         run: python release/tools/release_spec.py status
 
+      - name: Select the working-group review repository
+        id: route
+        env:
+          SPEC_ID: ${{ inputs.spec-id }}
+        run: |
+          set -euo pipefail
+          route=$(python release/tools/release_spec.py route "$SPEC_ID")
+          repository=$(printf '%s' "$route" | jq -er '.repository')
+          echo "PRIVATE_REPO=$repository" >> "$GITHUB_ENV"
+          echo "repository=$repository" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$route"
+
       - name: Dry run
         id: dry_run
         if: ${{ inputs.dry-run }}
@@ -100,12 +112,14 @@ jobs:
         if: ${{ ! inputs.dry-run }}
         env:
           SPEC_DRAFTS_TOKEN: ${{ secrets.SPEC_DRAFTS_TOKEN }}
+          GH_TOKEN: ${{ secrets.SPEC_DRAFTS_TOKEN }}
         run: |
           if [ -z "$SPEC_DRAFTS_TOKEN" ]; then
             echo "::error::Create SPEC_DRAFTS_TOKEN as a repository secret in $PUBLIC_REPO."
             echo "::error::It must be limited to $PRIVATE_REPO with Contents read/write and Pull requests read/write."
             exit 1
           fi
+          gh api "repos/$PRIVATE_REPO" --silent
 
       - name: Start the public branch
         if: ${{ ! inputs.dry-run }}
@@ -123,7 +137,7 @@ jobs:
         if: ${{ ! inputs.dry-run }}
         uses: actions/checkout@v4
         with:
-          repository: ${{ env.PRIVATE_REPO }}
+          repository: ${{ steps.route.outputs.repository }}
           token: ${{ secrets.SPEC_DRAFTS_TOKEN }}
           fetch-depth: 0
           path: ${{ env.WORK_DIR }}/private
@@ -172,10 +186,15 @@ jobs:
 
           skip = {".git", "node_modules", "__pycache__"}
           validators = []
-          for path in sorted(Path(".").rglob("validate_all.py")):
-              if skip.intersection(path.parts):
-                  continue
-              validators.append(path)
+          for base, directories, files in os.walk("."):
+              directories[:] = [
+                  name for name in directories
+                  if name not in skip and name != "_work"
+                  and not (Path(base) / name / ".git").exists()
+              ]
+              if "validate_all.py" in files:
+                  validators.append(Path(base) / "validate_all.py")
+          validators.sort()
           for path in validators:
               print(f"=== {path} --self-contained")
               subprocess.run([sys.executable, str(path), "--self-contained"], check=True)
@@ -204,23 +223,40 @@ jobs:
             --export "$WORK_DIR/export"
           cd "$WORK_DIR/private"
           python - <<'PY'
+          import os
           from pathlib import Path
           import subprocess
           import sys
 
+          workspace = Path(os.environ["GITHUB_WORKSPACE"])
+          sys.path.insert(0, str(workspace / "release" / "tools"))
+          from manifest import load
+          from review_routes import public_file_map
+
           missing = []
           export = Path("../export")
+          manifest = load(workspace / "release" / "manifest.json")
+          spec_id = os.environ["SPEC_ID"]
+          files = sorted(source.relative_to(export).as_posix()
+                         for source in export.rglob("*") if source.is_file())
+          mapping = ({path: path for path in files}
+                     if manifest.review_route(spec_id).legacy_layout
+                     else public_file_map(manifest, spec_id, files))
           for source in export.rglob("*"):
               if source.is_file():
-                  rel = source.relative_to(export)
+                  original = source.relative_to(export).as_posix()
+                  if original not in mapping:
+                      continue
+                  rel = mapping[original]
                   if not Path(rel).is_file():
                       missing.append(str(rel))
           if missing:
               raise SystemExit("exported files missing from private checkout: " + ", ".join(missing))
 
           validators = sorted(
-              source.relative_to(export)
-              for source in export.rglob("validate_local.py")
+              Path(target)
+              for original, target in mapping.items()
+              if original.endswith("/validate_local.py")
           )
           if not validators:
               raise SystemExit("release export contains no local validators")

@@ -105,7 +105,8 @@ class Manifest:
         self._data = data
         self._path = path
         self.publicRepo = data.get("publicRepo", "")
-        self.privateRepo = data.get("privateRepo", "")
+        self.privateRepo = data.get("reviewRepositories", {}).get("core", {}).get(
+            "repository", data.get("privateRepo", ""))
         self.accessInfo = data.get("accessInfo", "")
         self.sharedTooling = [_norm(p) for p in data.get("sharedTooling", [])]
         self._specs: dict[str, dict[str, Any]] = data.get("specs", {})
@@ -119,6 +120,10 @@ class Manifest:
 
     def spec_ids(self) -> list[str]:
         return sorted(self._specs)
+
+    def review_route(self, spec_id: str):
+        from review_routes import route_for
+        return route_for(self, spec_id)
 
     def closure(self, spec_id: str) -> list[str]:
         return self._relation_closure(spec_id, "closure", include_self=True)
@@ -174,6 +179,11 @@ class Manifest:
         return sorted(files)
 
     def export_set(self, spec_id: str) -> list[str]:
+        if not self.review_route(spec_id).legacy_layout:
+            from review_routes import public_file_map
+            # WG repositories already own their shared infrastructure and pinned
+            # dependencies. A dependency is not authority to export its entire spec.
+            return sorted(public_file_map(self, spec_id, self.file_set(spec_id)))
         files: set[str] = set()
         for current in self.closure(spec_id):
             files.update(self._own_export_set(current))
@@ -202,6 +212,15 @@ class Manifest:
         problems.extend(self._validate_shape())
         if problems:
             return problems
+
+        from review_routes import closure_routes
+        for spec_id in self.spec_ids():
+            try:
+                closure_routes(self, spec_id)
+            except (ValueError, KeyError) as error:
+                problems.append(str(error))
+        if problems:
+            return sorted(set(problems))
 
         problems.extend(self._validate_paths())
         problems.extend(self._validate_relations())

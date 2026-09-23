@@ -132,8 +132,8 @@ class ReleaseSpecTests(unittest.TestCase):
             released,
         )
         self.assertIn(
-            "OPCF-Members/spec-drafts/blob/main/"
-            "extras/metaverse-specs/ai-model-management/examples/index.md",
+            "OPCF-Members/OPC12000-Metaverse/blob/main/"
+            "extras/ai-model-management/examples/index.md",
             released,
         )
 
@@ -180,7 +180,7 @@ class ReleaseSpecTests(unittest.TestCase):
             problems,
         )
         self.assertTrue(
-            any("publisher document number 'OPC 99011-1'" in problem for problem in problems),
+            any("publisher document number 'OPC 12001-4'" in problem for problem in problems),
             problems,
         )
 
