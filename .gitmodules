@@ -10,3 +10,6 @@
 [submodule "OPC30450-CloudIntegration"]
 	path = OPC30450-CloudIntegration
 	url = https://github.com/OPCF-Members/OPC30450-CloudInitiative.git
+[submodule "OPC10000-Core"]
+	path = OPC10000-Core
+	url = https://github.com/OPCF-Members/OPC10000-Core.git
