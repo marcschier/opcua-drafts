@@ -4,7 +4,7 @@
 
 | Working group | Review repository | Local submodule |
 | --- | --- | --- |
-| Core | `OPCF-Members/spec-drafts` | `spec-drafts` |
+| Core | `OPCF-Members/OPC10000-Core` | `OPC10000-Core` |
 | WoT | `OPCF-Members/OPC10100-WoT` | `OPC10100-WoT` |
 | Metaverse | `OPCF-Members/OPC12000-Metaverse` | `OPC12000-Metaverse` |
 | CloudIntegration | `OPCF-Members/OPC30450-CloudInitiative` | `OPC30450-CloudIntegration` |
@@ -21,7 +21,7 @@ python release\tools\release_spec.py route xregistry
 
 `route` returns JSON containing the repository, submodule, working-group name and layout mode. The release workflow uses this output for its checkout, permission preflight and PR target rather than hard-coding `spec-drafts`.
 
-The Core review repository uses `source/<spec>`, `model/<spec>`, and `extras/<spec>` without a working-group directory. The other WG repositories use `source/<spec>`, flat `model` files, and `extras/<spec>`. More specific mappings cover generators formerly under `source`, informative research, example overlays, and allocation ledgers. Reverse mappings enumerate the actual review checkout, so destination-only additions are included even when the public source directory no longer exists. Public draft paths retain their own group directories.
+The four active WG repositories use `source/<spec>`, flat `model` files, and `extras/<spec>`. Legacy `spec-drafts` remains registered as a submodule but is not the active Core release destination. More specific mappings cover generators, informative research, example overlays, and allocation ledgers. Reverse mappings enumerate the actual review checkout, so destination-only additions are included even when the public source directory no longer exists. Public draft paths retain their own group directories.
 
 ## Safety boundaries
 

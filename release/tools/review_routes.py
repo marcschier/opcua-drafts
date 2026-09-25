@@ -128,7 +128,7 @@ def route_for(manifest, spec_id: str) -> Route:
         if not isinstance(item, dict) or set(item) != {"public", "review", "directory"} or type(item["directory"]) is not bool:
             raise ValueError(f"{spec_id}: invalid review path mapping")
         mappings.append(Mapping(relative_path(item["public"]), relative_path(item["review"]), item["directory"]))
-    legacy = key == "core"
+    legacy = key == "core" and repository.lower() == "opcf-members/spec-drafts"
     if not legacy and not mappings:
         raise ValueError(f"{spec_id}: WG routing requires explicit path mappings")
     route = Route(repository, relative_path(config["submodule"]), config["group"],
@@ -206,8 +206,10 @@ def review_file_map(manifest, spec_id: str, root: Path) -> dict[str, str]:
             checked_path(root, relative)
             route.require_content(relative)
             public = route.translate(relative, reverse=True)
-            if route.legacy_layout and not any(under(public, prefix) for prefix in manifest.spec(key)["move"]):
-                # Core shared helpers are exported, not owned by a returning spec.
+            if (any(under(public, prefix) for prefix in manifest.sharedTooling)
+                    or (route.legacy_layout and not any(
+                        under(public, prefix) for prefix in manifest.spec(key)["move"]))):
+                # Explicitly mapped shared helpers are export inputs, not returned ownership.
                 continue
             if route.excludes(public) or any(under(public, p) for p in manifest.spec(key).get("keepPublic", [])):
                 continue

@@ -60,7 +60,7 @@
       ]
     },
     "data-channels": {
-      "$comment": "Releasable base-namespace errata package. The combined specification, the insertion-ready Part 3, Part 4 and Part 6 errata, the generated model, the wire tooling, and the linked informative throughput report form one review unit. Both validators are self-contained and the draft has no RequiredModel dependency, so it needs neither closure nor vendored specifications.",
+      "$comment": "Core errata package maintained in OPC10000-Core. The integrated Part 3, Part 4 and Part 6 clauses, generated model and allocations, wire tooling and throughput report form one review unit. The Core node identities remain in namespace zero; the model package adds its own namespace metadata and declares the base UA dependency. Local acceptance is self-contained. Legacy Word artifacts are not transferred.",
       "title": "OPC UA — Data Channels",
       "submitted": true,
       "state": "released",
@@ -100,9 +100,19 @@
           "directory": true
         },
         {
-          "public": "model/core-specs/data-channels",
-          "review": "model/data-channels",
-          "directory": true
+          "public": "model/core-specs/data-channels/Opc.Ua.DataChannels.NodeSet2.xml",
+          "review": "model/Opc.Ua.DataChannels.NodeSet2.xml",
+          "directory": false
+        },
+        {
+          "public": "model/core-specs/data-channels/Opc.Ua.DataChannels.NodeIds.csv",
+          "review": "model/Opc.Ua.DataChannels.NodeIds.csv",
+          "directory": false
+        },
+        {
+          "public": "model/core-specs/data-channels/Opc.Ua.DataChannels.Allocations.csv",
+          "review": "model/Opc.Ua.DataChannels.Allocations.csv",
+          "directory": false
         },
         {
           "public": "extras/core-specs/data-channels",
@@ -118,23 +128,9 @@
           "public": "extras/core-specs/_common",
           "review": "extras/_common",
           "directory": true
-        },
-        {
-          "public": "word-drafts/OPC-UA-Data-Channels.docx",
-          "review": "word-drafts/OPC-UA-Data-Channels.docx",
-          "directory": false
-        },
-        {
-          "public": "word-drafts/OPC-UA-Data-Channels.docmodel.json",
-          "review": "word-drafts/OPC-UA-Data-Channels.docmodel.json",
-          "directory": false
-        },
-        {
-          "public": "word-drafts/OPC-UA-Data-Channels.provenance.json",
-          "review": "word-drafts/OPC-UA-Data-Channels.provenance.json",
-          "directory": false
         }
-      ]
+      ],
+      "reviewExclude": ["word-drafts"]
     },
     "observability-export": {
       "$comment": "Releasable Observability Export companion specification. Its normative NodeSet has one authoritative review copy; the public repository carries a byte-identical fixture under shared tooling for self-contained generator validation.",
@@ -870,8 +866,8 @@
   },
   "reviewRepositories": {
     "core": {
-      "repository": "OPCF-Members/spec-drafts",
-      "submodule": "spec-drafts",
+      "repository": "OPCF-Members/OPC10000-Core",
+      "submodule": "OPC10000-Core",
       "group": "Core"
     },
     "wot": {

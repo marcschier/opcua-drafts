@@ -30,7 +30,7 @@ class ReviewRouteTests(unittest.TestCase):
             "ai-model-management": "OPC12000-Metaverse",
             "avro-encoding": "OPC30450-CloudInitiative", "xregistry": "OPC30450-CloudInitiative",
             "schema-registry": "OPC30450-CloudInitiative", "observability-export": "OPC30450-CloudInitiative",
-            "data-channels": "spec-drafts",
+            "data-channels": "OPC10000-Core",
         }
         self.assertEqual(set(expected), set(self.manifest.spec_ids()))
         for spec, repository in expected.items():
@@ -66,7 +66,7 @@ class ReviewRouteTests(unittest.TestCase):
         self.assertEqual(translated_content(self.manifest, "data-channels", path,
                          "source/data-channels/spec.md", b"unchanged"), b"unchanged")
 
-    def test_core_review_retains_legacy_assets_but_cleanup_excludes_shared_helpers(self):
+    def test_modern_core_excludes_legacy_assets_and_shared_helpers_from_cleanup(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             for relative in ("source/data-channels/spec.md", "extras/_common/shared.py",
@@ -77,7 +77,6 @@ class ReviewRouteTests(unittest.TestCase):
             files = review_file_map(self.manifest, "data-channels", root)
             self.assertEqual(files, {
                 "source/core-specs/data-channels/spec.md": "source/data-channels/spec.md",
-                "word-drafts/OPC-UA-Data-Channels.docx": "word-drafts/OPC-UA-Data-Channels.docx",
             })
             exported = public_file_map(self.manifest, "data-channels", [
                 "source/core-specs/data-channels/spec.md",
@@ -85,7 +84,9 @@ class ReviewRouteTests(unittest.TestCase):
                 "word-drafts/OPC-UA-Data-Channels.docx",
             ])
             self.assertEqual(exported["extras/core-specs/_common/shared.py"], "extras/_common/shared.py")
-            self.assertIn("word-drafts/OPC-UA-Data-Channels.docx", exported)
+            self.assertNotIn("word-drafts/OPC-UA-Data-Channels.docx", exported)
+            self.assertFalse(route_for(self.manifest, "data-channels").legacy_layout)
+            self.assertEqual(cleanup_file_map(self.manifest, "data-channels", root), files)
 
     def test_core_manifest_maps_model_and_generator_paths_without_model_identity_changes(self):
         original = {
@@ -100,7 +101,7 @@ class ReviewRouteTests(unittest.TestCase):
             "source/data-channels/manifest.json", json.dumps(original).encode()))
         self.assertEqual(rendered["identity"], original["identity"])
         self.assertEqual(rendered["model"], {
-            "nodeset": "model/data-channels/Opc.Ua.DataChannels.NodeSet2.xml",
+            "nodeset": "model/Opc.Ua.DataChannels.NodeSet2.xml",
             "generator": "source/data-channels/tools/build_model.py",
         })
         returned = json.loads(translated_content(
